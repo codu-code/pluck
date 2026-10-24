@@ -1,4 +1,5 @@
 import { runJobs } from "@/lib/jobs";
+import { runScheduled } from "@/lib/schedule";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -7,5 +8,6 @@ export const maxDuration = 60;
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return new Response("unauthorized", { status: 401 });
-  return Response.json(await runJobs({ budgetMs: 45_000 }));
+  const scheduled = await runScheduled();
+  return Response.json({ ...scheduled, ...(await runJobs({ budgetMs: 45_000 })) });
 }

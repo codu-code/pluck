@@ -31,7 +31,7 @@ function placeholders(d: PluckDraft): Row[] {
   const now = new Date().toISOString();
   const base = {
     canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, status: "inbox" as const,
-    archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0,
+    archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0, inList: false,
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };
   if (d.text !== null)
@@ -43,16 +43,20 @@ const settling = (it: Row, now: number) =>
   !it.draft && now - new Date(it.lastTouchedAt).getTime() < WATCH_MS &&
   (it.extraction.state === "pending" || (it.extraction.state === "done" && !it.hasCover && it.kind === "link"));
 
+type Expiry = { days: number | null; scope: "inbox_later" | "inbox" };
+
 type Props = {
   view: View;
   initial: ItemPage;
   total: number;
   tags: Tag[];
+  expiry: Expiry;
+  expiringThisWeek?: number;
   deletedId?: string; // set after a delete on the item page: offers Undo from the bin
 };
 
 const SAMPLE_URL = "https://getpluck.io/sample";
-const VIEWS: Record<View, { title: string; subtitle: (total: number, sort: Sort) => string; empty: () => ReactNode }> = {
+const VIEWS: Record<View, { title: string; subtitle: (total: number, sort: Sort, expiring: number) => string; empty: () => ReactNode }> = {
   inbox: {
     title: "Inbox",
     subtitle: (total, sort) => `${total} to triage · ${sort === "newest" ? "newest first" : "untouched first"}`,
@@ -60,13 +64,13 @@ const VIEWS: Record<View, { title: string; subtitle: (total: number, sort: Sort)
   },
   later: {
     title: "Later",
-    subtitle: () => "Kept on purpose",
+    subtitle: (_t, _s, expiring) => (expiring ? `Kept on purpose · ${expiring} expire${expiring === 1 ? "s" : ""} this week, into the Archive` : "Kept on purpose"),
     empty: () => <EmptyState title="Nothing kept for later." body="Press l on any Inbox item to keep it here." />,
   },
 };
 
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
-export function ItemList({ view, initial, total: initialTotal, tags: initialTags, deletedId }: Props) {
+export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId }: Props) {
   const { title, subtitle, empty } = VIEWS[view];
   const sample = view === "inbox" ? SAMPLE_URL : undefined;
   const router = useRouter();
@@ -244,6 +248,17 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     });
     showToast({ message: on ? `Added to “${list.name}”.` : `Taken out of “${list.name}”.` });
   }
+  // The quiet "30 days" pill: in scope, not in a list, and within a week of moving to the Archive.
+  const expiring = (r: Row) => {
+    if (!expiry.days || r.draft || r.inList || (view === "later" && expiry.scope === "inbox")) return false;
+    const left = expiry.days * 86_400_000 - (now.getTime() - new Date(r.lastTouchedAt).getTime());
+    return left < 7 * 86_400_000;
+  };
+  async function keep(r: Row) {
+    if (!(await fetch(`/api/v1/items/${r.id}/open`, { method: "POST" })).ok) return;
+    setRows((cur) => cur.map((x) => (x.id === r.id ? { ...x, lastTouchedAt: new Date().toISOString() } : x)));
+    showToast({ message: `Kept. The ${expiry.days} days start again.` });
+  }
   const pickState = (tagId: string) => {
     const targets = real.filter((r) => picking?.includes(r.id));
     const n = targets.filter((r) => r.tagIds.includes(tagId)).length;
@@ -300,7 +315,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
           <div className={styles.head}>
             <h1 className={styles.title}>{title}</h1>
             <div className={styles.headRight}>
-              <span className={styles.subtitle}>{subtitle(total, sort)}</span>
+              <span className={styles.subtitle}>{subtitle(total, sort, expiringThisWeek)}</span>
               <div role="radiogroup" aria-label="Sort" className={styles.sort}>
                 {(["newest", "untouched"] as const).map((s) => (
                   <button key={s} type="button" role="radio" aria-checked={sort === s} className={styles.sortOption} onClick={() => changeSort(s)}>
@@ -347,6 +362,19 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
                     onToggle={() => toggle(r.id)}
                     onPoint={() => index >= 0 && setCursor(index)}
                     tags={chips(r)}
+                    pill={
+                      expiring(r) ? (
+                        <button
+                          type="button"
+                          className={styles.pill}
+                          title={`Untouched for ${expiry.days} days. Keep it, or it moves to the Archive. Nothing is deleted.`}
+                          aria-label={`Keep ${r.title}: it moves to the Archive soon`}
+                          onClick={() => keep(r)}
+                        >
+                          {expiry.days} days
+                        </button>
+                      ) : null
+                    }
                     actions={
                       r.draft || selecting ? null : (
                         <>

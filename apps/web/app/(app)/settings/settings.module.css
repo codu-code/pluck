@@ -37,3 +37,11 @@
 .handleInput { flex: 1; min-width: 0; height: 38px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; }
 .profileHint { flex: 1 1 200px; color: var(--ink2); font-size: 13px; padding-bottom: 10px; }
 .profileHint[role="alert"] { color: var(--danger); }
+.fields { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.selectField { height: 40px; min-width: 200px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
+.startClean { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-radius: 10px; background: var(--rail); }
+.startText { display: flex; flex-direction: column; gap: 2px; }
+.startText b { font-weight: 600; }
+.inkButton { height: 40px; padding: 0 14px; border-radius: 8px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 500; cursor: pointer; }
+.inkButton:disabled { opacity: 0.5; cursor: default; }

@@ -3,6 +3,7 @@
 import { fileURLToPath } from "node:url";
 import { runJobs } from "./lib/jobs";
 import { log } from "./lib/log";
+import { runScheduled } from "./lib/schedule";
 
 try {
   process.loadEnvFile(fileURLToPath(new URL("../../.env", import.meta.url)));
@@ -12,7 +13,12 @@ let stopping = false;
 for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig, () => (stopping = true));
 
 log("info", "worker started");
+let lastScheduled = 0;
 while (!stopping) {
+  if (Date.now() - lastScheduled > 60_000) {
+    lastScheduled = Date.now();
+    await runScheduled().catch((e) => log("error", "scheduled run failed", { error: String(e) }));
+  }
   const { ran } = await runJobs({ budgetMs: 30_000 }).catch((e) => {
     log("error", "worker loop error", { error: String(e) });
     return { ran: 0 };

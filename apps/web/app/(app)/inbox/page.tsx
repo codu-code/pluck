@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ItemList } from "@/components/ItemList";
 import { currentUser } from "@/lib/auth";
-import { browse, count, tagsOf } from "@/lib/library";
+import { browse, count, me, tagsOf } from "@/lib/library";
 
 export const metadata: Metadata = { title: "Inbox · Pluck" };
 
@@ -12,6 +12,10 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<{ 
     count(user.id, "inbox"),
     searchParams,
   ]);
-  const tags = await tagsOf(user.id);
-  return <ItemList view="inbox" initial={page} total={total} tags={tags} deletedId={deleted} />;
+  const [tags, profile, expiringThisWeek] = await Promise.all([tagsOf(user.id), me(user.id), Promise.resolve(0)]);
+  return (
+    <ItemList view="inbox" initial={page} total={total} tags={tags} deletedId={deleted}
+      expiry={{ days: profile.settings.expiryDays, scope: profile.settings.expiryScope }} expiringThisWeek={expiringThisWeek}
+    />
+  );
 }

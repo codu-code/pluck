@@ -1,6 +1,6 @@
 import type { Item, List, ListEntry, ListMembership } from "@pluck/shared-schemas";
-import { ObjectId, type Filter } from "mongodb";
-import { items, LEAN, listRows, lists, oid, users, type ItemDoc, type ListDoc, type ListItemDoc } from "./collections.ts";
+import { ObjectId } from "mongodb";
+import { items, LEAN, listRows, lists, oid, users, type ListDoc, type ListItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 import { slugify } from "./tags.ts";
 
@@ -42,7 +42,10 @@ export async function syncListNames(userId: ObjectId, itemIds: ObjectId[]): Prom
   const by = new Map<string, string[]>();
   for (const r of rows) by.set(r.itemId.toHexString(), [...(by.get(r.itemId.toHexString()) ?? []), names.get(r.listId.toHexString()) ?? ""]);
   await (await items()).bulkWrite(
-    itemIds.map((id) => ({ updateOne: { filter: { _id: id, userId }, update: { $set: { listNames: (by.get(id.toHexString()) ?? []).filter(Boolean) } } } })),
+    itemIds.map((id) => {
+      const names = (by.get(id.toHexString()) ?? []).filter(Boolean);
+      return { updateOne: { filter: { _id: id, userId }, update: { $set: { listNames: names, inList: names.length > 0 } } } };
+    }),
   );
 }
 
@@ -240,12 +243,6 @@ export async function listsForItem(userId: string, itemId: string): Promise<List
     out.push({ list: toList(list), place, note: r.note, noteBy: r.noteBy, ticked: r.ticked });
   }
   return out.sort((a, b) => b.list.lastActivityAt.localeCompare(a.list.lastActivityAt));
-}
-
-// Items in any list are exempt from expiry (used by the expiry job and Archive it all).
-export async function inAnyList(userId: ObjectId): Promise<Filter<ItemDoc>> {
-  const ids = await (await listRows()).distinct("itemId", { userId });
-  return { _id: { $nin: ids } };
 }
 
 export type VisibilityResult = { ok: true; list: List } | { ok: false; reason: "not_found" | "handle_required" | "closed" };

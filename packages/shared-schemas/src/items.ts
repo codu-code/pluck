@@ -25,6 +25,7 @@ export const Item = z.object({
   lang: z.string().nullable(),
   extraction: z.object({ state: ExtractionState, attempts: z.number().int(), lastError: z.string().nullable() }),
   readingProgress: z.number().min(0).max(1),
+  inList: z.boolean(), // in at least one list: never expires
   createdAt: z.string(),
   updatedAt: z.string(),
   lastTouchedAt: z.string(),

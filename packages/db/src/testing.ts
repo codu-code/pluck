@@ -28,3 +28,13 @@ export async function dropTestDatabase(): Promise<void> {
 export async function makeJobsVisible(): Promise<void> {
   await getDb().collection("jobs").updateMany({ state: "queued" }, { $set: { visibleAt: new Date(0) } });
 }
+
+// e2e: make one person's items look untouched for `days` (by email, so a browser test can call it).
+export async function ageItemsOf(email: string, titles: string[], days: number): Promise<number> {
+  const user = await getDb().collection("users").findOne({ email });
+  if (!user) return 0;
+  const res = await getDb()
+    .collection("items")
+    .updateMany({ userId: user._id, title: { $in: titles } }, { $set: { lastTouchedAt: new Date(Date.now() - days * 86_400_000) } });
+  return res.modifiedCount;
+}

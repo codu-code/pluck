@@ -4,10 +4,11 @@ import type { ReactNode } from "react";
 import type { SessionUser } from "@/lib/auth";
 import { OfflineBar } from "./Offline";
 import { RailNav } from "./RailNav";
+import { TimezoneSync } from "./TimezoneSync";
 import styles from "./AppShell.module.css";
 
 // The web app frame from the Main and Empty boards: rail on the left, pluck box and search on top.
-export function AppShell({ user, counts, children }: { user: SessionUser; counts: Record<string, number>; children: ReactNode }) {
+export function AppShell({ user, counts, timezone, children }: { user: SessionUser; counts: Record<string, number>; timezone: string; children: ReactNode }) {
   const display = user.name || user.email.split("@")[0] || user.email;
   return (
     <div className={styles.frame}>
@@ -23,6 +24,7 @@ export function AppShell({ user, counts, children }: { user: SessionUser; counts
           <span className={styles.meName}>{display}</span>
         </div>
       </nav>
+      <TimezoneSync current={timezone} />
       <main className={styles.main}>
         <OfflineBar />
         {children}

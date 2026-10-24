@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ItemList } from "@/components/ItemList";
 import { currentUser } from "@/lib/auth";
-import { browse, count, tagsOf } from "@/lib/library";
+import { browse, count, expiringSoon, me, tagsOf } from "@/lib/library";
 
 export const metadata: Metadata = { title: "Later · Pluck" };
 
@@ -12,6 +12,10 @@ export default async function Later({ searchParams }: { searchParams: Promise<{ 
     count(user.id, "later"),
     searchParams,
   ]);
-  const tags = await tagsOf(user.id);
-  return <ItemList view="later" initial={page} total={total} tags={tags} deletedId={deleted} />;
+  const [tags, profile, expiringThisWeek] = await Promise.all([tagsOf(user.id), me(user.id), expiringSoon(user.id, ["later"])]);
+  return (
+    <ItemList view="later" initial={page} total={total} tags={tags} deletedId={deleted}
+      expiry={{ days: profile.settings.expiryDays, scope: profile.settings.expiryScope }} expiringThisWeek={expiringThisWeek}
+    />
+  );
 }

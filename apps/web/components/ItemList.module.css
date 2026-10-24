@@ -22,3 +22,5 @@
 @media (max-width: 600px) { .page { padding: 20px 16px 0; } .keys { display: none; } }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .tagFilter { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--ink); background: var(--chip); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+.pill { flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; border: 0; background: var(--rail); color: var(--ink2); font: inherit; font-size: 12px; cursor: pointer; }
+.pill:hover { color: var(--ink); }

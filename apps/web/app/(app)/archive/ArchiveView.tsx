@@ -13,14 +13,14 @@ import styles from "./archive.module.css";
 const FILTERS: [ArchiveFilter, string][] = [["all", "All"], ["you", "By you"], ["expired", "Expired"], ["import", "Imported"]];
 const BIN_DAYS = 30;
 
-function why(item: Item, bin: boolean, now: Date): string {
+function why(item: Item, bin: boolean, now: Date, expiryDays: number | null): string {
   if (bin) {
     const left = BIN_DAYS - Math.floor((now.getTime() - new Date(item.deletedAt ?? item.updatedAt).getTime()) / 86_400_000);
     return `deleted, gone for good in ${Math.max(left, 1)} day${left === 1 ? "" : "s"}`;
   }
   if (item.status === "done") return "done";
   switch (item.archivedReason) {
-    case "expired": return "expired, kept here";
+    case "expired": return expiryDays ? `expired after ${expiryDays} days, kept here` : "expired, kept here";
     case "bulk": return "archived with Archive it all";
     case "import": return "imported";
     default: return "archived by you";
@@ -28,7 +28,7 @@ function why(item: Item, bin: boolean, now: Date): string {
 }
 
 // The Archive board: everything archived, done or expired, with Restore. The bin is a view of its own.
-export function ArchiveView({ initial, bin }: { initial: ItemPage; bin: boolean }) {
+export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; bin: boolean; expiryDays: number | null }) {
   const [rows, setRows] = useState(initial.items);
   const [nextCursor, setNextCursor] = useState(initial.nextCursor);
   const [filter, setFilter] = useState<ArchiveFilter>("all");
@@ -83,7 +83,7 @@ export function ArchiveView({ initial, bin }: { initial: ItemPage; bin: boolean 
               <KindGlyph kind={item.kind} />
               <div className={styles.body}>
                 {bin ? <span className={styles.titleText}>{item.title}</span> : <Link href={`/items/${item.id}`} className={styles.titleText}>{item.title}</Link>}
-                <span className={styles.meta}>{rowSite(item)} · {why(item, bin, now)}</span>
+                <span className={styles.meta}>{rowSite(item)} · {why(item, bin, now, expiryDays)}</span>
               </div>
               <span className={styles.when}>{when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
               <button type="button" className={styles.restore} onClick={() => restore(item)}>Restore</button>

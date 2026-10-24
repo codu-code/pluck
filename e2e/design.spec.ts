@@ -72,6 +72,8 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await snap("search");
   await page.goto("/settings");
   await snap("settings");
+  await page.goto("/later");
+  await snap("later");
   await page.goto("/inbox");
   await page.keyboard.press("t");
   await snap("tag-picker");

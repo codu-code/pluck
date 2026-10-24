@@ -58,6 +58,15 @@ export const UpdateEntryBody = z
   .strict();
 export const ReorderBody = z.object({ itemIds: z.array(ObjectIdString).max(1000) });
 
+export const ExpiryDays = z.union([z.literal(14), z.literal(30), z.literal(60), z.literal(90), z.null()]);
+export const Settings = z.object({
+  expiryDays: ExpiryDays,
+  expiryScope: z.enum(["inbox_later", "inbox"]),
+  digestDay: z.number().int().min(0).max(6),
+  timezone: z.string().min(1).max(64),
+});
+export type Settings = z.infer<typeof Settings>;
+
 export const Me = z.object({
   id: ObjectIdString,
   email: z.string(),
@@ -65,9 +74,13 @@ export const Me = z.object({
   handle: z.string().nullable(),
   handleChangeableAt: z.string().nullable(), // when a set handle can change again
   createdAt: z.string(),
+  settings: Settings,
 });
 export type Me = z.infer<typeof Me>;
-export const UpdateMeBody = z.object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional() }).strict();
+export const UpdateMeBody = z
+  .object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional(), settings: Settings.partial().optional() })
+  .strict();
+export const ArchiveStaleBody = z.object({ olderThanDays: z.number().int().min(1).max(3650).optional(), dryRun: z.boolean().default(false) });
 
 export const VisibilityBody = z.object({ visibility: Visibility });
 

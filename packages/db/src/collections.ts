@@ -36,6 +36,7 @@ export type ItemDoc = {
   // Search fields, kept in step by the writes that change them (see search.ts):
   tagNames?: string[];
   listNames?: string[];
+  inList?: boolean; // in at least one list: exempt from expiry
   searchText?: string; // excerpt, site, host, author
   searchBody?: string; // the kept text or the note body, capped
   deletedAt: Date | null; // in the bin; purged 30 days later
@@ -94,7 +95,18 @@ export type UserDoc = {
   handle?: string | null;
   handleChangedAt?: Date | null;
   publicKilled?: boolean; // an admin closed this person's public pages
+  settings?: Partial<UserSettings>;
+  expiryRanOn?: string; // local date of the last nightly expiry, the claim that makes it run once a day
+  digestSentOn?: string; // local date of the last Monday digest
 };
+
+export type UserSettings = {
+  expiryDays: 14 | 30 | 60 | 90 | null; // null: never
+  expiryScope: "inbox_later" | "inbox";
+  digestDay: number; // 0 Sunday … 6 Saturday; 1 by default
+  timezone: string; // IANA
+};
+export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC" };
 
 export type ReportDoc = {
   _id: ObjectId;
@@ -174,6 +186,7 @@ export function db(): Promise<Db> {
         { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
       ]),
       d.collection("users").createIndexes([{ key: { handle: 1 }, unique: true, partialFilterExpression: { handle: { $type: "string" } } }]),
+      d.collection("meta").createIndexes([{ key: { at: 1 }, expireAfterSeconds: 7 * 86_400 }]),
       d.collection("reports").createIndexes([{ key: { state: 1, createdAt: -1 } }]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
       d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
@@ -189,10 +202,13 @@ export function db(): Promise<Db> {
 }
 
 // Never read back the search copies on list and item queries.
-export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } } as const;
+export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } } as const; // inList stays: the UI needs it
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function meta(): Promise<Collection<{ _id: string; at: Date }>> {
+  return (await db()).collection<{ _id: string; at: Date }>("meta");
 }
 export async function users(): Promise<Collection<UserDoc>> {
   return (await db()).collection<UserDoc>("users");

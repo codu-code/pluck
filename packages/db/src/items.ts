@@ -32,6 +32,7 @@ export function toItem(d: ItemDoc): Item {
     lang: d.lang,
     extraction: d.extraction,
     readingProgress: d.readingProgress,
+    inList: Boolean(d.inList),
     createdAt: d.createdAt.toISOString(),
     updatedAt: d.updatedAt.toISOString(),
     lastTouchedAt: d.lastTouchedAt.toISOString(),

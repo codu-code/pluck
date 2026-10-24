@@ -1,9 +1,9 @@
 import { signedUrl } from "@pluck/blob";
 import {
   createList, createReport, createTextItem, getMe, hitRateLimit, listOwnedBy, pluckLink, publicCoverKey, publicList, publicListById, recordView,
-  setHandle, setName, setVisibility,
+  setHandle, setName, setVisibility, updateSettings,
 } from "@pluck/db";
-import { normalizeUrl, type Item, type List, type Me, type PublicList } from "@pluck/shared-schemas";
+import { normalizeUrl, type Item, type List, type Me, type PublicList, type Settings } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
 import { ApiError } from "../errors";
 import { log } from "../log";
@@ -24,8 +24,9 @@ const HANDLE_ERRORS = {
   too_soon: new ApiError("conflict", "You can change your handle once a month.", 409),
 };
 
-export async function updateMe(userId: string, patch: { name?: string; handle?: string }): Promise<Me> {
+export async function updateMe(userId: string, patch: { name?: string; handle?: string; settings?: Partial<Settings> }): Promise<Me> {
   if (patch.name !== undefined) await setName(userId, patch.name);
+  if (patch.settings) await updateSettings(userId, patch.settings);
   if (patch.handle !== undefined) {
     const res = await setHandle(userId, patch.handle);
     if (!res.ok) throw HANDLE_ERRORS[res.reason];

@@ -1,5 +1,5 @@
 import type { Me } from "@pluck/shared-schemas";
-import { oid, users, type UserDoc } from "./collections.ts";
+import { DEFAULT_SETTINGS, oid, users, type UserDoc, type UserSettings } from "./collections.ts";
 
 const HANDLE = /^[a-z0-9](?:[a-z0-9-]{1,22})[a-z0-9]$/;
 const RESERVED = new Set(
@@ -11,7 +11,14 @@ const toMe = (d: UserDoc): Me => ({
   id: d._id.toHexString(), email: d.email, name: d.name ?? "", handle: d.handle ?? null,
   handleChangeableAt: d.handle && d.handleChangedAt ? new Date(d.handleChangedAt.getTime() + MONTH_MS).toISOString() : null,
   createdAt: d.createdAt.toISOString(),
+  settings: { ...DEFAULT_SETTINGS, ...d.settings },
 });
+
+export async function updateSettings(userId: string, patch: Partial<UserSettings>): Promise<Me | null> {
+  const set = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined).map(([k, v]) => [`settings.${k}`, v]));
+  const doc = await (await users()).findOneAndUpdate({ _id: oid(userId) }, { $set: set }, { returnDocument: "after" });
+  return doc && toMe(doc);
+}
 
 export async function getMe(userId: string): Promise<Me | null> {
   const doc = await (await users()).findOne({ _id: oid(userId) });
