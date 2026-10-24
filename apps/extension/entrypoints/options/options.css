@@ -1,0 +1,18 @@
+/* Values from the Extension board's options panel. */
+body { background: var(--ground); }
+.options { max-width: 860px; margin: 0 auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px; }
+.options-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.options-head h1 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; }
+.meta { color: var(--ink2); font-size: 13px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 16px 24px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.strong { font-weight: 500; }
+.field input, .field select { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); }
+.field select { padding: 0 10px; }
+.account { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 12px; border-radius: 8px; background: var(--rail); }
+.account input { flex: 1; min-width: 0; height: 32px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 8px; }
+.links { display: flex; gap: 12px; }
+.link { padding: 0; border: 0; background: none; font-size: 13px; text-decoration: underline; }
+.check { display: flex; gap: 12px; align-items: flex-start; }
+.check input { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--ink); }
+.stack { display: flex; flex-direction: column; }

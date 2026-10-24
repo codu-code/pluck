@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  applyExtraction, createTextItem, editItem, getContent, getItem, getItemBlobKeys, listItems, pluckLink, recordExtractionFailure, resetExtraction, setBlobKeys,
+  applyExtraction, createTextItem, editItem, findByUrl, getContent, getItem, getItemBlobKeys, listItems, moveToBin, pluckLink, recordExtractionFailure, resetExtraction, setBlobKeys,
 } from "./index.ts";
 import { items } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
@@ -128,4 +128,13 @@ describe("notes, todos and things", () => {
     expect(todo).toMatchObject({ kind: "todo", dueAt: due.toISOString() });
     expect((await editItem(a, one.id, { dueAt: null }))?.dueAt).toBeNull();
   });
+});
+
+test("findByUrl finds only the person's own live item", async () => {
+  const { a, b } = await twoUsers();
+  const { item } = await pluckLink(a, { url: "https://example.test/find-me", source: "web" });
+  expect((await findByUrl(a, "https://example.test/find-me"))?.id).toBe(item.id);
+  expect(await findByUrl(b, "https://example.test/find-me")).toBeNull();
+  await moveToBin(a, item.id);
+  expect(await findByUrl(a, "https://example.test/find-me")).toBeNull();
 });

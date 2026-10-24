@@ -38,7 +38,8 @@ const Optional = {
   html: z.string().max(5_000_000).optional(),
   title: z.string().max(500).optional(),
   note: z.string().max(10_000).optional(),
-  selection: z.string().max(20_000).optional(),
+  selection: z.string().max(20_000).optional(), // kept as a highlight on the item (the extension's "Pluck selection")
+  transcript: z.string().max(500_000).optional(), // a video's captions, read in the browser; kept with the page text
   source: Source.optional(),
 };
 

@@ -9,8 +9,8 @@ export default defineConfig({
   retries: 0,
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "retain-on-failure" },
   webServer: {
-    // Services first (Playwright starts this before globalSetup), then the production build, not the dev server.
-    command: `pnpm stack && pnpm --filter @pluck/web build && pnpm --filter @pluck/web exec next start -p ${PORT}`,
+    // Services first (Playwright starts this before globalSetup), the extension (local build), then the web production build.
+    command: `pnpm stack && PLUCK_LOCAL=1 pnpm --filter @pluck/extension build && pnpm --filter @pluck/web build && pnpm --filter @pluck/web exec next start -p ${PORT}`,
     url: `http://127.0.0.1:${PORT}/api/health`,
     timeout: 240_000,
     reuseExistingServer: false,

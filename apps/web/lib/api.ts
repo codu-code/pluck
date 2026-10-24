@@ -1,6 +1,7 @@
-import { hitRateLimit, verifyApiKey } from "@pluck/db";
+import { verifyBearerToken } from "better-auth/oauth2";
+import { hitRateLimit, isAiConnected, verifyApiKey } from "@pluck/db";
 import { ZodError, type ZodType } from "zod";
-import { auth } from "./auth";
+import { API_RESOURCE, auth } from "./auth";
 import { ApiError } from "./errors";
 import { log } from "./log";
 
@@ -13,13 +14,23 @@ const errorResponse = (e: ApiError, headers?: HeadersInit) =>
 
 export type Caller = { userId: string; scopes: string[] };
 
-// Every API request resolves to a caller here: a personal API key (Bearer pk_live_…) or the session cookie.
-// MCP clients authenticate in app/mcp/route.ts; OAuth tokens for the extension and iOS join here in slice 14.
+// Every API request resolves to a caller here: a personal API key (Bearer pk_live_…), an OAuth access token
+// for the API (the extension, iOS), or the session cookie. MCP clients authenticate in app/mcp/route.ts.
 export async function authenticate(req: Request): Promise<Caller | null> {
   const bearer = req.headers.get("authorization")?.match(/^Bearer\s+(\S+)$/i)?.[1];
   if (bearer?.startsWith("pk_live_")) return verifyApiKey(bearer);
+  if (bearer) return verifyAppToken(bearer);
   const session = await auth.api.getSession({ headers: req.headers });
   return session ? { userId: session.user.id, scopes: ["full"] } : null;
+}
+
+// Signature, issuer, audience (this API, never the connector's) and expiry; then the person must not have
+// disconnected the app in Settings since.
+async function verifyAppToken(token: string): Promise<Caller | null> {
+  const { baseURL } = await auth.$context;
+  const claims = await verifyBearerToken(token, { verifyOptions: { issuer: baseURL, audience: API_RESOURCE }, jwksUrl: `${baseURL}/jwks` }).catch(() => null);
+  if (!claims?.sub || !claims.azp || !(await isAiConnected(claims.sub, String(claims.azp)))) return null;
+  return { userId: claims.sub, scopes: String(claims.scope ?? "").split(" ").filter(Boolean) };
 }
 
 // "full" is the signed-in person in their own browser; keys and tokens carry library:* scopes.

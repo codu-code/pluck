@@ -1,7 +1,7 @@
-import { deletePrefix, signedUrl } from "@pluck/blob";
+import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys,
-  listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setItemTags,
+  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
+  listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
 import {
@@ -67,8 +67,28 @@ export async function pluck(userId: string, body: CreateItemBody & { url: string
   const url = normalizeUrl(body.url);
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
   const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
-  if (!needsExtraction && !body.html) return { item, created };
-  return { item: await extractAttempt(userId, item, { html: body.html, timeoutMs: INLINE_TIMEOUT_MS, defer }), created };
+  const kept = needsExtraction || body.html || body.transcript
+    ? await extractAttempt(userId, item, { html: body.html, transcript: body.transcript, timeoutMs: INLINE_TIMEOUT_MS, defer })
+    : item;
+  // A selection becomes a highlight anchored by its quote; the reader finds it in the kept text.
+  const quote = body.selection?.trim();
+  if (quote) await addHighlight(userId, { itemId: item.id, quote, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  return { item: kept, created };
+}
+
+// The item a URL is already in, if any (the bin does not count): the extension's badge and "already plucked".
+export async function lookup(userId: string, rawUrl: string): Promise<Item | null> {
+  const url = normalizeUrl(rawUrl);
+  return url ? findByUrl(userId, url) : null;
+}
+
+// A cover from the app (the extension's screenshot of the tab) for an item that has none.
+export async function setCoverFromApp(userId: string, itemId: string, body: Uint8Array, contentType: string): Promise<Item> {
+  const item = await readItem(userId, itemId);
+  if (item.hasCover) return item;
+  await putObject(blobKeys.cover(userId, itemId), Buffer.from(body), contentType);
+  await setBlobKeys(userId, itemId, { coverKey: blobKeys.cover(userId, itemId) });
+  return readItem(userId, itemId);
 }
 
 export async function retryExtraction(userId: string, itemId: string, { defer }: { defer?: Defer } = {}): Promise<Item> {

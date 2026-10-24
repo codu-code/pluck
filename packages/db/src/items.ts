@@ -320,6 +320,12 @@ export async function setBlobKeys(userId: string, itemId: string, keys: { coverK
   await (await items()).updateOne({ _id: oid(itemId), userId: oid(userId) }, { $set: { ...keys, updatedAt: new Date() } });
 }
 
+// The live item for a normalised URL; binned ones do not count.
+export async function findByUrl(userId: string, normalizedUrl: string): Promise<Item | null> {
+  const doc = await (await items()).findOne({ userId: oid(userId), urlHash: urlHash(normalizedUrl), deletedAt: null }, LEAN);
+  return doc && toItem(doc);
+}
+
 export async function getItem(userId: string, itemId: string): Promise<Item | null> {
   const doc = await (await items()).findOne({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, LEAN);
   return doc && toItem(doc);

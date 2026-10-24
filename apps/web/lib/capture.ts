@@ -49,16 +49,23 @@ export async function storeBlobs(userId: string, itemId: string, x: Pick<Extract
 
 type Defer = (task: () => Promise<void>) => void;
 
+// Captions the browser read go after the page text, so search and the AI tool read what was said.
+function withTranscript(x: Extracted, transcript?: string): Extracted {
+  const t = transcript?.trim();
+  if (!t) return x;
+  return { ...x, markdown: `${x.markdown}\n\n## Transcript\n\n${t}`, wordCount: (x.wordCount ?? 0) + t.split(/\s+/).length };
+}
+
 // One extraction attempt. On success the item is updated and blobs are stored (deferred when a caller
 // is waiting). On failure the attempt is recorded and, unless it is final, a retry is queued.
 export async function extractAttempt(
   userId: string,
   item: Item,
-  { html, timeoutMs, defer }: { html?: string | null; timeoutMs: number; defer?: Defer },
+  { html, transcript, timeoutMs, defer }: { html?: string | null; transcript?: string; timeoutMs: number; defer?: Defer },
 ): Promise<Item> {
   const started = Date.now();
   try {
-    const x = await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs) });
+    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs) }), transcript);
     const updated = (await applyExtraction(userId, item.id, toResult(x))) ?? item;
     const blobs = () =>
       storeBlobs(userId, item.id, x).catch(async (e) => {

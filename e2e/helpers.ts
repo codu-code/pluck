@@ -1,3 +1,4 @@
+import { mkdirSync, writeFileSync } from "node:fs";
 import { expect, type Page } from "@playwright/test";
 
 const MAILPIT = "http://127.0.0.1:8035";
@@ -31,4 +32,18 @@ export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/i
   await page.goto(await linkFromEmail(email, sent));
   await expect(page).toHaveURL(new RegExp(`${lands.replace(/[/]/g, "\\/")}$`));
   return email;
+}
+
+// Saves the page as standalone HTML (CSS inlined, scripts removed) to test-results/design, so `pnpm design`
+// can run the impeccable detector on screens it cannot reach itself (signed-in pages, the extension).
+export async function snapshot(page: Page, name: string): Promise<void> {
+  const html = await page.evaluate(() => {
+    const css = [...document.styleSheets].map((s) => [...s.cssRules].map((r) => r.cssText).join("\n")).join("\n");
+    const doc = document.documentElement.cloneNode(true) as HTMLElement;
+    doc.querySelectorAll("script, link[rel=stylesheet], link[rel=preload]").forEach((n) => n.remove());
+    doc.querySelector("head")!.insertAdjacentHTML("beforeend", `<style>${css}</style>`);
+    return `<!doctype html>${doc.outerHTML}`;
+  });
+  mkdirSync("test-results/design", { recursive: true });
+  writeFileSync(`test-results/design/${name}.html`, html);
 }

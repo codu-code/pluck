@@ -1,7 +1,7 @@
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["**/node_modules/**", "**/.next/**", "**/.output/**", "**/cdk.out/**", "**/dist/**", "docs/**", "**/next-env.d.ts"] },
+  { ignores: ["**/node_modules/**", "**/.next/**", "**/.output/**", "**/cdk.out/**", "**/dist/**", "**/.wxt/**", "docs/**", "**/next-env.d.ts"] },
   ...tseslint.configs.recommended,
   {
     rules: {

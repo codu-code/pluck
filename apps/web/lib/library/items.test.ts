@@ -2,7 +2,7 @@ import { getContent, getItemBlobKeys, pendingJobCount } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
-import { pluck, pluckAny, readItem, readText, updateItem } from "./index";
+import { highlightsOf, lookup, pluck, pluckAny, readItem, readText, setCoverFromApp, updateItem } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -229,4 +229,19 @@ test("API keys authenticate with their scopes; the session-only and delete route
   expect(hasScope(caller!, "library:delete")).toBe(false);
   expect(hasScope(caller!, "full")).toBe(false);
   expect(await authenticate(new Request("http://x", { headers: { authorization: "Bearer pk_live_nope" } }))).toBeNull();
+});
+
+test("the extension's extras: a selection becomes a highlight, a transcript joins the kept text, lookup and covers", async () => {
+  const { a, b } = await twoUsers();
+  const html = `<html><head><title>A talk</title></head><body><article><h1>A talk</h1><p>${"The talk is about small teams. ".repeat(20)}</p></article></body></html>`;
+  const { item } = await pluck(a, { url: `${FIX}/talk-page?v=1`, html, selection: "about small teams", transcript: "Welcome back to the channel." });
+  expect(await readText(a, item.id)).toContain("## Transcript\n\nWelcome back to the channel.");
+  expect((await highlightsOf(a, item.id)).map((h) => h.quote)).toEqual(["about small teams"]);
+
+  expect((await lookup(a, `${FIX}/talk-page?v=1&utm_source=x`))?.id).toBe(item.id);
+  expect(await lookup(b, `${FIX}/talk-page?v=1`)).toBeNull();
+
+  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
+  expect((await setCoverFromApp(a, item.id, png, "image/png")).hasCover).toBe(true);
+  await expect(setCoverFromApp(b, item.id, png, "image/png")).rejects.toMatchObject({ code: "not_found" });
 });
