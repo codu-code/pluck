@@ -33,6 +33,11 @@ export type ItemDoc = {
   lastOpenedAt: Date | null;
   lastTouchedAt: Date;
   statusChangedAt: Date; // when it last moved between Inbox, Later, Archived and Done
+  // Search fields, kept in step by the writes that change them (see search.ts):
+  tagNames?: string[];
+  listNames?: string[];
+  searchText?: string; // excerpt, site, host, author
+  searchBody?: string; // the kept text or the note body, capped
   deletedAt: Date | null; // in the bin; purged 30 days later
 };
 
@@ -96,6 +101,13 @@ export function db(): Promise<Db> {
         { key: { "extraction.state": 1, updatedAt: 1 } },
         { key: { userId: 1, status: 1, statusChangedAt: -1 } },
         { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
+        {
+          key: { title: "text", note: "text", tagNames: "text", listNames: "text", searchText: "text", searchBody: "text" },
+          name: "search",
+          weights: { title: 10, note: 5, tagNames: 5, listNames: 3, searchText: 2, searchBody: 1 },
+          default_language: "english",
+          language_override: "searchLanguage", // items carry `lang` for display; never let it switch stemming
+        },
       ]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
       d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
@@ -109,6 +121,9 @@ export function db(): Promise<Db> {
     return d;
   })());
 }
+
+// Never read back the search copies on list and item queries.
+export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } } as const;
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");

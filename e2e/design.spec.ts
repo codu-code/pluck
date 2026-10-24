@@ -53,6 +53,9 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.getByRole("link", { name: "Kitchen plan" }).first().click();
   await page.waitForURL(/\/items\//);
   await snap("note-editor");
+  await page.goto("/search?q=teams");
+  await page.waitForSelector("mark");
+  await snap("search");
   await page.goto("/settings");
   await snap("settings");
   await page.goto("/inbox");

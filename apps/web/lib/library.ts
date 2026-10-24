@@ -1,12 +1,12 @@
 import { deletePrefix, signedUrl } from "@pluck/blob";
 import {
   batchTags, batchUpdate, countAiTagged, countItems, createHighlight, createTag, deleteTag, listTags, nearestTags, purgeAiTags, renameTag,
-  resolveTags, setItemTags, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys, listHighlights,
+  resolveTags, searchItems, setItemTags, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys, listHighlights,
   listItems, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, updateHighlight,
 } from "@pluck/db";
 import {
   extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type CreateItemBody, type CreateItemResult, type Item, type ItemPage,
-  type BatchBody, type CreateHighlightBody, type Highlight, type ListItemsQuery, type Tag, type PluckResponse, type Status, type UpdateItemBody,
+  type BatchBody, type CreateHighlightBody, type Highlight, type ListItemsQuery, type SearchQuery, type SearchResults, type Tag, type PluckResponse, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "./errors";
 import { extractAttempt } from "./capture";
@@ -200,5 +200,8 @@ export async function coverLocation(userId: string, itemId: string): Promise<str
   if (!keys?.coverKey) throw new ApiError("not_found", "No cover.", 404);
   return signedUrl(keys.coverKey, 600);
 }
+
+// Text search, no vectors: "by meaning" is your AI's job through the connector.
+export const search = (userId: string, q: SearchQuery): Promise<SearchResults> => searchItems(userId, q);
 
 export const browse = (userId: string, q: ListItemsQuery): Promise<ItemPage> => listItems(userId, q);

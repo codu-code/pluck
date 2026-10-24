@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { deriveExcerpt, deriveTitle, LINK_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
-import { contents, highlights, items, oid, type ItemDoc } from "./collections.ts";
+import { contents, highlights, items, LEAN, oid, type ItemDoc } from "./collections.ts";
+import { bodyForSearch, textForSearch } from "./search.ts";
 
 export const urlHash = (normalizedUrl: string) => createHash("sha256").update(normalizedUrl).digest("hex");
 
@@ -61,6 +62,7 @@ export async function pluckLink(
           author: null, excerpt: null, coverKey: null, htmlKey: null, dueAt: null, tagIds: [], note: input.note?.trim() || null,
           source: input.source, readingProgress: 0, wordCount: null, lang: null,
           extraction: { state: "pending", attempts: 0, lastError: null }, createdAt: now, lastOpenedAt: null,
+          searchText: textForSearch({ url: input.url }),
         },
       },
       { upsert: true, returnDocument: "after", includeResultMetadata: true },
@@ -99,7 +101,7 @@ export async function createTextItem(userId: string, input: TextItemInput): Prom
     excerpt: deriveExcerpt(input.text, !typed), coverKey: null, htmlKey: null, status: "inbox", archivedReason: null,
     dueAt: input.dueAt ?? null, tagIds: [], note: null, source: input.source, readingProgress: 0, wordCount: null, lang: null,
     extraction: { state: "none", attempts: 0, lastError: null }, createdAt: now, updatedAt: now, lastOpenedAt: null,
-    lastTouchedAt: now, statusChangedAt: now, deletedAt: null,
+    lastTouchedAt: now, statusChangedAt: now, deletedAt: null, searchBody: bodyForSearch(input.text),
   };
   await (await items()).insertOne(doc);
   await (await contents()).insertOne({
@@ -147,6 +149,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
   if (current.url === null && text !== undefined) {
     if (titleIsDerived) set.title = deriveTitle(text);
     set.excerpt = deriveExcerpt(text, titleIsDerived);
+    set.searchBody = bodyForSearch(text);
   }
   if (edit.kind !== undefined) set.kind = edit.kind;
   if (edit.dueAt !== undefined) set.dueAt = edit.dueAt;
@@ -272,6 +275,8 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
         canonicalUrl: x.canonicalUrl,
         lang: x.lang,
         wordCount: x.wordCount,
+        searchText: textForSearch({ url: current.url, excerpt: x.excerpt, siteName: x.siteName ?? current.siteName, author: x.author }),
+        searchBody: bodyForSearch(x.markdown),
         extraction: { state: "done", attempts: current.extraction.attempts + 1, lastError: null },
         updatedAt: new Date(),
       },
@@ -308,7 +313,7 @@ export async function setBlobKeys(userId: string, itemId: string, keys: { coverK
 }
 
 export async function getItem(userId: string, itemId: string): Promise<Item | null> {
-  const doc = await (await items()).findOne({ _id: oid(itemId), userId: oid(userId), deletedAt: null });
+  const doc = await (await items()).findOne({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, LEAN);
   return doc && toItem(doc);
 }
 
@@ -372,7 +377,7 @@ export async function listItems(userId: string, q: ListItemsQuery): Promise<Item
     } else Object.assign(filter, page);
   }
   const docs = await (await items())
-    .find(filter)
+    .find(filter, LEAN)
     .sort({ [field]: dir, _id: dir })
     .limit(q.limit + 1)
     .toArray();

@@ -13,3 +13,4 @@ export { hitRateLimit } from "./rate-limit.ts";
 export {
   slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, batchTags, purgeAiTags, countAiTagged,
 } from "./tags.ts";
+export { searchItems, snippetFor } from "./search.ts";

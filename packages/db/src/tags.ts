@@ -1,6 +1,7 @@
 import type { Tag } from "@pluck/shared-schemas";
 import { ObjectId, type UpdateFilter } from "mongodb";
 import type { ItemDoc } from "./collections.ts";
+import { syncTagNames } from "./search.ts";
 import { items, oid, tags, type TagDoc } from "./collections.ts";
 
 // Muted colours for the dot beside a tag in Settings, handed out in order.
@@ -75,6 +76,7 @@ export async function renameTag(userId: string, id: string, name: string): Promi
     { $set: { name: name.trim().slice(0, 40), slug, createdBy: "user" } },
     { returnDocument: "after" },
   );
+  if (doc) await syncTagNames(uid, { tagIds: doc._id });
   return doc && toTag(doc);
 }
 
@@ -91,9 +93,11 @@ export async function deleteTag(userId: string, id: string, opts: { reassignTo: 
     if (target.equals(tagId) || !(await t.findOne({ _id: target, userId: uid }))) return false;
     await col.updateMany({ userId: uid, tagIds: tagId }, { $addToSet: { tagIds: target } });
   }
+  const affected = (await col.find({ userId: uid, tagIds: tagId }, { projection: { _id: 1 } }).toArray()).map((d) => d._id);
   await col.updateMany({ userId: uid, tagIds: tagId }, { $pull: { tagIds: tagId, aiTags: { tagId } } });
   await t.deleteOne({ _id: tagId, userId: uid });
   if (target) await recount(uid, [target]);
+  await syncTagNames(uid, { _id: { $in: affected } });
   return true;
 }
 
@@ -151,6 +155,7 @@ export async function setItemTags(userId: string, itemId: string, tagIds: string
       : [...(current.aiTags ?? []).filter((a) => next.some((t) => t.equals(a.tagId))), ...added.map((tagId) => ({ tagId, at: now }))];
   await col.updateOne({ _id: current._id }, { $set: { tagIds: next, aiTags, lastTouchedAt: now, updatedAt: now } });
   await recount(uid, [...new Set([...current.tagIds, ...next].map((t) => t.toHexString()))].map(oid));
+  await syncTagNames(uid, { _id: current._id });
   return true;
 }
 
@@ -183,6 +188,7 @@ export async function batchTags(userId: string, itemIds: string[], add: string[]
     modified += res.modifiedCount;
   }
   await recount(uid, [...addIds, ...removeIds]);
+  await syncTagNames(uid, { _id: { $in: itemIds.map(oid) } });
   return modified;
 }
 
@@ -206,6 +212,7 @@ export async function purgeAiTags(userId: string, days: number): Promise<{ assig
   }
   const ids = [...touched].map(oid);
   await recount(uid, ids);
+  await syncTagNames(uid, { _id: { $in: affected.map((it) => it._id) } });
   const t = await tags();
   const res = await t.deleteMany({ userId: uid, _id: { $in: ids }, createdBy: "mcp", count: 0 });
   return { assignments, tags: res.deletedCount };

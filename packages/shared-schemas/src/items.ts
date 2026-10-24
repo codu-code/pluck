@@ -154,3 +154,24 @@ export const DeleteTagQuery = z.union([
   z.object({ removeFromItems: z.literal("true") }),
 ]);
 export const PurgeAiBody = z.object({ days: z.number().int().min(1).max(90).default(7) });
+
+export const SearchQuery = z.object({
+  q: z.string().trim().min(1).max(500),
+  kinds: z.array(Kind).optional(),
+  tagIds: z.array(ObjectIdString).max(10).optional(),
+  listId: ObjectIdString.optional(),
+  status: Status.optional(), // omitted: everything but the bin, Archive included
+  since: z.iso.datetime({ offset: true }).optional(),
+  until: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(25),
+  cursor: z.string().optional(),
+});
+export type SearchQuery = z.infer<typeof SearchQuery>;
+
+export const SearchHit = z.object({
+  item: Item,
+  snippet: z.object({ source: z.enum(["note", "body", "excerpt"]), pre: z.string(), hit: z.string(), post: z.string() }).nullable(),
+});
+export type SearchHit = z.infer<typeof SearchHit>;
+export const SearchResults = z.object({ results: z.array(SearchHit), total: z.number().int(), nextCursor: z.string().nullable() });
+export type SearchResults = z.infer<typeof SearchResults>;
