@@ -88,7 +88,7 @@ Seams agreed so far, in the codebase-design vocabulary:
 - Vercel: `EMAIL_IN_DOMAIN=in.getpluck.io`.
 - Copy `pluck/app-user` from Secrets Manager into Vercel as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Set `S3_BUCKET` to the `BucketName` output. No `S3_ENDPOINT` in prod.
 - Vercel: `DIGEST_SECRET` (random, optional; falls back to `BETTER_AUTH_SECRET`, but a separate one lets you revoke digest links without signing everyone out).
-- Vercel: `ADMIN_EMAILS` (your address), `ABUSE_EMAIL` (the [ABUSE EMAIL] placeholder once it exists).
+- Vercel: `ADMIN_EMAILS` (your address), `ABUSE_EMAIL` (where reports are emailed).
 - Extension: `pnpm --filter @pluck/extension zip` (and `build:firefox` then `wxt zip -b firefox --mv3`) for the stores. Chrome Web Store and Firefox Add-ons listings need the privacy URL (`/privacy`), a 30-second video and the data-use answers (page content and addresses go to the person's own Pluck server; nothing else). Firefox id `extension@getpluck.io`.
 - MCP: `BETTER_AUTH_URL` must be the public origin with no trailing slash; it becomes the token audience (`<origin>/mcp`) and the issuer. Keep `/.well-known/*` and `/mcp` free of apex-to-www redirects. The JWKS lives in the `jwks` collection; do not delete it or every connector token dies.
 - Publish `packages/mcp-stdio` to npm as `@pluck/mcp` (`pnpm --filter @pluck/mcp build && npm publish --access public` from that folder) before the Settings npx line means anything to self-hosters.

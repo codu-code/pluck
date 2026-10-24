@@ -75,10 +75,7 @@ Listed on every test run by `scripts/placeholders.test.ts`; the current set:
 | Placeholder | Where | What it is |
 |---|---|---|
 | `[CONNECTOR GIF]` | Settings, AI tools | A 20-second clip of adding the connector in an AI tool |
-| `[REPO URL]`, `[ORG]` | `apps/web/lib/site.ts` (header GitHub link, Open source page) | The public repository |
 | `[CHROME STORE URL]`, `[FIREFOX ADDONS URL]`, `[APP STORE URL]` | `apps/web/lib/site.ts` (home page buttons) | Store listings |
-| `[LICENCE]` | `apps/web/lib/site.ts` (Open source footer, Terms) | The licence name (spec: AGPL-3.0 server, MIT clients) |
 | `[DATE]` | Privacy, Terms | "Last updated" |
-| `[PRIVACY EMAIL]`, `[LEGAL ENTITY]`, `[ADDRESS]` | Privacy | Contact and company |
-| `[HOSTING PROVIDER]`, `[REGION]` | Privacy | Where the hosted service runs |
-| `[ABUSE EMAIL]`, `[RESPONSE DAYS]` | Terms | Report contact and response time |
+| `[LEGAL ENTITY]`, `[ADDRESS]` | Privacy | The company behind Pluck |
+| `[RESPONSE DAYS]` | Terms | Takedown response time |
