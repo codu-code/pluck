@@ -5,6 +5,9 @@ import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 import { ConnectTabs } from "./ConnectTabs";
 
+// The connector URL is this server's own, so a self-hosted copy shows its address, not the one it was built with.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Connect your AI · Pluck",
   description: "Pluck speaks MCP. One link and the AI tool you already use can read, search and sort your library.",

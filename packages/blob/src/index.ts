@@ -8,6 +8,14 @@ const s3 = () =>
     region: process.env.AWS_REGION ?? "eu-west-1",
     ...(process.env.S3_ENDPOINT ? { endpoint: process.env.S3_ENDPOINT, forcePathStyle: true } : {}),
   }));
+// URLs handed to a browser or phone (uploads, covers, exports) are signed for the address it can reach. With
+// MinIO in Docker that differs from the server's own (http://minio:9000 inside, http://localhost:9000 outside).
+let publicClient: S3Client | undefined;
+const s3Public = () =>
+  process.env.S3_PUBLIC_ENDPOINT
+    ? (publicClient ??= new S3Client({ region: process.env.AWS_REGION ?? "eu-west-1", endpoint: process.env.S3_PUBLIC_ENDPOINT, forcePathStyle: true }))
+    : s3();
+
 const bucket = () => {
   const b = process.env.S3_BUCKET;
   if (!b) throw new Error("S3_BUCKET is not set");
@@ -32,11 +40,11 @@ export async function getObject(key: string): Promise<Buffer> {
 
 // A short-lived URL a browser can PUT a file to directly (imports can be bigger than a request body allows).
 export function signedPutUrl(key: string, contentType: string, expiresIn = 900): Promise<string> {
-  return getSignedUrl(s3(), new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }), { expiresIn });
+  return getSignedUrl(s3Public(), new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }), { expiresIn });
 }
 
 export function signedUrl(key: string, expiresIn = 300): Promise<string> {
-  return getSignedUrl(s3(), new GetObjectCommand({ Bucket: bucket(), Key: key }), { expiresIn });
+  return getSignedUrl(s3Public(), new GetObjectCommand({ Bucket: bucket(), Key: key }), { expiresIn });
 }
 
 // Removes everything under a prefix. Used by account deletion.

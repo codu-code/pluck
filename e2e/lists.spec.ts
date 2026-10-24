@@ -22,7 +22,11 @@ test("build an ordered list from the Inbox, then tick, note, reorder, export and
   for (const _ of [1, 2]) {
     await page.keyboard.press("j");
     await page.keyboard.press("a");
-    await picker(page).getByRole("option", { name: /Talk on MCP auth/ }).click();
+    // Wait for the add itself: the Lists page renders on the server and would miss one still in flight.
+    await Promise.all([
+      page.waitForResponse((r) => /\/api\/v1\/lists\/[^/]+\/items$/.test(new URL(r.url()).pathname) && r.request().method() === "POST"),
+      picker(page).getByRole("option", { name: /Talk on MCP auth/ }).click(),
+    ]);
     await page.keyboard.press("Escape");
   }
 

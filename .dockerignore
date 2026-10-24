@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/.output
+**/.wxt
+**/dist
+**/cdk.out
+apps/ios
+apps/extension
+infra
+docs
+e2e
+test-results
+playwright-report
+.env
+.env.*
+.git
