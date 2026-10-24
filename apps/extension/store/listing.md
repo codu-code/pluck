@@ -27,7 +27,7 @@ The Pluck icon fills in on pages already in your library, so you can see at a gl
 
 No connection? Plucks wait on your computer and go when you are back online.
 
-Pluck is open source. Use getpluck.io, or point the extension at a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
+Pluck is open source. Use getpluck.io, or build the extension for a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
 
 Needs a free Pluck account at https://getpluck.io.
 ```
@@ -39,6 +39,7 @@ Needs a free Pluck account at https://getpluck.io.
 | Store icon (128×128) | `../public/icon/128.png` |
 | Screenshots (1280×800) | `1-pluck-this-page.png`, `2-your-inbox.png`, `3-the-reader.png` |
 | Small promo tile (440×280) | `promo-small-440x280.png` |
+| Marquee promo tile (1400×560) | `promo-marquee-1400x560.png` |
 
 **Official URL:** https://getpluck.io (needs the domain verified in Search Console under the same Google account)
 
@@ -66,7 +67,6 @@ Pluck saves the web page, link, image or text selection you choose into your own
 | `unlimitedStorage` | Lets plucks made offline keep the page they captured (up to 4 MB each) until they are sent; without it Chrome stops the extension's storage at 10 MB. |
 | `alarms` | Retries plucks that were made offline, once a minute, until they are sent. |
 | Host permission `https://getpluck.io/*` | The Pluck server the extension sends your plucks to and signs in with. |
-| Optional host permission `<all_urls>` | Asked for only to reach a Pluck server you run yourself. Not granted at install. |
 
 **Remote code:** No, I am not using remote code. (Everything runs from the package; the extension only sends and receives JSON.)
 

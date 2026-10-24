@@ -39,7 +39,7 @@ Update with `git pull && docker compose up -d --build`. Back up the `mongo` and 
 
 ## Apps and AI tools against your server
 
-- **Browser extension:** Options, Server, your `PLUCK_URL`. The extension asks for permission to reach it, then signs in through your server, or takes an API key (Settings, API keys).
+- **Browser extension:** the store extension only reaches getpluck.io (one host permission keeps its review short), so build one for your server: `PLUCK_SERVER=<PLUCK_URL> pnpm --filter @pluck/extension build`, then `chrome://extensions`, Developer mode, Load unpacked, `apps/extension/.output/chrome-mv3`. It signs in through your server, or takes an API key (Settings, API keys).
 - **iPhone:** on the sign-in screen, "Use your own server".
 - **AI tools:** the connector is `<PLUCK_URL>/mcp`, with OAuth like the hosted service. For a tool that only speaks stdio, or a server without public HTTPS: `npx @pluck/mcp --server <PLUCK_URL> --key pk_live_…`. See `docs/mcp.md`.
 

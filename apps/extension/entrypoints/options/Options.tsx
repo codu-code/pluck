@@ -34,8 +34,9 @@ export function Options() {
       return setMessage("That is not a web address.");
     }
     if (origin === s.server) return;
-    // Talking to your own server needs permission for its address.
-    if (!(await browser.permissions.request({ origins: [`${origin}/*`] }))) return setMessage("Pluck needs permission to reach that server.");
+    // Only servers this build was made for (its host permissions); others need their own build.
+    if (!(await browser.permissions.contains({ origins: [`${origin}/*`] })))
+      return setMessage("This copy of Pluck only reaches its own server. To use yours, build the extension from the repo: see docs/self-host.md.");
     await signOut();
     await save({ server: origin });
     setServer(origin);
