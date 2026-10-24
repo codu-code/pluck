@@ -42,11 +42,11 @@ test("a page that cannot be read says so and offers Retry, the original and the 
   await expect(page.getByRole("link", { name: "Try the Wayback copy" })).toHaveAttribute("href", `https://web.archive.org/web/*/${FIX}/gone.html`);
 });
 
-test("text that is not a link is refused with a readable message", async ({ page }) => {
+test("a URL that is not a link is refused with a readable message", async ({ page }) => {
   await signIn(page);
-  const box = page.getByRole("textbox", { name: "Pluck" });
-  await box.fill("javascript:alert(1)");
-  await box.press("Enter");
-  await expect(page.getByRole("alert").filter({ hasText: "Pluck" })).toHaveText("That is not a link Pluck can open.");
-  await expect(page.getByRole("heading", { name: "Nothing plucked yet." })).toBeVisible();
+  const res = await page.request.post("/api/v1/items", { data: { url: "javascript:alert(1)" } });
+  expect(res.status()).toBe(400);
+  expect(await res.json()).toEqual({ results: [], rejected: [{ input: "javascript:alert(1)", message: "That is not a link Pluck can open." }] });
+  const anon = await page.context().request.fetch("/api/v1/items", { method: "POST", data: { url: "https://example.com" }, headers: { cookie: "" } });
+  expect(anon.status()).toBe(401);
 });

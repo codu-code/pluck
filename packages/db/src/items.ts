@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { Item, ItemPage, Kind, ListItemsQuery, Source } from "@pluck/shared-schemas";
+import { deriveExcerpt, deriveTitle, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, items, oid, type ItemDoc } from "./collections.ts";
 
@@ -80,6 +80,67 @@ export async function pluckLink(
     ))!;
   }
   return { item: toItem(doc), created, needsExtraction: created || doc.extraction.state === "failed" };
+}
+
+export type TextItemInput = { kind: TextKind; text: string; title?: string | null; dueAt?: Date | null; source: Source };
+
+// A Note, Todo or Thing: no URL, no extraction, the body in contents with extractor "user".
+export async function createTextItem(userId: string, input: TextItemInput): Promise<Item> {
+  const now = new Date();
+  const uid = oid(userId);
+  const typed = input.title?.trim();
+  const doc: ItemDoc = {
+    _id: new ObjectId(), userId: uid, kind: input.kind, url: null, canonicalUrl: null,
+    title: typed || deriveTitle(input.text), titleIsDerived: !typed, siteName: null, author: null,
+    excerpt: deriveExcerpt(input.text, !typed), coverKey: null, htmlKey: null, status: "inbox", archivedReason: null,
+    dueAt: input.dueAt ?? null, tagIds: [], note: null, source: input.source, readingProgress: 0, wordCount: null, lang: null,
+    extraction: { state: "none", attempts: 0, lastError: null }, createdAt: now, updatedAt: now, lastOpenedAt: null,
+    lastTouchedAt: now, deletedAt: null,
+  };
+  await (await items()).insertOne(doc);
+  await (await contents()).insertOne({
+    _id: new ObjectId(), itemId: doc._id, userId: uid, textMarkdown: input.text, extractor: "user", bytes: Buffer.byteLength(input.text),
+  });
+  return toItem(doc);
+}
+
+export type ItemEdit = { title?: string; text?: string; kind?: Kind; dueAt?: Date | null };
+
+// Edits by the person. Title rules: a typed title sticks; an empty one goes back to the first line.
+// The caller has already checked the edit fits the item (text and text kinds only on items with no URL).
+export async function editItem(userId: string, itemId: string, edit: ItemEdit): Promise<Item | null> {
+  const uid = oid(userId);
+  const _id = oid(itemId);
+  const col = await items();
+  const current = await col.findOne({ _id, userId: uid, deletedAt: null });
+  if (!current) return null;
+  const now = new Date();
+  const set: Partial<ItemDoc> = { updatedAt: now, lastTouchedAt: now };
+  let text: string | undefined = edit.text;
+  if (edit.text !== undefined) {
+    await (await contents()).updateOne(
+      { itemId: _id, userId: uid },
+      { $set: { textMarkdown: edit.text, extractor: "user", bytes: Buffer.byteLength(edit.text) } },
+      { upsert: true },
+    );
+  } else if (edit.title !== undefined && current.url === null) {
+    text = (await (await contents()).findOne({ itemId: _id, userId: uid }))?.textMarkdown ?? "";
+  }
+  let titleIsDerived = current.titleIsDerived;
+  if (edit.title !== undefined) {
+    const typed = edit.title.trim();
+    titleIsDerived = !typed;
+    set.titleIsDerived = titleIsDerived;
+    if (typed) set.title = typed;
+  }
+  if (current.url === null && text !== undefined) {
+    if (titleIsDerived) set.title = deriveTitle(text);
+    set.excerpt = deriveExcerpt(text, titleIsDerived);
+  }
+  if (edit.kind !== undefined) set.kind = edit.kind;
+  if (edit.dueAt !== undefined) set.dueAt = edit.dueAt;
+  const doc = await col.findOneAndUpdate({ _id, userId: uid }, { $set: set }, { returnDocument: "after" });
+  return doc && toItem(doc);
 }
 
 export type ExtractionResult = {

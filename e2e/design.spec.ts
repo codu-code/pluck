@@ -35,5 +35,13 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   });
   await page.waitForURL(/\/items\//);
   await snap("item-failed");
-  await page.goto("/signin");
+  await page.goto("/inbox");
+  await box.fill("Kitchen plan\nHob on the island.");
+  await box.press("Enter");
+  await page.getByRole("link", { name: "Kitchen plan" }).first().click();
+  await page.waitForURL(/\/items\//);
+  await snap("note-editor");
+  await page.goto("/inbox");
+  await box.fill("Buy an induction hob");
+  await snap("paste-box-text");
 });

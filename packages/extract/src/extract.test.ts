@@ -27,5 +27,6 @@ describe.each(fixtures)("$file", (f) => {
     if (f.canonical) expect(out.canonicalUrl).toBe(f.canonical);
     if (f.author) expect(out.author).toBe(f.author);
     if (f.kind === "video") expect(out.kind).toBe("video");
+    expect(out.excerpt ?? "").not.toMatch(/\\[.\-*#]/); // no markdown escapes in the row's second line
   });
 });

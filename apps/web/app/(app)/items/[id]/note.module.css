@@ -1,0 +1,21 @@
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 32px; border-bottom: 1px solid var(--line); }
+.back { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px; text-decoration: none; color: var(--ink2); }
+.kbd { font: 11px var(--font-ui); border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 5px; }
+.state { color: var(--ink2); font-size: 13px; margin-left: 8px; }
+.layout { display: flex; flex-wrap: wrap; gap: 48px; padding: 40px 32px 64px; align-items: flex-start; }
+.editor { flex: 999 1 480px; max-width: 680px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.meta { color: var(--ink2); font-size: 13px; }
+.field { display: flex; flex-direction: column; }
+.visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.title, .body { border: 0; outline: none; padding: 0; background: transparent; font-family: var(--font-reader); color: var(--ink); }
+.title { font-size: 36px; line-height: 44px; font-weight: 600; letter-spacing: -0.015em; }
+.title::placeholder { color: var(--ink); opacity: 0.45; }
+.body { resize: vertical; font-size: 18px; line-height: 29px; }
+/* The board draws no box round the writing surfaces; the caret is the focus cue. */
+.title:focus-visible, .body:focus-visible { outline: none; }
+.aside { flex: 1 1 280px; max-width: 320px; display: flex; flex-direction: column; gap: 24px; }
+.group { display: flex; flex-direction: column; gap: 8px; }
+.groupTitle { font-weight: 600; }
+.select { height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font: inherit; color: var(--ink); }
+.foot { display: flex; flex-direction: column; gap: 6px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink2); font-size: 13px; }
+@media (max-width: 600px) { .layout { padding: 24px 16px 48px; gap: 32px; } .bar { padding: 8px 16px; } .title { font-size: 28px; line-height: 34px; } }

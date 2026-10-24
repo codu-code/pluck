@@ -30,8 +30,30 @@ export function ago(iso: string, now = new Date()): string {
   return `on ${w}`;
 }
 
-// "12 min", "photo", "Plucking", "Couldn't read".
-export function rowMeta(item: Item): string {
+const SHORT_DUE = new Intl.DateTimeFormat("en-GB", { weekday: "short" });
+
+// "due Fri" within the coming week, "due 3 Nov" after that.
+export function dueLabel(iso: string, now = new Date()): string {
+  const d = new Date(iso);
+  const days = Math.round((startOfDay(d) - startOfDay(now)) / DAY);
+  if (days < 0) return "overdue";
+  if (days === 0) return "due today";
+  if (days === 1) return "due tomorrow";
+  if (days < 7) return `due ${SHORT_DUE.format(d)}`;
+  return `due ${DAY_MONTH.format(d)}`;
+}
+
+const TEXT_SITE = { note: "Note", todo: "Todo", thing: "Thing" } as const;
+
+// The row's "site" slot: the site for links, the kind for notes, todos and things.
+export function rowSite(item: Item): string {
+  if (item.url === null) return TEXT_SITE[item.kind as keyof typeof TEXT_SITE] ?? "Note";
+  return item.siteName ?? new URL(item.url).hostname;
+}
+
+// "12 min", "photo", "Plucking", "Couldn't read", "by you", "due Fri".
+export function rowMeta(item: Item, now = new Date()): string {
+  if (item.url === null) return item.dueAt ? dueLabel(item.dueAt, now) : item.source === "mcp" ? "by AI" : "by you";
   if (item.extraction.state === "failed") return "Couldn't read";
   if (item.extraction.state === "pending") return "Plucking";
   if (item.kind === "image") return "photo";

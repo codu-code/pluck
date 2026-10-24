@@ -1,0 +1,163 @@
+[
+  {
+    "name": "one bare URL",
+    "text": "https://example.com/a",
+    "urls": [
+      "https://example.com/a"
+    ]
+  },
+  {
+    "name": "five URLs on lines",
+    "text": "https://a.example/1\nhttps://b.example/2\nhttps://c.example/3\nhttps://d.example/4\nhttps://e.example/5",
+    "urls": [
+      "https://a.example/1",
+      "https://b.example/2",
+      "https://c.example/3",
+      "https://d.example/4",
+      "https://e.example/5"
+    ]
+  },
+  {
+    "name": "sentence punctuation",
+    "text": "Read https://example.com/post. Then https://example.org/next, and https://example.net/last!",
+    "urls": [
+      "https://example.com/post",
+      "https://example.org/next",
+      "https://example.net/last"
+    ]
+  },
+  {
+    "name": "parentheses around a link",
+    "text": "(see https://example.com/a) and also (https://example.com/b).",
+    "urls": [
+      "https://example.com/a",
+      "https://example.com/b"
+    ]
+  },
+  {
+    "name": "balanced parentheses inside",
+    "text": "https://en.wikipedia.org/wiki/Mercury_(planet) is the one",
+    "urls": [
+      "https://en.wikipedia.org/wiki/Mercury_(planet)"
+    ]
+  },
+  {
+    "name": "markdown links",
+    "text": "- [Indexes](https://example.com/indexes)\n- [Windows](https://example.com/windows \"title\")",
+    "urls": [
+      "https://example.com/indexes",
+      "https://example.com/windows"
+    ]
+  },
+  {
+    "name": "angle brackets",
+    "text": "Links: <https://example.com/a>, <https://example.com/b>",
+    "urls": [
+      "https://example.com/a",
+      "https://example.com/b"
+    ]
+  },
+  {
+    "name": "bare www host",
+    "text": "try www.example.com/page and WWW.Example.org",
+    "urls": [
+      "https://www.example.com/page",
+      "https://www.example.org/"
+    ]
+  },
+  {
+    "name": "duplicates by tracking params",
+    "text": "https://example.com/a?utm_source=x https://example.com/a?utm_medium=y https://example.com/a#frag",
+    "urls": [
+      "https://example.com/a"
+    ]
+  },
+  {
+    "name": "X share text",
+    "text": "Pick one boring stack. Ship on Sunday night. https://x.com/niall/status/123?s=20&t=abc",
+    "urls": [
+      "https://x.com/niall/status/123"
+    ]
+  },
+  {
+    "name": "YouTube description",
+    "text": "Chapters\n0:00 Intro\nSlides: https://example.com/slides.pdf\nCode: https://github.com/example/repo\nhttps://youtu.be/abc123?si=share",
+    "urls": [
+      "https://example.com/slides.pdf",
+      "https://github.com/example/repo",
+      "https://youtu.be/abc123"
+    ]
+  },
+  {
+    "name": "email addresses are not links",
+    "text": "write to hello@example.com or niall@www.example.com, see https://example.com",
+    "urls": [
+      "https://example.com/"
+    ]
+  },
+  {
+    "name": "quotes",
+    "text": "\"https://example.com/q1\" and 'https://example.com/q2' and “https://example.com/q3”",
+    "urls": [
+      "https://example.com/q1",
+      "https://example.com/q2",
+      "https://example.com/q3"
+    ]
+  },
+  {
+    "name": "ellipsis and colon",
+    "text": "Read this: https://example.com/long… or https://example.com/other:",
+    "urls": [
+      "https://example.com/long",
+      "https://example.com/other"
+    ]
+  },
+  {
+    "name": "query strings kept and sorted",
+    "text": "https://example.com/s?q=mcp&page=2",
+    "urls": [
+      "https://example.com/s?page=2&q=mcp"
+    ]
+  },
+  {
+    "name": "no links at all",
+    "text": "Remember to measure the worktop cut-out twice.",
+    "urls": []
+  },
+  {
+    "name": "other schemes ignored",
+    "text": "ftp://example.com/file mailto:a@example.com javascript:alert(1) https://example.com/ok",
+    "urls": [
+      "https://example.com/ok"
+    ]
+  },
+  {
+    "name": "CJK punctuation",
+    "text": "看这个https://example.com/zh。还有https://example.com/zh2，好",
+    "urls": [
+      "https://example.com/zh",
+      "https://example.com/zh2"
+    ]
+  },
+  {
+    "name": "comma separated",
+    "text": "https://a.example/1,https://b.example/2,https://c.example/3",
+    "urls": [
+      "https://a.example/1",
+      "https://b.example/2",
+      "https://c.example/3"
+    ]
+  },
+  {
+    "name": "Wayback link stays whole",
+    "text": "https://web.archive.org/web/2024/https://example.com/gone",
+    "urls": [
+      "https://web.archive.org/web/2024/https://example.com/gone"
+    ]
+  },
+  {
+    "name": "fifty-five links capped at fifty",
+    "generate": 55,
+    "expectCount": 50
+  }
+]

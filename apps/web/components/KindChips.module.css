@@ -1,0 +1,8 @@
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip, .subchip {
+  border: 1px solid var(--line-strong); background: transparent; color: var(--ink); font: inherit; cursor: pointer;
+}
+.chip { height: 32px; padding: 0 12px; border-radius: 16px; font-size: 13px; }
+.subchip { height: 28px; padding: 0 10px; border-radius: 14px; font-size: 12px; }
+.chip[aria-pressed="true"], .subchip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.sub { display: inline-flex; gap: 4px; align-items: center; padding-left: 6px; border-left: 1px solid var(--line-strong); }

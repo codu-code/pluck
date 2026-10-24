@@ -25,7 +25,9 @@ export type Extracted = {
 
 const countWords = (text: string) => (text.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) ?? []).length;
 const clean = (s: string | null | undefined) => (s && s.replace(/\s+/g, " ").trim()) || null;
-const excerptOf = (text: string) => clean(text.replace(/[#>*_`[\]()!-]/g, " ").slice(0, 400))?.slice(0, 200) ?? null;
+// Plain text for the row's second line: markdown escapes and markup removed.
+const excerptOf = (text: string) =>
+  clean(text.replace(/\\([\\`*_{}[\]()#+\-.!>|])/g, "$1").replace(/[#>*_`[\]()!]|^-\s/gm, " ").slice(0, 400))?.slice(0, 200) ?? null;
 const VIDEO_HOSTS = /(^|\.)(youtube\.com|youtu\.be|vimeo\.com)$/;
 
 function meta(doc: Document, ...names: string[]): string | null {

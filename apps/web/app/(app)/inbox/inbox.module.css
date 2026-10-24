@@ -3,3 +3,4 @@
 .title { margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em; }
 .rows { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 @media (max-width: 600px) { .page { padding: 20px 16px 32px; } }
+.none { margin: 0; padding: 24px 12px; color: var(--ink2); }

@@ -37,11 +37,43 @@ const Optional = {
   source: Source.optional(),
 };
 
-export const CreateItemBody = z.object({ url: z.string().min(1).max(4096), ...Optional });
+export const DueAt = z.iso.datetime({ offset: true });
+
+// One of: { url }, { urls[] } (max 50), or { text }. Text with no kind becomes one link item per URL
+// found in it, or a Note when it has none. Text with kind note, todo or thing becomes that kind.
+export const CreateItemBody = z
+  .object({
+    url: z.string().min(1).max(4096).optional(),
+    urls: z.array(z.string().min(1).max(4096)).min(1).max(50).optional(),
+    text: z.string().min(1).max(100_000).optional(),
+    kind: Kind.optional(),
+    dueAt: DueAt.optional(),
+    ...Optional,
+  })
+  .refine((b) => [b.url, b.urls, b.text].filter((v) => v !== undefined).length === 1, {
+    message: "Send exactly one of url, urls or text.",
+  });
 export type CreateItemBody = z.infer<typeof CreateItemBody>;
 
 export const CreateItemResult = z.object({ item: Item, created: z.boolean() });
 export type CreateItemResult = z.infer<typeof CreateItemResult>;
+
+export const PluckResponse = z.object({
+  results: z.array(CreateItemResult),
+  rejected: z.array(z.object({ input: z.string(), message: z.string() })),
+});
+export type PluckResponse = z.infer<typeof PluckResponse>;
+
+// Grows slice by slice (status, tags, note and progress land with triage and tags).
+export const UpdateItemBody = z
+  .object({
+    title: z.string().max(500).optional(), // "" goes back to the derived title
+    text: z.string().max(100_000).optional(), // notes, todos and things only
+    kind: Kind.optional(),
+    dueAt: DueAt.nullable().optional(),
+  })
+  .strict();
+export type UpdateItemBody = z.infer<typeof UpdateItemBody>;
 
 export const ListItemsQuery = z.object({
   status: Status.default("inbox"),

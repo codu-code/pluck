@@ -1,6 +1,9 @@
 import { signedUrl } from "@pluck/blob";
-import { getContent, getItem, getItemBlobKeys, listItems, pluckLink, resetExtraction } from "@pluck/db";
-import { normalizeUrl, type CreateItemBody, type CreateItemResult, type Item, type ItemPage, type ListItemsQuery } from "@pluck/shared-schemas";
+import { createTextItem, editItem, getContent, getItem, getItemBlobKeys, listItems, pluckLink, resetExtraction } from "@pluck/db";
+import {
+  extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type CreateItemBody, type CreateItemResult, type Item, type ItemPage,
+  type ListItemsQuery, type PluckResponse, type UpdateItemBody,
+} from "@pluck/shared-schemas";
 import { ApiError } from "./errors";
 import { extractAttempt } from "./capture";
 
@@ -9,7 +12,55 @@ import { extractAttempt } from "./capture";
 type Defer = (task: () => Promise<void>) => void;
 const INLINE_TIMEOUT_MS = 5000;
 
-export async function pluck(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
+// Everything POST /items accepts: one URL, many URLs, text with links in it, or a note, todo or thing.
+export async function pluckAny(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<PluckResponse> {
+  const source = body.source ?? "web";
+  if (body.text !== undefined && (isTextKind(body.kind) || extractUrls(body.text).length === 0)) {
+    const item = await createTextItem(userId, {
+      kind: isTextKind(body.kind) ? body.kind : "note", text: body.text, title: body.title, source,
+      dueAt: body.dueAt ? new Date(body.dueAt) : null,
+    });
+    return { results: [{ item, created: true }], rejected: [] };
+  }
+  const inputs = body.url !== undefined ? [body.url] : (body.urls ?? extractUrls(body.text!));
+  if (inputs.length === 1) {
+    try {
+      return { results: [await pluck(userId, { ...body, url: inputs[0]! }, { defer })], rejected: [] };
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 400) return { results: [], rejected: [{ input: inputs[0]!, message: e.message }] };
+      throw e;
+    }
+  }
+  // Many links: every row lands now, pages are read after the response (or by the retry queue).
+  const results: CreateItemResult[] = [];
+  const rejected: PluckResponse["rejected"] = [];
+  const toExtract: Item[] = [];
+  for (const input of inputs) {
+    const url = normalizeUrl(input);
+    if (!url) {
+      rejected.push({ input, message: "That is not a link Pluck can open." });
+      continue;
+    }
+    const { item, created, needsExtraction } = await pluckLink(userId, { url, source });
+    results.push({ item, created });
+    if (needsExtraction) toExtract.push(item);
+  }
+  const work = () => extractMany(userId, toExtract);
+  if (defer) defer(work);
+  else await work();
+  return { results, rejected };
+}
+
+async function extractMany(userId: string, items: Item[], concurrency = 6): Promise<void> {
+  const queue = [...items];
+  await Promise.all(
+    Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
+      for (let item = queue.shift(); item; item = queue.shift()) await extractAttempt(userId, item, { timeoutMs: 15_000 });
+    }),
+  );
+}
+
+export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
   const url = normalizeUrl(body.url);
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
   const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
@@ -32,6 +83,21 @@ export async function readItem(userId: string, itemId: string): Promise<Item> {
 // The kept text of an item: the reader view and what an AI tool reads.
 export async function readText(userId: string, itemId: string): Promise<string> {
   return (await getContent(userId, itemId))?.textMarkdown ?? "";
+}
+
+// Edits from the person. Text and the text kinds belong to items with no URL; link kinds to items with one.
+export async function updateItem(userId: string, itemId: string, patch: UpdateItemBody): Promise<Item> {
+  const current = await readItem(userId, itemId);
+  const hasUrl = current.url !== null;
+  if (patch.text !== undefined && hasUrl) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
+  if (patch.kind && hasUrl !== (LINK_KINDS as readonly string[]).includes(patch.kind))
+    throw new ApiError("bad_request", hasUrl ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
+  const updated = await editItem(userId, itemId, {
+    ...patch,
+    dueAt: patch.dueAt === undefined ? undefined : patch.dueAt === null ? null : new Date(patch.dueAt),
+  });
+  if (!updated) throw new ApiError("not_found", "No such item.", 404);
+  return updated;
 }
 
 // A short-lived URL for an item's cover in the private bucket.

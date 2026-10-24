@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  applyExtraction, getContent, getItem, getItemBlobKeys, listItems, pluckLink, recordExtractionFailure, resetExtraction, setBlobKeys,
+  applyExtraction, createTextItem, editItem, getContent, getItem, getItemBlobKeys, listItems, pluckLink, recordExtractionFailure, resetExtraction, setBlobKeys,
 } from "./index.ts";
 import { items } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
@@ -97,4 +97,35 @@ test("listItems pages newest first with opaque cursors", async () => {
 test("a malformed id finds nothing", async () => {
   const { a } = await twoUsers();
   expect(await getItem(a, "not-an-id")).toBeNull();
+});
+
+describe("notes, todos and things", () => {
+  test("a note takes its title from the first line until a title is typed, and back again when cleared", async () => {
+    const { a, b } = await twoUsers();
+    const note = await createTextItem(a, { kind: "note", text: "Kitchen plan\nHob under the window.", source: "web" });
+    expect(note).toMatchObject({ kind: "note", url: null, title: "Kitchen plan", titleIsDerived: true, excerpt: "Hob under the window." });
+    expect(note.extraction.state).toBe("none");
+    expect((await getContent(a, note.id))?.textMarkdown).toBe("Kitchen plan\nHob under the window.");
+
+    expect((await editItem(a, note.id, { text: "Kitchen plan v2\nHob on the island." }))?.title).toBe("Kitchen plan v2");
+    const typed = await editItem(a, note.id, { title: "Reno" });
+    expect(typed).toMatchObject({ title: "Reno", titleIsDerived: false, excerpt: "Kitchen plan v2 Hob on the island." });
+    expect((await editItem(a, note.id, { text: "Third draft\nbody" }))?.title).toBe("Reno");
+    expect((await editItem(a, note.id, { title: "" }))?.title).toBe("Third draft");
+
+    // B can neither edit nor read it.
+    expect(await editItem(b, note.id, { text: "hijack" })).toBeNull();
+    expect((await getContent(a, note.id))?.textMarkdown).toBe("Third draft\nbody");
+  });
+
+  test("kind and due date change, and notes have no URL hash so many can exist", async () => {
+    const { a } = await twoUsers();
+    const one = await createTextItem(a, { kind: "note", text: "same", source: "web" });
+    const two = await createTextItem(a, { kind: "note", text: "same", source: "web" });
+    expect(one.id).not.toBe(two.id);
+    const due = new Date("2026-11-03T09:00:00.000Z");
+    const todo = await editItem(a, one.id, { kind: "todo", dueAt: due });
+    expect(todo).toMatchObject({ kind: "todo", dueAt: due.toISOString() });
+    expect((await editItem(a, one.id, { dueAt: null }))?.dueAt).toBeNull();
+  });
 });

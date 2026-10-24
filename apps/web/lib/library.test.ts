@@ -2,7 +2,7 @@ import { getContent, getItemBlobKeys, pendingJobCount } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "./jobs";
-import { pluck, readItem } from "./library";
+import { pluck, pluckAny, readItem, readText, updateItem } from "./library";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -56,4 +56,46 @@ test("a PDF link keeps its text and the file", async () => {
 test("not a link is a 400 with a sentence a person can read", async () => {
   const { a } = await twoUsers();
   await expect(pluck(a, { url: "javascript:alert(1)" })).rejects.toMatchObject({ status: 400, code: "bad_request" });
+});
+
+test("a block of text with links makes one item per link and reads them all", async () => {
+  const { a } = await twoUsers();
+  const text = `Two for later: ${FIX}/news-3.html and ${FIX}/blog-1.html, plus ${FIX}/news-3.html?utm_source=dup and javascript:void(0)`;
+  const res = await pluckAny(a, { text });
+  expect(res.results).toHaveLength(2);
+  expect(res.rejected).toHaveLength(0);
+  const titles = await Promise.all(res.results.map(async (r) => (await readItem(a, r.item.id)).title));
+  expect(titles).toEqual(["Free services need honest rate limits", "Notes on reading code for the first time"]);
+});
+
+test("urls[] reports the ones it cannot open", async () => {
+  const { a } = await twoUsers();
+  const res = await pluckAny(a, { urls: [`${FIX}/news-4.html`, "not a link", `${FIX}/docs-2.html`] });
+  expect(res.results).toHaveLength(2);
+  expect(res.rejected).toEqual([{ input: "not a link", message: "That is not a link Pluck can open." }]);
+});
+
+test("text without links is a note; with a kind it is a todo or a thing with a due date", async () => {
+  const { a } = await twoUsers();
+  const note = (await pluckAny(a, { text: "Measure the worktop cut-out twice." })).results[0]!.item;
+  expect(note).toMatchObject({ kind: "note", title: "Measure the worktop cut-out twice.", url: null });
+  const todo = (await pluckAny(a, { text: "Outline the November talk", kind: "todo", dueAt: "2026-11-03T09:00:00.000Z" })).results[0]!.item;
+  expect(todo).toMatchObject({ kind: "todo", dueAt: "2026-11-03T09:00:00.000Z" });
+  // A todo whose text has a link in it stays a todo.
+  const thing = (await pluckAny(a, { text: `Induction hob ${FIX}/news-1.html`, kind: "thing" })).results[0]!.item;
+  expect(thing.kind).toBe("thing");
+});
+
+test("edits follow the rules for links and notes", async () => {
+  const { a } = await twoUsers();
+  const note = (await pluckAny(a, { text: "First\nbody" })).results[0]!.item;
+  expect((await updateItem(a, note.id, { text: "Second\nbody" })).title).toBe("Second");
+  expect(await readText(a, note.id)).toBe("Second\nbody");
+  expect((await updateItem(a, note.id, { kind: "thing" })).kind).toBe("thing");
+  await expect(updateItem(a, note.id, { kind: "video" })).rejects.toMatchObject({ status: 400 });
+
+  const link = (await pluckAny(a, { url: `${FIX}/blog-2.html` })).results[0]!.item;
+  await expect(updateItem(a, link.id, { text: "nope" })).rejects.toMatchObject({ status: 400 });
+  await expect(updateItem(a, link.id, { kind: "note" })).rejects.toMatchObject({ status: 400 });
+  expect((await updateItem(a, link.id, { kind: "video" })).kind).toBe("video");
 });

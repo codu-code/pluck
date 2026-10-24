@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { ago, sourceLabel, waybackUrl } from "@/lib/format";
 import { readItem, readText } from "@/lib/library";
+import { NoteEditor } from "./NoteEditor";
 import { RetryButton } from "./RetryButton";
 import styles from "./item.module.css";
 
@@ -15,6 +16,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const item = await readItem(user.id, id).catch(() => null);
   if (!item) notFound();
+  if (item.url === null) return <NoteEditor item={item} text={await readText(user.id, item.id)} />;
   const plucked = `${sourceLabel(item.source)} · ${ago(item.createdAt)}`;
 
   return (

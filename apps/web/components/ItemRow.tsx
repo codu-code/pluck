@@ -1,13 +1,13 @@
 import { KindGlyph } from "@pluck/ui";
 import type { Item } from "@pluck/shared-schemas";
 import Link from "next/link";
-import { coverSrc, initials, rowMeta, tileIndex, when } from "@/lib/format";
+import { coverSrc, initials, rowMeta, rowSite, tileIndex, when } from "@/lib/format";
 import styles from "./ItemRow.module.css";
 
 // One 64px row from the Main board: cover or site tile, title, site and meta, excerpt, kind glyph and when.
 export function ItemRow({ item, now }: { item: Item; now: Date }) {
-  const meta = rowMeta(item);
-  const site = item.siteName ?? (item.url ? new URL(item.url).hostname : item.kind);
+  const meta = rowMeta(item, now);
+  const site = rowSite(item);
   return (
     <div className={styles.row} data-state={item.extraction.state}>
       {item.hasCover ? (
@@ -31,7 +31,7 @@ export function ItemRow({ item, now }: { item: Item; now: Date }) {
             {site} · {meta}
           </span>
         </div>
-        <div className={styles.excerpt}>{item.excerpt ?? item.url}</div>
+        <div className={styles.excerpt}>{item.excerpt ?? item.url ?? ""}</div>
       </div>
       <div className={styles.side}>
         <KindGlyph kind={item.kind} />
