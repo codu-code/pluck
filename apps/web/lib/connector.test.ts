@@ -132,10 +132,11 @@ test("create_list is private with AI notes; update_list changes everything but t
   expect(purpose.error.code).toBe("invalid_input");
   expect((await readList(a, list.id)).list.purpose).toBe("For the talk");
 
-  expect((await call("update_list", { id: list.id, visibility: "public" })).error.code).toBe("forbidden");
-  expect((await call("update_list", { id: list.id, visibility: "public", personAskedForPublic: true })).error.code).toBe("handle_required");
   await updateMe(a, { handle: `ai-${Date.now().toString(36)}` });
-  expect((await call("update_list", { id: list.id, visibility: "public", personAskedForPublic: true })).list.visibility).toBe("public");
+  expect((await call("update_list", { id: list.id, visibility: "public" })).error.code).toBe("forbidden");
+  expect((await call("update_list", { id: list.id, visibility: "public", personAskedForPublic: true })).error.code).toBe("invalid_input");
+  expect((await readList(a, list.id)).list.visibility).toBe("private");
+  expect((await call("update_list", { id: list.id, visibility: "private" })).list.visibility).toBe("private");
   expect((await call("list_lists")).lists.map((l: { id: string }) => l.id)).toEqual([list.id]);
 });
 

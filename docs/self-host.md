@@ -20,18 +20,20 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | Variable | What | Default |
 |---|---|---|
 | `PLUCK_URL` | The public address, no trailing slash. Becomes the sign-in link host, the OAuth issuer and the connector URL (`<PLUCK_URL>/mcp`) | `http://localhost:3000` |
-| `PLUCK_PORT` | Host port for the web app | `3000` |
+| `PLUCK_PORT` | Host port for the web app, on 127.0.0.1 only, for your proxy | `3000` |
 | `BETTER_AUTH_SECRET` | 32+ random bytes. Leave unset to have one generated and kept in the `secrets` volume | generated |
 | `SMTP_URL` | Your mail relay, e.g. `smtps://user:pass@smtp.example.com:465` | the bundled Mailpit |
 | `EMAIL_FROM` | The From line for sign-in links and the Monday email | `Pluck <pluck@localhost>` |
 | `S3_PUBLIC_ENDPOINT` | Where browsers and phones reach the blob store (uploads, covers, exports). Publish MinIO behind your proxy and put its public address here | `http://localhost:9000` |
-| `S3_ACCESS_KEY`, `S3_SECRET_KEY` | MinIO's credentials, used by the app too. **Change the secret** | `pluck`, `pluck-change-me` |
+| `S3_ACCESS_KEY`, `S3_SECRET_KEY` | MinIO's credentials, used by the app too. Set the secret to a long random value (`openssl rand -hex 32`): the default is public, so Pluck will not start with it unless `PLUCK_URL` and `S3_PUBLIC_ENDPOINT` are both localhost | `pluck`, `pluck-change-me` |
 | `S3_ENDPOINT`, `S3_BUCKET`, `AWS_REGION` | To use real S3 (or R2, B2, …) instead of the bundled MinIO | MinIO |
 | `ADMIN_EMAILS` | Who can open `/admin` (reports, take-downs), comma separated | none |
 | `ABUSE_EMAIL` | Where reports of public lists are emailed | none |
 | `EMAIL_IN_DOMAIN` | For email-in: the domain whose mail lands in the bucket under `inbound/` (needs an inbound mail service that writes raw messages there, like SES receipt rules) | off |
 
 Never set `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` on a server: they exist for local development and tests only. Without them Pluck refuses to fetch private addresses and rate-limits sign-in.
+
+Rate limits key on the caller's address, which Pluck reads from `X-Forwarded-For`. Your proxy must set that header to the one address it saw, not pass on whatever the client sent. Caddy's `reverse_proxy` does this by default. In nginx, use `proxy_set_header X-Forwarded-For $remote_addr;`, not `$proxy_add_x_forwarded_for`.
 
 Update with `git pull && docker compose up -d --build`. Back up the `mongo` and `minio` volumes.
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { after } from "next/server";
-import { authenticate, json, parseBody, publicRoute, TRY_COOKIE, tryToken } from "@/lib/api";
+import { ApiError, authenticate, hasScope, json, parseBody, publicRoute, TRY_COOKIE, tryToken } from "@/lib/api";
 import { holdPaste, pluckAny } from "@/lib/library";
 
 const Body = z.object({ text: z.string().trim().min(1).max(5000) });
@@ -10,6 +10,7 @@ export const POST = publicRoute(10, async ({ req }) => {
   const { text } = await parseBody(req, Body);
   const caller = await authenticate(req);
   if (caller) {
+    if (!hasScope(caller, "library:write")) throw new ApiError("forbidden", "This key cannot do that.", 403, { needs: "library:write" });
     const res = await pluckAny(caller.userId, { text, source: "web" }, { defer: after });
     return json({ signedIn: true, count: res.results.length });
   }

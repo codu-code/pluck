@@ -1,10 +1,10 @@
-# Local services for dev and e2e. Ports are offset so they never clash with other projects.
+# Local services for dev and e2e. Ports are offset so they never clash with other projects, and bound to this machine only.
 name: pluck-dev
 services:
   mongo:
     image: mongo:8.2
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
-    ports: ["27027:27017"]
+    ports: ["127.0.0.1:27027:27017"]
     volumes: [mongo:/data/db]
     healthcheck:
       # Initiates the single-node replica set on first boot, then reports healthy once it is primary.
@@ -14,7 +14,7 @@ services:
       retries: 30
   mailpit:
     image: axllent/mailpit:v1.27
-    ports: ["1035:1025", "8035:8025"]
+    ports: ["127.0.0.1:1035:1025", "127.0.0.1:8035:8025"]
     healthcheck:
       test: ["CMD", "/mailpit", "readyz"]
       interval: 2s
@@ -22,7 +22,7 @@ services:
   minio:
     image: cgr.dev/chainguard/minio:latest
     command: ["server", "/data", "--console-address", ":9001"]
-    ports: ["9010:9000", "9011:9001"]
+    ports: ["127.0.0.1:9010:9000", "127.0.0.1:9011:9001"]
     environment: { MINIO_ROOT_USER: pluck, MINIO_ROOT_PASSWORD: pluck-dev-secret }
     volumes: [minio:/data]
   # One-shot, run by `pnpm stack` after the services are up (not part of `up --wait`).
@@ -36,7 +36,7 @@ services:
   fixtures:
     image: node:22-alpine
     command: ["node", "/fixtures/server.mjs"]
-    ports: ["4180:4180"]
+    ports: ["127.0.0.1:4180:4180"]
     volumes: ["./packages/extract/fixtures:/fixtures:ro"]
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4180/health"]

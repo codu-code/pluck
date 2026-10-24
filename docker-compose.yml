@@ -30,7 +30,8 @@ x-app: &app
 services:
   web:
     <<: *app
-    ports: ["${PLUCK_PORT:-3000}:3000"]
+    # Local only: put your HTTPS reverse proxy in front (see docs/self-host.md).
+    ports: ["127.0.0.1:${PLUCK_PORT:-3000}:3000"]
   worker:
     <<: *app
     command: ["pnpm", "--filter", "@pluck/web", "worker"]

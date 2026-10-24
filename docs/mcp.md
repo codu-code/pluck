@@ -50,7 +50,7 @@ A tool is only listed when the token carries its scope.
 | `list_lists` | Lists with purpose, counts and visibility |
 | `get_list` | One list in order, with each item's note and tick |
 | `create_list` | A private list with a purpose and ordered items, each with an optional note. Marked as made by AI |
-| `update_list` | Rename, add, remove, reorder, set notes and ticks, change visibility. The purpose is read-only. `visibility: "public"` needs `personAskedForPublic: true` and a handle |
+| `update_list` | Rename, add, remove, reorder, set notes and ticks, make a list private. The purpose is read-only. Only the person can make a list public, in Pluck: a saved page could otherwise talk an AI into publishing |
 | `get_digest` | What is expiring, due, oldest in the Inbox, and quiet lists |
 | `delete_item` | Moves an item to the bin (30 days). Only with `library:delete` |
 

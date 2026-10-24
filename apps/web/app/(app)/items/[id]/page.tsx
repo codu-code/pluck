@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
-import { currentUser } from "@/lib/auth";
+import { currentUser, requireUser } from "@/lib/auth";
 import { ago, sourceLabel, waybackUrl } from "@/lib/format";
 import { highlightsOf, membershipsOf, readItem, readText, tagsOf } from "@/lib/library";
 import { renderReader } from "@/lib/markdown";
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 // The item page: the reader for links, the editor for notes, todos and things, and the pending and failed states.
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = (await currentUser())!;
+  const user = await requireUser();
   const { id } = await params;
   const item = await readItem(user.id, id).catch(() => null);
   if (!item) notFound();
