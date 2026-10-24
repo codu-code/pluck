@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
-  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, getItem, importLink, listApiKeys, recountTags,
+  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, listApiKeys, recountTags,
   listTags, pluckLink, revokeApiKey, verifyApiKey,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -36,6 +36,14 @@ test("imports land in the Archive as imported, keep tags, and never disturb what
   const again = await importLink(a, "https://example.com/already", { title: "Other", tags: ["x"], note: null, createdAt: null });
   expect(again.created).toBe(false);
   expect(await getItem(a, mine.id)).toMatchObject({ status: "inbox", title: "https://example.com/already", tagIds: [] });
+});
+
+test("an import starts once, and only for its owner", async () => {
+  const { a, b } = await twoUsers();
+  const imp = await createImport(a, "pocket", "u/x/imports/y.csv");
+  expect(await claimImportStart(b, imp.id)).toBe(false);
+  expect(await Promise.all([claimImportStart(a, imp.id), claimImportStart(a, imp.id)])).toEqual(expect.arrayContaining([true, false]));
+  expect((await getImport(a, imp.id))?.state).toBe("running");
 });
 
 test("export gathers everything; delete removes one person entirely and leaves the other", async () => {

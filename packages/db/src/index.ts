@@ -27,7 +27,7 @@ export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";
 export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOPES } from "./api-keys.ts";
 export {
-  createImport, getImport, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
+  createImport, getImport, claimImportStart, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
 } from "./account.ts";
 export { aiConnections, disconnectAi, isAiConnected } from "./ai-tools.ts";
 export { holdTry, takeTry } from "./tries.ts";

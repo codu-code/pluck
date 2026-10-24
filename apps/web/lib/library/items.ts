@@ -162,8 +162,9 @@ export async function restoreItem(userId: string, itemId: string): Promise<Item>
 
 // Nightly: items in the bin for 30 days go for good, files included.
 export async function purgeBinNow(): Promise<number> {
-  const { purged, blobPrefixes } = await purgeBin();
-  for (const prefix of blobPrefixes) await deletePrefix(prefix);
+  const { purged } = await purgeBin(new Date(), async (prefixes) => {
+    for (const prefix of prefixes) await deletePrefix(prefix);
+  });
   return purged;
 }
 
