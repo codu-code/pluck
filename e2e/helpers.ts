@@ -1,4 +1,5 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { expect, type Page } from "@playwright/test";
 
 const MAILPIT = "http://127.0.0.1:8035";
@@ -36,14 +37,31 @@ export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/i
 
 // Saves the page as standalone HTML (CSS inlined, scripts removed) to test-results/design, so `pnpm design`
 // can run the impeccable detector on screens it cannot reach itself (signed-in pages, the extension).
+// The web fonts go too, at their own paths beside the pages: without them every machine measures its own fallback
+// fonts, and a Linux runner's are wide enough to fail checks a Mac passes.
 export async function snapshot(page: Page, name: string): Promise<void> {
-  const html = await page.evaluate(() => {
-    const css = [...document.styleSheets].map((s) => [...s.cssRules].map((r) => r.cssText).join("\n")).join("\n");
+  const { html, fonts } = await page.evaluate(async () => {
+    const rules = [...document.styleSheets].flatMap((s) => [...s.cssRules]);
+    const css = rules.map((r) => r.cssText).join("\n");
+    const urls = new Set(rules.filter((r) => r instanceof CSSFontFaceRule).flatMap((r) => [...r.cssText.matchAll(/url\("?([^")]+)"?\)/g)].map((m) => m[1]!)));
+    const fonts = await Promise.all([...urls].map(async (u) => {
+      const at = new URL(u, location.href);
+      const bytes = new Uint8Array(await (await fetch(at)).arrayBuffer());
+      let bin = "";
+      for (const b of bytes) bin += String.fromCharCode(b);
+      return { path: at.pathname, data: btoa(bin) };
+    }));
     const doc = document.documentElement.cloneNode(true) as HTMLElement;
     doc.querySelectorAll("script, link[rel=stylesheet], link[rel=preload]").forEach((n) => n.remove());
     doc.querySelector("head")!.insertAdjacentHTML("beforeend", `<style>${css}</style>`);
-    return `<!doctype html>${doc.outerHTML}`;
+    return { html: `<!doctype html>${doc.outerHTML}`, fonts };
   });
+  for (const f of fonts) {
+    const at = join("test-results/design", f.path);
+    if (existsSync(at)) continue;
+    mkdirSync(dirname(at), { recursive: true });
+    writeFileSync(at, Buffer.from(f.data, "base64"));
+  }
   mkdirSync("test-results/design", { recursive: true });
   writeFileSync(`test-results/design/${name}.html`, html);
 }
