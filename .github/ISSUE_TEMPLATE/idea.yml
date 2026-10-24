@@ -1,0 +1,25 @@
+name: An idea
+description: Something Pluck could do better, or do at all.
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pluck stays small on purpose: no AI inside the app, no dashboards, nothing deleted behind your back. Ideas that fit that tend to land fastest.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What gets in your way
+      description: The problem first, in your own words. What were you trying to do?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you would like
+    validations:
+      required: true
+  - type: textarea
+    id: else
+    attributes:
+      label: Anything you tried instead

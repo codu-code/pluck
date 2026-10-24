@@ -1,0 +1,54 @@
+name: Something is broken
+description: Pluck did something it should not, or did not do something it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+      placeholder: I plucked a link from the share sheet and it said "Plucked." but it never showed up in the Inbox.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to see it
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      multiple: true
+      options:
+        - Web app
+        - Website
+        - Browser extension
+        - iPhone app
+        - iPhone share sheet
+        - AI connector (MCP)
+        - Email-in
+        - Import or export
+        - Self-hosted (Docker)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Browser, device or version
+      placeholder: Chrome 141 on macOS, iPhone 16 on iOS 26.1, or the commit you self-host
+  - type: input
+    id: url
+    attributes:
+      label: A link that shows it (if it is about one page)
+      description: Only if the page is public. Never paste anything private.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Optional. Remove anything personal first.
