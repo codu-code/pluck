@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { deriveExcerpt, deriveTitle, LINK_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
+import { deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
 import { recountList, recountListsOf } from "./lists.ts";
@@ -138,7 +138,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
       { $set: { textMarkdown: edit.text, extractor: "user", bytes: Buffer.byteLength(edit.text) } },
       { upsert: true },
     );
-  } else if (edit.title !== undefined && current.url === null) {
+  } else if (edit.title !== undefined && isTextKind(current.kind)) {
     text = (await (await contents()).findOne({ itemId: _id, userId: uid }))?.textMarkdown ?? "";
   }
   let titleIsDerived = current.titleIsDerived;
@@ -148,7 +148,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
     set.titleIsDerived = titleIsDerived;
     if (typed) set.title = typed;
   }
-  if (current.url === null && text !== undefined) {
+  if (isTextKind(current.kind) && text !== undefined) {
     if (titleIsDerived) set.title = deriveTitle(text);
     set.excerpt = deriveExcerpt(text, titleIsDerived);
     set.searchBody = bodyForSearch(text);
@@ -187,8 +187,9 @@ export async function batchUpdate(userId: string, itemIds: string[], patch: Batc
   }
   if (patch.kind) {
     set.kind = patch.kind;
-    filter.url = (LINK_KINDS as readonly string[]).includes(patch.kind) ? { $ne: null } : null;
-    if (patch.status === "done") filter.kind = { $in: ["todo", "thing"] };
+    // A link kind fits links (with or without a URL, like email-in); a text kind fits notes, todos and things.
+    const group: readonly string[] = (LINK_KINDS as readonly string[]).includes(patch.kind) ? LINK_KINDS : TEXT_KINDS;
+    filter.kind = { $in: (patch.status === "done" ? group.filter((k) => k === "todo" || k === "thing") : group) as Kind[] };
   }
   const matched = await col.countDocuments(base);
   const res = await col.updateMany(filter, { $set: set });

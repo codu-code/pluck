@@ -142,3 +142,41 @@ test("signed taps keep, let go and undo, stop the email, and archive it all only
   await expect(lib.runTap("forged.token")).rejects.toMatchObject({ status: 403 });
   expect(await lib.sendDigest(a, { force: true })).toBe(true); // to Mailpit
 });
+
+test("email-in: a newsletter dropped in the inbound folder becomes a Read item; spam and unknown addresses are dropped", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const blob = await import("@pluck/blob");
+  const { makeJobsVisible } = await import("@pluck/db/testing");
+  const lib = await import("./index");
+  const { a } = await twoUsers();
+  const address = await lib.emailInAddress(a);
+  const token = address.match(/pluck\+(\w+)@/)![1]!;
+  const eml = (name: string, t = token, id = `${Date.now()}`) =>
+    readFileSync(join(import.meta.dirname, "../../../../packages/extract/fixtures/email", `${name}.eml.tmpl`), "utf8").replace(/TOKEN/g, t).replace("issue-42", `issue-${id}`);
+  const run = Date.now();
+  await blob.putObject(`inbound/test-${run}-news`, eml("newsletter"), "message/rfc822");
+  await blob.putObject(`inbound/test-${run}-spam`, eml("spam"), "message/rfc822");
+  await blob.putObject(`inbound/test-${run}-nobody`, eml("forwarded", "nobody0000"), "message/rfc822");
+
+  expect(await lib.pollInbound()).toBeGreaterThanOrEqual(3);
+  expect(await lib.pollInbound()).toBe(0); // each object is queued once
+  await makeJobsVisible();
+  await runJobs({ budgetMs: 20_000 });
+
+  const inbox = await lib.browse(a, { status: "inbox", sort: "newest", limit: 50 });
+  const item = inbox.items.find((i) => i.source === "email")!;
+  expect(item).toMatchObject({ title: "Writing for engineers who skim", siteName: "Field Notes Weekly", kind: "link", url: null });
+  expect(await readText(a, item.id)).toContain("Short paragraphs are a kindness.");
+  expect(inbox.items.filter((i) => i.source === "email")).toHaveLength(1); // spam and the unknown address were dropped
+  expect((await blob.listKeys(`inbound/test-${run}`)).length).toBe(0);
+  expect((await blob.listKeys(`u/${a}/items/${item.id}/`)).map((k) => k.key)).toEqual([`u/${a}/items/${item.id}/file.eml`]);
+
+  // A retired address stops working at once. (The same message twice is one item: packages/db email-in.test.ts.)
+  await lib.newEmailInAddress(a);
+  await blob.putObject(`inbound/test-${run}-old`, eml("forwarded"), "message/rfc822");
+  await lib.pollInbound();
+  await makeJobsVisible();
+  await runJobs({ budgetMs: 20_000 });
+  expect((await lib.browse(a, { status: "inbox", sort: "newest", limit: 50 })).items.filter((i) => i.source === "email")).toHaveLength(1);
+});

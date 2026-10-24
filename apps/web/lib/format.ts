@@ -1,4 +1,4 @@
-import type { Item, Source } from "@pluck/shared-schemas";
+import { isTextKind, type Item, type Source } from "@pluck/shared-schemas";
 
 const DAY = 86_400_000;
 const WEEKDAY = new Intl.DateTimeFormat("en-GB", { weekday: "short" });
@@ -47,13 +47,13 @@ const TEXT_SITE = { note: "Note", todo: "Todo", thing: "Thing" } as const;
 
 // The row's "site" slot: the site for links, the kind for notes, todos and things.
 export function rowSite(item: Item): string {
-  if (item.url === null) return TEXT_SITE[item.kind as keyof typeof TEXT_SITE] ?? "Note";
-  return item.siteName ?? new URL(item.url).hostname;
+  if (isTextKind(item.kind)) return TEXT_SITE[item.kind as keyof typeof TEXT_SITE] ?? "Note";
+  return item.siteName ?? (item.url ? new URL(item.url).hostname : "email-in");
 }
 
 // "12 min", "photo", "Plucking", "Couldn't read", "by you", "due Fri".
 export function rowMeta(item: Item, now = new Date()): string {
-  if (item.url === null) return item.dueAt ? dueLabel(item.dueAt, now) : item.source === "mcp" ? "by AI" : "by you";
+  if (isTextKind(item.kind)) return item.dueAt ? dueLabel(item.dueAt, now) : item.source === "mcp" ? "by AI" : "by you";
   if (item.extraction.state === "failed") return "Couldn't read";
   if (item.extraction.state === "pending") return "Plucking";
   if (item.kind === "image") return "photo";

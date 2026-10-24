@@ -23,6 +23,8 @@ export class DataStack extends Stack {
       lifecycleRules: [
         { transitions: [{ storageClass: s3.StorageClass.INFREQUENT_ACCESS, transitionAfter: Duration.days(90) }] },
         { prefix: "tmp/", expiration: Duration.days(2) },
+        // Email-in objects are moved under u/ once processed; anything left a week is junk.
+        { prefix: "inbound/", expiration: Duration.days(7) },
       ],
     });
 

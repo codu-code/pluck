@@ -24,3 +24,4 @@ export { DEFAULT_SETTINGS, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS } from "./public.ts";
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
 export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
+export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";

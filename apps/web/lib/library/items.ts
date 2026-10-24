@@ -93,10 +93,10 @@ import { tagIdsFor, type Actor } from "./tags";
 // Edits from the person. Text and the text kinds belong to items with no URL; link kinds to items with one.
 export async function updateItem(userId: string, itemId: string, patch: UpdateItemBody, { by = "user" }: { by?: Actor } = {}): Promise<Item> {
   const current = await readItem(userId, itemId);
-  const hasUrl = current.url !== null;
-  if (patch.text !== undefined && hasUrl) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
-  if (patch.kind && hasUrl !== (LINK_KINDS as readonly string[]).includes(patch.kind))
-    throw new ApiError("bad_request", hasUrl ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
+  const isLink = !isTextKind(current.kind);
+  if (patch.text !== undefined && isLink) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
+  if (patch.kind && isLink !== (LINK_KINDS as readonly string[]).includes(patch.kind))
+    throw new ApiError("bad_request", isLink ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
   if (patch.status === "done" && !["todo", "thing"].includes(patch.kind ?? current.kind))
     throw new ApiError("bad_request", "Done is for todos and things.", 400);
   const { tagIds, ...rest } = patch;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { currentUser } from "@/lib/auth";
-import { aiTaggedCount, archiveItAll, me, tagsOf } from "@/lib/library";
+import { aiTaggedCount, archiveItAll, emailInAddress, me, tagsOf } from "@/lib/library";
+import { EmailInSection } from "./EmailInSection";
 import { ExpirySection } from "./ExpirySection";
 import { ProfileSection } from "./ProfileSection";
 import { TagsSection } from "./TagsSection";
@@ -12,7 +13,9 @@ export const metadata: Metadata = { title: "Settings · Pluck" };
 // expiry, import, export and delete later.
 export default async function Settings() {
   const user = (await currentUser())!;
-  const [tags, aiWeek, profile, stale] = await Promise.all([tagsOf(user.id), aiTaggedCount(user.id, 7), me(user.id), archiveItAll(user.id, { dryRun: true })]);
+  const [tags, aiWeek, profile, stale, address] = await Promise.all([
+    tagsOf(user.id), aiTaggedCount(user.id, 7), me(user.id), archiveItAll(user.id, { dryRun: true }), emailInAddress(user.id),
+  ]);
   return (
     <div className={styles.page}>
       <div className={styles.head}>
@@ -20,6 +23,7 @@ export default async function Settings() {
         <span className={styles.meta}>{user.email} · signed in with an email link</span>
       </div>
       <ProfileSection initial={profile} />
+      <EmailInSection initial={address} />
       <ExpirySection initial={profile.settings} staleCount={stale.count} />
       <TagsSection initial={tags} aiWeek={aiWeek} />
     </div>

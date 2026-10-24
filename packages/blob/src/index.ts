@@ -1,4 +1,4 @@
-import { DeleteObjectsCommand, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { CopyObjectCommand, DeleteObjectCommand, DeleteObjectsCommand, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // One S3 code path everywhere: AWS S3 in prod, MinIO locally and for self-host (S3_ENDPOINT set).
@@ -46,4 +46,18 @@ export async function deletePrefix(prefix: string): Promise<number> {
     token = page.NextContinuationToken;
   } while (token);
   return deleted;
+}
+
+export async function listKeys(prefix: string, max = 50): Promise<{ key: string; size: number }[]> {
+  const page = await s3().send(new ListObjectsV2Command({ Bucket: bucket(), Prefix: prefix, MaxKeys: max }));
+  return (page.Contents ?? []).map((o) => ({ key: o.Key!, size: o.Size ?? 0 }));
+}
+
+export async function moveObject(from: string, to: string): Promise<void> {
+  await s3().send(new CopyObjectCommand({ Bucket: bucket(), CopySource: `${bucket()}/${encodeURIComponent(from)}`, Key: to }));
+  await deleteObject(from);
+}
+
+export async function deleteObject(key: string): Promise<void> {
+  await s3().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key }));
 }

@@ -1,5 +1,6 @@
 import { claimJob, completeJob, failJob, getItem, retryJob, type Job } from "@pluck/db";
 import { extractAttempt } from "./capture";
+import { ingestInbound } from "./library";
 import { log } from "./log";
 
 // Worker job handlers. A handler that throws is retried with backoff up to five times.
@@ -9,6 +10,9 @@ const handlers: Record<string, (payload: Record<string, unknown>) => Promise<voi
     const item = await getItem(userId, String(p.itemId));
     if (!item || item.extraction.state !== "pending") return; // done, failed, re-plucked or gone
     await extractAttempt(userId, item, { timeoutMs: 20_000 }); // records the attempt and queues the next one itself
+  },
+  async "email-in"(p) {
+    await ingestInbound(String(p.key));
   },
 };
 

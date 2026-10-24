@@ -19,7 +19,7 @@ export async function createHighlight(userId: string, input: HighlightInput): Pr
   const itemId = oid(input.itemId);
   const now = new Date();
   const item = await (await items()).findOneAndUpdate(
-    { _id: itemId, userId: uid, url: { $ne: null }, deletedAt: null },
+    { _id: itemId, userId: uid, kind: { $in: ["link", "video", "pdf", "image"] }, deletedAt: null },
     { $set: { lastTouchedAt: now } },
   );
   if (!item) return null;

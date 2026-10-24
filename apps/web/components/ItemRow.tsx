@@ -1,5 +1,5 @@
 import { KindGlyph } from "@pluck/ui";
-import type { Item } from "@pluck/shared-schemas";
+import { isTextKind, type Item } from "@pluck/shared-schemas";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { coverSrc, initials, rowMeta, rowSite, tileIndex, when } from "@/lib/format";
@@ -37,7 +37,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
       {item.hasCover ? (
         // why: covers are signed S3 redirects from our own route, so next/image would only add a hop.
         <img className={styles.tile} src={coverSrc(item.id)} alt="" width={40} height={40} loading="lazy" />
-      ) : item.url ? (
+      ) : !isTextKind(item.kind) ? (
         <div className={styles.tile} style={{ background: `var(--tile-${tileIndex(site)})` }} aria-hidden="true">
           {initials(item.siteName, item.url)}
         </div>

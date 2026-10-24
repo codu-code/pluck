@@ -24,6 +24,7 @@
     "typescript-eslint": "8.72.0",
     "vitest": "5.0.5",
     "@pluck/db": "workspace:*",
-    "impeccable": "4.7.0"
+    "impeccable": "4.7.0",
+    "@pluck/blob": "workspace:*"
   }
 }

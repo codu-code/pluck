@@ -46,3 +46,5 @@
 .inkButton { height: 40px; padding: 0 14px; border-radius: 8px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 500; cursor: pointer; }
 .inkButton:disabled { opacity: 0.5; cursor: default; }
 .linkButton { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-decoration: underline; cursor: pointer; }
+.copyRow { display: flex; gap: 8px; max-width: 560px; }
+.code { flex: 1; min-width: 0; height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong); font: 13px ui-monospace, "SF Mono", Menlo, monospace; overflow: hidden; white-space: nowrap; }

@@ -1,3 +1,4 @@
+import { isTextKind } from "@pluck/shared-schemas";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -24,7 +25,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
   const item = await readItem(user.id, id).catch(() => null);
   if (!item) notFound();
   const [tags, lists] = await Promise.all([tagsOf(user.id), membershipsOf(user.id, item.id)]);
-  if (item.url === null) return <NoteEditor item={item} text={await readText(user.id, item.id)} tags={tags} lists={lists} />;
+  if (isTextKind(item.kind)) return <NoteEditor item={item} text={await readText(user.id, item.id)} tags={tags} lists={lists} />;
 
   if (item.extraction.state === "done") {
     const [text, highlights] = await Promise.all([readText(user.id, item.id), highlightsOf(user.id, item.id)]);
@@ -33,6 +34,8 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     return <Reader item={item} html={renderReader(text)} initialHighlights={highlights} showCover={showCover} tags={tags} lists={lists} />;
   }
 
+  const url = item.url;
+  if (!url) notFound(); // pending and failed only happen to items fetched from a URL
   const plucked = `${sourceLabel(item.source)} · ${ago(item.createdAt)}`;
   return (
     <>
@@ -42,12 +45,12 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           <div className={styles.head}>
             <span className={styles.meta}>{plucked}</span>
             <h1 className={styles.title}>Couldn&apos;t read this page.</h1>
-            <code className={styles.url}>{item.url}</code>
+            <code className={styles.url}>{url}</code>
           </div>
           <div className={styles.actions}>
             <RetryButton id={item.id} />
-            <a className={styles.secondary} href={item.url} target="_blank" rel="noreferrer">Open original</a>
-            <a className={styles.secondary} href={waybackUrl(item.url)} target="_blank" rel="noreferrer">Try the Wayback copy</a>
+            <a className={styles.secondary} href={url} target="_blank" rel="noreferrer">Open original</a>
+            <a className={styles.secondary} href={waybackUrl(url)} target="_blank" rel="noreferrer">Try the Wayback copy</a>
           </div>
           <div className={styles.tip}>
             <b>Behind a login?</b>
@@ -66,7 +69,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             <span className={styles.meta}>{plucked}</span>
             <h1 className={styles.title}>{item.title}</h1>
             <p className={styles.meta}>Plucking this page. It takes a few seconds.</p>
-            <a href={item.url} target="_blank" rel="noreferrer" className={styles.meta}>Open original</a>
+            <a href={url} target="_blank" rel="noreferrer" className={styles.meta}>Open original</a>
           </div>
         </div>
       )}

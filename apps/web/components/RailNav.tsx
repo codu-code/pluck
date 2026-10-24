@@ -14,7 +14,7 @@ const LINKS = [
 ];
 
 // Settings sections, added as their slices land (Settings board order).
-const SETTINGS = [{ href: "#expiry", label: "Expiry and archive" }, { href: "#tags", label: "Tags" }];
+const SETTINGS = [{ href: "#email", label: "Email-in" }, { href: "#expiry", label: "Expiry and archive" }, { href: "#tags", label: "Tags" }];
 
 export const COUNTS_CHANGED = "pluck:counts";
 

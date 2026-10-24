@@ -118,6 +118,8 @@ export type ReportDoc = {
   state: "open" | "resolved";
 };
 
+export type EmailAliasDoc = { _id: ObjectId; userId: ObjectId; token: string; active: boolean; createdAt: Date };
+
 export type HighlightDoc = {
   _id: ObjectId;
   userId: ObjectId;
@@ -186,6 +188,7 @@ export function db(): Promise<Db> {
         { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
       ]),
       d.collection("users").createIndexes([{ key: { handle: 1 }, unique: true, partialFilterExpression: { handle: { $type: "string" } } }]),
+      d.collection("emailAliases").createIndexes([{ key: { token: 1 }, unique: true }, { key: { userId: 1, active: 1 } }]),
       d.collection("meta").createIndexes([{ key: { at: 1 }, expireAfterSeconds: 7 * 86_400 }]),
       d.collection("reports").createIndexes([{ key: { state: 1, createdAt: -1 } }]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
@@ -206,6 +209,9 @@ export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, l
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
+  return (await db()).collection<EmailAliasDoc>("emailAliases");
 }
 export async function meta(): Promise<Collection<{ _id: string; at: Date }>> {
   return (await db()).collection<{ _id: string; at: Date }>("meta");
