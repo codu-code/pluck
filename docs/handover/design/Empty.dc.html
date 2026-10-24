@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Empty inbox</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Empty.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Inbox</a>
+<a href="Later.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later</a>
+<a href="Collections.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists</a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 32px; border-bottom: 1px solid #DDE2D8">
+<label style="flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 6px 0 14px; border-radius: 8px; background: #FFFFFF; border: 1.5px solid #151A13">
+<span style="font-weight: 600">Pluck</span>
+<input type="text" value="https://getpluck.io/sample" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #151A13">
+<button type="button" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-size: 13px; font-weight: 500">Pluck it</button>
+</label>
+<a href="Search.dc.html" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: space-between; height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #EBEEE7; text-decoration: none; color: #525A4E">Search<kbd style="font: 12px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 6px">/</kbd></a>
+</div>
+
+<div style="width: 100%; max-width: 760px; box-sizing: border-box; padding: 120px 32px 48px; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.03em">Nothing plucked yet.</h1>
+<p style="margin: 0; color: #525A4E; font-size: 16px; line-height: 24px">Three ways to start. The first one takes a second.</p>
+</div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid #DDE2D8">
+<span style="width: 28px; color: #525A4E; font-weight: 600">1</span>
+<span style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 2px"><b style="font-weight: 600">Press Pluck it above</b><span style="color: #525A4E">The sample link is already there. Watch it land.</span></span>
+</li>
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid #DDE2D8">
+<span style="width: 28px; color: #525A4E; font-weight: 600">2</span>
+<span style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 2px"><b style="font-weight: 600">Add the extension</b><span style="color: #525A4E">One click, or Alt+Shift+P, on any page.</span></span>
+<span style="display: flex; gap: 8px"><a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none">Chrome</a><a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none">Firefox</a></span>
+</li>
+<li style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid #DDE2D8">
+<span style="width: 28px; color: #525A4E; font-weight: 600">3</span>
+<span style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 2px"><b style="font-weight: 600">Pluck from your phone</b><span style="color: #525A4E">The iOS app, or the Pluck Shortcut until it ships.</span></span>
+<span style="display: flex; gap: 8px"><a href="IOSShare.dc.html" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none">iOS app</a><a href="Settings.dc.html" style="display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none">Add the Shortcut</a></span>
+</li>
+</ol>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

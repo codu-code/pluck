@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Terms</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;family=Geist:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 27px; overflow: hidden">
+
+<header style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Landing.dc.html" aria-label="Pluck home" style="display: inline-flex; align-items: center; text-decoration: none; margin-right: auto"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<nav aria-label="Site" style="display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px">
+<a href="Landing.dc.html#lists" style="text-decoration: none">Lists</a>
+<a href="SiteClaude.dc.html" style="text-decoration: none">Connect your AI</a>
+<a href="SiteOpen.dc.html" style="text-decoration: none">Open source</a>
+</nav>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600; font-size: 15px">Get Pluck</a>
+</header>
+
+<main style="max-width: 760px; margin: 0 auto; box-sizing: border-box; padding: 64px 24px 96px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-size: clamp(44px, 6vw, 72px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.03em">Terms</h1>
+<p style="margin: 0; font-size: 20px; line-height: 30px; color: #525A4E">Short version: it's your library, be decent with public lists, and we can't promise the free service lasts for ever, which is why you can export and self-host. Last updated [DATE].</p>
+</div>
+
+<sc-for list="{{sections}}" as="s" hint-placeholder-count="9">
+<section style="display: flex; flex-direction: column; gap: 10px; padding-top: 28px; border-top: 1px solid #DDE2D8">
+<h2 style="margin: 0; font-size: 24px; line-height: 30px; font-weight: 600; letter-spacing: -0.02em">{{s.h}}</h2>
+<p style="margin: 0; white-space: pre-line">{{s.p}}</p>
+</section>
+</sc-for>
+
+<section style="display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: #EDF0EA">
+<b style="font-weight: 600">Report a public list</b>
+<span>Every public page has a Report link at the bottom. Or email [ABUSE EMAIL] with the link. We act within [N] days.</span>
+</section>
+</main>
+
+<footer style="border-top: 1px solid #DDE2D8">
+<div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 14px; color: #525A4E">
+<span style="margin-right: auto">Pluck is free and open source. Made in Dublin.</span>
+<a href="Landing.dc.html" style="color: #525A4E">Home</a><a href="SiteOpen.dc.html" style="color: #525A4E">Open source</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { sections: [
+      { h: "The service", p: "Pluck lets you save links, notes, todos and things, read them later, put them in lists, and connect an AI tool to your library over MCP. The hosted service at getpluck.io is free. The code is open source under [LICENCE], and you may run your own copy." },
+      { h: "Your account", p: "You need to be 16 or over. Keep your sign-in and API keys to yourself. You are responsible for what is done with them. One person, one account." },
+      { h: "Your library is yours", p: "You own what you pluck and what you write. We claim no rights over it. We store and show it to you, and to others only where you make a list public. You can export it all at any time." },
+      { h: "Public lists", p: "When you make a list public you are publishing it. You confirm you have the right to share each item's title, cover, site and your own note. Don't publish lists that contain or point to illegal content, material that sexualises minors, threats, harassment, doxxing, spam, malware, or content that infringes someone else's copyright or trademark. We may take down a public list that breaks these rules, and may close accounts that keep doing it. Taking a list down does not delete it from your library." },
+      { h: "Stored pages", p: "Pluck keeps a private copy of pages you save so you can read them later, the way a browser cache does. That copy is for you alone and is never served publicly. If a rights holder asks us to remove a stored copy of their page, we will." },
+      { h: "Fair use of the service", p: "Don't use Pluck to scrape sites at scale, to run a bot farm, or to store things that aren't yours to store. We rate-limit capture, API and MCP calls to keep the service fast for everyone. Limits are published in the docs and we will tell you if you hit them." },
+      { h: "AI tools", p: "Connecting an AI tool is your choice. What that tool does with your library is governed by its own terms. We expose read tools, write tools that mark their changes, and no delete tool. We are not responsible for what a third-party tool does." },
+      { h: "No promises, but a way out", p: "The hosted service is free and provided as is. We will do our best to keep it fast and up, but we can't guarantee it, and we can't guarantee it runs for ever. If we ever have to stop, we will give at least 90 days' notice, keep Export working to the last day, and the self-host option will always exist. Our liability to you is limited to the amount you paid us, which is nothing." },
+      { h: "Changes and law", p: "We may update these terms. We'll post the date at the top and email you for anything that matters. These terms are governed by the law of Ireland." }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Lists</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Inbox<span style="color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Lists<span style="font-weight: 400; color: #525A4E">7</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 32px; border-bottom: 1px solid #DDE2D8">
+<label style="flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE">
+<span style="font-weight: 600">Pluck</span>
+<input type="text" placeholder="Paste one link or many, or type a note" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #151A13">
+</label>
+<a href="Search.dc.html" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: space-between; height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #EBEEE7; text-decoration: none; color: #525A4E">Search<kbd style="font: 12px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 6px">/</kbd></a>
+</div>
+
+<div style="width: 100%; max-width: 1040px; box-sizing: border-box; padding: 28px 32px 48px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em">Lists</h1>
+<span style="color: #525A4E">What you are making. A book, an issue, a talk, a trip, things to buy.</span>
+</div>
+<div style="display: flex; gap: 8px">
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-weight: 500">New list</button>
+</div>
+</div>
+
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 680px; border-collapse: collapse">
+<thead><tr style="text-align: left; color: #525A4E; font-size: 13px">
+<th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8">Name and purpose</th>
+<th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8; width: 140px">Visibility</th>
+<th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8; width: 96px; text-align: right">Ticked</th>
+<th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8; width: 110px; text-align: right">Last added</th>
+</tr></thead>
+<tbody>
+<sc-for list="{{rows}}" as="c" hint-placeholder-count="7">
+<tr>
+<td style="padding: 14px 12px; border-bottom: 1px solid #DDE2D8"><span style="display: flex; align-items: center; gap: 8px"><a href="Collection.dc.html" style="font-weight: 600; text-decoration: none">{{c.name}}</a>
+<sc-if value="{{c.claude}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 11px; border: 1px solid #C9A28E; color: #9A5536; font-size: 12px"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: #B06A48"></span>by AI</span></sc-if>
+</span><div style="color: #525A4E; font-size: 13px">{{c.purpose}}</div></td>
+<td style="padding: 14px 12px; border-bottom: 1px solid #DDE2D8"><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="{{c.visIcon}}" fill="none" stroke="#151A13" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{c.vis}}</span></td>
+<td style="padding: 14px 12px; border-bottom: 1px solid #DDE2D8; text-align: right">{{c.ticked}}</td>
+<td style="padding: 14px 12px; border-bottom: 1px solid #DDE2D8; text-align: right; color: #525A4E">{{c.last}}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; color: #525A4E; font-size: 13px">Items in a list never expire. A list is a plan.</p>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+var LOCK = "M4.5 7.5V5a3.5 3.5 0 0 1 7 0v2.5M3.5 7.5h9v6h-9z";
+var GLOBE = "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM2 8h12M8 2c1.8 1.7 2.6 3.8 2.6 6S9.8 12.3 8 14C6.2 12.3 5.4 10.2 5.4 8S6.2 3.7 8 2z";
+var R = [
+  ["Best MCP reading", "Start here if you are building an MCP server. Best first.", "Public · 214 views", GLOBE, "12 of 12", "2h", 0, 0],
+  ["Talk on MCP auth", "Twenty minutes for the Codú November meetup.", "Private", LOCK, "5 of 9", "2h", 0, 0],
+  ["Book, chapter 3 sources", "Everything chapter 3 quotes or leans on.", "Private", LOCK, "14 of 22", "Tue", 0, 0],
+  ["Codú newsletter #42", "Links for the next issue. Six is plenty.", "Private", LOCK, "0 of 6", "Mon", 0, 0],
+  ["Kitchen reno, to buy", "Things to buy before the fitters come in December.", "Private", LOCK, "3 of 11", "Sun", 0, 0],
+  ["Postgres, November", "One index, one window function and one query plan a week.", "Private", LOCK, "4 of 14", "Tue", 0, 0],
+  ["Local-first sync", "Built from what you plucked, with a line on each.", "Private", LOCK, "0 of 8", "Mon", 1, 0]
+];
+class Component extends DCLogic {
+  renderVals() {
+    return { rows: R.map((r) => ({ name: r[0], purpose: r[1], vis: r[2], visIcon: r[3], ticked: r[4], last: r[5], claude: !!r[6], smart: !!r[7] })) };
+  }
+}
+</script>
+</body>
+</html>

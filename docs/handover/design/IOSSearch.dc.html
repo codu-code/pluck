@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck iOS · Search</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Geist:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 20px; display: flex; flex-direction: column">
+<div style="padding: 62px 16px 12px; display: flex; flex-direction: column; gap: 12px">
+<h1 style="margin: 0; font-size: 32px; line-height: 38px; font-weight: 700; letter-spacing: -0.03em">Search</h1>
+<label style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 10px; background: #FFFFFF; border: 1.5px solid #151A13">
+<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM10.6 10.6L14 14" fill="none" stroke="#151A13" stroke-width="1.5" stroke-linecap="round"></path></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search</span>
+<input type="search" value="kitchen" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #151A13">
+</label>
+<div style="display: flex; gap: 8px; overflow: hidden">
+<button type="button" style="flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-size: 14px">Any kind</button>
+<button type="button" style="flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #CDD3C7; background: transparent; font: inherit; font-size: 14px">Tag</button>
+<button type="button" style="flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #CDD3C7; background: transparent; font: inherit; font-size: 14px">List</button>
+<button type="button" style="flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #CDD3C7; background: transparent; font: inherit; font-size: 14px">Status</button>
+<button type="button" style="flex: none; height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #CDD3C7; background: transparent; font: inherit; font-size: 14px">Date</button>
+</div>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; border-top: 1px solid #DDE2D8; overflow: hidden">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+<a href="IOSReader.dc.html" style="display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #DDE2D8; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 16 16" role="img" aria-label="{{r.kindName}}" style="flex: none; margin-top: 1px"><path d="{{r.glyph}}" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<b style="font-weight: 600">{{r.title}}</b>
+<span style="color: #394034; font-size: 14px; line-height: 20px">{{r.pre}}<mark style="background: #C9EEDC; color: #151A13; padding: 0 2px; border-radius: 2px">{{r.hit}}</mark>{{r.post}}</span>
+<span style="color: #525A4E; font-size: 13px">{{r.where}}</span>
+</div>
+</a>
+</sc-for>
+<div style="margin: 16px; padding: 14px 16px; border-radius: 10px; background: #EDF0EA; color: #151A13">Want it by meaning? Ask your AI.</div>
+</div>
+<nav aria-label="Tabs" style="height: 83px; box-sizing: border-box; padding: 6px 8px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #EDF0EA; border-top: 1px solid #DDE2D8">
+<a href="IOSInbox.dc.html" style="height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 11px; color: #525A4E"><svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 9h3l1 2h4l1-2h3M3.5 3h9L14 9v4H2V9z" fill="none" stroke="#525A4E" stroke-width="1.4" stroke-linejoin="round"></path></svg>Inbox</a>
+<a href="IOSInbox.dc.html" style="height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 11px; color: #525A4E"><svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM8 5v3l2 1.5" fill="none" stroke="#525A4E" stroke-width="1.4" stroke-linecap="round"></path></svg>Later</a>
+<a href="IOSSearch.dc.html" aria-current="page" style="height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 11px; font-weight: 600"><svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true"><path d="M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM10.6 10.6L14 14" fill="none" stroke="#151A13" stroke-width="1.6" stroke-linecap="round"></path></svg>Search</a>
+<a href="IOSLists.dc.html" style="height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; font-size: 11px; color: #525A4E"><svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4h8M5.5 8h8M5.5 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01" fill="none" stroke="#525A4E" stroke-width="1.5" stroke-linecap="round"></path></svg>Lists</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+var G = {
+  thing: "M3 5.5h10l-.8 8.5H3.8zM6 5.5V4.5a2 2 0 0 1 4 0v1",
+  read: "M3 4.5h10M3 8h10M3 11.5h6",
+  watch: "M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z"
+};
+var N = { thing: "Thing", read: "Read", watch: "Watch" };
+var R = [
+  ["thing", "Induction hob, 60 cm, four zones", "Your note: check the width against the ", "kitchen", " worktop cut-out.", "Kitchen reno, to buy · ticked"],
+  ["thing", "Tap with a pull-out spray", "Tag: ", "kitchen", ". Brushed steel, not chrome.", "Kitchen reno, to buy"],
+  ["read", "Small kitchens that work", "…the ", "kitchen", " triangle matters less than one long run of worktop…", "Later"],
+  ["watch", "Fitting a worktop in a weekend", "Transcript, 08:12: “…measure the ", "kitchen", " wall twice, it is never square…”", "Inbox"],
+  ["thing", "Under-cabinet LED strip, warm", "Tag: ", "kitchen", ". Two metres, plug-in.", "Kitchen reno, to buy"]
+];
+class Component extends DCLogic {
+  renderVals() {
+    return { rows: R.map((r) => ({ glyph: G[r[0]], kindName: N[r[0]], title: r[1], pre: r[2], hit: r[3], post: r[4], where: r[5] })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="110" viewBox="0 0 360 110">
+  <!-- Wordmark: "pluck" set in Fredoka 700. Convert to outlines before shipping; the live font is loaded in the app. -->
+  <text x="8" y="92" font-family="Fredoka, ui-rounded, sans-serif" font-weight="700" font-size="104" letter-spacing="-1" fill="#1E5C45">pluck</text>
+  <g transform="translate(292 8) scale(4.2)"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="1.8" stroke-linecap="round"/></g>
+</svg>

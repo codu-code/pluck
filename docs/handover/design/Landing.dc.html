@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Pluck it. Sort it later.</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 26px; overflow: hidden">
+
+<header style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Landing.dc.html" aria-label="Pluck home" style="display: inline-flex; align-items: center; gap: 7px; font-size: 24px; font-weight: 700; letter-spacing: -0.05em; text-decoration: none; margin-right: auto"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<nav aria-label="Site" style="display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px">
+<a href="#lists" style="text-decoration: none">Lists</a>
+<a href="SiteClaude.dc.html" style="text-decoration: none">Connect your AI</a>
+<a href="SiteOpen.dc.html" style="text-decoration: none">Open source</a>
+<a href="https://github.com" style="text-decoration: none">GitHub</a>
+</nav>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600; font-size: 15px">Get Pluck</a>
+</header>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px 0">
+<h1 style="margin: 0; font-size: clamp(88px, 17vw, 236px); line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pluck it<span style="color: #34A07C">.</span></h1>
+<div style="display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-end; justify-content: space-between; margin-top: 40px">
+<p style="margin: 0; flex: 1 1 420px; max-width: 560px; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 500">Save anything in one tap. Sort it later, by hand or with your AI. Or don't. We won't nag.</p>
+<div style="flex: 0 1 420px; display: flex; flex-direction: column; gap: 10px">
+<label style="display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 6px 0 16px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #151A13">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Paste a link to try it</span>
+<input type="url" placeholder="Paste a link. Or five. Go on." style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: #151A13">
+<button type="button" onClick="{{pluck}}" style="height: 44px; padding: 0 18px; border-radius: 8px; border: 0; background: #7FD3AE; color: #151A13; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Pluck it</button>
+</label>
+<sc-if value="{{plucked}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 10px; background: #1E5C45; color: #F6F8F4"><span style="width: 22px; height: 22px; border-radius: 11px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-weight: 600">Plucked.</b><span style="color: #A0A898">That was 300 ms. Sign up to keep it.</span></div>
+</sc-if>
+<sc-if value="{{notPlucked}}" hint-placeholder-val="{{ true }}">
+<span style="font-size: 14px; color: #525A4E">Free. Open source. iPhone, Chrome, Firefox, web and email. Ready for your AI.</span>
+</sc-if>
+</div>
+</div>
+</section>
+
+<section aria-label="The app" style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 72px 24px 0; position: relative">
+<div style="border-radius: 18px 18px 0 0; background: #FFFFFF; border: 1px solid #DDE2D8; border-bottom: 0; box-shadow: 0 30px 80px rgba(21,26,19,0.10); overflow: hidden">
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 24px; border-bottom: 1px solid #DDE2D8"><b style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Inbox</b><span style="color: #525A4E; font-size: 14px">24 to triage</span><span style="margin-left: auto; color: #525A4E; font-size: 13px; font-family: 'Geist Mono', monospace">j k l e t a</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 16px; height: 68px; padding: 0 24px; border-bottom: 1px solid #E6EBE2; background: {{r.bg}}">
+<div style="width: 42px; height: 42px; flex: none; border-radius: 7px; background: {{r.tile}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">{{r.ini}}</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column"><b style="font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.t}}</b><span style="color: #525A4E; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.s}}</span></div>
+<span style="flex: none; display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; background: #E3E8DE; font-size: 13px">{{r.tag}}</span>
+</div>
+</sc-for>
+</div>
+<div role="presentation" style="position: absolute; right: 64px; top: 40px; display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 14px; border-radius: 14px; background: #1E5C45; color: #F6F8F4; box-shadow: 0 16px 40px rgba(21,26,19,0.25); transform: rotate(-3deg)"><span style="width: 36px; height: 36px; border-radius: 18px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em">Plucked.</b></div>
+</section>
+
+<section style="background: #151A13; color: #ECEFE8">
+<div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 96px 24px">
+<p style="margin: 0; font-size: clamp(34px, 5.4vw, 76px); line-height: 1.04; font-weight: 700; letter-spacing: -0.045em; text-wrap: balance">An article. A recipe. A thread. <span style="color: #7FD3AE">Half an idea.</span> A hob for the kitchen. A talk you'll give in November. <span style="color: #A0A898">A PDF you will never read.</span></p>
+<p style="margin: 32px 0 0; font-size: 20px; line-height: 30px; color: #A0A898; max-width: 560px">One inbox for all of it. The page is kept, not just the link, so it's still there when the site isn't.</p>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 112px 24px 0; display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13">
+<b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">1 tap</b>
+<p style="margin: 0; font-size: 22px; line-height: 32px">From the iPhone share sheet, without opening an app. From Chrome, Firefox, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13">
+<b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">0 nags</b>
+<p style="margin: 0; font-size: 22px; line-height: 32px">No streaks, no badges, no guilt. Nothing gets tagged behind your back. Things you never touch slide into the Archive after 30 days (you pick the number), unless they're in a list. Nothing is deleted.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13; border-bottom: 2px solid #151A13">
+<b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">30 s</b>
+<p style="margin: 0; font-size: 22px; line-height: 32px">To plug in the AI you already use. Claude, ChatGPT, Cursor, anything that speaks MCP. Ask it to tidy, group or turn your saves into ideas. It works while you watch, and never deletes.</p>
+</div>
+</section>
+
+<section id="lists" style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 128px 24px 0; display: flex; flex-wrap: wrap; gap: 48px 64px; align-items: center">
+<div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: clamp(44px, 6vw, 84px); line-height: 0.96; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Lists are what you're making.</h2>
+<p style="margin: 0; font-size: 21px; line-height: 31px; max-width: 520px">A book. A newsletter issue. A talk. A trip. Things to buy. Put any pluck in as many lists as you like, each with its own note and a tick.</p>
+<p style="margin: 0; font-size: 21px; line-height: 31px; max-width: 520px">Private by default. Public with one switch. Take it back with the same switch.</p>
+</div>
+<div style="flex: 1 1 440px; position: relative; min-height: 440px">
+<div style="position: absolute; left: 0; top: 0; right: 48px; border-radius: 16px; background: #FFFFFF; border: 1px solid #DDE2D8; padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 60px rgba(21,26,19,0.08)">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em">Kitchen reno, to buy</b><span style="font-size: 13px; color: #525A4E">3 of 7</span></div>
+<sc-for list="{{kitchen}}" as="k" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: flex-start"><span style="width: 22px; height: 22px; flex: none; box-sizing: border-box; border-radius: 11px; border: 1.5px solid {{k.ring}}; background: {{k.fill}}; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="{{k.tick}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span style="display: flex; flex-direction: column"><b style="font-weight: 600; font-size: 16px; line-height: 22px">{{k.t}}</b><span style="color: #525A4E; font-size: 14px; line-height: 20px">{{k.n}}</span></span></div>
+</sc-for>
+</div>
+<a href="PublicList.dc.html" style="position: absolute; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 14px; background: #7FD3AE; text-decoration: none; box-shadow: 0 16px 40px rgba(21,26,19,0.15); transform: rotate(2deg)"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM2 8h12M8 2c1.8 1.7 2.6 3.8 2.6 6S9.8 12.3 8 14C6.2 12.3 5.4 10.2 5.4 8S6.2 3.7 8 2z" fill="none" stroke="#151A13" stroke-width="1.5"></path></svg><span style="display: flex; flex-direction: column"><b style="font-weight: 700">getpluck.io/@niall/best-mcp-reading</b><span style="font-size: 13px; line-height: 18px">Public. Anyone can pluck it into theirs.</span></span></a>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 128px 24px 0">
+<div style="border-radius: 24px; background: #151A13; color: #ECEFE8; padding: clamp(32px, 6vw, 80px); display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+<div style="flex: 1 1 400px; display: flex; flex-direction: column; gap: 20px">
+<span style="font: 500 13px 'Geist Mono', monospace; color: #D08A68; letter-spacing: 0.04em">READY FOR YOUR AI</span>
+<h2 style="margin: 0; font-size: clamp(40px, 5vw, 68px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Plug in the AI you already use.</h2>
+<p style="margin: 0; font-size: 20px; line-height: 30px; color: #A0A898">“What did I pluck about MCP auth?” “Tidy my inbox.” “Make a reading list from this month, best first.” One link and your whole library is there. It changes things only when you say so, and marks everything it touched.</p>
+<a href="SiteClaude.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 10px; background: #ECEFE8; color: #151A13; text-decoration: none; font-weight: 600">How it works with AI</a>
+</div>
+<div style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 24px">
+<div style="align-self: flex-end; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #252A22">Pluck this as an idea: an MCP server for Assemble's estimates</div>
+<span style="align-self: flex-start; font: 12px 'Geist Mono', monospace; color: #A0A898; padding: 4px 10px; border-radius: 6px; border: 1px solid #363C33">save_item kind=idea</span>
+<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C; border: 1px solid #363C33">Plucked. It's in your inbox as a Note, marked as saved by me.</div>
+<div style="align-self: flex-end; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #252A22">What's rotting in my library?</div>
+<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C; border: 1px solid #363C33">Five things untouched for a month. Want to go through them one at a time?</div>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 128px 24px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: clamp(40px, 5vw, 64px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pocket shut down. Omnivore shut down.</h2>
+<p style="margin: 0; font-size: 21px; line-height: 31px">Pluck is open source and runs on a database you can own. It can't close with two weeks' notice. Bring your old library across in one go.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px; align-self: end">
+<sc-for list="{{imports}}" as="i" hint-placeholder-count="4">
+<div style="display: flex; justify-content: space-between; align-items: center; height: 60px; padding: 0 20px; border-radius: 12px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-weight: 600">{{i.name}}</b><span style="color: #525A4E; font-size: 15px">{{i.fmt}}</span></div>
+</sc-for>
+<a href="SiteOpen.dc.html" style="align-self: flex-start; font-weight: 600; margin-top: 4px">Self-host it in one command</a>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 144px 24px 96px; display: flex; flex-direction: column; gap: 32px">
+<p style="margin: 0; font-size: clamp(80px, 15vw, 210px); line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Sort it<br>later<span style="color: #34A07C">.</span></p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Add to Chrome</a>
+<a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Firefox</a>
+<a href="IOSShare.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">iPhone</a>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Use it on the web</a>
+</div>
+</section>
+
+<footer style="border-top: 1px solid #DDE2D8">
+<div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: #525A4E">
+<span style="display: inline-flex; align-items: center; gap: 6px; color: #151A13; font-weight: 700; letter-spacing: -0.04em; font-size: 18px; margin-right: auto"><dc-import name="Logo" size="18" tone="brand" hint-size="54px,18px"></dc-import></span>
+<a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SiteOpen.dc.html" style="color: #525A4E">Open source</a><a href="https://github.com" style="color: #525A4E">GitHub</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
+<span>Made in Dublin.</span>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4600}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { plucked: false }; }
+  renderVals() {
+    var on = [true, true, false, true];
+    return {
+      plucked: this.state.plucked, notPlucked: !this.state.plucked,
+      pluck: () => this.setState({ plucked: true }),
+      rows: [
+        { t: "How MCP auth actually works", s: "modelcontextprotocol.io · 12 min", tag: "mcp", ini: "MC", tile: "#E1E6CF", bg: "transparent" },
+        { t: "Postgres indexes in 40 minutes", s: "youtube.com · 41 min", tag: "postgres", ini: "YT", tile: "#E6DCD6", bg: "#E6EBE2" },
+        { t: "An MCP server for Assemble's estimates", s: "Note · by you", tag: "assemble", ini: "", tile: "#EDF0EA", bg: "transparent" },
+        { t: "Induction hob, 60 cm, four zones", s: "Thing · Kitchen reno list", tag: "kitchen", ini: "", tile: "#EDF0EA", bg: "transparent" }
+      ],
+      kitchen: [
+        { t: "Induction hob, 60 cm", n: "Check the width against the cut-out." },
+        { t: "Tap with a pull-out spray", n: "Brushed steel, not chrome." },
+        { t: "Under-cabinet LED strip", n: "Plug-in, no electrician." },
+        { t: "Extractor, ducted", n: "Ask the fitters about the wall first." }
+      ].map((k, i) => ({ t: k.t, n: k.n, ring: on[i] ? "#151A13" : "#9AA392", fill: on[i] ? "#7FD3AE" : "transparent", tick: on[i] ? "#151A13" : "transparent" })),
+      imports: [
+        { name: "Pocket", fmt: "CSV export" },
+        { name: "Omnivore", fmt: "Export zip" },
+        { name: "Raindrop", fmt: "CSV" },
+        { name: "Any browser", fmt: "Bookmarks HTML" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

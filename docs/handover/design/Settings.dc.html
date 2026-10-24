@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 1900px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Inbox<span style="color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists<span style="color: #525A4E">6</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" aria-current="page" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Settings</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px; padding-left: 8px; border-left: 1px solid transparent">
+<a href="#claude" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">AI tools</a>
+<a href="#email" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">Email-in</a>
+<a href="#keys" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">API keys</a>
+<a href="#expiry" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">Expiry and archive</a>
+<a href="#tags" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">Tags</a>
+<a href="#import" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">Import and export</a>
+<a href="#delete" style="height: 28px; display: flex; align-items: center; padding: 0 8px; color: #525A4E; text-decoration: none">Delete account</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="width: 100%; max-width: 1040px; box-sizing: border-box; padding: 32px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
+<h1 style="margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em">Settings</h1>
+<span style="color: #525A4E">niall@codu.co · signed in with GitHub</span>
+</div>
+
+<section style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end">
+<label style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Name</span><input type="text" value="Niall Maher" style="height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"></label>
+<label style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Handle, for public lists</span><span style="display: flex; align-items: center; height: 40px; box-sizing: border-box; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; overflow: hidden"><span style="padding: 0 4px 0 12px; color: #525A4E">getpluck.io/@</span><input type="text" value="niall" style="flex: 1; min-width: 0; height: 38px; border: 0; outline: none; background: transparent; font: inherit; color: #151A13"></span></label>
+<span style="flex: 1 1 200px; color: #525A4E; font-size: 13px; padding-bottom: 10px">Only shown on lists you make public.</span>
+</section>
+
+<section id="claude" style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">AI tools</h2>
+<p style="margin: 0; color: #525A4E; max-width: 600px">Your library, in the AI tool you already use, in thirty seconds. It reads everything, changes things only when you ask, and can never delete.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start">
+<div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Connector URL, for Claude, ChatGPT, Cursor and any MCP client</span>
+<div style="display: flex; gap: 8px"><code style="flex: 1; min-width: 0; height: 40px; box-sizing: border-box; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE; font: 13px ui-monospace, 'SF Mono', Menlo, monospace">https://getpluck.io/mcp</code><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-weight: 500">Copy</button></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Claude Code</span>
+<div style="display: flex; gap: 8px"><code style="flex: 1; min-width: 0; height: 40px; box-sizing: border-box; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE; font: 13px ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; overflow: hidden">claude mcp add --transport http pluck https://getpluck.io/mcp</code><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit">Copy</button></div></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Self-hosting without a public URL</span>
+<code style="height: 40px; box-sizing: border-box; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: #EDF0EA; font: 13px ui-monospace, 'SF Mono', Menlo, monospace">npx @pluck/mcp --key pk_live_••••••••3f9a</code></div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px"><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #151A13; background: transparent; font: inherit; font-weight: 500">Test it</button><span style="color: #525A4E; font-size: 13px">Opens your AI with “What did I pluck this week?”</span></div>
+</div>
+<div style="flex: 0 1 300px; display: flex; flex-direction: column; gap: 8px">
+<div style="height: 180px; border-radius: 8px; background: #EDF0EA; display: flex; align-items: center; justify-content: center; color: #525A4E; font-size: 12px">[20-second GIF: adding the connector]</div>
+<span style="display: flex; align-items: center; gap: 8px; font-size: 13px"><span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 4px; background: #34A07C"></span>Connected · last call 12 min ago</span>
+</div>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px; padding-top: 32px; border-top: 1px solid #DDE2D8">
+<section id="email" style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Email-in</h2>
+<p style="margin: 0; color: #525A4E">Forward a newsletter here. It lands as a Read item.</p>
+<div style="display: flex; gap: 8px"><code style="flex: 1; min-width: 0; height: 40px; box-sizing: border-box; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE; font: 13px ui-monospace, 'SF Mono', Menlo, monospace">pluck+k7f2q9@in.getpluck.io</code><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit">Copy</button></div>
+<a href="#email" style="font-size: 13px">Regenerate address</a>
+</section>
+<section id="keys" style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">API keys</h2>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 48px; padding: 0 12px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE"><span><b style="font-weight: 600">iPhone Shortcut</b> <span style="color: #525A4E">· pk_live_••••3f9a · used today</span></span><button type="button" style="height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #CDD3C7; background: transparent; font: inherit; font-size: 13px">Revoke</button></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit">New key</button><button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-weight: 500">Add the Pluck Shortcut</button></div>
+</section>
+</div>
+
+<section id="expiry" style="display: flex; flex-direction: column; gap: 16px; padding-top: 32px; border-top: 1px solid #DDE2D8">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Expiry and archive</h2>
+<p style="margin: 0; color: #525A4E; max-width: 620px">Things you don't touch move to the Archive on their own. They are never deleted. Search still finds them, and Restore puts them back. Items in a list never expire.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end">
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Move to Archive after</span>
+<select style="height: 40px; min-width: 200px; padding: 0 10px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"><option>14 days untouched</option><option selected>30 days untouched</option><option>60 days untouched</option><option>90 days untouched</option><option>Never</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Applies to</span>
+<select style="height: 40px; min-width: 200px; padding: 0 10px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"><option selected>Inbox and Later</option><option>Inbox only</option></select></label>
+<span style="color: #525A4E; font-size: 13px; padding-bottom: 10px">The Monday email warns you a week before.</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-radius: 10px; background: #EDF0EA">
+<div style="display: flex; flex-direction: column; gap: 2px"><b style="font-weight: 600">Start clean</b><span style="color: #525A4E">Move everything in Inbox and Later older than 30 days to the Archive, right now. 112 items. Lists are left alone.</span></div>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1.5px solid #151A13; background: transparent; font: inherit; font-weight: 500">Archive it all. No, really.</button>
+</div>
+</section>
+
+<section id="tags" style="display: flex; flex-direction: column; gap: 12px; padding-top: 32px; border-top: 1px solid #DDE2D8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Tags</h2>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #C9A28E; background: transparent; color: #9A5536; font: inherit; font-weight: 500">Remove everything AI tagged this week · 18</button>
+</div>
+<div style="overflow-x: auto">
+<table style="width: 100%; min-width: 560px; border-collapse: collapse">
+<thead><tr style="text-align: left; color: #525A4E; font-size: 13px"><th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8">Tag</th><th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8; text-align: right">Yours</th><th scope="col" style="font-weight: 500; padding: 8px 12px; border-bottom: 1px solid #DDE2D8; text-align: right">By Claude</th><th scope="col" style="padding: 8px 12px; border-bottom: 1px solid #DDE2D8"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Actions</span></th></tr></thead>
+<tbody>
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="6">
+<tr>
+<td style="padding: 10px 12px; border-bottom: 1px solid #DDE2D8"><span style="display: inline-flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; background: {{t.color}}"></span>{{t.name}}</span></td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #DDE2D8; text-align: right">{{t.mine}}</td>
+<td style="padding: 10px 12px; border-bottom: 1px solid #DDE2D8; text-align: right; color: #9A5536">{{t.claude}}</td>
+<td style="padding: 6px 12px; border-bottom: 1px solid #DDE2D8; text-align: right"><span style="display: inline-flex; gap: 4px"><button type="button" style="height: 32px; padding: 0 10px; border-radius: 6px; border: 0; background: transparent; font: inherit; font-size: 13px">Rename</button><button type="button" style="height: 32px; padding: 0 10px; border-radius: 6px; border: 0; background: transparent; font: inherit; font-size: 13px">Merge</button></span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+
+<div id="import" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px; padding-top: 32px; border-top: 1px solid #DDE2D8">
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Import</h2>
+<label style="height: 88px; border-radius: 8px; border: 1.5px dashed #C3CABC; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: #525A4E; text-align: center">
+<span style="color: #151A13; font-weight: 500">Drop a file, or choose one</span>
+<span style="font-size: 13px">Pocket CSV · Omnivore zip · Raindrop CSV · bookmarks HTML</span>
+<input type="file" style="position: absolute; width: 1px; height: 1px; opacity: 0">
+</label>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span>pocket_export.csv</span><span style="color: #525A4E">1,204 done · 12 failed</span></div>
+<div style="height: 6px; border-radius: 3px; background: #DDE2D8"><div style="width: 72%; height: 6px; border-radius: 3px; background: #151A13"></div></div>
+<span style="color: #525A4E; font-size: 13px">Runs in the background. Close the page if you like.</span>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Export</h2>
+<p style="margin: 0; color: #525A4E">items.json, plus one Markdown file per item with highlights and notes, and one per list. A zip, by email and as a download. Any single list exports from its own page.</p>
+<button type="button" style="align-self: flex-start; height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-weight: 500">Export everything</button>
+</section>
+</div>
+
+<section id="delete" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 32px; border-top: 1px solid #DDE2D8">
+<div style="display: flex; flex-direction: column; gap: 4px"><h2 style="margin: 0; font-size: 18px; line-height: 24px; font-weight: 600">Delete account</h2><span style="color: #525A4E">Every item, tag, note and key. Export first.</span></div>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #A3341F; background: transparent; color: #A3341F; font: inherit; font-weight: 500">Delete everything. No, really.</button>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { tags: [
+      { name: "mcp", color: "#34A07C", mine: 38, claude: 4 },
+      { name: "postgres", color: "#5B7FA6", mine: 27, claude: 6 },
+      { name: "codu", color: "#C27A3A", mine: 22, claude: 3 },
+      { name: "assemble", color: "#7C6A9E", mine: 15, claude: 0 },
+      { name: "auth", color: "#B8A44A", mine: 9, claude: 5 },
+      { name: "guitar", color: "#5E8C6A", mine: 8, claude: 0 }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

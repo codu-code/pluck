@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · The loop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="position: relative; width: 1600px; height: 780px; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 20px">
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 304px; top: 160px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 304px; top: 264px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 304px; top: 368px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 304px; top: 472px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 304px; top: 576px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="8" height="416" viewBox="0 0 8 416" preserveAspectRatio="none" style="position: absolute; left: 348px; top: 164px; width: 8px; height: 416px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 4 0 L 4 416"></path></svg>
+<svg width="95" height="8" viewBox="0 0 95 8" preserveAspectRatio="none" style="position: absolute; left: 352px; top: 368px; width: 95px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-1" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#8A8478" stroke="none" style="stroke: none; fill: #8A8478; fill: context-stroke"/></marker></defs><path d="M 0 4 L 91 4" marker-end="url(#dc-arrow-head-filled-1)"></path></svg>
+<svg width="80" height="8" viewBox="0 0 80 8" preserveAspectRatio="none" style="position: absolute; left: 728px; top: 368px; width: 80px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 80 4"></path></svg>
+<svg width="8" height="224" viewBox="0 0 8 224" preserveAspectRatio="none" style="position: absolute; left: 804px; top: 260px; width: 8px; height: 224px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 4 0 L 4 224"></path></svg>
+<svg width="95" height="8" viewBox="0 0 95 8" preserveAspectRatio="none" style="position: absolute; left: 808px; top: 256px; width: 95px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-2" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#8A8478" stroke="none" style="stroke: none; fill: #8A8478; fill: context-stroke"/></marker></defs><path d="M 0 4 L 91 4" marker-end="url(#dc-arrow-head-filled-2)"></path></svg>
+<svg width="95" height="8" viewBox="0 0 95 8" preserveAspectRatio="none" style="position: absolute; left: 808px; top: 480px; width: 95px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-3" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#8A8478" stroke="none" style="stroke: none; fill: #8A8478; fill: context-stroke"/></marker></defs><path d="M 0 4 L 91 4" marker-end="url(#dc-arrow-head-filled-3)"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 1204px; top: 256px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="48" height="8" viewBox="0 0 48 8" preserveAspectRatio="none" style="position: absolute; left: 1204px; top: 480px; width: 48px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 48 4"></path></svg>
+<svg width="8" height="224" viewBox="0 0 8 224" preserveAspectRatio="none" style="position: absolute; left: 1248px; top: 260px; width: 8px; height: 224px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 4 0 L 4 224"></path></svg>
+<svg width="47" height="8" viewBox="0 0 47 8" preserveAspectRatio="none" style="position: absolute; left: 1252px; top: 256px; width: 47px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-4" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#8A8478" stroke="none" style="stroke: none; fill: #8A8478; fill: context-stroke"/></marker></defs><path d="M 0 4 L 43 4" marker-end="url(#dc-arrow-head-filled-4)"></path></svg>
+<svg width="47" height="8" viewBox="0 0 47 8" preserveAspectRatio="none" style="position: absolute; left: 1252px; top: 480px; width: 47px; height: 8px; overflow: visible; fill: none; stroke: #8A8478; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-5" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#8A8478" stroke="none" style="stroke: none; fill: #8A8478; fill: context-stroke"/></marker></defs><path d="M 0 4 L 43 4" marker-end="url(#dc-arrow-head-filled-5)"></path></svg>
+<svg width="8" height="148" viewBox="0 0 8 148" preserveAspectRatio="none" style="position: absolute; left: 1050px; top: 532px; width: 8px; height: 148px; overflow: visible; fill: none; stroke: #B06A48; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 6"><path d="M 4 0 L 4 148"></path></svg>
+<svg width="466" height="8" viewBox="0 0 466 8" preserveAspectRatio="none" style="position: absolute; left: 588px; top: 676px; width: 466px; height: 8px; overflow: visible; fill: none; stroke: #B06A48; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 6"><path d="M 0 4 L 466 4"></path></svg>
+<svg width="8" height="251" viewBox="0 0 8 251" preserveAspectRatio="none" style="position: absolute; left: 584px; top: 429px; width: 8px; height: 251px; overflow: visible; fill: none; stroke: #B06A48; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 6"><defs><marker id="dc-arrow-head-filled-6" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#B06A48" stroke="none" style="stroke: none; fill: #B06A48; fill: context-stroke"/></marker></defs><path d="M 4 251 L 4 4" marker-end="url(#dc-arrow-head-filled-6)"></path></svg>
+
+<div style="position: absolute; left: 64px; top: 56px; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em">The Pluck loop</div>
+<div style="position: absolute; left: 64px; top: 92px; color: #525A4E">Five ways in, one inbox, two ways to act on it, two ways out.</div>
+
+<div style="position: absolute; left: 64px; top: 136px; width: 240px; height: 56px; box-sizing: border-box; padding: 8px 16px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px">iOS share sheet</div>
+<div style="position: absolute; left: 64px; top: 240px; width: 240px; height: 56px; box-sizing: border-box; padding: 8px 16px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px">Browser extension</div>
+<div style="position: absolute; left: 64px; top: 344px; width: 240px; height: 56px; box-sizing: border-box; padding: 8px 16px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px">Web paste box</div>
+<div style="position: absolute; left: 64px; top: 448px; width: 240px; height: 56px; box-sizing: border-box; padding: 8px 16px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px">Email-in</div>
+<div style="position: absolute; left: 64px; top: 552px; width: 240px; height: 56px; box-sizing: border-box; padding: 8px 16px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px"><span>Your AI, <b style="font-weight: 600">save_item</b></span></div>
+
+<div style="position: absolute; left: 448px; top: 316px; width: 280px; height: 112px; box-sizing: border-box; padding: 16px 20px; display: flex; align-items: center; background: #1E5C45; color: #F6F8F4; border-radius: 12px"><span><b style="font-size: 20px; line-height: 28px; font-weight: 600">Inbox</b><br>Store, show, search, nudge. This is all Pluck does.</span></div>
+
+<div style="position: absolute; left: 904px; top: 212px; width: 300px; height: 96px; box-sizing: border-box; padding: 16px 20px; display: flex; align-items: center; background: #FFFFFF; border: 1px solid #D3D9CE; border-radius: 10px"><span><b style="font-weight: 600">You</b><br>Triage, read, highlight, make lists.</span></div>
+<div style="position: absolute; left: 904px; top: 436px; width: 300px; height: 96px; box-sizing: border-box; padding: 16px 20px; display: flex; align-items: center; background: #FFFFFF; border: 1.5px solid #B06A48; border-radius: 10px"><span><b style="font-weight: 600; color: #9A5536">Your AI, when you ask</b><br>Tidy, build lists, ideas, review.</span></div>
+
+<div style="position: absolute; left: 1300px; top: 224px; width: 236px; height: 72px; box-sizing: border-box; padding: 12px 16px; display: flex; align-items: center; background: #E6EBE2; border-radius: 10px"><span><b style="font-weight: 600">Archive</b><br>Done, let go, or expired. Never deleted.</span></div>
+<div style="position: absolute; left: 1300px; top: 448px; width: 236px; height: 72px; box-sizing: border-box; padding: 12px 16px; display: flex; align-items: center; background: #E6EBE2; border-radius: 10px"><span><b style="font-weight: 600">Public list or export</b><br>A page to share, or your data.</span></div>
+
+<div style="position: absolute; left: 611px; top: 692px; width: 420px; text-align: center; font-size: 13px; line-height: 16px; color: #9A5536">Drafts and plans get plucked back in as a Note</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":780}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

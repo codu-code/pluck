@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.output/
+.turbo/
+dist/
+cdk.out/
+.env*
+!.env.example
+test-results/
+playwright-report/
+.DS_Store

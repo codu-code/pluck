@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck iOS · First run</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Geist:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 20px; display: flex; flex-direction: column; gap: 28px; padding: 76px 24px 34px; box-sizing: border-box">
+<dc-import name="Icon" size="56" tone="bare" hint-size="56px,56px"></dc-import>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h1 style="margin: 0; font-size: 40px; line-height: 42px; font-weight: 700; letter-spacing: -0.04em">You're in.<br>Now pluck something.</h1>
+<p style="margin: 0; color: #525A4E; font-size: 16px; line-height: 23px">You never need to open this app to save. It lives in Share, in every app.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="height: 196px; border-radius: 14px; background: #E4E8E0; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end">
+<div style="border-radius: 10px; background: #F2F3F1; padding: 10px; display: flex; gap: 8px">
+<dc-import name="Icon" size="34" tone="forest" hint-size="34px,34px"></dc-import>
+<span style="width: 34px; height: 34px; border-radius: 9px; background: #DFE4DA"></span><span style="width: 34px; height: 34px; border-radius: 9px; background: #DFE4DA"></span>
+</div>
+</div>
+<span style="font-size: 14px"><b style="font-weight: 600">1.</b> Tap Share, then Pluck.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="height: 196px; border-radius: 14px; background: #E4E8E0; padding: 10px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end">
+<div style="border-radius: 10px; background: #F6F8F4; padding: 12px 10px; display: flex; align-items: center; gap: 8px">
+<span style="width: 24px; height: 24px; border-radius: 12px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<b style="font-weight: 700; letter-spacing: -0.02em">Plucked.</b>
+</div>
+</div>
+<span style="font-size: 14px"><b style="font-weight: 600">2.</b> That's it. Keep reading.</span>
+</div>
+</div>
+
+<div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+<a href="IOSShare.dc.html" style="display: flex; align-items: center; justify-content: center; height: 52px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; font-weight: 600; text-decoration: none">Try it now</a>
+<span style="text-align: center; color: #525A4E; font-size: 13px">Opens a sample page in Safari. Share it to Pluck.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

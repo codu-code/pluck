@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Best MCP reading · a list by Niall Maher</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 1300px; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 22px; display: flex; flex-direction: column; align-items: center">
+<header style="width: 100%; max-width: 760px; box-sizing: border-box; padding: 24px 24px 0; display: flex; align-items: center; justify-content: space-between">
+<a href="Landing.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; font-size: 22px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none"><dc-import name="Logo" size="22" tone="brand" hint-size="66px,22px"></dc-import></a>
+<a href="Landing.dc.html" style="font-size: 13px; color: #525A4E">What is Pluck?</a>
+</header>
+
+<main style="width: 100%; max-width: 760px; box-sizing: border-box; padding: 72px 24px 64px; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<span style="color: #525A4E; font-size: 13px">A list by Niall Maher · 6 items · updated 2 hours ago</span>
+<h1 style="margin: 0; font-size: 52px; line-height: 56px; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance">Best MCP reading</h1>
+<p style="margin: 0; font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 21px; line-height: 31px; color: #394034">Start here if you are building an MCP server. Best first.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px">
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; gap: 10px; height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600"><span style="width: 20px; height: 20px; border-radius: 10px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>Pluck this list</a>
+<span style="color: #525A4E; font-size: 13px">Copies it into your own Pluck. Free.</span>
+</div>
+</div>
+
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<sc-for list="{{rows}}" as="it" hint-placeholder-count="6">
+<li style="display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid #DDE2D8">
+<span style="width: 28px; flex: none; font-size: 20px; line-height: 28px; font-weight: 600; color: #525A4E">{{it.n}}</span>
+<div style="width: 112px; height: 72px; flex: none; border-radius: 6px; background: {{it.tile}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #394034">{{it.ini}}</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<a href="https://getpluck.io" style="font-size: 18px; line-height: 24px; font-weight: 600; text-decoration: none">{{it.title}}</a>
+<span style="color: #525A4E; font-size: 13px">{{it.site}}</span>
+<p style="margin: 0; font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 17px; line-height: 26px; color: #394034">{{it.note}}</p>
+</div>
+</li>
+</sc-for>
+</ol>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px; border-radius: 12px; background: #EDF0EA">
+<div style="display: flex; flex-direction: column; gap: 4px"><b style="font-weight: 600">Make lists like this from what you save.</b><span style="color: #525A4E">Pluck it. Sort it later. Share it when it's good.</span></div>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Pluck this list</a>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 13px; color: #525A4E"><a href="SiteTerms.dc.html" style="color: #525A4E">Report this list</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a></div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+var R = [
+  ["How MCP auth actually works", "modelcontextprotocol.io", "Start here. The scope section is the whole talk.", "MC", "#E1E6CF"],
+  ["Building an MCP server from scratch", "youtube.com · 52 min", "Watch from 31:04 for the refresh flow.", "YT", "#E6DCD6"],
+  ["Tool descriptions that models read well", "blog post", "Short, plain names. One job per tool.", "TD", "#DCE1E3"],
+  ["OAuth scopes for people in a hurry", "blog post", "Read after the first one. Narrow scopes win.", "OA", "#E2E6DA"],
+  ["Designing results for small screens", "blog post", "Why tool results should be cards, not JSON.", "DR", "#E1E6CF"],
+  ["Shipping an MCP server to production", "x.com · thread", "The checklist at the end is worth printing.", "X", "#DFE2DC"]
+];
+class Component extends DCLogic {
+  renderVals() {
+    return { rows: R.map((r, i) => ({ n: i + 1, title: r[0], site: r[1], note: r[2], ini: r[3], tile: r[4] })) };
+  }
+}
+</script>
+</body>
+</html>

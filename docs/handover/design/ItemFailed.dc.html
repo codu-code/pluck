@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Item, couldn't read</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Inbox<span style="font-weight: 400; color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists<span style="color: #525A4E">6</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; padding: 12px 32px; border-bottom: 1px solid #DDE2D8">
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px; text-decoration: none; color: #525A4E"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="#525A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>Inbox</a>
+</div>
+
+<div style="width: 100%; max-width: 744px; box-sizing: border-box; padding: 64px 32px; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="color: #525A4E; font-size: 13px">Plucked from iOS · 10 min ago</span>
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em">Couldn't read this page.</h1>
+<code style="font: 13px ui-monospace, 'SF Mono', Menlo, monospace; color: #525A4E; word-break: break-all">https://members.example-journal.com/2026/10/estimating-with-ai</code>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-weight: 500">Retry</button>
+<a href="https://members.example-journal.com" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none; font-weight: 500">Open original</a>
+<a href="https://web.archive.org" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; text-decoration: none; font-weight: 500">Try the Wayback copy</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 8px; background: #EDF0EA">
+<b style="font-weight: 600">Behind a login?</b>
+<span style="color: #525A4E">Pluck it from the extension to keep the page. It sends what your browser already sees.</span>
+<a href="Extension.dc.html" style="font-size: 13px; font-weight: 500">Get the extension</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding-top: 24px; border-top: 1px solid #DDE2D8">
+<span style="font-weight: 600">Still yours</span>
+<span style="color: #525A4E">The link, your note and your tags are kept. Search finds it by title and note.</span>
+<div style="display: flex; gap: 6px"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #E3E8DE; font-size: 12px">assemble</span></div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

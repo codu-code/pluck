@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · The connector in Claude</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; padding: 56px 64px; background: #E4E8E0; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 23px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: baseline; justify-content: space-between">
+<h1 style="margin: 0; font-size: 32px; line-height: 36px; font-weight: 700; letter-spacing: -0.03em">The connector, in use</h1>
+<span style="color: #525A4E">12 tools · 4 prompts · it can never delete</span>
+</div>
+
+<div style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; min-height: 0">
+
+<section aria-label="tidy_inbox" style="border-radius: 14px; background: #FFFFFF; padding: 28px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+<span style="align-self: flex-start; display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; background: #F3E9E3; color: #7A4026; font: 500 12px 'Geist Mono', ui-monospace, monospace">tidy_inbox</span>
+<div style="align-self: flex-end; max-width: 80%; padding: 10px 14px; border-radius: 14px; background: #EDF0EA">Tidy my Pluck inbox</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">list_items status=inbox</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">list_tags</span>
+</div>
+<p style="margin: 0">24 in your inbox. Here's what I'd do, using only tags you already have:</p>
+<div style="overflow-x: auto">
+<table style="width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px">
+<thead><tr style="text-align: left; color: #525A4E; font-size: 12px"><th scope="col" style="font-weight: 500; padding: 6px 8px; border-bottom: 1px solid #DDE2D8">Item</th><th scope="col" style="font-weight: 500; padding: 6px 8px; border-bottom: 1px solid #DDE2D8">Tags</th><th scope="col" style="font-weight: 500; padding: 6px 8px; border-bottom: 1px solid #DDE2D8">Do</th></tr></thead>
+<tbody>
+<sc-for list="{{tidy}}" as="r" hint-placeholder-count="5">
+<tr><td style="padding: 8px; border-bottom: 1px solid #E6EBE2">{{r.item}}</td><td style="padding: 8px; border-bottom: 1px solid #E6EBE2; color: #9A5536">{{r.tags}}</td><td style="padding: 8px; border-bottom: 1px solid #E6EBE2; font-weight: 500">{{r.act}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; color: #525A4E; font-size: 14px">Plus 19 more. Say yes, or change any row.</p>
+<div style="align-self: flex-end; max-width: 80%; padding: 10px 14px; border-radius: 14px; background: #EDF0EA">Yes. Keep the Postgres video in the inbox.</div>
+<span style="align-self: flex-start; height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">batch_update · 23 items</span>
+<p style="margin: 0">Done. 23 items changed. Every tag I added carries the “by AI” mark, and Settings can remove them all in one go.</p>
+</section>
+
+<section aria-label="build_list" style="border-radius: 14px; background: #FFFFFF; padding: 28px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+<span style="align-self: flex-start; display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 13px; background: #F3E9E3; color: #7A4026; font: 500 12px 'Geist Mono', ui-monospace, monospace">build_list</span>
+<div style="align-self: flex-end; max-width: 86%; padding: 10px 14px; border-radius: 14px; background: #EDF0EA">Make me a reading list on local-first sync from what I've plucked, with a line on why each matters, and make it public.</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">search_items "local-first"</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">get_item × 5</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">create_list</span>
+<span style="height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 6px; background: #F6F8F4; border: 1px solid #DDE2D8; font: 12px 'Geist Mono', ui-monospace, monospace; color: #394034">update_list visibility=public</span>
+</div>
+<p style="margin: 0">Five of your plucks were worth it. Best first:</p>
+<div style="border-radius: 12px; border: 1px solid #DDE2D8; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #F6F8F4; border-bottom: 1px solid #DDE2D8">
+<span style="display: flex; align-items: center; gap: 8px"><dc-import name="Icon" size="16" tone="bare" hint-size="16px,16px"></dc-import><b style="font-weight: 600">Local-first sync</b></span>
+<span style="font-size: 13px; color: #525A4E">Public · 5 items</span>
+</div>
+<ol style="margin: 0; padding: 4px 16px 4px 36px; display: flex; flex-direction: column">
+<sc-for list="{{lf}}" as="r" hint-placeholder-count="5">
+<li style="padding: 8px 0; border-bottom: 1px solid #E6EBE2"><b style="font-weight: 600">{{r.t}}</b><br><span style="color: #9A5536; font-size: 14px">{{r.why}}</span></li>
+</sc-for>
+</ol>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid #DDE2D8"><code style="font: 13px 'Geist Mono', ui-monospace, monospace">getpluck.io/@niall/local-first-sync</code><a href="PublicList.dc.html" style="font-size: 13px; font-weight: 500">Open</a></div>
+</div>
+<p style="margin: 0; color: #525A4E; font-size: 14px">It's public because you asked in this message. Say “make it private” to take it down.</p>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      tidy: [
+        { item: "How MCP auth actually works", tags: "mcp, auth", act: "Later" },
+        { item: "Postgres indexes in 40 minutes", tags: "postgres", act: "Later" },
+        { item: "Writing for engineers who skim", tags: "writing", act: "Keep" },
+        { item: "Kubernetes in 100 seconds, again", tags: "none", act: "Archive" },
+        { item: "Induction hob, 60 cm", tags: "kitchen", act: "Kitchen reno list" }
+      ],
+      lf: [
+        { t: "Local-first software, the essay", why: "The idea in full. Everything else builds on it." },
+        { t: "CRDTs for people who ship", why: "The clearest take on merges without a server." },
+        { t: "Sync engines compared", why: "Read before you pick a library." },
+        { t: "Offline-first on iOS, a field report", why: "What broke in production, and the fix." },
+        { t: "Postgres as the sync backend", why: "Ties it back to the stack you already run." }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

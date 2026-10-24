@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Monday email</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="width: 720px; height: 1320px; box-sizing: border-box; padding: 40px; background: #E4E8E0; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 22px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 0 4px; font-size: 13px; color: #525A4E">
+<span><b style="color: #151A13; font-weight: 600">Five things you plucked and forgot.</b></span>
+<span>Pluck · Monday 06:00 · to niall@codu.co</span>
+</div>
+<div style="border-radius: 12px; background: #FFFFFF; padding: 40px 44px; display: flex; flex-direction: column; gap: 28px">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; letter-spacing: -0.045em"><dc-import name="Logo" size="20" tone="brand" hint-size="60px,20px"></dc-import></span>
+<p style="margin: 0; font-size: 17px; line-height: 26px">Morning Niall. Three minutes, then get on with your week.</p>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Untouched for 30 days</h2>
+<sc-for list="{{old}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #E6EBE2">
+<span style="display: flex; flex-direction: column"><b style="font-weight: 600">{{r.t}}</b><span style="color: #525A4E; font-size: 13px">{{r.s}}</span></span>
+<span style="display: flex; gap: 14px; flex: none; font-size: 14px"><a href="Later.dc.html" style="font-weight: 600">Keep</a><a href="Archive.dc.html" style="color: #525A4E">Let it go</a></span>
+</div>
+</sc-for>
+<span style="color: #525A4E; font-size: 13px">Do nothing and they move to your Archive on Thursday. Still searchable, never deleted.</span>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Due this week</h2>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E6EBE2"><b style="font-weight: 600">Learn window functions</b><span style="color: #525A4E">Fri</span></div>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E6EBE2"><b style="font-weight: 600">Outline the Codú November talk</b><span style="color: #525A4E">3 Nov</span></div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Oldest in your inbox</h2>
+<ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px">
+<li>A field guide to design reviews</li><li>Notes on a good restaurant list</li><li>Half marathon pacing, explained</li><li>Pricing a small SaaS for trades</li><li>How to run a meetup people come back to</li>
+</ol>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Lists gone quiet</h2>
+<div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E6EBE2"><span><b style="font-weight: 600">Book, chapter 3 sources</b> <span style="color: #525A4E">· 14 of 22 ticked</span></span><span style="color: #525A4E">31 days</span></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 10px; border: 1px solid #DDE2D8"><span><b style="font-weight: 600">Pile too big?</b> <span style="color: #525A4E">Archive everything older than 30 days in one go.</span></span><a href="Settings.dc.html" style="font-weight: 600; white-space: nowrap">Archive it all. No, really.</a></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 10px; background: #EDF0EA">
+<b style="font-weight: 600">Rather do this with your AI?</b>
+<span style="color: #394034">Say “run my weekly review”. Same list, one decision at a time.</span>
+</div>
+<span style="color: #525A4E; font-size: 12px; line-height: 18px">Links work for 7 days, no login. Plain rules, no model. <a href="Settings.dc.html" style="color: #525A4E">Change the day</a> · <a href="Settings.dc.html" style="color: #525A4E">Stop these</a></span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":720,"height":1320}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { old: [
+      { t: "The case for boring technology, revisited", s: "Later · plucked 29 Sep" },
+      { t: "Barre chords without the pain", s: "Later · plucked 27 Sep" },
+      { t: "Row level security in practice.pdf", s: "Later · plucked 25 Sep" }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

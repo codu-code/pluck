@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Brand and system</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&amp;family=Geist:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1320px; box-sizing: border-box; padding: 72px 80px; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; row-gap: 56px; align-content: start">
+
+<section style="grid-column: span 7; display: flex; flex-direction: column; gap: 20px">
+<dc-import name="Logo" size="184" tone="brand" hint-size="552px,184px"></dc-import>
+
+<p style="margin: 0; font-size: 34px; line-height: 40px; letter-spacing: -0.025em; font-weight: 600">Pluck it. Sort it later.</p>
+<p style="margin: 0; max-width: 580px; color: #525A4E; font-size: 16px; line-height: 24px">Chunky, rounded, a bit pleased with itself. Three drawn dashes pop off the k, the moment something gets plucked. Wordmark in Fredoka 700, lowercase. Never PLUCK, never pluck.io.</p>
+</section>
+
+<section style="grid-column: span 5; display: flex; flex-direction: column; gap: 18px; justify-content: flex-end">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">App icon and favicon</h2>
+<div style="display: flex; align-items: flex-end; gap: 24px">
+<dc-import name="Icon" size="128" tone="forest" hint-size="128px,128px"></dc-import>
+<dc-import name="Icon" size="128" tone="mint" hint-size="128px,128px"></dc-import>
+<dc-import name="Icon" size="32" tone="forest" hint-size="32px,32px"></dc-import>
+<dc-import name="Icon" size="16" tone="forest" hint-size="16px,16px"></dc-import>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid #DDE2D8">
+<div style="display: flex; gap: 2px; padding: 8px 8px 0; border-radius: 10px 10px 0 0; background: #DDE2D8">
+<div style="display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: 8px 8px 0 0; background: #FFFFFF; font-size: 13px"><dc-import name="Icon" size="16" tone="forest" hint-size="16px,16px"></dc-import>Inbox · Pluck</div>
+<div style="display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; font-size: 13px; color: #525A4E"><dc-import name="Icon" size="16" tone="dark" hint-size="16px,16px"></dc-import>Dark tab bar</div>
+</div>
+<span style="color: #525A4E; font-size: 13px">Favicon at real size. Below 20 px the p gets heavier and drops to two sparks, so it never smudges into the tile.</span>
+</div>
+</section>
+
+<section style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Colour, light · forest, sea green, mint</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{light}}" as="s" hint-placeholder-count="8">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="height: 72px; border-radius: 8px; background: {{s.hex}}; border: 1px solid #DDE2D8"></div>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span style="font-weight: 600">{{s.name}}</span><span style="color: #525A4E">{{s.hex}}</span></div>
+<span style="color: #525A4E; font-size: 12px; line-height: 16px">{{s.use}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: 12px; background: #10130F; color: #ECEFE8">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #A0A898">Colour, dark</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{dark}}" as="s" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="height: 52px; border-radius: 8px; background: {{s.hex}}; border: 1px solid #2A2F27"></div>
+<div style="display: flex; justify-content: space-between; font-size: 12px"><span style="font-weight: 600">{{s.name}}</span><span style="color: #A0A898">{{s.hex}}</span></div>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; color: #A0A898; font-size: 13px">Same system, inverted. Ships on day one on every surface.</p>
+</section>
+
+<section style="grid-column: span 6; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Type</h2>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 16px; border-bottom: 1px solid #DDE2D8">
+<span style="font-size: 40px; line-height: 44px; font-weight: 700; letter-spacing: -0.04em">Geist, for the UI</span>
+<span style="color: #525A4E">Display 700 set tight · titles 600 · body 400 · lists 14 px. Söhne if we pay for it.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 40px; line-height: 44px">Source Serif, <i>for reading</i></span>
+<span style="font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 18px; line-height: 29px; max-width: 520px">Reader body at 18 px, line height 1.6, measure 680 px. Real italics. Tiempos if we pay for it.</span>
+</div>
+</section>
+
+<section style="grid-column: span 6; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Kind glyphs · 7 · 16 px · 1.4 stroke</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{glyphs}}" as="g" hint-placeholder-count="7">
+<div style="display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 14px; border-radius: 8px; background: #FFFFFF; border: 1px solid #DDE2D8">
+<svg width="22" height="22" viewBox="0 0 16 16" aria-hidden="true"><path d="{{g.d}}" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>{{g.name}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section style="grid-column: span 7; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Components</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<div style="display: flex; align-items: center; gap: 16px; height: 64px; padding: 0 12px; border-bottom: 1px solid #DDE2D8">
+<div style="width: 40px; height: 40px; border-radius: 6px; background: #E1E6CF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">MC</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">How MCP auth actually works <span style="font-weight: 400; color: #525A4E; font-size: 13px">modelcontextprotocol.io · 12 min</span></span><span style="color: #525A4E; font-size: 13px">Tokens, scopes and the bit everyone gets wrong.</span></div>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #E3E8DE; font-size: 12px">mcp</span>
+<span title="Tagged by AI" style="display: inline-flex; align-items: center; gap: 6px; height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 12px; border: 1px solid #C9A28E; color: #9A5536; font-size: 12px"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: #B06A48"></span>auth</span>
+</div>
+<div style="display: flex; align-items: center; gap: 16px; height: 64px; padding: 0 12px; border-bottom: 1px solid #DDE2D8; background: #E6EBE2">
+<div style="width: 40px; height: 40px; border-radius: 6px; background: #E6DCD6; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">YT</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600">Postgres indexes in 40 minutes</span><span style="color: #525A4E; font-size: 13px">Selected: a tint, never a stripe.</span></div>
+<button type="button" style="height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Later</button>
+<button type="button" style="height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">List</button>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center">
+<div role="radiogroup" aria-label="Visibility" style="display: flex; padding: 3px; border-radius: 10px; background: #E3E8DE"><button type="button" role="radio" aria-checked="false" style="height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font: inherit; font-size: 13px">Private</button><button type="button" role="radio" aria-checked="true" style="height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: #FFFFFF; font: inherit; font-size: 13px; font-weight: 600">Public</button></div>
+<div style="display: flex; border-radius: 8px; background: #151A13; padding: 4px"><button type="button" style="height: 32px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #F6F8F4; font: inherit; font-size: 13px">Highlight</button><button type="button" style="height: 32px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #F6F8F4; font: inherit; font-size: 13px">Note</button></div>
+<div style="display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 8px 0 14px; border-radius: 8px; background: #1E5C45; color: #F6F8F4">Gone. Well, archived.<button type="button" style="height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: #30362D; color: #F6F8F4; font: inherit; font-size: 13px">Undo</button></div>
+<div style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px; border-radius: 8px; background: #FFFFFF; border: 1px solid #DDE2D8"><span style="width: 24px; height: 24px; border-radius: 12px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span style="font-weight: 600">Plucked.</span></div>
+</div>
+</section>
+
+<section style="grid-column: span 5; display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #525A4E">Voice</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<sc-for list="{{lines}}" as="l" hint-placeholder-count="6">
+<div style="display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid #DDE2D8"><span style="width: 96px; flex: none; color: #525A4E; font-size: 13px">{{l.where}}</span><span style="font-weight: 500">{{l.line}}</span></div>
+</sc-for>
+</div>
+<p style="margin: 0; color: #525A4E">Dry, short, Irish. The joke is implied. No emoji, no exclamation marks, no AI words.</p>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1320}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      light: [
+        { name: "Ground", hex: "#F6F8F4", use: "Cool white with a green breath." },
+                        { name: "Line", hex: "#DDE2D8", use: "Full hairlines only." },
+        { name: "Ink", hex: "#151A13", use: "Text and marks. Green-black." },
+        { name: "Ink 2", hex: "#525A4E", use: "Meta. 6.8:1 on ground." },
+        { name: "Brand", hex: "#1E5C45", use: "Wordmark, icon, primary buttons." },
+        { name: "Accent", hex: "#34A07C", use: "The pops. Large marks only." },
+        { name: "Highlight", hex: "#7FD3AE", use: "Ticks, highlights, success. Ink on top." },
+        { name: "Clay", hex: "#9A5536", use: "Marks what AI changed. Never purple." }
+      ],
+      dark: [
+        { name: "Ground", hex: "#10130F" },
+        { name: "Surface", hex: "#191D17" },
+        { name: "Line", hex: "#2A2F27" },
+        { name: "Ink", hex: "#ECEFE8" },
+        { name: "Ink 2", hex: "#A0A898" },
+        { name: "Clay", hex: "#D08A68" }
+      ],
+      glyphs: [
+        { name: "Read", d: "M3 4.5h10M3 8h10M3 11.5h6" },
+        { name: "Watch", d: "M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" },
+        { name: "PDF", d: "M4 2h5l3 3v9H4zM9 2v3h3M6 9h4M6 11.5h4" },
+        { name: "Image", d: "M3 3h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 11l3.5-3.5 3 3 2-2L14 12" },
+        { name: "Todo", d: "M3.5 2.5h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM5.5 8.2l1.8 1.8 3.2-4" },
+        { name: "Note", d: "M3 13l.8-3L10.5 3.3l2.2 2.2L6 12.2zM9.3 4.5l2.2 2.2" },
+        { name: "Thing", d: "M3 5.5h10l-.8 8.5H3.8zM6 5.5V4.5a2 2 0 0 1 4 0v1" }
+      ],
+      lines: [
+        { where: "Share sheet", line: "Plucked." },
+        { where: "Expiry", line: "Untouched for 30 days. Keep it, or it goes to the Archive." },
+        { where: "Archive", line: "Gone. Well, archived." },
+        { where: "Email", line: "Five things you plucked and forgot." },
+        { where: "Public list", line: "Pluck this list." },
+        { where: "Delete", line: "Delete everything. No, really." }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

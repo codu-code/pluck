@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Later</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="position: relative; min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Inbox<span style="color: #525A4E">23</span></a>
+<a href="Later.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Later<span style="font-weight: 400; color: #525A4E">41</span></a>
+<a href="Collections.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists<span style="color: #525A4E">6</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 32px; border-bottom: 1px solid #DDE2D8">
+<label style="flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE">
+<span style="font-weight: 600">Pluck</span>
+<input type="text" placeholder="Paste one link or many, or type a note" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #151A13">
+</label>
+<a href="Search.dc.html" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: space-between; height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #EBEEE7; text-decoration: none; color: #525A4E">Search<kbd style="font: 12px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 6px">/</kbd></a>
+</div>
+
+<div style="width: 100%; max-width: 1040px; box-sizing: border-box; padding: 28px 32px 120px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px">
+<h1 style="margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em">Later</h1>
+<span style="color: #525A4E">Kept on purpose · 3 expire this week, into the Archive</span>
+</div>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<sc-for list="{{rows}}" as="it" hint-placeholder-count="9">
+<div style="display: flex; align-items: center; gap: 16px; height: 64px; padding: 0 12px; border-bottom: 1px solid #DDE2D8">
+<div style="width: 40px; height: 40px; flex: none; border-radius: 6px; background: {{it.tile}}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">{{it.ini}}</div>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; gap: 8px; align-items: baseline; min-width: 0"><a href="Item.dc.html" style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none">{{it.title}}</a><span style="flex: none; color: #525A4E; font-size: 13px">{{it.site}} · {{it.meta}}</span></div>
+<div style="color: #525A4E; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.ex}}</div>
+</div>
+<sc-if value="{{it.expiring}}" hint-placeholder-val="{{ false }}"><span title="Untouched for 30 days. Keep it, or it moves to the Archive. Nothing is deleted." style="flex: none; display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #EDF0EA; color: #525A4E; font-size: 12px">30 days</span></sc-if>
+<div style="display: flex; gap: 6px; flex: none">
+<sc-for list="{{it.tags}}" as="t" hint-placeholder-count="1"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #E3E8DE; font-size: 12px">{{t}}</span></sc-for>
+</div>
+<div style="width: 76px; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; color: #525A4E; font-size: 12px">
+<svg width="16" height="16" viewBox="0 0 16 16" role="img" aria-label="{{it.kindName}}"><path d="{{it.glyph}}" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span>{{it.when}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</main>
+
+<div role="status" style="position: absolute; left: 50%; bottom: 32px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 8px 0 16px; border-radius: 8px; background: #1E5C45; color: #F6F8F4">Gone. Well, archived.<button type="button" style="height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: #30362D; color: #F6F8F4; font: inherit; font-size: 13px">Undo</button></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+var G = {
+  read: "M3 4.5h10M3 8h10M3 11.5h6",
+  watch: "M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z",
+  pdf: "M4 2h5l3 3v9H4zM9 2v3h3M6 9h4M6 11.5h4",
+  study: "M2 3.5c2-.8 4-.8 6 .5 2-1.3 4-1.3 6-.5v9c-2-.8-4-.8-6 .5-2-1.3-4-1.3-6-.5zM8 4v9"
+};
+var N = { read: "Read", watch: "Watch", pdf: "PDF", todo: "Todo" };
+var R = [
+  ["read", "The case for boring technology, revisited", "blog post", "18 min", "Spend your innovation tokens on the product, not the stack.", ["architecture"], "29 Sep", "BT", "#DCE1E3", 1],
+  ["watch", "Building an MCP server from scratch", "youtube.com", "52 min", "A full build in TypeScript, from tool schema to deploy.", ["mcp"], "27 Sep", "YT", "#E6DCD6", 1],
+  ["pdf", "Row level security in practice.pdf", "PDF", "22 pages", "Policies, roles and the gotchas with views.", ["postgres"], "25 Sep", "PDF", "#E2E6DA", 1],
+  ["read", "How to run a meetup people come back to", "codu.co", "8 min", "Same night, same room, a clear start time and a good host.", ["codu"], "12 Oct", "CO", "#E1E6CF", 0],
+  ["todo", "Query plans: EXPLAIN ANALYZE", "Todo", "due 8 Nov", "Read three real plans a day for a week.", ["postgres", "study"], "10 Oct", "", "#EDF0EA", 0],
+  ["read", "Pricing a small SaaS for trades", "newsletter", "11 min", "Per seat loses to per job when the crew size changes weekly.", ["assemble"], "9 Oct", "NL", "#DCE1E3", 0],
+  ["watch", "Half marathon pacing, explained", "youtube.com", "19 min", "Negative splits and why the first 5k should feel easy.", ["running"], "6 Oct", "YT", "#E6DCD6", 0],
+  ["read", "A field guide to design reviews", "blog post", "9 min", "Ask what problem it solves before asking how it looks.", ["writing"], "4 Oct", "FG", "#E1E6CF", 0],
+  ["read", "Notes on a good restaurant list", "blog post", "5 min", "Write down what you ordered, not just where you went.", ["food"], "2 Oct", "RL", "#DFE2DC", 0]
+];
+class Component extends DCLogic {
+  renderVals() {
+    return { rows: R.map((r) => ({ glyph: G[r[0]], kindName: N[r[0]], title: r[1], site: r[2], meta: r[3], ex: r[4], tags: r[5], when: r[6], ini: r[7], tile: r[8], expiring: !!r[9] })) };
+  }
+}
+</script>
+</body>
+</html>

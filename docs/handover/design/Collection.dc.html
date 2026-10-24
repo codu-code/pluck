@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · List: Best MCP reading</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Inbox<span style="color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Lists<span style="font-weight: 400; color: #525A4E">7</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 32px; border-bottom: 1px solid #DDE2D8">
+<label style="flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE">
+<span style="font-weight: 600">Pluck</span>
+<input type="text" placeholder="Paste one link or many, or type a note" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: #151A13">
+</label>
+<a href="Search.dc.html" style="flex: 1 1 200px; display: flex; align-items: center; justify-content: space-between; height: 44px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #EBEEE7; text-decoration: none; color: #525A4E">Search<kbd style="font: 12px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 6px">/</kbd></a>
+</div>
+
+<div style="width: 100%; max-width: 1040px; box-sizing: border-box; padding: 20px 32px 48px; display: flex; flex-direction: column; gap: 20px">
+<a href="Collections.dc.html" style="color: #525A4E; text-decoration: none; font-size: 13px">Lists</a>
+<div style="display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 20px">
+<div style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em">Best MCP reading</h1>
+<label style="display: flex; flex-direction: column; gap: 4px"><span style="color: #525A4E; font-size: 13px">Purpose</span><input type="text" value="Start here if you are building an MCP server. Best first." style="height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"></label>
+</div>
+<div style="flex: 0 1 380px; display: flex; flex-direction: column; gap: 10px">
+<div role="radiogroup" aria-label="Visibility" style="display: flex; padding: 3px; border-radius: 10px; background: #E3E8DE">
+<sc-for list="{{vis}}" as="v" hint-placeholder-count="2">
+<button type="button" role="radio" aria-checked="{{v.on}}" onClick="{{v.pick}}" style="flex: 1; height: 36px; border: 0; border-radius: 8px; background: {{v.bg}}; font: inherit; font-weight: {{v.weight}}; cursor: pointer">{{v.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{isOpen}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 8px"><code style="flex: 1; min-width: 0; height: 36px; box-sizing: border-box; display: flex; align-items: center; padding: 0 10px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D3D9CE; font: 12px ui-monospace, 'SF Mono', Menlo, monospace; white-space: nowrap; overflow: hidden">getpluck.io/@niall/best-mcp-reading</code><button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 0; background: #1E5C45; color: #F6F8F4; font: inherit; font-size: 13px">Copy</button></div>
+<span style="color: #525A4E; font-size: 13px">214 views · only you see this · <a href="PublicList.dc.html">View the public page</a></span>
+</sc-if>
+<sc-if value="{{isPrivate}}" hint-placeholder-val="{{ false }}"><span style="color: #525A4E; font-size: 13px">Only you can see this list.</span></sc-if>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Copy for your AI: “Ask about this list”</button>
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Export this list</button>
+<span style="margin-left: auto; color: #525A4E; font-size: 13px; align-self: center">{{tickedCount}} of 6 ticked</span>
+</div>
+
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<sc-for list="{{rows}}" as="it" hint-placeholder-count="6">
+<li style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid #DDE2D8; background: {{it.bg}}">
+<button type="button" aria-label="Drag to reorder" style="width: 24px; height: 40px; flex: none; border: 0; background: transparent; padding: 0; cursor: grab"><svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true"><path d="M4 4h.01M8 4h.01M4 8h.01M8 8h.01M4 12h.01M8 12h.01" stroke="#525A4E" stroke-width="2.2" stroke-linecap="round"></path></svg></button>
+<span style="width: 24px; flex: none; padding-top: 10px; color: #525A4E; font-size: 13px; text-align: right">{{it.n}}</span>
+<input type="checkbox" checked="{{it.ticked}}" onChange="{{it.toggle}}" aria-label="Tick {{it.title}}" style="width: 20px; height: 20px; margin: 10px 0 0; flex: none; accent-color: #151A13">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 8px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline"><a href="Item.dc.html" style="font-weight: 600; text-decoration: {{it.strike}}">{{it.title}}</a><span style="color: #525A4E; font-size: 13px">{{it.site}}</span></div>
+<sc-if value="{{it.mine}}" hint-placeholder-val="{{ true }}"><span style="color: #394034">{{it.note}}</span></sc-if>
+<sc-if value="{{it.claude}}" hint-placeholder-val="{{ false }}"><span style="display: flex; gap: 8px; align-items: baseline; color: #9A5536"><span aria-hidden="true" style="width: 6px; height: 6px; flex: none; border-radius: 3px; background: #B06A48; transform: translateY(-1px)"></span><span>{{it.note}} <span style="font-size: 12px">· by AI</span></span></span></sc-if>
+</div>
+</li>
+</sc-for>
+</ol>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; color: #525A4E; font-size: 12px">
+<span><kbd>Space</kbd> tick</span><span><kbd>n</kbd> note</span><span><kbd>Shift+J</kbd> <kbd>Shift+K</kbd> reorder</span><span>Add from the inbox with <kbd>a</kbd>, or pluck straight in from the extension</span>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+var R = [
+  ["How MCP auth actually works", "modelcontextprotocol.io", "Start here. The scope section is the whole talk.", 0],
+  ["Building an MCP server from scratch", "youtube.com · 52 min", "Watch from 31:04 for the refresh flow.", 0],
+  ["Tool descriptions that models read well", "blog post", "Short, plain names. One job per tool.", 1],
+  ["OAuth scopes for people in a hurry", "blog post", "Read after the first one. Narrow scopes win.", 0],
+  ["Designing results for small screens", "blog post", "Why tool results should be cards, not JSON.", 0],
+  ["Shipping an MCP server to production", "x.com · thread", "The checklist at the end is worth printing.", 1]
+];
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { vis: "public", ticked: [true, true, false, true, false, false] }; }
+  renderVals() {
+    var s = this.state;
+    var opts = [["private", "Private"], ["public", "Public"]];
+    return {
+      vis: opts.map((o) => { var on = s.vis === o[0]; return { label: o[1], on: on ? "true" : "false", bg: on ? "#FFFFFF" : "transparent", weight: on ? "600" : "400", pick: () => this.setState({ vis: o[0] }) }; }),
+      isOpen: s.vis !== "private", isPrivate: s.vis === "private",
+      tickedCount: s.ticked.filter(Boolean).length,
+      rows: R.map((r, i) => ({ n: i + 1, title: r[0], site: r[1], note: r[2], mine: !r[3], claude: !!r[3], ticked: s.ticked[i], strike: s.ticked[i] ? "none" : "none", bg: "transparent",
+        toggle: () => { var t = s.ticked.slice(); t[i] = !t[i]; this.setState({ ticked: t }); } }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Connect your AI</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#ECEFE8}a:hover{color:#7FD3AE}
+</style>
+</helmet>
+<div style="background: #10130F; color: #ECEFE8; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 26px; overflow: hidden">
+
+<header style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Landing.dc.html" aria-label="Pluck home" style="display: inline-flex; align-items: center; text-decoration: none; margin-right: auto"><dc-import name="Logo" size="24" tone="onDark" hint-size="72px,24px"></dc-import></a>
+<nav aria-label="Site" style="display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px">
+<a href="Landing.dc.html#lists" style="text-decoration: none">Lists</a>
+<a href="SiteClaude.dc.html" aria-current="page" style="text-decoration: none; color: #7FD3AE">Connect your AI</a>
+<a href="SiteOpen.dc.html" style="text-decoration: none">Open source</a>
+</nav>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #7FD3AE; color: #151A13; text-decoration: none; font-weight: 600; font-size: 15px">Get Pluck</a>
+</header>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 72px 24px 0; display: flex; flex-direction: column; gap: 28px">
+<span style="font: 500 13px 'Geist Mono', monospace; color: #D08A68; letter-spacing: 0.04em">PLUCK + YOUR AI · MCP</span>
+<h1 style="margin: 0; font-size: clamp(56px, 9vw, 132px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em; max-width: 1100px">Ready for your AI. Whichever one you use.</h1>
+<p style="margin: 0; max-width: 640px; font-size: 22px; line-height: 33px; color: #A0A898">Pluck speaks MCP, the open standard AI tools use to plug into apps. One link and your AI can read, search and sort your whole library. It changes things only when you say so, and never deletes.</p>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 96px 24px 0">
+<h2 style="margin: 0 0 8px; font-size: clamp(36px, 4.5vw, 60px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.03em">Install. Thirty seconds, honestly.</h2>
+<p style="margin: 0 0 32px; color: #A0A898; font-size: 19px">Sign in to Pluck, then pick your tool. The link is the same for all of them.</p>
+<div role="tablist" aria-label="Your AI tool" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<button type="button" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}" style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid {{t.border}}; background: {{t.bg}}; color: {{t.fg}}; font: inherit; font-size: 15px; font-weight: 500; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+<div role="tabpanel" style="border-radius: 16px; background: #191D17; border: 1px solid #2A2F27; padding: clamp(24px, 4vw, 40px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 32px">
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 18px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<li style="display: flex; gap: 16px; align-items: flex-start"><span style="width: 32px; height: 32px; flex: none; border-radius: 16px; background: #7FD3AE; color: #151A13; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px">{{s.n}}</span><span style="padding-top: 3px">{{s.text}}</span></li>
+</sc-for>
+</ol>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; color: #A0A898">{{codeLabel}}</span>
+<div style="display: flex; gap: 8px; align-items: stretch">
+<code style="flex: 1; min-width: 0; box-sizing: border-box; display: flex; align-items: center; padding: 14px 16px; border-radius: 10px; background: #10130F; border: 1px solid #2A2F27; font: 15px/24px 'Geist Mono', monospace; white-space: pre-wrap; word-break: break-all">{{code}}</code>
+<button type="button" style="height: 52px; padding: 0 18px; border-radius: 10px; border: 0; background: #ECEFE8; color: #151A13; font: inherit; font-weight: 600; align-self: flex-start">Copy</button>
+</div>
+<span style="font-size: 14px; color: #A0A898">{{codeNote}}</span>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 112px 24px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: clamp(36px, 4.5vw, 60px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.03em">Twelve tools. Plain names.</h2>
+<p style="margin: 0; font-size: 19px; line-height: 29px; color: #A0A898">Results come back as cards with titles first, so a question like “what did I pluck this week” is one call and one screen.</p>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #2A2F27">
+<sc-for list="{{tools}}" as="t" hint-placeholder-count="12">
+<div style="display: flex; gap: 16px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid #2A2F27"><code style="flex: none; width: 160px; font: 500 14px 'Geist Mono', monospace; color: #7FD3AE">{{t.name}}</code><span style="font-size: 15px; color: #A0A898">{{t.does}}</span></div>
+</sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 20px">
+<h2 style="margin: 0; font-size: clamp(36px, 4.5vw, 60px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.03em">Four things to ask.</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #2A2F27">
+<sc-for list="{{prompts}}" as="p" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px 0; border-bottom: 1px solid #2A2F27">
+<b style="font-size: 22px; line-height: 28px; font-weight: 700; letter-spacing: -0.02em">“{{p.say}}”</b>
+<span style="font-size: 15px; line-height: 23px; color: #A0A898">{{p.does}}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #191D17; border: 1px solid #2A2F27">
+<b style="font-weight: 600">What your AI can never do</b>
+<sc-for list="{{never}}" as="n" hint-placeholder-count="5"><span style="display: flex; gap: 10px; align-items: baseline; font-size: 15px; color: #A0A898"><span aria-hidden="true" style="width: 10px; height: 2px; flex: none; background: #D08A68; transform: translateY(-4px)"></span>{{n}}</span></sc-for>
+<span style="font-size: 14px; color: #A0A898; margin-top: 4px">Everything it adds carries a “by AI” mark. Settings removes a week of it in one tap.</span>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 112px 24px 96px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between">
+<p style="margin: 0; font-size: clamp(64px, 11vw, 160px); line-height: 0.88; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Ask your AI<span style="color: #7FD3AE">.</span></p>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #ECEFE8; color: #151A13; text-decoration: none; font-weight: 600">Get Pluck, then connect</a>
+</section>
+
+<footer style="border-top: 1px solid #2A2F27">
+<div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 14px; color: #A0A898">
+<span style="margin-right: auto">Pluck is free and open source. Made in Dublin.</span>
+<a href="Landing.dc.html" style="color: #A0A898">Home</a><a href="SiteOpen.dc.html" style="color: #A0A898">Open source</a><a href="SitePrivacy.dc.html" style="color: #A0A898">Privacy</a><a href="SiteTerms.dc.html" style="color: #A0A898">Terms</a>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3600}}'>
+var TABS = {
+  claude: { label: "Claude", steps: ["Open Claude, then Settings, then Connectors.", "Choose Add custom connector and paste the link.", "Sign in to Pluck when it asks. Done."], codeLabel: "Connector URL", code: "https://getpluck.io/mcp", note: "Works on web, desktop and phone once added." },
+  code: { label: "Claude Code", steps: ["Open a terminal.", "Run the one line on the right.", "Say “what did I pluck this week?” to test it."], codeLabel: "One line", code: "claude mcp add --transport http pluck https://getpluck.io/mcp", note: "Signs you in through your browser the first time." },
+  chatgpt: { label: "ChatGPT", steps: ["Open ChatGPT, then Settings, then Connectors.", "Choose Create and paste the link as the MCP server URL.", "Sign in to Pluck when it asks."], codeLabel: "MCP server URL", code: "https://getpluck.io/mcp", note: "Needs a plan that allows custom connectors." },
+  cursor: { label: "Cursor", steps: ["Open Cursor settings, then MCP.", "Add a server with the JSON on the right.", "Sign in to Pluck when it asks."], codeLabel: "mcp.json", code: "{ \"mcpServers\": { \"pluck\": { \"url\": \"https://getpluck.io/mcp\" } } }", note: "Any editor or client that supports remote MCP works the same way." },
+  self: { label: "Self-hosted", steps: ["Make an API key in Settings.", "Run the line on the right where your AI tool runs.", "Point it at the local server it starts."], codeLabel: "Without a public URL", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." }
+};
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { tab: "claude" }; }
+  renderVals() {
+    var cur = this.state.tab;
+    var t = TABS[cur];
+    return {
+      tabs: Object.keys(TABS).map((k) => { var on = k === cur; return { label: TABS[k].label, on: on ? "true" : "false", bg: on ? "#ECEFE8" : "transparent", fg: on ? "#151A13" : "#ECEFE8", border: on ? "#ECEFE8" : "#363C33", pick: () => this.setState({ tab: k }) }; }),
+      steps: t.steps.map((s, i) => ({ n: i + 1, text: s })),
+      codeLabel: t.codeLabel, code: t.code, codeNote: t.note,
+      tools: [
+        { name: "search_items", does: "Text search over title, note, tags, list names and body." },
+        { name: "list_items", does: "Browse Inbox, Later, Archive or Done, newest or untouched first." },
+        { name: "get_item", does: "One item in full, including the stored page text." },
+        { name: "save_item", does: "Pluck a link, many links, a note, a todo or a thing. Marked as saved by AI." },
+        { name: "batch_update", does: "Status, kind, tags and due dates on one or many items." },
+        { name: "list_tags", does: "Your tags, with counts." },
+        { name: "create_tag", does: "A new tag, only after you said yes." },
+        { name: "list_lists", does: "Your lists, with purpose, count and visibility." },
+        { name: "get_list", does: "One list in order, with notes and ticks." },
+        { name: "create_list", does: "A new list with items in order and a note per item. Private." },
+        { name: "update_list", does: "Rename, reorder, add, tick, or make public when you say so." },
+        { name: "get_digest", does: "Expiring, due, oldest and quiet lists. The Monday email, as data." }
+      ],
+      prompts: [
+        { say: "Tidy my Pluck inbox.", does: "Proposes tags from the ones you already have, plus keep, later or archive per item. You say yes or edit. One batch." },
+        { say: "Make a reading list on MCP auth, best first.", does: "Searches, reads, and builds the list in order with a line on why each one matters. Private until you say otherwise." },
+        { say: "Three blog ideas from what I plucked this week.", does: "Reads the best five in full and drafts three angles with sources. Pick one and it plucks the draft back in as a Note." },
+        { say: "Run my weekly review.", does: "The Monday email, in conversation. One decision at a time." }
+      ],
+      never: ["Delete anything. The scope isn't granted.", "Make a tag you didn't ask for.", "Change a tag you made.", "Rewrite a list's purpose.", "Make a list public without you saying so."]
+    };
+  }
+}
+</script>
+</body>
+</html>

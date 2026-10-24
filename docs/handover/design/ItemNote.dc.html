@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Note editor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 960px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; text-decoration: none"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Inbox<span style="font-weight: 400; color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists<span style="color: #525A4E">7</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 32px; border-bottom: 1px solid #DDE2D8">
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px; text-decoration: none; color: #525A4E"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="#525A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>Inbox <kbd style="font: 11px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 5px">Esc</kbd></a>
+<span style="color: #525A4E; font-size: 13px; margin-left: 8px">Saved</span>
+<span style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px">
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Later <kbd style="font: 11px 'Geist', sans-serif; color: #525A4E">l</kbd></button>
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Archive <kbd style="font: 11px 'Geist', sans-serif; color: #525A4E">e</kbd></button>
+</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 48px; padding: 40px 32px 64px; align-items: flex-start">
+<article style="flex: 999 1 480px; max-width: 680px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<span style="color: #525A4E; font-size: 13px">Note · plucked 18 Oct from the web · edited 2h ago</span>
+<label style="display: flex; flex-direction: column"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Title</span>
+<input type="text" value="An MCP server for Assemble's estimates" style="border: 0; outline: none; padding: 0; background: transparent; font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 36px; line-height: 44px; font-weight: 600; letter-spacing: -0.015em; color: #151A13"></label>
+<label style="display: flex; flex-direction: column"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Body</span>
+<textarea rows="16" style="border: 0; outline: none; padding: 0; background: transparent; resize: vertical; font-family: 'Source Serif 4', Charter, Georgia, serif; font-size: 18px; line-height: 29px; color: #151A13">Let the AI read a takeoff and draft the estimate lines. Start with read-only tools.
+
+Tools for v1:
+- list_takeoffs
+- get_takeoff
+- search_rates
+
+Then one write tool, draft_estimate, behind a confirm.
+
+Open question: do rates live in Assemble or come from a supplier feed? Ask Dave before the November talk.</textarea></label>
+<span style="color: #525A4E; font-size: 13px">The first line is the title. Plain text. Saves as you type.</span>
+</article>
+
+<aside aria-label="About this note" style="flex: 1 1 280px; max-width: 320px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600">Tags</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 14px; background: #E3E8DE; font-size: 13px">assemble</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 14px; background: #E3E8DE; font-size: 13px">mcp</span>
+<button type="button" style="height: 28px; padding: 0 10px; border-radius: 14px; border: 1px dashed #C3CABC; background: transparent; font: inherit; font-size: 13px; color: #525A4E">Add tag <kbd style="font: 11px 'Geist', sans-serif">t</kbd></button>
+</div>
+</div>
+<label style="display: flex; flex-direction: column; gap: 8px"><span style="font-weight: 600">Kind</span>
+<select style="height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"><option selected>Note</option><option>Todo</option><option>Thing</option></select>
+<span style="color: #525A4E; font-size: 13px">Make it a Todo to add a due date and a tick.</span>
+</label>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600">In 1 list</span>
+<a href="Collection.dc.html" style="display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 8px; background: #EDF0EA; text-decoration: none"><span style="display: flex; justify-content: space-between"><b style="font-weight: 600">Talk on MCP auth</b><span style="color: #525A4E; font-size: 12px">Private · #4</span></span><span style="color: #525A4E; font-size: 13px">Demo 3, if there's time.</span></a>
+<button type="button" style="height: 36px; text-align: left; padding: 0 12px; border-radius: 8px; border: 1px dashed #C3CABC; background: transparent; font: inherit; color: #525A4E">Add to a list <kbd style="font: 11px 'Geist', sans-serif">a</kbd></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 16px; border-top: 1px solid #DDE2D8; color: #525A4E; font-size: 13px">
+<span>Source: web paste box</span>
+<span>Notes have no highlights. Select text to copy it.</span>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

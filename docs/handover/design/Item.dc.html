@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Item reader</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+</style>
+</helmet>
+<div style="min-height: 1180px; display: flex; flex-wrap: wrap; background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 20px">
+
+<nav aria-label="Main" style="flex: 1 1 220px; max-width: 100%; box-sizing: border-box; padding: 24px 16px; background: #EDF0EA; display: flex; flex-direction: column; gap: 24px">
+<a href="Main.dc.html" aria-label="Pluck" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 8px; font-size: 24px; font-weight: 600; letter-spacing: -0.045em; text-decoration: none; color: #151A13"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" aria-current="page" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; background: #DFE4DA; text-decoration: none; font-weight: 600">Inbox<span style="font-weight: 400; color: #525A4E">24</span></a>
+<a href="Later.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Later<span style="color: #525A4E">41</span></a>
+<a href="Collections.dc.html" style="display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Lists<span style="color: #525A4E">6</span></a>
+<a href="Archive.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Archive</a>
+<a href="Settings.dc.html" style="display: flex; align-items: center; height: 36px; padding: 0 8px; border-radius: 6px; text-decoration: none">Settings</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column">
+<div style="height: 3px; background: #DDE2D8"><div style="width: 38%; height: 3px; background: #34A07C"></div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 32px; border-bottom: 1px solid #DDE2D8">
+<a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px; text-decoration: none; color: #525A4E"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="#525A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>Inbox <kbd style="font: 11px 'Geist', sans-serif; border: 1px solid #CDD3C7; border-radius: 4px; padding: 0 5px">Esc</kbd></a>
+<span style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px">
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Later <kbd style="font: 11px 'Geist', sans-serif; color: #525A4E">l</kbd></button>
+<button type="button" style="height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Archive <kbd style="font: 11px 'Geist', sans-serif; color: #525A4E">e</kbd></button>
+</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 48px; padding: 40px 32px 64px; align-items: flex-start">
+<article style="flex: 999 1 480px; max-width: 680px; min-width: 0; display: flex; flex-direction: column; gap: 20px; font-family: 'Source Serif 4', Charter, Georgia, serif">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'Geist', sans-serif; color: #525A4E; font-size: 13px">modelcontextprotocol.io · 12 min read · plucked 2h ago from Chrome</span>
+<h1 style="margin: 0; font-size: 40px; line-height: 46px; font-weight: 600; letter-spacing: -0.015em">How MCP auth actually works</h1>
+<span style="font-size: 17px; font-style: italic; color: #525A4E">By [AUTHOR NAME]</span>
+</div>
+<div style="height: 300px; border-radius: 8px; background: #E1E6CF; display: flex; align-items: center; justify-content: center; font-family: 'Geist', sans-serif; color: #525A4E; font-size: 13px">[cover image]</div>
+<p style="margin: 0; font-size: 18px; line-height: 29px">Most people meet auth in MCP the hard way. The server works on their laptop. Then someone asks who it is acting for, and nobody has a good answer.</p>
+<p style="margin: 0; font-size: 18px; line-height: 29px">The short version is simple. The client never hands the server a password. It gets a token from an authorisation server, scoped to what the user agreed to, and sends it with each call. The server checks the token, not the person.</p>
+<p style="margin: 0; font-size: 18px; line-height: 29px"><mark style="background: #C9EEDC; color: #151A13; padding: 1px 0">The scope is the contract. If a tool can delete, the scope should say so, and the user should see it before they agree.</mark></p>
+<div style="position: relative">
+<div role="toolbar" aria-label="Selection" style="position: absolute; left: 160px; top: -52px; display: flex; padding: 4px; border-radius: 8px; background: #151A13; font-family: 'Geist', sans-serif">
+<button type="button" style="height: 36px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #F6F8F4; font: inherit; font-size: 13px">Highlight <kbd style="font: 11px 'Geist', sans-serif; color: #A0A898">h</kbd></button>
+<button type="button" style="height: 36px; padding: 0 12px; border: 0; border-radius: 6px; background: transparent; color: #F6F8F4; font: inherit; font-size: 13px">Note <kbd style="font: 11px 'Geist', sans-serif; color: #A0A898">n</kbd></button>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 29px"><span style="background: #D6E2F2">Refresh is where most servers go wrong.</span> A long-lived token in a config file is a password with extra steps. Short tokens, refreshed quietly, with a clear way to revoke them.</p>
+</div>
+<p style="margin: 0; font-size: 18px; line-height: 29px">Start with read-only tools. Add write scopes one at a time. Log the token id, never the token. And when a call fails, say which scope was missing, so the person can fix it without reading your code.</p>
+<p style="margin: 0; font-size: 18px; line-height: 29px">None of this is new. It is the same advice we gave web apps ten years ago. The difference is that now the thing holding the token can read, and it will do exactly what the scope allows.</p>
+</article>
+
+<aside aria-label="About this item" style="flex: 1 1 280px; max-width: 320px; display: flex; flex-direction: column; gap: 24px">
+<label style="display: flex; flex-direction: column; gap: 8px"><span style="font-weight: 600">Note</span><textarea rows="4" style="resize: vertical; padding: 10px 12px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13">Use the scope line in the November talk.</textarea></label>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600">Tags</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 14px; background: #E3E8DE; font-size: 13px">mcp</span>
+<span title="Tagged by AI" style="display: inline-flex; align-items: center; gap: 6px; height: 28px; box-sizing: border-box; padding: 0 10px; border-radius: 14px; border: 1px solid #C9A28E; color: #9A5536; font-size: 13px"><span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: #B06A48"></span>auth</span>
+<button type="button" style="height: 28px; padding: 0 10px; border-radius: 14px; border: 1px dashed #C3CABC; background: transparent; font: inherit; font-size: 13px; color: #525A4E">Add tag <kbd style="font: 11px 'Geist', sans-serif">t</kbd></button>
+</div>
+<span style="color: #9A5536; font-size: 12px">“auth” was added by your AI. Touch it and it becomes yours.</span>
+</div>
+<label style="display: flex; flex-direction: column; gap: 8px"><span style="font-weight: 600">Kind</span>
+<select style="height: 40px; padding: 0 10px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"><option>Read</option><option>Watch</option><option>PDF</option><option>Image</option><option>Idea</option><option>Todo</option><option>Study</option><option>Note</option></select>
+</label>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600">In 2 lists</span>
+<a href="Collection.dc.html" style="display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 8px; background: #EDF0EA; text-decoration: none"><span style="display: flex; justify-content: space-between"><b style="font-weight: 600">Best MCP reading</b><span style="color: #525A4E; font-size: 12px">Public · #1</span></span><span style="color: #525A4E; font-size: 13px">Start here. The scope section is the whole talk.</span></a>
+<a href="Collection.dc.html" style="display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 8px; background: #EDF0EA; text-decoration: none"><span style="display: flex; justify-content: space-between"><b style="font-weight: 600">Talk on MCP auth</b><span style="color: #525A4E; font-size: 12px">Private · #3</span></span><span style="color: #525A4E; font-size: 13px">Use the scope line on slide 4.</span></a>
+<button type="button" style="height: 36px; text-align: left; padding: 0 12px; border-radius: 8px; border: 1px dashed #C3CABC; background: transparent; font: inherit; color: #525A4E">Add to a list <kbd style="font: 11px 'Geist', sans-serif">a</kbd></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-weight: 600">Highlights · 1</span>
+<blockquote style="margin: 0; padding: 10px 12px; border-radius: 8px; background: #E3F5EC; font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; line-height: 22px">The scope is the contract.</blockquote>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 16px; border-top: 1px solid #DDE2D8; color: #525A4E; font-size: 13px">
+<span>Source: Chrome extension · page kept</span>
+<a href="https://modelcontextprotocol.io" style="font-weight: 500">Open original</a>
+</div>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

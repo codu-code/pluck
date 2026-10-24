@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck logo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<span role="img" aria-label="pluck" style="display: inline-flex; align-items: flex-start; font-family: 'Fredoka', 'Geist', ui-rounded, sans-serif; font-weight: 700; letter-spacing: -0.01em; line-height: 0.92; white-space: nowrap; font-size: {{px}}; color: {{ink}}"><span aria-hidden="true">pluck</span><svg viewBox="0 0 12 12" aria-hidden="true" style="width: 0.457em; height: 0.457em; flex: none; overflow: visible; margin-left: -0.098em; margin-top: 0.022em"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="{{spark}}" stroke-width="{{sw}}" stroke-linecap="round"></path></svg></span>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"size":{"editor":"int","default":96,"min":10,"max":400,"unit":"px"},"tone":{"editor":"enum","options":["brand","onDark"],"default":"brand"},"$preview":{"width":360,"height":120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var size = parseInt(this.props.size, 10) || 96;
+    var dark = this.props.tone === "onDark";
+    return {
+      px: size + "px",
+      ink: dark ? "#ECEFE8" : "#1E5C45",
+      spark: dark ? "#7FD3AE" : "#34A07C",
+      sw: size >= 80 ? 1.8 : 2
+    };
+  }
+}
+</script>
+</body>
+</html>

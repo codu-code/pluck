@@ -1,0 +1,369 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Archive.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Archive",
+      "w": 1440,
+      "x": 6080,
+      "y": 3120
+    },
+    "Brand.dc.html": {
+      "h": 1320,
+      "title": "Brand and system",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Claude.dc.html": {
+      "h": 1200,
+      "title": "AI connector in use (Claude shown)",
+      "w": 1440,
+      "x": 0,
+      "y": 7900
+    },
+    "Collection.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · List, public",
+      "w": 1440,
+      "x": 3040,
+      "y": 3120
+    },
+    "Collections.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Lists",
+      "w": 1440,
+      "x": 1520,
+      "y": 3120
+    },
+    "Email.dc.html": {
+      "h": 1320,
+      "title": "Monday email",
+      "w": 720,
+      "x": 1520,
+      "y": 7900
+    },
+    "Empty.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Empty inbox",
+      "w": 1440,
+      "x": 3040,
+      "y": 1740
+    },
+    "Extension.dc.html": {
+      "h": 1080,
+      "title": "Extension · popup states, options, menus",
+      "w": 1680,
+      "x": 0,
+      "y": 5040
+    },
+    "FirstPluck.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · First pluck",
+      "w": 1440,
+      "x": 1520,
+      "y": 1740
+    },
+    "IOSFirstRun.dc.html": {
+      "h": 844,
+      "title": "iOS · First run",
+      "w": 390,
+      "x": 4290,
+      "y": 6540
+    },
+    "IOSInbox.dc.html": {
+      "h": 844,
+      "title": "iOS · Inbox",
+      "w": 390,
+      "x": 1940,
+      "y": 6540
+    },
+    "IOSLists.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "iOS · List",
+      "w": 390,
+      "x": 3350,
+      "y": 6540
+    },
+    "IOSReader.dc.html": {
+      "h": 844,
+      "title": "iOS · Reader",
+      "w": 390,
+      "x": 2410,
+      "y": 6540
+    },
+    "IOSSearch.dc.html": {
+      "h": 844,
+      "title": "iOS · Search",
+      "w": 390,
+      "x": 2880,
+      "y": 6540
+    },
+    "IOSSettings.dc.html": {
+      "h": 844,
+      "title": "iOS · Settings",
+      "w": 390,
+      "x": 3820,
+      "y": 6540
+    },
+    "IOSShare.dc.html": {
+      "h": 940,
+      "title": "iOS · Share sheet, straight from any app",
+      "w": 1860,
+      "x": 0,
+      "y": 6540
+    },
+    "InboxDark.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Inbox, dark, bulk select",
+      "w": 1440,
+      "x": 7600,
+      "y": 1740
+    },
+    "Item.dc.html": {
+      "expand": "fill",
+      "h": 1180,
+      "is_interactive": true,
+      "title": "Web · Item reader",
+      "w": 1440,
+      "x": 0,
+      "y": 3120
+    },
+    "ItemFailed.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Item, couldn't read",
+      "w": 1440,
+      "x": 9120,
+      "y": 3120
+    },
+    "Landing.dc.html": {
+      "expand": "fill",
+      "h": 4600,
+      "is_interactive": true,
+      "title": "Site · Home",
+      "w": 1440,
+      "x": 2320,
+      "y": 7900
+    },
+    "Later.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Later",
+      "w": 1440,
+      "x": 4560,
+      "y": 1740
+    },
+    "Loop.dc.html": {
+      "h": 780,
+      "title": "The loop",
+      "w": 1600,
+      "x": 1520,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Inbox",
+      "w": 1440,
+      "x": 0,
+      "y": 1740
+    },
+    "PublicList.dc.html": {
+      "expand": "fill",
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Public page · /@niall/best-mcp-reading",
+      "w": 1440,
+      "x": 4560,
+      "y": 3120
+    },
+    "Search.dc.html": {
+      "expand": "fill",
+      "h": 960,
+      "is_interactive": true,
+      "title": "Web · Search",
+      "w": 1440,
+      "x": 6080,
+      "y": 1740
+    },
+    "Settings.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Web · Settings",
+      "w": 1440,
+      "x": 7600,
+      "y": 3120
+    },
+    "SiteClaude.dc.html": {
+      "expand": "fill",
+      "h": 3600,
+      "is_interactive": true,
+      "title": "Site · Connect your AI (MCP)",
+      "w": 1440,
+      "x": 3840,
+      "y": 7900
+    },
+    "SiteOpen.dc.html": {
+      "expand": "fill",
+      "h": 2600,
+      "is_interactive": true,
+      "title": "Site · Open source",
+      "w": 1440,
+      "x": 5360,
+      "y": 7900
+    },
+    "Logo.dc.html": {
+      "x": 3200,
+      "y": 0,
+      "w": 360,
+      "h": 120,
+      "title": "Component · Logo"
+    },
+    "Icon.dc.html": {
+      "x": 3200,
+      "y": 200,
+      "w": 128,
+      "h": 128,
+      "title": "Component · Icon"
+    },
+    "ItemNote.dc.html": {
+      "x": 10640,
+      "y": 3120,
+      "w": 1440,
+      "h": 960,
+      "title": "Web · Note editor",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "SitePrivacy.dc.html": {
+      "x": 6880,
+      "y": 7900,
+      "w": 1440,
+      "h": 2500,
+      "title": "Site · Privacy",
+      "expand": "fill"
+    },
+    "SiteTerms.dc.html": {
+      "x": 8400,
+      "y": 7900,
+      "w": 1440,
+      "h": 2500,
+      "title": "Site · Terms",
+      "expand": "fill"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-23T20:10:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t-claude": {
+      "kind": "title1",
+      "maxW": 9840,
+      "text": "AI connector, email and the marketing site",
+      "w": 240,
+      "x": 0,
+      "y": 7600
+    },
+    "t-ext": {
+      "kind": "title1",
+      "maxW": 1680,
+      "text": "Browser extension",
+      "w": 240,
+      "x": 0,
+      "y": 4740
+    },
+    "t-ios": {
+      "kind": "title1",
+      "maxW": 4680,
+      "text": "iOS",
+      "w": 240,
+      "x": 0,
+      "y": 6240
+    },
+    "t-system": {
+      "kind": "title1",
+      "maxW": 3120,
+      "text": "System and loop",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "t-web": {
+      "kind": "title1",
+      "maxW": 8000,
+      "text": "Web app",
+      "w": 240,
+      "x": 0,
+      "y": 1440
+    },
+    "t-web2": {
+      "kind": "title1",
+      "maxW": 12080,
+      "text": "Web app: reading, lists, sharing, settings",
+      "w": 240,
+      "x": 0,
+      "y": 2820
+    }
+  },
+  "order": [
+    "Brand.dc.html",
+    "Logo.dc.html",
+    "Icon.dc.html",
+    "Loop.dc.html",
+    "Main.dc.html",
+    "FirstPluck.dc.html",
+    "Empty.dc.html",
+    "Later.dc.html",
+    "Search.dc.html",
+    "InboxDark.dc.html",
+    "Item.dc.html",
+    "ItemNote.dc.html",
+    "Collections.dc.html",
+    "Collection.dc.html",
+    "PublicList.dc.html",
+    "Archive.dc.html",
+    "Settings.dc.html",
+    "ItemFailed.dc.html",
+    "Extension.dc.html",
+    "IOSShare.dc.html",
+    "IOSInbox.dc.html",
+    "IOSReader.dc.html",
+    "IOSSearch.dc.html",
+    "IOSLists.dc.html",
+    "IOSSettings.dc.html",
+    "IOSFirstRun.dc.html",
+    "Claude.dc.html",
+    "Email.dc.html",
+    "Landing.dc.html",
+    "SiteClaude.dc.html",
+    "SiteOpen.dc.html",
+    "SitePrivacy.dc.html",
+    "SiteTerms.dc.html"
+  ],
+  "pages": [],
+  "title": "Pluck — Product and Design v1"
+}
