@@ -1,17 +1,17 @@
 import type { BottomTabBarProps } from "expo-router/js-tabs";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { font, useTheme } from "@/lib/theme";
+import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS } from "./Glyph";
 
 const TABS: Record<string, { label: string; icon: string }> = {
   index: { label: "Inbox", icon: ICONS.inbox },
   later: { label: "Later", icon: ICONS.later },
   search: { label: "Search", icon: ICONS.search },
-  lists: { label: "Lists", icon: ICONS.lists },
+  lists: { label: "Lists", icon: ICONS.listsTab },
 };
 
-// The tab bar from the boards: four tabs on the rail colour, 22pt glyphs, 11pt labels.
+// The tab bar from the boards: four tabs on the rail colour, 22pt glyphs, 11pt labels that stay 11pt, like the system bar.
 export function TabBar({ state, navigateToTab }: BottomTabBarProps) {
   const t = useTheme();
   const bottom = useSafeAreaInsets().bottom;
@@ -27,11 +27,12 @@ export function TabBar({ state, navigateToTab }: BottomTabBarProps) {
             key={route.key}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
+            accessibilityLabel={tab.label}
             style={styles.tab}
             onPress={() => !on && navigateToTab(route.key)}
           >
             <Icon d={tab.icon} color={color} width={on ? 1.6 : 1.4} />
-            <Text style={[on ? font.semibold : font.regular, styles.label, { color }]}>{tab.label}</Text>
+            <Text maxFontSizeMultiplier={scale.bar} style={[on ? font.semibold : font.regular, styles.label, { color }]}>{tab.label}</Text>
           </Pressable>
         );
       })}

@@ -1,9 +1,9 @@
 import type { Kind, Status } from "@pluck/shared-schemas";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActionSheetIOS, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActionSheetIOS, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Icon, ICONS, KIND_NAMES, KindGlyph } from "@/components/Glyph";
-import { Empty, Header } from "@/components/Screen";
+import { Empty, TitledList } from "@/components/Screen";
 import { useLists, useSearch, useTags, type SearchFilters } from "@/lib/data";
 import { font, useTheme } from "@/lib/theme";
 
@@ -43,13 +43,15 @@ export default function Search() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: t.ground }}>
-      <Header title="Search" bold>
+    <TitledList
+      title="Search"
+      bold
+      head={
         <View style={{ paddingHorizontal: 16, paddingBottom: 12, gap: 12 }}>
           <View style={[styles.field, { backgroundColor: t.surface, borderColor: t.ink }]}>
             <Icon d={ICONS.search} size={16} color={t.ink} width={1.5} />
             <TextInput value={text} onChangeText={setText} placeholder="Search" placeholderTextColor={t.ink2} returnKeyType="search" autoCorrect={false}
-              clearButtonMode="while-editing" accessibilityLabel="Search" style={[font.regular, { flex: 1, color: t.ink, fontSize: 15 }]} />
+              clearButtonMode="while-editing" accessibilityLabel="Search" style={[font.regular, { flex: 1, color: t.ink, fontSize: 15, paddingVertical: 10 }]} />
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {chip(f.kindName ?? "Any kind", Boolean(f.kinds), () =>
@@ -66,37 +68,40 @@ export default function Search() {
               }))))}
           </ScrollView>
         </View>
-      </Header>
-      <FlatList
-        data={results.data?.results ?? []}
-        keyExtractor={(r) => r.item.id}
-        style={{ borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: t.line }}
-        keyboardDismissMode="on-drag"
-        renderItem={({ item: { item, snippet } }) => (
-          <Pressable onPress={() => router.push(`/items/${item.id}`)} style={[styles.row, { borderBottomColor: t.line }]}>
-            <View style={{ marginTop: 1 }}><KindGlyph kind={item.kind} size={18} color={t.ink} /></View>
-            <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
-              <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{item.title}</Text>
-              {snippet && (
-                <Text style={[font.regular, { color: t.ink2, fontSize: 14, lineHeight: 20 }]} numberOfLines={2}>
-                  {snippet.source === "note" ? "Your note: " : ""}{snippet.pre}
-                  <Text style={{ backgroundColor: t.highlightWash, color: t.ink }}>{snippet.hit}</Text>{snippet.post}
-                </Text>
-              )}
-              <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{STATUS[item.status]}</Text>
-            </View>
-          </Pressable>
-        )}
-        ListEmptyComponent={q && results.data ? <Empty title="Nothing plucked matches that." body="Try fewer words, or another filter." /> : undefined}
-        ListFooterComponent={q ? <Text style={[font.regular, styles.footer, { color: t.ink2 }]}>Want it by meaning? Ask your AI.</Text> : undefined}
-      />
-    </View>
+      }
+      data={q ? (results.data?.results ?? []) : []}
+      keyExtractor={(r) => r.item.id}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      renderItem={({ item: { item, snippet } }) => (
+        <Pressable onPress={() => router.push(`/items/${item.id}`)} accessibilityRole="button"
+          style={({ pressed }) => [styles.row, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
+          <View style={{ marginTop: 1 }}><KindGlyph kind={item.kind} size={18} color={t.ink} /></View>
+          <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+            <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{item.title}</Text>
+            {snippet && (
+              <Text style={[font.regular, { color: t.ink2, fontSize: 14, lineHeight: 20 }]} numberOfLines={2}>
+                {snippet.source === "note" ? "Your note: " : ""}{snippet.pre}
+                <Text style={{ backgroundColor: t.highlightWash, color: t.ink }}>{snippet.hit}</Text>{snippet.post}
+              </Text>
+            )}
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{STATUS[item.status]}</Text>
+          </View>
+        </Pressable>
+      )}
+      ListEmptyComponent={
+        !q ? <Empty title="Find it again." body="Titles, notes, tags, lists and the words on the page." />
+          : results.isError ? <Empty title="Search didn't answer." body="Check the connection, then try again." />
+            : results.data ? <Empty title="Nothing plucked matches that." body="Try fewer words, or another filter." /> : undefined
+      }
+      ListFooterComponent={q ? <Text style={[font.regular, styles.footer, { color: t.ink2 }]}>Want it by meaning? Ask your AI.</Text> : undefined}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  field: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1.5 },
-  chip: { height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
+  field: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1.5 },
+  chip: { minHeight: 36, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
   row: { flexDirection: "row", gap: 12, paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   footer: { padding: 24, textAlign: "center", fontSize: 14 },
 });
