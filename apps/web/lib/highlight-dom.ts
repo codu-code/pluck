@@ -20,14 +20,19 @@ export function selectorFor(root: HTMLElement, range: Range): Highlight["selecto
   };
 }
 
-function locate(text: string, s: Highlight["selector"]): [number, number] | null {
+export function locate(text: string, s: Highlight["selector"]): [number, number] | null {
   const { start, end } = s.textPosition;
   const { exact, prefix, suffix } = s.textQuote;
   if (text.slice(start, end) === exact) return [start, end];
   const withContext = text.indexOf(prefix + exact + suffix);
   if (withContext >= 0) return [withContext + prefix.length, withContext + prefix.length + exact.length];
   const bare = text.indexOf(exact);
-  return bare >= 0 ? [bare, bare + exact.length] : null;
+  if (bare >= 0) return [bare, bare + exact.length];
+  // A selection made in the browser across paragraphs reads "a\n\nb" where the reader's text has "a\nb":
+  // match any run of whitespace for any other.
+  const loose = new RegExp(exact.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+"));
+  const m = exact.trim() ? loose.exec(text) : null;
+  return m ? [m.index, m.index + m[0].length] : null;
 }
 
 // Wraps [start, end) in <mark> elements, one per text node it crosses.

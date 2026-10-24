@@ -105,11 +105,32 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
   };
 }
 
+// The last part of the path as a name. A stray % ("50%off.pdf") or a Latin-1 escape is not valid percent-encoding,
+// and throwing there would lose a page that read fine; keep the name as it is.
+function fileNameOf(url: string): string | null {
+  const last = new URL(url).pathname.split("/").pop() ?? "";
+  try {
+    return decodeURIComponent(last) || null;
+  } catch {
+    return last || null;
+  }
+}
+
+// Most pages are UTF-8, but not all: the header's charset, else the page's own <meta>, else UTF-8.
+function decodeHtml(body: Buffer, contentType: string): string {
+  const declared = /charset=["']?([\w-]+)/i.exec(contentType)?.[1] ?? /<meta[^>]+charset=["']?([\w-]+)/i.exec(body.subarray(0, 4096).toString("latin1"))?.[1];
+  try {
+    return new TextDecoder(declared ?? "utf-8").decode(body);
+  } catch {
+    return body.toString("utf8"); // a label TextDecoder does not know
+  }
+}
+
 async function extractPdf(url: string, body: Buffer): Promise<Extracted> {
   const pdf = await getDocumentProxy(new Uint8Array(body));
   const { text } = await extractText(pdf, { mergePages: true });
   const info = (await pdf.getMetadata().catch(() => null))?.info as { Title?: string; Author?: string } | undefined;
-  const fileName = decodeURIComponent(new URL(url).pathname.split("/").pop() ?? "") || null;
+  const fileName = fileNameOf(url);
   return {
     kind: "pdf", url, canonicalUrl: null, title: clean(info?.Title) ?? fileName, siteName: new URL(url).hostname, author: clean(info?.Author),
     excerpt: excerptOf(text), lang: null, coverUrl: null, markdown: text.trim(), wordCount: countWords(text), extractor: "unpdf",
@@ -138,11 +159,11 @@ export async function extract({ url, html }: ExtractInput, { signal }: { signal?
   const type = res.contentType.toLowerCase();
   if (type.includes("application/pdf")) return extractPdf(res.url, res.body);
   if (type.startsWith("image/")) {
-    const name = decodeURIComponent(new URL(res.url).pathname.split("/").pop() ?? "") || null;
+    const name = fileNameOf(res.url);
     return {
       kind: "image", url: res.url, canonicalUrl: null, title: name, siteName: new URL(res.url).hostname, author: null, excerpt: null,
       lang: null, coverUrl: res.url, markdown: "", wordCount: 0, extractor: "none", raw: { contentType: type, body: res.body },
     };
   }
-  return extractFromHtml(res.body.toString("utf8"), res.url);
+  return extractFromHtml(decodeHtml(res.body, res.contentType), res.url);
 }

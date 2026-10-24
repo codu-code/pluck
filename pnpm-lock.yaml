@@ -11,9 +11,6 @@ importers:
       '@modelcontextprotocol/client':
         specifier: 2.4.0
         version: 2.4.0
-      '@modelcontextprotocol/server':
-        specifier: 2.4.0
-        version: 2.4.0
       '@playwright/test':
         specifier: 1.64.1
         version: 1.64.1
@@ -41,9 +38,6 @@ importers:
       vitest:
         specifier: 5.0.5
         version: 5.0.5(@types/node@22.20.5)(vite@8.3.5(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.15))
-      zod:
-        specifier: 4.6.7
-        version: 4.6.7
 
   apps/extension:
     dependencies:
@@ -352,6 +346,10 @@ importers:
       '@modelcontextprotocol/server':
         specifier: 2.4.0
         version: 2.4.0
+    devDependencies:
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
 
   packages/shared-schemas:
     dependencies:
@@ -7024,7 +7022,9 @@ snapshots:
       metro-runtime: 0.87.1
     transitivePeerDependencies:
       - '@babel/core'
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@react-native/normalize-colors@0.79.7': {}
 

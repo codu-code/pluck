@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { extractFromHtml } from "./extract.ts";
+import { extract, extractFromHtml } from "./extract.ts";
+
+const FIX = "http://127.0.0.1:4180";
 
 type Fixture = { file: string; kind: string; title: string; words: number; cover: boolean; site?: string; lang?: string; canonical?: string; author?: string; metaOnly?: boolean };
 const DIR = join(import.meta.dirname, "../fixtures");
@@ -29,4 +31,17 @@ describe.each(fixtures)("$file", (f) => {
     if (f.kind === "video") expect(out.kind).toBe("video");
     expect(out.excerpt ?? "").not.toMatch(/\\[.\-*#]/); // no markdown escapes in the row's second line
   });
+});
+
+test("pages in windows-1252 read right, whether the header or only a <meta> says so", async () => {
+  expect((await extract({ url: `${FIX}/latin1` })).title).toBe("Café crème");
+  const meta = await extract({ url: `${FIX}/latin1-meta` });
+  expect(meta.title).toBe("Déjà vu");
+  expect(meta.markdown).toContain("Un café crème à la terrasse");
+});
+
+test("a PDF whose name has a stray % is kept, named as served", async () => {
+  const x = await extract({ url: `${FIX}/odd/50%off.pdf` });
+  expect(x.kind).toBe("pdf");
+  expect(x.wordCount).toBeGreaterThan(0);
 });

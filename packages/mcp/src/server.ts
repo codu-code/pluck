@@ -1,5 +1,5 @@
 import { McpServer, ResourceTemplate, type CallToolResult } from "@modelcontextprotocol/server";
-import { DueAt, Kind, ObjectIdString, Status, type Item, type ListEntry, type ListMembership } from "@pluck/shared-schemas";
+import { DueAt, ErrorCode, Kind, ObjectIdString, Status, type Item, type ListEntry, type ListMembership } from "@pluck/shared-schemas";
 import { z } from "zod";
 import type { PluckLibrary } from "./library";
 import { registerPrompts } from "./prompts";
@@ -17,8 +17,9 @@ const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: fals
 const ok = (data: unknown): CallToolResult => ({ content: [{ type: "text", text: JSON.stringify(data) }] });
 
 // The library's errors ({ code, message, details }) go back to the AI tool as they are, so it can correct itself.
+// Only our own codes: a database or runtime error also has a code and a message, and those stay on our side, logged.
 function failed(e: unknown): CallToolResult | null {
-  if (!e || typeof e !== "object" || !("code" in e) || !("message" in e)) return null;
+  if (!e || typeof e !== "object" || !("code" in e) || !("message" in e) || !ErrorCode.safeParse(e.code).success) return null;
   const { code, message, details } = e as { code: string; message: string; details?: unknown };
   return { isError: true, content: [{ type: "text", text: JSON.stringify({ error: { code, message, ...(details === undefined ? {} : { details }) } }) }] };
 }
@@ -131,9 +132,10 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
       },
     );
 
-    tool("list_tags", { description: "The person's tags with how many items carry each.", inputSchema: z.object({}), annotations: READ }, async () => {
+    tool("list_tags", { description: "The person's tags with how many items carry each.", inputSchema: z.object({ cursor: Cursor }), annotations: READ }, async ({ cursor }) => {
       const tags = (await lib.tags()).map((t) => ({ id: t.id, name: t.name, count: t.count, madeByAi: t.createdBy === "mcp" }));
-      return { tags: fit(tags, 0).rows };
+      const { rows, nextCursor } = fit(tags, readOffset(cursor));
+      return { tags: rows, nextCursor };
     });
 
     tool("list_lists", { description: "The person's lists with purpose, counts and visibility.", inputSchema: z.object({ cursor: Cursor }), annotations: READ }, async ({ cursor }) => {
@@ -180,9 +182,17 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
             dueAt: DueAt.optional(),
           })
           .refine((b) => (b.url === undefined) !== (b.text === undefined), { message: "Send url or text." }),
-        annotations: { ...WRITE, idempotentHint: true },
+        annotations: WRITE, // a link twice is one item, but a note twice is two
       },
       async ({ tagIds, listId, ...body }) => {
+        // Check the tags and the list before anything is saved: an error after the pluck would leave the item made,
+        // and an AI tool that retries would make it again.
+        if (listId) await lib.list(listId);
+        if (tagIds?.length) {
+          const known = new Set((await lib.tags()).map((t) => t.id));
+          const unknown = tagIds.filter((t) => !known.has(t));
+          if (unknown.length) throw Object.assign(new Error("Use existing tags only: list_tags has them."), { code: "unknown_tags", details: { unknown } });
+        }
         const res = await lib.pluck({ ...body, source: "mcp" });
         const ids = res.results.map((r) => r.item.id);
         if (ids.length && tagIds?.length) await lib.batch({ itemIds: ids, patch: { addTagIds: tagIds } });

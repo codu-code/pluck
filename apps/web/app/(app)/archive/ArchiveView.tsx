@@ -1,6 +1,6 @@
 "use client";
 
-import type { ArchiveFilter, Item, ItemPage } from "@pluck/shared-schemas";
+import { BIN_DAYS, type ArchiveFilter, type Item, type ItemPage } from "@pluck/shared-schemas";
 import { KindGlyph } from "@pluck/ui";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,7 +12,6 @@ import styles from "./archive.module.css";
 import { useNow } from "@/lib/use-now";
 
 const FILTERS: [ArchiveFilter, string][] = [["all", "All"], ["you", "By you"], ["expired", "Expired"], ["import", "Imported"]];
-const BIN_DAYS = 30;
 
 function why(item: Item, bin: boolean, now: Date, expiryDays: number | null): string {
   if (bin) {

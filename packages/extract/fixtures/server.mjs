@@ -18,6 +18,12 @@ createServer(async (req, res) => {
     if (!globalThis.seen.has(n)) { globalThis.seen.add(n); return res.writeHead(503).end("try later"); }
     return res.writeHead(200, { "content-type": TYPES[".html"] }).end(`<html><head><title>Back on its feet ${n}</title></head><body><article><h1>Back on its feet</h1><p>${"This page failed once and then worked. ".repeat(20)}</p></article></body></html>`);
   }
+  // Pages in windows-1252, declared in the header or only in a <meta>: "Café" must not come out as mojibake.
+  const latin1 = (title) => Buffer.from(`<html><head><meta charset="windows-1252"><title>${title}</title></head><body><article><h1>${title}</h1><p>${"Un café crème à la terrasse, déjà réservé. ".repeat(20)}</p></article></body></html>`, "latin1");
+  if (url.pathname === "/latin1") return res.writeHead(200, { "content-type": "text/html; charset=windows-1252" }).end(latin1("Café crème"));
+  if (url.pathname === "/latin1-meta") return res.writeHead(200, { "content-type": "text/html" }).end(latin1("Déjà vu"));
+  // A file name that is not valid percent-encoding (a stray %), as real sites serve them.
+  if (url.pathname.startsWith("/odd/")) return res.writeHead(200, { "content-type": "application/pdf" }).end(await readFile(join(ROOT, "doc.pdf")));
   const path = normalize(join(ROOT, url.pathname === "/" ? "index.html" : url.pathname));
   if (!path.startsWith(ROOT)) return res.writeHead(403).end();
   try {

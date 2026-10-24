@@ -9,9 +9,9 @@ const FIX = "http://127.0.0.1:4180";
 const ALL = ["library:read", "library:write"];
 
 // The connector exactly as an AI tool meets it, over an in-memory transport, against the real library.
-async function connect(userId: string, scopes = ALL) {
+async function connect(userId: string, scopes = ALL, lib = connectorFor(userId), onError?: (e: unknown, tool: string) => void) {
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
-  await createPluckServer(connectorFor(userId), { scopes }).connect(serverSide);
+  await createPluckServer(lib, { scopes, onError }).connect(serverSide);
   const client = new Client({ name: "test-ai", version: "1.0.0" });
   await client.connect(clientSide);
   const call = async (name: string, args: Record<string, unknown> = {}) => {
@@ -58,6 +58,27 @@ test("save_item plucks a link marked as from the AI, tags it and adds it to a li
   expect(many.saved).toHaveLength(2);
   const todo = await call("save_item", { text: "Ring the printer", kind: "todo", dueAt: "2026-11-01T09:00:00Z" });
   expect(todo.saved[0]).toMatchObject({ kind: "todo", url: null });
+});
+
+test("save_item checks the tags and the list first: an unknown one saves nothing, so a retry cannot duplicate", async () => {
+  const { a } = await twoUsers();
+  const { call } = await connect(a);
+  const before = (await call("list_items", { status: "inbox" })).items.length;
+  const badTag = await call("save_item", { text: "A note that must not land", tagIds: ["000000000000000000000000"] });
+  expect(badTag.error.code).toBe("unknown_tags");
+  const badList = await call("save_item", { text: "Nor this one", listId: "000000000000000000000000" });
+  expect(badList.error.code).toBe("not_found");
+  expect((await call("list_items", { status: "inbox" })).items).toHaveLength(before);
+});
+
+test("an error that is not one of ours stays on our side: logged, and the AI tool gets a plain internal error", async () => {
+  const { a } = await twoUsers();
+  const seen: string[] = [];
+  const lib = { ...connectorFor(a), tags: async () => { throw Object.assign(new Error("WriteConflict on collection tags"), { code: 112 }); } };
+  const { call } = await connect(a, ALL, lib, (_e, tool) => seen.push(tool));
+  const res = await call("list_tags");
+  expect(res.error).toEqual({ code: "internal", message: "Something went wrong on Pluck's side." });
+  expect(seen).toEqual(["list_tags"]);
 });
 
 test("search, browse and read: cards, full text paged, highlights and lists, and nothing from another person", async () => {
