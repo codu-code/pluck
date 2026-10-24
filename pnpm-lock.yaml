@@ -47,6 +47,9 @@ importers:
 
   apps/extension:
     dependencies:
+      '@pluck/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@pluck/shared-schemas':
         specifier: workspace:*
         version: link:../../packages/shared-schemas
@@ -84,6 +87,9 @@ importers:
       '@expo-google-fonts/source-serif-4':
         specifier: 0.4.2
         version: 0.4.2
+      '@pluck/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@pluck/shared-schemas':
         specifier: workspace:*
         version: link:../../packages/shared-schemas
@@ -273,6 +279,12 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.1156.0
         version: 3.1156.0
+
+  packages/client:
+    dependencies:
+      '@pluck/shared-schemas':
+        specifier: workspace:*
+        version: link:../shared-schemas
 
   packages/db:
     dependencies:

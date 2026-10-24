@@ -9,7 +9,8 @@ export default defineConfig({
   manifest: ({ browser }) => ({
     name: "Pluck",
     description: "Pluck the page you are on into your Pluck library, with one click.",
-    permissions: ["activeTab", "contextMenus", "storage", "scripting", "alarms"],
+    // unlimitedStorage: queued plucks keep their page (up to 4 MB each) and Chrome otherwise stops storage.local at 10 MB.
+    permissions: ["activeTab", "contextMenus", "storage", "unlimitedStorage", "scripting", "alarms"],
     host_permissions: ["https://getpluck.io/*", ...(local ? ["http://127.0.0.1/*", "http://localhost/*"] : [])],
     // Your own server, the badge on every page and "Pluck all tabs" ask for these when first needed.
     optional_host_permissions: ["<all_urls>"],

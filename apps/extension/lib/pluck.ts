@@ -1,6 +1,7 @@
 import type { CreateItemBody, Item, PluckResponse } from "@pluck/shared-schemas";
 import { api, Refused, Unreachable } from "./api";
 import { capture, screenshot } from "./capture";
+import { createQueue } from "@pluck/client";
 import { get, set, settings } from "./store";
 
 export type PluckOutcome =
@@ -53,29 +54,20 @@ async function addScreenshot(itemId: string, windowId: number) {
 
 // ---- The queue: plucks that could not reach the server wait here and are retried by an alarm -----------
 
+const queue = createQueue({ read: () => get("queue"), write: (q) => set({ queue: q }) });
+
 async function enqueue(body: CreateItemBody): Promise<number> {
-  const queue = [...(await get("queue")), { body, at: Date.now() }];
-  await set({ queue });
+  const count = await queue.add(body);
   await browser.alarms.create("drain", { periodInMinutes: 1 });
-  await showQueued(queue.length);
-  return queue.length;
+  await showQueued(count);
+  return count;
 }
 
 export async function drain(): Promise<number> {
-  const queue = await get("queue");
-  const left = [];
-  for (const q of queue) {
-    try {
-      await api("/api/v1/items", { json: q.body });
-    } catch (e) {
-      if (e instanceof Refused) continue; // the server said no: retrying will not change that
-      left.push(q);
-    }
-  }
-  await set({ queue: left });
-  if (!left.length) await browser.alarms.clear("drain");
-  await showQueued(left.length);
-  return left.length;
+  const left = await queue.drain((body) => api("/api/v1/items", { json: body }));
+  if (!left) await browser.alarms.clear("drain");
+  await showQueued(left);
+  return left;
 }
 
 // ---- The toolbar badge: a dot while plucks are queued, a tick on pages already in the library ----------

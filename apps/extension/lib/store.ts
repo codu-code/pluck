@@ -1,15 +1,13 @@
-import type { CreateItemBody } from "@pluck/shared-schemas";
+import type { Queued, Tokens } from "@pluck/client";
 
 // Everything the extension keeps lives in storage.local: the service worker can be killed at any time,
 // so nothing is held in memory between events.
-export type Tokens = { access: string; refresh: string | null; expiresAt: number };
 export type Settings = {
   server: string;
   defaultKind: "guess" | "link" | "video";
   sendContent: boolean;
   transcripts: boolean;
 };
-export type Queued = { body: CreateItemBody; at: number };
 
 type Local = {
   settings: Settings;
