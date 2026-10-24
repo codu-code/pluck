@@ -70,7 +70,7 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   await expect.poll(async () => (await itemsOf(page))[0]?.note).toBe("for the talk");
   const lists = (await (await page.request.get("/api/v1/lists")).json()).lists as { itemCount: number }[];
   expect(lists[0]!.itemCount).toBe(1);
-  expect(await sw.evaluate(async (tabId) => chrome.action.getBadgeText({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("✓");
+  expect(await sw.evaluate(async (tabId) => chrome.action.getTitle({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("Plucked");
 
   // Opening it again shows the item instead of plucking a second one; Later moves it.
   await popup.close();

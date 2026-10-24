@@ -23,6 +23,8 @@ Right-click a link, an image or the page to pluck it without opening it. Select 
 
 Pages behind your logins are kept as your browser rendered them. YouTube videos come with their transcript, so search and your AI tools can read what was said.
 
+The Pluck icon fills in on pages already in your library, so you can see at a glance what you have plucked.
+
 No connection? Plucks wait on your computer and go when you are back online.
 
 Pluck is open source. Use getpluck.io, or point the extension at a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
@@ -58,19 +60,20 @@ Pluck saves the web page, link, image or text selection you choose into your own
 |---|---|
 | `activeTab` | When you click Pluck or press its shortcut, it reads the address, title and text of the tab you are on, so the item is kept as you see it. |
 | `scripting` | Runs once in the tab you pluck, after you click, to read the rendered page, your selected text and, on YouTube, the transcript. |
+| `tabs` | Reads the address of your open tabs, so the Pluck icon fills in on pages already in your library and "Pluck all tabs" can list them. Only the address is read, never the page. |
 | `contextMenus` | Adds "Pluck link", "Pluck image", "Pluck page" and "Pluck selection as highlight" to the right-click menu. |
 | `storage` | Keeps your sign-in, your settings and any plucks waiting for a connection on your computer. |
 | `unlimitedStorage` | Lets plucks made offline keep the page they captured (up to 4 MB each) until they are sent; without it Chrome stops the extension's storage at 10 MB. |
 | `alarms` | Retries plucks that were made offline, once a minute, until they are sent. |
 | Host permission `https://getpluck.io/*` | The Pluck server the extension sends your plucks to and signs in with. |
-| Optional host permission `<all_urls>` | Asked for only when you use "Pluck all tabs" (to read the address of each open tab), or to reach a Pluck server you run yourself. Not granted at install. |
+| Optional host permission `<all_urls>` | Asked for only to reach a Pluck server you run yourself. Not granted at install. |
 
 **Remote code:** No, I am not using remote code. (Everything runs from the package; the extension only sends and receives JSON.)
 
 **Data usage**, tick:
 
 - **Authentication information:** the sign-in token for your Pluck account, kept on your computer.
-- **Web history:** the addresses of pages you pluck. If you grant the all-sites permission, the address of the page you are on is checked against your library to show the badge.
+- **Web history:** the addresses of pages you pluck, and, while you are signed in, the address of the page you are on, checked against your library so the icon can fill in.
 - **Website content:** the text, title and images of pages you pluck, and YouTube transcripts when that setting is on.
 
 Leave the rest unticked (no personally identifiable information, health, financial, personal communications, location or user activity is collected by the extension).
