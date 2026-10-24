@@ -1,0 +1,27 @@
+.page { width: 100%; max-width: 1040px; padding: 28px 32px 48px; display: flex; flex-direction: column; gap: 20px; }
+.head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.titles { display: flex; flex-direction: column; gap: 4px; }
+.title { margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em; }
+.meta { color: var(--ink2); margin: 0; }
+.primary { height: 40px; padding: 0 14px; border-radius: 8px; border: 0; background: var(--brand); color: var(--on-brand); font: inherit; font-weight: 500; cursor: pointer; }
+.primary:disabled { opacity: 0.6; cursor: default; }
+.textButton { height: 40px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; cursor: pointer; }
+.newList { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; padding: 16px; border-radius: 8px; background: var(--rail); }
+.field { display: flex; flex-direction: column; gap: 6px; font-weight: 500; }
+.grow { flex: 1 1 280px; }
+.input { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-weight: 400; }
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; min-width: 680px; border-collapse: collapse; }
+.table th { text-align: left; color: var(--ink2); font-size: 13px; font-weight: 500; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.table td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.visCol { width: 140px; }
+.num { text-align: right; white-space: nowrap; }
+.table th.num { text-align: right; width: 110px; }
+.nameLine { display: flex; align-items: center; gap: 8px; }
+.name { font-weight: 600; text-decoration: none; }
+.purpose { color: var(--ink2); font-size: 13px; }
+.vis { display: inline-flex; align-items: center; gap: 6px; }
+.byAi { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 11px; border: 1px solid var(--clay-line); color: var(--clay); font-size: 12px; }
+.dot { width: 6px; height: 6px; border-radius: 3px; background: var(--clay-dot); }
+.foot { margin: 0; color: var(--ink2); font-size: 13px; }
+@media (max-width: 600px) { .page { padding: 20px 16px 32px; } }

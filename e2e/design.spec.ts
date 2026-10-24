@@ -53,6 +53,15 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.getByRole("link", { name: "Kitchen plan" }).first().click();
   await page.waitForURL(/\/items\//);
   await snap("note-editor");
+  const made = await page.request.post("/api/v1/lists", { data: { name: "Best MCP reading", purpose: "Start here. Best first." } });
+  const listId = (await made.json()).list.id;
+  const ids = (await (await page.request.get("/api/v1/items?status=inbox")).json()).items.slice(0, 3).map((i: { id: string }) => i.id);
+  await page.request.post(`/api/v1/lists/${listId}/items`, { data: { itemIds: ids } });
+  await page.request.patch(`/api/v1/lists/${listId}/items/${ids[0]}`, { data: { ticked: true, note: "Start here." } });
+  await page.goto("/lists");
+  await snap("lists");
+  await page.goto(`/lists/${listId}`);
+  await snap("list");
   await page.goto("/search?q=teams");
   await page.waitForSelector("mark");
   await snap("search");

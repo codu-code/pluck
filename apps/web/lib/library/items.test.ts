@@ -1,8 +1,8 @@
 import { getContent, getItemBlobKeys, pendingJobCount } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
-import { runJobs } from "./jobs";
-import { pluck, pluckAny, readItem, readText, updateItem } from "./library";
+import { runJobs } from "../jobs";
+import { pluck, pluckAny, readItem, readText, updateItem } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -101,7 +101,7 @@ test("edits follow the rules for links and notes", async () => {
 });
 
 test("Done is only for todos and things; batch skips what does not fit", async () => {
-  const { updateItem: update, batch } = await import("./library");
+  const { updateItem: update, batch } = await import("./index");
   const { a } = await twoUsers();
   const link = (await pluckAny(a, { url: `${FIX}/blog-4.html` })).results[0]!.item;
   const todo = (await pluckAny(a, { text: "Book the room", kind: "todo" })).results[0]!.item;
@@ -111,7 +111,7 @@ test("Done is only for todos and things; batch skips what does not fit", async (
 });
 
 test("tags by id or name; an unknown tag is a 422 with the nearest ones, and nothing is created", async () => {
-  const lib = await import("./library");
+  const lib = await import("./index");
   const { a } = await twoUsers();
   const pg = (await lib.addTag(a, "postgres")).tag;
   await lib.addTag(a, "python");

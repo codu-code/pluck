@@ -52,6 +52,37 @@ export type TagDoc = {
   createdBy: "user" | "mcp";
 };
 
+export type ListDoc = {
+  _id: ObjectId;
+  userId: ObjectId;
+  name: string;
+  slug: string;
+  purpose: string;
+  visibility: "private" | "public";
+  itemCount: number;
+  tickedCount: number;
+  views: number;
+  lastAddedAt: Date | null;
+  lastActivityAt: Date;
+  createdBy: "user" | "mcp";
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ListItemDoc = {
+  _id: ObjectId;
+  listId: ObjectId;
+  userId: ObjectId;
+  itemId: ObjectId;
+  position: number;
+  note: string | null;
+  noteBy: "user" | "mcp" | null;
+  ticked: boolean;
+  tickedAt: Date | null;
+  addedBy: "user" | "mcp";
+  addedAt: Date;
+};
+
 export type HighlightDoc = {
   _id: ObjectId;
   userId: ObjectId;
@@ -109,6 +140,16 @@ export function db(): Promise<Db> {
           language_override: "searchLanguage", // items carry `lang` for display; never let it switch stemming
         },
       ]),
+      d.collection("lists").createIndexes([
+        { key: { userId: 1, slug: 1 }, unique: true },
+        { key: { userId: 1, updatedAt: -1 } },
+        { key: { userId: 1, lastActivityAt: 1 } },
+      ]),
+      d.collection("listItems").createIndexes([
+        { key: { listId: 1, position: 1 } },
+        { key: { itemId: 1 } },
+        { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
+      ]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
       d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
       d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }]),
@@ -127,6 +168,12 @@ export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, l
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function lists(): Promise<Collection<ListDoc>> {
+  return (await db()).collection<ListDoc>("lists");
+}
+export async function listRows(): Promise<Collection<ListItemDoc>> {
+  return (await db()).collection<ListItemDoc>("listItems");
 }
 export async function tags(): Promise<Collection<TagDoc>> {
   return (await db()).collection<TagDoc>("tags");

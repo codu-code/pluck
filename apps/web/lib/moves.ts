@@ -6,6 +6,7 @@ export async function moveItems(ids: string[], status: Status): Promise<boolean>
     ids.length === 1
       ? await fetch(`/api/v1/items/${ids[0]}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status }) })
       : await fetch("/api/v1/items/batch", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ itemIds: ids, patch: { status } }) });
+  if (res.ok) window.dispatchEvent(new Event("pluck:counts"));
   return res.ok;
 }
 

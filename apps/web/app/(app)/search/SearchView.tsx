@@ -1,6 +1,6 @@
 "use client";
 
-import { LINK_KINDS, type SearchResults, type Status, type Tag } from "@pluck/shared-schemas";
+import { LINK_KINDS, type List, type SearchResults, type Status, type Tag } from "@pluck/shared-schemas";
 import { KindGlyph } from "@pluck/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,8 +10,8 @@ import { when } from "@/lib/format";
 import { isTyping } from "@/lib/keys";
 import styles from "./search.module.css";
 
-type Filters = { kind: string; tag: string; status: string; date: string };
-const NONE: Filters = { kind: "any", tag: "any", status: "any", date: "any" };
+type Filters = { kind: string; tag: string; list: string; status: string; date: string };
+const NONE: Filters = { kind: "any", tag: "any", list: "any", status: "any", date: "any" };
 const STATUS_LABEL: Record<Status, string> = { inbox: "Inbox", later: "Later", archived: "Archived", done: "Done" };
 const DAYS: Record<string, number> = { week: 7, month: 31, year: 365 };
 
@@ -20,6 +20,7 @@ function params(q: string, f: Filters, cursor?: string) {
   if (f.kind === "links") p.set("kinds", LINK_KINDS.join(","));
   else if (f.kind !== "any") p.set("kinds", f.kind);
   if (f.tag !== "any") p.set("tagIds", f.tag);
+  if (f.list !== "any") p.set("listId", f.list);
   if (f.status !== "any") p.set("status", f.status);
   if (f.date !== "any") p.set("since", new Date(Date.now() - DAYS[f.date]! * 86_400_000).toISOString());
   if (cursor) p.set("cursor", cursor);
@@ -28,7 +29,7 @@ function params(q: string, f: Filters, cursor?: string) {
 
 // The Search board: one box, five filter chips, ranked results with the matching words marked,
 // and the honest pointer to your AI for anything "by meaning".
-export function SearchView({ initialQuery, initial, tags }: { initialQuery: string; initial: SearchResults | null; tags: Tag[] }) {
+export function SearchView({ initialQuery, initial, tags, lists }: { initialQuery: string; initial: SearchResults | null; tags: Tag[]; lists: List[] }) {
   const router = useRouter();
   const [q, setQ] = useState(initialQuery);
   const [filters, setFilters] = useState<Filters>(NONE);
@@ -116,6 +117,7 @@ export function SearchView({ initialQuery, initial, tags }: { initialQuery: stri
         <div className={styles.filters}>
           {chip("kind", "Kind", [["any", "Kind: any"], ["links", "Links"], ["link", "Read"], ["video", "Watch"], ["pdf", "PDF"], ["image", "Image"], ["note", "Notes"], ["todo", "Todos"], ["thing", "Things"]])}
           {chip("tag", "Tag", [["any", "Tag"], ...tags.map((t): [string, string] => [t.id, t.name])])}
+          {chip("list", "List", [["any", "List"], ...lists.map((l): [string, string] => [l.id, l.name])])}
           {chip("status", "Status", [["any", "Status"], ["inbox", "Inbox"], ["later", "Later"], ["archived", "Archived"], ["done", "Done"]])}
           {chip("date", "Date", [["any", "Date"], ["week", "Past week"], ["month", "Past month"], ["year", "Past year"]])}
           {data && (
@@ -130,7 +132,7 @@ export function SearchView({ initialQuery, initial, tags }: { initialQuery: stri
         {data && data.results.length > 0 && (
           <div className={styles.rows} role="list" aria-label="Results">
             {data.results.map((r, i) => (
-              <div key={r.item.id} role="listitem" className={styles.row} data-active={i === cursor || undefined} onMouseEnter={() => setCursor(i)}>
+              <div key={r.item.id} role="listitem" className={styles.row} data-active={i === cursor || undefined} onMouseMove={() => setCursor(i)}>
                 <KindGlyph kind={r.item.kind} />
                 <div className={styles.body}>
                   <div className={styles.titleLine}>

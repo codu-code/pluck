@@ -1,8 +1,9 @@
 "use client";
 
-import type { Item, Tag, TextKind } from "@pluck/shared-schemas";
+import type { Item, ListMembership, Tag, TextKind } from "@pluck/shared-schemas";
 import { useEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
+import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
 import { ago, sourceLabel } from "@/lib/format";
 import styles from "./note.module.css";
@@ -16,7 +17,7 @@ const KIND_HINT: Record<TextKind, string> = {
 };
 
 // The Note, Todo and Thing editor (ItemNote board). Plain text, saved as you type. Esc goes back.
-export function NoteEditor({ item, text, tags }: { item: Item; text: string; tags: Tag[] }) {
+export function NoteEditor({ item, text, tags, lists }: { item: Item; text: string; tags: Tag[]; lists: ListMembership[] }) {
   const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
   const [body, setBody] = useState(text);
   const [kind, setKind] = useState(item.kind as TextKind);
@@ -140,6 +141,7 @@ export function NoteEditor({ item, text, tags }: { item: Item; text: string; tag
               />
             </label>
           )}
+          <ItemLists itemId={item.id} initial={lists} />
           <div className={styles.foot}>
             <span>Source: {item.source === "web" ? "web paste box" : sourceLabel(item.source).replace(/^Plucked /, "")}</span>
             <span>Notes have no highlights. Select text to copy it.</span>

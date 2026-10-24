@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { deriveExcerpt, deriveTitle, LINK_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
-import { contents, highlights, items, LEAN, oid, type ItemDoc } from "./collections.ts";
+import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
+import { recountList, recountListsOf } from "./lists.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
 export const urlHash = (normalizedUrl: string) => createHash("sha256").update(normalizedUrl).digest("hex");
@@ -202,6 +203,7 @@ export async function markOpened(userId: string, itemId: string): Promise<void> 
 // The bin: deleted items wait 30 days, then purgeBin removes them for good.
 export async function moveToBin(userId: string, itemId: string): Promise<boolean> {
   const res = await (await items()).updateOne({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, { $set: { deletedAt: new Date() } });
+  if (res.modifiedCount === 1) await recountListsOf([oid(itemId)]);
   return res.modifiedCount === 1;
 }
 
@@ -211,6 +213,7 @@ export async function restoreFromBin(userId: string, itemId: string): Promise<It
     { $set: { deletedAt: null, lastTouchedAt: new Date() } },
     { returnDocument: "after" },
   );
+  if (doc) await recountListsOf([doc._id]);
   return doc && toItem(doc);
 }
 
@@ -226,7 +229,10 @@ export async function purgeBin(now = new Date()): Promise<{ purged: number; user
   const ids = docs.map((d) => d._id);
   await (await contents()).deleteMany({ itemId: { $in: ids } });
   await (await highlights()).deleteMany({ itemId: { $in: ids } });
+  const listIds = await (await listRows()).distinct("listId", { itemId: { $in: ids } });
+  await (await listRows()).deleteMany({ itemId: { $in: ids } });
   await col.deleteMany({ _id: { $in: ids }, deletedAt: { $lt: cutoff } });
+  for (const id of listIds) await recountList(id);
   return {
     purged: docs.length,
     userIds: [...new Set(docs.map((d) => d.userId.toHexString()))],

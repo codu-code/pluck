@@ -32,7 +32,7 @@ test("keyboard triage: archive with undo, later and back", async ({ page }) => {
 
   await page.keyboard.press("l");
   await expect(page.getByRole("status").filter({ hasText: "Kept for later." })).toBeVisible();
-  await page.getByRole("link", { name: "Later", exact: true }).click();
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: /^Later/ }).click();
   await expect(rows(page)).toHaveCount(1);
   await page.keyboard.press("l"); // in Later, l goes back to the Inbox
   await expect(page.getByRole("status").filter({ hasText: "Back in the Inbox." })).toBeVisible();

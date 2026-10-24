@@ -1,6 +1,6 @@
 import { UpdateItemBody } from "@pluck/shared-schemas";
 import { json, parseBody, route } from "@/lib/api";
-import { deleteItem, highlightsOf, readItem, readText, updateItem } from "@/lib/library";
+import { deleteItem, highlightsOf, membershipsOf, readItem, readText, updateItem } from "@/lib/library";
 
 export const GET = route<{ id: string }>({ kind: "read" }, async ({ req, caller, params }) => {
   const item = await readItem(caller.userId, params.id);
@@ -9,6 +9,7 @@ export const GET = route<{ id: string }>({ kind: "read" }, async ({ req, caller,
     item,
     ...(include.includes("text") ? { text: await readText(caller.userId, item.id) } : {}),
     ...(include.includes("highlights") ? { highlights: await highlightsOf(caller.userId, item.id) } : {}),
+    ...(include.includes("lists") ? { lists: await membershipsOf(caller.userId, item.id) } : {}),
   });
 });
 

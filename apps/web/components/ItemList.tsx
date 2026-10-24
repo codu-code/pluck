@@ -1,17 +1,19 @@
 "use client";
 
-import type { Item, ItemPage, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
+import type { Item, ItemPage, List, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { EmptyInbox, EmptyState } from "@/components/EmptyInbox";
 import { ItemRow, RowAction } from "@/components/ItemRow";
 import { KindChips, kindsFor, matches, type KindFilter } from "@/components/KindChips";
+import { ListPicker } from "@/components/ListPicker";
 import { Shortcuts } from "@/components/Shortcuts";
 import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
 import { useToast } from "@/components/Toast";
 import { TopBar, type PluckDraft } from "@/components/TopBar";
 import { MOVED, moveItems, restoreStatuses } from "@/lib/moves";
+import { createListNamed, fetchLists, membershipsOf, setInList } from "@/lib/listing";
 import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
 import { isTyping } from "@/lib/keys";
 import styles from "./ItemList.module.css";
@@ -80,6 +82,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const [vocab, setVocab] = useState(initialTags);
   const [tagFilter, setTagFilter] = useState<Tag | null>(null);
   const [picking, setPicking] = useState<string[] | null>(null); // item ids the tag picker is open for
+  const [listing, setListing] = useState<{ ids: string[]; lists: List[]; on: Set<string> } | null>(null); // the a picker
   const [now, setNow] = useState(() => new Date());
   const [everPlucked, setEverPlucked] = useState(initial.items.length > 0);
   const [toast, showToast] = useToast();
@@ -189,6 +192,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
         d: () => void move(targets, "done"),
         x: () => current && toggle(current.id),
         t: () => targets.length && setPicking(targets),
+        a: () => targets.length && void openLists(targets),
         Escape: () => setSelected(new Set()),
         c: () => document.getElementById("pluck-box")?.focus(),
         "/": () => router.push("/search"),
@@ -220,6 +224,25 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     const updated = await setTagOn(ids, tag, on, real);
     if (updated) setRows((cur) => cur.map((r) => updated.find((u) => u.id === r.id) ?? r));
     setVocab(await fetchTags());
+  }
+  // For one item the picker shows the lists it is already in; for many it starts empty and adds to all.
+  async function openLists(ids: string[]) {
+    const [lists, memberships] = await Promise.all([fetchLists(), ids.length === 1 ? membershipsOf(ids[0]!) : Promise.resolve([])]);
+    setListing({ ids, lists, on: new Set(memberships.map((m) => m.list.id)) });
+  }
+  async function toggleList(list: List, on: boolean) {
+    const ids = listing?.ids;
+    if (!ids || !(await setInList(ids, list, on))) return showToast({ message: "That did not go through." });
+    const lists = await fetchLists();
+    // Only refresh the picker this toggle came from: one closed (Esc) or reopened for other items stays as it is.
+    setListing((cur) => {
+      if (!cur || cur.ids !== ids) return cur;
+      const next = new Set(cur.on);
+      if (on) next.add(list.id);
+      else next.delete(list.id);
+      return { ...cur, on: next, lists };
+    });
+    showToast({ message: on ? `Added to “${list.name}”.` : `Taken out of “${list.name}”.` });
   }
   const pickState = (tagId: string) => {
     const targets = real.filter((r) => picking?.includes(r.id));
@@ -304,6 +327,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
               <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "archived")}>Archive</button>
               {allTodo && <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "done")}>Done</button>}
               <button type="button" className={styles.bulkButton} onClick={() => setPicking([...selected])}>Tag</button>
+              <button type="button" className={styles.bulkButton} onClick={() => openLists([...selected])}>Add to list</button>
               <button type="button" className={styles.bulkClear} onClick={() => setSelected(new Set())}>Clear</button>
             </div>
           )}
@@ -329,6 +353,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
                           <RowAction label={view === "later" ? "Inbox" : "Later"} keyHint="l" onClick={() => move([r.id], laterTarget)} />
                           <RowAction label="Archive" keyHint="e" onClick={() => move([r.id], "archived")} />
                           <RowAction label="Tag" keyHint="t" onClick={() => setPicking([r.id])} />
+                          <RowAction label="List" keyHint="a" onClick={() => openLists([r.id])} />
                           {(r.kind === "todo" || r.kind === "thing") && <RowAction label="Done" keyHint="d" onClick={() => move([r.id], "done")} />}
                           <RowAction label="Open" keyHint="o" href={`/items/${r.id}`} />
                         </>
@@ -350,12 +375,23 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
             <span><kbd>l</kbd> {view === "later" ? "inbox" : "later"}</span>
             <span><kbd>e</kbd> archive</span>
             <span><kbd>t</kbd> tag</span>
+            <span><kbd>a</kbd> add to list</span>
             <span><kbd>x</kbd> select</span>
             <span><kbd>?</kbd> all shortcuts</span>
           </div>
         </div>
       )}
       <Shortcuts open={help} onClose={() => setHelp(false)} />
+      {listing && (
+        <ListPicker
+          title={listing.ids.length > 1 ? `Add ${listing.ids.length} items to a list` : "Add to a list"}
+          lists={listing.lists}
+          state={(id) => (listing.on.has(id) ? "on" : "off")}
+          onToggle={toggleList}
+          onCreate={createListNamed}
+          onClose={() => setListing(null)}
+        />
+      )}
       {picking && (
         <TagPicker
           title={picking.length > 1 ? `Tag ${picking.length} items` : "Tag"}

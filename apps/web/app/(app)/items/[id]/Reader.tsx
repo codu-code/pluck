@@ -1,9 +1,10 @@
 "use client";
 
-import { LINK_KINDS, type Highlight, type Item, type Kind, type Tag } from "@pluck/shared-schemas";
+import { LINK_KINDS, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { KIND_NAMES } from "@pluck/ui";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
+import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
 import { ago, coverSrc, sourceLabel } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
@@ -14,7 +15,7 @@ type Toolbar = { x: number; y: number } & ({ kind: "new"; selector: Highlight["s
 const json = (method: string, body: unknown) => ({ method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 // The reader (Item board): kept text in serif, highlights from a selection, the note, kind and source alongside.
-export function Reader({ item, html, initialHighlights, showCover, tags }: { item: Item; html: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[] }) {
+export function Reader({ item, html, initialHighlights, showCover, tags, lists }: { item: Item; html: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[]; lists: ListMembership[] }) {
   const article = useRef<HTMLDivElement>(null);
   const [highlights, setHighlights] = useState(initialHighlights);
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
@@ -194,6 +195,7 @@ export function Reader({ item, html, initialHighlights, showCover, tags }: { ite
               ))}
             </select>
           </label>
+          <ItemLists itemId={item.id} initial={lists} />
           <div className={styles.group}>
             <span className={styles.groupTitle}>Highlights · {highlights.length}</span>
             {highlights.length === 0 && <span className={styles.meta}>Select text to highlight it.</span>}

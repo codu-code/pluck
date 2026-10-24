@@ -1,0 +1,10 @@
+.group { display: flex; flex-direction: column; gap: 8px; }
+.title { font-weight: 600; }
+.card { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; border-radius: 8px; background: var(--rail); text-decoration: none; }
+.cardHead { display: flex; justify-content: space-between; gap: 8px; }
+.name { font-weight: 600; }
+.meta { color: var(--ink2); font-size: 12px; white-space: nowrap; }
+.note { color: var(--ink2); font-size: 13px; }
+.ai { color: var(--clay); }
+.add { height: 36px; text-align: left; padding: 0 12px; border-radius: 8px; border: 1px dashed var(--line-dashed); background: transparent; color: var(--ink2); font: inherit; cursor: pointer; }
+.kbd { font: 11px var(--font-ui); }

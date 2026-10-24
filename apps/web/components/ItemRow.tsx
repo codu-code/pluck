@@ -28,7 +28,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
       data-active={active || undefined}
       data-selected={selected || undefined}
       data-leaving={leaving || undefined}
-      onMouseEnter={onPoint}
+      onMouseMove={onPoint} // move, not enter: a closing overlay must not steal the keyboard cursor
     >
       {selecting && (
         <input type="checkbox" className={styles.check} checked={Boolean(selected)} onChange={onToggle} aria-label={`Select ${item.title}`} />

@@ -1,17 +1,15 @@
 import { deletePrefix, signedUrl } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countAiTagged, countItems, createHighlight, createTag, deleteTag, listTags, nearestTags, purgeAiTags, renameTag,
-  resolveTags, searchItems, setItemTags, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys, listHighlights,
-  listItems, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, updateHighlight,
+  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys,
+  listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setItemTags,
+  updateHighlight,
 } from "@pluck/db";
 import {
-  extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type CreateItemBody, type CreateItemResult, type Item, type ItemPage,
-  type BatchBody, type CreateHighlightBody, type Highlight, type ListItemsQuery, type SearchQuery, type SearchResults, type Tag, type PluckResponse, type Status, type UpdateItemBody,
+  extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
+  type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
-import { ApiError } from "./errors";
-import { extractAttempt } from "./capture";
-
-// The library: what a signed-in person can do with their items. REST routes and MCP tools both call this.
+import { ApiError } from "../errors";
+import { extractAttempt } from "../capture";
 
 type Defer = (task: () => Promise<void>) => void;
 const INLINE_TIMEOUT_MS = 5000;
@@ -89,19 +87,7 @@ export async function readText(userId: string, itemId: string): Promise<string> 
   return (await getContent(userId, itemId))?.textMarkdown ?? "";
 }
 
-export type Actor = "user" | "mcp";
-
-// Tag ids, or names of existing tags. Anything else is a 422 with the nearest tags; nothing is created here.
-async function tagIdsFor(userId: string, refs: string[]): Promise<string[]> {
-  const { ids, unknown } = await resolveTags(userId, refs);
-  if (unknown.length) {
-    throw new ApiError("unknown_tags", `No tag called ${unknown.map((u) => `"${u}"`).join(", ")}. Use an existing tag, or create one first.`, 422, {
-      unknown,
-      nearest: await nearestTags(userId, unknown[0]!),
-    });
-  }
-  return ids;
-}
+import { tagIdsFor, type Actor } from "./tags";
 
 // Edits from the person. Text and the text kinds belong to items with no URL; link kinds to items with one.
 export async function updateItem(userId: string, itemId: string, patch: UpdateItemBody, { by = "user" }: { by?: Actor } = {}): Promise<Item> {
@@ -134,27 +120,7 @@ export async function batch(userId: string, body: BatchBody, { by = "user" }: { 
   return { matched: res.matched, updated: Math.max(res.updated, tagged) };
 }
 
-export const tagsOf = (userId: string): Promise<Tag[]> => listTags(userId);
 
-export async function addTag(userId: string, name: string, { by = "user" }: { by?: Actor } = {}): Promise<{ tag: Tag; created: boolean }> {
-  const res = await createTag(userId, name, by);
-  if (!res) throw new ApiError("bad_request", "A tag needs at least one letter or number.", 400);
-  return res;
-}
-
-export async function renameTagFor(userId: string, id: string, name: string): Promise<Tag> {
-  const res = await renameTag(userId, id, name);
-  if (res === "conflict") throw new ApiError("conflict", `There is already a tag called "${name}". Merge them instead.`, 409);
-  if (!res) throw new ApiError("not_found", "No such tag.", 404);
-  return res;
-}
-
-export async function removeTag(userId: string, id: string, opts: { reassignTo: string } | { removeFromItems: true }): Promise<void> {
-  if (!(await deleteTag(userId, id, opts))) throw new ApiError("not_found", "No such tag, or no tag to merge into.", 404);
-}
-
-export const purgeAi = (userId: string, days: number) => purgeAiTags(userId, days);
-export const aiTaggedCount = (userId: string, days: number) => countAiTagged(userId, days);
 
 export const openItem = (userId: string, itemId: string) => markOpened(userId, itemId);
 export const count = (userId: string, status: Status) => countItems(userId, status);
@@ -201,7 +167,6 @@ export async function coverLocation(userId: string, itemId: string): Promise<str
   return signedUrl(keys.coverKey, 600);
 }
 
-// Text search, no vectors: "by meaning" is your AI's job through the connector.
-export const search = (userId: string, q: SearchQuery): Promise<SearchResults> => searchItems(userId, q);
+export const membershipsOf = (userId: string, itemId: string): Promise<ListMembership[]> => listsForItem(userId, itemId);
 
 export const browse = (userId: string, q: ListItemsQuery): Promise<ItemPage> => listItems(userId, q);

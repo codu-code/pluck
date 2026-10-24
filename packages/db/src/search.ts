@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { normalizeUrl, type Item, type SearchHit, type SearchQuery } from "@pluck/shared-schemas";
 import type { Filter, ObjectId } from "mongodb";
-import { items, oid, tags, type ItemDoc } from "./collections.ts";
+import { items, listRows, oid, tags, type ItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 
 // Text search over title (10), note and tags (5), list names (3), site and excerpt (2) and the kept text (1).
@@ -84,6 +84,7 @@ export async function searchItems(userId: string, q: SearchQuery): Promise<{ res
   if (q.status) filter.status = q.status;
   if (q.kinds?.length) filter.kind = { $in: q.kinds };
   if (q.tagIds?.length) filter.tagIds = { $all: q.tagIds.map(oid) };
+  if (q.listId) filter._id = { $in: await (await listRows()).distinct("itemId", { userId: uid, listId: oid(q.listId) }) };
   if (q.since || q.until) filter.createdAt = { ...(q.since ? { $gte: new Date(q.since) } : {}), ...(q.until ? { $lt: new Date(q.until) } : {}) };
   const text = { ...filter, $text: { $search: q.q } };
   const offset = decode(q.cursor);

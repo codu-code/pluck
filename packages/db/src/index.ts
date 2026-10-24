@@ -14,3 +14,7 @@ export {
   slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, batchTags, purgeAiTags, countAiTagged,
 } from "./tags.ts";
 export { searchItems, snippetFor } from "./search.ts";
+export {
+  createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, reorderList, listsForItem,
+  type NewList, type ListEdit, type EntryEdit,
+} from "./lists.ts";

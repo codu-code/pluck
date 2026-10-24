@@ -7,7 +7,7 @@ import { RailNav } from "./RailNav";
 import styles from "./AppShell.module.css";
 
 // The web app frame from the Main and Empty boards: rail on the left, pluck box and search on top.
-export function AppShell({ user, children }: { user: SessionUser; children: ReactNode }) {
+export function AppShell({ user, counts, children }: { user: SessionUser; counts: Record<string, number>; children: ReactNode }) {
   const display = user.name || user.email.split("@")[0] || user.email;
   return (
     <div className={styles.frame}>
@@ -15,7 +15,7 @@ export function AppShell({ user, children }: { user: SessionUser; children: Reac
         <Link href="/inbox" aria-label="Pluck" className={styles.home}>
           <Logo size={24} />
         </Link>
-        <RailNav />
+        <RailNav counts={counts} />
         <div className={styles.me}>
           <span className={styles.avatar} aria-hidden="true">
             {display.slice(0, 2).toUpperCase()}

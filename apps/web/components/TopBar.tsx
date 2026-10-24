@@ -101,6 +101,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     }
     const json = await res.json();
     if (res.ok || res.status === 201) {
+      window.dispatchEvent(new Event("pluck:counts"));
       const result = json as PluckResponse;
       if (result.rejected.length) setError(`${result.rejected.length} could not be plucked: ${result.rejected[0]!.message}`);
       return onPlucked?.(draft, result);

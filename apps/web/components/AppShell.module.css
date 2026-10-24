@@ -22,3 +22,4 @@
 .sublinks { display: flex; flex-direction: column; gap: 2px; padding-left: 8px; }
 .sublink { height: 28px; display: flex; align-items: center; padding: 0 8px; color: var(--ink2); text-decoration: none; }
 .sublink:hover { color: var(--ink); }
+.count { font-weight: 400; color: var(--ink2); }
