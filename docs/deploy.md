@@ -13,22 +13,24 @@ The hosted service: the Next.js app and its cron worker on **Vercel** (Pro, for 
 ```sh
 cd infra/cdk
 pnpm exec cdk bootstrap aws://<ACCOUNT>/eu-west-1      # once per account and region
-pnpm exec cdk diff
-pnpm exec cdk deploy --all --outputs-file cdk-outputs.json
+pnpm exec cdk diff -c alertEmail=<you>
+pnpm exec cdk deploy --all -c alertEmail=<you> --outputs-file cdk-outputs.json   # add -c monthlyBudgetUsd=<n> to change the $50 budget
 ```
 
-The three stacks:
+The address for alarms is passed at deploy time so it never lands in the repo. The four stacks:
 
 - **PluckEmail:** the SES domain identity for getpluck.io with DKIM, a custom MAIL FROM (`mail.getpluck.io`), and DMARC. Outputs the DNS records.
 - **PluckData:** the `pluck-content` bucket (eu-west-1, Infrequent Access after 90 days, `inbound/` expires after 7 days, CORS PUT from the app origin) and the IAM user `pluck-app` with access to the bucket and permission to send from the identity. Its secret key goes to Secrets Manager as `pluck/app-user`, never to an output.
 - **PluckInbound:** the receipt rule set `pluck-inbound` that writes mail for `in.getpluck.io` (scanned for spam and viruses) to the bucket under `inbound/`.
+- **PluckAlerts:** emails the alert address when SES bounces pass 4% or complaints pass 0.08% (AWS reviews an account at 5% and 0.1%, and can pause sending, which stops sign-in), and when the month's AWS cost passes 80% of the budget or is forecast to pass it.
 
 Then:
 
 1. **DNS on Vercel.** Add every `Dns*` output to the domain: `node scripts/vercel-dns.mjs infra/cdk/cdk-outputs.json getpluck.io` prints the `vercel dns add` commands; add `--apply` to run them with your Vercel login.
 2. **Activate the receipt rule set** (CloudFormation cannot): run the `ActivateRuleSet` output.
 3. **SES out of the sandbox:** in the SES console, request production access for eu-west-1 (transactional mail: sign-in links and a weekly digest people opt into). Until then SES only sends to verified addresses.
-4. **The app's keys:** `aws secretsmanager get-secret-value --secret-id pluck/app-user --region eu-west-1` gives the access key id and secret for Vercel.
+4. **Confirm the alert subscription:** AWS emails the alert address a link; alarms reach it only after you click it.
+5. **The app's keys:** `aws secretsmanager get-secret-value --secret-id pluck/app-user --region eu-west-1` gives the access key id and secret for Vercel.
 
 ## 3. Vercel
 
@@ -54,6 +56,7 @@ Then:
 Do not set `SMTP_URL`, `S3_ENDPOINT`, `S3_PUBLIC_ENDPOINT`, `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` in production.
 
 4. Domain: add `getpluck.io` to the project as the primary domain. Keep `/.well-known/*` and `/mcp` free of apex-to-www redirects (AI tools do not follow them during sign-in).
+5. Firewall (Project, Firewall): add a rate-limit rule on paths starting `/api/auth/`, 60 requests a minute per IP, action Deny. The app limits sign-in on its own; this rule turns a flood away before it costs a function run.
 
 ## 4. After the first deploy
 
