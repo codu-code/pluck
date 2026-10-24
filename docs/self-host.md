@@ -46,7 +46,7 @@ Update with `git pull && docker compose up -d --build`. Back up the `mongo` and 
 ## What runs where
 
 - `web`: `next start` on port 3000. Health at `/api/health`.
-- `worker`: the job queue (page extraction retries, imports, exports, shared files, email-in) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
+- `worker`: the job queue (reading pages, imports, exports, shared files, email-in, the Monday email at 8 a second) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
 - `mongo`: MongoDB 8.2, a single-node replica set.
 - `minio` and `minio-init`: the blob store and a one-off that makes the bucket.
 - `mailpit`: catches mail until `SMTP_URL` points elsewhere. Remove it once you do.

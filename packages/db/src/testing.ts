@@ -24,9 +24,13 @@ export async function dropTestDatabase(): Promise<void> {
   await getClient().close();
 }
 
-// Makes every queued job claimable now, so retry tests do not wait out their backoff.
+// Makes every queued job claimable now, and every lease run out, so retry tests do not wait out their backoff.
 export async function makeJobsVisible(): Promise<void> {
-  await getDb().collection("jobs").updateMany({ state: "queued" }, { $set: { visibleAt: new Date(0) } });
+  await getDb().collection("jobs").updateMany({ state: { $in: ["queued", "running"] } }, { $set: { visibleAt: new Date(0) } });
+}
+
+export async function jobState(id: string): Promise<{ state: string; lastError: string | null } | null> {
+  return getDb().collection("jobs").findOne({ _id: new ObjectId(id) }, { projection: { _id: 0, state: 1, lastError: 1 } }) as Promise<{ state: string; lastError: string | null } | null>;
 }
 
 // e2e: make one person's items look untouched for `days` (by email, so a browser test can call it).

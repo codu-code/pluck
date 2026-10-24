@@ -69,7 +69,9 @@ export function localNow(now: Date, timezone: string): { date: string; hour: num
 // The claim is an atomic update on the user, so two workers never both run it.
 export async function runDueExpiry(now = new Date()): Promise<{ users: number; archived: number; perUser: { userId: string; archived: number }[] }> {
   const col = await users();
-  const candidates = await col.find({ "settings.expiryDays": { $ne: null } }, { projection: { settings: 1, expiryRanOn: 1 } }).toArray();
+  // Missing settings mean the defaults (expiry and the email on), and `$ne: null` would skip a missing field.
+  // shortcut: reads every person each minute; fine to tens of thousands, then keep a next-due time per person.
+  const candidates = await col.find({ "settings.expiryDays": { $not: { $type: "null" } } }, { projection: { settings: 1, expiryRanOn: 1 } }).toArray();
   const perUser: { userId: string; archived: number }[] = [];
   for (const u of candidates) {
     const s = { ...DEFAULT_SETTINGS, ...u.settings };

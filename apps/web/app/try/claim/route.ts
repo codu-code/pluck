@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { currentUser } from "@/lib/auth";
 import { claimPaste } from "@/lib/library";
 import { TRY_COOKIE, tryToken } from "@/lib/api";
@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   const user = await currentUser();
   if (!user) return NextResponse.redirect(`${origin}/signin`);
   const token = tryToken(req.headers.get("cookie"));
-  if (token) await claimPaste(user.id, token);
+  if (token) await claimPaste(user.id, token, { defer: after }); // the pages are read after the redirect
   const res = NextResponse.redirect(`${origin}/inbox`);
   res.cookies.delete(TRY_COOKIE);
   return res;

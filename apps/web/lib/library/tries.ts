@@ -14,7 +14,7 @@ export async function holdPaste(token: string | null, text: string): Promise<{ t
 }
 
 // After sign-up (or sign-in) in the same browser: the held links become the person's items.
-export async function claimPaste(userId: string, token: string): Promise<PluckResponse | null> {
+export async function claimPaste(userId: string, token: string, { defer }: { defer?: (task: () => Promise<void>) => void } = {}): Promise<PluckResponse | null> {
   const urls = await takeTry(token);
-  return urls.length ? pluckAny(userId, { urls, source: "web" }) : null;
+  return urls.length ? pluckAny(userId, { urls, source: "web" }, { defer }) : null;
 }
