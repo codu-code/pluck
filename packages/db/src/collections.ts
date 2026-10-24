@@ -173,28 +173,44 @@ export type RateLimitDoc = { _id: string; count: number; expireAt: Date };
 
 let ready: Promise<Db> | undefined;
 
+const RETIRED_ITEM_INDEXES = [
+  "search",
+  "userId_1_status_1_createdAt_-1",
+  "userId_1_status_1_lastTouchedAt_1",
+  "userId_1_tagIds_1_createdAt_-1",
+  "userId_1_status_1_statusChangedAt_-1",
+];
+
 // Indexes are created once per process, before the first query.
 export function db(): Promise<Db> {
   return (ready ??= (async () => {
     const d = getDb();
+    const itemsCol = d.collection("items");
     await Promise.all([
-      d.collection("items").createIndexes([
-        { key: { userId: 1, status: 1, createdAt: -1 } },
-        { key: { userId: 1, status: 1, lastTouchedAt: 1 } },
-        { key: { userId: 1, urlHash: 1 }, unique: true, partialFilterExpression: { urlHash: { $type: "string" } } },
-        { key: { userId: 1, tagIds: 1, createdAt: -1 } },
-        { key: { userId: 1, kind: 1, dueAt: 1 } },
-        { key: { "extraction.state": 1, updatedAt: 1 } },
-        { key: { userId: 1, status: 1, statusChangedAt: -1 } },
-        { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
-        {
-          key: { title: "text", note: "text", tagNames: "text", listNames: "text", searchText: "text", searchBody: "text" },
-          name: "search",
-          weights: { title: 10, note: 5, tagNames: 5, listNames: 3, searchText: 2, searchBody: 1 },
-          default_language: "english",
-          language_override: "searchLanguage", // items carry `lang` for display; never let it switch stemming
-        },
-      ]),
+      // The retired indexes go first: a collection holds one text index, and the rest are prefixes of their successors.
+      // Remove this line once every database has started on the new ones.
+      Promise.all(RETIRED_ITEM_INDEXES.map((name) => itemsCol.dropIndex(name).catch(() => undefined))).then(() =>
+        itemsCol.createIndexes([
+          // Every listing sorts on (field, _id), so the index ends in _id too; otherwise each page sorts in memory.
+          { key: { userId: 1, status: 1, createdAt: -1, _id: -1 } },
+          { key: { userId: 1, status: 1, lastTouchedAt: 1, _id: 1 } },
+          { key: { userId: 1, urlHash: 1 }, unique: true, partialFilterExpression: { urlHash: { $type: "string" } } },
+          { key: { userId: 1, tagIds: 1, createdAt: -1, _id: -1 } },
+          { key: { userId: 1, kind: 1, dueAt: 1 } },
+          { key: { "extraction.state": 1, updatedAt: 1 } },
+          { key: { userId: 1, status: 1, statusChangedAt: -1, _id: -1 } },
+          { key: { userId: 1, deletedAt: -1, _id: -1 } }, // the Bin
+          { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
+          {
+            // userId first: a search reads one person's matches, not everyone's. Every $text query filters on it.
+            key: { userId: 1, title: "text", note: "text", tagNames: "text", listNames: "text", searchText: "text", searchBody: "text" },
+            name: "search_by_user",
+            weights: { title: 10, note: 5, tagNames: 5, listNames: 3, searchText: 2, searchBody: 1 },
+            default_language: "english",
+            language_override: "searchLanguage", // items carry `lang` for display; never let it switch stemming
+          },
+        ]),
+      ),
       d.collection("lists").createIndexes([
         { key: { userId: 1, slug: 1 }, unique: true },
         { key: { userId: 1, updatedAt: -1 } },

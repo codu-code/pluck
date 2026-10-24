@@ -24,7 +24,7 @@ test("Raindrop: notes with newlines and comma tags", () => {
 
 test("bookmarks HTML: links with tags and dates, place: entries dropped, entities decoded", () => {
   const e = parseImport("html", file("bookmarks.html"));
-  expect(e.map((x) => x.title)).toEqual(["Indexes & queries", "Estimating rates"]);
+  expect(e.map((x) => x.title)).toEqual(["Indexes & queries", "Estimating rates", "Don't panic: &lt;b&gt; is “bold”"]); // each entity decoded once
   expect(e[0]!.tags).toEqual(["postgres", "db"]);
 });
 
