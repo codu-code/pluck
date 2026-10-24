@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { signIn, uniqueEmail } from "./helpers";
+import { linkFromEmail, signIn, uniqueEmail } from "./helpers";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -16,8 +16,14 @@ test("a visitor pastes links on the home page, signs up, and finds them in the I
   await box.press("Enter");
   await expect(page.getByRole("status")).toContainText("Plucked.");
 
-  await page.getByRole("link", { name: "Sign up to keep it" }).click();
-  await signIn(page, uniqueEmail("visitor"));
+  // Kept from the home page itself: the email's link lands on /try/claim, then the Inbox.
+  const email = uniqueEmail("visitor");
+  const sent = Date.now();
+  await page.getByLabel("Your email, to keep what you plucked").fill(email);
+  await page.getByRole("button", { name: "Keep it" }).click();
+  await expect(page.getByRole("status")).toContainText(`We sent a link to ${email}.`);
+  await page.goto(await linkFromEmail(email, sent));
+  await expect(page).toHaveURL(/\/inbox$/);
   await expect(page.getByRole("link", { name: "Small teams ship when the list is short" }).first()).toBeVisible();
   await expect.poll(async () => ((await (await page.request.get("/api/v1/items?status=inbox")).json()).items as unknown[]).length).toBe(3);
   expect((await page.context().cookies()).some((c) => c.name === "pluck_try")).toBe(false);
