@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { currentUser } from "@/lib/auth";
 import { ago, sourceLabel, waybackUrl } from "@/lib/format";
-import { highlightsOf, readItem, readText } from "@/lib/library";
+import { highlightsOf, readItem, readText, tagsOf } from "@/lib/library";
 import { renderReader } from "@/lib/markdown";
 import { NoteEditor } from "./NoteEditor";
 import { Reader } from "./Reader";
@@ -23,13 +23,14 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const item = await readItem(user.id, id).catch(() => null);
   if (!item) notFound();
-  if (item.url === null) return <NoteEditor item={item} text={await readText(user.id, item.id)} />;
+  const tags = await tagsOf(user.id);
+  if (item.url === null) return <NoteEditor item={item} text={await readText(user.id, item.id)} tags={tags} />;
 
   if (item.extraction.state === "done") {
     const [text, highlights] = await Promise.all([readText(user.id, item.id), highlightsOf(user.id, item.id)]);
     // The kept page usually carries its own lead image; show the cover only when it does not.
     const showCover = item.hasCover && !/!\[[^\]]*\]\(/.test(text);
-    return <Reader item={item} html={renderReader(text)} initialHighlights={highlights} showCover={showCover} />;
+    return <Reader item={item} html={renderReader(text)} initialHighlights={highlights} showCover={showCover} tags={tags} />;
   }
 
   const plucked = `${sourceLabel(item.source)} · ${ago(item.createdAt)}`;

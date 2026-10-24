@@ -18,6 +18,7 @@
 .failed { color: var(--danger); }
 .excerpt { color: var(--ink2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .actions { display: flex; gap: 4px; flex: none; }
+.tags { display: flex; gap: 6px; flex: none; max-width: 40%; overflow: hidden; }
 .action {
   display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 6px;
   border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px;
@@ -27,4 +28,4 @@
 .side { width: 76px; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; color: var(--ink2); font-size: 12px; }
 .side svg { color: var(--ink); }
 @media (prefers-reduced-motion: reduce) { .row { transition: none; } }
-@media (max-width: 600px) { .meta { display: none; } .side { width: 48px; } .actions { display: none; } }
+@media (max-width: 600px) { .meta { display: none; } .side { width: 48px; } .actions { display: none; } .tags { display: none; } }

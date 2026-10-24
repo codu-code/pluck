@@ -1,8 +1,9 @@
 "use client";
 
-import type { Item, TextKind } from "@pluck/shared-schemas";
+import type { Item, Tag, TextKind } from "@pluck/shared-schemas";
 import { useEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
+import { ItemTags } from "@/components/ItemTags";
 import { ago, sourceLabel } from "@/lib/format";
 import styles from "./note.module.css";
 
@@ -15,7 +16,7 @@ const KIND_HINT: Record<TextKind, string> = {
 };
 
 // The Note, Todo and Thing editor (ItemNote board). Plain text, saved as you type. Esc goes back.
-export function NoteEditor({ item, text }: { item: Item; text: string }) {
+export function NoteEditor({ item, text, tags }: { item: Item; text: string; tags: Tag[] }) {
   const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
   const [body, setBody] = useState(text);
   const [kind, setKind] = useState(item.kind as TextKind);
@@ -106,6 +107,7 @@ export function NoteEditor({ item, text }: { item: Item; text: string }) {
           <span className={styles.meta}>The first line is the title. Plain text. Saves as you type.</span>
         </article>
         <aside aria-label={`About this ${kindName.toLowerCase()}`} className={styles.aside}>
+          <ItemTags item={item} vocabulary={tags} />
           <label className={styles.group}>
             <span className={styles.groupTitle}>Kind</span>
             <select

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ItemList } from "@/components/ItemList";
 import { currentUser } from "@/lib/auth";
-import { browse, count } from "@/lib/library";
+import { browse, count, tagsOf } from "@/lib/library";
 
 export const metadata: Metadata = { title: "Inbox · Pluck" };
 
@@ -12,5 +12,6 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<{ 
     count(user.id, "inbox"),
     searchParams,
   ]);
-  return <ItemList view="inbox" initial={page} total={total} deletedId={deleted} />;
+  const tags = await tagsOf(user.id);
+  return <ItemList view="inbox" initial={page} total={total} tags={tags} deletedId={deleted} />;
 }

@@ -20,3 +20,5 @@
 .keys { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 0 32px; color: var(--ink2); font-size: 12px; }
 .keys kbd { font: inherit; }
 @media (max-width: 600px) { .page { padding: 20px 16px 0; } .keys { display: none; } }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tagFilter { height: 32px; padding: 0 12px; border-radius: 16px; border: 1px solid var(--ink); background: var(--chip); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }

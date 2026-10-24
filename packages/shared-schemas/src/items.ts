@@ -18,6 +18,7 @@ export const Item = z.object({
   archivedReason: ArchivedReason.nullable(),
   dueAt: z.string().nullable(),
   tagIds: z.array(ObjectIdString),
+  aiTagIds: z.array(ObjectIdString), // the subset an AI tool added, shown "by AI" until the person touches them
   note: z.string().nullable(),
   source: Source,
   wordCount: z.number().int().nullable(),
@@ -77,13 +78,18 @@ export const UpdateItemBody = z
     status: Status.optional(), // done is for todos and things
     note: z.string().max(10_000).nullable().optional(),
     readingProgress: z.number().min(0).max(1).optional(),
+    tagIds: z.array(z.string().min(1).max(64)).max(50).optional(), // ids, or existing tag names
   })
   .strict();
 export type UpdateItemBody = z.infer<typeof UpdateItemBody>;
 
 // One change over many items: bulk select in the apps, batch_update for an AI tool.
+const TagRefs = z.array(z.string().min(1).max(64)).max(50);
 export const BatchPatch = z
-  .object({ status: Status.optional(), kind: Kind.optional(), dueAt: DueAt.nullable().optional(), note: z.string().max(10_000).nullable().optional() })
+  .object({
+    status: Status.optional(), kind: Kind.optional(), dueAt: DueAt.nullable().optional(), note: z.string().max(10_000).nullable().optional(),
+    addTagIds: TagRefs.optional(), removeTagIds: TagRefs.optional(),
+  })
   .strict()
   .refine((p) => Object.keys(p).length > 0, { message: "Send at least one change." });
 export const BatchBody = z.object({ itemIds: z.array(ObjectIdString).min(1).max(100), patch: BatchPatch });
@@ -119,6 +125,7 @@ export type ArchiveFilter = z.infer<typeof ArchiveFilter>;
 export const ListItemsQuery = z.object({
   status: ListView.default("inbox"),
   archive: ArchiveFilter.optional(),
+  tagId: ObjectIdString.optional(),
   kinds: z.array(Kind).optional(),
   sort: z.enum(["newest", "untouched"]).default("newest"),
   cursor: z.string().optional(),
@@ -128,3 +135,22 @@ export type ListItemsQuery = z.infer<typeof ListItemsQuery>;
 
 export const ItemPage = z.object({ items: z.array(Item), nextCursor: z.string().nullable() });
 export type ItemPage = z.infer<typeof ItemPage>;
+
+export const Tag = z.object({
+  id: ObjectIdString,
+  name: z.string(),
+  slug: z.string(),
+  colour: z.string(),
+  count: z.number().int(),
+  aiCount: z.number().int(), // assignments still marked "by AI"
+  createdBy: z.enum(["user", "mcp"]),
+  createdAt: z.string(),
+});
+export type Tag = z.infer<typeof Tag>;
+export const CreateTagBody = z.object({ name: z.string().trim().min(1).max(40) });
+export const UpdateTagBody = z.object({ name: z.string().trim().min(1).max(40) }).strict();
+export const DeleteTagQuery = z.union([
+  z.object({ reassignTo: ObjectIdString }),
+  z.object({ removeFromItems: z.literal("true") }),
+]);
+export const PurgeAiBody = z.object({ days: z.number().int().min(1).max(90).default(7) });

@@ -23,6 +23,7 @@ export function toItem(d: ItemDoc): Item {
     archivedReason: d.archivedReason,
     dueAt: iso(d.dueAt),
     tagIds: d.tagIds.map((t) => t.toHexString()),
+    aiTagIds: (d.aiTags ?? []).map((t) => t.tagId.toHexString()),
     note: d.note,
     source: d.source,
     wordCount: d.wordCount,
@@ -359,6 +360,7 @@ export async function listItems(userId: string, q: ListItemsQuery): Promise<Item
     } else filter.status = q.status;
   }
   if (q.kinds?.length) filter.kind = { $in: q.kinds };
+  if (q.tagId) filter.tagIds = oid(q.tagId);
   const cursor = decode(q.cursor);
   if (cursor?.v) {
     const v = new Date(cursor.v);

@@ -19,3 +19,6 @@
 }
 .meName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; }
+.sublinks { display: flex; flex-direction: column; gap: 2px; padding-left: 8px; }
+.sublink { height: 28px; display: flex; align-items: center; padding: 0 8px; color: var(--ink2); text-decoration: none; }
+.sublink:hover { color: var(--ink); }

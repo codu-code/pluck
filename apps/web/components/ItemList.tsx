@@ -1,15 +1,18 @@
 "use client";
 
-import type { Item, ItemPage, PluckResponse, Status } from "@pluck/shared-schemas";
+import type { Item, ItemPage, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { EmptyInbox, EmptyState } from "@/components/EmptyInbox";
 import { ItemRow, RowAction } from "@/components/ItemRow";
 import { KindChips, kindsFor, matches, type KindFilter } from "@/components/KindChips";
 import { Shortcuts } from "@/components/Shortcuts";
+import { TagChip } from "@/components/TagChip";
+import { TagPicker } from "@/components/TagPicker";
 import { useToast } from "@/components/Toast";
 import { TopBar, type PluckDraft } from "@/components/TopBar";
 import { MOVED, moveItems, restoreStatuses } from "@/lib/moves";
+import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
 import { isTyping } from "@/lib/keys";
 import styles from "./ItemList.module.css";
 
@@ -26,7 +29,7 @@ function placeholders(d: PluckDraft): Row[] {
   const now = new Date().toISOString();
   const base = {
     canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, status: "inbox" as const,
-    archivedReason: null, dueAt: null, tagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0,
+    archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0,
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };
   if (d.text !== null)
@@ -42,6 +45,7 @@ type Props = {
   view: View;
   initial: ItemPage;
   total: number;
+  tags: Tag[];
   deletedId?: string; // set after a delete on the item page: offers Undo from the bin
 };
 
@@ -60,7 +64,7 @@ const VIEWS: Record<View, { title: string; subtitle: (total: number, sort: Sort)
 };
 
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
-export function ItemList({ view, initial, total: initialTotal, deletedId }: Props) {
+export function ItemList({ view, initial, total: initialTotal, tags: initialTags, deletedId }: Props) {
   const { title, subtitle, empty } = VIEWS[view];
   const sample = view === "inbox" ? SAMPLE_URL : undefined;
   const router = useRouter();
@@ -73,6 +77,9 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [leaving, setLeaving] = useState<Set<string>>(new Set());
   const [help, setHelp] = useState(false);
+  const [vocab, setVocab] = useState(initialTags);
+  const [tagFilter, setTagFilter] = useState<Tag | null>(null);
+  const [picking, setPicking] = useState<string[] | null>(null); // item ids the tag picker is open for
   const [now, setNow] = useState(() => new Date());
   const [everPlucked, setEverPlucked] = useState(initial.items.length > 0);
   const [toast, showToast] = useToast();
@@ -88,17 +95,19 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
   }, [deletedId, showToast, router, view]);
 
   const query = useCallback(
-    async (f: KindFilter, s: Sort, after?: string) => {
+    async (f: KindFilter, s: Sort, after?: string, tag: Tag | null = tagFilter) => {
       const kinds = kindsFor(f);
-      const qs = new URLSearchParams({ status: view, sort: s, ...(kinds ? { kinds: kinds.join(",") } : {}), ...(after ? { cursor: after } : {}) });
+      const qs = new URLSearchParams({
+        status: view, sort: s, ...(kinds ? { kinds: kinds.join(",") } : {}), ...(after ? { cursor: after } : {}), ...(tag ? { tagId: tag.id } : {}),
+      });
       const res = await fetch(`/api/v1/items?${qs}`);
       return res.ok ? ((await res.json()) as ItemPage) : null;
     },
-    [view],
+    [view, tagFilter],
   );
 
-  async function reload(f = filter, s = sort) {
-    const page = await query(f, s);
+  async function reload(f = filter, s = sort, tag = tagFilter) {
+    const page = await query(f, s, undefined, tag);
     if (!page) return;
     setRows(page.items);
     setNextCursor(page.nextCursor);
@@ -179,6 +188,7 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
         e: () => void move(targets, "archived"),
         d: () => void move(targets, "done"),
         x: () => current && toggle(current.id),
+        t: () => targets.length && setPicking(targets),
         Escape: () => setSelected(new Set()),
         c: () => document.getElementById("pluck-box")?.focus(),
         "/": () => router.push("/search"),
@@ -192,6 +202,30 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [real, cursor, selected, move, router, laterTarget]);
+
+  const byId = useMemo(() => new Map(vocab.map((t) => [t.id, t])), [vocab]);
+  function chips(r: Row) {
+    if (!r.tagIds.length) return null;
+    return r.tagIds.map((id) => {
+      const t = byId.get(id);
+      return t ? <TagChip key={id} tag={t} ai={r.aiTagIds.includes(id)} onClick={() => filterByTag(t)} label={`Show only ${t.name}`} /> : null;
+    });
+  }
+  async function filterByTag(t: Tag | null) {
+    setTagFilter(t);
+    await reload(filter, sort, t);
+  }
+  async function toggleTag(tag: Tag, on: boolean) {
+    const ids = picking ?? [];
+    const updated = await setTagOn(ids, tag, on, real);
+    if (updated) setRows((cur) => cur.map((r) => updated.find((u) => u.id === r.id) ?? r));
+    setVocab(await fetchTags());
+  }
+  const pickState = (tagId: string) => {
+    const targets = real.filter((r) => picking?.includes(r.id));
+    const n = targets.filter((r) => r.tagIds.includes(tagId)).length;
+    return n === 0 ? "off" : n === targets.length ? "on" : "some";
+  };
 
   // Keep the cursor row in view.
   useEffect(() => {
@@ -253,7 +287,14 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
               </div>
             </div>
           </div>
-          <KindChips value={filter} onChange={changeFilter} />
+          <div className={styles.filters}>
+            <KindChips value={filter} onChange={changeFilter} />
+            {tagFilter && (
+              <button type="button" className={styles.tagFilter} onClick={() => filterByTag(null)} aria-label={`Stop filtering by ${tagFilter.name}`}>
+                {tagFilter.name} <span aria-hidden="true">×</span>
+              </button>
+            )}
+          </div>
           {selecting && (
             <div role="toolbar" aria-label="Bulk actions" className={styles.bulk}>
               <b className={styles.bulkCount}>{selected.size} selected</b>
@@ -262,6 +303,7 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
               </button>
               <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "archived")}>Archive</button>
               {allTodo && <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "done")}>Done</button>}
+              <button type="button" className={styles.bulkButton} onClick={() => setPicking([...selected])}>Tag</button>
               <button type="button" className={styles.bulkClear} onClick={() => setSelected(new Set())}>Clear</button>
             </div>
           )}
@@ -280,11 +322,13 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
                     leaving={leaving.has(r.id)}
                     onToggle={() => toggle(r.id)}
                     onPoint={() => index >= 0 && setCursor(index)}
+                    tags={chips(r)}
                     actions={
                       r.draft || selecting ? null : (
                         <>
                           <RowAction label={view === "later" ? "Inbox" : "Later"} keyHint="l" onClick={() => move([r.id], laterTarget)} />
                           <RowAction label="Archive" keyHint="e" onClick={() => move([r.id], "archived")} />
+                          <RowAction label="Tag" keyHint="t" onClick={() => setPicking([r.id])} />
                           {(r.kind === "todo" || r.kind === "thing") && <RowAction label="Done" keyHint="d" onClick={() => move([r.id], "done")} />}
                           <RowAction label="Open" keyHint="o" href={`/items/${r.id}`} />
                         </>
@@ -305,12 +349,27 @@ export function ItemList({ view, initial, total: initialTotal, deletedId }: Prop
             <span><kbd>j</kbd> <kbd>k</kbd> move</span>
             <span><kbd>l</kbd> {view === "later" ? "inbox" : "later"}</span>
             <span><kbd>e</kbd> archive</span>
+            <span><kbd>t</kbd> tag</span>
             <span><kbd>x</kbd> select</span>
             <span><kbd>?</kbd> all shortcuts</span>
           </div>
         </div>
       )}
       <Shortcuts open={help} onClose={() => setHelp(false)} />
+      {picking && (
+        <TagPicker
+          title={picking.length > 1 ? `Tag ${picking.length} items` : "Tag"}
+          vocabulary={vocab}
+          state={pickState}
+          onToggle={toggleTag}
+          onCreate={async (name) => {
+            const t = await createTagNamed(name);
+            if (t) setVocab((v) => [...v.filter((x) => x.id !== t.id), t]);
+            return t;
+          }}
+          onClose={() => setPicking(null)}
+        />
+      )}
       {toast}
     </>
   );

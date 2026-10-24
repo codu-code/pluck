@@ -15,10 +15,11 @@ type Props = {
   onToggle?: () => void;
   onPoint?: () => void;
   actions?: ReactNode;
+  tags?: ReactNode; // chips, shown when the row is not showing its actions
 };
 
 // One 64px row from the Main board: cover or site tile, title, site and meta, excerpt, kind glyph and when.
-export function ItemRow({ item, now, active, selecting, selected, leaving, onToggle, onPoint, actions }: Props) {
+export function ItemRow({ item, now, active, selecting, selected, leaving, onToggle, onPoint, actions, tags }: Props) {
   const site = rowSite(item);
   return (
     <div
@@ -55,7 +56,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
         </div>
         <div className={styles.excerpt}>{item.excerpt ?? item.url ?? ""}</div>
       </div>
-      {active && actions ? <div className={styles.actions}>{actions}</div> : null}
+      {active && actions ? <div className={styles.actions}>{actions}</div> : tags ? <div className={styles.tags}>{tags}</div> : null}
       <div className={styles.side}>
         <KindGlyph kind={item.kind} />
         <span>{when(item.createdAt, now)}</span>

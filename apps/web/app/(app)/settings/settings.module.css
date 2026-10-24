@@ -1,0 +1,29 @@
+.page { width: 100%; max-width: 1040px; padding: 32px; display: flex; flex-direction: column; gap: 40px; }
+.head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.title { margin: 0; font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -0.02em; }
+.meta { color: var(--ink2); margin: 0; }
+.section { display: flex; flex-direction: column; gap: 12px; padding-top: 32px; border-top: 1px solid var(--line); }
+.sectionHead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.h2 { margin: 0; font-size: 18px; line-height: 24px; font-weight: 600; }
+.clayButton { height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--clay-line); background: transparent; color: var(--clay); font: inherit; font-weight: 500; cursor: pointer; }
+.clayButton:disabled { opacity: 0.55; cursor: default; }
+.confirm { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--clay); }
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; min-width: 560px; border-collapse: collapse; }
+.table th { text-align: left; color: var(--ink2); font-size: 13px; font-weight: 500; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.num { text-align: right; }
+.table th.num { text-align: right; }
+.clay { color: var(--clay); }
+.tagName { display: inline-flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 5px; flex: none; }
+.byAi { color: var(--clay); font-size: 12px; }
+.actions { text-align: right; white-space: nowrap; }
+.inline { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.textButton { height: 32px; padding: 0 10px; border-radius: 6px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+.textButton:hover:not(:disabled) { background: var(--rail); }
+.textButton:disabled { color: var(--ink2); cursor: default; }
+.input { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
+.error { display: block; color: var(--danger); font-size: 13px; margin-top: 4px; }
+.visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+@media (max-width: 600px) { .page { padding: 20px 16px; } }

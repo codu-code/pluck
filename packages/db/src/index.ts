@@ -10,3 +10,6 @@ export {
 export { createHighlight, listHighlights, updateHighlight, deleteHighlight, type HighlightInput } from "./highlights.ts";
 export { enqueue, claimJob, completeJob, retryJob, failJob, pendingJobCount, type Job } from "./jobs.ts";
 export { hitRateLimit } from "./rate-limit.ts";
+export {
+  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, batchTags, purgeAiTags, countAiTagged,
+} from "./tags.ts";

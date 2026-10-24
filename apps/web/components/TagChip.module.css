@@ -1,0 +1,8 @@
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px; border-radius: 12px; border: 1px solid transparent;
+  background: var(--chip); color: var(--ink); font: inherit; font-size: 12px; white-space: nowrap;
+}
+button.chip { cursor: pointer; }
+.aside { height: 28px; padding: 0 10px; border-radius: 14px; font-size: 13px; }
+.ai { background: transparent; border-color: var(--clay-line); color: var(--clay); }
+.dot { width: 6px; height: 6px; border-radius: 3px; background: var(--clay-dot); }

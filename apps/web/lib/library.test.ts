@@ -109,3 +109,19 @@ test("Done is only for todos and things; batch skips what does not fit", async (
   expect((await update(a, todo.id, { status: "done" })).status).toBe("done");
   expect(await batch(a, { itemIds: [link.id, todo.id], patch: { status: "archived" } })).toEqual({ matched: 2, updated: 2 });
 });
+
+test("tags by id or name; an unknown tag is a 422 with the nearest ones, and nothing is created", async () => {
+  const lib = await import("./library");
+  const { a } = await twoUsers();
+  const pg = (await lib.addTag(a, "postgres")).tag;
+  await lib.addTag(a, "python");
+  const item = (await pluckAny(a, { text: "Index notes" })).results[0]!.item;
+  expect((await lib.updateItem(a, item.id, { tagIds: ["Postgres"] })).tagIds).toEqual([pg.id]);
+  await expect(lib.updateItem(a, item.id, { tagIds: ["postgress"] })).rejects.toMatchObject({
+    status: 422,
+    code: "unknown_tags",
+    details: { unknown: ["postgress"], nearest: expect.arrayContaining([{ id: pg.id, name: "postgres" }]) },
+  });
+  expect((await lib.tagsOf(a)).map((t) => t.name).sort()).toEqual(["postgres", "python"]);
+  await expect(lib.batch(a, { itemIds: [item.id], patch: { addTagIds: ["nope"] } })).rejects.toMatchObject({ status: 422 });
+});

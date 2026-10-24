@@ -5,7 +5,7 @@ import styles from "./Shortcuts.module.css";
 
 const KEYS: [string, string][] = [
   ["/", "Search"], ["c", "Pluck box"], ["j  k", "Move down and up"], ["o", "Open"], ["l", "Later (or back to the Inbox)"],
-  ["e", "Archive"], ["d", "Done (todos and things)"], ["x", "Select"], ["Esc", "Clear the selection, or go back"], ["?", "This list"],
+  ["e", "Archive"], ["d", "Done (todos and things)"], ["t", "Tag"], ["x", "Select"], ["Esc", "Clear the selection, or go back"], ["?", "This list"],
 ];
 
 // The "?" cheat sheet.

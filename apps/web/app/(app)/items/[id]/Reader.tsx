@@ -1,9 +1,10 @@
 "use client";
 
-import { LINK_KINDS, type Highlight, type Item, type Kind } from "@pluck/shared-schemas";
+import { LINK_KINDS, type Highlight, type Item, type Kind, type Tag } from "@pluck/shared-schemas";
 import { KIND_NAMES } from "@pluck/ui";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
+import { ItemTags } from "@/components/ItemTags";
 import { ago, coverSrc, sourceLabel } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
 import styles from "./reader.module.css";
@@ -13,7 +14,7 @@ type Toolbar = { x: number; y: number } & ({ kind: "new"; selector: Highlight["s
 const json = (method: string, body: unknown) => ({ method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 // The reader (Item board): kept text in serif, highlights from a selection, the note, kind and source alongside.
-export function Reader({ item, html, initialHighlights, showCover }: { item: Item; html: string; initialHighlights: Highlight[]; showCover: boolean }) {
+export function Reader({ item, html, initialHighlights, showCover, tags }: { item: Item; html: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[] }) {
   const article = useRef<HTMLDivElement>(null);
   const [highlights, setHighlights] = useState(initialHighlights);
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
@@ -176,6 +177,7 @@ export function Reader({ item, html, initialHighlights, showCover }: { item: Ite
               onBlur={() => void fetch(`/api/v1/items/${item.id}`, json("PATCH", { note: note || null }))}
             />
           </label>
+          <ItemTags item={item} vocabulary={tags} />
           <label className={styles.group}>
             <span className={styles.groupTitle}>Kind</span>
             <select

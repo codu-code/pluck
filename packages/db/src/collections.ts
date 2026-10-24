@@ -21,6 +21,7 @@ export type ItemDoc = {
   archivedReason: z.infer<typeof ArchivedReason> | null;
   dueAt: Date | null;
   tagIds: ObjectId[];
+  aiTags?: { tagId: ObjectId; at: Date }[]; // assignments made by an AI tool, until the person touches the item's tags
   note: string | null;
   source: Source;
   readingProgress: number;
@@ -33,6 +34,17 @@ export type ItemDoc = {
   lastTouchedAt: Date;
   statusChangedAt: Date; // when it last moved between Inbox, Later, Archived and Done
   deletedAt: Date | null; // in the bin; purged 30 days later
+};
+
+export type TagDoc = {
+  _id: ObjectId;
+  userId: ObjectId;
+  name: string;
+  slug: string;
+  colour: string;
+  count: number;
+  createdAt: Date;
+  createdBy: "user" | "mcp";
 };
 
 export type HighlightDoc = {
@@ -85,6 +97,7 @@ export function db(): Promise<Db> {
         { key: { userId: 1, status: 1, statusChangedAt: -1 } },
         { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
       ]),
+      d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
       d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
       d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }]),
       d.collection("jobs").createIndexes([
@@ -99,6 +112,9 @@ export function db(): Promise<Db> {
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function tags(): Promise<Collection<TagDoc>> {
+  return (await db()).collection<TagDoc>("tags");
 }
 export async function highlights(): Promise<Collection<HighlightDoc>> {
   return (await db()).collection<HighlightDoc>("highlights");
