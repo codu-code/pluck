@@ -32,6 +32,10 @@ export async function syncTagNames(userId: ObjectId, filter: Filter<ItemDoc>): P
 const terms = (q: string) =>
   q.toLowerCase().replace(/["'“”]/g, " ").split(/\s+/).filter((t) => t.length > 1 && !t.startsWith("-"));
 
+// The kept text is markdown: a snippet shows its words, not the image links and marks around them.
+const plain = (md: string) =>
+  md.replace(/!\[[^\]]*\]\([^)]*\)/g, "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/\*\*|__|`|^#+ /gm, "").trim();
+
 // The best snippet: the person's note first, then the kept text, then the excerpt. The hit is the matched term.
 export function snippetFor(doc: Pick<ItemDoc, "note" | "searchBody" | "excerpt">, q: string): SearchHit["snippet"] {
   const words = terms(q);
@@ -40,8 +44,9 @@ export function snippetFor(doc: Pick<ItemDoc, "note" | "searchBody" | "excerpt">
     ["body", doc.searchBody],
     ["excerpt", doc.excerpt],
   ] as const;
-  for (const [source, text] of sources) {
-    if (!text) continue;
+  for (const [source, raw] of sources) {
+    if (!raw) continue;
+    const text = plain(raw);
     const lower = text.toLowerCase();
     let best: { at: number; len: number } | null = null;
     // Prefer the whole query as a phrase, then any single term.
