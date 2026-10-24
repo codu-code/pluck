@@ -45,6 +45,8 @@ const Optional = {
 
 export const DueAt = z.iso.datetime({ offset: true });
 
+export const BIN_DAYS = 30; // deleted items wait this long in the Bin, then go for good
+
 // One of: { url }, { urls[] } (max 50), or { text }. Text with no kind becomes one link item per URL
 // found in it, or a Note when it has none. Text with kind note, todo or thing becomes that kind.
 export const CreateItemBody = z

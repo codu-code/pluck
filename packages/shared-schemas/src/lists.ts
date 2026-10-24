@@ -83,7 +83,6 @@ export const UpdateMeBody = z
   .strict();
 export const ArchiveStaleBody = z.object({ olderThanDays: z.number().int().min(1).max(3650).optional(), dryRun: z.boolean().default(false) });
 
-export const VisibilityBody = z.object({ visibility: Visibility });
 
 // What a public page may show. Pinned by packages/db/src/public.test.ts: no text, tags, ticks or status, ever.
 export const PublicEntry = z.object({

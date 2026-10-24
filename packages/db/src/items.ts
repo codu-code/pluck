@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
+import { BIN_DAYS, deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
 import { recountList, recountListsOf } from "./lists.ts";
@@ -238,7 +238,7 @@ export async function restoreFromBin(userId: string, itemId: string): Promise<It
   return doc && toItem(doc);
 }
 
-export const BIN_DAYS = 30;
+export { BIN_DAYS }; // the number lives in shared-schemas so the web app's Bin view uses the same one
 
 // Hard-deletes items that have been in the bin longer than 30 days, with their contents and highlights.
 // `removeFiles` deletes their stored files before any row goes.
