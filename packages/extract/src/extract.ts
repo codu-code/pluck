@@ -117,6 +117,18 @@ async function extractPdf(url: string, body: Buffer): Promise<Extracted> {
   };
 }
 
+// A file shared from a phone (no URL): a PDF's text, or an image kept as it is.
+export async function extractFile({ body, contentType, fileName }: { body: Buffer; contentType: string; fileName: string }): Promise<Extracted> {
+  if (contentType === "application/pdf") {
+    const x = await extractPdf(`file:///${encodeURIComponent(fileName)}`, body);
+    return { ...x, url: "", siteName: null, title: x.title === fileName ? fileName.replace(/\.pdf$/i, "") : x.title };
+  }
+  return {
+    kind: "image", url: "", canonicalUrl: null, title: fileName.replace(/\.[a-z0-9]+$/i, "") || null, siteName: null, author: null, excerpt: null,
+    lang: null, coverUrl: null, markdown: "", wordCount: 0, extractor: "none", raw: { contentType, body },
+  };
+}
+
 export type ExtractInput = { url: string; html?: string | null };
 
 // Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch.

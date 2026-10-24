@@ -94,6 +94,10 @@ Seams agreed so far, in the codebase-design vocabulary:
 - Publish `packages/mcp-stdio` to npm as `@pluck/mcp` (`pnpm --filter @pluck/mcp build && npm publish --access public` from that folder) before the Settings npx line means anything to self-hosters.
 - Vercel: `CRON_SECRET` (random), and `apps/web/vercel.json` pins the function region to `dub1` (next to eu-west-1) and runs `/api/worker/tick` every minute, which needs Vercel Pro. Never set `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` in prod.
 
+## Design gaps
+
+`docs/design-gaps.md` lists every screen built without its own board, every departure from a board and every placeholder, for a design pass later (Niall's request, 2026-10-24). **Each slice adds its own rows there before it is committed.**
+
 ## Notes per slice
 
 _Last failing check, decisions made while building, anything the next iteration needs._

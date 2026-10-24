@@ -11,7 +11,7 @@ export function LegalPage({ page, title, lede, sections, box }: {
   box: { title: string; body: ReactNode };
 }) {
   return (
-    <SitePage page={page} footerNote="Pluck is free and open source. Made in Dublin.">
+    <SitePage page={page} footerNote="Pluck is free and open source.">
       <main className={styles.legal}>
         <div className={styles.legalHead}>
           <h1 className={`${styles.display} ${styles.legalTitle}`}>{title}</h1>

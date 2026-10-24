@@ -18,7 +18,7 @@ const REASONS = [
 
 export default function OpenSource() {
   return (
-    <SitePage page="open-source" footerNote={`Licence: ${LICENCE}. Made in Dublin.`}>
+    <SitePage page="open-source" footerNote={`Licence: ${LICENCE}.`}>
       <section className={`${styles.wrap} ${styles.pageHero}`}>
         <h1 className={`${styles.display} ${styles.openTitle}`}>Free.<br />Open.<br /><span className={styles.marker}>Yours.</span></h1>
         <p className={styles.heroPara}>Read-it-later apps keep closing. Pluck can't, because the code is public and the data is yours. Use ours, or run your own in one command.</p>

@@ -2,7 +2,7 @@
 export { ping } from "./client.ts";
 export { authAdapter } from "./auth.ts";
 export {
-  pluckLink, createTextItem, editItem, applyExtraction, recordExtractionFailure, resetExtraction, setBlobKeys,
+  pluckLink, createFileItem, createTextItem, editItem, applyExtraction, recordExtractionFailure, resetExtraction, setBlobKeys,
   findByUrl, getItem, getItemBlobKeys, getContent, listItems, urlHash, batchUpdate, markOpened, moveToBin, restoreFromBin, purgeBin,
   countItems, BIN_DAYS,
   type PluckLinkInput, type TextItemInput, type ItemEdit, type BatchEdit, type ExtractionResult,

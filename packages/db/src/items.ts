@@ -90,6 +90,21 @@ export async function pluckLink(
   return { item: toItem(doc), created, needsExtraction: created || doc.extraction.state === "failed" };
 }
 
+// An Image or PDF shared as a file: no URL, the bytes arrive in blob storage and the worker reads them.
+export async function createFileItem(userId: string, input: { kind: "image" | "pdf"; title: string; source: Source }): Promise<Item> {
+  const now = new Date();
+  const _id = new ObjectId();
+  const col = await items();
+  await col.insertOne({
+    _id, userId: oid(userId), kind: input.kind, url: null, canonicalUrl: null, title: input.title, titleIsDerived: true, siteName: null,
+    author: null, excerpt: null, coverKey: null, htmlKey: null, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], note: null,
+    source: input.source, readingProgress: 0, wordCount: null, lang: null, extraction: { state: "pending", attempts: 0, lastError: null },
+    createdAt: now, updatedAt: now, lastOpenedAt: null, lastTouchedAt: now, statusChangedAt: now, deletedAt: null,
+    searchText: textForSearch({}),
+  });
+  return toItem((await col.findOne({ _id }))!);
+}
+
 export type TextItemInput = { kind: TextKind; text: string; title?: string | null; dueAt?: Date | null; source: Source };
 
 // A Note, Todo or Thing: no URL, no extraction, the body in contents with extractor "user".

@@ -31,7 +31,6 @@ export function SitePage({ page, dark = false, footerNote, children }: { page: P
           {page === "home" && <a href={REPO_URL}>GitHub</a>}
           {page !== "privacy" && <Link href="/privacy">Privacy</Link>}
           {page !== "terms" && <Link href="/terms">Terms</Link>}
-          {!footerNote && <span>Made in Dublin.</span>}
         </div>
       </footer>
     </div>

@@ -50,7 +50,7 @@ const NEVER = [
 
 export default function Connect() {
   return (
-    <SitePage page="connect" dark footerNote="Pluck is free and open source. Made in Dublin.">
+    <SitePage page="connect" dark footerNote="Pluck is free and open source.">
       <section className={`${styles.wrap} ${styles.pageHero}`}>
         <span className={`${styles.eyebrow} ${styles.mono}`}>PLUCK + YOUR AI · MCP</span>
         <h1 className={`${styles.display} ${styles.connectTitle}`}>Ready for your AI. Whichever one you use.</h1>
