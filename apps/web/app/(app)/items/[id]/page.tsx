@@ -1,6 +1,7 @@
 import { isTextKind } from "@pluck/shared-schemas";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { currentUser, requireUser } from "@/lib/auth";
@@ -12,9 +13,12 @@ import { Reader } from "./Reader";
 import { RetryButton } from "./RetryButton";
 import styles from "./item.module.css";
 
+// One read per request: the title and the page share it.
+const itemFor = cache((userId: string, id: string) => readItem(userId, id).catch(() => null));
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const user = await currentUser();
-  const item = user ? await readItem(user.id, (await params).id).catch(() => null) : null;
+  const item = user ? await itemFor(user.id, (await params).id) : null;
   return { title: item ? `${item.title} · Pluck` : "Pluck" };
 }
 
@@ -22,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser();
   const { id } = await params;
-  const item = await readItem(user.id, id).catch(() => null);
+  const item = await itemFor(user.id, id);
   if (!item) notFound();
   const [tags, lists] = await Promise.all([tagsOf(user.id), membershipsOf(user.id, item.id)]);
   if (isTextKind(item.kind)) return <NoteEditor item={item} text={await readText(user.id, item.id)} tags={tags} lists={lists} />;

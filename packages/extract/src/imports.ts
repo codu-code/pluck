@@ -9,7 +9,7 @@ export type ImportEntry = {
   tags: string[];
   note: string | null;
   createdAt: Date | null;
-  html: string | null; // the kept page, when the export has it (Omnivore)
+  html: (() => string) | null; // reads the kept page, when the export has it (Omnivore)
 };
 
 // RFC 4180 CSV: quoted fields, doubled quotes, newlines inside quotes.
@@ -84,23 +84,23 @@ function bookmarksHtml(text: string): ImportEntry[] {
 
 // Omnivore: a zip of metadata_*.json arrays, with the kept page at content/<slug>.html when present.
 function omnivore(zip: Uint8Array): ImportEntry[] {
-  const files = unzipSync(zip);
-  // slug → kept page, built once: scanning the zip for each record made a big export quadratic.
-  const pages = new Map<string, Uint8Array>();
-  for (const [name, data] of Object.entries(files)) {
-    const slug = name.match(/(?:^|\/)content\/(.+)\.html$/)?.[1];
-    if (slug) pages.set(slug, data);
-  }
+  // Unzip only the metadata; note where each kept page is. The import runs in batches and parses the file
+  // each time, so a page is decompressed only when its batch asks for it.
+  const pages = new Map<string, string>(); // slug → file name
+  const files = unzipSync(zip, {
+    filter: (f) => {
+      const slug = f.name.match(/(?:^|\/)content\/(.+)\.html$/)?.[1];
+      if (slug) pages.set(slug, f.name);
+      return /(^|\/)metadata_[^/]*\.json$/.test(f.name);
+    },
+  });
+  const read = (name: string) => () => strFromU8(unzipSync(zip, { filter: (f) => f.name === name })[name]!);
   const out: ImportEntry[] = [];
-  for (const [name, data] of Object.entries(files)) {
-    if (!/(^|\/)metadata_[^/]*\.json$/.test(name)) continue;
+  for (const data of Object.values(files)) {
     const records = JSON.parse(strFromU8(data)) as { url?: string; title?: string; slug?: string; labels?: string[]; savedAt?: string; description?: string }[];
     for (const r of records) {
-      const content = r.slug ? pages.get(r.slug) : undefined;
-      out.push({
-        url: r.url ?? "", title: r.title ?? null, tags: r.labels ?? [], note: null, createdAt: date(r.savedAt),
-        html: content ? strFromU8(content) : null,
-      });
+      const page = r.slug ? pages.get(r.slug) : undefined;
+      out.push({ url: r.url ?? "", title: r.title ?? null, tags: r.labels ?? [], note: null, createdAt: date(r.savedAt), html: page ? read(page) : null });
     }
   }
   return out;

@@ -32,6 +32,6 @@ test("Omnivore: metadata plus the kept page when the zip has it", () => {
   const e = parseImport("omnivore", file("omnivore.zip"));
   expect(e).toHaveLength(2);
   expect(e[0]).toMatchObject({ url: "https://example.com/albums", tags: ["family"] });
-  expect(e[0]!.html).toContain("Every printed photograph");
+  expect(e[0]!.html?.()).toContain("Every printed photograph");
   expect(e[1]!.html).toBeNull();
 });
