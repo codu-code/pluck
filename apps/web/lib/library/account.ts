@@ -1,6 +1,6 @@
 import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiConnections, applyExtraction, createApiKey, disconnectAi, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport,
+  aiConnections, applyExtraction, createApiKey, disconnectAi, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport, recountTags,
   listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
@@ -70,13 +70,15 @@ export async function runImport(userId: string, importId: string): Promise<void>
   }
   if (record.total === 0) await updateImport(importId, { total: entries.length });
   let { done, failed } = record;
+  const touchedTags: string[] = [];
   for (const e of entries.slice(done + failed, done + failed + BATCH)) {
     const url = normalizeUrl(e.url);
     if (!url) {
       failed++;
       continue;
     }
-    const { item, created } = await importLink(userId, url, e);
+    const { item, created, tagIds } = await importLink(userId, url, e);
+    touchedTags.push(...tagIds);
     if (created) {
       const page = e.html ? await extractFromHtml(e.html, url).catch(() => null) : null;
       if (page && page.wordCount > 0) {
@@ -91,6 +93,7 @@ export async function runImport(userId: string, importId: string): Promise<void>
     }
     done++;
   }
+  await recountTags(userId, touchedTags);
   const finished = done + failed >= entries.length;
   await updateImport(importId, { done, failed, state: finished ? "done" : "running" });
   if (!finished) await enqueue("import", { userId, importId });

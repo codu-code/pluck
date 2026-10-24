@@ -1,4 +1,5 @@
 import { unzipSync, strFromU8 } from "fflate";
+import { parseHTML } from "linkedom";
 
 // Parsers for the files people bring from elsewhere. Pure: a file in, a list of entries out.
 export type ImportSource = "pocket" | "omnivore" | "raindrop" | "html";
@@ -70,27 +71,32 @@ function raindrop(text: string): ImportEntry[] {
   }));
 }
 
-// Netscape bookmark HTML, as every browser exports it.
+// Netscape bookmark HTML, as every browser exports it. A real HTML parser, so every entity (Chrome writes &#39;) decodes once.
 function bookmarksHtml(text: string): ImportEntry[] {
-  const out: ImportEntry[] = [];
-  for (const m of text.matchAll(/<A\s+([^>]*)>([\s\S]*?)<\/A>/gi)) {
-    const attrs = Object.fromEntries([...m[1]!.matchAll(/([A-Z_]+)\s*=\s*"([^"]*)"/gi)].map((a) => [a[1]!.toLowerCase(), a[2]!]));
-    if (!attrs.href) continue;
-    const title = m[2]!.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').trim();
-    out.push({ url: attrs.href, title: title || null, tags: tagList(attrs.tags, /,/), note: null, createdAt: date(attrs.add_date), html: null });
-  }
-  return out;
+  const { document } = parseHTML(text);
+  return [...document.querySelectorAll("a")].flatMap((a) => {
+    const attrs = Object.fromEntries([...a.attributes].map((x) => [x.name.toLowerCase(), x.value])); // HREF or href, as exported
+    return attrs.href
+      ? [{ url: attrs.href, title: a.textContent?.trim() || null, tags: tagList(attrs.tags, /,/), note: null, createdAt: date(attrs.add_date), html: null }]
+      : [];
+  });
 }
 
 // Omnivore: a zip of metadata_*.json arrays, with the kept page at content/<slug>.html when present.
 function omnivore(zip: Uint8Array): ImportEntry[] {
   const files = unzipSync(zip);
+  // slug → kept page, built once: scanning the zip for each record made a big export quadratic.
+  const pages = new Map<string, Uint8Array>();
+  for (const [name, data] of Object.entries(files)) {
+    const slug = name.match(/(?:^|\/)content\/(.+)\.html$/)?.[1];
+    if (slug) pages.set(slug, data);
+  }
   const out: ImportEntry[] = [];
   for (const [name, data] of Object.entries(files)) {
     if (!/(^|\/)metadata_[^/]*\.json$/.test(name)) continue;
     const records = JSON.parse(strFromU8(data)) as { url?: string; title?: string; slug?: string; labels?: string[]; savedAt?: string; description?: string }[];
     for (const r of records) {
-      const content = r.slug ? Object.entries(files).find(([n]) => n.endsWith(`content/${r.slug}.html`))?.[1] : undefined;
+      const content = r.slug ? pages.get(r.slug) : undefined;
       out.push({
         url: r.url ?? "", title: r.title ?? null, tags: r.labels ?? [], note: null, createdAt: date(r.savedAt),
         html: content ? strFromU8(content) : null,

@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
-  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, getItem, importLink, listApiKeys,
+  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, getItem, importLink, listApiKeys, recountTags,
   listTags, pluckLink, revokeApiKey, verifyApiKey,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -30,7 +30,9 @@ test("imports land in the Archive as imported, keep tags, and never disturb what
   expect(fresh.item).toMatchObject({ status: "archived", archivedReason: "import", source: "import", title: "New one", note: "from Pocket" });
   expect(fresh.item.createdAt).toBe("2023-01-01T00:00:00.000Z");
   expect(fresh.item.tagIds).toHaveLength(2);
-  expect((await listTags(a)).map((t) => t.name).sort()).toEqual(["db", "postgres"]);
+  await recountTags(a, fresh.tagIds);
+  expect((await listTags(a)).map((t) => [t.name, t.count]).sort()).toEqual([["db", 1], ["postgres", 1]]);
+  expect((await getItem(a, fresh.item.id))?.tagIds).toHaveLength(2);
   const again = await importLink(a, "https://example.com/already", { title: "Other", tags: ["x"], note: null, createdAt: null });
   expect(again.created).toBe(false);
   expect(await getItem(a, mine.id)).toMatchObject({ status: "inbox", title: "https://example.com/already", tagIds: [] });

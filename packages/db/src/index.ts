@@ -11,7 +11,7 @@ export { createHighlight, listHighlights, updateHighlight, deleteHighlight, type
 export { enqueue, claimJob, completeJob, retryJob, failJob, pendingJobCount, type Job } from "./jobs.ts";
 export { hitRateLimit } from "./rate-limit.ts";
 export {
-  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, batchTags, purgeAiTags, countAiTagged,
+  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, recountTags, batchTags, purgeAiTags, countAiTagged,
 } from "./tags.ts";
 export { searchItems, snippetFor } from "./search.ts";
 export {
