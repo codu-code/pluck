@@ -63,6 +63,20 @@ test("Add to Chrome: a coming-soon page until the store listing is live", async 
   await expect(page.getByRole("link", { name: "Use it on the web" })).toHaveAttribute("href", "/signin");
 });
 
+test("home: drawn pieces below the fold play once in view; reduced motion leaves them drawn", async ({ page, browser }) => {
+  await page.goto("/");
+  const band = page.locator("section[data-reveal]").first();
+  await expect(band).toHaveAttribute("data-reveal", "wait");
+  await band.scrollIntoViewIfNeeded();
+  await expect(band).toHaveAttribute("data-reveal", "in");
+  await expect(page.getByText("A PDF you will never read.")).toHaveCSS("text-decoration-line", "line-through");
+
+  const still = await browser.newPage({ reducedMotion: "reduce" });
+  await still.goto(page.url());
+  await expect(still.locator("section[data-reveal]").first()).toHaveAttribute("data-reveal", "true");
+  await still.close();
+});
+
 test("iPhone: a coming-soon page while the app is on TestFlight", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "iPhone", exact: true }).click();
