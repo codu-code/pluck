@@ -10,3 +10,4 @@ export * from "./expiry";
 export * from "./digest";
 export * from "./email-in";
 export * from "./account";
+export * from "./tries";

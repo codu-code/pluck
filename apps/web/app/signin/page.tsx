@@ -1,6 +1,8 @@
 import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { TRY_COOKIE } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
 import { SignInForm } from "./SignInForm";
 import styles from "./signin.module.css";
@@ -24,7 +26,9 @@ function oauthResume(params: Record<string, string | string[] | undefined>): str
 
 export default async function SignIn({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
-  const next = oauthResume(params) ?? safeNext(typeof params.next === "string" ? params.next : undefined);
+  const asked = oauthResume(params) ?? safeNext(typeof params.next === "string" ? params.next : undefined);
+  // Links pasted on the home page before signing up come along: the email link lands on the claim first.
+  const next = asked === "/inbox" && (await cookies()).has(TRY_COOKIE) ? "/try/claim" : asked;
   if (await currentUser()) redirect(next);
   return (
     <main className={styles.page}>

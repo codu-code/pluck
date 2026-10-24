@@ -114,3 +114,8 @@ export function publicRoute<P = Record<string, never>>(perMinute: number, handle
     }
   };
 }
+
+// The home page paste box holds a visitor's links against this cookie until they sign up.
+export const TRY_COOKIE = "pluck_try";
+export const tryToken = (cookieHeader: string | null | undefined): string | null =>
+  cookieHeader?.match(new RegExp(`(?:^|; )${TRY_COOKIE}=([a-f0-9]{32})`))?.[1] ?? null;

@@ -30,3 +30,4 @@ export {
   createImport, getImport, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
 } from "./account.ts";
 export { aiConnections, disconnectAi, isAiConnected } from "./ai-tools.ts";
+export { holdTry, takeTry } from "./tries.ts";

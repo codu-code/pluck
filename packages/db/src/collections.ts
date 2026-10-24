@@ -220,6 +220,7 @@ export function db(): Promise<Db> {
         { key: { finishedAt: 1 }, expireAfterSeconds: 7 * 24 * 3600, partialFilterExpression: { state: "done" } },
       ]),
       d.collection("rateLimits").createIndexes([{ key: { expireAt: 1 }, expireAfterSeconds: 0 }]),
+      d.collection("tries").createIndexes([{ key: { expireAt: 1 }, expireAfterSeconds: 0 }]),
     ]);
     return d;
   })());

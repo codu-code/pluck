@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { fredoka, geist, sourceSerif } from "./fonts";
+import { fredoka, geist, geistMono, sourceSerif } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${fredoka.variable} ${sourceSerif.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${fredoka.variable} ${sourceSerif.variable}`}>
       <body>{children}</body>
     </html>
   );
