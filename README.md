@@ -29,3 +29,12 @@ pnpm dev              # http://127.0.0.1:3000; sign-in links arrive in Mailpit a
 ```
 
 Checks: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`, then `pnpm design`. `CLAUDE.md` has the rules of the codebase, and `GLOSSARY.md` the words.
+
+## Licence
+
+Pluck uses a copyleft licence for the server and a permissive one for what you install:
+
+- **AGPL-3.0** ([`LICENSE`](LICENSE)): the server and everything it runs on: `apps/web`, `packages/db`, `packages/extract`, `packages/blob`, `packages/mcp` and `infra`. Run a changed copy as a service and you share the changes.
+- **MIT** (a `LICENSE` in each folder): the clients and the pieces other software builds on: `apps/extension`, `apps/ios`, `packages/mcp-stdio`, `packages/shared-schemas` and `packages/ui`.
+
+A folder's `LICENSE` file wins; anything without one is AGPL-3.0.

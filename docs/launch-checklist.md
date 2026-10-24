@@ -5,8 +5,8 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 ## Before anything ships
 
 - [x] Push the repo to GitHub (`codu-code/pluck`, private until launch) and fill the repo links.
-- [x] Licences: AGPL-3.0 for the server, MIT for the clients and shared schemas (in `site.ts` and every package.json). Add the LICENSE files before the repo goes public.
-- [ ] Fill the legal placeholders left on Privacy and Terms: `[DATE]`, `[LEGAL ENTITY]`, `[ADDRESS]`, `[RESPONSE DAYS]`. `pnpm test` lists every placeholder left (`scripts/placeholders.test.ts`).
+- [x] Licences: AGPL-3.0 for the server (root `LICENSE`), MIT for the clients and shared schemas (a `LICENSE` in each of their folders, and in `site.ts` and every package.json).
+- [ ] Fill the legal placeholders left on Terms: `[RESPONSE DAYS]`. Add the registered address of Codú Limited to Privacy once known. `pnpm test` lists every placeholder left (`scripts/placeholders.test.ts`).
 - [ ] Record the 20-second clip for `[CONNECTOR GIF]` (Settings, AI tools).
 - [ ] Design pass on `docs/design-gaps.md`: screens with no board, departures from the boards.
 
