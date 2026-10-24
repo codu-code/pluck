@@ -21,7 +21,7 @@ const TOPICS: { id: string; title: string; answers: Answer[] }[] = [
       { q: "Can I keep a quote, not the whole page?", a: <>Select the words and press <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>H</kbd>. Pluck keeps the page with your selection as a highlight on it.</> },
       { q: "Why is there a dot on the Pluck button?", a: "You plucked something with no connection. It waits on your computer and goes up by itself once you are back online. The dot goes when it does." },
       { q: "A page behind my login came out empty.", a: "In the extension's options, turn on Send page content with plucks. Pluck then keeps the page as your browser shows it, not as it looks to a stranger." },
-      { q: "How do I use it with my own server?", a: "Open the extension's options, put your server's address under Server and allow it when your browser asks. Then sign in, or paste an API key from Settings." },
+      { q: "How do I use it with my own server?", a: "Build the extension for your server with the self-host guide in the repository, then load it in your browser. Sign in, or paste an API key from Settings." },
     ],
   },
   {

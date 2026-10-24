@@ -23,7 +23,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 - [ ] `pnpm --filter @pluck/extension zip`, and for Firefox `pnpm --filter @pluck/extension build:firefox` then `wxt zip -b firefox --mv3`.
 - [ ] Chrome Web Store listing: description, screenshots, a 30-second video, privacy policy `https://getpluck.io/privacy`, data-use answers (the page you pluck and its address go to your own Pluck server; nothing else, no selling, no ads).
 - [ ] Firefox Add-ons listing, same answers (id `extension@getpluck.io`).
-- [ ] Fill `[CHROME STORE URL]` and `[FIREFOX ADDONS URL]` in `apps/web/lib/site.ts` once the listings are live.
+- [ ] Once the listings are live, put the store URL in `CHROME_STORE_URL` (it points at the `/chrome` coming-soon page until then) and fill `[FIREFOX ADDONS URL]` in `apps/web/lib/site.ts`.
 
 ## iPhone
 
