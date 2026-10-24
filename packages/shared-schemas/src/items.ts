@@ -23,9 +23,12 @@ export const Item = z.object({
   wordCount: z.number().int().nullable(),
   lang: z.string().nullable(),
   extraction: z.object({ state: ExtractionState, attempts: z.number().int(), lastError: z.string().nullable() }),
+  readingProgress: z.number().min(0).max(1),
   createdAt: z.string(),
   updatedAt: z.string(),
   lastTouchedAt: z.string(),
+  statusChangedAt: z.string(),
+  deletedAt: z.string().nullable(), // in the bin since
 });
 export type Item = z.infer<typeof Item>;
 
@@ -64,19 +67,58 @@ export const PluckResponse = z.object({
 });
 export type PluckResponse = z.infer<typeof PluckResponse>;
 
-// Grows slice by slice (status, tags, note and progress land with triage and tags).
+// Tags join in slice 5.
 export const UpdateItemBody = z
   .object({
     title: z.string().max(500).optional(), // "" goes back to the derived title
     text: z.string().max(100_000).optional(), // notes, todos and things only
     kind: Kind.optional(),
     dueAt: DueAt.nullable().optional(),
+    status: Status.optional(), // done is for todos and things
+    note: z.string().max(10_000).nullable().optional(),
+    readingProgress: z.number().min(0).max(1).optional(),
   })
   .strict();
 export type UpdateItemBody = z.infer<typeof UpdateItemBody>;
 
+// One change over many items: bulk select in the apps, batch_update for an AI tool.
+export const BatchPatch = z
+  .object({ status: Status.optional(), kind: Kind.optional(), dueAt: DueAt.nullable().optional(), note: z.string().max(10_000).nullable().optional() })
+  .strict()
+  .refine((p) => Object.keys(p).length > 0, { message: "Send at least one change." });
+export const BatchBody = z.object({ itemIds: z.array(ObjectIdString).min(1).max(100), patch: BatchPatch });
+export type BatchBody = z.infer<typeof BatchBody>;
+
+export const Highlight = z.object({
+  id: ObjectIdString,
+  itemId: ObjectIdString,
+  quote: z.string(),
+  note: z.string().nullable(),
+  selector: z.object({
+    textQuote: z.object({ exact: z.string(), prefix: z.string(), suffix: z.string() }),
+    textPosition: z.object({ start: z.number().int().min(0), end: z.number().int().min(0) }),
+  }),
+  createdAt: z.string(),
+});
+export type Highlight = z.infer<typeof Highlight>;
+export const CreateHighlightBody = z.object({
+  itemId: ObjectIdString,
+  quote: z.string().min(1).max(5000),
+  note: z.string().max(5000).nullable().optional(),
+  selector: Highlight.shape.selector,
+});
+export type CreateHighlightBody = z.infer<typeof CreateHighlightBody>;
+export const UpdateHighlightBody = z.object({ note: z.string().max(5000).nullable() }).strict();
+
+// "archive" is the Archive page: archived and done together, newest move first.
+export const ListView = z.union([Status, z.literal("archive"), z.literal("bin")]);
+export type ListView = z.infer<typeof ListView>;
+export const ArchiveFilter = z.enum(["all", "you", "expired", "import"]);
+export type ArchiveFilter = z.infer<typeof ArchiveFilter>;
+
 export const ListItemsQuery = z.object({
-  status: Status.default("inbox"),
+  status: ListView.default("inbox"),
+  archive: ArchiveFilter.optional(),
   kinds: z.array(Kind).optional(),
   sort: z.enum(["newest", "untouched"]).default("newest"),
   cursor: z.string().optional(),

@@ -1,9 +1,8 @@
 "use client";
 
 import type { Item, TextKind } from "@pluck/shared-schemas";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ago, sourceLabel } from "@/lib/format";
 import styles from "./note.module.css";
 
@@ -17,7 +16,6 @@ const KIND_HINT: Record<TextKind, string> = {
 
 // The Note, Todo and Thing editor (ItemNote board). Plain text, saved as you type. Esc goes back.
 export function NoteEditor({ item, text }: { item: Item; text: string }) {
-  const router = useRouter();
   const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
   const [body, setBody] = useState(text);
   const [kind, setKind] = useState(item.kind as TextKind);
@@ -48,9 +46,8 @@ export function NoteEditor({ item, text }: { item: Item; text: string }) {
     timer.current = setTimeout(flush, now ? 0 : 600);
   }
 
-  // Never lose typing: flush on leave.
+  // Never lose typing: flush on leave. keepalive lets the PATCH finish after the page is gone.
   useEffect(() => {
-    // keepalive lets the PATCH finish after the page is gone (sendBeacon cannot PATCH).
     const onLeave = () => {
       clearTimeout(timer.current);
       if (!Object.keys(pending.current).length) return;
@@ -58,36 +55,23 @@ export function NoteEditor({ item, text }: { item: Item; text: string }) {
       pending.current = {};
       void fetch(`/api/v1/items/${item.id}`, { method: "PATCH", keepalive: true, headers: { "content-type": "application/json" }, body });
     };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        void flush().then(() => router.push("/inbox"));
-      }
-    };
     window.addEventListener("pagehide", onLeave);
-    window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("pagehide", onLeave);
-      window.removeEventListener("keydown", onKey);
       onLeave();
     };
-  }, [item.id, router]);
+  }, [item.id]);
 
   const derived = body.split("\n").map((l) => l.trim()).find(Boolean) ?? "Untitled note";
   const kindName = kind === "note" ? "Note" : kind === "todo" ? "Todo" : "Thing";
 
   return (
     <>
-      <div className={styles.bar}>
-        <Link href="/inbox" className={styles.back}>
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Inbox <kbd className={styles.kbd}>Esc</kbd>
-        </Link>
-        <span className={styles.state} role="status">
-          {state === "saved" ? "Saved" : state === "saving" ? "Saving" : "Not saved. Retrying when you type."}
-        </span>
-      </div>
+      <ItemBar
+        item={item}
+        before={flush}
+        state={<span role="status">{state === "saved" ? "Saved" : state === "saving" ? "Saving" : "Not saved. Retrying when you type."}</span>}
+      />
       <div className={styles.layout}>
         <article className={styles.editor}>
           <span className={styles.meta}>
@@ -157,6 +141,7 @@ export function NoteEditor({ item, text }: { item: Item; text: string }) {
           <div className={styles.foot}>
             <span>Source: {item.source === "web" ? "web paste box" : sourceLabel(item.source).replace(/^Plucked /, "")}</span>
             <span>Notes have no highlights. Select text to copy it.</span>
+            <DeleteButton id={item.id} />
           </div>
         </aside>
       </div>

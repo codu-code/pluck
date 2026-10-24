@@ -31,7 +31,18 @@ export type ItemDoc = {
   updatedAt: Date;
   lastOpenedAt: Date | null;
   lastTouchedAt: Date;
-  deletedAt: Date | null;
+  statusChangedAt: Date; // when it last moved between Inbox, Later, Archived and Done
+  deletedAt: Date | null; // in the bin; purged 30 days later
+};
+
+export type HighlightDoc = {
+  _id: ObjectId;
+  userId: ObjectId;
+  itemId: ObjectId;
+  quote: string;
+  note: string | null;
+  selector: { textQuote: { exact: string; prefix: string; suffix: string }; textPosition: { start: number; end: number } };
+  createdAt: Date;
 };
 
 export type ContentDoc = {
@@ -71,7 +82,10 @@ export function db(): Promise<Db> {
         { key: { userId: 1, tagIds: 1, createdAt: -1 } },
         { key: { userId: 1, kind: 1, dueAt: 1 } },
         { key: { "extraction.state": 1, updatedAt: 1 } },
+        { key: { userId: 1, status: 1, statusChangedAt: -1 } },
+        { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
       ]),
+      d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
       d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }]),
       d.collection("jobs").createIndexes([
         { key: { state: 1, visibleAt: 1 } },
@@ -85,6 +99,9 @@ export function db(): Promise<Db> {
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function highlights(): Promise<Collection<HighlightDoc>> {
+  return (await db()).collection<HighlightDoc>("highlights");
 }
 export async function contents(): Promise<Collection<ContentDoc>> {
   return (await db()).collection<ContentDoc>("contents");

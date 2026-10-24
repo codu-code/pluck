@@ -1,0 +1,2 @@
+.bar { padding: 8px 32px; background: var(--ink); color: var(--ground); font-size: 13px; }
+@media (max-width: 600px) { .bar { padding: 8px 16px; } }

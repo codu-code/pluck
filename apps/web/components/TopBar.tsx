@@ -2,7 +2,7 @@
 
 import { extractUrls, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
 import Link from "next/link";
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import styles from "./TopBar.module.css";
 
 export type PluckDraft = { key: string; urls: string[]; text: string | null; kind: TextKind | null };
@@ -22,13 +22,57 @@ const KINDS: { kind: TextKind; label: string }[] = [
   { kind: "thing", label: "Thing" },
 ];
 
+const QUEUE_KEY = "pluck:queue";
+type Queued = { draft: PluckDraft; body: Record<string, unknown> };
+
+// Plucks made offline wait in this browser and go when the network is back.
+function readQueue(): Queued[] {
+  try {
+    return JSON.parse(localStorage.getItem(QUEUE_KEY) ?? "[]") as Queued[];
+  } catch {
+    return [];
+  }
+}
+function writeQueue(q: Queued[]) {
+  try {
+    if (q.length) localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+    else localStorage.removeItem(QUEUE_KEY);
+  } catch {
+    // storage blocked: the pluck stays on screen as a draft row until reload
+  }
+}
+
+const post = (body: Record<string, unknown>) =>
+  fetch("/api/v1/items", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+
 // The paste box (Flow 3): one link, a block of links, or a sentence that becomes a Note, Todo or Thing. No modal.
 export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed }: Props) {
   const [value, setValue] = useState(sample ?? "");
   const [kind, setKind] = useState<TextKind>("note");
   const [due, setDue] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+
+  // Send anything queued while offline, now and whenever the network comes back.
+  useEffect(() => {
+    async function flush() {
+      if (!navigator.onLine) return;
+      const queue = readQueue();
+      writeQueue([]);
+      for (const q of queue) {
+        try {
+          const res = await post(q.body);
+          if (res.ok) onPlucked?.(q.draft, (await res.json()) as PluckResponse);
+        } catch {
+          writeQueue([...readQueue(), q]);
+        }
+      }
+    }
+    void flush();
+    window.addEventListener("online", flush);
+    return () => window.removeEventListener("online", flush);
+  }, [onPlucked]);
 
   const text = value.trim();
   const urls = text ? extractUrls(text) : [];
@@ -38,6 +82,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     e.preventDefault();
     if (!text) return;
     setError(null);
+    setNotice(null);
     const draft: PluckDraft = { key: `${Date.now()}`, urls, text: isText ? text : null, kind: isText ? kind : null };
     const body = isText
       ? { text, kind, source: "web", ...(due && kind !== "note" ? { dueAt: new Date(`${due}T09:00:00`).toISOString() } : {}) }
@@ -45,7 +90,15 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     setValue("");
     setDue("");
     onPluck?.(draft);
-    const res = await fetch("/api/v1/items", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    let res: Response;
+    try {
+      if (!navigator.onLine) throw new TypeError("offline");
+      res = await post(body);
+    } catch {
+      writeQueue([...readQueue(), { draft, body }]);
+      setNotice("Plucked. Will sync when you are back online.");
+      return;
+    }
     const json = await res.json();
     if (res.ok || res.status === 201) {
       const result = json as PluckResponse;
@@ -88,6 +141,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
         Search<kbd className={styles.kbd}>/</kbd>
       </Link>
       <div id="pluck-hint" className={styles.hint} aria-live="polite">
+        {notice && !text && <span>{notice}</span>}
         {urls.length > 1 && <span>{urls.length} links. Enter plucks them all.</span>}
         {isText && (
           <span className={styles.textKinds}>

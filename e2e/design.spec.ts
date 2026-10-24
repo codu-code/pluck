@@ -36,6 +36,18 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.waitForURL(/\/items\//);
   await snap("item-failed");
   await page.goto("/inbox");
+  await page.getByRole("link", { name: "Small teams ship when the list is short" }).first().click();
+  await page.waitForURL(/\/items\//);
+  await page.waitForSelector("article p");
+  await snap("reader");
+  await page.goto("/inbox");
+  await page.keyboard.press("x");
+  await snap("inbox-bulk");
+  await page.keyboard.press("Escape");
+  await Promise.all([page.waitForResponse((r) => r.request().method() === "PATCH"), page.keyboard.press("e")]);
+  await page.goto("/archive");
+  await snap("archive");
+  await page.goto("/inbox");
   await box.fill("Kitchen plan\nHob on the island.");
   await box.press("Enter");
   await page.getByRole("link", { name: "Kitchen plan" }).first().click();

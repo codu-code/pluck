@@ -2,6 +2,7 @@ import { Logo } from "@pluck/ui";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SessionUser } from "@/lib/auth";
+import { OfflineBar } from "./Offline";
 import { RailNav } from "./RailNav";
 import styles from "./AppShell.module.css";
 
@@ -22,7 +23,10 @@ export function AppShell({ user, children }: { user: SessionUser; children: Reac
           <span className={styles.meName}>{display}</span>
         </div>
       </nav>
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <OfflineBar />
+        {children}
+      </main>
     </div>
   );
 }

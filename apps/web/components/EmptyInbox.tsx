@@ -43,3 +43,15 @@ export function EmptyInbox() {
     </div>
   );
 }
+
+// A quiet empty state for the other lists.
+export function EmptyState({ title, body }: { title: string; body: string }) {
+  return (
+    <div className={styles.empty}>
+      <div className={styles.head}>
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.lede}>{body}</p>
+      </div>
+    </div>
+  );
+}

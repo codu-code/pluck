@@ -27,14 +27,14 @@ test("a sentence becomes a Note you can open and keep writing", async ({ page })
   const body = page.getByRole("textbox", { name: "Body" });
   await expect(body).toHaveValue("An MCP server for estimates");
   await body.fill("Estimates over MCP\nRead-only tools first.\nThen one write tool behind a confirm.");
-  await expect(page.getByRole("status")).toHaveText("Saved");
+  await expect(page.getByText("Saved", { exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByRole("textbox", { name: "Body" })).toHaveValue(/Then one write tool/);
   await expect(page.getByRole("textbox", { name: "Title" })).toHaveAttribute("placeholder", "Estimates over MCP");
 
   await page.getByRole("combobox", { name: "Kind" }).selectOption("todo");
   await page.getByLabel("Due", { exact: true }).fill("2026-11-03");
-  await expect(page.getByRole("status")).toHaveText("Saved");
+  await expect(page.getByText("Saved", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page).toHaveURL(/\/inbox$/);
   await expect(rows(page).first()).toContainText("Estimates over MCP");
@@ -60,7 +60,7 @@ test("pick Todo with a due date in the paste box, and filter by kind", async ({ 
   await expect(rows(page)).toHaveCount(1);
   await expect(rows(page).first()).toContainText("Postgres indexes");
   await page.getByRole("button", { name: "Read" }).click();
-  await expect(page.getByText("Nothing of this kind in the Inbox.")).toBeVisible();
+  await expect(page.getByText("Nothing of this kind in Inbox.")).toBeVisible();
   await page.getByRole("button", { name: "All" }).click();
   await expect(rows(page)).toHaveCount(2);
 });

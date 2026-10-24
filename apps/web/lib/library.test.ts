@@ -99,3 +99,13 @@ test("edits follow the rules for links and notes", async () => {
   await expect(updateItem(a, link.id, { kind: "note" })).rejects.toMatchObject({ status: 400 });
   expect((await updateItem(a, link.id, { kind: "video" })).kind).toBe("video");
 });
+
+test("Done is only for todos and things; batch skips what does not fit", async () => {
+  const { updateItem: update, batch } = await import("./library");
+  const { a } = await twoUsers();
+  const link = (await pluckAny(a, { url: `${FIX}/blog-4.html` })).results[0]!.item;
+  const todo = (await pluckAny(a, { text: "Book the room", kind: "todo" })).results[0]!.item;
+  await expect(update(a, link.id, { status: "done" })).rejects.toMatchObject({ status: 400, message: "Done is for todos and things." });
+  expect((await update(a, todo.id, { status: "done" })).status).toBe("done");
+  expect(await batch(a, { itemIds: [link.id, todo.id], patch: { status: "archived" } })).toEqual({ matched: 2, updated: 2 });
+});

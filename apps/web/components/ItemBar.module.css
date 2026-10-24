@@ -1,0 +1,14 @@
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px 32px; border-bottom: 1px solid var(--line); }
+.back { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px; text-decoration: none; color: var(--ink2); }
+.kbd { font: 11px var(--font-ui); border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 5px; }
+.slot { color: var(--ink2); font-size: 13px; margin-left: 8px; }
+.actions { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+.action {
+  height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface);
+  color: var(--ink); font: inherit; font-size: 13px; cursor: pointer;
+}
+.action[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+.hint { font: 11px var(--font-ui); color: var(--ink2); }
+.action[aria-pressed="true"] .hint { color: var(--ground); }
+.delete { align-self: flex-start; padding: 0; border: 0; background: none; color: var(--danger); font: inherit; font-size: 13px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 600px) { .bar { padding: 8px 16px; } }

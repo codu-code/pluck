@@ -1,0 +1,7 @@
+.region { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 20; }
+.toast {
+  display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 8px 0 16px; border-radius: 8px;
+  background: var(--brand); color: var(--on-brand); white-space: nowrap;
+}
+.toast:not(:has(button)) { padding-right: 16px; }
+.undo { height: 32px; padding: 0 10px; border: 0; border-radius: 6px; background: #30362D; color: var(--on-brand); font: inherit; font-size: 13px; cursor: pointer; }

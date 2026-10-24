@@ -1,8 +1,11 @@
-import { signedUrl } from "@pluck/blob";
-import { createTextItem, editItem, getContent, getItem, getItemBlobKeys, listItems, pluckLink, resetExtraction } from "@pluck/db";
+import { deletePrefix, signedUrl } from "@pluck/blob";
+import {
+  batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, getContent, getItem, getItemBlobKeys, listHighlights,
+  listItems, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, updateHighlight,
+} from "@pluck/db";
 import {
   extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type CreateItemBody, type CreateItemResult, type Item, type ItemPage,
-  type ListItemsQuery, type PluckResponse, type UpdateItemBody,
+  type BatchBody, type CreateHighlightBody, type Highlight, type ListItemsQuery, type PluckResponse, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "./errors";
 import { extractAttempt } from "./capture";
@@ -92,12 +95,57 @@ export async function updateItem(userId: string, itemId: string, patch: UpdateIt
   if (patch.text !== undefined && hasUrl) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
   if (patch.kind && hasUrl !== (LINK_KINDS as readonly string[]).includes(patch.kind))
     throw new ApiError("bad_request", hasUrl ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
+  if (patch.status === "done" && !["todo", "thing"].includes(patch.kind ?? current.kind))
+    throw new ApiError("bad_request", "Done is for todos and things.", 400);
   const updated = await editItem(userId, itemId, {
     ...patch,
     dueAt: patch.dueAt === undefined ? undefined : patch.dueAt === null ? null : new Date(patch.dueAt),
   });
   if (!updated) throw new ApiError("not_found", "No such item.", 404);
   return updated;
+}
+
+export async function batch(userId: string, body: BatchBody): Promise<{ matched: number; updated: number }> {
+  const p = body.patch;
+  return batchUpdate(userId, body.itemIds, { ...p, dueAt: p.dueAt === undefined ? undefined : p.dueAt === null ? null : new Date(p.dueAt) });
+}
+
+export const openItem = (userId: string, itemId: string) => markOpened(userId, itemId);
+export const count = (userId: string, status: Status) => countItems(userId, status);
+
+export async function deleteItem(userId: string, itemId: string): Promise<void> {
+  if (!(await moveToBin(userId, itemId))) throw new ApiError("not_found", "No such item.", 404);
+}
+
+export async function restoreItem(userId: string, itemId: string): Promise<Item> {
+  const item = await restoreFromBin(userId, itemId);
+  if (!item) throw new ApiError("not_found", "Nothing in the bin with that id.", 404);
+  return item;
+}
+
+// Nightly: items in the bin for 30 days go for good, files included.
+export async function purgeBinNow(): Promise<number> {
+  const { purged, blobPrefixes } = await purgeBin();
+  for (const prefix of blobPrefixes) await deletePrefix(prefix);
+  return purged;
+}
+
+export const highlightsOf = (userId: string, itemId: string): Promise<Highlight[]> => listHighlights(userId, itemId);
+
+export async function addHighlight(userId: string, body: CreateHighlightBody): Promise<Highlight> {
+  const h = await createHighlight(userId, body);
+  if (!h) throw new ApiError("not_found", "Highlights are for links you plucked.", 404);
+  return h;
+}
+
+export async function noteHighlight(userId: string, id: string, note: string | null): Promise<Highlight> {
+  const h = await updateHighlight(userId, id, note);
+  if (!h) throw new ApiError("not_found", "No such highlight.", 404);
+  return h;
+}
+
+export async function removeHighlight(userId: string, id: string): Promise<void> {
+  if (!(await deleteHighlight(userId, id))) throw new ApiError("not_found", "No such highlight.", 404);
 }
 
 // A short-lived URL for an item's cover in the private bucket.
