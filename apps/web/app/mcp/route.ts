@@ -13,7 +13,7 @@ const handler = createMcpHandler(({ authInfo }) => {
   const userId = String(authInfo?.extra?.userId);
   return createPluckServer(connectorFor(userId, { defer: after }), {
     scopes: authInfo?.scopes ?? [],
-    onError: (error, tool) => log("error", "mcp tool error", { userId, tool, error: String(error) }),
+    onError: (error, tool) => log("error", "mcp tool error", { userId, tool, error }),
   });
 });
 

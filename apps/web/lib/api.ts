@@ -92,7 +92,7 @@ export function route<P = Record<string, never>>(opts: Options, handler: Handler
     } catch (e) {
       if (e instanceof ApiError) return errorResponse(e);
       if (e instanceof ZodError) return errorResponse(new ApiError("bad_request", "Some fields are not right.", 400, e.issues));
-      log("error", "api error", { userId: caller?.userId, path: new URL(req.url).pathname, durationMs: Date.now() - started, error: String(e) });
+      log("error", "api error", { userId: caller?.userId, path: new URL(req.url).pathname, durationMs: Date.now() - started, error: e });
       return errorResponse(new ApiError("internal", "Something went wrong on our side.", 500));
     }
   };
@@ -108,7 +108,7 @@ export function publicRoute<P = Record<string, never>>(perMinute: number, handle
     } catch (e) {
       if (e instanceof ApiError) return errorResponse(e);
       if (e instanceof ZodError) return errorResponse(new ApiError("bad_request", "Some fields are not right.", 400, e.issues));
-      log("error", "public api error", { path: new URL(req.url).pathname, error: String(e) });
+      log("error", "public api error", { path: new URL(req.url).pathname, error: e });
       return errorResponse(new ApiError("internal", "Something went wrong on our side.", 500));
     }
   };

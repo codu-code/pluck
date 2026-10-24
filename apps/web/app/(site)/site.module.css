@@ -45,6 +45,8 @@
 .footer { margin-top: auto; border-top: 1px solid var(--line); }
 .footerInner { max-width: 1240px; margin: 0 auto; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: var(--ink2); }
 .footerInner a, .site .footerInner a { color: var(--ink2); }
+.footerButton { padding: 0; border: 0; background: none; font: inherit; color: var(--ink2); text-decoration: underline; cursor: pointer; }
+.footerButton:hover { color: var(--ink); }
 .footerBrand { margin-right: auto; display: inline-flex; align-items: center; }
 .footerNote { margin-right: auto; }
 @media (max-width: 600px) { .footerBrand, .footerNote { flex-basis: 100%; margin-bottom: 4px; } }

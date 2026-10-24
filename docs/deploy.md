@@ -52,6 +52,9 @@ Then:
 | `ADMIN_EMAILS` | your address |
 | `ABUSE_EMAIL` | the abuse inbox |
 | `EMAIL_IN_DOMAIN` | `in.getpluck.io` |
+| `NEXT_PUBLIC_POSTHOG_KEY` | the PostHog project token (EU project). Read at build time. Turns on the cookie banner, usage analytics after a yes, and error tracking for the browser and the server |
+
+Leave `NEXT_PUBLIC_POSTHOG_KEY` off Preview, so previews never report into the real project. In PostHog, turn on Error tracking (Project settings, Error tracking) and keep Session replay off: Pluck never sends recordings.
 
 Do not set `SMTP_URL`, `S3_ENDPOINT`, `S3_PUBLIC_ENDPOINT`, `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` in production.
 

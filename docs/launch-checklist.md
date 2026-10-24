@@ -28,7 +28,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 - [ ] Apple developer team in Xcode or EAS for both targets (app and share extension); App Group `group.io.getpluck.app` and Keychain group `io.getpluck.shared` on both.
 - [ ] The manual checklist in `docs/ios.md`, on a phone.
-- [ ] App Store Connect: privacy labels (email; content you pluck; no tracking), the privacy policy URL, a permanent demo account for review (with a pk_live key or a mailbox you can read), in-app account deletion (Settings opens it on the web), screenshots.
+- [ ] App Store Connect: privacy labels (email; content you pluck; usage data after the in-app yes; crash data, not linked; no tracking, see `docs/ios.md`), the privacy policy URL, a permanent demo account for review (with a pk_live key or a mailbox you can read), in-app account deletion (Settings opens it on the web), screenshots.
 - [ ] Expect one Guideline 2.1 round. If review objects to "Open Pluck to sign in" in the share extension, change it to a line of text (see `docs/ios.md`).
 - [ ] Stopgap until approval: an iOS Shortcut named "Pluck" that posts the shared URL with an API key.
 - [ ] TestFlight first. Once the App Store listing is live, put its URL in `APP_STORE_URL` in `apps/web/lib/site.ts` (it points at the `/iphone` coming-soon page until then).

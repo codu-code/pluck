@@ -1,12 +1,14 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { router, Stack } from "expo-router";
+import { router, Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { AppState, LogBox, Settings, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { queryClient, syncPending } from "@/lib/data";
+import { UsagePrompt } from "@/components/UsagePrompt";
+import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
 import { useTheme } from "@/lib/theme";
@@ -37,7 +39,10 @@ export default function Root() {
     })();
     const off = onSession((s) => {
       setSignedIn(Boolean(s?.access || s?.apiKey));
-      if (!s) queryClient.clear();
+      if (!s) {
+        queryClient.clear();
+        forgetUser();
+      }
     });
     // Coming back to the app is when queued plucks (from the app or the share sheet) go up.
     const sub = AppState.addEventListener("change", (state) => state === "active" && void syncPending().catch(() => {}));
@@ -68,8 +73,29 @@ export default function Root() {
             </Stack.Protected>
             <Stack.Screen name="oauth" />
           </Stack>
+          <Screens />
+          {signedIn && <SignedInAnalytics />}
         </PersistQueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
+}
+
+// Each route as a screen view (lib/analytics.ts sends them only after a yes).
+function Screens() {
+  const path = usePathname();
+  useEffect(() => screen(path), [path]);
+  return null;
+}
+
+// Ties usage to the account once they said yes, and asks the question once.
+function SignedInAnalytics() {
+  const me = useMe();
+  const id = me.data?.id;
+  useEffect(() => {
+    if (!id) return;
+    identify(id);
+    return onConsent(() => identify(id));
+  }, [id]);
+  return <UsagePrompt />;
 }

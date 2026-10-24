@@ -7,7 +7,7 @@ export function LegalPage({ page, title, lede, sections, box }: {
   page: "privacy" | "terms";
   title: string;
   lede: string;
-  sections: { h: string; p: string }[];
+  sections: { h: string; p: string; id?: string }[];
   box: { title: string; body: ReactNode };
 }) {
   return (
@@ -18,7 +18,7 @@ export function LegalPage({ page, title, lede, sections, box }: {
           <p className={styles.legalLede}>{lede}</p>
         </div>
         {sections.map((s) => (
-          <section key={s.h} className={styles.legalSection}>
+          <section key={s.h} id={s.id} className={styles.legalSection}>
             <h2>{s.h}</h2>
             <p>{s.p}</p>
           </section>

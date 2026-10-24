@@ -2,7 +2,11 @@
 # Everything is configured by environment variables (an .env file next to this one works); see docs/self-host.md.
 name: pluck
 x-app: &app
-  build: .
+  build:
+    context: .
+    args:
+      NEXT_PUBLIC_POSTHOG_KEY: ${NEXT_PUBLIC_POSTHOG_KEY:-}
+      POSTHOG_HOST: ${POSTHOG_HOST:-}
   image: pluck:local
   restart: unless-stopped
   volumes: [secrets:/data]
@@ -23,6 +27,7 @@ x-app: &app
     ADMIN_EMAILS: ${ADMIN_EMAILS:-}
     ABUSE_EMAIL: ${ABUSE_EMAIL:-}
     EMAIL_IN_DOMAIN: ${EMAIL_IN_DOMAIN:-}
+    POSTHOG_HOST: ${POSTHOG_HOST:-}
   depends_on:
     mongo: { condition: service_healthy }
     minio-init: { condition: service_completed_successfully }

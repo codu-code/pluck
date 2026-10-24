@@ -6,6 +6,10 @@ WORKDIR /app
 # The build imports the server modules; these placeholders satisfy them and are never connected to.
 # The runtime stage below starts clean; real values come from docker-compose.yml or your environment.
 ENV MONGODB_URI=mongodb://build-only:27017/pluck BETTER_AUTH_URL=http://localhost:3000 BETTER_AUTH_SECRET=build-only-placeholder-not-used-at-runtime
+# Optional PostHog (docs/self-host.md): the browser half is baked in at build time.
+ARG NEXT_PUBLIC_POSTHOG_KEY=
+ARG POSTHOG_HOST=
+ENV NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "@pluck/web..." \
  && pnpm --filter @pluck/web build

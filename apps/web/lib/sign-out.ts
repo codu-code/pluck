@@ -1,3 +1,5 @@
+import { forgetUser } from "./analytics";
+
 // Signing out (or deleting the account) leaves nothing behind in this browser: the offline page cache
 // and any plucks waiting to sync go too.
 export async function signOutHere(): Promise<void> {
@@ -6,6 +8,7 @@ export async function signOutHere(): Promise<void> {
 }
 
 export async function clearLocal(): Promise<void> {
+  forgetUser();
   try {
     localStorage.removeItem("pluck:queue");
   } catch {

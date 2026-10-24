@@ -2,9 +2,10 @@ import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useState, type ReactNode } from "react";
-import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
+import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
 import { kv } from "@/lib/kv";
 import { queryClient, useMe, useTags } from "@/lib/data";
 import { getSession, signOut, type Session } from "@/lib/session";
@@ -26,6 +27,7 @@ export default function Settings() {
   const [cache, setCache] = useState({ items: 0, bytes: 0 });
   const [copied, setCopied] = useState(false);
   const [icon, setIcon] = useState<AppIcon | null>(null);
+  const [usage, setUsage] = useState<Consent | null>(null);
 
   useEffect(() => {
     void getSession().then(setSession);
@@ -34,6 +36,8 @@ export default function Settings() {
       setCache({ items, bytes: raw?.length ?? 0 });
     });
     if (appIcons.supported) void appIcons.get().then(setIcon);
+    void loadConsent().then(setUsage);
+    return onConsent(setUsage);
   }, []);
 
   const server = session?.server ?? "https://getpluck.io";
@@ -150,6 +154,19 @@ export default function Settings() {
         </View>
       )}
 
+      {analyticsOn && (
+        <View style={styles.group}>
+          {section("Privacy")}
+          <View style={card}>
+            <View style={[styles.switchRow]}>
+              <Text style={[label, { flex: 1 }]}>Share how I use Pluck</Text>
+              <Switch accessibilityLabel="Share how I use Pluck" value={usage === "yes"} onValueChange={(on) => void setConsent(on ? "yes" : "no")} trackColor={{ true: t.accent }} />
+            </View>
+          </View>
+          <Text style={[font.regular, styles.footnote, { color: t.ink2 }]}>Which screens you use, tied to your account. Never what you pluck. Crash reports go either way, without your name.</Text>
+        </View>
+      )}
+
       <View style={[styles.tip, { backgroundColor: t.surface }]}>
         <Image source={require("../assets/icon.png")} style={{ width: 36, height: 36, borderRadius: 8 }} />
         <View style={{ flex: 1, gap: 2 }}>
@@ -173,6 +190,7 @@ const styles = StyleSheet.create({
   group: { gap: 6 },
   section: { paddingHorizontal: 12, fontSize: 12, letterSpacing: 0.6 },
   card: { borderRadius: 12, overflow: "hidden" },
+  switchRow: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 48, paddingHorizontal: 16, paddingVertical: 8 },
   account: { minHeight: 56, flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 8, paddingHorizontal: 14, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   avatar: { width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
   row: { minHeight: 48, paddingVertical: 10, flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", columnGap: 12, rowGap: 2, paddingHorizontal: 14 },
