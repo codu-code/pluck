@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { APP_STORE_URL, CHROME_STORE_URL } from "@/lib/site";
 import { PasteBox } from "./PasteBox";
+import { Reveal } from "./Reveal";
 import { SitePage } from "./SiteChrome";
 import styles from "./site.module.css";
 
@@ -39,6 +40,7 @@ const Tick = ({ size, stroke = "#151A13" }: { size: number; stroke?: string }) =
 export default function Home() {
   return (
     <SitePage page="home">
+      <Reveal />
       <section className={`${styles.wrap} ${styles.hero}`}>
         <h1 className={`${styles.display} ${styles.heroTitle}`}>Pluck it<span className={styles.dot}>.</span></h1>
         <div className={styles.heroRow}>
@@ -71,7 +73,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className={styles.band}>
+      <section className={styles.band} data-reveal>
         <div className={styles.bandInner}>
           <p className={styles.bandBig}>
             {/* Set as four lines on wide screens; on a phone it flows, but each thing stays in one piece. */}
@@ -81,8 +83,8 @@ export default function Home() {
             <span className={styles.bandLine}>
               <span className={`${styles.phrase} ${styles.mint}`}>Half an idea.</span> <span className={styles.phrase}>A hob for the kitchen.</span>
             </span>{" "}
-            <span className={styles.bandLine}><span className={styles.phrase}>A talk you'll give in November.</span></span>{" "}
-            <span className={styles.bandLine}><span className={`${styles.phrase} ${styles.quiet}`}>A PDF you will never read.</span></span>
+            <span className={styles.bandLine}><span className={styles.phraseLong}>A talk you'll give in November.</span></span>{" "}
+            <span className={styles.bandLine}><span className={`${styles.phraseLong} ${styles.unread}`}>A PDF you will never read.</span></span>
           </p>
           <p className={styles.bandSmall}>One inbox for all of it. The page is kept, not just the link, so it's still there when the site isn't.</p>
         </div>
@@ -91,7 +93,7 @@ export default function Home() {
       <section className={`${styles.wrap} ${styles.stats}`}>
         <div className={styles.stat}>
           <b className={`${styles.display} ${styles.statNumber}`}>1 tap</b>
-          <p className={styles.statText}>From the iPhone share sheet, without opening an app. From Chrome, Firefox, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.</p>
+          <p className={styles.statText}>From the iPhone share sheet, without opening an app. From Chrome, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.</p>
         </div>
         <div className={styles.stat}>
           <b className={`${styles.display} ${styles.statNumber}`}>0 nags</b>
@@ -109,7 +111,7 @@ export default function Home() {
           <p className={styles.para}>A book. A newsletter issue. A talk. A trip. <span className={styles.phrase}>Things to buy.</span> Put any pluck in as many lists as you like, each with its own note and a tick.</p>
           <p className={styles.para}>Private by default. Public with one switch. Take it back with the same switch.</p>
         </div>
-        <div className={styles.listArt}>
+        <div className={styles.listArt} data-reveal>
           <div className={styles.listCard}>
             <div className={styles.listCardHead}><b>Kitchen reno, to buy</b><span>3 of 7</span></div>
             {KITCHEN.map((k) => (
@@ -141,7 +143,7 @@ export default function Home() {
             </p>
             <Link href="/connect" className={styles.lightButton}>How it works with AI</Link>
           </div>
-          <div className={styles.chat}>
+          <div className={styles.chat} data-reveal>
             <div className={styles.me}>Pluck this as an idea: an MCP server for Assemble's estimates</div>
             <span className={`${styles.toolCall} ${styles.mono}`}>save_item kind=note</span>
             <div className={styles.ai}>Plucked. It's in your inbox as a Note, marked as plucked by me.</div>
@@ -152,7 +154,7 @@ export default function Home() {
       </section>
 
       <section className={`${styles.wrap} ${styles.importsSection}`}>
-        <div className={styles.col} style={{ gap: 16 }}>
+        <div className={styles.col}>
           <h2 className={`${styles.display} ${styles.h2Small}`}>Pocket shut down. Omnivore shut down.</h2>
           <p className={styles.para} style={{ maxWidth: "none" }}>Pluck is open source and runs on a database you can own. It can't close with two weeks' notice. Bring your old library across in one go.</p>
         </div>
