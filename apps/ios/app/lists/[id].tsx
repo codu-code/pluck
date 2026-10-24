@@ -67,7 +67,7 @@ export default function ListScreen() {
         <View style={styles.head}>
           <Text accessibilityRole="header" style={[font.bold, styles.title, { color: t.ink }]}>{list.name}</Text>
           {list.purpose ? <Text style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{list.purpose}</Text> : null}
-          <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{entries.filter((e) => e.ticked).length} of {entries.length} ticked</Text>
+          {entries.length > 0 && <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{entries.filter((e) => e.ticked).length} of {entries.length} ticked</Text>}
         </View>
       )}
       <FlatList
