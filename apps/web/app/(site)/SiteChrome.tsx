@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { REPO_URL } from "@/lib/site";
 import styles from "./site.module.css";
 
-type Page = "home" | "connect" | "open-source" | "privacy" | "terms";
+type Page = "home" | "connect" | "open-source" | "support" | "privacy" | "terms";
 
 // Header and footer for the marketing pages (the boards' shared chrome).
 export function SitePage({ page, dark = false, footerNote, children }: { page: Page; dark?: boolean; footerNote?: ReactNode; children: ReactNode }) {
@@ -29,6 +29,7 @@ export function SitePage({ page, dark = false, footerNote, children }: { page: P
           {page !== "connect" && <Link href="/connect">Connect your AI</Link>}
           {page !== "open-source" && <Link href="/open-source">Open source</Link>}
           {page === "home" && <a href={REPO_URL}>GitHub</a>}
+          {page !== "support" && <Link href="/support">Support</Link>}
           {page !== "privacy" && <Link href="/privacy">Privacy</Link>}
           {page !== "terms" && <Link href="/terms">Terms</Link>}
         </div>
