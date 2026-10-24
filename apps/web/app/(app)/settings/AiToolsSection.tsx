@@ -2,6 +2,8 @@
 
 import type { AiConnection } from "@pluck/shared-schemas";
 import { useEffect, useState } from "react";
+import { ConnectLoop } from "@/components/ConnectLoop";
+import { ConnectLoopFit } from "@/components/ConnectLoopFit";
 import { useToast } from "@/components/Toast";
 import { ago } from "@/lib/format";
 import styles from "./settings.module.css";
@@ -49,19 +51,18 @@ export function AiToolsSection({ connectorUrl, keyPrefix, initial, lastCallAt }:
             {!keyPrefix && <span className={styles.meta} style={{ fontSize: 13 }}>Make an API key below, then use it here.</span>}
           </div>
           <div className={styles.inline} style={{ gap: 12 }}>
-            <a className={styles.inkButton} style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }} href={`https://claude.ai/new?q=${encodeURIComponent(TEST_PROMPT)}`} target="_blank" rel="noreferrer">
+            {/* Copies the question rather than opening one vendor's site: any AI tool works. */}
+            <button type="button" className={styles.inkButton} onClick={async () => {
+              await navigator.clipboard?.writeText(TEST_PROMPT).catch(() => {});
+              showToast({ message: "Copied. Paste it into your AI." });
+            }}>
               Test it
-            </a>
-            <span className={styles.meta} style={{ fontSize: 13 }}>Opens your AI with “{TEST_PROMPT}”</span>
+            </button>
+            <span className={styles.meta} style={{ fontSize: 13 }}>Copies “{TEST_PROMPT}” for your AI</span>
           </div>
         </div>
         <div className={styles.aiSide}>
-          {/* What a connected AI does, drawn (a recorded GIF can replace it later). */}
-          <div className={styles.chat} aria-hidden="true">
-            <span className={styles.chatMe}>{TEST_PROMPT}</span>
-            <span className={styles.chatTool}>list_items · status inbox · newest</span>
-            <span className={styles.chatAi}>Six things. Two on MCP auth, one hob for the kitchen, and a talk you said you would write.</span>
-          </div>
+          <div className={styles.loopFrame}><ConnectLoopFit><ConnectLoop /></ConnectLoopFit></div>
           <span className={styles.status}>
             <span aria-hidden="true" className={styles.statusDot} style={{ background: connected ? "var(--accent)" : "var(--line-strong)" }} />
             {connected ? `Connected${lastCall ? ` · last call ${lastCall}` : ""}` : "Not connected yet"}

@@ -72,15 +72,9 @@
 .dangerButton:disabled { opacity: 0.5; cursor: default; }
 .aiGrid { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
 .aiSteps { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
-.aiSide { flex: 0 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.loopFrame { border: 1px solid var(--line); border-radius: 13px; } /* the loop's ground is the page's in light mode */
+.aiSide { flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .codeQuiet { min-height: 40px; display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--rail); font: 13px/20px var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; overflow-wrap: anywhere; }
-.chat { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 12px; background: var(--rail); font-size: 13px; line-height: 19px; }
-.chatMe, .chatAi, .chatTool { animation: chatIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.chatMe { align-self: flex-end; max-width: 85%; padding: 8px 12px; border-radius: 12px; background: var(--chip); }
-.chatTool { align-self: flex-start; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line-strong); color: var(--ink2); font: 11px/18px var(--font-geist-mono), ui-monospace, monospace; animation-delay: 180ms; }
-.chatAi { align-self: flex-start; max-width: 90%; padding: 8px 12px; border-radius: 12px; background: var(--surface); animation-delay: 360ms; }
-@keyframes chatIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .chatMe, .chatAi, .chatTool { animation: none; } }
 .status + .keyRow { border-top: 1px solid var(--line); }
 .status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .statusDot { width: 8px; height: 8px; border-radius: 4px; flex: none; }

@@ -51,8 +51,4 @@ The copy and behaviour departures for the site, the extension, the share sheet, 
 
 ## Placeholders to fill
 
-Listed on every test run by `scripts/placeholders.test.ts`; the current set:
-
-| Placeholder | Where | What it is |
-|---|---|---|
-| `[CONNECTOR GIF]` | Settings, AI tools | A 20-second clip of adding the connector in an AI tool. A drawn three-line conversation stands in until then |
+None left. `scripts/placeholders.test.ts` lists any that come back.
