@@ -2,7 +2,13 @@
 body { width: 360px; }
 .meta { color: var(--ink2); font-size: 13px; }
 .card { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
-.card.center { align-items: center; padding: 24px 16px; }
+.card.center { align-items: center; padding: 24px 16px; text-align: center; }
+.lede { margin: 0; max-width: 260px; font-size: 14px; line-height: 20px; color: var(--ink2); }
+/* The three dashes draw in turn off the k, over and over, while the page is plucked (one path, drawn by its dash). */
+.plucking { gap: 10px; padding: 28px 16px; }
+.plucking svg path { stroke-dasharray: 12; stroke-dashoffset: 12; animation: sparks 1100ms cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+@keyframes sparks { 0% { stroke-dashoffset: 12; } 55%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -12; } }
+@media (prefers-reduced-motion: reduce) { .plucking svg path { animation: none; stroke-dashoffset: 0; } }
 .card.row { flex-direction: row; align-items: center; }
 .stack { display: flex; flex-direction: column; }
 .stack-14 { gap: 14px; }
