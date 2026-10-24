@@ -27,7 +27,7 @@ The Pluck icon fills in on pages already in your library, so you can see at a gl
 
 No connection? Plucks wait on your computer and go when you are back online.
 
-Pluck is open source. Use getpluck.io, or point the extension at a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
+Pluck is open source. Use getpluck.io, or build the extension for a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
 
 Needs a free Pluck account at https://getpluck.io.
 ```
@@ -66,7 +66,6 @@ Pluck saves the web page, link, image or text selection you choose into your own
 | `unlimitedStorage` | Lets plucks made offline keep the page they captured (up to 4 MB each) until they are sent; without it Chrome stops the extension's storage at 10 MB. |
 | `alarms` | Retries plucks that were made offline, once a minute, until they are sent. |
 | Host permission `https://getpluck.io/*` | The Pluck server the extension sends your plucks to and signs in with. |
-| Optional host permission `<all_urls>` | Asked for only to reach a Pluck server you run yourself. Not granted at install. |
 
 **Remote code:** No, I am not using remote code. (Everything runs from the package; the extension only sends and receives JSON.)
 
