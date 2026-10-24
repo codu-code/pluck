@@ -49,6 +49,13 @@ describe("expiry", () => {
     expect((await getItem(b, theirs.id))?.status).toBe("inbox");
   });
 
+  test("someone who never opened Settings gets the default 30 days", async () => {
+    const { a } = await twoUsers(); // no settings stored
+    const old = (await pluckLink(a, { url: "https://example.com/n3", source: "web" })).item;
+    await age(old.id, 40);
+    expect((await runDueExpiry(new Date("2026-10-25T03:00:00Z"))).perUser.find((p) => p.userId === a)?.archived).toBe(1);
+  });
+
   test("expiring-soon counts the week before, and local dates follow the timezone", async () => {
     const { a } = await twoUsers();
     const it = await createTextItem(a, { kind: "note", text: "soon", source: "web" });
