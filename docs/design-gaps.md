@@ -30,7 +30,20 @@ What still needs a designer's eye. Three kinds: screens built without a board of
 
 ### iOS app
 
-Being built in slice 16; this section fills in as screens land.
+| Screen | Built from | What to decide |
+|---|---|---|
+| Sign in, and "Use your own server" | IOSFirstRun and Brand | The whole screen; the server and API key fields |
+| Lists (the index) | Web Lists board, IOSLists | Row design, empty state |
+| Note, Todo and Thing editor | Web ItemNote board | Title field and first-line title, the Done tick for todos and things |
+| Tag, list and "Add to list" sheets | Web pickers | One sheet for three picks today |
+| Inbox empty and Later empty | Empty board | Copy and art |
+| Reader: image items, "Plucking the page", "Couldn't read this page" | IOSReader | States the board does not draw |
+| New note button in the Inbox header | None | Where creating a note on the phone lives |
+| Share extension: working, failed | IOSShare | Only plucked, signed out and offline are drawn |
+
+### Native share sheet
+
+The share sheet is SwiftUI (`apps/ios/targets/share/ShareView.swift`) with the token values copied in; fonts are the system's, not Geist (extensions keep their size down). Worth a look on a phone next to the board.
 
 ## Departures from a board
 
@@ -50,6 +63,10 @@ Being built in slice 16; this section fills in as screens land.
 | Privacy | Delete "within 24 hours"; "one cookie" | "At once"; a second cookie for the home page paste box | Matches what the code does |
 | Terms | "no delete tool" | "a delete tool only if you grant it separately" | The `library:delete` scope exists |
 | All site footers | "Made in Dublin." | Removed | Asked for by Niall |
+| iOS first run | "You never need to open this app to save." | "…to pluck." | Product words |
+| iOS Search | Results show which list they are in | They show the status | Search results do not carry list membership |
+| iOS Inbox | Swipe right for Later | Also swipe left to Archive | Two moves the reader toolbar already has |
+| iOS share sheet | Kind row, all seven | Note, Todo and Thing disabled for links | A link cannot become one |
 
 ## Placeholders to fill
 

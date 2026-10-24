@@ -11,3 +11,5 @@ playwright-report/
 .DS_Store
 cdk.out/
 .wxt/
+apps/ios/ios/
+apps/ios/.expo/

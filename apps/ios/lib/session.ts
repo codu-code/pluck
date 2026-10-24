@@ -1,0 +1,163 @@
+import Constants from "expo-constants";
+import * as Crypto from "expo-crypto";
+import * as SecureStore from "expo-secure-store";
+import * as WebBrowser from "expo-web-browser";
+import { createClient } from "./api";
+import { kv } from "./kv";
+import { codeFrom, pkcePair } from "./pkce";
+
+// The signed-in session lives in the Keychain, in the access group the share extension also reads
+// (the app's default group: the first one in keychain-access-groups).
+export type Session = {
+  server: string;
+  clientId?: string;
+  access?: string;
+  refresh?: string | null;
+  expiresAt?: number;
+  apiKey?: string;
+  email?: string;
+};
+
+const STORE = { keychainService: "pluck", keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK };
+export const REDIRECT = "io.getpluck.app:/oauth";
+const SCOPE = "offline_access library:read library:write";
+export const defaultServer: string = (Constants.expoConfig?.extra as { server?: string } | undefined)?.server ?? "https://getpluck.io";
+
+let current: Session | null | undefined;
+const listeners = new Set<(s: Session | null) => void>();
+export const onSession = (fn: (s: Session | null) => void) => (listeners.add(fn), () => void listeners.delete(fn));
+
+export async function getSession(): Promise<Session | null> {
+  if (current !== undefined) return current;
+  const raw = await SecureStore.getItemAsync("session", STORE);
+  current = raw ? (JSON.parse(raw) as Session) : null;
+  return current;
+}
+
+async function setSession(s: Session | null) {
+  current = s;
+  if (s) await SecureStore.setItemAsync("session", JSON.stringify(s), STORE);
+  else await SecureStore.deleteItemAsync("session", STORE);
+  listeners.forEach((fn) => fn(s));
+}
+
+const signedIn = (s: Session | null) => Boolean(s?.access || s?.apiKey);
+export const isSignedIn = async () => signedIn(await getSession());
+
+// ---- OAuth with PKCE ---------------------------------------------------------------------------------
+
+async function clientIdFor(server: string): Promise<string> {
+  const ids = await kv.get<Record<string, string>>("clientIds", {});
+  if (ids[server]) return ids[server];
+  const res = await fetch(`${server}/api/auth/oauth2/register`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      client_name: "Pluck for iPhone", redirect_uris: [REDIRECT], token_endpoint_auth_method: "none",
+      grant_types: ["authorization_code", "refresh_token"], response_types: ["code"], scope: SCOPE, resources: [`${server}/api/v1`],
+    }),
+  });
+  if (!res.ok) throw new Error(`Could not reach ${server}.`);
+  const { client_id } = (await res.json()) as { client_id: string };
+  await kv.set("clientIds", { ...ids, [server]: client_id });
+  return client_id;
+}
+
+type Pending = { server: string; clientId: string; verifier: string; state: string };
+
+// Opens the sign-in in a web authentication session. The email link may open in Safari instead; then the
+// redirect reaches the app as a link and finishSignIn picks it up from there.
+export async function signIn(server = defaultServer): Promise<boolean> {
+  const clientId = await clientIdFor(server);
+  const { verifier, challenge, state } = await pkcePair(
+    (n) => Crypto.getRandomBytes(n),
+    async (s) => new Uint8Array(await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, new TextEncoder().encode(s))),
+  );
+  const pending: Pending = { server, clientId, verifier, state };
+  await SecureStore.setItemAsync("pending", JSON.stringify(pending), STORE);
+  const q = new URLSearchParams({
+    response_type: "code", client_id: clientId, redirect_uri: REDIRECT, scope: SCOPE, state, code_challenge: challenge,
+    code_challenge_method: "S256", resource: `${server}/api/v1`,
+  });
+  const result = await WebBrowser.openAuthSessionAsync(`${server}/api/auth/oauth2/authorize?${q}`, REDIRECT);
+  return result.type === "success" ? finishSignIn(result.url) : isSignedIn();
+}
+
+export async function finishSignIn(url: string): Promise<boolean> {
+  const raw = await SecureStore.getItemAsync("pending", STORE);
+  if (!raw) return isSignedIn();
+  const p = JSON.parse(raw) as Pending;
+  const code = codeFrom(url, p.state);
+  if (!code) return false;
+  await SecureStore.deleteItemAsync("pending", STORE);
+  WebBrowser.dismissAuthSession();
+  const tokens = await tokenRequest(p.server, {
+    grant_type: "authorization_code", code, redirect_uri: REDIRECT, client_id: p.clientId, code_verifier: p.verifier, resource: `${p.server}/api/v1`,
+  });
+  if (!tokens) return false;
+  await setSession({ server: p.server, clientId: p.clientId, ...tokens });
+  await rememberEmail();
+  return true;
+}
+
+async function tokenRequest(server: string, form: Record<string, string>) {
+  const res = await fetch(`${server}/api/auth/oauth2/token`, {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(form).toString(),
+  }).catch(() => null);
+  if (!res?.ok) return null;
+  const t = (await res.json()) as { access_token: string; refresh_token?: string; expires_in: number };
+  return { access: t.access_token, refresh: t.refresh_token ?? null, expiresAt: Date.now() + t.expires_in * 1000 };
+}
+
+let refreshing: Promise<string | null> | null = null;
+
+// "Bearer …" for the API: a personal key, or an access token refreshed a minute before it runs out.
+export async function authHeader(): Promise<string | null> {
+  const s = await getSession();
+  if (!s) return null;
+  if (s.apiKey) return `Bearer ${s.apiKey}`;
+  if (s.access && (s.expiresAt ?? 0) - Date.now() > 60_000) return `Bearer ${s.access}`;
+  if (!s.refresh || !s.clientId) return null;
+  refreshing ??= tokenRequest(s.server, { grant_type: "refresh_token", refresh_token: s.refresh, client_id: s.clientId, resource: `${s.server}/api/v1` })
+    .then(async (t) => {
+      if (!t) return null;
+      await setSession({ ...s, ...t });
+      return `Bearer ${t.access}`;
+    })
+    .finally(() => (refreshing = null));
+  return refreshing;
+}
+
+export async function signInWithKey(server: string, key: string): Promise<boolean> {
+  const res = await fetch(`${server}/api/v1/me`, { headers: { authorization: `Bearer ${key.trim()}` } }).catch(() => null);
+  if (!res?.ok) return false;
+  const { me } = (await res.json()) as { me: { email: string } };
+  await setSession({ server, apiKey: key.trim(), email: me.email });
+  return true;
+}
+
+async function rememberEmail() {
+  const me = await api<{ me: { email: string } }>("/api/v1/me").catch(() => null);
+  const s = await getSession();
+  if (me && s) await setSession({ ...s, email: me.me.email });
+}
+
+export async function signOut(): Promise<void> {
+  const s = await getSession();
+  if (s?.refresh && s.clientId) {
+    await fetch(`${s.server}/api/auth/oauth2/revoke`, {
+      method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ token: s.refresh, token_type_hint: "refresh_token", client_id: s.clientId }).toString(),
+    }).catch(() => {});
+  }
+  await setSession(null);
+}
+
+export const api = createClient({
+  server: async () => (await getSession())?.server ?? defaultServer,
+  auth: authHeader,
+  onSignedOut: async () => {
+    const s = await getSession();
+    if (s) await setSession({ server: s.server });
+  },
+});

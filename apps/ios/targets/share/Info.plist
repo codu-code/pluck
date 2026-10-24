@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDisplayName</key>
+  <string>Pluck</string>
+  <key>NSExtension</key>
+  <dict>
+    <key>NSExtensionAttributes</key>
+    <dict>
+      <!-- Links, text, up to ten images or one PDF. Never TRUEPREDICATE (App Review rejects it). -->
+      <key>NSExtensionActivationRule</key>
+      <string>SUBQUERY (extensionItems, $extensionItem, SUBQUERY ($extensionItem.attachments, $attachment, ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url" OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.plain-text" OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "com.adobe.pdf" OR ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.image").@count &gt;= 1).@count &gt;= 1</string>
+      <key>NSExtensionActivationSupportsImageWithMaxCount</key>
+      <integer>10</integer>
+      <key>NSExtensionActivationSupportsFileWithMaxCount</key>
+      <integer>1</integer>
+      <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+      <integer>1</integer>
+      <key>NSExtensionActivationSupportsText</key>
+      <true/>
+      <!-- Safari runs Preprocess.js on the page first: the title, the selection and the rendered HTML come along. -->
+      <key>NSExtensionJavaScriptPreprocessingFile</key>
+      <string>Preprocess</string>
+    </dict>
+    <key>NSExtensionPrincipalClass</key>
+    <string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
+    <key>NSExtensionPointIdentifier</key>
+    <string>com.apple.share-services</string>
+  </dict>
+</dict>
+</plist>

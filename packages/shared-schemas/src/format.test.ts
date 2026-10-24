@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { initials, tileIndex, when } from "./format";
+import { initials, tileIndex, when } from "./format.ts";
 
 const now = new Date(2026, 9, 24, 15, 0); // Sat 24 Oct 2026, 15:00
 
