@@ -7,6 +7,7 @@ import { useToast } from "@/components/Toast";
 import { when } from "@/lib/format";
 import { clearLocal, signOutHere } from "@/lib/sign-out";
 import styles from "./settings.module.css";
+import { useNow } from "@/lib/use-now";
 
 const send = (url: string, method: string, body?: unknown) =>
   fetch(url, { method, headers: { "content-type": "application/json" }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
@@ -27,7 +28,7 @@ export function KeysSection({ initial }: { initial: ApiKey[] }) {
   const [name, setName] = useState("");
   const [fresh, setFresh] = useState<string | null>(null);
   const [toast, showToast] = useToast();
-  const now = new Date();
+  const now = useNow();
   return (
     <section id="keys" className={styles.sectionPlain}>
       <h2 className={styles.h2}>API keys</h2>
@@ -42,7 +43,7 @@ export function KeysSection({ initial }: { initial: ApiKey[] }) {
       )}
       {keys.map((k) => (
         <div key={k.id} className={styles.keyRow}>
-          <span><b>{k.name}</b> <span className={styles.meta}>· pk_live_{k.prefix}•••• · {k.lastUsedAt ? `used ${when(k.lastUsedAt, now)}` : "not used yet"}</span></span>
+          <span><b>{k.name}</b> <span className={styles.meta}>· pk_live_{k.prefix}•••• · {k.lastUsedAt ? `used ${now ? when(k.lastUsedAt, now) : ""}` : "not used yet"}</span></span>
           <button
             type="button"
             className={styles.small}

@@ -8,6 +8,7 @@ import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
 import { when } from "@/lib/format";
 import styles from "./lists.module.css";
+import { useNow } from "@/lib/use-now";
 
 const LOCK = "M4.5 7.5V5a3.5 3.5 0 0 1 7 0v2.5M3.5 7.5h9v6h-9z";
 const GLOBE = "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM2 8h12M8 2c1.8 1.7 2.6 3.8 2.6 6S9.8 12.3 8 14C6.2 12.3 5.4 10.2 5.4 8S6.2 3.7 8 2z";
@@ -19,7 +20,7 @@ export function ListsView({ initial }: { initial: List[] }) {
   const [name, setName] = useState("");
   const [purpose, setPurpose] = useState("");
   const [toast, showToast] = useToast();
-  const now = new Date();
+  const now = useNow();
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -86,7 +87,7 @@ export function ListsView({ initial }: { initial: List[] }) {
                       </span>
                     </td>
                     <td className={styles.num}>{l.tickedCount} of {l.itemCount}</td>
-                    <td className={`${styles.num} ${styles.meta}`}>{l.lastAddedAt ? when(l.lastAddedAt, now) : "Not yet"}</td>
+                    <td className={`${styles.num} ${styles.meta}`}>{l.lastAddedAt ? (now ? when(l.lastAddedAt, now) : "") : "Not yet"}</td>
                   </tr>
                 ))}
               </tbody>

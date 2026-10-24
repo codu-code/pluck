@@ -17,6 +17,7 @@ import { createListNamed, fetchLists, membershipsOf, setInList } from "@/lib/lis
 import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
 import { isTyping } from "@/lib/keys";
 import styles from "./ItemList.module.css";
+import { useNow } from "@/lib/use-now";
 
 type View = "inbox" | "later";
 type Sort = "newest" | "untouched";
@@ -87,7 +88,9 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const [tagFilter, setTagFilter] = useState<Tag | null>(null);
   const [picking, setPicking] = useState<string[] | null>(null); // item ids the tag picker is open for
   const [listing, setListing] = useState<{ ids: string[]; lists: List[]; on: Set<string> } | null>(null); // the a picker
-  const [now, setNow] = useState(() => new Date());
+  const mounted = useNow();
+  const [ticked, setNow] = useState<Date | null>(null);
+  const now = ticked ?? mounted;
   const [everPlucked, setEverPlucked] = useState(initial.items.length > 0);
   const [toast, showToast] = useToast();
   const listRef = useRef<HTMLDivElement>(null);
@@ -126,15 +129,16 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     const id = setInterval(async () => {
       const t = Date.now();
       setNow(new Date(t));
-      const watch = rows.filter((r) => settling(r, t));
-      if (!watch.length) return;
-      const fresh = await Promise.all(
-        watch.map((r) => fetch(`/api/v1/items/${r.id}`).then((res) => (res.ok ? (res.json() as Promise<{ item: Item }>) : null))),
-      );
-      setRows((cur) => cur.map((r) => fresh.find((f) => f?.item.id === r.id)?.item ?? r));
+      if (!rows.some((r) => settling(r, t))) return;
+      // One request for the newest page, not one per row: fifty links pasted at once would otherwise spend the
+      // person's whole read allowance in seconds. Fresh plucks are the newest, so they are on it.
+      const page = await query("all", "newest", undefined, null);
+      if (!page) return;
+      const fresh = new Map(page.items.map((i) => [i.id, i]));
+      setRows((cur) => cur.map((r) => (settling(r, t) && fresh.get(r.id)) || r));
     }, 1500);
     return () => clearInterval(id);
-  }, [rows]);
+  }, [rows, query]);
 
   const real = useMemo(() => rows.filter((r) => !r.draft), [rows]);
 
@@ -251,7 +255,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   // The quiet "30 days" pill: in scope, not in a list, and within a week of moving to the Archive.
   const expiring = (r: Row) => {
     if (!expiry.days || r.draft || r.inList || (view === "later" && expiry.scope === "inbox")) return false;
-    const left = expiry.days * 86_400_000 - (now.getTime() - new Date(r.lastTouchedAt).getTime());
+    const left = expiry.days * 86_400_000 - (Date.now() - new Date(r.lastTouchedAt).getTime());
     return left < 7 * 86_400_000;
   };
   async function keep(r: Row) {

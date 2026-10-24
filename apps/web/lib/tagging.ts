@@ -24,6 +24,6 @@ export async function setTagOn(ids: string[], tag: Tag, on: boolean, known: Item
   }
   const res = await send("/api/v1/items/batch", "POST", { itemIds: ids, patch: on ? { addTagIds: [tag.id] } : { removeTagIds: [tag.id] } });
   if (!res.ok) return null;
-  const fresh = await Promise.all(ids.map((id) => fetch(`/api/v1/items/${id}`).then((r) => (r.ok ? r.json() : null))));
-  return fresh.filter(Boolean).map((f) => (f as { item: Item }).item);
+  // The batch did exactly this to each item, so apply it here rather than fetching every item back.
+  return known.filter((i) => ids.includes(i.id)).map((i) => ({ ...i, tagIds: on ? [...new Set([...i.tagIds, tag.id])] : i.tagIds.filter((t) => t !== tag.id) }));
 }

@@ -7,7 +7,7 @@ import styles from "./ItemRow.module.css";
 
 type Props = {
   item: Item;
-  now: Date;
+  now: Date | null; // null until the page is in the browser (see useNow)
   active?: boolean; // the keyboard cursor: shows the actions
   selecting?: boolean; // bulk select: shows the checkbox
   selected?: boolean;
@@ -52,7 +52,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
             {item.title}
           </Link>
           <span className={item.extraction.state === "failed" ? `${styles.meta} ${styles.failed}` : styles.meta}>
-            {site} · {rowMeta(item, now)}
+            {site}{now || !item.dueAt ? ` · ${rowMeta(item, now ?? undefined)}` : ""}
           </span>
         </div>
         <div className={styles.excerpt}>{item.excerpt ?? item.url ?? ""}</div>
@@ -61,7 +61,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
       {active && actions ? <div className={styles.actions}>{actions}</div> : tags ? <div className={styles.tags}>{tags}</div> : null}
       <div className={styles.side}>
         <KindGlyph kind={item.kind} />
-        <span>{when(item.createdAt, now)}</span>
+        <span>{now && when(item.createdAt, now)}</span>
       </div>
     </div>
   );

@@ -58,7 +58,10 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
     setNoting(null);
     if ((e.note ?? "") === draft.trim()) return;
     setEntries((cur) => cur.map((x) => (x.item.id === e.item.id ? { ...x, note: draft.trim() || null, noteBy: draft.trim() ? "user" : null } : x)));
-    await send(`${base}/items/${e.item.id}`, "PATCH", { note: draft.trim() || null });
+    const res = await send(`${base}/items/${e.item.id}`, "PATCH", { note: draft.trim() || null });
+    if (res.ok) return;
+    setEntries((cur) => cur.map((x) => (x.item.id === e.item.id ? e : x))); // back to what is saved
+    showToast({ message: "That did not go through." });
   }
 
   // Moves entry `id` to index `to` and writes its new position.
@@ -172,7 +175,7 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
                 }}
                 onKeyDown={(e) => e.key === "Escape" && (setRenaming(false), setName(list.name))}
               >
-                <input className={styles.nameInput} aria-label="List name" value={name} autoFocus onChange={(e) => setName(e.target.value)} />
+                <input className={styles.nameInput} aria-label="List name" maxLength={120} value={name} autoFocus onChange={(e) => setName(e.target.value)} />
                 <button type="submit" className={styles.secondary}>Save</button>
               </form>
             ) : (
@@ -307,7 +310,7 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
                       }}
                       onKeyDown={(ev) => ev.key === "Escape" && (ev.stopPropagation(), setNoting(null))}
                     >
-                      <input className={styles.input} aria-label={`Note on ${e.item.title} in this list`} value={draft} autoFocus onChange={(ev) => setDraft(ev.target.value)} onBlur={() => saveNote(e)} />
+                      <input className={styles.input} aria-label={`Note on ${e.item.title} in this list`} value={draft} maxLength={2000} autoFocus onChange={(ev) => setDraft(ev.target.value)} onBlur={() => saveNote(e)} />
                     </form>
                   ) : e.note ? (
                     <span className={e.noteBy === "mcp" ? `${styles.note} ${styles.ai}` : styles.note}>
