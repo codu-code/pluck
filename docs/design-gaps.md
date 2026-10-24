@@ -25,15 +25,13 @@ Loading draws the logo's three dashes in turn while the page is plucked (the Bra
 
 ### iOS app
 
+Designed in the iPhone polish pass (no board, built from the nearest board and the tokens, checked in the Simulator in light, dark and at large Dynamic Type): sign in and "Use your own server" (labelled fields, a hint for the key, scrolls at large sizes, `pluck://signin?server=…` fills the server); the Lists index rows and empty state; the tag, list and Add sheets (one sheet, the title in the list header, an empty state each); Inbox and Later empty, each with a drawn piece of the product (the share row with Pluck first, a row mid-swipe to Later); Search before a query, and list detail with nothing on it; the reader's image items (the picture at its own shape), "Plucking the page" (a spinner, and it checks back until the page lands) and "Couldn't read this page" (Open the original, Try again).
+
 | Screen | Built from | What to decide |
 |---|---|---|
-| Sign in, and "Use your own server" | IOSFirstRun and Brand | The whole screen; the server and API key fields |
-| Lists (the index) | Web Lists board, IOSLists | Row design, empty state |
 | Note, Todo and Thing editor | Web ItemNote board | Title field and first-line title, the Done tick for todos and things |
-| Tag, list and "Add to list" sheets | Web pickers | One sheet for three picks today |
-| Inbox empty and Later empty | Empty board | Copy and art |
-| Reader: image items, "Plucking the page", "Couldn't read this page" | IOSReader | States the board does not draw |
 | New note button in the Inbox header | None | Where creating a note on the phone lives |
+| Settings, App icon | IOSSettings rows, the iOS picker pattern | Two rows (Light, Dark) with the icon and a tick; whether a third (the mint tile) earns a place |
 | Share extension: working, failed | IOSShare | Only plucked, signed out and offline are drawn |
 
 ### Native share sheet
@@ -64,6 +62,9 @@ The share sheet is SwiftUI (`apps/ios/targets/share/ShareView.swift`) with the t
 | iOS Search | Results show which list they are in | They show the status | Search results do not carry list membership |
 | iOS Inbox | Swipe right for Later | Also swipe left to Archive | Two moves the reader toolbar already has |
 | iOS share sheet | Kind row, all seven | Note, Todo and Thing disabled for links | A link cannot become one |
+| iOS Inbox, Later, Search, Lists | A large title fixed above the list | The title scrolls with the list and an inline title fades into a bar | How UIKit's large titles behave; at large text sizes it gives the list the room |
+| iOS Inbox row | 72 tall | At least 72; grows with the text size | Fixed rows clipped at large Dynamic Type sizes |
+| iOS tab bar, reader toolbar | Labels at 11 | 11 at every text size | What the system bars do; the labels broke mid-word at large sizes |
 
 ## Placeholders to fill
 

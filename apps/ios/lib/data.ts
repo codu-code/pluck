@@ -3,9 +3,10 @@ import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMe
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
+import { useEffect, useState } from "react";
 import { createQueue, Unreachable } from "@pluck/client";
 import { kv } from "./kv";
-import { api } from "./session";
+import { api, authHeader, getSession } from "./session";
 
 const GROUP: string = (Constants.expoConfig?.extra as { appGroup?: string } | undefined)?.appGroup ?? "group.io.getpluck.app";
 
@@ -28,8 +29,29 @@ export type FullItem = { item: Item; text: string; highlights: Highlight[]; list
 
 export const useItems = (status: Status) =>
   useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`) });
+// While the page is still being plucked, ask again every few seconds so it shows up without leaving the screen.
 export const useItem = (id: string) =>
-  useQuery({ queryKey: keys.item(id), queryFn: () => api<FullItem>(`/api/v1/items/${id}?include=text,highlights,lists`) });
+  useQuery({
+    queryKey: keys.item(id),
+    queryFn: () => api<FullItem>(`/api/v1/items/${id}?include=text,highlights,lists`),
+    refetchInterval: (q) => (q.state.data?.item.extraction.state === "pending" ? 3000 : false),
+  });
+
+// An image item's picture. Covers are private, so the request carries the signed-in header.
+export function useCover(item: Item): { uri: string; headers: Record<string, string> } | null {
+  const [src, setSrc] = useState<{ uri: string; headers: Record<string, string> } | null>(null);
+  useEffect(() => {
+    if (item.kind !== "image" || !item.hasCover) return;
+    let live = true;
+    void (async () => {
+      const s = await getSession();
+      const auth = await authHeader();
+      if (live && s && auth) setSrc({ uri: `${s.server}/api/v1/items/${item.id}/cover`, headers: { authorization: auth } });
+    })();
+    return () => void (live = false);
+  }, [item.id, item.kind, item.hasCover]);
+  return src;
+}
 export const useLists = () => useQuery({ queryKey: keys.lists, queryFn: async () => (await api<{ lists: List[] }>("/api/v1/lists")).lists });
 export const useList = (id: string) =>
   useQuery({ queryKey: keys.list(id), queryFn: () => api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${id}`) });

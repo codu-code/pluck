@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
-import { initials, tileIndex, when } from "./format.ts";
+import type { Item } from "./items.ts";
+import { initials, rowSite, tileIndex, when } from "./format.ts";
 
 const now = new Date(2026, 9, 24, 15, 0); // Sat 24 Oct 2026, 15:00
 
@@ -29,4 +30,11 @@ test("tile index is stable and in range", () => {
   expect(tileIndex("example.com")).toBe(tileIndex("example.com"));
   expect(tileIndex("x")).toBeGreaterThanOrEqual(0);
   expect(tileIndex("x")).toBeLessThan(6);
+});
+
+test("an item with no page says where it came from", () => {
+  const file = { kind: "image", siteName: null, url: null } as const;
+  expect(rowSite({ ...file, source: "email" } as Item)).toBe("email-in");
+  expect(rowSite({ ...file, source: "ios" } as Item)).toBe("Your file");
+  expect(rowSite({ ...file, url: "https://example.com/a.png", source: "ios" } as Item)).toBe("example.com");
 });

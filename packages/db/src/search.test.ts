@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { describe, expect, test } from "vitest";
 import { items } from "./collections.ts";
 import {
-  applyExtraction, createTag, createTextItem, deleteTag, editItem, pluckLink, renameTag, searchItems, setItemTags,
+  applyExtraction, createTag, createTextItem, deleteTag, editItem, pluckLink, renameTag, searchItems, setItemTags, snippetFor,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -13,6 +13,11 @@ const extracted = (markdown: string, title = "A page") => ({
 });
 
 describe("search", () => {
+  test("snippets show the words, not the markdown around them", () => {
+    const searchBody = "![](https://x.test/cover.png)\n\nPhotograph: **Example** Media. Most [teams](https://x.test) do not have a tooling problem.";
+    expect(snippetFor({ note: null, excerpt: null, searchBody }, "teams")).toEqual({ source: "body", pre: "Photograph: Example Media. Most ", hit: "teams", post: " do not have a tooling problem." });
+  });
+
   test("finds body, note and tag text, ranks titles first, and never crosses users", async () => {
     const { a, b } = await twoUsers();
     const inBody = (await pluckLink(a, { url: "https://example.com/body", source: "web" })).item;

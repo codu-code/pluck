@@ -52,7 +52,8 @@ const TEXT_SITE = { note: "Note", todo: "Todo", thing: "Thing" } as const;
 // The row's "site" slot: the site for links, the kind for notes, todos and things.
 export function rowSite(item: Item): string {
   if (isTextKind(item.kind)) return TEXT_SITE[item.kind as keyof typeof TEXT_SITE] ?? "Note";
-  return item.siteName ?? (item.url ? new URL(item.url).hostname : "email-in");
+  // Without a page behind it, the item came by email or is a file someone plucked from a phone, the web or a tool.
+  return item.siteName ?? (item.url ? new URL(item.url).hostname : item.source === "email" ? "email-in" : "Your file");
 }
 
 // "12 min", "photo", "Plucking", "Couldn't read", "by you", "due Fri".

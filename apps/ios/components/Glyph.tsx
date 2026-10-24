@@ -19,6 +19,8 @@ export const ICONS = {
   later: "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM8 5v3l2 1.5",
   search: "M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM10.6 10.6L14 14",
   lists: "M5.5 4h8M5.5 8h8M5.5 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01",
+  listsTab: "M4 2.5h8M3 5h10M2.5 7.5h11v6h-11z", // the Lists tab on the IOSInbox board: a stack, not the bullets
+  chevron: "M6 3l5 5-5 5",
   back: "M10 3L5 8l5 5",
   archive: "M2 3h12v3H2zM3 6v7h10V6M6.5 9h3",
   tag: "M2 2.5h5.5L14 9l-5 5-6.5-6.5zM5 5.5h.01",
@@ -33,7 +35,7 @@ export const ICONS = {
 
 export function Icon({ d, size = 22, color, width = 1.4 }: { d: string; size?: number; color: string; width?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 16 16">
+    <Svg width={size} height={size} viewBox="0 0 16 16" accessibilityElementsHidden importantForAccessibility="no">
       <Path d={d} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );

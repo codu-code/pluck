@@ -3,13 +3,18 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { AppState, Settings, View } from "react-native";
+import { AppState, LogBox, Settings, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient, syncPending } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
 import { useTheme } from "@/lib/theme";
+import { appIcons, type AppIcon } from "@/modules/app-icon";
+
+// Two known dev-only warnings that covered the bottom of every screen: React Native's no-op one for a native-driven
+// value with no JS listener, and expo-linking noting the second scheme (the OAuth redirect, on purpose).
+LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate` with no listeners registered.", "Linking found multiple possible URI schemes"]);
 
 const persister = createAsyncStoragePersister({ storage: kv.storage, key: "queryCache" });
 
@@ -26,6 +31,9 @@ export default function Root() {
       // Demo builds take a screen to open as a launch argument (simctl launch … -demoRoute /lists/…), for screenshots.
       const route = demoKey ? (Settings.get("demoRoute") as string | undefined) : undefined;
       if (route) setTimeout(() => router.push(route as never), 300);
+      // …and the home screen icon (-demoIcon dark), to check the alternate icon without tapping through Settings.
+      const icon = demoKey ? (Settings.get("demoIcon") as AppIcon | undefined) : undefined;
+      if (icon) void appIcons.set(icon).catch(() => {});
     })();
     const off = onSession((s) => {
       setSignedIn(Boolean(s?.access || s?.apiKey));
