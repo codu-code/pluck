@@ -23,7 +23,7 @@ export default function Terms() {
       title="Terms"
       lede="Short version: it's your library, be decent with public lists, and we can't promise the free service lasts for ever, which is why you can export and self-host. Last updated 24 October 2026."
       sections={SECTIONS}
-      box={{ title: "Report a public list", body: "Every public page has a Report link at the bottom. Or email support@getpluck.io with the link. We act within [RESPONSE DAYS] days." }}
+      box={{ title: "Report a public list", body: "Every public page has a Report link at the bottom. Or email support@getpluck.io with the link. We act within 3 working days." }}
     />
   );
 }

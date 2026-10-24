@@ -55,6 +55,14 @@ test("the site: connect your AI with tabs, open source, privacy and terms", asyn
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pluck it.");
 });
 
+test("Add to Chrome: a coming-soon page until the store listing is live", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Add to Chrome" }).first().click();
+  await expect(page).toHaveURL(/\/chrome$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Soon.");
+  await expect(page.getByRole("link", { name: "Use it on the web" })).toHaveAttribute("href", "/signin");
+});
+
 test("support: answers by topic, and bugs go to GitHub issues", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("contentinfo").getByRole("link", { name: "Support" }).click();
