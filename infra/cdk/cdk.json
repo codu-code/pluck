@@ -1,0 +1,4 @@
+{
+  "app": "tsx bin/app.ts",
+  "context": { "domain": "getpluck.io" }
+}

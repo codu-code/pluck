@@ -15,6 +15,12 @@
   --danger: #A3341F;
   --surface: #FFFFFF;
   --on-brand: #F6F8F4;
+  /* Surface steps copied from the light boards (Main, Empty). */
+  --rail-active: #DFE4DA;
+  --field: #EBEEE7;
+  --chip: #E3E8DE;
+  --avatar: #D6DCD0;
+  --line-strong: #CDD3C7;
   --logo-ink: #1E5C45;
   --logo-spark: #34A07C;
   --font-ui: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
@@ -25,7 +31,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --ground: #10130F;
-    --rail: #191D17;
+    --rail: #161A14;
+    --rail-active: #252A22;
+    --field: #191D17;
+    --chip: #252A22;
+    --avatar: #252A22;
+    --line-strong: #363C33;
     --tint: #191D17;
     --surface: #191D17;
     --line: #2A2F27;
@@ -39,7 +50,12 @@
 }
 :root[data-theme="dark"] {
   --ground: #10130F;
-  --rail: #191D17;
+  --rail: #161A14;
+  --rail-active: #252A22;
+  --field: #191D17;
+  --chip: #252A22;
+  --avatar: #252A22;
+  --line-strong: #363C33;
   --tint: #191D17;
   --surface: #191D17;
   --line: #2A2F27;

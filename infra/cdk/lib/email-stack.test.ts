@@ -1,0 +1,23 @@
+import { App } from "aws-cdk-lib";
+import { Template } from "aws-cdk-lib/assertions";
+import { expect, test } from "vitest";
+import { EmailStack } from "./email-stack.ts";
+
+const template = () =>
+  Template.fromStack(new EmailStack(new App(), "Email", { env: { region: "eu-west-1" }, domain: "getpluck.io" }));
+
+test("SES domain identity with DKIM and a custom MAIL FROM", () => {
+  template().hasResourceProperties("AWS::SES::EmailIdentity", {
+    EmailIdentity: "getpluck.io",
+    DkimSigningAttributes: { NextSigningKeyLength: "RSA_2048_BIT" },
+    MailFromAttributes: { MailFromDomain: "mail.getpluck.io" },
+  });
+});
+
+test("every DNS record Vercel needs is an output, and nothing touches Route53", () => {
+  const t = template();
+  const outputs = Object.keys(t.findOutputs("*"));
+  expect(outputs.filter((o) => o.startsWith("DnsDkim"))).toHaveLength(3);
+  expect(outputs).toEqual(expect.arrayContaining(["DnsMailFromMx", "DnsMailFromSpf", "DnsDmarc"]));
+  expect(Object.keys(t.findResources("AWS::Route53::RecordSet"))).toHaveLength(0);
+});

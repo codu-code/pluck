@@ -1,0 +1,16 @@
+.empty { width: 100%; max-width: 760px; padding: 120px 32px 48px; display: flex; flex-direction: column; gap: 32px; }
+.head { display: flex; flex-direction: column; gap: 8px; }
+.title { margin: 0; font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.03em; }
+.lede { margin: 0; color: var(--ink2); font-size: 16px; line-height: 24px; }
+.steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.step { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.num { width: 28px; color: var(--ink2); font-weight: 600; }
+.text { flex: 1 1 300px; display: flex; flex-direction: column; gap: 2px; }
+.text b { font-weight: 600; }
+.text span { color: var(--ink2); }
+.actions { display: flex; gap: 8px; }
+.action {
+  display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 6px;
+  border: 1px solid var(--line-strong); background: var(--surface); text-decoration: none;
+}
+@media (max-width: 600px) { .empty { padding: 48px 16px; } .title { font-size: 32px; line-height: 36px; } }

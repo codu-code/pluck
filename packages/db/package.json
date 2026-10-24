@@ -4,7 +4,16 @@
   "private": true,
   "license": "AGPL-3.0-only",
   "type": "module",
-  "exports": { ".": "./src/index.ts" },
-  "scripts": { "typecheck": "tsc -p ." },
-  "dependencies": { "@pluck/shared-schemas": "workspace:*", "mongodb": "7.7.0" }
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@pluck/shared-schemas": "workspace:*",
+    "better-auth": "1.7.12",
+    "mongodb": "7.7.0"
+  }
 }

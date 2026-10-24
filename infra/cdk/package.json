@@ -1,0 +1,20 @@
+{
+  "name": "@pluck/cdk",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "synth": "cdk synth",
+    "diff": "cdk diff"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.274.0",
+    "constructs": "10.8.1"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.1146.1",
+    "tsx": "4.23.15"
+  }
+}

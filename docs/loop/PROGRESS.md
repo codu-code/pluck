@@ -32,8 +32,8 @@ All must pass before a slice is committed:
 | # | Status | Slice | Chrome demo |
 |---|---|---|---|
 | 0 | done | Walking skeleton: toolchain (Node 22, pnpm 10), pnpm and Turborepo monorepo, `docker-compose.dev.yml`, `packages/ui` (tokens, Logo, Icon, seven glyphs from `brand/`), `shared-schemas`, `db` skeleton with the ESLint rule, Next app, Vitest and Playwright wired, placeholder-listing test | Branded empty page |
-| 1 | todo | Magic-link sign-in (Better Auth, Mongo adapter), `sendEmail` seam (SES or SMTP), two-user scoping test harness, Empty inbox board. **CDK `EmailStack` outbound** | Link arrives in Mailpit, click it, land on the empty Inbox |
-| 2 | todo | Pluck one URL: `POST /items`, inline extraction (Defuddle then Readability, 5 s cap), the 30 fixtures, cover to MinIO, re-pluck, the Mongo job queue and retry worker, `/api/worker/tick`, failed state with Retry, Open original and the Wayback link. **CDK `DataStack`** | Paste a URL, the row lands, the title and cover fill in |
+| 1 | done | Magic-link sign-in (Better Auth, Mongo adapter), `sendEmail` seam (SES or SMTP), two-user scoping test harness, Empty inbox board. **CDK `EmailStack` outbound** | Link arrives in Mailpit, click it, land on the empty Inbox |
+| 2 | todo | Pluck one URL: `POST /items`, inline extraction (Defuddle then Readability, 5 s cap), the 30 fixtures, cover to MinIO, re-pluck, the Mongo job queue and retry worker, `/api/worker/tick`, failed state with Retry, Open original and the Wayback link, `authenticate(request)`, the spec's per-user and per-IP rate limits (Mongo-backed, shared by every route). **CDK `DataStack`** with the app IAM user, granted `ses:SendEmail` on the `EmailStack` identity | Paste a URL, the row lands, the title and cover fill in |
 | 3 | todo | Multi-link paste (`shared-schemas/urls.ts` and 20 fixtures), notes, todos and things, the note editor, kind chips | Paste a block of links and get N rows, then write a note |
 | 4 | todo | Triage: Later, Archive, Done, the sort toggle, keyboard triage, bulk select, the delete bin, the reader with highlights, dark mode, PWA shell | Work through the inbox with only the keyboard |
 | 5 | todo | Tags: CRUD, picker, 422 with the nearest tags, purge-ai | Tag items, then filter by tag |
@@ -70,8 +70,14 @@ Seams agreed so far, in the codebase-design vocabulary:
 - **Blobs have no seam:** the S3 SDK against MinIO locally and S3 in prod. One implementation.
 - **Extraction:** `extract({ url, html? })` returns a result and does no writes. Tested against the fixture server.
 
+## Deploy notes (collect into docs/deploy.md in slice 17)
+
+- Vercel env: `MONGODB_URI` (Atlas, `pluck` database, `readWrite` on `pluck` only), `BETTER_AUTH_URL=https://getpluck.io`, `BETTER_AUTH_SECRET` (32+ random bytes), `EMAIL_FROM`, `AWS_REGION=eu-west-1`, the app IAM user's keys. No `SMTP_URL` in prod.
+- `cdk deploy PluckEmail`, then add its `Dns*` outputs to Vercel DNS. Request SES production access (out of the sandbox) before launch.
+
 ## Notes per slice
 
 _Last failing check, decisions made while building, anything the next iteration needs._
 
+- **1:** Better Auth collections: `users`, `auth_sessions`, `auth_accounts`, `auth_verifications`, `auth_rate_limits`. Pluck fields (settings, handle) go on `users` through `packages/db`. Vitest gives each test file its own `pluck_test_*` database (`vitest.setup.ts`); `@pluck/db/testing` has `twoUsers()`. Claude in Chrome blocks reading token URLs back, so the Chrome check opens the magic link with `location.href = ...` inside the Mailpit tab. Clicking inside a field can hit the password-manager icon; focus fields with JS instead. No sign-out yet (Settings, slice 12).
 - **0:** Turborepo skipped (`pnpm -r` covers it until the build gets slow). Playwright starts `webServer` before `globalSetup`, so `pnpm stack` runs inside the webServer command. The Logo gained an `auto` tone (CSS variables) so it reads in dark mode. The handover's `CLAUDE.md` is renamed `CLAUDE.original.md` so it stops auto-loading over the edited root one.

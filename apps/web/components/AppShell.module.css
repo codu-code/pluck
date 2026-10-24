@@ -1,0 +1,21 @@
+.frame { min-height: 100vh; display: flex; flex-wrap: wrap; }
+.rail {
+  flex: 1 1 220px; max-width: 100%; padding: 24px 16px; background: var(--rail);
+  display: flex; flex-direction: column; gap: 24px;
+}
+@media (min-width: 800px) { .rail { max-width: 220px; position: sticky; top: 0; height: 100vh; } }
+.home { display: inline-flex; align-items: center; padding: 0 8px; text-decoration: none; }
+.links { display: flex; flex-direction: column; gap: 2px; }
+.link {
+  display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px;
+  border-radius: 6px; text-decoration: none; color: var(--ink);
+}
+.link:hover { background: var(--rail-active); color: var(--ink); }
+.link[aria-current="page"] { background: var(--rail-active); font-weight: 600; }
+.me { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 0 8px; color: var(--ink2); }
+.avatar {
+  width: 28px; height: 28px; border-radius: 14px; background: var(--avatar); color: var(--ink);
+  display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex: none;
+}
+.meName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; }
