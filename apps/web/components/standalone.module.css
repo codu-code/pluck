@@ -1,0 +1,91 @@
+/* The pages between the site and the app (see Standalone.tsx). Light or dark with the system, like the app;
+   the type, the accent full stop and the stamp come from the site boards. */
+.page { min-height: 100vh; display: flex; flex-direction: column; background: var(--ground); color: var(--ink); }
+.page ::selection { background: var(--highlight); color: #151A13; }
+.bar { width: 100%; max-width: 1240px; margin: 0 auto; padding: 20px 24px; display: flex; align-items: center; }
+.home { display: inline-flex; text-decoration: none; }
+
+.main { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: clamp(24px, 7vh, 88px) 24px 96px; display: grid; gap: 56px 72px; align-content: center; }
+@media (min-width: 960px) { .withArt { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: center; } }
+.copy { display: flex; flex-direction: column; gap: 24px; max-width: 560px; }
+.copyWide { max-width: 640px; }
+
+.title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(52px, 6.8vw, 92px); line-height: 0.92; letter-spacing: -0.035em; text-wrap: balance; }
+.titleMd { font-size: clamp(40px, 5vw, 64px); line-height: 0.98; }
+.titleLine { display: block; }
+.dot { color: var(--accent); }
+.lede { margin: 0; max-width: 46ch; font-size: 20px; line-height: 30px; color: var(--ink2); text-wrap: pretty; }
+.lede b, .lede strong { color: var(--ink); font-weight: 600; }
+
+/* The next step: one primary, at most one quiet companion. */
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 4px; }
+.primary { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 22px; border-radius: 12px; border: 0; background: var(--brand); color: var(--on-brand); font: inherit; font-size: 16px; font-weight: 600; text-decoration: none; cursor: pointer; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.primary:hover { background: color-mix(in srgb, var(--brand) 88%, #000); color: var(--on-brand); }
+.primary:active { transform: translateY(1px); }
+.primary:disabled { opacity: 0.55; cursor: default; transform: none; }
+.secondary { display: inline-flex; align-items: center; height: 52px; padding: 0 20px; border-radius: 12px; border: 1.5px solid var(--line-strong); background: transparent; color: var(--ink); font: inherit; font-size: 16px; font-weight: 500; text-decoration: none; cursor: pointer; transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.secondary:hover { border-color: var(--ink); color: var(--ink); }
+.textLink { color: var(--ink); font-weight: 600; text-underline-offset: 4px; text-decoration-thickness: 2px; text-decoration-color: var(--accent); }
+.textLink:hover { color: var(--ink2); }
+.small { margin: 0; font-size: 15px; line-height: 23px; color: var(--ink2); max-width: 52ch; }
+
+/* Ruled steps or entries, as on the site's lists. */
+.ruled { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
+.ruled li { display: flex; gap: 14px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line-strong); font-size: 17px; line-height: 25px; }
+.ruled .n { flex: none; width: 22px; font-family: var(--font-display); font-weight: 700; color: var(--accent); }
+.code { display: block; padding: 12px 14px; border-radius: 10px; background: var(--rail); font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; line-height: 20px; color: var(--ink2); overflow-wrap: anywhere; }
+
+/* Keyboard keys, drawn. */
+.keys { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.key { display: inline-flex; align-items: center; justify-content: center; min-width: 64px; height: 64px; padding: 0 18px; border-radius: 14px; border: 1px solid var(--line-strong); border-bottom-width: 4px; background: var(--surface); font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); box-shadow: 0 10px 24px rgba(21, 26, 19, 0.08); }
+.keyPlus { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--ink2); }
+.keyRow { display: flex; flex-direction: column; gap: 14px; }
+.keyNote { margin: 0; font-size: 15px; color: var(--ink2); }
+
+/* The drawn piece beside the copy. */
+.art { position: relative; display: flex; justify-content: center; }
+@media (max-width: 959px) { .art { justify-content: flex-start; } }
+.panel { position: relative; width: 100%; max-width: 500px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 28px 70px rgba(21, 26, 19, 0.12); }
+.panelHead { display: flex; align-items: center; gap: 10px; padding: 18px 24px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--ink2); }
+.panelHead time { margin-left: auto; font-size: 13px; }
+.panelHead b { color: var(--ink); font-weight: 600; }
+.panelBody { display: flex; flex-direction: column; gap: 16px; padding: 28px 24px 32px; }
+.panelBody p { margin: 0; font-size: 16px; line-height: 25px; color: var(--ink2); }
+.panelTitle { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; letter-spacing: -0.02em; color: var(--ink); }
+.panelButton { align-self: flex-start; display: inline-flex; align-items: center; height: 48px; padding: 0 20px; border-radius: 10px; background: var(--brand); color: var(--on-brand); font-weight: 600; font-size: 15px; }
+.entry { display: flex; gap: 12px; align-items: flex-start; padding: 12px 20px; border-top: 1px solid var(--line); }
+.entry:first-child { border-top: 0; }
+.ring { width: 20px; height: 20px; flex: none; margin-top: 2px; border-radius: 10px; border: 1.5px solid var(--line-strong); }
+.entryText { min-width: 0; display: flex; flex-direction: column; }
+.entryText b { font-weight: 600; font-size: 15px; line-height: 21px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entryText span { color: var(--ink2); font-size: 13px; line-height: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.more { padding: 12px 20px 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink2); }
+
+.stamp { position: absolute; right: -6px; top: -22px; display: inline-flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 14px; background: var(--brand); color: var(--on-brand); box-shadow: 0 16px 40px rgba(21, 26, 19, 0.25); transform: rotate(-3deg); animation: stampIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.stamp b { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.stampTick { width: 32px; height: 32px; border-radius: 16px; background: var(--highlight); display: flex; align-items: center; justify-content: center; }
+@keyframes stampIn { from { opacity: 0; transform: rotate(-9deg) scale(1.12); } to { opacity: 1; transform: rotate(-3deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .stamp { animation: none; } }
+
+/* Fields */
+.form { display: flex; flex-direction: column; gap: 14px; max-width: 440px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.label { font-weight: 600; font-size: 15px; }
+.input { height: 52px; padding: 0 16px; border-radius: 12px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 17px; caret-color: var(--accent); transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.input:hover { border-color: var(--ink2); }
+.input:focus { outline: none; border-color: var(--ink); }
+.input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.input::placeholder { color: var(--ink2); }
+.error { margin: 0; color: var(--danger); font-size: 15px; line-height: 22px; }
+.linkButton { padding: 0; border: 0; background: none; font: inherit; font-size: 16px; cursor: pointer; text-decoration: underline; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.notice { margin: 0; padding: 14px 16px; border-radius: 12px; background: color-mix(in srgb, var(--clay) 14%, var(--surface)); font-size: 16px; line-height: 24px; color: var(--ink); max-width: 52ch; }
+.mark { display: inline-flex; border-radius: 48px; transform: rotate(-6deg); box-shadow: 0 30px 70px rgba(21, 26, 19, 0.22); }
+@media (max-width: 959px) { .mark { transform: rotate(-6deg) scale(0.55); transform-origin: left center; margin: -40px 0; } }
+.dotClay { width: 10px; height: 10px; flex: none; margin-top: 6px; border-radius: 5px; background: var(--clay-dot); }
+.keyArt { display: flex; flex-direction: column; gap: 36px; }
+@media (min-width: 960px) { .keyArt .key { min-width: 84px; height: 84px; font-size: 30px; border-radius: 18px; } .keyArt .keyPlus { font-size: 28px; } }
+.aiChip { flex: none; align-self: center; margin-left: auto; display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 12px; background: var(--chip); font-size: 12px; color: var(--ink2); }
+.bigCount { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.bigCount b { font-family: var(--font-display); font-weight: 700; font-size: clamp(120px, 16vw, 220px); line-height: 0.85; letter-spacing: -0.04em; color: var(--ink); }
+.bigCount span { font-size: 17px; color: var(--ink2); max-width: 28ch; }

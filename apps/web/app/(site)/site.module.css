@@ -66,6 +66,13 @@
 .pasteHint { font-size: 14px; color: var(--ink2); }
 .pasteError { font-size: 14px; color: var(--danger); }
 
+/* Sentences that read better one to a line (the hero lede, the AI card's questions). */
+.line { display: block; }
+.lineGap { display: block; margin-top: 12px; }
+.phrase { white-space: nowrap; }
+@media (max-width: 700px) { .phrase { white-space: normal; } }
+@media (min-width: 701px) { .bandLine { display: block; } }
+
 /* Landing: the app, drawn */
 .appShot { padding-top: 72px; position: relative; }
 .mock { border-radius: 18px 18px 0 0; background: var(--surface); border: 1px solid var(--line); border-bottom: 0; box-shadow: 0 30px 80px rgba(21, 26, 19, 0.1); overflow: hidden; }

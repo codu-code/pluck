@@ -148,7 +148,7 @@ test("signing in with OAuth: consent once, then the popup plucks with the app's 
   await expect(consent.getByRole("heading", { name: "Pluck for your browser wants to use your Pluck" })).toBeVisible();
   await expect(consent.getByText("It plucks and organises as you, from this device.")).toBeVisible();
   await consent.getByRole("button", { name: "Allow" }).click();
-  await expect(consent.getByRole("heading", { name: "You can pluck from your browser now." })).toBeVisible();
+  await expect(consent.getByRole("heading", { name: "Connected." })).toBeVisible();
   await snapshot(consent, "extension-connected");
   await expect(options.getByText(/@example\.test/)).toBeVisible();
 

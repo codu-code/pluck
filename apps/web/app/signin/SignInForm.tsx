@@ -1,59 +1,94 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import styles from "./signin.module.css";
+import { Actions, Dot, Stamp, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
-export function SignInForm({ next = "/inbox" }: { next?: string }) {
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "limited">("idle");
+type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited";
+
+// What lands in their inbox, drawn: so the next step is no surprise.
+function EmailPreview({ sent }: { sent: boolean }) {
+  return (
+    <div className={s.panel}>
+      {sent && <Stamp>Sent.</Stamp>}
+      <div className={s.panelHead}><b>Pluck</b><span>Your link to Pluck</span><time>now</time></div>
+      <div className={s.panelBody}>
+        <span className={s.panelTitle}>Here is your link.</span>
+        <p>Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.</p>
+        <span className={s.panelButton}>Sign in to Pluck</span>
+      </div>
+    </div>
+  );
+}
+
+export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: string; forAiTool?: boolean }) {
+  const [state, setState] = useState<State>("idle");
   const [email, setEmail] = useState("");
 
-  async function submit(e: FormEvent) {
-    e.preventDefault();
-    setState("sending");
+  async function send() {
+    setState(state === "sent" ? "resending" : "sending");
     const res = await fetch("/api/auth/sign-in/magic-link", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, callbackURL: next }),
-    });
-    setState(res.ok ? "sent" : res.status === 429 ? "limited" : "error");
+    }).catch(() => null);
+    setState(res?.ok ? "sent" : res?.status === 429 ? "limited" : "error");
   }
 
-  if (state === "sent") {
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    void send();
+  };
+
+  if (state === "sent" || state === "resending") {
     return (
-      <p className={styles.sent} role="status">
-        Check <b>{email}</b>. The link works once, for 10 minutes.
-      </p>
+      <Standalone
+        title={<>Check your email<Dot /></>}
+        lede={<>We sent a link to <b>{email}</b>. It works once, for 10 minutes, in the browser you open it in.</>}
+        art={<EmailPreview sent />}
+      >
+        <p className={s.srOnly} role="status">Sent a link to {email}. Check your email.</p>
+        <Actions>
+          <button type="button" className={s.secondary} disabled={state === "resending"} onClick={() => void send()}>
+            {state === "resending" ? "Sending" : "Send it again"}
+          </button>
+          <button type="button" className={`${s.textLink} ${s.linkButton}`} onClick={() => setState("idle")}>Use a different email</button>
+        </Actions>
+        <p className={s.small}>Nothing after a minute? Look in spam, then send it again.</p>
+      </Standalone>
     );
   }
 
   return (
-    <form className={styles.form} onSubmit={submit}>
-      <label className={styles.field}>
-        <span className={styles.label}>Email</span>
-        <input
-          className={styles.input}
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          autoFocus
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </label>
-      <button className={styles.button} type="submit" disabled={state === "sending"}>
-        {state === "sending" ? "Sending" : "Email me a link"}
-      </button>
-      {state === "error" && (
-        <p className={styles.error} role="alert">
-          That did not go through. Check the address and try again.
-        </p>
-      )}
-      {state === "limited" && (
-        <p className={styles.error} role="alert">
-          Too many links asked for. Use the last one we sent, or try again later.
-        </p>
-      )}
-    </form>
+    <Standalone
+      title={forAiTool ? <>Sign in to connect your AI<Dot /></> : ["One link.", <>No password<Dot /></>]}
+      lede={forAiTool ? "We email you a link. Once you are in, you choose what your AI tool can do." : "Type your email and we send a link. It signs you in, or starts your library if you are new."}
+      art={<EmailPreview sent={false} />}
+    >
+      <form className={s.form} onSubmit={submit}>
+        <label className={s.field}>
+          <span className={s.label}>Email</span>
+          <input
+            className={s.input}
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            autoFocus
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <button className={s.primary} type="submit" disabled={state === "sending"}>
+          {state === "sending" ? "Sending" : "Email me a link"}
+        </button>
+        {state === "error" && (
+          <p className={s.error} role="alert">That did not go through. Check the address, then try again.</p>
+        )}
+        {state === "limited" && (
+          <p className={s.error} role="alert">That is a lot of links. Use the newest one we sent, or try again in an hour.</p>
+        )}
+      </form>
+    </Standalone>
   );
 }
