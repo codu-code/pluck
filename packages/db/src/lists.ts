@@ -1,6 +1,6 @@
 import type { Item, List, ListEntry, ListMembership } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
-import { items, LEAN, listRows, lists, oid, type ItemDoc, type ListDoc, type ListItemDoc } from "./collections.ts";
+import { items, LEAN, listRows, lists, oid, users, type ItemDoc, type ListDoc, type ListItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 import { slugify } from "./tags.ts";
 
@@ -112,7 +112,9 @@ export async function updateList(userId: string, listId: string, edit: ListEdit)
   if (edit.purpose !== undefined) set.purpose = edit.purpose.trim();
   if (edit.name !== undefined) {
     set.name = edit.name.trim().slice(0, 120);
-    set.slug = await uniqueSlug(uid, edit.name, _id);
+    // Once a list has been public its link is out there: the slug stays put.
+    const current = await (await lists()).findOne({ _id, userId: uid }, { projection: { publishedAt: 1 } });
+    if (!current?.publishedAt) set.slug = await uniqueSlug(uid, edit.name, _id);
   }
   const doc = await (await lists()).findOneAndUpdate({ _id, userId: uid }, { $set: set }, { returnDocument: "after" });
   if (doc && edit.name !== undefined) await syncListNames(uid, await (await listRows()).distinct("itemId", { listId: _id }));
@@ -244,4 +246,31 @@ export async function listsForItem(userId: string, itemId: string): Promise<List
 export async function inAnyList(userId: ObjectId): Promise<Filter<ItemDoc>> {
   const ids = await (await listRows()).distinct("itemId", { userId });
   return { _id: { $nin: ids } };
+}
+
+export type VisibilityResult = { ok: true; list: List } | { ok: false; reason: "not_found" | "handle_required" | "closed" };
+
+// Public needs a handle, and an account an admin has closed cannot publish.
+export async function setVisibility(userId: string, listId: string, visibility: "private" | "public"): Promise<VisibilityResult> {
+  const uid = oid(userId);
+  const _id = oid(listId);
+  const col = await lists();
+  const list = await col.findOne({ _id, userId: uid });
+  if (!list) return { ok: false, reason: "not_found" };
+  if (visibility === "public") {
+    const owner = await (await users()).findOne({ _id: uid }, { projection: { handle: 1, publicKilled: 1 } });
+    if (owner?.publicKilled || list.killed) return { ok: false, reason: "closed" };
+    if (!owner?.handle) return { ok: false, reason: "handle_required" };
+  }
+  const now = new Date();
+  const doc = await col.findOneAndUpdate(
+    { _id },
+    { $set: { visibility, updatedAt: now, lastActivityAt: now, ...(visibility === "public" && !list.publishedAt ? { publishedAt: now } : {}) } },
+    { returnDocument: "after" },
+  );
+  return { ok: true, list: toList(doc!) };
+}
+
+export async function listOwnedBy(listId: string, userId: string): Promise<boolean> {
+  return Boolean(await (await lists()).findOne({ _id: oid(listId), userId: oid(userId) }, { projection: { _id: 1 } }));
 }

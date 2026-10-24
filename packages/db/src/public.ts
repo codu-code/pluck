@@ -1,0 +1,77 @@
+import { createHash } from "node:crypto";
+import type { PublicList } from "@pluck/shared-schemas";
+import { ObjectId } from "mongodb";
+import { items, listRows, lists, oid, reports, users } from "./collections.ts";
+
+// The only code that serves public list data. It reads lists, listItems and a narrow slice of items,
+// and never touches contents, tags, ticks or status. Its field lists are pinned by public.test.ts.
+
+export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1 } as const;
+const WEEK_MS = 7 * 86_400_000;
+
+async function findPublic(handle: string, slug: string) {
+  const owner = await (await users()).findOne({ handle: handle.toLowerCase(), publicKilled: { $ne: true } }, { projection: { _id: 1, name: 1, handle: 1, createdAt: 1 } });
+  if (!owner) return null;
+  const list = await (await lists()).findOne({ userId: owner._id, slug, visibility: "public", killed: { $ne: true } });
+  return list ? { owner, list } : null;
+}
+
+export async function publicList(handle: string, slug: string, now = new Date()): Promise<PublicList | null> {
+  const found = await findPublic(handle, slug);
+  if (!found) return null;
+  const { owner, list } = found;
+  const rows = await (await listRows()).find({ listId: list._id }, { projection: { itemId: 1, note: 1, position: 1 } }).sort({ position: 1 }).toArray();
+  const docs = await (await items())
+    .find({ _id: { $in: rows.map((r) => r.itemId) }, userId: owner._id, deletedAt: null }, { projection: PUBLIC_ITEM_FIELDS })
+    .toArray();
+  const byId = new Map(docs.map((d) => [d._id.toHexString(), d]));
+  const entries = rows.flatMap((r) => {
+    const d = byId.get(r.itemId.toHexString());
+    return d
+      ? [{ id: d._id.toHexString(), title: d.title, siteName: d.siteName ?? null, excerpt: d.excerpt ?? null, url: d.url ?? null, hasCover: Boolean(d.coverKey), note: r.note ?? null }]
+      : [];
+  });
+  return {
+    list: {
+      id: list._id.toHexString(), name: list.name, purpose: list.purpose, updatedAt: list.lastActivityAt.toISOString(), itemCount: entries.length,
+      // New lists and new accounts stay out of search engines for a week (link farms).
+      noindex: now.getTime() - list.createdAt.getTime() < WEEK_MS || now.getTime() - owner.createdAt.getTime() < WEEK_MS,
+    },
+    author: { name: owner.name || null, handle: owner.handle! },
+    entries,
+  };
+}
+
+// The cover key for one item, only when that item is on a public, live list.
+export async function publicCoverKey(listId: string, itemId: string): Promise<string | null> {
+  const list = await (await lists()).findOne({ _id: oid(listId), visibility: "public", killed: { $ne: true } }, { projection: { userId: 1 } });
+  if (!list) return null;
+  const owner = await (await users()).findOne({ _id: list.userId, publicKilled: { $ne: true } }, { projection: { _id: 1 } });
+  if (!owner || !(await (await listRows()).findOne({ listId: list._id, itemId: oid(itemId) }, { projection: { _id: 1 } }))) return null;
+  const item = await (await items()).findOne({ _id: oid(itemId), userId: list.userId, deletedAt: null }, { projection: { coverKey: 1 } });
+  return item?.coverKey ?? null;
+}
+
+export async function recordView(listId: string): Promise<void> {
+  await (await lists()).updateOne({ _id: oid(listId), visibility: "public" }, { $inc: { views: 1 } });
+}
+
+// Reports from the public page. The address is kept only as a salted hash, enough to spot one source.
+export async function createReport(listId: string, ip: string, reason: string, details: string | null): Promise<boolean> {
+  const list = await (await lists()).findOne({ _id: oid(listId), visibility: "public" }, { projection: { _id: 1 } });
+  if (!list) return false;
+  const salt = process.env.BETTER_AUTH_SECRET ?? "pluck";
+  await (await reports()).insertOne({
+    _id: new ObjectId(), listId: list._id, reporterIp: createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 32),
+    reason, details: details?.trim().slice(0, 2000) || null, createdAt: new Date(), state: "open",
+  });
+  return true;
+}
+
+// The same public view, found by list id (for "Pluck this list").
+export async function publicListById(listId: string): Promise<PublicList | null> {
+  const list = await (await lists()).findOne({ _id: oid(listId), visibility: "public", killed: { $ne: true } }, { projection: { userId: 1, slug: 1 } });
+  if (!list) return null;
+  const owner = await (await users()).findOne({ _id: list.userId }, { projection: { handle: 1 } });
+  return owner?.handle ? publicList(owner.handle, list.slug) : null;
+}

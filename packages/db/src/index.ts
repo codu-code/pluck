@@ -16,5 +16,8 @@ export {
 export { searchItems, snippetFor } from "./search.ts";
 export {
   createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, reorderList, listsForItem,
-  type NewList, type ListEdit, type EntryEdit,
+  setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
+export { getMe, setName, setHandle, type HandleResult } from "./users.ts";
+export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS } from "./public.ts";
+export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";

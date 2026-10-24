@@ -57,3 +57,47 @@ export const UpdateEntryBody = z
   .object({ note: z.string().max(2000).nullable().optional(), ticked: z.boolean().optional(), position: z.number().optional() })
   .strict();
 export const ReorderBody = z.object({ itemIds: z.array(ObjectIdString).max(1000) });
+
+export const Me = z.object({
+  id: ObjectIdString,
+  email: z.string(),
+  name: z.string(),
+  handle: z.string().nullable(),
+  handleChangeableAt: z.string().nullable(), // when a set handle can change again
+  createdAt: z.string(),
+});
+export type Me = z.infer<typeof Me>;
+export const UpdateMeBody = z.object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional() }).strict();
+
+export const VisibilityBody = z.object({ visibility: Visibility });
+
+// What a public page may show. Pinned by packages/db/src/public.test.ts: no text, tags, ticks or status, ever.
+export const PublicEntry = z.object({
+  id: ObjectIdString,
+  title: z.string(),
+  siteName: z.string().nullable(),
+  excerpt: z.string().nullable(),
+  url: z.string().nullable(),
+  hasCover: z.boolean(),
+  note: z.string().nullable(),
+});
+export const PublicList = z.object({
+  list: z.object({ id: ObjectIdString, name: z.string(), purpose: z.string(), updatedAt: z.string(), itemCount: z.number().int(), noindex: z.boolean() }),
+  author: z.object({ name: z.string().nullable(), handle: z.string() }),
+  entries: z.array(PublicEntry),
+});
+export type PublicList = z.infer<typeof PublicList>;
+
+export const REPORT_REASONS = ["illegal", "minors", "harassment", "doxxing", "spam", "malware", "infringement", "other"] as const;
+export const ReportBody = z.object({ listId: ObjectIdString, reason: z.enum(REPORT_REASONS), details: z.string().max(2000).optional() });
+export const CopyListBody = z.object({ listId: ObjectIdString });
+
+export const AdminReport = z.object({
+  id: ObjectIdString,
+  reason: z.string(),
+  details: z.string().nullable(),
+  createdAt: z.string(),
+  list: z.object({ id: ObjectIdString, name: z.string(), slug: z.string(), killed: z.boolean() }).nullable(),
+  owner: z.object({ id: ObjectIdString, handle: z.string().nullable(), email: z.string(), closed: z.boolean() }).nullable(),
+});
+export type AdminReport = z.infer<typeof AdminReport>;

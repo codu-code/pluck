@@ -67,6 +67,8 @@ export type ListDoc = {
   createdBy: "user" | "mcp";
   createdAt: Date;
   updatedAt: Date;
+  publishedAt?: Date | null; // first made public: the slug is frozen from then on
+  killed?: boolean; // taken down by an admin; never served publicly
 };
 
 export type ListItemDoc = {
@@ -81,6 +83,27 @@ export type ListItemDoc = {
   tickedAt: Date | null;
   addedBy: "user" | "mcp";
   addedAt: Date;
+};
+
+// Better Auth owns the core fields; Pluck adds its own through packages/db.
+export type UserDoc = {
+  _id: ObjectId;
+  email: string;
+  name: string;
+  createdAt: Date;
+  handle?: string | null;
+  handleChangedAt?: Date | null;
+  publicKilled?: boolean; // an admin closed this person's public pages
+};
+
+export type ReportDoc = {
+  _id: ObjectId;
+  listId: ObjectId;
+  reporterIp: string; // a salted hash, never the address itself
+  reason: string;
+  details: string | null;
+  createdAt: Date;
+  state: "open" | "resolved";
 };
 
 export type HighlightDoc = {
@@ -150,6 +173,8 @@ export function db(): Promise<Db> {
         { key: { itemId: 1 } },
         { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
       ]),
+      d.collection("users").createIndexes([{ key: { handle: 1 }, unique: true, partialFilterExpression: { handle: { $type: "string" } } }]),
+      d.collection("reports").createIndexes([{ key: { state: 1, createdAt: -1 } }]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
       d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
       d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }]),
@@ -168,6 +193,12 @@ export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, l
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function users(): Promise<Collection<UserDoc>> {
+  return (await db()).collection<UserDoc>("users");
+}
+export async function reports(): Promise<Collection<ReportDoc>> {
+  return (await db()).collection<ReportDoc>("reports");
 }
 export async function lists(): Promise<Collection<ListDoc>> {
   return (await db()).collection<ListDoc>("lists");

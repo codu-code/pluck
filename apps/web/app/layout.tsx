@@ -4,6 +4,8 @@ import { fredoka, geist, sourceSerif } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // Absolute URLs for OG images and canonical links: the app's public origin.
+  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000"),
   title: "Pluck",
   description: "Pluck it. A fast, open-source URL saver your AI can read.",
   icons: {

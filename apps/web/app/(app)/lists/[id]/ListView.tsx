@@ -22,7 +22,7 @@ function between(prev: number | undefined, next: number | undefined): number {
 }
 
 // The Collection board: one list in order, each item with a tick and a note that belong to the list.
-export function ListView({ initial }: { initial: { list: List; entries: ListEntry[] } }) {
+export function ListView({ initial, handle: initialHandle }: { initial: { list: List; entries: ListEntry[] }; handle: string | null }) {
   const router = useRouter();
   const [list, setList] = useState(initial.list);
   const [entries, setEntries] = useState(initial.entries);
@@ -34,6 +34,12 @@ export function ListView({ initial }: { initial: { list: List; entries: ListEntr
   const [purpose, setPurpose] = useState(initial.list.purpose);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [dragging, setDragging] = useState<string | null>(null);
+  const [handle, setHandle] = useState(initialHandle);
+  const [askHandle, setAskHandle] = useState(false);
+  const [handleDraft, setHandleDraft] = useState("");
+  const [handleError, setHandleError] = useState<string | null>(null);
+  const [host, setHost] = useState("getpluck.io");
+  useEffect(() => setHost(window.location.host), []);
   const [toast, showToast] = useToast();
   const listRef = useRef<HTMLOListElement>(null);
   const base = `/api/v1/lists/${list.id}`;
@@ -108,6 +114,28 @@ export function ListView({ initial }: { initial: { list: List; entries: ListEntr
     listRef.current?.querySelector("[data-active]")?.scrollIntoView({ block: "nearest" });
   }, [cursor]);
 
+  // Flow 15: one switch. Public asks for a handle once, then shows the link.
+  async function setVisibility(visibility: "private" | "public") {
+    const res = await send(base, "PATCH", { visibility });
+    const body = await res.json();
+    if (res.ok) {
+      setList((body as { list: List }).list);
+      setAskHandle(false);
+      return showToast({ message: visibility === "public" ? "Public. Anyone with the link can see it." : "Private again. The link stops working now." });
+    }
+    if (body?.error?.code === "handle_required") return setAskHandle(true);
+    showToast({ message: body?.error?.message ?? "That did not go through." });
+  }
+
+  async function chooseHandle() {
+    setHandleError(null);
+    const res = await send("/api/v1/me", "PATCH", { handle: handleDraft });
+    const body = await res.json();
+    if (!res.ok) return setHandleError(body.error.message);
+    setHandle(body.me.handle);
+    await setVisibility("public");
+  }
+
   async function saveMeta(patch: { name?: string; purpose?: string }) {
     const res = await send(base, "PATCH", patch);
     if (res.ok) setList(((await res.json()) as { list: List }).list);
@@ -164,7 +192,47 @@ export function ListView({ initial }: { initial: { list: List; entries: ListEntr
             </label>
           </div>
           <div className={styles.visibility}>
-            <span className={styles.meta}>Only you can see this list.</span>
+            <div role="radiogroup" aria-label="Visibility" className={styles.switch}>
+              {(["private", "public"] as const).map((v) => (
+                <button key={v} type="button" role="radio" aria-checked={list.visibility === v} className={styles.switchOption} onClick={() => list.visibility !== v && setVisibility(v)}>
+                  {v === "private" ? "Private" : "Public"}
+                </button>
+              ))}
+            </div>
+            {askHandle && list.visibility === "private" ? (
+              <form className={styles.handleForm} onSubmit={(e) => { e.preventDefault(); void chooseHandle(); }}>
+                <label className={styles.meta} htmlFor="handle">Pick a handle for the link. It shows on public lists only.</label>
+                <span className={styles.handleRow}>
+                  <span className={styles.handleBox}>
+                    <span className={styles.prefix}>getpluck.io/@</span>
+                    <input id="handle" className={styles.handleInput} value={handleDraft} autoFocus onChange={(e) => setHandleDraft(e.target.value.toLowerCase())} />
+                  </span>
+                  <button type="submit" className={styles.primarySmall}>Use it</button>
+                </span>
+                {handleError && <span role="alert" className={styles.error}>{handleError}</span>}
+              </form>
+            ) : list.visibility === "public" && handle ? (
+              <>
+                <span className={styles.linkRow}>
+                  <code className={styles.link}>{`${host}/@${handle}/${list.slug}`}</code>
+                  <button
+                    type="button"
+                    className={styles.primarySmall}
+                    onClick={async () => {
+                      await navigator.clipboard?.writeText(`${window.location.origin}/@${handle}/${list.slug}`).catch(() => {});
+                      showToast({ message: "Link copied." });
+                    }}
+                  >
+                    Copy
+                  </button>
+                </span>
+                <span className={styles.meta}>
+                  {list.views} view{list.views === 1 ? "" : "s"} · only you see this · <a href={`/@${handle}/${list.slug}`} target="_blank" rel="noreferrer">View the public page</a>
+                </span>
+              </>
+            ) : (
+              <span className={styles.meta}>Only you can see this list.</span>
+            )}
           </div>
         </div>
 

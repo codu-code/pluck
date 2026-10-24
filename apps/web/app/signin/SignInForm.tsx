@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import styles from "./signin.module.css";
 
-export function SignInForm() {
+export function SignInForm({ next = "/inbox" }: { next?: string }) {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [email, setEmail] = useState("");
 
@@ -13,7 +13,7 @@ export function SignInForm() {
     const res = await fetch("/api/auth/sign-in/magic-link", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ email, callbackURL: "/inbox" }),
+      body: JSON.stringify({ email, callbackURL: next }),
     });
     setState(res.ok ? "sent" : "error");
   }

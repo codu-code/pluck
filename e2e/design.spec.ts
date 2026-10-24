@@ -60,8 +60,13 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.request.patch(`/api/v1/lists/${listId}/items/${ids[0]}`, { data: { ticked: true, note: "Start here." } });
   await page.goto("/lists");
   await snap("lists");
+  await page.request.patch("/api/v1/me", { data: { handle: `d-${Date.now().toString(36)}` } });
+  await page.request.patch(`/api/v1/lists/${listId}`, { data: { visibility: "public" } });
   await page.goto(`/lists/${listId}`);
   await snap("list");
+  const handle = (await (await page.request.get("/api/v1/me")).json()).me.handle;
+  await page.goto(`/@${handle}/best-mcp-reading`);
+  await snap("public-list");
   await page.goto("/search?q=teams");
   await page.waitForSelector("mark");
   await snap("search");

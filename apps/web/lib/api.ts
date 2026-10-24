@@ -45,6 +45,7 @@ export const searchParamsObject = (req: Request) => {
 
 type Options = { kind: "read" | "write"; ipLimit?: boolean };
 type Handler<P> = (ctx: { req: Request; caller: Caller; params: P }) => Promise<Response>;
+type PublicHandler<P> = (ctx: { req: Request; params: P }) => Promise<Response>;
 
 // Spec limits: per user 120 writes and 600 reads a minute; per IP 300 a minute on the abuse-prone routes.
 const LIMITS = { read: 600, write: 120, ip: 300 };
@@ -72,6 +73,22 @@ export function route<P = Record<string, never>>(opts: Options, handler: Handler
       if (e instanceof ApiError) return errorResponse(e);
       if (e instanceof ZodError) return errorResponse(new ApiError("bad_request", "Some fields are not right.", 400, e.issues));
       log("error", "api error", { userId: caller?.userId, path: new URL(req.url).pathname, durationMs: Date.now() - started, error: String(e) });
+      return errorResponse(new ApiError("internal", "Something went wrong on our side.", 500));
+    }
+  };
+}
+
+// Routes anyone may call (public pages, reports): per-IP limit, same error shape, no caller.
+export function publicRoute<P = Record<string, never>>(perMinute: number, handler: PublicHandler<P>) {
+  return async (req: Request, ctx: { params: Promise<P> }): Promise<Response> => {
+    try {
+      const hit = await limited(`ip:${clientIp(req)}:${new URL(req.url).pathname.split("/").slice(0, 5).join("/")}`, perMinute);
+      if (hit) return errorResponse(hit, { "retry-after": String((hit.details as { retryAfter: number }).retryAfter) });
+      return await handler({ req, params: await ctx.params });
+    } catch (e) {
+      if (e instanceof ApiError) return errorResponse(e);
+      if (e instanceof ZodError) return errorResponse(new ApiError("bad_request", "Some fields are not right.", 400, e.issues));
+      log("error", "public api error", { path: new URL(req.url).pathname, error: String(e) });
       return errorResponse(new ApiError("internal", "Something went wrong on our side.", 500));
     }
   };

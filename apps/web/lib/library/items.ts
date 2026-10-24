@@ -53,7 +53,8 @@ export async function pluckAny(userId: string, body: CreateItemBody, { defer }: 
   return { results, rejected };
 }
 
-async function extractMany(userId: string, items: Item[], concurrency = 6): Promise<void> {
+// Reads many pages after the response, six at a time, each through the same extraction attempt.
+export async function extractMany(userId: string, items: Item[], concurrency = 6): Promise<void> {
   const queue = [...items];
   await Promise.all(
     Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
