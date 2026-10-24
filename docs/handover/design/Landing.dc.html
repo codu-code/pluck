@@ -22,7 +22,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <a href="#lists" style="text-decoration: none">Lists</a>
 <a href="SiteClaude.dc.html" style="text-decoration: none">Connect your AI</a>
 <a href="SiteOpen.dc.html" style="text-decoration: none">Open source</a>
-<a href="https://github.com" style="text-decoration: none">GitHub</a>
+<a href="https://github.com/codu-code/pluck" style="text-decoration: none">GitHub</a>
 </nav>
 <a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600; font-size: 15px">Get Pluck</a>
 </header>
@@ -30,7 +30,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px 0">
 <h1 style="margin: 0; font-size: clamp(88px, 17vw, 236px); line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pluck it<span style="color: #34A07C">.</span></h1>
 <div style="display: flex; flex-wrap: wrap; gap: 32px 64px; align-items: flex-end; justify-content: space-between; margin-top: 40px">
-<p style="margin: 0; flex: 1 1 420px; max-width: 560px; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 500">Save anything in one tap. Sort it later, by hand or with your AI. Or don't. We won't nag.</p>
+<p style="margin: 0; flex: 1 1 420px; max-width: 560px; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 500"><span style="display: block; text-wrap: balance">Pluck anything in one tap.</span><span style="display: block; text-wrap: balance">Sort it later, by hand or with your AI.</span><span style="display: block; text-wrap: balance">Or don't. We won't nag.</span></p>
 <div style="flex: 0 1 420px; display: flex; flex-direction: column; gap: 10px">
 <label style="display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 6px 0 16px; border-radius: 12px; background: #FFFFFF; border: 1.5px solid #151A13">
 <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Paste a link to try it</span>
@@ -38,10 +38,16 @@ a{color:#151A13}a:hover{color:#525A4E}
 <button type="button" onClick="{{pluck}}" style="height: 44px; padding: 0 18px; border-radius: 8px; border: 0; background: #7FD3AE; color: #151A13; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Pluck it</button>
 </label>
 <sc-if value="{{plucked}}" hint-placeholder-val="{{ false }}">
-<div role="status" style="display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 10px; background: #1E5C45; color: #F6F8F4"><span style="width: 22px; height: 22px; border-radius: 11px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-weight: 600">Plucked.</b><span style="color: #A0A898">That was 300 ms. Sign up to keep it.</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 14px; background: #1E5C45; color: #F6F8F4">
+<div role="status" style="display: flex; flex-direction: column; gap: 6px; padding: 0 2px">
+<span style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px"><span style="width: 22px; height: 22px; border-radius: 11px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-weight: 600">Plucked.</b><span style="color: #CFE0D6; font-size: 15px">That was 212 ms.</span></span>
+<span style="color: #CFE0D6; font-size: 15px; line-height: 22px">Add your email to keep it. New or back, the link signs you in.</span>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 5px 0 14px; border-radius: 10px; background: #FFFFFF"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Your email, to keep what you plucked</span><input type="email" placeholder="you@example.com" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: #151A13"><button type="button" style="height: 42px; padding: 0 18px; border-radius: 8px; border: 0; background: #7FD3AE; color: #151A13; font: inherit; font-size: 15px; font-weight: 700">Keep it</button></label>
+</div>
 </sc-if>
 <sc-if value="{{notPlucked}}" hint-placeholder-val="{{ true }}">
-<span style="font-size: 14px; color: #525A4E">Free. Open source. iPhone, Chrome, Firefox, web and email. Ready for your AI.</span>
+<span style="font-size: 14px; color: #525A4E">Free. Open source. iPhone, Chrome, web and email. Ready for your AI.</span>
 </sc-if>
 </div>
 </div>
@@ -58,12 +64,12 @@ a{color:#151A13}a:hover{color:#525A4E}
 </div>
 </sc-for>
 </div>
-<div role="presentation" style="position: absolute; right: 64px; top: 40px; display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 14px; border-radius: 14px; background: #1E5C45; color: #F6F8F4; box-shadow: 0 16px 40px rgba(21,26,19,0.25); transform: rotate(-3deg)"><span style="width: 36px; height: 36px; border-radius: 18px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em">Plucked.</b></div>
+<div role="presentation" style="position: absolute; right: 64px; top: 12px; display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 14px; border-radius: 14px; background: #1E5C45; color: #F6F8F4; box-shadow: 0 16px 40px rgba(21,26,19,0.25); transform: rotate(-3deg)"><span style="width: 36px; height: 36px; border-radius: 18px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><b style="font-size: 22px; font-weight: 700; letter-spacing: -0.03em">Plucked.</b></div>
 </section>
 
 <section style="background: #151A13; color: #ECEFE8">
 <div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 96px 24px">
-<p style="margin: 0; font-size: clamp(34px, 5.4vw, 76px); line-height: 1.04; font-weight: 700; letter-spacing: -0.045em; text-wrap: balance">An article. A recipe. A thread. <span style="color: #7FD3AE">Half an idea.</span> A hob for the kitchen. A talk you'll give in November. <span style="color: #A0A898">A PDF you will never read.</span></p>
+<p style="margin: 0; font-size: clamp(34px, 5.4vw, 76px); line-height: 1.04; font-weight: 700; letter-spacing: -0.045em; text-wrap: balance"><span style="display: block">An article. A recipe. A thread.</span><span style="display: block"><span style="color: #7FD3AE; white-space: nowrap">Half an idea.</span> <span style="white-space: nowrap">A hob for the kitchen.</span></span><span style="display: block">A talk you'll give in November.</span><span style="display: block; color: #A0A898">A PDF you will never read.</span></p>
 <p style="margin: 32px 0 0; font-size: 20px; line-height: 30px; color: #A0A898; max-width: 560px">One inbox for all of it. The page is kept, not just the link, so it's still there when the site isn't.</p>
 </div>
 </section>
@@ -71,15 +77,15 @@ a{color:#151A13}a:hover{color:#525A4E}
 <section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 112px 24px 0; display: flex; flex-direction: column">
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13">
 <b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">1 tap</b>
-<p style="margin: 0; font-size: 22px; line-height: 32px">From the iPhone share sheet, without opening an app. From Chrome, Firefox, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.</p>
+<p style="margin: 0; font-size: 22px; line-height: 32px">From the iPhone share sheet, without opening an app. From Chrome, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.</p>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13">
 <b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">0 nags</b>
-<p style="margin: 0; font-size: 22px; line-height: 32px">No streaks, no badges, no guilt. Nothing gets tagged behind your back. Things you never touch slide into the Archive after 30 days (you pick the number), unless they're in a list. Nothing is deleted.</p>
+<p style="margin: 0; font-size: 22px; line-height: 32px">No streaks, no badges, no guilt. Nothing gets tagged behind your back. Things you never touch move to the Archive after 30 days (you pick the number), unless they're in a list. Nothing is deleted.</p>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px 48px; align-items: baseline; padding: 32px 0; border-top: 2px solid #151A13; border-bottom: 2px solid #151A13">
 <b style="font-size: clamp(64px, 9vw, 128px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">30 s</b>
-<p style="margin: 0; font-size: 22px; line-height: 32px">To plug in the AI you already use. Claude, ChatGPT, Cursor, anything that speaks MCP. Ask it to tidy, group or turn your saves into ideas. It works while you watch, and never deletes.</p>
+<p style="margin: 0; font-size: 22px; line-height: 32px">To plug in the AI you already use. Claude, ChatGPT, Cursor, anything that speaks MCP. Ask it to tidy, group or turn your plucks into ideas. It works while you watch, and never deletes.</p>
 </div>
 </section>
 
@@ -105,15 +111,15 @@ a{color:#151A13}a:hover{color:#525A4E}
 <div style="flex: 1 1 400px; display: flex; flex-direction: column; gap: 20px">
 <span style="font: 500 13px 'Geist Mono', monospace; color: #D08A68; letter-spacing: 0.04em">READY FOR YOUR AI</span>
 <h2 style="margin: 0; font-size: clamp(40px, 5vw, 68px); line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Plug in the AI you already use.</h2>
-<p style="margin: 0; font-size: 20px; line-height: 30px; color: #A0A898">“What did I pluck about MCP auth?” “Tidy my inbox.” “Make a reading list from this month, best first.” One link and your whole library is there. It changes things only when you say so, and marks everything it touched.</p>
+<p style="margin: 0; font-size: 20px; line-height: 30px; color: #A0A898"><span style="display: block">“What did I pluck about MCP auth?”</span><span style="display: block">“Tidy my inbox.”</span><span style="display: block">“Make a reading list from this month, best first.”</span><span style="display: block; margin-top: 12px">One link and your whole library is there. It changes things only when you say so, and marks everything it touched.</span></p>
 <a href="SiteClaude.dc.html" style="align-self: flex-start; display: inline-flex; align-items: center; height: 48px; box-sizing: border-box; padding: 0 20px; border-radius: 10px; background: #ECEFE8; color: #151A13; text-decoration: none; font-weight: 600">How it works with AI</a>
 </div>
 <div style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 24px">
 <div style="align-self: flex-end; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #252A22">Pluck this as an idea: an MCP server for Assemble's estimates</div>
-<span style="align-self: flex-start; font: 12px 'Geist Mono', monospace; color: #A0A898; padding: 4px 10px; border-radius: 6px; border: 1px solid #363C33">save_item kind=idea</span>
-<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C; border: 1px solid #363C33">Plucked. It's in your inbox as a Note, marked as saved by me.</div>
+<span style="align-self: flex-start; font: 12px 'Geist Mono', monospace; color: #A0A898; padding: 4px 10px; border-radius: 6px; border: 1px solid #363C33">save_item kind=note</span>
+<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C">Plucked. It's in your inbox as a Note, marked as plucked by me.</div>
 <div style="align-self: flex-end; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #252A22">What's rotting in my library?</div>
-<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C; border: 1px solid #363C33">Five things untouched for a month. Want to go through them one at a time?</div>
+<div style="align-self: flex-start; max-width: 85%; padding: 12px 16px; border-radius: 16px; background: #1E221C">Five things untouched for a month. Want to go through them one at a time?</div>
 </div>
 </div>
 </section>
@@ -134,9 +140,8 @@ a{color:#151A13}a:hover{color:#525A4E}
 <section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 144px 24px 96px; display: flex; flex-direction: column; gap: 32px">
 <p style="margin: 0; font-size: clamp(80px, 15vw, 210px); line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Sort it<br>later<span style="color: #34A07C">.</span></p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px">
-<a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Add to Chrome</a>
-<a href="Extension.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Firefox</a>
-<a href="IOSShare.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">iPhone</a>
+<a href="SiteChrome.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Add to Chrome</a>
+<a href="SiteIPhone.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">iPhone</a>
 <a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Use it on the web</a>
 </div>
 </section>
@@ -144,8 +149,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <footer style="border-top: 1px solid #DDE2D8">
 <div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: #525A4E">
 <span style="display: inline-flex; align-items: center; gap: 6px; color: #151A13; font-weight: 700; letter-spacing: -0.04em; font-size: 18px; margin-right: auto"><dc-import name="Logo" size="18" tone="brand" hint-size="54px,18px"></dc-import></span>
-<a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SiteOpen.dc.html" style="color: #525A4E">Open source</a><a href="https://github.com" style="color: #525A4E">GitHub</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
-<span>Made in Dublin.</span>
+<a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SiteOpen.dc.html" style="color: #525A4E">Open source</a><a href="https://github.com/codu-code/pluck" style="color: #525A4E">GitHub</a><a href="SiteSupport.dc.html" style="color: #525A4E">Support</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
 </div>
 </footer>
 </div>

@@ -1,0 +1,124 @@
+/* Generated from the ConnectLoop board. Brand easing: cubic-bezier(0.16, 1, 0.3, 1). */
+
+.loop { --ground: #F6F8F4; --surface: #FFFFFF; --ink: #151A13; --ink2: #525A4E; --brand: #1E5C45; --accent: #34A07C; --highlight: #7FD3AE; --line: #DDE2D8;
+  --app: #FFFFFF; --app-side: #F3F4F6; --app-line: #E4E6EA; --app-ink: #22252A; --app-ink2: #6B7079; --app-bubble: #ECEEF1; --app-dark: #2B2F36;
+  --display: 'Fredoka', 'Geist', ui-rounded, sans-serif; --ui: 'Geist', ui-sans-serif, system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace;
+  position: relative; width: 1200px; height: 750px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: var(--ui); text-align: left; }
+.loop * { box-sizing: border-box; }
+.logo { position: absolute; left: 56px; top: 52px; display: inline-flex; align-items: flex-start; font: 700 30px/0.92 var(--display); letter-spacing: -0.01em; color: var(--brand); }
+.logo svg { width: 0.457em; height: 0.457em; margin-left: -0.098em; margin-top: 0.022em; overflow: visible; }
+.cap1, .cap2, .cap3 { position: absolute; left: 56px; top: 250px; width: 300px; display: flex; flex-direction: column; gap: 18px; }
+.capT { font: 700 64px/0.98 var(--display); letter-spacing: -0.03em; }
+.dot { color: var(--accent); }
+.capS { font-size: 19px; line-height: 28px; color: var(--ink2); }
+.dots { position: absolute; left: 56px; bottom: 56px; display: flex; gap: 8px; }
+.bar { width: 28px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.d1, .d2, .d3 { display: block; height: 100%; width: 100%; background: var(--brand); transform-origin: 0 50%; }
+.win { position: absolute; left: 392px; top: 48px; width: 760px; height: 654px; border-radius: 16px; background: var(--app); border: 1px solid var(--app-line); box-shadow: 0 30px 80px rgba(21, 26, 19, 0.10); overflow: hidden; display: flex; }
+.side { width: 184px; flex: none; background: var(--app-side); border-right: 1px solid var(--app-line); padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.lights { display: flex; gap: 7px; margin-bottom: 10px; }
+.light { width: 11px; height: 11px; border-radius: 6px; background: #D5D8DD; }
+.newchat { height: 34px; border-radius: 9px; background: var(--app); border: 1px solid var(--app-line); display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: var(--app-ink); }
+.hist { height: 9px; border-radius: 5px; background: #E2E5E9; margin: 6px 4px 0; }
+.main { flex: 1; position: relative; display: flex; flex-direction: column; }
+.top { height: 52px; flex: none; border-bottom: 1px solid var(--app-line); display: flex; align-items: center; padding: 0 22px; font-size: 14px; font-weight: 500; color: var(--app-ink); }
+.thread { flex: 1; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 23px; color: var(--app-ink); }
+.me { align-self: flex-end; max-width: 75%; padding: 10px 14px; border-radius: 14px; background: var(--app-bubble); }
+.tool { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid var(--app-line); font: 12px var(--mono); color: var(--app-ink2); }
+.ai { display: flex; flex-direction: column; gap: 10px; }
+.c1, .c2, .c3 { display: flex; align-items: center; gap: 12px; height: 58px; padding: 0 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.cardText { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cardTitle { font-weight: 600; font-size: 14px; line-height: 19px; }
+.cardMeta { font-size: 12px; color: var(--ink2); }
+.tag { height: 22px; padding: 0 8px; border-radius: 11px; background: #E3E8DE; font-size: 12px; display: inline-flex; align-items: center; color: var(--ink); }
+.composer { margin: 0 24px 22px; height: 52px; flex: none; border-radius: 14px; border: 1px solid var(--app-line); display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; font-size: 15px; color: var(--app-ink); }
+.typed { flex: 1; position: relative; height: 23px; white-space: nowrap; overflow: hidden; }
+.ph { position: absolute; left: 0; top: 0; color: var(--app-ink2); }
+.q { position: absolute; left: 0; top: 0; clip-path: inset(0 100% 0 0); }
+.send { width: 36px; height: 36px; border-radius: 18px; background: var(--app-dark); display: flex; align-items: center; justify-content: center; flex: none; }
+.pill { position: absolute; left: 24px; bottom: 82px; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 6px; border-radius: 15px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; color: var(--ink); }
+.ptile { width: 20px; height: 20px; border-radius: 5px; background: var(--brand); display: flex; align-items: center; justify-content: center; }
+.scrim { position: absolute; inset: 0; background: rgba(34, 37, 42, 0.18); opacity: 0; }
+.modal { position: absolute; left: 50%; top: 50%; width: 440px; margin-left: -220px; margin-top: -160px; border-radius: 16px; background: var(--app); border: 1px solid var(--app-line); box-shadow: 0 20px 60px rgba(34, 37, 42, 0.16); padding: 24px; display: flex; flex-direction: column; gap: 14px; color: var(--app-ink); opacity: 0; }
+.modalT { font-size: 18px; font-weight: 600; }
+.modalP { font-size: 14px; line-height: 21px; color: var(--app-ink2); }
+.field { height: 44px; border-radius: 10px; border: 1.5px solid var(--app-dark); display: flex; align-items: center; padding: 0 12px; font: 14px var(--mono); }
+.url { display: inline-block; clip-path: inset(0 100% 0 0); }
+.row { display: flex; justify-content: flex-end; gap: 8px; }
+.ghost, .add { height: 38px; padding: 0 16px; border-radius: 9px; display: inline-flex; align-items: center; font-size: 14px; font-weight: 500; }
+.ghost { border: 1px solid var(--app-line); color: var(--app-ink); }
+.add { background: var(--app-dark); color: #FFFFFF; }
+.consent { position: absolute; left: 50%; top: 50%; width: 460px; margin-left: -230px; margin-top: -232px; border-radius: 18px; background: var(--ground); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(21, 26, 19, 0.18); padding: 28px; display: flex; flex-direction: column; gap: 16px; color: var(--ink); opacity: 0; }
+.clogo { display: inline-flex; align-items: flex-start; font: 700 22px/0.92 var(--display); letter-spacing: -0.01em; color: var(--brand); }
+.clogo svg { width: 0.457em; height: 0.457em; margin-left: -0.098em; margin-top: 0.022em; overflow: visible; }
+.consentT { font: 700 34px/1 var(--display); letter-spacing: -0.025em; }
+.consentP { font-size: 15px; line-height: 22px; color: var(--ink2); }
+.scopes { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.scope { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.scopeNo { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink2); }
+.tick { width: 20px; height: 20px; border-radius: 10px; background: var(--highlight); display: flex; align-items: center; justify-content: center; flex: none; }
+.no { width: 20px; height: 20px; border-radius: 10px; border: 1.5px solid #9AA392; flex: none; display: flex; align-items: center; justify-content: center; }
+.noBar { width: 10px; height: 1.6px; background: #9AA392; }
+.pbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cancel, .allow { height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; }
+.cancel { border: 1.5px solid var(--ink); }
+.allow { background: var(--brand); color: #F6F8F4; }
+.cursor { position: absolute; left: 0; top: 0; width: 22px; height: 26px; z-index: 5; opacity: 0; }
+.r1, .r2, .r3 { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 17px; border: 2px solid var(--app-dark); opacity: 0; z-index: 4; }
+/* At rest (no motion, or before the CSS loads) it shows the answer: step three, connected, three plucks back. */
+.cap1, .cap2 { opacity: 0; }
+@keyframes cap1 { 0%, 23% { opacity: 1; transform: none; } 27%, 95% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
+@keyframes cap2 { 0%, 25% { opacity: 0; transform: translateY(14px); } 30%, 39% { opacity: 1; transform: none; } 43%, 100% { opacity: 0; transform: none; } }
+@keyframes cap3 { 0%, 41% { opacity: 0; transform: translateY(14px); } 46%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes d1 { 0%, 0% { transform: scaleX(0); animation-timing-function: linear; } 25%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes d2 { 0%, 25% { transform: scaleX(0); animation-timing-function: linear; } 41%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes d3 { 0%, 41% { transform: scaleX(0); animation-timing-function: linear; } 93%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes scrim { 0%, 38% { opacity: 1; } 41%, 94% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes modal { 0%, 23.5% { opacity: 1; transform: none; } 27% { opacity: 0; transform: translateY(-10px) scale(0.97); } 93.9% { opacity: 0; transform: translateY(-10px) scale(0.97); } 94% { opacity: 0; transform: none; } 100% { opacity: 1; transform: none; } }
+@keyframes url { 0%, 9.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(23, end); } 16.5%, 93.9% { clip-path: inset(0 0 0 0); } 94%, 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes add { 0%, 21.4% { transform: none; } 21.5%, 22.9% { transform: scale(0.96); } 23%, 100% { transform: none; } }
+@keyframes consent { 0%, 24.5% { opacity: 0; transform: translateY(24px); } 29%, 38% { opacity: 1; transform: none; } 41.5%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); } }
+@keyframes allow { 0%, 36.9% { transform: none; } 37%, 38.4% { transform: scale(0.96); } 38.5%, 100% { transform: none; } }
+@keyframes pill { 0%, 40% { opacity: 0; transform: translateY(8px); } 45%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes ph { 0%, 43.9% { opacity: 1; } 44%, 56.9% { opacity: 0; } 57%, 100% { opacity: 1; } }
+@keyframes q { 0%, 44% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(32, end); } 54%, 56.9% { clip-path: inset(0 0 0 0); } 57%, 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes send { 0%, 56.9% { transform: none; } 57%, 58.4% { transform: scale(0.92); } 58.5%, 100% { transform: none; } }
+@keyframes me { 0%, 57.5% { opacity: 0; transform: translateY(14px); } 61.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes tool { 0%, 61.5% { opacity: 0; transform: translateY(8px); } 65.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes ans { 0%, 66.5% { opacity: 0; transform: translateY(8px); } 70%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c1 { 0%, 68.5% { opacity: 0; transform: translateY(14px); } 73.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c2 { 0%, 70.5% { opacity: 0; transform: translateY(14px); } 75.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c3 { 0%, 72.5% { opacity: 0; transform: translateY(14px); } 77.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes more { 0%, 77% { opacity: 0; transform: translateY(8px); } 81%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes cursor { 0% { transform: translate(980px, 560px); } 3% { transform: translate(980px, 560px); } 9% { transform: translate(800px, 334px); } 17.5% { transform: translate(800px, 334px); } 21.5% { transform: translate(1025px, 390px); } 25% { transform: translate(1025px, 390px); } 33% { transform: translate(960px, 464px); } 37% { transform: translate(960px, 464px); } 43% { transform: translate(760px, 654px); } 54.5% { transform: translate(760px, 654px); } 57% { transform: translate(1100px, 654px); } 62% { transform: translate(1100px, 654px); } 78% { transform: translate(1010px, 600px); opacity: 1; } 82% { opacity: 0; } 96% { opacity: 0; } 100% { transform: translate(980px, 560px); opacity: 1; } }
+@keyframes r1 { 0%, 21.49% { opacity: 0; transform: translate(1028px, 393px) scale(0.4); } 21.5% { opacity: 1; transform: translate(1028px, 393px) scale(0.4); } 26.5%, 100% { opacity: 0; transform: translate(1028px, 393px) scale(1.2); } }
+@keyframes r2 { 0%, 36.99% { opacity: 0; transform: translate(963px, 467px) scale(0.4); } 37% { opacity: 1; transform: translate(963px, 467px) scale(0.4); } 42%, 100% { opacity: 0; transform: translate(963px, 467px) scale(1.2); } }
+@keyframes r3 { 0%, 56.99% { opacity: 0; transform: translate(1103px, 657px) scale(0.4); } 57% { opacity: 1; transform: translate(1103px, 657px) scale(0.4); } 62%, 100% { opacity: 0; transform: translate(1103px, 657px) scale(1.2); } }
+.cap1 { animation: cap1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cap2 { animation: cap2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cap3 { animation: cap3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d1 { animation: d1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d2 { animation: d2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d3 { animation: d3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.scrim { animation: scrim 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.modal { animation: modal 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.url { animation: url 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.add { animation: add 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.consent { animation: consent 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.allow { animation: allow 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.pill { animation: pill 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.ph { animation: ph 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.q { animation: q 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.send { animation: send 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.me { animation: me 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.tool { animation: tool 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.ans { animation: ans 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c1 { animation: c1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c2 { animation: c2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c3 { animation: c3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.more { animation: more 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cursor { animation: cursor 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r1 { animation: r1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r2 { animation: r2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r3 { animation: r3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+@media (prefers-reduced-motion: reduce) { .cap1 .cap2 .cap3 .d1 .d2 .d3 .scrim .modal .url .add .consent .allow .pill .ph .q .send .me .tool .ans .c1 .c2 .c3 .more .cursor .r1 .r2 .r3 { animation: none; } }

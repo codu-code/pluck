@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Cookie banner</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+@keyframes crumb{0%{opacity:0;transform:translate(-3px,3px)}100%{opacity:1;transform:none}}
+@keyframes rise{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+.crumbs path{animation:crumb 420ms cubic-bezier(0.16,1,0.3,1) both}
+.crumbs path:nth-child(2){animation-delay:80ms}.crumbs path:nth-child(3){animation-delay:160ms}
+.rise{animation:rise 520ms cubic-bezier(0.16,1,0.3,1) both}
+@media (prefers-reduced-motion: reduce){.crumbs path,.rise{animation:none}}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 1500px; box-sizing: border-box; padding: 64px 72px 80px; background: #E4E8E0; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 22px; display: flex; flex-direction: column; gap: 40px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px">
+<h1 style="margin: 0; font-size: 56px; line-height: 1; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Cookies<span style="color: #34A07C">.</span></h1>
+<p style="margin: 0; font-size: 18px; line-height: 27px; color: #394034">A banner everyone has to see, so it may as well be good. One drawn cookie, two buttons of the same size, and nothing pre-ticked. Saying no is as easy as saying yes, which is also the law.</p>
+</div>
+<button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid #9AA392; background: transparent; font: inherit; font-weight: 500; cursor: pointer">Show it again</button>
+</div>
+
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 40px; align-items: start">
+
+<section aria-label="Desktop, live" style="position: relative; height: 760px; border-radius: 16px; background: #F6F8F4; border: 1px solid #CDD3C7; overflow: hidden">
+<div aria-hidden="true" style="padding: 24px 32px; display: flex; flex-direction: column; gap: 28px; opacity: 0.55">
+<div style="display: flex; align-items: center; gap: 24px"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import><span style="margin-left: auto; width: 60px; height: 10px; border-radius: 5px; background: #CDD3C7"></span><span style="width: 120px; height: 10px; border-radius: 5px; background: #CDD3C7"></span><span style="width: 96px; height: 40px; border-radius: 10px; background: #1E5C45"></span></div>
+<b style="font-size: 150px; line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pluck it<span style="color: #34A07C">.</span></b>
+<span style="width: 460px; height: 14px; border-radius: 7px; background: #CDD3C7"></span>
+<span style="width: 380px; height: 14px; border-radius: 7px; background: #CDD3C7"></span>
+</div>
+
+<sc-if value="{{asking}}" hint-placeholder-val="{{ true }}">
+<div role="dialog" aria-labelledby="ck-title" aria-describedby="ck-body" class="rise" style="position: absolute; left: 24px; bottom: 24px; width: 440px; box-sizing: border-box; padding: 24px; border-radius: 20px; background: #FFFFFF; border: 1px solid #DDE2D8; box-shadow: 0 24px 64px rgba(21,26,19,0.16); display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; gap: 18px; align-items: flex-start">
+<svg width="88" height="88" viewBox="-2 -14 96 96" aria-hidden="true" style="flex: none">
+<defs><mask id="bite"><rect width="80" height="80" fill="#fff"></rect><circle cx="70" cy="14" r="14" fill="#000"></circle><circle cx="58" cy="6" r="9" fill="#000"></circle><circle cx="76" cy="27" r="9" fill="#000"></circle></mask></defs>
+<g mask="url(#bite)">
+<circle cx="38" cy="42" r="32" fill="#C98B4F"></circle>
+<circle cx="38" cy="42" r="32" fill="none" stroke="#A86D37" stroke-width="2.5"></circle>
+<path d="M22 30c2-3 6-3 7 0s-1 5-4 5-4-2-3-5zM40 50c2-3 7-2 7 1s-3 5-5 5-4-3-2-6zM24 52c1-2 4-2 5 0s0 4-3 4-3-2-2-4zM46 30c1-2 4-2 5 0s0 4-3 4-3-2-2-4zM34 40c1-2 3-2 4 0s0 3-2 3-3-1-2-3zM54 46c1-2 4-2 4 0s0 4-2 4-3-2-2-4z" fill="#3B2A1C"></path>
+</g>
+<g class="crumbs" fill="none" stroke="#34A07C" stroke-width="3.4" stroke-linecap="round"><path d="M80 30l4.6 2"></path><path d="M84 15l5-1.2"></path><path d="M73 1l2.4-4.4"></path></g>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 4px">
+<h2 id="ck-title" style="margin: 0; font-size: 26px; line-height: 28px; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.02em">Fancy a cookie<span style="color: #34A07C">?</span></h2>
+<p id="ck-body" style="margin: 0; color: #394034">Two already keep you signed in and hold what you pasted. This third one counts visits, so we know if anyone reads this page. No ads. No selling. It doesn't follow you home.</p>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<button type="button" onClick="{{no}}" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 10px; border: 1.5px solid #151A13; background: #FFFFFF; color: #151A13; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Pluck off</button>
+<button type="button" onClick="{{yes}}" style="display: flex; align-items: center; justify-content: center; height: 48px; border-radius: 10px; border: 1.5px solid #1E5C45; background: #1E5C45; color: #F6F8F4; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Pluck it, I'm in</button>
+</div>
+<a href="SitePrivacy.dc.html" style="align-self: flex-start; font-size: 13px; color: #525A4E">What's in each one</a>
+</div>
+</sc-if>
+
+<sc-if value="{{answered}}" hint-placeholder-val="{{ false }}">
+<div role="status" class="rise" style="position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 18px 0 12px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; box-shadow: 0 16px 40px rgba(21,26,19,0.2)">
+<span style="width: 28px; height: 28px; border-radius: 14px; background: #7FD3AE; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<b style="font-weight: 600">{{doneTitle}}</b><span style="color: #CFE0D6">{{doneNote}}</span>
+</div>
+</sc-if>
+<span style="position: absolute; right: 20px; top: 16px; font: 12px 'Geist Mono', monospace; color: #525A4E">getpluck.io · 1280 wide</span>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 16px">
+<section aria-label="Phone" style="position: relative; width: 390px; height: 760px; box-sizing: border-box; border-radius: 44px; background: #151A13; padding: 10px">
+<div style="position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border-radius: 36px; background: #F6F8F4; overflow: hidden">
+<div aria-hidden="true" style="padding: 64px 20px 0; display: flex; flex-direction: column; gap: 18px; opacity: 0.55"><b style="font-size: 76px; line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pluck it<span style="color: #34A07C">.</span></b><span style="width: 260px; height: 12px; border-radius: 6px; background: #CDD3C7"></span><span style="width: 200px; height: 12px; border-radius: 6px; background: #CDD3C7"></span></div>
+<div role="dialog" aria-label="Cookies" style="position: absolute; left: 8px; right: 8px; bottom: 8px; box-sizing: border-box; padding: 20px 18px 18px; border-radius: 28px; background: #FFFFFF; box-shadow: 0 -8px 40px rgba(21,26,19,0.12); display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; gap: 14px; align-items: center">
+<svg width="64" height="64" viewBox="-2 -14 96 96" aria-hidden="true" style="flex: none"><defs><mask id="bite2"><rect width="80" height="80" fill="#fff"></rect><circle cx="70" cy="14" r="14" fill="#000"></circle><circle cx="58" cy="6" r="9" fill="#000"></circle><circle cx="76" cy="27" r="9" fill="#000"></circle></mask></defs><g mask="url(#bite2)"><circle cx="38" cy="42" r="32" fill="#C98B4F"></circle><circle cx="38" cy="42" r="32" fill="none" stroke="#A86D37" stroke-width="2.5"></circle><path d="M22 30c2-3 6-3 7 0s-1 5-4 5-4-2-3-5zM40 50c2-3 7-2 7 1s-3 5-5 5-4-3-2-6zM24 52c1-2 4-2 5 0s0 4-3 4-3-2-2-4zM46 30c1-2 4-2 5 0s0 4-3 4-3-2-2-4zM34 40c1-2 3-2 4 0s0 3-2 3-3-1-2-3zM54 46c1-2 4-2 4 0s0 4-2 4-3-2-2-4z" fill="#3B2A1C"></path></g><g fill="none" stroke="#34A07C" stroke-width="3.4" stroke-linecap="round"><path d="M80 30l4.6 2"></path><path d="M84 15l5-1.2"></path><path d="M73 1l2.4-4.4"></path></g></svg>
+<h2 style="margin: 0; font-size: 24px; line-height: 26px; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.02em">Fancy a cookie<span style="color: #34A07C">?</span></h2>
+</div>
+<p style="margin: 0; color: #394034; font-size: 15px; line-height: 22px">One more, to count visits. No ads, no selling, it doesn't follow you home.</p>
+<div style="display: flex; flex-direction: column; gap: 8px"><button type="button" style="display: flex; align-items: center; justify-content: center; height: 50px; border-radius: 12px; border: 1.5px solid #1E5C45; background: #1E5C45; color: #F6F8F4; font: inherit; font-size: 16px; font-weight: 600">Pluck it, I'm in</button><button type="button" style="display: flex; align-items: center; justify-content: center; height: 50px; border-radius: 12px; border: 1.5px solid #151A13; background: #FFFFFF; color: #151A13; font: inherit; font-size: 16px; font-weight: 600">Pluck off</button></div>
+</div>
+</div>
+</section>
+<span style="font-size: 13px; color: #525A4E">On a phone it is a bottom sheet with the buttons stacked, same size, same weight. It never covers the paste box's button.</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 16px; background: #10130F; color: #ECEFE8">
+<span style="font: 500 12px 'Geist Mono', monospace; color: #A0A898; letter-spacing: 0.04em">DARK</span>
+<b style="font-size: 22px; line-height: 26px; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700">Fancy a cookie<span style="color: #7FD3AE">?</span></b>
+<span style="color: #A0A898">Surface #191D17, buttons outline #ECEFE8 and fill #7FD3AE with ink on top. The cookie stays a cookie.</span>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px"><span style="height: 44px; border-radius: 10px; border: 1.5px solid #ECEFE8; display: flex; align-items: center; justify-content: center; font-weight: 600">Pluck off</span><span style="height: 44px; border-radius: 10px; background: #7FD3AE; color: #151A13; display: flex; align-items: center; justify-content: center; font-weight: 600">Pluck it, I'm in</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 16px; background: #FFFFFF">
+<span style="font: 500 12px 'Geist Mono', monospace; color: #525A4E; letter-spacing: 0.04em">AFTER</span>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #DDE2D8">
+<div style="display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #DDE2D8"><b style="width: 112px; flex: none; font-weight: 600">Pluck off</b><span>“Fair. No crumbs taken.”</span></div>
+<div style="display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #DDE2D8"><b style="width: 112px; flex: none; font-weight: 600">I'm in</b><span>“Plucked. Cheers.”</span></div>
+<div style="display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #DDE2D8"><b style="width: 112px; flex: none; font-weight: 600">Change it</b><span>Footer link “Cookies” opens it again.</span></div>
+</div>
+<span style="color: #525A4E; font-size: 13px">The toast goes after three seconds. The answer is kept for a year, then we ask once more.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 16px; background: #FFFFFF">
+<span style="font: 500 12px 'Geist Mono', monospace; color: #9A5536; letter-spacing: 0.04em">TODAY: NO BANNER</span>
+<span>Pluck sets two cookies and both are needed, so the law asks for no banner and Privacy already says so. Ship this only on the day an analytics cookie arrives, and say which one in “What's in each one”.</span>
+<span style="color: #525A4E; font-size: 13px">Until then the honest joke lives in the footer: “Cookies: two, both needed, neither tracks you.”</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(p) { super(p); this.state = { answer: null }; }
+  renderVals() {
+    var a = this.state.answer;
+    return {
+      asking: a === null, answered: a !== null,
+      doneTitle: a === "no" ? "Fair." : "Plucked.",
+      doneNote: a === "no" ? "No crumbs taken." : "Cheers.",
+      no: () => this.setState({ answer: "no" }),
+      yes: () => this.setState({ answer: "yes" }),
+      reset: () => this.setState({ answer: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck for Chrome · Soon</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#151A13}a:hover{color:#525A4E}
+
+</style>
+</helmet>
+<div style="background: #F6F8F4; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 26px; overflow: hidden; min-height: 1000px; display: flex; flex-direction: column">
+<header style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px">
+<a href="Landing.dc.html" aria-label="Pluck home" style="display: inline-flex; align-items: center; text-decoration: none; margin-right: auto"><dc-import name="Logo" size="24" tone="brand" hint-size="72px,24px"></dc-import></a>
+<nav aria-label="Site" style="display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 15px">
+<a href="Landing.dc.html#lists" style="text-decoration: none">Lists</a>
+<a href="SiteClaude.dc.html" style="text-decoration: none">Connect your AI</a>
+<a href="SiteOpen.dc.html" style="text-decoration: none">Open source</a>
+</nav>
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 18px; border-radius: 10px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600; font-size: 15px">Get Pluck</a>
+</header>
+<section style="flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 72px 24px 112px; display: flex; flex-wrap: wrap; gap: 56px 72px; align-items: center">
+<div style="flex: 1 1 520px; display: flex; flex-direction: column; gap: 28px">
+<h1 style="margin: 0; font-size: clamp(88px, 15vw, 210px); line-height: 0.86; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Soon<span style="color: #34A07C">.</span></h1>
+<p style="margin: 0; max-width: 640px; font-size: 22px; line-height: 33px">Pluck for Chrome is in the Chrome Web Store's review queue, somewhere behind a few thousand coupon finders. Out any day now.</p>
+<p style="margin: 0; max-width: 640px; font-size: 22px; line-height: 33px">Until then, Pluck works on the web: paste a link and it is plucked. Your AI can pluck for you too.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Use it on the web</a>
+<a href="SiteClaude.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Connect your AI</a>
+</div>
+</div>
+<div aria-hidden="true" style="flex: 0 1 420px; display: flex; justify-content: center"><div style="width: 400px; display: flex; flex-direction: column; gap: 20px">
+<div style="border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8; box-shadow: 0 20px 60px rgba(21,26,19,0.08); overflow: hidden">
+<div style="display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 14px; background: #EDF0EA; border-bottom: 1px solid #DDE2D8">
+<span style="flex: 1; height: 30px; border-radius: 15px; background: #FFFFFF; border: 1px solid #DDE2D8; display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: #525A4E">chromewebstore.google.com</span>
+<span style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: #FFFFFF; border: 1px dashed #9AA392"><dc-import name="Icon" size="18" tone="bare" hint-size="18px,18px"></dc-import></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 18px 20px">
+<span style="font: 500 12px 'Geist Mono', monospace; color: #525A4E; letter-spacing: 0.04em">REVIEW QUEUE</span>
+<sc-for list="{{queue}}" as="q" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 12px; height: 40px; border-bottom: 1px solid #E6EBE2; font-size: 15px; color: {{q.fg}}; font-weight: {{q.w}}"><span style="width: 44px; flex: none; text-align: right; font: 13px 'Geist Mono', monospace; color: #525A4E">{{q.n}}</span>{{q.t}}</div>
+</sc-for>
+</div>
+</div>
+</div></div>
+</section>
+<footer style="border-top: 1px solid #DDE2D8">
+<div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: #525A4E">
+<span style="margin-right: auto; display: inline-flex"><dc-import name="Logo" size="18" tone="brand" hint-size="54px,18px"></dc-import></span>
+<a href="Landing.dc.html" style="color: #525A4E">Home</a><a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SiteOpen.dc.html" style="color: #525A4E">Open source</a><a href="SiteSupport.dc.html" style="color: #525A4E">Support</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var rows = [["4,211", "Coupon Finder Ultra"], ["4,212", "Coupon Finder Ultra Pro"], ["4,213", "Tab Organiser 9000"], ["4,214", "Pluck"], ["4,215", "Yet another coupon finder"]];
+    return { queue: rows.map((r) => ({ n: r[0], t: r[1], fg: r[1] === "Pluck" ? "#151A13" : "#9AA392", w: r[1] === "Pluck" ? 600 : 400 })) };
+  }
+}
+</script>
+</body>
+</html>

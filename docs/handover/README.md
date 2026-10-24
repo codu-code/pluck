@@ -11,7 +11,7 @@
 
 ## Design
 
-`design/` holds the canvas as 33 `.dc.html` artboards plus `canvas.json` (the index with each board's title, size and position). Each file is a self-contained HTML page with inline styles, so the exact paddings, sizes, radii and colours are readable in the markup. Treat them as the visual source of truth and copy values from them rather than rounding.
+`design/` holds the canvas as 43 `.dc.html` artboards plus `canvas.json` (the index with each board's title, size and position). Each file is a self-contained HTML page with inline styles, so the exact paddings, sizes, radii and colours are readable in the markup. Treat them as the visual source of truth and copy values from them rather than rounding.
 
 Two of the boards are shared components the others import: `Logo.dc.html` and `Icon.dc.html`. Port those first into `packages/ui`.
 
@@ -33,11 +33,15 @@ Board map:
 | `IOSShare.dc.html`, `IOSInbox.dc.html`, `IOSReader.dc.html`, `IOSSearch.dc.html`, `IOSLists.dc.html`, `IOSSettings.dc.html`, `IOSFirstRun.dc.html` | iOS |
 | `Claude.dc.html` | The connector in use (two example conversations) |
 | `Email.dc.html` | The Monday digest |
-| `Landing.dc.html`, `SiteClaude.dc.html`, `SiteOpen.dc.html`, `SitePrivacy.dc.html`, `SiteTerms.dc.html` | Marketing site: home, connect your AI, open source, privacy, terms |
+| `Landing.dc.html`, `SiteClaude.dc.html`, `SiteOpen.dc.html`, `SiteSupport.dc.html`, `SitePrivacy.dc.html`, `SiteTerms.dc.html` | Marketing site: home, connect your AI, open source, support, privacy, terms |
+| `SiteChrome.dc.html`, `SiteIPhone.dc.html` | "Soon." pages while the Chrome Web Store and App Store listings are in review |
+| `Cookies.dc.html` | The cookie banner, for the day an analytics cookie arrives (none is needed today) |
+| `ConnectLoop.dc.html` | The 10-second "connect your AI" loop: live, with timing, frames, spec and where it goes. The same CSS ships as `apps/web/components/ConnectLoop.tsx`; `motion/connect-loop.html` is the standalone page that `scripts/record-loop.mjs` records |
+| `AppStore1.dc.html` to `AppStore5.dc.html` | App Store screenshots at 1320 × 2868 (6.9 inch), built from the iOS boards |
 
 ## Brand
 
-`brand/tokens.json` is the palette, type, layout and the seven kind glyph paths. `brand/*.svg` are the app icon (forest, mint, dark), favicons at 32 and 16, the bare glyph, and the wordmark. The wordmark SVG uses the live Fredoka font; convert to outlines before shipping it anywhere the font is not loaded.
+`brand/tokens.json` is the palette, type, layout and the seven kind glyph paths. `brand/*.svg` are the app icon (regenerated with every other icon size by `node scripts/icons.mjs`, from `packages/ui/src/icon.json`) (forest, mint, dark), favicons at 32 and 16, the bare glyph, and the wordmark. The wordmark SVG uses the live Fredoka font; convert to outlines before shipping it anywhere the font is not loaded.
 
 ## Placeholders to fill before launch
 

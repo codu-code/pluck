@@ -70,7 +70,7 @@
       mount(node.getAttribute("name"), props, slot);
       return;
     }
-    const el = document.createElementNS(node.namespaceURI, node.tagName);
+    const el = document.createElementNS(node.namespaceURI, node.localName); // localName: tagName is upper-case, which makes unknown elements
     for (const a of Array.from(node.attributes)) {
       const v = interp(a.value, scope);
       if (/^on[A-Z]/.test(a.name) || (a.name.startsWith("on") && typeof v === "function")) {

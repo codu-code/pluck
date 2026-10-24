@@ -24,7 +24,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <article style="flex: 1; overflow: hidden; padding: 20px 20px 0; display: flex; flex-direction: column; gap: 16px; font-family: 'Source Serif 4', Charter, Georgia, serif">
 <span style="font-family: 'Geist', sans-serif; color: #525A4E; font-size: 13px">modelcontextprotocol.io · 12 min</span>
 <h1 style="margin: 0; font-size: 30px; line-height: 36px; font-weight: 600; letter-spacing: -0.01em">How MCP auth actually works</h1>
-<span style="font-style: italic; color: #525A4E">By [AUTHOR NAME]</span>
+<span style="font-style: italic; color: #525A4E">By Ciara Walsh</span>
 <p style="margin: 0; font-size: 18px; line-height: 29px">The short version is simple. The client never hands the server a password. It gets a token, scoped to what the user agreed to, and sends it with each call.</p>
 <p style="margin: 0; font-size: 18px; line-height: 29px"><mark style="background: #C9EEDC; color: #151A13">The scope is the contract. If a tool can delete, the scope should say so, and the user should see it before they agree.</mark></p>
 <p style="margin: 0; font-size: 18px; line-height: 29px">Refresh is where most servers go wrong. A long-lived token in a config file is a password with extra steps.</p>

@@ -36,10 +36,10 @@ a{color:#151A13}a:hover{color:#525A4E}
 </div>
 <div role="group" aria-label="Kind" style="display: flex; gap: 4px">
 <sc-for list="{{kinds}}" as="k" hint-placeholder-count="7">
-<button type="button" aria-label="{{k.name}}" aria-pressed="{{k.on}}" title="{{k.name}}" style="width: 32px; height: 36px; border-radius: 8px; border: 1px solid {{k.border}}; background: {{k.bg}}; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k.d}}" fill="none" stroke="{{k.fg}}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<button type="button" aria-label="{{k.name}}" aria-pressed="{{k.on}}" title="{{k.name}}" aria-disabled="{{k.off}}" style="opacity: {{k.op}}; width: 32px; height: 36px; border-radius: 8px; border: 1px solid {{k.border}}; background: {{k.bg}}; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k.d}}" fill="none" stroke="{{k.fg}}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
 </sc-for>
 </div>
-<label style="display: flex; align-items: center; gap: 8px"><span style="font-size: 12px; color: #525A4E; width: 44px">To list</span><select style="flex: 1; height: 36px; padding: 0 8px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; font-size: 13px; color: #151A13"><option>Best MCP reading (last used)</option><option>Talk on MCP auth</option><option>Codú newsletter #42</option><option>None</option></select></label>
+<label style="display: flex; align-items: center; gap: 8px"><span style="font-size: 12px; color: #525A4E; width: 44px">To list</span><select style="flex: 1; height: 36px; padding: 0 8px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; font-size: 13px; color: #151A13"><option>None</option><option>Best MCP reading (last used)</option><option>Talk on MCP auth</option><option>Codú newsletter #42</option></select></label>
 <label style="display: flex"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Note</span><input type="text" placeholder="A note, if you like" style="flex: 1; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; font-size: 13px"></label>
 <div style="display: flex; gap: 6px">
 <button type="button" style="flex: 1; height: 36px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Later</button>
@@ -59,7 +59,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <div style="display: flex; gap: 6px"><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #E3E8DE; font-size: 12px">auth</span><span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: #E3E8DE; font-size: 12px">mcp</span></div>
 <div style="display: flex; gap: 6px">
 <a href="Item.dc.html" style="flex: 1; display: flex; align-items: center; justify-content: center; height: 36px; border-radius: 8px; background: #1E5C45; color: #F6F8F4; font-size: 13px; text-decoration: none">Open in Pluck</a>
-<button type="button" style="flex: 1; height: 36px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Pluck again as new</button>
+<button type="button" style="flex: 1; height: 36px; border-radius: 8px; border: 1px solid #CDD3C7; background: #FFFFFF; font: inherit; font-size: 13px">Pluck it again</button>
 </div>
 </div>
 
@@ -123,7 +123,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 500">Account</span><span style="display: flex; align-items: center; justify-content: space-between; height: 40px; padding: 0 12px; border-radius: 8px; background: #EDF0EA">niall@codu.co<a href="#options" style="font-size: 13px">Use an API key instead</a></span></div>
 <div></div>
 <label style="display: flex; gap: 12px; align-items: flex-start"><input type="checkbox" checked style="width: 18px; height: 18px; margin: 1px 0 0; accent-color: #151A13"><span style="display: flex; flex-direction: column"><span style="font-weight: 500">Send page content with plucks</span><span style="color: #525A4E; font-size: 13px">So pages behind your logins are readable later.</span></span></label>
-<label style="display: flex; gap: 12px; align-items: flex-start"><input type="checkbox" checked style="width: 18px; height: 18px; margin: 1px 0 0; accent-color: #151A13"><span style="display: flex; flex-direction: column"><span style="font-weight: 500">Capture YouTube transcripts</span><span style="color: #525A4E; font-size: 13px">So search and Claude can read what was said.</span></span></label>
+<label style="display: flex; gap: 12px; align-items: flex-start"><input type="checkbox" checked style="width: 18px; height: 18px; margin: 1px 0 0; accent-color: #151A13"><span style="display: flex; flex-direction: column"><span style="font-weight: 500">Capture YouTube transcripts</span><span style="color: #525A4E; font-size: 13px">So search and your AI can read what was said.</span></span></label>
 </div>
 </div>
 </div>
@@ -140,7 +140,7 @@ var K = [
 ];
 class Component extends DCLogic {
   renderVals() {
-    return { kinds: K.map((k, i) => ({ name: k[0], d: k[1], on: i === 0 ? "true" : "false", bg: i === 0 ? "#151A13" : "#FFFFFF", fg: i === 0 ? "#F6F8F4" : "#151A13", border: i === 0 ? "#151A13" : "#D3D9CE" })) };
+    return { kinds: K.map((k, i) => ({ name: k[0], d: k[1], off: /Note|Todo|Thing/.test(k[0]) ? "true" : "false", op: /Note|Todo|Thing/.test(k[0]) ? 0.35 : 1, on: i === 0 ? "true" : "false", bg: i === 0 ? "#151A13" : "#FFFFFF", fg: i === 0 ? "#F6F8F4" : "#151A13", border: i === 0 ? "#151A13" : "#D3D9CE" })) };
   }
 }
 </script>

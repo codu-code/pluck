@@ -8,7 +8,7 @@ const server = process.env.PLUCK_SERVER ?? "https://getpluck.io";
 const GROUP = "group.io.getpluck.app";
 
 // The Dark home screen icon (Settings, App icon): an alternate icon set beside the primary one in the asset catalog,
-// which Xcode lists in Info.plist itself. Both PNGs come from packages/ui's Icon (scripts/app-icons.mjs).
+// which Xcode lists in Info.plist itself. Both PNGs come from packages/ui's Icon (scripts/icons.mjs at the repo root).
 const DARK_ICON = "AppIconDark";
 const withDarkIcon: ConfigPlugin = (c) => {
   c = withDangerousMod(c, ["ios", async (m) => {

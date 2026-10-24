@@ -1,0 +1,64 @@
+{
+  "$comment": "The app icon's drawn p, in a 20 unit box. One source for Icon.tsx, scripts/icons.mjs and design/Icon.dc.html. The glyph is set at its optical centre: halfway between the p's own centre and the centre of everything including the sparks, so the longer leg no longer pulls it low and the sparks no longer pull it right. At 16 px and under the p is heavier and the three sparks shorter, so they stay three and never smudge.",
+  "tones": {
+    "forest": {
+      "bg": "#1E5C45",
+      "ink": "#F6F8F4",
+      "spark": "#7FD3AE",
+      "tile": true
+    },
+    "mint": {
+      "bg": "#7FD3AE",
+      "ink": "#1E5C45",
+      "spark": "#151A13",
+      "tile": true
+    },
+    "dark": {
+      "bg": "#10130F",
+      "ink": "#ECEFE8",
+      "spark": "#7FD3AE",
+      "tile": true
+    },
+    "bare": {
+      "bg": "transparent",
+      "ink": "#1E5C45",
+      "spark": "#34A07C",
+      "tile": false
+    },
+    "bareOnDark": {
+      "bg": "transparent",
+      "ink": "#ECEFE8",
+      "spark": "#7FD3AE",
+      "tile": false
+    }
+  },
+  "glyph": {
+    "large": {
+      "stem": "M4.8 7.3v10",
+      "stemWidth": 4,
+      "cx": 8.8,
+      "cy": 9.7,
+      "r": 3.5,
+      "ringWidth": 3.4,
+      "sparks": "M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9",
+      "sparkWidth": 2.2
+    },
+    "small": {
+      "stem": "M4.6 7.3v10",
+      "stemWidth": 4.5,
+      "cx": 8.6,
+      "cy": 9.7,
+      "r": 3.5,
+      "ringWidth": 3.9,
+      "sparks": "M14.3 3.9L15.6 2.5M15.7 7.3L17.5 7M11.4 1.9L11.6 0.6",
+      "sparkWidth": 2.3
+    }
+  },
+  "smallAt": 16,
+  "glyphScale": {
+    "tile": 0.66,
+    "tinyTile": 0.84,
+    "tinyTileAt": 20
+  },
+  "radius": 0.22
+}
