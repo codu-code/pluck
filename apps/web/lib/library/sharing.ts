@@ -42,13 +42,23 @@ export async function setListVisibility(userId: string, listId: string, visibili
   throw new ApiError("not_found", "No such list.", 404);
 }
 
+// Route params can arrive still percent-encoded (the /@handle/slug rewrite passes them on as they came), and a slug
+// can hold any letter: "café-東京-reading". A malformed escape is left as it is, and then simply finds nothing.
+const decoded = (s: string) => {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+};
+
 // The public page's data. Views count on the server, never for the owner.
 export async function publicPage(
   handle: string,
   slug: string,
   { viewerId, count = true }: { viewerId?: string | null; count?: boolean } = {},
 ): Promise<PublicList | null> {
-  const page = await publicList(handle, slug);
+  const page = await publicList(decoded(handle), decoded(slug));
   if (page && count && !(viewerId && (await listOwnedBy(page.list.id, viewerId)))) await recordView(page.list.id);
   return page;
 }
