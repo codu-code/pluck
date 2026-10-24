@@ -55,6 +55,8 @@ Then:
 
 Do not set `SMTP_URL`, `S3_ENDPOINT`, `S3_PUBLIC_ENDPOINT`, `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` in production.
 
+Preview deployments build every PR, and the build reads the database, so set `MONGODB_URI` (a separate preview database, never production's) and `BETTER_AUTH_SECRET` for the Preview environment too, or every preview fails at "Collecting page data".
+
 4. Domain: add `getpluck.io` to the project as the primary domain. Keep `/.well-known/*` and `/mcp` free of apex-to-www redirects (AI tools do not follow them during sign-in).
 5. Firewall (Project, Firewall): add a rate-limit rule on paths starting `/api/auth/`, 60 requests a minute per IP, action Deny. The app limits sign-in on its own; this rule turns a flood away before it costs a function run.
 

@@ -78,3 +78,17 @@ test("Private again is a 404 at once", async ({ page, browser }) => {
   await page.request.patch(`/api/v1/lists/${list.id}`, { data: { visibility: "private" } });
   expect((await anon.goto(`/@${me.handle}/short-lived`))?.status()).toBe(404);
 });
+
+test("a public list named in any script opens at its own address", async ({ browser }) => {
+  const owner = await (await browser.newContext()).newPage();
+  await signIn(owner);
+  const handle = `e2e-${Date.now().toString(36)}`;
+  await owner.request.patch("/api/v1/me", { data: { handle } });
+  const item = (await (await owner.request.post("/api/v1/items", { data: { url: `${FIX}/news-2.html` } })).json()).results[0].item;
+  const { list } = await (await owner.request.post("/api/v1/lists", { data: { name: "Café 東京 reading", items: [{ itemId: item.id }] } })).json();
+  await owner.request.patch(`/api/v1/lists/${list.id}`, { data: { visibility: "public" } });
+  const { slug } = (await (await owner.request.get(`/api/v1/lists/${list.id}`)).json()).list;
+  const visitor = await (await browser.newContext()).newPage();
+  await visitor.goto(`/@${handle}/${encodeURIComponent(slug)}`);
+  await expect(visitor.getByRole("heading", { level: 1 })).toHaveText("Café 東京 reading");
+});
