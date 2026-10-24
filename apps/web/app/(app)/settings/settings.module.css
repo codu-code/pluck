@@ -66,3 +66,10 @@
 .deleteForm { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
 .dangerButton { height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font: inherit; font-weight: 500; cursor: pointer; }
 .dangerButton:disabled { opacity: 0.5; cursor: default; }
+.aiGrid { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.aiSteps { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.aiSide { flex: 0 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.codeQuiet { height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: var(--rail); font: 13px ui-monospace, "SF Mono", Menlo, monospace; overflow: hidden; white-space: nowrap; }
+.gif { height: 180px; border-radius: 8px; background: var(--rail); display: flex; align-items: center; justify-content: center; color: var(--ink2); font-size: 12px; text-align: center; padding: 0 16px; }
+.status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.statusDot { width: 8px; height: 8px; border-radius: 4px; flex: none; }

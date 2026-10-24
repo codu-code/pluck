@@ -1,0 +1,9 @@
+.page { min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; }
+.card { width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 16px; }
+.title { margin: 8px 0 0; font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em; }
+.meta { margin: 0; color: var(--ink2); }
+.scopes { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.scopes li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+.buttons { display: flex; gap: 8px; margin-top: 8px; }
+.allow { height: 44px; padding: 0 20px; border-radius: 8px; border: 0; background: var(--brand); color: var(--on-brand); font: inherit; font-weight: 600; cursor: pointer; }
+.deny { height: 44px; padding: 0 20px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }

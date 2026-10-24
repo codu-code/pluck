@@ -13,6 +13,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1156.0",
+    "@better-auth/cimd": "1.7.12",
+    "@better-auth/mcp": "1.7.12",
+    "@better-auth/oauth-provider": "1.7.12",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@pluck/mcp-server": "workspace:*",
     "@pluck/blob": "workspace:*",
     "@pluck/db": "workspace:*",
     "@pluck/extract": "workspace:*",

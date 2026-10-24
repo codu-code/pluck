@@ -72,6 +72,17 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await snap("search");
   await page.goto("/settings");
   await snap("settings");
+  const reg = await page.request.post("/api/auth/oauth2/register", {
+    headers: { origin: new URL(page.url()).origin }, // signed in, so Better Auth checks the origin
+    data: { client_name: "Test AI", redirect_uris: [`${FIX}/callback`], token_endpoint_auth_method: "none", grant_types: ["authorization_code"], response_types: ["code"] },
+  });
+  const consent = new URLSearchParams({
+    response_type: "code", client_id: (await reg.json()).client_id, redirect_uri: `${FIX}/callback`, state: "s", scope: "library:read library:write",
+    code_challenge: "x".repeat(43), code_challenge_method: "S256", resource: `${new URL(page.url()).origin}/mcp`,
+  });
+  await page.goto(`/api/auth/oauth2/authorize?${consent}`);
+  await page.waitForURL(/\/oauth\/consent/);
+  await snap("consent");
   await page.goto("/later");
   await snap("later");
   await page.goto("/inbox");

@@ -1,0 +1,14 @@
+{
+  "name": "@pluck/mcp-server",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p ." },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "@pluck/shared-schemas": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

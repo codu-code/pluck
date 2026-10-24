@@ -10,8 +10,21 @@ export const metadata: Metadata = { title: "Sign in · Pluck" };
 // Only same-site paths, so a crafted link cannot bounce people elsewhere after sign-in.
 const safeNext = (n?: string) => (n && n.startsWith("/") && !n.startsWith("//") ? n : "/inbox");
 
-export default async function SignIn({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
-  const next = safeNext((await searchParams).next);
+// Sent here by the OAuth provider (an AI tool connecting): after the email link signs you in, carry on
+// with the same authorization request. The signing fields only matter to this page, so they are dropped.
+function oauthResume(params: Record<string, string | string[] | undefined>): string | null {
+  if (!params.sig || !params.client_id) return null;
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(params)) {
+    if (["sig", "exp", "next"].includes(k) || k.startsWith("ba_") || v === undefined) continue;
+    for (const x of Array.isArray(v) ? v : [v]) q.append(k, x);
+  }
+  return `/api/auth/oauth2/authorize?${q}`;
+}
+
+export default async function SignIn({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
+  const next = oauthResume(params) ?? safeNext(typeof params.next === "string" ? params.next : undefined);
   if (await currentUser()) redirect(next);
   return (
     <main className={styles.page}>

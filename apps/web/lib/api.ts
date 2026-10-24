@@ -14,7 +14,7 @@ const errorResponse = (e: ApiError, headers?: HeadersInit) =>
 export type Caller = { userId: string; scopes: string[] };
 
 // Every API request resolves to a caller here: a personal API key (Bearer pk_live_…) or the session cookie.
-// OAuth access tokens for MCP clients, the extension and iOS join in slice 13.
+// MCP clients authenticate in app/mcp/route.ts; OAuth tokens for the extension and iOS join here in slice 14.
 export async function authenticate(req: Request): Promise<Caller | null> {
   const bearer = req.headers.get("authorization")?.match(/^Bearer\s+(\S+)$/i)?.[1];
   if (bearer?.startsWith("pk_live_")) return verifyApiKey(bearer);

@@ -1,10 +1,10 @@
 import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  applyExtraction, createApiKey, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport,
+  aiConnections, applyExtraction, createApiKey, disconnectAi, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport,
   listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
-import { normalizeUrl, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
+import { normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
 import { ApiError } from "../errors";
@@ -16,6 +16,13 @@ export const keysOf = (userId: string): Promise<ApiKey[]> => listApiKeys(userId)
 export const newKey = (userId: string, name: string, scopes?: string[]) => createApiKey(userId, name, scopes);
 export async function revokeKey(userId: string, id: string): Promise<void> {
   if (!(await revokeApiKey(userId, id))) throw new ApiError("not_found", "No such key.", 404);
+}
+
+// ---- AI tools connected over OAuth -------------------------------------------------------------------
+
+export const aiToolsOf = (userId: string): Promise<AiConnection[]> => aiConnections(userId);
+export async function disconnectAiTool(userId: string, clientId: string): Promise<void> {
+  if (!(await disconnectAi(userId, clientId))) throw new ApiError("not_found", "That AI tool is not connected.", 404);
 }
 
 // ---- Import ---------------------------------------------------------------------------------------

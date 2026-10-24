@@ -125,6 +125,8 @@ export async function deleteAccountData(userId: string): Promise<void> {
     // Better Auth rows: its Mongo adapter stores userId as an ObjectId; cover the string form too.
     d.collection("auth_sessions").deleteMany({ userId: { $in: [uid, userId] } }),
     d.collection("auth_accounts").deleteMany({ userId: { $in: [uid, userId] } }),
+    d.collection("oauthConsent").deleteMany({ userId: { $in: [uid, userId] } }),
+    d.collection("oauthRefreshToken").deleteMany({ userId: { $in: [uid, userId] } }),
   ]);
   await (await users()).deleteOne({ _id: uid });
 }

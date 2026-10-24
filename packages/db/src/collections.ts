@@ -98,6 +98,7 @@ export type UserDoc = {
   settings?: Partial<UserSettings>;
   expiryRanOn?: string; // local date of the last nightly expiry, the claim that makes it run once a day
   digestSentOn?: string; // local date of the last Monday digest
+  lastMcpCallAt?: Date; // the connector's last call, for Settings, written at most once a minute
 };
 
 export type UserSettings = {

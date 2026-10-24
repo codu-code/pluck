@@ -13,8 +13,9 @@ const LINKS = [
   { href: "/settings", label: "Settings" },
 ];
 
-// Settings sections, added as their slices land (Settings board order).
+// Settings sections, in Settings board order.
 const SETTINGS = [
+  { href: "#ai", label: "AI tools" },
   { href: "#email", label: "Email-in" },
   { href: "#keys", label: "API keys" },
   { href: "#expiry", label: "Expiry and archive" },

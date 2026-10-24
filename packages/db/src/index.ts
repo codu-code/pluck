@@ -18,7 +18,7 @@ export {
   createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
-export { getMe, setName, setHandle, updateSettings, type HandleResult } from "./users.ts";
+export { getMe, markMcpCall, setName, setHandle, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS } from "./public.ts";
@@ -29,3 +29,4 @@ export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOP
 export {
   createImport, getImport, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
 } from "./account.ts";
+export { aiConnections, disconnectAi, isAiConnected } from "./ai-tools.ts";

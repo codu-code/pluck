@@ -75,6 +75,7 @@ export const Me = z.object({
   handleChangeableAt: z.string().nullable(), // when a set handle can change again
   createdAt: z.string(),
   settings: Settings,
+  lastMcpCallAt: z.string().nullable(), // when an AI tool last used the connector
 });
 export type Me = z.infer<typeof Me>;
 export const UpdateMeBody = z
@@ -138,3 +139,7 @@ export const ImportStatus = z.object({
 });
 export type ImportStatus = z.infer<typeof ImportStatus>;
 export const CreateImportBody = z.object({ source: ImportSourceEnum, size: z.number().int().min(1).max(500_000_000) });
+
+// An AI tool the person connected over OAuth, shown in Settings with a Disconnect button.
+export const AiConnection = z.object({ clientId: z.string(), name: z.string(), scopes: z.array(z.string()), connectedAt: z.string() });
+export type AiConnection = z.infer<typeof AiConnection>;

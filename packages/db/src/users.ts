@@ -12,7 +12,16 @@ const toMe = (d: UserDoc): Me => ({
   handleChangeableAt: d.handle && d.handleChangedAt ? new Date(d.handleChangedAt.getTime() + MONTH_MS).toISOString() : null,
   createdAt: d.createdAt.toISOString(),
   settings: { ...DEFAULT_SETTINGS, ...d.settings },
+  lastMcpCallAt: d.lastMcpCallAt?.toISOString() ?? null,
 });
+
+// Settings shows "Connected · last call"; one write a minute at most, however busy the AI tool is.
+export async function markMcpCall(userId: string, now = new Date()): Promise<void> {
+  await (await users()).updateOne(
+    { _id: oid(userId), $or: [{ lastMcpCallAt: { $exists: false } }, { lastMcpCallAt: { $lt: new Date(now.getTime() - 60_000) } }] },
+    { $set: { lastMcpCallAt: now } },
+  );
+}
 
 export async function updateSettings(userId: string, patch: Partial<UserSettings>): Promise<Me | null> {
   const set = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined).map(([k, v]) => [`settings.${k}`, v]));

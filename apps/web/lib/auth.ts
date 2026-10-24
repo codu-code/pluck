@@ -1,11 +1,18 @@
 import { authAdapter } from "@pluck/db";
+import { cimd } from "@better-auth/cimd";
+import { fetchClientMetadataResource } from "@better-auth/cimd/node";
+import { mcp } from "@better-auth/mcp";
 import { betterAuth } from "better-auth";
-import { magicLink } from "better-auth/plugins";
+import { jwt, magicLink } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { sendEmail } from "./email";
 import { magicLinkEmail } from "./emails";
 
 const DAY = 60 * 60 * 24;
+
+// The MCP endpoint is the protected resource every OAuth token is bound to (aud).
+export const MCP_RESOURCE = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/mcp`;
+export const LIBRARY_SCOPES = ["library:read", "library:write", "library:delete"] as const;
 
 export const auth = betterAuth({
   database: authAdapter(),
@@ -18,10 +25,32 @@ export const auth = betterAuth({
   // In-memory limits reset per serverless instance; the database is shared.
   // AUTH_RATE_LIMIT=off is for the e2e server only, which signs in from one IP many times a minute.
   rateLimit: { storage: "database", modelName: "auth_rate_limits", enabled: process.env.AUTH_RATE_LIMIT !== "off" },
+  onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so
   plugins: [
     magicLink({
       expiresIn: 10 * 60,
       sendMagicLink: ({ email, url }) => sendEmail(magicLinkEmail(email, url)),
+    }),
+    // OAuth 2.1 for MCP clients (and later the extension and iOS): JWT access tokens bound to MCP_RESOURCE.
+    jwt(),
+    mcp({
+      loginPage: "/signin",
+      consentPage: "/oauth/consent",
+      resource: MCP_RESOURCE,
+      scopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES],
+      accessTokenExpiresIn: 60 * 60,
+      refreshTokenExpiresIn: 90 * DAY,
+      // CIMD first; dynamic registration as the fallback for clients that do not speak CIMD yet.
+      allowDynamicClientRegistration: true,
+      allowUnauthenticatedClientRegistration: true,
+      clientRegistrationDefaultApplicationType: "infer",
+      clientRegistrationDefaultScopes: ["offline_access", "library:read", "library:write"],
+      clientRegistrationAllowedScopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES],
+    }),
+    cimd({
+      // Dev and tests use plain fetch (looked up per call, so tests can stand in for the client's server); prod uses the guarded Node transport.
+      fetchClientMetadataResource: process.env.ALLOW_PRIVATE_FETCH === "1" ? (input, init) => fetch(input, init) : fetchClientMetadataResource,
+      metadataProfile: "mcp-2026-07-28",
     }),
   ],
 });

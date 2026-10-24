@@ -17,14 +17,17 @@
     "design": "node scripts/design-check.mjs"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/server": "2.4.0",
     "@playwright/test": "1.64.1",
+    "@pluck/blob": "workspace:*",
+    "@pluck/db": "workspace:*",
     "@types/node": "^22",
     "eslint": "10.13.0",
+    "impeccable": "4.7.0",
     "typescript": "^5.9",
     "typescript-eslint": "8.72.0",
     "vitest": "5.0.5",
-    "@pluck/db": "workspace:*",
-    "impeccable": "4.7.0",
-    "@pluck/blob": "workspace:*"
+    "zod": "4.6.7"
   }
 }
