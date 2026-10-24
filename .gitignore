@@ -13,3 +13,4 @@ cdk.out/
 .wxt/
 apps/ios/ios/
 apps/ios/.expo/
+.vercel
