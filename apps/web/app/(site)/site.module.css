@@ -257,7 +257,7 @@
 .answers { display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
 .answer { display: flex; flex-direction: column; gap: 8px; padding: 24px 0; border-bottom: 1px solid var(--line-strong); scroll-margin-top: 24px; }
 .answer h3 { margin: 0; font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: -0.015em; text-wrap: balance; }
-.answer p { margin: 0; max-width: 64ch; font-size: 17px; line-height: 27px; color: #394034; text-wrap: pretty; }
+.answer p { margin: 0; max-width: 54ch; font-size: 17px; line-height: 27px; color: #394034; text-wrap: pretty; }
 .answer a { font-weight: 600; text-underline-offset: 3px; }
 .answer kbd { display: inline-flex; align-items: center; min-width: 26px; height: 24px; padding: 0 7px; border-radius: 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; line-height: 1; color: var(--ink); vertical-align: 1px; }
 .bugsSection { padding-top: 128px; padding-bottom: 96px; scroll-margin-top: 24px; }
@@ -273,7 +273,7 @@
 .legalLede { margin: 0; max-width: 54ch; font-size: 20px; line-height: 30px; color: var(--ink2); }
 .legalSection { display: flex; flex-direction: column; gap: 10px; padding-top: 28px; border-top: 1px solid var(--line); }
 .legalSection h2 { margin: 0; font-size: 24px; line-height: 30px; font-weight: 600; letter-spacing: -0.02em; }
-.legalSection p, .legalBox span { margin: 0; max-width: 60ch; }
+.legalSection p, .legalBox span { margin: 0; max-width: 52ch; } /* Geist's "0" is wide: 52ch holds about 75 letters */
 .legalBox { display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: var(--rail); }
 .legalBox b { font-weight: 600; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

@@ -42,14 +42,23 @@ export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/i
 export async function snapshot(page: Page, name: string): Promise<void> {
   const { html, fonts } = await page.evaluate(async () => {
     const rules = [...document.styleSheets].flatMap((s) => [...s.cssRules]);
-    const css = rules.map((r) => r.cssText).join("\n");
-    const urls = new Set(rules.filter((r) => r instanceof CSSFontFaceRule).flatMap((r) => [...r.cssText.matchAll(/url\("?([^")]+)"?\)/g)].map((m) => m[1]!)));
-    const fonts = await Promise.all([...urls].map(async (u) => {
-      const at = new URL(u, location.href);
+    // Font URLs are relative to their stylesheet, not the page: fetch each from there and point the copy at /fonts/.
+    const found = new Map<string, string>(); // absolute URL → file name
+    const css = rules.map((r) => {
+      if (!(r instanceof CSSFontFaceRule)) return r.cssText;
+      const base = r.parentStyleSheet?.href ?? location.href;
+      return r.cssText.replace(/url\("?([^")]+)"?\)/g, (_, u: string) => {
+        const at = new URL(u, base).href;
+        const name = new URL(at).pathname.split("/").pop()!;
+        found.set(at, name);
+        return `url("/fonts/${name}")`;
+      });
+    }).join("\n");
+    const fonts = await Promise.all([...found].map(async ([at, name]) => {
       const bytes = new Uint8Array(await (await fetch(at)).arrayBuffer());
       let bin = "";
       for (const b of bytes) bin += String.fromCharCode(b);
-      return { path: at.pathname, data: btoa(bin) };
+      return { path: `/fonts/${name}`, data: btoa(bin) };
     }));
     const doc = document.documentElement.cloneNode(true) as HTMLElement;
     doc.querySelectorAll("script, link[rel=stylesheet], link[rel=preload]").forEach((n) => n.remove());
