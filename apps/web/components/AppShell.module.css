@@ -23,3 +23,20 @@
 .sublink { height: 28px; display: flex; align-items: center; padding: 0 8px; color: var(--ink2); text-decoration: none; }
 .sublink:hover { color: var(--ink); }
 .count { font-weight: 400; color: var(--ink2); }
+
+/* Phones: the rail becomes a slim top bar (logo and you), the five places a tab bar at the bottom, in thumb
+   reach. Settings' section links go; the page itself is the list. */
+@media (max-width: 799px) {
+  .frame { flex-direction: column; flex-wrap: nowrap; }
+  .rail { position: sticky; top: 0; z-index: 25; flex: none; flex-direction: row; align-items: center; gap: 12px; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); border-bottom: 1px solid var(--line); }
+  .home { padding: 0; }
+  .me { margin: 0 0 0 auto; padding: 0; }
+  .meName { display: none; }
+  .sublinks { display: none; }
+  .links { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; flex-direction: row; gap: 0; padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--line); }
+  .link { position: relative; flex: 1 1 0; flex-direction: column; justify-content: center; height: 48px; padding: 0; border-radius: 10px; font-size: 12px; font-weight: 500; color: var(--ink2); }
+  .link:hover { background: transparent; }
+  .link[aria-current="page"] { background: var(--rail-active); color: var(--ink); font-weight: 600; }
+  .count { position: absolute; top: 4px; right: calc(50% - 26px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--brand); color: var(--on-brand); font-size: 10px; line-height: 16px; text-align: center; }
+  .main { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+}

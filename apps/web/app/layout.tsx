@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  viewportFit: "cover", // the phone tab bar pads itself for the home indicator
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#F6F8F4" },
     { media: "(prefers-color-scheme: dark)", color: "#10130F" },

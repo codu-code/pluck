@@ -24,4 +24,11 @@
 .byAi { display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 8px; border-radius: 11px; border: 1px solid var(--clay-line); color: var(--clay); font-size: 12px; }
 .dot { width: 6px; height: 6px; border-radius: 3px; background: var(--clay-dot); }
 .foot { margin: 0; color: var(--ink2); font-size: 13px; }
-@media (max-width: 600px) { .page { padding: 20px 16px 32px; } }
+@media (max-width: 600px) {
+  .page { padding: 20px 16px 32px; }
+  /* A phone shows the name, who can see it and the ticks; the column heads and Last added go. */
+  .table { min-width: 0; }
+  .table thead, .table td:nth-child(4) { display: none; }
+  .table td { padding: 14px 8px; }
+  .table td:first-child { padding-left: 0; }
+}

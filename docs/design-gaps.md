@@ -70,7 +70,7 @@ Listed on every test run by `scripts/placeholders.test.ts`; the current set:
 
 | Placeholder | Where | What it is |
 |---|---|---|
-| `[CONNECTOR GIF]` | Settings, AI tools | A 20-second clip of adding the connector in an AI tool |
+| `[CONNECTOR GIF]` | Settings, AI tools | A 20-second clip of adding the connector in an AI tool. A drawn three-line conversation stands in until then |
 | `[CHROME STORE URL]`, `[FIREFOX ADDONS URL]`, `[APP STORE URL]` | `apps/web/lib/site.ts` (home page buttons) | Store listings |
 | `[DATE]` | Privacy, Terms | "Last updated" |
 | `[LEGAL ENTITY]`, `[ADDRESS]` | Privacy | The company behind Pluck |
