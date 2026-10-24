@@ -28,7 +28,7 @@ a{color:#ECEFE8}a:hover{color:#7FD3AE}
 
 <section style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 72px 24px 0; display: flex; flex-direction: column; gap: 28px">
 <span style="font: 500 13px 'Geist Mono', monospace; color: #D08A68; letter-spacing: 0.04em">PLUCK + YOUR AI · MCP</span>
-<h1 style="margin: 0; font-size: clamp(56px, 9vw, 132px); line-height: 0.9; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em; max-width: 1100px">Ready for your AI. Whichever one you use.</h1>
+<h1 style="margin: 0; font-size: clamp(48px, 6.4vw, 92px); line-height: 0.94; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em; max-width: 1000px">Ready for your AI. Whichever one you use.</h1>
 <p style="margin: 0; max-width: 640px; font-size: 22px; line-height: 33px; color: #A0A898">Pluck speaks MCP, the open standard AI tools use to plug into apps. One link and your AI can read, search and sort your whole library. It changes things only when you say so, and never deletes.</p>
 </section>
 
@@ -92,8 +92,8 @@ a{color:#ECEFE8}a:hover{color:#7FD3AE}
 
 <footer style="border-top: 1px solid #2A2F27">
 <div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 14px; color: #A0A898">
-<span style="margin-right: auto">Pluck is free and open source. Made in Dublin.</span>
-<a href="Landing.dc.html" style="color: #A0A898">Home</a><a href="SiteOpen.dc.html" style="color: #A0A898">Open source</a><a href="SitePrivacy.dc.html" style="color: #A0A898">Privacy</a><a href="SiteTerms.dc.html" style="color: #A0A898">Terms</a>
+<span style="margin-right: auto">Pluck is free and open source.</span>
+<a href="Landing.dc.html" style="color: #A0A898">Home</a><a href="SiteOpen.dc.html" style="color: #A0A898">Open source</a><a href="SiteSupport.dc.html" style="color: #A0A898">Support</a><a href="SitePrivacy.dc.html" style="color: #A0A898">Privacy</a><a href="SiteTerms.dc.html" style="color: #A0A898">Terms</a>
 </div>
 </footer>
 </div>
@@ -104,7 +104,7 @@ var TABS = {
   code: { label: "Claude Code", steps: ["Open a terminal.", "Run the one line on the right.", "Say “what did I pluck this week?” to test it."], codeLabel: "One line", code: "claude mcp add --transport http pluck https://getpluck.io/mcp", note: "Signs you in through your browser the first time." },
   chatgpt: { label: "ChatGPT", steps: ["Open ChatGPT, then Settings, then Connectors.", "Choose Create and paste the link as the MCP server URL.", "Sign in to Pluck when it asks."], codeLabel: "MCP server URL", code: "https://getpluck.io/mcp", note: "Needs a plan that allows custom connectors." },
   cursor: { label: "Cursor", steps: ["Open Cursor settings, then MCP.", "Add a server with the JSON on the right.", "Sign in to Pluck when it asks."], codeLabel: "mcp.json", code: "{ \"mcpServers\": { \"pluck\": { \"url\": \"https://getpluck.io/mcp\" } } }", note: "Any editor or client that supports remote MCP works the same way." },
-  self: { label: "Self-hosted", steps: ["Make an API key in Settings.", "Run the line on the right where your AI tool runs.", "Point it at the local server it starts."], codeLabel: "Without a public URL", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." }
+  self: { label: "Self-hosted", steps: ["Make an API key in Settings.", "Add the line on the right to your AI tool as a local (stdio) server.", "Ask it what you plucked this week."], codeLabel: "Without a public URL", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." }
 };
 class Component extends DCLogic {
   constructor(p) { super(p); this.state = { tab: "claude" }; }
@@ -119,14 +119,14 @@ class Component extends DCLogic {
         { name: "search_items", does: "Text search over title, note, tags, list names and body." },
         { name: "list_items", does: "Browse Inbox, Later, Archive or Done, newest or untouched first." },
         { name: "get_item", does: "One item in full, including the stored page text." },
-        { name: "save_item", does: "Pluck a link, many links, a note, a todo or a thing. Marked as saved by AI." },
+        { name: "save_item", does: "Pluck a link, many links, a note, a todo or a thing. Marked as plucked by AI." },
         { name: "batch_update", does: "Status, kind, tags and due dates on one or many items." },
         { name: "list_tags", does: "Your tags, with counts." },
         { name: "create_tag", does: "A new tag, only after you said yes." },
         { name: "list_lists", does: "Your lists, with purpose, count and visibility." },
         { name: "get_list", does: "One list in order, with notes and ticks." },
         { name: "create_list", does: "A new list with items in order and a note per item. Private." },
-        { name: "update_list", does: "Rename, reorder, add, tick, or make public when you say so." },
+        { name: "update_list", does: "Rename, reorder, add, tick, or make private. Only you make a list public." },
         { name: "get_digest", does: "Expiring, due, oldest and quiet lists. The Monday email, as data." }
       ],
       prompts: [
@@ -135,7 +135,7 @@ class Component extends DCLogic {
         { say: "Three blog ideas from what I plucked this week.", does: "Reads the best five in full and drafts three angles with sources. Pick one and it plucks the draft back in as a Note." },
         { say: "Run my weekly review.", does: "The Monday email, in conversation. One decision at a time." }
       ],
-      never: ["Delete anything. The scope isn't granted.", "Make a tag you didn't ask for.", "Change a tag you made.", "Rewrite a list's purpose.", "Make a list public without you saying so."]
+      never: ["Delete anything. The scope isn't granted.", "Make a tag you didn't ask for.", "Rename or remove a tag you made.", "Rewrite a list's purpose.", "Make a list public. Only you can, from the list in Pluck."]
     };
   }
 }

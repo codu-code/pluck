@@ -12,7 +12,7 @@
 body{margin:0}
 </style>
 </helmet>
-<span role="img" aria-label="Pluck" style="display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box; width: {{box}}; height: {{box}}; border-radius: {{radius}}; background: {{bg}}"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: {{glyph}}; height: {{glyph}}; overflow: visible"><path d="M6 8.2v10" fill="none" stroke="{{ink}}" stroke-width="{{stem}}" stroke-linecap="round"></path><circle cx="10" cy="10.6" r="3.5" fill="none" stroke="{{ink}}" stroke-width="{{ring}}"></circle><path d="{{sparks}}" fill="none" stroke="{{spark}}" stroke-width="{{sw}}" stroke-linecap="round"></path></svg></span>
+<span role="img" aria-label="Pluck" style="display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box; width: {{box}}; height: {{box}}; border-radius: {{radius}}; background: {{bg}}"><svg viewBox="0 0 20 20" aria-hidden="true" style="width: {{glyph}}; height: {{glyph}}; overflow: visible"><path d="{{stemD}}" fill="none" stroke="{{ink}}" stroke-width="{{stem}}" stroke-linecap="round"></path><circle cx="{{cx}}" cy="{{cy}}" r="3.5" fill="none" stroke="{{ink}}" stroke-width="{{ring}}"></circle><path d="{{sparks}}" fill="none" stroke="{{spark}}" stroke-width="{{sw}}" stroke-linecap="round"></path></svg></span>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"size":{"editor":"int","default":128,"min":12,"max":512,"unit":"px"},"tone":{"editor":"enum","options":["forest","mint","dark","bare","bareOnDark"],"default":"forest"},"$preview":{"width":128,"height":128}}'>
 var TONES = {
@@ -33,10 +33,14 @@ class Component extends DCLogic {
       radius: t.tile ? Math.round(size * 0.22) + "px" : "0",
       bg: t.bg, ink: t.ink, spark: t.spark,
       glyph: glyph + "px",
-      stem: small ? 4.6 : 4,
-      ring: small ? 4 : 3.4,
-      sparks: small ? "M15.1 5.4L16.9 3.6M16.4 8.6L18.8 8.2" : "M15.3 5.3L16.7 3.9M16.6 8.3L18.4 8M12.8 3.2L13 1.8",
-      sw: small ? 2.8 : 2.2
+      // Optical centre: halfway between the p's own centre and the centre of the whole mark, sparks included.
+      stemD: small ? "M4.6 7.3v10" : "M4.8 7.3v10",
+      cx: small ? 8.6 : 8.8,
+      cy: small ? 9.7 : 9.7,
+      stem: small ? 4.5 : 4,
+      ring: small ? 3.9 : 3.4,
+      sparks: small ? "M14.3 3.9L15.6 2.5M15.7 7.3L17.5 7M11.4 1.9L11.6 0.6" : "M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9",
+      sw: small ? 2.3 : 2.2
     };
   }
 }

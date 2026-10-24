@@ -69,7 +69,7 @@ a{color:#151A13}a:hover{color:#525A4E}
 <div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; color: #525A4E">Kind</span>
 <div role="group" aria-label="Kind" style="display: flex; justify-content: space-between">
 <sc-for list="{{kinds}}" as="k" hint-placeholder-count="7">
-<button type="button" aria-label="{{k.name}}" aria-pressed="{{k.on}}" style="width: 36px; height: 44px; border-radius: 10px; border: 1px solid {{k.border}}; background: {{k.bg}}; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k.d}}" fill="none" stroke="{{k.fg}}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<button type="button" aria-label="{{k.name}}" aria-pressed="{{k.on}}" aria-disabled="{{k.off}}" style="opacity: {{k.op}}; width: 36px; height: 44px; border-radius: 10px; border: 1px solid {{k.border}}; background: {{k.bg}}; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="17" height="17" viewBox="0 0 16 16" aria-hidden="true"><path d="{{k.d}}" fill="none" stroke="{{k.fg}}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
 </sc-for>
 </div></div>
 <label style="display: flex"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Why you plucked it</span><input type="text" placeholder="Why you plucked it, in a line. Optional." style="flex: 1; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #D3D9CE; background: #FFFFFF; font: inherit; color: #151A13"></label>
@@ -126,7 +126,7 @@ var K = [
 ];
 class Component extends DCLogic {
   renderVals() {
-    return { kinds: K.map((k, i) => ({ name: k[0], d: k[1], on: i === 0 ? "true" : "false", bg: i === 0 ? "#151A13" : "#FFFFFF", fg: i === 0 ? "#F6F8F4" : "#151A13", border: i === 0 ? "#151A13" : "#D3D9CE" })) };
+    return { kinds: K.map((k, i) => ({ name: k[0], d: k[1], off: /Note|Todo|Thing/.test(k[0]) ? "true" : "false", op: /Note|Todo|Thing/.test(k[0]) ? 0.35 : 1, on: i === 0 ? "true" : "false", bg: i === 0 ? "#151A13" : "#FFFFFF", fg: i === 0 ? "#F6F8F4" : "#151A13", border: i === 0 ? "#151A13" : "#D3D9CE" })) };
   }
 }
 </script>

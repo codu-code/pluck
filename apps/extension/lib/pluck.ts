@@ -73,7 +73,7 @@ export async function drain(): Promise<number> {
 // ---- The toolbar: a dot while plucks are queued; the icon fills in on pages already in the library -------
 
 async function showQueued(count: number) {
-  await browser.action.setBadgeBackgroundColor({ color: "#C27A3A" });
+  await browser.action.setBadgeBackgroundColor({ color: "#9A5536" });
   await browser.action.setBadgeText({ text: count ? "•" : "" });
 }
 

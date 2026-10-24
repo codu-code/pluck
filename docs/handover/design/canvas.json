@@ -20,7 +20,7 @@
     },
     "Claude.dc.html": {
       "h": 1200,
-      "title": "AI connector in use (Claude shown)",
+      "title": "AI connector in use",
       "w": 1440,
       "x": 0,
       "y": 7900
@@ -269,6 +269,80 @@
       "h": 2500,
       "title": "Site · Terms",
       "expand": "fill"
+    },
+    "SiteSupport.dc.html": {
+      "x": 9920,
+      "y": 7900,
+      "w": 1440,
+      "h": 3900,
+      "title": "Site · Support",
+      "expand": "fill"
+    },
+    "SiteChrome.dc.html": {
+      "x": 11440,
+      "y": 7900,
+      "w": 1440,
+      "h": 1000,
+      "title": "Site · Chrome, coming soon",
+      "expand": "fill"
+    },
+    "SiteIPhone.dc.html": {
+      "x": 11440,
+      "y": 9000,
+      "w": 1440,
+      "h": 1000,
+      "title": "Site · iPhone, coming soon",
+      "expand": "fill"
+    },
+    "Cookies.dc.html": {
+      "x": 12960,
+      "y": 7900,
+      "w": 1440,
+      "h": 1500,
+      "title": "Site · Cookie banner",
+      "is_interactive": true
+    },
+    "AppStore1.dc.html": {
+      "x": 0,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · screenshot 1 of 5 (6.9 in)"
+    },
+    "AppStore2.dc.html": {
+      "x": 1400,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · screenshot 2 of 5 (6.9 in)"
+    },
+    "AppStore3.dc.html": {
+      "x": 2800,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · screenshot 3 of 5 (6.9 in)"
+    },
+    "AppStore4.dc.html": {
+      "x": 4200,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · screenshot 4 of 5 (6.9 in)"
+    },
+    "AppStore5.dc.html": {
+      "x": 5600,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · screenshot 5 of 5 (6.9 in)"
+    },
+    "ConnectLoop.dc.html": {
+      "x": 7200,
+      "y": 12900,
+      "w": 1440,
+      "h": 3400,
+      "title": "Motion · Connect your AI loop, 10 s"
     }
   },
   "createdOnFiles": {
@@ -282,7 +356,7 @@
   "notes": {
     "t-claude": {
       "kind": "title1",
-      "maxW": 9840,
+      "maxW": 14400,
       "text": "AI connector, email and the marketing site",
       "w": 240,
       "x": 0,
@@ -327,6 +401,22 @@
       "w": 240,
       "x": 0,
       "y": 2820
+    },
+    "t-appstore": {
+      "kind": "title1",
+      "maxW": 6920,
+      "text": "App Store screenshots, 1320 × 2868",
+      "w": 240,
+      "x": 0,
+      "y": 12600
+    },
+    "t-motion": {
+      "kind": "title1",
+      "maxW": 1440,
+      "text": "Motion",
+      "w": 240,
+      "x": 7200,
+      "y": 12600
     }
   },
   "order": [
@@ -362,8 +452,18 @@
     "SiteClaude.dc.html",
     "SiteOpen.dc.html",
     "SitePrivacy.dc.html",
-    "SiteTerms.dc.html"
+    "SiteTerms.dc.html",
+    "SiteSupport.dc.html",
+    "SiteChrome.dc.html",
+    "SiteIPhone.dc.html",
+    "Cookies.dc.html",
+    "AppStore1.dc.html",
+    "AppStore2.dc.html",
+    "AppStore3.dc.html",
+    "AppStore4.dc.html",
+    "AppStore5.dc.html",
+    "ConnectLoop.dc.html"
   ],
   "pages": [],
-  "title": "Pluck — Product and Design v1"
+  "title": "Pluck — Product and Design"
 }

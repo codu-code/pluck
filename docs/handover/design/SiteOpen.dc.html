@@ -37,12 +37,12 @@ a{color:#151A13}a:hover{color:#525A4E}
 <p style="margin: 0; font-size: 19px; line-height: 29px; color: #394034">The same app, extension, iPhone app and AI connector. Point them at your server in Settings.</p>
 </div>
 <div style="border-radius: 16px; background: #151A13; color: #ECEFE8; padding: 24px 28px; font: 15px/26px 'Geist Mono', ui-monospace, monospace; display: flex; flex-direction: column; gap: 2px; overflow-x: auto">
-<span style="color: #A0A898"># [REPO URL]</span>
-<span>git clone https://github.com/[ORG]/pluck</span>
+<span style="color: #A0A898"># https://github.com/codu-code/pluck</span>
+<span>git clone https://github.com/codu-code/pluck</span>
 <span>cd pluck</span>
 <span><span style="color: #7FD3AE">docker compose up -d</span></span>
 <span style="color: #A0A898; margin-top: 10px"># then, for AI tools without a public URL</span>
-<span>npx @pluck/mcp --key pk_live_…</span>
+<span>npx @pluck/mcp --server http://localhost:3000 --key pk_live_…</span>
 </div>
 </section>
 
@@ -61,14 +61,14 @@ a{color:#151A13}a:hover{color:#525A4E}
 <p style="margin: 0; font-size: clamp(64px, 11vw, 160px); line-height: 0.88; font-family: 'Fredoka', 'Geist', sans-serif; font-weight: 700; letter-spacing: -0.035em">Pluck it<span style="color: #34A07C">.</span></p>
 <div style="display: flex; flex-wrap: wrap; gap: 10px">
 <a href="Empty.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 600">Use getpluck.io</a>
-<a href="https://github.com" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Read the code</a>
+<a href="https://github.com/codu-code/pluck" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 24px; border-radius: 12px; border: 1.5px solid #151A13; text-decoration: none; font-weight: 600">Read the code</a>
 </div>
 </section>
 
 <footer style="border-top: 1px solid #DDE2D8">
 <div style="max-width: 1240px; margin: 0 auto; box-sizing: border-box; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; font-size: 14px; color: #525A4E">
-<span style="margin-right: auto">Licence: [LICENCE]. Made in Dublin.</span>
-<a href="Landing.dc.html" style="color: #525A4E">Home</a><a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
+<span style="margin-right: auto">Licence: AGPL-3.0 (server) and MIT (apps).</span>
+<a href="Landing.dc.html" style="color: #525A4E">Home</a><a href="SiteClaude.dc.html" style="color: #525A4E">Connect your AI</a><a href="SiteSupport.dc.html" style="color: #525A4E">Support</a><a href="SitePrivacy.dc.html" style="color: #525A4E">Privacy</a><a href="SiteTerms.dc.html" style="color: #525A4E">Terms</a>
 </div>
 </footer>
 </div>
@@ -78,9 +78,9 @@ class Component extends DCLogic {
   renderVals() {
     return { rows: [
       { h: "Export in one click.", p: "Every item as JSON, plus one Markdown file per item and per list, with your highlights and notes. It works on day one, not when we get round to it." },
-      { h: "The page, not just the link.", p: "Pluck keeps what you saved. When the site goes down or changes, your copy is still there, readable." },
+      { h: "The page, not just the link.", p: "Pluck keeps what you plucked. When the site goes down or changes, your copy is still there, readable." },
       { h: "Public means public. Private means private.", p: "A public list shows titles, covers, your notes and links out. It never serves the stored page text. Flip it back to private and the page is gone within a minute." },
-      { h: "Your AI, your call.", p: "Pluck never sends what you save to a model on its own. Your AI tool reads your library only when you connect it, and only does what you ask." }
+      { h: "Your AI, your call.", p: "Pluck never sends what you pluck to a model on its own. Your AI tool reads your library only when you connect it, and only does what you ask." }
     ] };
   }
 }

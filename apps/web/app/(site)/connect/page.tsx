@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ConnectLoop } from "@/components/ConnectLoop";
+import { ConnectLoopFit } from "@/components/ConnectLoopFit";
 import { CONNECTOR_URL } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
@@ -60,6 +62,10 @@ export default function Connect() {
         <p className={`${styles.heroPara} ${styles.heroQuiet}`}>
           Pluck speaks MCP, the open standard AI tools use to plug into apps. One link and your AI can read, search and sort your whole library. It changes things only when you say so, and never deletes.
         </p>
+      </section>
+
+      <section aria-label="How connecting works" className={`${styles.wrap} ${styles.block}`}>
+        <ConnectLoopFit radius={16}><ConnectLoop /></ConnectLoopFit>
       </section>
 
       <section className={`${styles.wrap} ${styles.block}`}>

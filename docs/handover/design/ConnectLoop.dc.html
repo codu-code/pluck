@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pluck · Connect loop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+.board { --display: 'Fredoka', 'Geist', ui-rounded, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace; }
+
+.loop { --ground: #F6F8F4; --surface: #FFFFFF; --ink: #151A13; --ink2: #525A4E; --brand: #1E5C45; --accent: #34A07C; --highlight: #7FD3AE; --line: #DDE2D8;
+  --app: #FFFFFF; --app-side: #F3F4F6; --app-line: #E4E6EA; --app-ink: #22252A; --app-ink2: #6B7079; --app-bubble: #ECEEF1; --app-dark: #2B2F36;
+  --display: 'Fredoka', 'Geist', ui-rounded, sans-serif; --ui: 'Geist', ui-sans-serif, system-ui, sans-serif; --mono: 'Geist Mono', ui-monospace, monospace;
+  position: relative; width: 1200px; height: 750px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: var(--ui); text-align: left; }
+.loop * { box-sizing: border-box; }
+.logo { position: absolute; left: 56px; top: 52px; display: inline-flex; align-items: flex-start; font: 700 30px/0.92 var(--display); letter-spacing: -0.01em; color: var(--brand); }
+.logo svg { width: 0.457em; height: 0.457em; margin-left: -0.098em; margin-top: 0.022em; overflow: visible; }
+.cap1, .cap2, .cap3 { position: absolute; left: 56px; top: 250px; width: 300px; display: flex; flex-direction: column; gap: 18px; }
+.capT { font: 700 64px/0.98 var(--display); letter-spacing: -0.03em; }
+.dot { color: var(--accent); }
+.capS { font-size: 19px; line-height: 28px; color: var(--ink2); }
+.dots { position: absolute; left: 56px; bottom: 56px; display: flex; gap: 8px; }
+.bar { width: 28px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.d1, .d2, .d3 { display: block; height: 100%; width: 100%; background: var(--brand); transform-origin: 0 50%; }
+.win { position: absolute; left: 392px; top: 48px; width: 760px; height: 654px; border-radius: 16px; background: var(--app); border: 1px solid var(--app-line); box-shadow: 0 30px 80px rgba(21, 26, 19, 0.10); overflow: hidden; display: flex; }
+.side { width: 184px; flex: none; background: var(--app-side); border-right: 1px solid var(--app-line); padding: 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+.lights { display: flex; gap: 7px; margin-bottom: 10px; }
+.light { width: 11px; height: 11px; border-radius: 6px; background: #D5D8DD; }
+.newchat { height: 34px; border-radius: 9px; background: var(--app); border: 1px solid var(--app-line); display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: var(--app-ink); }
+.hist { height: 9px; border-radius: 5px; background: #E2E5E9; margin: 6px 4px 0; }
+.main { flex: 1; position: relative; display: flex; flex-direction: column; }
+.top { height: 52px; flex: none; border-bottom: 1px solid var(--app-line); display: flex; align-items: center; padding: 0 22px; font-size: 14px; font-weight: 500; color: var(--app-ink); }
+.thread { flex: 1; padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 23px; color: var(--app-ink); }
+.me { align-self: flex-end; max-width: 75%; padding: 10px 14px; border-radius: 14px; background: var(--app-bubble); }
+.tool { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid var(--app-line); font: 12px var(--mono); color: var(--app-ink2); }
+.ai { display: flex; flex-direction: column; gap: 10px; }
+.c1, .c2, .c3 { display: flex; align-items: center; gap: 12px; height: 58px; padding: 0 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
+.cardText { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cardTitle { font-weight: 600; font-size: 14px; line-height: 19px; }
+.cardMeta { font-size: 12px; color: var(--ink2); }
+.tag { height: 22px; padding: 0 8px; border-radius: 11px; background: #E3E8DE; font-size: 12px; display: inline-flex; align-items: center; color: var(--ink); }
+.composer { margin: 0 24px 22px; height: 52px; flex: none; border-radius: 14px; border: 1px solid var(--app-line); display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; font-size: 15px; color: var(--app-ink); }
+.typed { flex: 1; position: relative; height: 23px; white-space: nowrap; overflow: hidden; }
+.ph { position: absolute; left: 0; top: 0; color: var(--app-ink2); }
+.q { position: absolute; left: 0; top: 0; clip-path: inset(0 100% 0 0); }
+.send { width: 36px; height: 36px; border-radius: 18px; background: var(--app-dark); display: flex; align-items: center; justify-content: center; flex: none; }
+.pill { position: absolute; left: 24px; bottom: 82px; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px 0 6px; border-radius: 15px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; color: var(--ink); }
+.ptile { width: 20px; height: 20px; border-radius: 5px; background: var(--brand); display: flex; align-items: center; justify-content: center; }
+.scrim { position: absolute; inset: 0; background: rgba(34, 37, 42, 0.18); opacity: 0; }
+.modal { position: absolute; left: 50%; top: 50%; width: 440px; margin-left: -220px; margin-top: -160px; border-radius: 16px; background: var(--app); border: 1px solid var(--app-line); box-shadow: 0 20px 60px rgba(34, 37, 42, 0.16); padding: 24px; display: flex; flex-direction: column; gap: 14px; color: var(--app-ink); opacity: 0; }
+.modalT { font-size: 18px; font-weight: 600; }
+.modalP { font-size: 14px; line-height: 21px; color: var(--app-ink2); }
+.field { height: 44px; border-radius: 10px; border: 1.5px solid var(--app-dark); display: flex; align-items: center; padding: 0 12px; font: 14px var(--mono); }
+.url { display: inline-block; clip-path: inset(0 100% 0 0); }
+.row { display: flex; justify-content: flex-end; gap: 8px; }
+.ghost, .add { height: 38px; padding: 0 16px; border-radius: 9px; display: inline-flex; align-items: center; font-size: 14px; font-weight: 500; }
+.ghost { border: 1px solid var(--app-line); color: var(--app-ink); }
+.add { background: var(--app-dark); color: #FFFFFF; }
+.consent { position: absolute; left: 50%; top: 50%; width: 460px; margin-left: -230px; margin-top: -232px; border-radius: 18px; background: var(--ground); border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(21, 26, 19, 0.18); padding: 28px; display: flex; flex-direction: column; gap: 16px; color: var(--ink); opacity: 0; }
+.clogo { display: inline-flex; align-items: flex-start; font: 700 22px/0.92 var(--display); letter-spacing: -0.01em; color: var(--brand); }
+.clogo svg { width: 0.457em; height: 0.457em; margin-left: -0.098em; margin-top: 0.022em; overflow: visible; }
+.consentT { font: 700 34px/1 var(--display); letter-spacing: -0.025em; }
+.consentP { font-size: 15px; line-height: 22px; color: var(--ink2); }
+.scopes { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.scope { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.scopeNo { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink2); }
+.tick { width: 20px; height: 20px; border-radius: 10px; background: var(--highlight); display: flex; align-items: center; justify-content: center; flex: none; }
+.no { width: 20px; height: 20px; border-radius: 10px; border: 1.5px solid #9AA392; flex: none; display: flex; align-items: center; justify-content: center; }
+.noBar { width: 10px; height: 1.6px; background: #9AA392; }
+.pbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cancel, .allow { height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; }
+.cancel { border: 1.5px solid var(--ink); }
+.allow { background: var(--brand); color: #F6F8F4; }
+.cursor { position: absolute; left: 0; top: 0; width: 22px; height: 26px; z-index: 5; opacity: 0; }
+.r1, .r2, .r3 { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 17px; border: 2px solid var(--app-dark); opacity: 0; z-index: 4; }
+/* At rest (no motion, or before the CSS loads) it shows the answer: step three, connected, three plucks back. */
+.cap1, .cap2 { opacity: 0; }
+@keyframes cap1 { 0%, 23% { opacity: 1; transform: none; } 27%, 95% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: none; } }
+@keyframes cap2 { 0%, 25% { opacity: 0; transform: translateY(14px); } 30%, 39% { opacity: 1; transform: none; } 43%, 100% { opacity: 0; transform: none; } }
+@keyframes cap3 { 0%, 41% { opacity: 0; transform: translateY(14px); } 46%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes d1 { 0%, 0% { transform: scaleX(0); animation-timing-function: linear; } 25%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes d2 { 0%, 25% { transform: scaleX(0); animation-timing-function: linear; } 41%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes d3 { 0%, 41% { transform: scaleX(0); animation-timing-function: linear; } 93%, 96% { transform: scaleX(1); } 96.1%, 100% { transform: scaleX(0); } }
+@keyframes scrim { 0%, 38% { opacity: 1; } 41%, 94% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes modal { 0%, 23.5% { opacity: 1; transform: none; } 27% { opacity: 0; transform: translateY(-10px) scale(0.97); } 93.9% { opacity: 0; transform: translateY(-10px) scale(0.97); } 94% { opacity: 0; transform: none; } 100% { opacity: 1; transform: none; } }
+@keyframes url { 0%, 9.5% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(23, end); } 16.5%, 93.9% { clip-path: inset(0 0 0 0); } 94%, 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes add { 0%, 21.4% { transform: none; } 21.5%, 22.9% { transform: scale(0.96); } 23%, 100% { transform: none; } }
+@keyframes consent { 0%, 24.5% { opacity: 0; transform: translateY(24px); } 29%, 38% { opacity: 1; transform: none; } 41.5%, 100% { opacity: 0; transform: translateY(-10px) scale(0.97); } }
+@keyframes allow { 0%, 36.9% { transform: none; } 37%, 38.4% { transform: scale(0.96); } 38.5%, 100% { transform: none; } }
+@keyframes pill { 0%, 40% { opacity: 0; transform: translateY(8px); } 45%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes ph { 0%, 43.9% { opacity: 1; } 44%, 56.9% { opacity: 0; } 57%, 100% { opacity: 1; } }
+@keyframes q { 0%, 44% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(32, end); } 54%, 56.9% { clip-path: inset(0 0 0 0); } 57%, 100% { clip-path: inset(0 100% 0 0); } }
+@keyframes send { 0%, 56.9% { transform: none; } 57%, 58.4% { transform: scale(0.92); } 58.5%, 100% { transform: none; } }
+@keyframes me { 0%, 57.5% { opacity: 0; transform: translateY(14px); } 61.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes tool { 0%, 61.5% { opacity: 0; transform: translateY(8px); } 65.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes ans { 0%, 66.5% { opacity: 0; transform: translateY(8px); } 70%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c1 { 0%, 68.5% { opacity: 0; transform: translateY(14px); } 73.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c2 { 0%, 70.5% { opacity: 0; transform: translateY(14px); } 75.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes c3 { 0%, 72.5% { opacity: 0; transform: translateY(14px); } 77.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes more { 0%, 77% { opacity: 0; transform: translateY(8px); } 81%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
+@keyframes cursor { 0% { transform: translate(980px, 560px); } 3% { transform: translate(980px, 560px); } 9% { transform: translate(800px, 334px); } 17.5% { transform: translate(800px, 334px); } 21.5% { transform: translate(1025px, 390px); } 25% { transform: translate(1025px, 390px); } 33% { transform: translate(960px, 464px); } 37% { transform: translate(960px, 464px); } 43% { transform: translate(760px, 654px); } 54.5% { transform: translate(760px, 654px); } 57% { transform: translate(1100px, 654px); } 62% { transform: translate(1100px, 654px); } 78% { transform: translate(1010px, 600px); opacity: 1; } 82% { opacity: 0; } 96% { opacity: 0; } 100% { transform: translate(980px, 560px); opacity: 1; } }
+@keyframes r1 { 0%, 21.49% { opacity: 0; transform: translate(1028px, 393px) scale(0.4); } 21.5% { opacity: 1; transform: translate(1028px, 393px) scale(0.4); } 26.5%, 100% { opacity: 0; transform: translate(1028px, 393px) scale(1.2); } }
+@keyframes r2 { 0%, 36.99% { opacity: 0; transform: translate(963px, 467px) scale(0.4); } 37% { opacity: 1; transform: translate(963px, 467px) scale(0.4); } 42%, 100% { opacity: 0; transform: translate(963px, 467px) scale(1.2); } }
+@keyframes r3 { 0%, 56.99% { opacity: 0; transform: translate(1103px, 657px) scale(0.4); } 57% { opacity: 1; transform: translate(1103px, 657px) scale(0.4); } 62%, 100% { opacity: 0; transform: translate(1103px, 657px) scale(1.2); } }
+.cap1 { animation: cap1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cap2 { animation: cap2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cap3 { animation: cap3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d1 { animation: d1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d2 { animation: d2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.d3 { animation: d3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.scrim { animation: scrim 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.modal { animation: modal 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.url { animation: url 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.add { animation: add 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.consent { animation: consent 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.allow { animation: allow 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.pill { animation: pill 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.ph { animation: ph 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.q { animation: q 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.send { animation: send 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.me { animation: me 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.tool { animation: tool 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.ans { animation: ans 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c1 { animation: c1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c2 { animation: c2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.c3 { animation: c3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.more { animation: more 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.cursor { animation: cursor 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r1 { animation: r1 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r2 { animation: r2 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+.r3 { animation: r3 10s cubic-bezier(0.16, 1, 0.3, 1) infinite; animation-delay: var(--at, 0s); animation-play-state: var(--play, running); }
+@media (prefers-reduced-motion: reduce) { .cap1 .cap2 .cap3 .d1 .d2 .d3 .scrim .modal .url .add .consent .allow .pill .ph .q .send .me .tool .ans .c1 .c2 .c3 .more .cursor .r1 .r2 .r3 { animation: none; } }
+
+</style>
+</helmet>
+<div class="board" style="width: 1440px; box-sizing: border-box; padding: 64px 120px 96px; background: #E4E8E0; color: #151A13; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 22px; display: flex; flex-direction: column; gap: 48px">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px">
+<h1 style="margin: 0; font: 700 56px/1 var(--display); letter-spacing: -0.035em">Connect your AI, in ten seconds<span style="color: #34A07C">.</span></h1>
+<p style="margin: 0; font-size: 18px; line-height: 27px; color: #394034">Paste Pluck's link into any AI tool, say yes on Pluck's screen, ask a question and get your own plucks back. The loop below is live and pure CSS, the same code as the component.</p>
+</div>
+<span style="font: 13px var(--mono); color: #525A4E">1200 × 750 · 10 s loop · 30 fps when recorded</span>
+</div>
+
+<div style="border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(21, 26, 19, 0.12); width: 1200px; height: 750px"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div>
+
+<section style="display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font: 700 32px/1 var(--display); letter-spacing: -0.02em">Timing<span style="color: #34A07C">.</span></h2>
+<div style="position: relative; width: 1200px; height: 92px"><span style="position: absolute; left: 0px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 4px; top: -2px; font: 12px var(--mono); color: #525A4E">0s</span><span style="position: absolute; left: 120px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 124px; top: -2px; font: 12px var(--mono); color: #525A4E">1s</span><span style="position: absolute; left: 240px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 244px; top: -2px; font: 12px var(--mono); color: #525A4E">2s</span><span style="position: absolute; left: 360px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 364px; top: -2px; font: 12px var(--mono); color: #525A4E">3s</span><span style="position: absolute; left: 480px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 484px; top: -2px; font: 12px var(--mono); color: #525A4E">4s</span><span style="position: absolute; left: 600px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 604px; top: -2px; font: 12px var(--mono); color: #525A4E">5s</span><span style="position: absolute; left: 720px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 724px; top: -2px; font: 12px var(--mono); color: #525A4E">6s</span><span style="position: absolute; left: 840px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 844px; top: -2px; font: 12px var(--mono); color: #525A4E">7s</span><span style="position: absolute; left: 960px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 964px; top: -2px; font: 12px var(--mono); color: #525A4E">8s</span><span style="position: absolute; left: 1080px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 1084px; top: -2px; font: 12px var(--mono); color: #525A4E">9s</span><span style="position: absolute; left: 1200px; top: 0; height: 10px; border-left: 1px solid #9AA392"></span><span style="position: absolute; left: 1204px; top: -2px; font: 12px var(--mono); color: #525A4E">10s</span><div style="position: absolute; left: 0px; width: 298.0px; top: 22px; height: 44px; border-radius: 8px; background: #E3E8DE; display: flex; align-items: center; padding: 0 12px; box-sizing: border-box; font: 700 18px var(--display); white-space: nowrap; overflow: hidden">Paste one link.</div><div style="position: absolute; left: 300.0px; width: 189.99999999999994px; top: 22px; height: 44px; border-radius: 8px; background: #CFE9DC; display: flex; align-items: center; padding: 0 12px; box-sizing: border-box; font: 700 18px var(--display); white-space: nowrap; overflow: hidden">Say yes.</div><div style="position: absolute; left: 491.99999999999994px; width: 622.0000000000001px; top: 22px; height: 44px; border-radius: 8px; background: #E3E8DE; display: flex; align-items: center; padding: 0 12px; box-sizing: border-box; font: 700 18px var(--display); white-space: nowrap; overflow: hidden">Ask away.</div><div style="position: absolute; left: 1116.0px; width: 81.99999999999991px; top: 22px; height: 44px; border-radius: 8px; background: #EDF0EA; display: flex; align-items: center; padding: 0 12px; box-sizing: border-box; font: 700 18px var(--display); white-space: nowrap; overflow: hidden">Reset</div><span style="position: absolute; left: -4px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 110.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 254.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #1E5C45"></span><span style="position: absolute; left: 290.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 440.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #1E5C45"></span><span style="position: absolute; left: 476.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 524.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 680.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #1E5C45"></span><span style="position: absolute; left: 686.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 734.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 794.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 818.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 920.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span><span style="position: absolute; left: 1112.0px; top: 76px; width: 8px; height: 8px; border-radius: 4px; background: #151A13"></span></div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px"><div style="display: flex; flex-direction: column; border-top: 2px solid #151A13"><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">0.00s</span><span>Modal open, field empty</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">0.95s</span><span>Link types in, 23 characters in 0.7 s</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #1E5C45; font-weight: 600"><span style="font: 500 13px var(--mono)">2.15s</span><span>Click Add</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">2.45s</span><span>Pluck consent rises, 24 px, 0.45 s</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #1E5C45; font-weight: 600"><span style="font: 500 13px var(--mono)">3.70s</span><span>Click Allow</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">4.00s</span><span>"Pluck connected" pill</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">4.40s</span><span>Question types in, 1.0 s</span></div></div><div style="display: flex; flex-direction: column; border-top: 2px solid #151A13"><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #1E5C45; font-weight: 600"><span style="font: 500 13px var(--mono)">5.70s</span><span>Click send</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">5.75s</span><span>Bubble</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">6.15s</span><span>Tool call</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">6.65s</span><span>Answer line</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">6.85s</span><span>Three cards, 0.2 s apart</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">7.70s</span><span>Follow-up line</span></div><div style="display: grid; grid-template-columns: 64px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid #CDD3C7; color: #151A13; font-weight: 400"><span style="font: 500 13px var(--mono)">9.30s</span><span>Everything fades, back to the modal</span></div></div></div>
+<p style="margin: 0; color: #525A4E">Green marks are clicks: the cursor glides to each on the brand easing, presses, and a ring opens from the tip. The progress bars under the captions fill in step with the three phases.</p>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 18px">
+<h2 style="margin: 0; font: 700 32px/1 var(--display); letter-spacing: -0.02em">Frames<span style="color: #34A07C">.</span></h2>
+<div style="display: grid; grid-template-columns: repeat(3, 360px); gap: 28px 60px"><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -1.4s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">1.4s</b><span>Typing the link</span></figcaption>
+</figure><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -2.2s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">2.2s</b><span>Add, pressed</span></figcaption>
+</figure><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -3.3s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">3.3s</b><span>Pluck asks once</span></figcaption>
+</figure><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -5.0s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">5.0s</b><span>Asking</span></figcaption>
+</figure><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -8.6s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">8.6s</b><span>Three plucks back</span></figcaption>
+</figure><figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="width: 360px; height: 225px; overflow: hidden; border-radius: 10px; border: 1px solid #DDE2D8; position: relative"><div style="position: absolute; left: 0; top: 0; transform: scale(0.3); transform-origin: 0 0; --at: -9.7s; --play: paused"><div class="loop" role="img" aria-label="Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.">
+<span class="logo" aria-hidden="true">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<div class="cap1"><span class="capT">Paste one link<span class="dot">.</span></span><span class="capS">Into any AI tool that speaks MCP.</span></div>
+<div class="cap2"><span class="capT">Say yes<span class="dot">.</span></span><span class="capS">Pluck asks once. Your AI can never delete.</span></div>
+<div class="cap3"><span class="capT">Ask away<span class="dot">.</span></span><span class="capS">Your whole library, in the chat you already use.</span></div>
+<div class="dots"><span class="bar"><span class="d1"></span></span><span class="bar"><span class="d2"></span></span><span class="bar"><span class="d3"></span></span></div>
+<div class="win">
+<div class="side"><div class="lights"><span class="light"></span><span class="light"></span><span class="light"></span></div><div class="newchat">New chat</div><div class="hist" style="width: 80%"></div><div class="hist" style="width: 64%"></div><div class="hist" style="width: 72%"></div><div class="hist" style="width: 50%"></div></div>
+<div class="main">
+<div class="top">Chat</div>
+<div class="thread">
+<div class="me">What did I pluck about MCP auth?</div>
+<span class="tool"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#6B7079" stroke-width="1.4"/><path d="M6 3.6V6l1.6 1" fill="none" stroke="#6B7079" stroke-width="1.4" stroke-linecap="round"/></svg>pluck · search_items “mcp auth”</span>
+<div class="ai">
+<span class="ans">Three things, newest first:</span>
+<div class="c1"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">How MCP auth actually works</span><span class="cardMeta">modelcontextprotocol.io · 12 min</span></span><span class="tag">mcp</span></div>
+<div class="c2"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linecap="round"/></svg><span class="cardText"><span class="cardTitle">OAuth scopes for people in a hurry</span><span class="cardMeta">a blog post · 6 min</span></span><span class="tag">auth</span></div>
+<div class="c3"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z" fill="none" stroke="#151A13" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="cardText"><span class="cardTitle">Tokens, scopes and the bit everyone gets wrong</span><span class="cardMeta">youtube.com · 18 min</span></span><span class="tag">mcp</span></div>
+<span class="more">Want them in a list, best first?</span>
+</div>
+</div>
+<span class="pill"><span class="ptile"><svg width="14" height="14" viewBox="0 0 20 20"><path d="M4.8 7.3v10" stroke="#F6F8F4" stroke-width="4" stroke-linecap="round"/><circle cx="8.8" cy="9.7" r="3.5" fill="none" stroke="#F6F8F4" stroke-width="3.4"/><path d="M14.1 4.4L15.5 3M15.4 7.4L17.2 7.1M11.6 2.3L11.8 0.9" stroke="#7FD3AE" stroke-width="2.2" stroke-linecap="round"/></svg></span>Pluck connected</span>
+<div class="composer"><span class="typed"><span class="ph">Message</span><span class="q">What did I pluck about MCP auth?</span></span><span class="send"><svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+<div class="scrim"></div>
+<div class="modal"><span class="modalT">Add a connector</span><span class="modalP">Paste the server's link. You'll sign in to it next.</span><div class="field"><span class="url">https://getpluck.io/mcp</span></div><div class="row"><span class="ghost">Cancel</span><span class="add">Add</span></div></div>
+<div class="consent">
+<span class="clogo">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="#34A07C" stroke-width="2" stroke-linecap="round"/></svg></span>
+<span class="consentT">Let your AI in<span class="dot">.</span></span>
+<span class="consentP">Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.</span>
+<div class="scopes"><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read and search your library</span><span class="scope"><span class="tick"><svg width="11" height="11" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pluck, tag and sort, marked by AI</span><span class="scopeNo"><span class="no"><span class="noBar"></span></span>Delete anything</span></div>
+<div class="pbtns"><span class="cancel">Cancel</span><span class="allow">Allow</span></div>
+</div>
+</div>
+</div>
+<span class="r1"></span><span class="r2"></span><span class="r3"></span>
+<svg class="cursor" viewBox="0 0 22 26" aria-hidden="true"><path d="M2 2v19l5-4.6 3.4 7.4 3.4-1.5-3.4-7.3H17z" fill="#22252A" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</div></div></div>
+<figcaption style="display: flex; gap: 10px; font-size: 14px"><b style="font: 500 13px var(--mono)">9.7s</b><span>Back to the start</span></figcaption>
+</figure></div>
+</section>
+
+<section style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0 0 12px; font: 700 32px/1 var(--display); letter-spacing: -0.02em">Spec<span style="color: #34A07C">.</span></h2>
+<div style="border-top: 2px solid #151A13"><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">Stage</b><span style="color: #394034">1200 × 750, ground #F6F8F4. The chat window sits at 392, 48 and is 760 × 654.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">Loop</b><span style="color: #394034">10 s, infinite. Every move eases out on cubic-bezier(0.16, 1, 0.3, 1). Typing uses steps, one per character. No bounce, no glow, no gradient.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">Entrances</b><span style="color: #394034">Rise 14 px and fade in over 0.4 to 0.5 s. Small chips rise 8 px. Pluck consent rises 24 px. Presses scale to 0.96 for 0.15 s.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">Type</b><span style="color: #394034">Captions and the consent headline in Fredoka 700, full stops in #34A07C. Everything else Geist; the link and the tool call in Geist Mono.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">Pluck</b><span style="color: #394034">Its own colours only on its own screens: consent, the pill, the result cards. Buttons #1E5C45, ticks #7FD3AE, ink #151A13, meta #525A4E.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">The AI app</b><span style="color: #394034">Unbranded on purpose so it stands for any tool: cool greys #F3F4F6, #E4E6EA, #22252A, #6B7079, a grey send button, grey window dots, no logo, no assistant name.</span></div><div style="display: grid; grid-template-columns: 140px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid #DDE2D8"><b style="font-weight: 600">At rest</b><span style="color: #394034">With reduced motion, or before the CSS loads, it shows the answer: step three, connected, three plucks back.</span></div></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 style="margin: 0 0 4px; font: 700 32px/1 var(--display); letter-spacing: -0.02em">In the codebase<span style="color: #34A07C">.</span></h2>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-size: 18px; line-height: 24px; font-weight: 600">1. Drop in the component</b><p style="margin: 0; font-size: 15px; line-height: 23px; color: #394034">Three files in <code>apps/web/components</code>: <code>ConnectLoop.tsx</code> (markup, a server component), <code>ConnectLoop.module.css</code> (every keyframe) and <code>ConnectLoopFit.tsx</code> (scales the 1200 px stage to its column). No script runs the loop.</p><code style="display: block; padding: 12px 14px; border-radius: 8px; background: #151A13; color: #ECEFE8; font: 13px/20px var(--mono); white-space: pre-wrap">&lt;ConnectLoopFit&gt;&lt;ConnectLoop /&gt;&lt;/ConnectLoopFit&gt;</code></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-size: 18px; line-height: 24px; font-weight: 600">2. Settings, AI tools</b><p style="margin: 0; font-size: 15px; line-height: 23px; color: #394034">Replaces the drawn three-line chat in <code>app/(app)/settings/AiToolsSection.tsx</code> (the <code>styles.chat</code> block in <code>aiSide</code>). That closes the <code>[CONNECTOR GIF]</code> item in <code>docs/launch-checklist.md</code> and <code>docs/design-gaps.md</code>.</p></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-size: 18px; line-height: 24px; font-weight: 600">3. Connect your AI</b><p style="margin: 0; font-size: 15px; line-height: 23px; color: #394034">On <code>app/(site)/connect/page.tsx</code>, between the hero and “Install. Thirty seconds, honestly.” The page is dark, so give it a 16 px radius and no border; the stage keeps its own light ground.</p></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-size: 18px; line-height: 24px; font-weight: 600">4. A video, for the README, socials or an App Store preview</b><p style="margin: 0; font-size: 15px; line-height: 23px; color: #394034"><code>node scripts/record-loop.mjs</code> opens the page at each frame (<code>?t=</code> freezes it through <code>--at</code>), takes 300 shots at 30 fps and writes <code>connect-loop.mp4</code> (H.264, CRF 18) and a <code>connect-loop.gif</code> with its own palette. Fonts must load, so run it where Google Fonts is reachable.</p></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 24px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DDE2D8"><b style="font-size: 18px; line-height: 24px; font-weight: 600">Freeze any frame</b><p style="margin: 0; font-size: 15px; line-height: 23px; color: #394034">Set <code>--at: -6.2s</code> and <code>--play: paused</code> on any parent, or pass <code>at={{6200}}</code> to the component. That is how the stills above are drawn.</p></div>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3400}}'>
+class Component extends DCLogic { renderVals() { return {}; } }
+</script>
+</body>
+</html>

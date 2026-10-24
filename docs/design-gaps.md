@@ -40,36 +40,15 @@ The share sheet is SwiftUI (`apps/ios/targets/share/ShareView.swift`) with the t
 
 ## Departures from a board
 
+The copy and behaviour departures for the site, the extension, the share sheet, iOS first run and iOS Search were folded back into the boards on 24 October 2026 (the boards now match the app). What is left is how native iOS behaves.
+
 | Where | Board says | Built | Why |
 |---|---|---|---|
-| Extension, already plucked | "Pluck again as new" | "Pluck it again" (moves it back to the Inbox) | A URL is never plucked twice (CLAUDE.md, re-pluck rule) |
-| Extension, To list | Last used list preselected | "None" preselected, last used first and marked | Preselecting would file every pluck into that list |
-| Extension, kind row | All seven kinds active | Note, Todo, Thing shown but disabled | A link cannot become one |
-| Extension options | "So search and Claude can read…" | "So search and your AI can read…" | Product words: never one vendor as the only option |
-| Home | "Save anything", "your saves", "marked as saved", `kind=idea` | "Pluck anything", "your plucks", "plucked", `kind=note` | Product words; there is no Idea kind |
-| Home | "Plucked." stamp at 40px from the top | 12px | It covered the shortcut keys in the drawn app |
-| Home, AI card | Chat replies with a border | No border | Design detector: cards inside cards |
-| Home, hero lede and AI card | One flowing paragraph | One sentence (or quoted question) to a line | Lines broke mid-sentence ("We / won't nag.") |
-| Home, dark band | Flowing text | Four set lines on wide screens; each thing kept whole on phones | "Half / an idea." split a phrase across lines |
-| Connect your AI | h1 at up to 132px | Up to 92px | Design detector: a 41-character headline at that size fills the screen |
-| Connect your AI, Self-hosted tab | "Point it at the local server it starts." | "Add the line … as a local (stdio) server." | That is how the bridge works |
-| Privacy and Terms | 760px column | Text at 60ch | Design detector: lines over 80 characters |
-| Privacy | "We count sign-ups and plucks per day as totals" | Removed | We count nothing |
-| Privacy | Delete "within 24 hours"; "one cookie" | "At once"; a second cookie for the home page paste box | Matches what the code does |
-| Terms | "no delete tool" | "a delete tool only if you grant it separately" | The `library:delete` scope exists |
-| All site footers | "Made in Dublin." | Removed | Asked for by Niall |
-| iOS first run | "You never need to open this app to save." | "…to pluck." | Product words |
-| iOS Search | Results show which list they are in | They show the status | Search results do not carry list membership |
 | iOS Inbox | Swipe right for Later | Also swipe left to Archive | Two moves the reader toolbar already has |
-| iOS share sheet | Kind row, all seven | Note, Todo and Thing disabled for links | A link cannot become one |
 | iOS Inbox, Later, Search, Lists | A large title fixed above the list | The title scrolls with the list and an inline title fades into a bar | How UIKit's large titles behave; at large text sizes it gives the list the room |
 | iOS Inbox row | 72 tall | At least 72; grows with the text size | Fixed rows clipped at large Dynamic Type sizes |
 | iOS tab bar, reader toolbar | Labels at 11 | 11 at every text size | What the system bars do; the labels broke mid-word at large sizes |
 
 ## Placeholders to fill
 
-Listed on every test run by `scripts/placeholders.test.ts`; the current set:
-
-| Placeholder | Where | What it is |
-|---|---|---|
-| `[CONNECTOR GIF]` | Settings, AI tools | A 20-second clip of adding the connector in an AI tool. A drawn three-line conversation stands in until then |
+None left. `scripts/placeholders.test.ts` lists any that come back.
