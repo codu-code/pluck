@@ -1,9 +1,9 @@
-import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Actions, BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 import { runTap } from "@/lib/library";
 import { verifyTap } from "@/lib/signed";
 import { AutoSubmit } from "./AutoSubmit";
-import styles from "../d.module.css";
 
 export const metadata: Metadata = { title: "Pluck", robots: { index: false } };
 
@@ -16,40 +16,40 @@ export default async function Tap({ params, searchParams }: { params: Promise<{ 
   const tap = verifyTap(token);
   // Counting is read-only, so Archive it all shows its number straight away.
   const count = (await searchParams).count ?? (tap?.a === "archive-all" ? String((await runTap(token)).count ?? 0) : undefined);
-  return (
-    <main className={styles.page}>
-      <Logo size={32} />
-      {!tap ? (
-        <>
-          <h1 className={styles.title}>This link has expired.</h1>
-          <p className={styles.meta}>Links in the email work for 7 days. Everything is still in Pluck.</p>
-        </>
-      ) : tap.a === "archive-all" ? (
-        <>
-          <h1 className={styles.title}>Archive it all. No, really.</h1>
-          {
-            <>
-              <p className={styles.meta}>
-                {count} item{count === "1" ? "" : "s"} untouched for longer than your expiry length move to the Archive. Nothing is deleted, and lists are left alone.
-              </p>
-              <form method="post" action={`/api/d/${token}`}>
-                <input type="hidden" name="confirm" value="1" />
-                <button type="submit" className={styles.primary} disabled={count === "0"}>Yes, move {count} to the Archive</button>
-              </form>
-            </>
-          }
-        </>
-      ) : (
-        <>
-          <h1 className={styles.title}>{DOING[tap.a]}</h1>
-          <form method="post" action={`/api/d/${token}`} id="tap">
-            <noscript>
-              <button type="submit" className={styles.primary}>Confirm</button>
-            </noscript>
+
+  if (!tap)
+    return (
+      <Standalone art={<BigMark />} title={<>This link has expired<Dot /></>} lede="Links in the email work for 7 days. Everything is still in Pluck, right where you left it.">
+        <Actions><Link href="/inbox" className={s.primary}>Open Pluck</Link></Actions>
+      </Standalone>
+    );
+
+  if (tap.a === "archive-all")
+    return (
+      <Standalone
+        title={["Archive it all.", <>No, really<Dot /></>]}
+        artIsContent
+        art={<p className={s.bigCount}><b>{count}</b><span>item{count === "1" ? "" : "s"} untouched for longer than your expiry length</span></p>}
+        lede="They move to the Archive in one go. Nothing is deleted, and lists are left alone."
+      >
+        <Actions>
+          <form method="post" action={`/api/d/${token}`}>
+            <input type="hidden" name="confirm" value="1" />
+            <button type="submit" className={s.primary} disabled={count === "0"}>Yes, move {count} to the Archive</button>
           </form>
-          <AutoSubmit formId="tap" />
-        </>
-      )}
-    </main>
+          <Link href="/inbox" className={s.textLink}>Not now</Link>
+        </Actions>
+      </Standalone>
+    );
+
+  return (
+    <Standalone art={<BigMark />} title={<>{DOING[tap.a]}<Dot>…</Dot></>}>
+      <form method="post" action={`/api/d/${token}`} id="tap">
+        <noscript>
+          <button type="submit" className={s.primary}>Confirm</button>
+        </noscript>
+      </form>
+      <AutoSubmit formId="tap" />
+    </Standalone>
   );
 }

@@ -4,19 +4,13 @@ What still needs a designer's eye. Three kinds: screens built without a board of
 
 ## Screens with no board of their own
 
+Sign-in, consent, the OAuth error, extension connected, the email's one-tap pages, copy a list, offline, not found and the error pages now share one layout (`apps/web/components/Standalone.tsx`): the site's display type with the accent full stop, one sentence to a line, a short lede, the next step, and a drawn piece of the product beside it (the sign-in email with its "Sent." stamp, queued rows offline, the "by AI" mark on consent, the shortcut keys, the count for Archive it all, otherwise the app icon). Worth a designer's look, but no longer bare.
+
 ### Web app
 
 | Screen | Route | Built from | What to decide |
 |---|---|---|---|
-| Sign in | `/signin` | Empty and Brand boards | The whole screen: email field, "check your email" state, errors |
-| Consent for AI tools and our own apps | `/oauth/consent` | Brand board, a centred column with the Logo | The only Pluck screen most connector users see (spec: "carries the voice"). Scope list, Allow/Deny, the "request expired" state, and how an app (extension, iOS) reads differently from an AI tool |
-| OAuth error | `/oauth/error` | Same as consent | Tone, and whether to show the technical reason |
-| Extension connected | `/extension/connected` | Same as consent | The landing after the extension signs in |
-| Digest one-tap actions | `/d/[token]`, `/d/done` | Email board | Confirm screens for "Let it go" and "Archive it all" from the Monday email, and Undo |
-| Copy a public list | `/copy/[listId]` | PublicList board | The "Pluck this list" confirmation |
 | Admin | `/admin` | Settings board | Reports queue and kill switches (internal, low priority) |
-| Offline (PWA) | `/offline` | Empty board | What shows when the app is opened with no connection |
-| Not found | 404 | Empty board | Copy and illustration |
 | Settings, AI tools: connected tools | `/settings#ai` | Settings board shows one "Connected · last call" line | The list of connected tools (AI tools and our own extension) with Disconnect; whether the extension belongs in "AI tools" at all |
 | Settings, Weekly email, import progress, export, delete account | `/settings` | Settings board (partly) | The states the board does not draw: import running and failed, export ready, delete confirmation |
 
@@ -56,6 +50,8 @@ The share sheet is SwiftUI (`apps/ios/targets/share/ShareView.swift`) with the t
 | Home | "Save anything", "your saves", "marked as saved", `kind=idea` | "Pluck anything", "your plucks", "plucked", `kind=note` | Product words; there is no Idea kind |
 | Home | "Plucked." stamp at 40px from the top | 12px | It covered the shortcut keys in the drawn app |
 | Home, AI card | Chat replies with a border | No border | Design detector: cards inside cards |
+| Home, hero lede and AI card | One flowing paragraph | One sentence (or quoted question) to a line | Lines broke mid-sentence ("We / won't nag.") |
+| Home, dark band | Flowing text | Four set lines on wide screens; each thing kept whole on phones | "Half / an idea." split a phrase across lines |
 | Connect your AI | h1 at up to 132px | Up to 92px | Design detector: a 41-character headline at that size fills the screen |
 | Connect your AI, Self-hosted tab | "Point it at the local server it starts." | "Add the line … as a local (stdio) server." | That is how the bridge works |
 | Privacy and Terms | 760px column | Text at 60ch | Design detector: lines over 80 characters |

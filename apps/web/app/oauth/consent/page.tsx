@@ -1,11 +1,10 @@
 import { verifyOAuthQueryParams } from "@better-auth/oauth-provider";
-import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth, currentUser, FIRST_PARTY_REDIRECTS } from "@/lib/auth";
 import { ConsentButtons } from "./ConsentButtons";
-import styles from "./consent.module.css";
+import { BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
 export const metadata: Metadata = { title: "Connect your AI · Pluck", robots: { index: false } };
 
@@ -34,37 +33,33 @@ export default async function Consent({ searchParams }: { searchParams: Promise<
   const fallback = clientId.startsWith("http") && URL.canParse(clientId) ? new URL(clientId).host : "An AI tool";
   // Anyone can name a client; only our own apps get to be called Pluck here.
   const name = client?.client_name && (forApp || !/pluck/i.test(client.client_name)) ? client.client_name : fallback;
-  const scopes = (query.get("scope") ?? "").split(" ").filter((s) => SCOPES[s]);
+  const scopes = (query.get("scope") ?? "").split(" ").filter((scope) => SCOPES[scope]);
+
+  if (!valid)
+    return <Standalone art={<BigMark />} title={<>This request has expired<Dot /></>} lede="Start the connection again from your AI tool. Nothing was shared." />;
 
   return (
-    <main className={styles.page}>
-      <div className={styles.card}>
-        <Logo size={48} />
-        {!valid ? (
-          <>
-            <h1 className={styles.title}>This request has expired.</h1>
-            <p className={styles.meta}>Start the connection again from your AI tool.</p>
-          </>
-        ) : (
-          <>
-            <h1 className={styles.title}>{name} wants to use your Pluck</h1>
-            <p className={styles.meta}>
-              Signed in as {user.email}.{" "}
-              {forApp ? "It plucks and organises as you, from this device." : "It acts for you, only while you use it, and every change it makes is marked by AI."}
-            </p>
-            {!forApp && returnsTo && (
-              <p className={styles.meta}>
-                Allowing sends you on to <b>{returnsTo}</b>. If you do not know that address, do not allow it.
-              </p>
-            )}
-            <ul className={styles.scopes}>
-              {scopes.map((s) => <li key={s}>{SCOPES[s]}</li>)}
-            </ul>
-            <p className={styles.meta}>It can never delete anything unless that is listed above. You can disconnect it in Settings.</p>
-            <ConsentButtons />
-          </>
-        )}
-      </div>
-    </main>
+    <Standalone
+      size="md"
+      title={<>{name} wants to use your Pluck<Dot /></>}
+      lede={forApp ? "It plucks and organises as you, from this device." : "It acts for you, only while you use it, and every change it makes is marked by AI."}
+      art={forApp ? <BigMark /> : (
+        <div className={s.panel}>
+          <div className={s.panelHead}><b>Inbox</b><time>after you ask it to tidy</time></div>
+          <div className={s.entry}><span className={s.ring} /><span className={s.entryText}><b>How MCP auth actually works</b><span>Tagged mcp, auth</span></span><span className={s.aiChip}>by AI</span></div>
+          <div className={s.entry}><span className={s.ring} /><span className={s.entryText}><b>Postgres indexes in 40 minutes</b><span>Moved to Later</span></span><span className={s.aiChip}>by AI</span></div>
+          <div className={s.entry}><span className={s.ring} /><span className={s.entryText}><b>A kitchen plan in three drafts</b><span>Left as it was</span></span></div>
+        </div>
+      )}
+    >
+      {!forApp && returnsTo && (
+        <p className={s.notice}>Allowing sends you on to <b>{returnsTo}</b>. If you do not know that address, do not allow it.</p>
+      )}
+      <ul className={s.ruled}>
+        {scopes.map((scope) => <li key={scope}>{SCOPES[scope]}</li>)}
+      </ul>
+      <p className={s.small}>Signed in as {user.email}. It can never delete anything unless that is listed above, and you can disconnect it in Settings.</p>
+      <ConsentButtons />
+    </Standalone>
   );
 }

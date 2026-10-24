@@ -42,7 +42,10 @@ export default function Home() {
       <section className={`${styles.wrap} ${styles.hero}`}>
         <h1 className={`${styles.display} ${styles.heroTitle}`}>Pluck it<span className={styles.dot}>.</span></h1>
         <div className={styles.heroRow}>
-          <p className={styles.heroLede}>Pluck anything in one tap. Sort it later, by hand or with your AI. Or don't. We won't nag.</p>
+          <p className={styles.heroLede}>
+            <span className={styles.line}>Pluck anything in one tap.</span> <span className={styles.line}>Sort it later, by hand or with your AI.</span>{" "}
+            <span className={styles.line}>Or don't. We won't nag.</span>
+          </p>
           <PasteBox />
         </div>
       </section>
@@ -71,8 +74,15 @@ export default function Home() {
       <section className={styles.band}>
         <div className={styles.bandInner}>
           <p className={styles.bandBig}>
-            An article. A recipe. A thread. <span className={styles.mint}>Half an idea.</span> A hob for the kitchen. A talk you'll give in November.{" "}
-            <span className={styles.quiet}>A PDF you will never read.</span>
+            {/* Set as four lines on wide screens; on a phone it flows, but each thing stays in one piece. */}
+            <span className={styles.bandLine}>
+              <span className={styles.phrase}>An article.</span> <span className={styles.phrase}>A recipe.</span> <span className={styles.phrase}>A thread.</span>
+            </span>{" "}
+            <span className={styles.bandLine}>
+              <span className={`${styles.phrase} ${styles.mint}`}>Half an idea.</span> <span className={styles.phrase}>A hob for the kitchen.</span>
+            </span>{" "}
+            <span className={styles.bandLine}><span className={styles.phrase}>A talk you'll give in November.</span></span>{" "}
+            <span className={styles.bandLine}><span className={`${styles.phrase} ${styles.quiet}`}>A PDF you will never read.</span></span>
           </p>
           <p className={styles.bandSmall}>One inbox for all of it. The page is kept, not just the link, so it's still there when the site isn't.</p>
         </div>
@@ -96,7 +106,7 @@ export default function Home() {
       <section id="lists" className={`${styles.wrap} ${styles.listsSection}`}>
         <div className={styles.listsCopy}>
           <h2 className={`${styles.display} ${styles.h2Big}`}>Lists are what you're making.</h2>
-          <p className={styles.para}>A book. A newsletter issue. A talk. A trip. Things to buy. Put any pluck in as many lists as you like, each with its own note and a tick.</p>
+          <p className={styles.para}>A book. A newsletter issue. A talk. A trip. <span className={styles.phrase}>Things to buy.</span> Put any pluck in as many lists as you like, each with its own note and a tick.</p>
           <p className={styles.para}>Private by default. Public with one switch. Take it back with the same switch.</p>
         </div>
         <div className={styles.listArt}>
@@ -125,7 +135,9 @@ export default function Home() {
             <span className={`${styles.eyebrow} ${styles.mono}`}>READY FOR YOUR AI</span>
             <h2 className={`${styles.display} ${styles.h2Mid}`}>Plug in the AI you already use.</h2>
             <p className={styles.aiPara}>
-              “What did I pluck about MCP auth?” “Tidy my inbox.” “Make a reading list from this month, best first.” One link and your whole library is there. It changes things only when you say so, and marks everything it touched.
+              <span className={styles.line}>“What did I pluck about MCP auth?”</span> <span className={styles.line}>“Tidy my inbox.”</span>{" "}
+              <span className={styles.line}>“Make a reading list from this month, best first.”</span>{" "}
+              <span className={styles.lineGap}>One link and your whole library is there. It changes things only when you say so, and marks everything it touched.</span>
             </p>
             <Link href="/connect" className={styles.lightButton}>How it works with AI</Link>
           </div>

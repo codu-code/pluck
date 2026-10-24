@@ -52,13 +52,13 @@ test("the weekly email: sections, one-tap Keep and Let it go with undo, Archive 
 
   // Let it go, then Undo.
   await tap(page, [...mail.text.matchAll(/Let it go: (\S+)/g)][1]![1]!);
-  await expect(page.getByRole("status")).toHaveText("Moved to the Archive. Nothing is deleted.");
+  await expect(page.getByRole("status")).toHaveText("Gone. Well, archived. Nothing is deleted.");
   await page.getByRole("button", { name: "Undo" }).click();
   await expect(page.getByRole("status")).toHaveText("Back where it was.");
 
   // Archive it all: a count, then a real yes.
   await tap(page, mail.text.match(/in one go: (\S+)/)![1]!);
-  await expect(page.getByText(/^1 item untouched for longer than your expiry length/)).toBeVisible();
+  await expect(page.getByText("item untouched for longer than your expiry length")).toBeVisible();
   await page.getByRole("button", { name: "Yes, move 1 to the Archive" }).click();
   await expect(page.getByRole("status")).toHaveText("1 item moved to the Archive. Nothing is deleted.");
 

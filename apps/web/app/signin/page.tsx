@@ -1,11 +1,9 @@
-import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { TRY_COOKIE } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
 import { SignInForm } from "./SignInForm";
-import styles from "./signin.module.css";
 
 export const metadata: Metadata = { title: "Sign in · Pluck" };
 
@@ -30,16 +28,5 @@ export default async function SignIn({ searchParams }: { searchParams: Promise<R
   // Links pasted on the home page before signing up come along: the email link lands on the claim first.
   const next = asked === "/inbox" && (await cookies()).has(TRY_COOKIE) ? "/try/claim" : asked;
   if (await currentUser()) redirect(next);
-  return (
-    <main className={styles.page}>
-      <div className={styles.panel}>
-        <Logo size={48} />
-        <div className={styles.copy}>
-          <h1 className={styles.title}>Sign in to Pluck</h1>
-          <p className={styles.lede}>We email you a link. No password, no profile form.</p>
-        </div>
-        <SignInForm next={next} />
-      </div>
-    </main>
-  );
+  return <SignInForm next={next} forAiTool={Boolean(params.sig && params.client_id)} />;
 }

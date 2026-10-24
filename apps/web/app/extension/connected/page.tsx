@@ -1,19 +1,40 @@
-import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
-import styles from "../../oauth/consent/consent.module.css";
+import { Fragment } from "react";
+import { Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
 export const metadata: Metadata = { title: "Connected · Pluck", robots: { index: false } };
+
+const Keys = ({ keys }: { keys: string[] }) => (
+  <span className={s.keys}>
+    {keys.map((k, i) => (
+      <Fragment key={k}>
+        {i > 0 && <span className={s.keyPlus} aria-hidden="true">+</span>}
+        <kbd className={s.key}>{k}</kbd>
+      </Fragment>
+    ))}
+  </span>
+);
 
 // Where the extension's sign-in ends. The extension reads the code from this tab's address (it holds the
 // PKCE verifier, so the code is useless to anyone else) and closes the tab.
 export default function Connected() {
   return (
-    <main className={styles.page}>
-      <div className={styles.card}>
-        <Logo size={48} />
-        <h1 className={styles.title}>You can pluck from your browser now.</h1>
-        <p className={styles.meta}>Close this tab, or click the Pluck button on any page. Alt+Shift+P does it without the click.</p>
-      </div>
-    </main>
+    <Standalone
+      title={<>Connected<Dot /></>}
+      lede="You can pluck from your browser now. Close this tab; from here on, any page is one press away."
+      artIsContent
+      art={
+        <div className={s.keyArt}>
+          <div className={s.keyRow}>
+            <Keys keys={["Alt", "Shift", "P"]} />
+            <p className={s.keyNote}>Plucks the page you are on. Alt is Option on a Mac.</p>
+          </div>
+          <div className={s.keyRow}>
+            <Keys keys={["Alt", "Shift", "H"]} />
+            <p className={s.keyNote}>Plucks what you selected, kept as a highlight.</p>
+          </div>
+        </div>
+      }
+    />
   );
 }

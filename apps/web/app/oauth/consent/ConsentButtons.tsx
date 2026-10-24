@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./consent.module.css";
+import { Actions, standaloneStyles as s } from "@/components/Standalone";
 
 // The signed query from this page's URL goes back with the decision, as the OAuth provider expects.
 export function ConsentButtons() {
@@ -18,9 +18,9 @@ export function ConsentButtons() {
     else setBusy(false);
   }
   return (
-    <div className={styles.buttons}>
-      <button type="button" className={styles.allow} disabled={busy} onClick={() => decide(true)}>Allow</button>
-      <button type="button" className={styles.deny} disabled={busy} onClick={() => decide(false)}>Deny</button>
-    </div>
+    <Actions>
+      <button type="button" className={s.primary} disabled={busy} onClick={() => decide(true)}>Allow</button>
+      <button type="button" className={s.secondary} disabled={busy} onClick={() => decide(false)}>Deny</button>
+    </Actions>
   );
 }

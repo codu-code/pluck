@@ -1,14 +1,14 @@
-import { Icon } from "@pluck/ui";
 import Link from "next/link";
+import { Actions, BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
-// A plain 404 with the Pluck mark (public pages that are private, gone or never were).
+// Public pages that are private now, gone, or never were; and any address that is not a page.
 export default function NotFound() {
   return (
-    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", alignContent: "center", gap: 16, padding: 16, textAlign: "center" }}>
-      <Icon size={56} tone="bare" />
-      <h1 style={{ margin: 0, fontSize: 28, fontWeight: 600 }}>Nothing here.</h1>
-      <p style={{ margin: 0, color: "var(--ink2)" }}>It may be private now, or it never was.</p>
-      <Link href="/">Go to Pluck</Link>
-    </main>
+    <Standalone title={<>Nothing here<Dot /></>} lede="It may be private now, or it never was." art={<BigMark />}>
+      <Actions>
+        <Link href="/" className={s.primary}>Go to Pluck</Link>
+        <Link href="/support" className={s.textLink}>Support</Link>
+      </Actions>
+    </Standalone>
   );
 }
