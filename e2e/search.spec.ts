@@ -12,8 +12,11 @@ test("search finds page text, notes, tags and the Archive, and points to your AI
   await page.request.patch(`/api/v1/items/${note.id}`, { data: { tagIds: ["reno"], status: "archived" } });
 
   await page.goto("/inbox");
-  await page.keyboard.press("/");
-  await expect(page).toHaveURL(/\/search$/);
+  // The shortcut listens once the page has hydrated, which a slow CI runner can take a moment to do.
+  await expect(async () => {
+    await page.keyboard.press("/");
+    await expect(page).toHaveURL(/\/search$/, { timeout: 1000 });
+  }).toPass();
   const box = page.getByRole("searchbox", { name: "Search" });
   await expect(box).toBeFocused();
 
