@@ -19,5 +19,29 @@ services:
       test: ["CMD", "/mailpit", "readyz"]
       interval: 2s
       retries: 30
+  minio:
+    image: cgr.dev/chainguard/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports: ["9010:9000", "9011:9001"]
+    environment: { MINIO_ROOT_USER: pluck, MINIO_ROOT_PASSWORD: pluck-dev-secret }
+    volumes: [minio:/data]
+  # One-shot, run by `pnpm stack` after the services are up (not part of `up --wait`).
+  minio-init:
+    profiles: [init]
+    image: amazon/aws-cli:2.27.7
+    depends_on: [minio]
+    environment: { AWS_ACCESS_KEY_ID: pluck, AWS_SECRET_ACCESS_KEY: pluck-dev-secret, AWS_DEFAULT_REGION: eu-west-1 }
+    entrypoint: ["sh", "-c", "until aws --endpoint-url http://minio:9000 s3 ls >/dev/null 2>&1; do sleep 1; done; aws --endpoint-url http://minio:9000 s3api head-bucket --bucket pluck-content 2>/dev/null || aws --endpoint-url http://minio:9000 s3 mb s3://pluck-content"]
+  # Serves packages/extract/fixtures so extraction tests and demos never touch the internet.
+  fixtures:
+    image: node:22-alpine
+    command: ["node", "/fixtures/server.mjs"]
+    ports: ["4180:4180"]
+    volumes: ["./packages/extract/fixtures:/fixtures:ro"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:4180/health"]
+      interval: 2s
+      retries: 30
 volumes:
   mongo:
+  minio:

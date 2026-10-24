@@ -30,12 +30,12 @@ Next.js 16 App Router, TypeScript strict, Node 22, pnpm 10, ESM. MongoDB (`pluck
 
 ## Design
 
-`packages/ui` holds the tokens, the Logo and Icon components and the seven kind glyphs. Copy values from the `.dc.html` boards in `docs/handover/design/`, never round them. Banned: one-sided accent borders, cards in cards, gradients, glows, Inter, pure black, bounce easing, emoji, dashboards, cream grounds. Run `npx impeccable detect` before committing UI.
+`packages/ui` holds the tokens, the Logo and Icon components and the seven kind glyphs. Copy values from the `.dc.html` boards in `docs/handover/design/`, never round them. Banned: one-sided accent borders, cards in cards, gradients, glows, Inter, pure black, bounce easing, emoji, dashboards, cream grounds. `pnpm design` runs the impeccable detector on the e2e snapshots of every app page.
 
 ## Working here
 
 - Build in vertical slices (db → API → UI → e2e → Chrome check). Infra lands with the first slice that needs it.
-- `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e` must pass. No `any` without a `// why:` comment.
+- `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`, then `pnpm design` must pass. Services come up with `pnpm stack`. No `any` without a `// why:` comment.
 - **During the build loop:** each slice that passes its gate is one squash commit on local `main`. No remote, no PRs until the first draft is pushed by a human. After that, short branches and PRs; a human merges.
 - Tests that matter: `packages/extract` fixtures, `packages/db` scoping and the public projection, `packages/mcp` tool tests, the MCP OAuth end-to-end, Playwright e2e per slice.
 - Keep `docs/self-host.md` and `docs/mcp.md` in the same commit as any env var or tool change.

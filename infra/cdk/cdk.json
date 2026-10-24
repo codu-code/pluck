@@ -1,4 +1,7 @@
 {
   "app": "tsx bin/app.ts",
-  "context": { "domain": "getpluck.io" }
+  "context": {
+    "domain": "getpluck.io",
+    "@aws-cdk/core:defaultCrossStackReferences": "strong"
+  }
 }

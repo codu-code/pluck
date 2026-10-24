@@ -14,6 +14,6 @@ export default defineConfig({
     url: `http://127.0.0.1:${PORT}/api/health`,
     timeout: 240_000,
     reuseExistingServer: false,
-    env: { BETTER_AUTH_URL: `http://127.0.0.1:${PORT}` },
+    env: { BETTER_AUTH_URL: `http://127.0.0.1:${PORT}`, AUTH_RATE_LIMIT: "off" },
   },
 });

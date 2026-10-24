@@ -1,11 +1,13 @@
 .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 32px; border-bottom: 1px solid var(--line); }
 .pluck {
-  flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 6px 0 14px;
+  flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px;
   border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong);
 }
 .pluck:focus-within, .emphasis { border: 1.5px solid var(--ink); }
+.emphasis { padding-right: 6px; }
 .pluckLabel { font-weight: 600; }
 .input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: var(--ink); }
+.input::placeholder { color: var(--ink2); }
 .button {
   height: 32px; padding: 0 12px; border-radius: 6px; border: 0; background: var(--brand); color: var(--on-brand);
   font: inherit; font-size: 13px; font-weight: 500; cursor: pointer;
@@ -15,4 +17,6 @@
   padding: 0 14px; border-radius: 8px; background: var(--field); text-decoration: none; color: var(--ink2);
 }
 .search:hover { color: var(--ink); }
-.kbd { font: 12px var(--font-ui); border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 6px; }
+.kbd { font: 12px var(--font-ui); color: var(--ink2); border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 6px; }
+.error { flex-basis: 100%; margin: 0; color: var(--danger); }
+@media (max-width: 600px) { .bar { padding: 12px 16px; } }

@@ -1,0 +1,16 @@
+.row { display: flex; align-items: center; gap: 16px; height: 64px; padding: 0 12px; border-bottom: 1px solid var(--line); }
+.row[data-state="pending"] .title { color: var(--ink2); }
+.tile {
+  width: 40px; height: 40px; flex: none; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.02em; object-fit: cover; color: var(--ink);
+}
+.glyphTile { border: 1px dashed var(--line-dashed); }
+.body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.titleLine { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; }
+.meta { flex: none; color: var(--ink2); font-size: 13px; }
+.failed { color: var(--danger); }
+.excerpt { color: var(--ink2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.side { width: 76px; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; color: var(--ink2); font-size: 12px; }
+.side svg { color: var(--ink); }
+@media (max-width: 600px) { .meta { display: none; } .side { width: 48px; } }

@@ -14,6 +14,7 @@
   "dependencies": {
     "@pluck/shared-schemas": "workspace:*",
     "better-auth": "1.7.12",
-    "mongodb": "7.7.0"
+    "mongodb": "7.7.0",
+    "zod": "4.6.7"
   }
 }

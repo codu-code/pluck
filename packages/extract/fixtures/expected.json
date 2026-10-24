@@ -1,0 +1,238 @@
+[
+  {
+    "file": "news-1.html",
+    "kind": "news",
+    "title": "Small teams ship when the list is short",
+    "words": 147,
+    "cover": true,
+    "site": "The Example Times"
+  },
+  {
+    "file": "news-2.html",
+    "kind": "news",
+    "title": "Why the slowest releases are mostly waiting",
+    "words": 179,
+    "cover": true,
+    "site": "The Example Times"
+  },
+  {
+    "file": "news-3.html",
+    "kind": "news",
+    "title": "Free services need honest rate limits",
+    "words": 106,
+    "cover": true,
+    "site": "Tech Weekly"
+  },
+  {
+    "file": "news-4.html",
+    "kind": "news",
+    "title": "The archive is not a bin",
+    "words": 99,
+    "cover": true,
+    "site": "The Example Times"
+  },
+  {
+    "file": "blog-1.html",
+    "kind": "blog",
+    "title": "Notes on reading code for the first time",
+    "words": 101,
+    "cover": false,
+    "lang": "en"
+  },
+  {
+    "file": "blog-2.html",
+    "kind": "blog",
+    "title": "A kitchen plan in three drafts",
+    "words": 111,
+    "cover": false,
+    "lang": "en"
+  },
+  {
+    "file": "blog-3.html",
+    "kind": "blog",
+    "title": "Drop D, slowly",
+    "words": 74,
+    "cover": false,
+    "lang": "en"
+  },
+  {
+    "file": "blog-4.html",
+    "kind": "blog",
+    "title": "Une promenade dans la vieille ville",
+    "words": 111,
+    "cover": false,
+    "lang": "fr"
+  },
+  {
+    "file": "docs-1.html",
+    "kind": "docs",
+    "title": "Indexing the inbox query",
+    "words": 113,
+    "cover": true,
+    "site": "Example Docs"
+  },
+  {
+    "file": "docs-2.html",
+    "kind": "docs",
+    "title": "Rotating refresh tokens",
+    "words": 144,
+    "cover": true,
+    "site": "Example Docs"
+  },
+  {
+    "file": "paywall-1.html",
+    "kind": "paywall",
+    "title": "Estimating with uncertainty",
+    "words": 74,
+    "cover": true,
+    "short": true
+  },
+  {
+    "file": "paywall-2.html",
+    "kind": "paywall",
+    "title": "The economics of groundworks",
+    "words": 37,
+    "cover": true,
+    "short": true
+  },
+  {
+    "file": "youtube-1.html",
+    "kind": "video",
+    "title": "Postgres indexes in 40 minutes",
+    "words": 0,
+    "cover": true,
+    "site": "YouTube",
+    "metaOnly": true
+  },
+  {
+    "file": "youtube-2.html",
+    "kind": "video",
+    "title": "Drop D fingerstyle, slowly",
+    "words": 0,
+    "cover": true,
+    "site": "YouTube",
+    "metaOnly": true
+  },
+  {
+    "file": "x-1.html",
+    "kind": "x",
+    "title": "Niall Maher on X",
+    "words": 0,
+    "cover": true,
+    "metaOnly": true
+  },
+  {
+    "file": "x-2.html",
+    "kind": "x",
+    "title": "Cod\u00fa on X",
+    "words": 0,
+    "cover": true,
+    "metaOnly": true
+  },
+  {
+    "file": "spa-1.html",
+    "kind": "spa",
+    "title": "Dashboard",
+    "words": 0,
+    "cover": false,
+    "metaOnly": true
+  },
+  {
+    "file": "spa-2.html",
+    "kind": "spa",
+    "title": "Loading",
+    "words": 0,
+    "cover": false,
+    "metaOnly": true
+  },
+  {
+    "file": "comments-1.html",
+    "kind": "comments",
+    "title": "Pricing a small extension",
+    "words": 110,
+    "cover": true
+  },
+  {
+    "file": "comments-2.html",
+    "kind": "comments",
+    "title": "What we learned from forty services",
+    "words": 72,
+    "cover": true
+  },
+  {
+    "file": "newsletter-1.html",
+    "kind": "newsletter",
+    "title": "Writing for engineers who skim",
+    "words": 99,
+    "cover": false
+  },
+  {
+    "file": "newsletter-2.html",
+    "kind": "newsletter",
+    "title": "This week: indexes and windows",
+    "words": 104,
+    "cover": false
+  },
+  {
+    "file": "jsonld-1.html",
+    "kind": "jsonld",
+    "title": "Albums of ordinary days",
+    "words": 106,
+    "cover": true,
+    "author": "Ciara Doyle"
+  },
+  {
+    "file": "jsonld-2.html",
+    "kind": "jsonld",
+    "title": "Starters, flour and patience",
+    "words": 74,
+    "cover": true,
+    "author": "Ciara Doyle"
+  },
+  {
+    "file": "listicle-1.html",
+    "kind": "listicle",
+    "title": "Five habits of teams that finish",
+    "words": 179,
+    "cover": true
+  },
+  {
+    "file": "listicle-2.html",
+    "kind": "listicle",
+    "title": "Three rules for cold water",
+    "words": 110,
+    "cover": true
+  },
+  {
+    "file": "canonical-1.html",
+    "kind": "canonical",
+    "title": "Tokens and audiences",
+    "words": 74,
+    "cover": true,
+    "canonical": "https://blog.example.test/posts/1"
+  },
+  {
+    "file": "canonical-2.html",
+    "kind": "canonical",
+    "title": "Search without vectors",
+    "words": 113,
+    "cover": true,
+    "canonical": "https://blog.example.test/posts/2"
+  },
+  {
+    "file": "news-5.html",
+    "kind": "news",
+    "title": "Shipping side projects on weekends",
+    "words": 101,
+    "cover": true,
+    "site": "Builders Daily"
+  },
+  {
+    "file": "blog-5.html",
+    "kind": "blog",
+    "title": "Window functions, finally",
+    "words": 104,
+    "cover": false,
+    "lang": "en"
+  }
+]

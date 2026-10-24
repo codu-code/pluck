@@ -16,7 +16,8 @@ export const auth = betterAuth({
   account: { modelName: "auth_accounts" },
   verification: { modelName: "auth_verifications" },
   // In-memory limits reset per serverless instance; the database is shared.
-  rateLimit: { storage: "database", modelName: "auth_rate_limits" },
+  // AUTH_RATE_LIMIT=off is for the e2e server only, which signs in from one IP many times a minute.
+  rateLimit: { storage: "database", modelName: "auth_rate_limits", enabled: process.env.AUTH_RATE_LIMIT !== "off" },
   plugins: [
     magicLink({
       expiresIn: 10 * 60,
