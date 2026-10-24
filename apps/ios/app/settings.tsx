@@ -117,7 +117,7 @@ export default function Settings() {
         {section("Library")}
         <View style={card}>
           {row(<><Text style={label}>Tags</Text><Text style={value}>{tags.data?.length ?? ""}</Text></>, () => web("/settings#tags"))}
-          {row(<><Text style={label}>Offline cache</Text><Text style={value}>{cache.items} items · {Math.max(1, Math.round(cache.bytes / 1_000_000))} MB</Text></>, () =>
+          {row(<><Text style={label}>Offline cache</Text><Text style={value}>{cache.items} {cache.items === 1 ? "item" : "items"} · {Math.max(1, Math.round(cache.bytes / 1_000_000))} MB</Text></>, () =>
             Alert.alert("Clear the offline copy?", "Your library stays on the server. The app downloads it again as you use it.", [
               { text: "Cancel", style: "cancel" },
               { text: "Clear", onPress: () => { queryClient.clear(); void kv.remove("queryCache"); setCache({ items: 0, bytes: 0 }); } },
