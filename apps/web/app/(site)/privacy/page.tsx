@@ -10,7 +10,7 @@ const SECTIONS = [
   { h: "Public lists", p: "A list is private until you make it public. A public list shows its name, purpose, your name and handle, each item's title, cover, site and your note, with links out to the originals. It never shows the stored page text, your tags, ticks or anything else in your library. Flip it back to private and the page returns a 404 within a minute." },
   { h: "Email-in", p: "Mail sent to your pluck+ address becomes an item. We keep the message body as the item's page text and the sender as its site. We don't use that address for anything else." },
   { h: "Cookies and analytics", p: "One cookie, to keep you signed in. If you paste a link on the home page before you have an account, a second cookie holds it for a day so it is waiting when you sign up. No tracking cookies, no third-party analytics." },
-  { h: "Where it lives", p: "Our hosted service runs on [HOSTING PROVIDER] in [REGION]. If you self-host, nothing touches our servers at all." },
+  { h: "Where it lives", p: "Our hosted service runs on Vercel, MongoDB Atlas and AWS, all in Ireland. If you self-host, nothing touches our servers at all." },
   { h: "Export and delete", p: "Export everything as JSON and Markdown from Settings, any time. Delete your account from Settings and every item, tag, list, note and key is gone at once. Backups are purged within 30 days." },
   { h: "Your rights", p: "You can ask for a copy of your data, correct it, or have it erased. Export and Delete in Settings do this without asking us. If you need something else, email us. You can also complain to the Data Protection Commission in Ireland." },
 ];
@@ -22,7 +22,7 @@ export default function Privacy() {
       title="Privacy"
       lede="Short version: we store what you pluck so you can read it later. We don't read it, sell it, or feed it to a model. Last updated [DATE]."
       sections={SECTIONS}
-      box={{ title: "Questions", body: "Email [PRIVACY EMAIL]. The company behind Pluck is [LEGAL ENTITY], [ADDRESS], Ireland." }}
+      box={{ title: "Questions", body: "Email privacy@getpluck.io. The company behind Pluck is [LEGAL ENTITY], [ADDRESS], Ireland." }}
     />
   );
 }
