@@ -1,8 +1,35 @@
+import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import type { ExpoConfig } from "expo/config";
+import { type ConfigPlugin, withDangerousMod, withXcodeProject } from "expo/config-plugins";
 
 // PLUCK_SERVER builds point at another server (local dev, e2e screenshots); store builds use getpluck.io.
 const server = process.env.PLUCK_SERVER ?? "https://getpluck.io";
 const GROUP = "group.io.getpluck.app";
+
+// The Dark home screen icon (Settings, App icon): an alternate icon set beside the primary one in the asset catalog,
+// which Xcode lists in Info.plist itself. Both PNGs come from packages/ui's Icon (scripts/app-icons.mjs).
+const DARK_ICON = "AppIconDark";
+const withDarkIcon: ConfigPlugin = (c) => {
+  c = withDangerousMod(c, ["ios", async (m) => {
+    const set = join(m.modRequest.platformProjectRoot, m.modRequest.projectName!, "Images.xcassets", `${DARK_ICON}.appiconset`);
+    mkdirSync(set, { recursive: true });
+    copyFileSync(join(m.modRequest.projectRoot, "assets/icon-dark.png"), join(set, "icon-dark.png"));
+    writeFileSync(join(set, "Contents.json"), JSON.stringify({
+      images: [{ filename: "icon-dark.png", idiom: "universal", platform: "ios", size: "1024x1024" }], info: { version: 1, author: "expo" },
+    }, null, 2));
+    return m;
+  }]);
+  return withXcodeProject(c, (m) => {
+    const configs = m.modResults.pbxXCBuildConfigurationSection() as Record<string, { buildSettings?: Record<string, string> }>;
+    for (const { buildSettings: b } of Object.values(configs)) {
+      if (b?.PRODUCT_BUNDLE_IDENTIFIER?.replace(/"/g, "") !== "io.getpluck.app") continue; // the app, not the share extension
+      b.ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = DARK_ICON;
+      b.ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = "YES";
+    }
+    return m;
+  });
+};
 
 const config: ExpoConfig = {
   name: "Pluck",
@@ -46,4 +73,4 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: false },
 };
 
-export default config;
+export default withDarkIcon(config);
