@@ -3,7 +3,7 @@ module.exports = (config) => ({
   type: "share",
   name: "PluckShare",
   displayName: "Pluck",
-  icon: "../../assets/icon.png",
+  // No `icon`: scripts/icons.mjs writes Assets.xcassets, so prebuild leaves it alone.
   deploymentTarget: "17.0",
   frameworks: ["SwiftUI", "UniformTypeIdentifiers"],
   entitlements: {
