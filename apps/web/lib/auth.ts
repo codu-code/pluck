@@ -7,6 +7,7 @@ import { APIError, createAuthMiddleware } from "better-auth/api";
 import { jwt, magicLink } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { sendEmail } from "./email";
 import { magicLinkEmail } from "./emails";
 import { clientIp } from "./ip";
@@ -94,11 +95,12 @@ export const auth = betterAuth({
 
 export type SessionUser = { id: string; email: string; name: string };
 
-// For server components and pages: the signed-in user, or null.
-export async function currentUser(): Promise<SessionUser | null> {
+// For server components and pages: the signed-in user, or null. Once per request: the layout, the page and its
+// metadata all ask.
+export const currentUser = cache(async (): Promise<SessionUser | null> => {
   const session = await auth.api.getSession({ headers: await headers() });
   return session ? { id: session.user.id, email: session.user.email, name: session.user.name } : null;
-}
+});
 
 // For pages inside (app): Next renders a layout and its page side by side, so the layout's redirect alone
 // does not stop the page from running signed out.

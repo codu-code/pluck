@@ -58,15 +58,13 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
   useEffect(() => {
     async function flush() {
       if (!navigator.onLine) return;
-      const queue = readQueue();
-      writeQueue([]);
-      for (const q of queue) {
-        try {
-          const res = await post(q.body);
-          if (res.ok) onPlucked?.(q.draft, (await res.json()) as PluckResponse);
-        } catch {
-          writeQueue([...readQueue(), q]);
-        }
+      for (const q of readQueue()) {
+        const res = await post(q.body).catch(() => null);
+        // Offline, signed out, busy or down: it stays queued, and so does everything after it.
+        if (!res || res.status === 401 || res.status === 429 || res.status >= 500) return;
+        writeQueue(readQueue().filter((x) => x.draft.key !== q.draft.key)); // sent, or refused for good
+        const result = res.ok ? ((await res.json().catch(() => null)) as PluckResponse | null) : null;
+        if (result) onPlucked?.(q.draft, result);
       }
     }
     void flush();
@@ -99,9 +97,10 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       setNotice("Plucked. Will sync when you are back online.");
       return;
     }
-    const json = await res.json();
-    if (res.ok || res.status === 201) {
+    const json = await res.json().catch(() => null); // a gateway error page is not JSON
+    if (res.ok) {
       window.dispatchEvent(new Event("pluck:counts"));
+      if (!json) return;
       const result = json as PluckResponse;
       if (result.rejected.length) setError(`${result.rejected.length} could not be plucked: ${result.rejected[0]!.message}`);
       return onPlucked?.(draft, result);

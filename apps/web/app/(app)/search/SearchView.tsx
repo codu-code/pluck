@@ -9,6 +9,7 @@ import { useToast } from "@/components/Toast";
 import { when } from "@/lib/format";
 import { isTyping } from "@/lib/keys";
 import styles from "./search.module.css";
+import { useNow } from "@/lib/use-now";
 
 type Filters = { kind: string; tag: string; list: string; status: string; date: string };
 const NONE: Filters = { kind: "any", tag: "any", list: "any", status: "any", date: "any" };
@@ -38,7 +39,7 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
   const [toast, showToast] = useToast();
   const input = useRef<HTMLInputElement>(null);
   const first = useRef(true);
-  const now = new Date();
+  const now = useNow();
 
   useEffect(() => {
     if (first.current) {
@@ -151,7 +152,7 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
                     </div>
                   )}
                 </div>
-                <span className={styles.when}>{when(r.item.createdAt, now)}</span>
+                <span className={styles.when}>{now && when(r.item.createdAt, now)}</span>
               </div>
             ))}
           </div>

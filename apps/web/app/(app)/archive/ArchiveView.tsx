@@ -9,6 +9,7 @@ import { TopBar } from "@/components/TopBar";
 import { rowSite, when } from "@/lib/format";
 import { moveItems } from "@/lib/moves";
 import styles from "./archive.module.css";
+import { useNow } from "@/lib/use-now";
 
 const FILTERS: [ArchiveFilter, string][] = [["all", "All"], ["you", "By you"], ["expired", "Expired"], ["import", "Imported"]];
 const BIN_DAYS = 30;
@@ -33,7 +34,7 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
   const [nextCursor, setNextCursor] = useState(initial.nextCursor);
   const [filter, setFilter] = useState<ArchiveFilter>("all");
   const [toast, showToast] = useToast();
-  const now = new Date();
+  const now = useNow();
 
   async function load(f: ArchiveFilter, after?: string) {
     const qs = new URLSearchParams({ status: bin ? "bin" : "archive", archive: f, ...(after ? { cursor: after } : {}) });
@@ -83,9 +84,9 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
               <KindGlyph kind={item.kind} />
               <div className={styles.body}>
                 {bin ? <span className={styles.titleText}>{item.title}</span> : <Link href={`/items/${item.id}`} className={styles.titleText}>{item.title}</Link>}
-                <span className={styles.meta}>{rowSite(item)} · {why(item, bin, now, expiryDays)}</span>
+                <span className={styles.meta}>{rowSite(item)} · {why(item, bin, now ?? new Date(), expiryDays)}</span>
               </div>
-              <span className={styles.when}>{when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
+              <span className={styles.when}>{now && when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
               <button type="button" className={styles.restore} onClick={() => restore(item)}>Restore</button>
             </div>
           ))}
