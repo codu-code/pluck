@@ -8,7 +8,7 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await signIn(page);
   const snap = (name: string) => snapshot(page, name);
 
-  for (const route of ["/", "/chrome", "/connect", "/open-source", "/support", "/privacy", "/terms"]) {
+  for (const route of ["/", "/chrome", "/iphone", "/connect", "/open-source", "/support", "/privacy", "/terms"]) {
     await page.goto(route);
     await snap(`site-${route.slice(1) || "home"}`);
   }

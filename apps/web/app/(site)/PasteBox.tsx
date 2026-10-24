@@ -49,7 +49,7 @@ export function PasteBox() {
           )}
         </div>
       ) : (
-        <span className={styles.pasteHint}>Free. Open source. iPhone, Chrome, Firefox, web and email. Ready for your AI.</span>
+        <span className={styles.pasteHint}>Free. Open source. iPhone, Chrome, web and email. Ready for your AI.</span>
       )}
     </div>
   );

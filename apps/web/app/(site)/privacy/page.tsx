@@ -23,7 +23,7 @@ export default function Privacy() {
       title="Privacy"
       lede="Short version: we store what you pluck so you can read it later. We don't read it, sell it, or feed it to a model. Last updated 24 October 2026."
       sections={SECTIONS}
-      box={{ title: "Questions", body: "Email privacy@getpluck.io. The company behind Pluck is Codú Limited, Ireland." }}
+      box={{ title: "Questions", body: "Email privacy@getpluck.io and we answer within 30 days. The company behind Pluck is Codú Limited, Ireland." }}
     />
   );
 }

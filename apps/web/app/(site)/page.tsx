@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { APP_STORE_URL, CHROME_STORE_URL, FIREFOX_ADDONS_URL } from "@/lib/site";
+import { APP_STORE_URL, CHROME_STORE_URL } from "@/lib/site";
 import { PasteBox } from "./PasteBox";
 import { SitePage } from "./SiteChrome";
 import styles from "./site.module.css";
@@ -166,7 +166,6 @@ export default function Home() {
         <p className={`${styles.display} ${styles.closingBig}`}>Sort it<br />later<span className={styles.dot}>.</span></p>
         <div className={styles.buttons}>
           <a href={CHROME_STORE_URL} className={`${styles.big} ${styles.bigPrimary}`}>Add to Chrome</a>
-          <a href={FIREFOX_ADDONS_URL} className={`${styles.big} ${styles.bigOutline}`}>Firefox</a>
           <a href={APP_STORE_URL} className={`${styles.big} ${styles.bigOutline}`}>iPhone</a>
           <Link href="/signin" className={`${styles.big} ${styles.bigOutline}`}>Use it on the web</Link>
         </div>

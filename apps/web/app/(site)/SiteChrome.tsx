@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { REPO_URL } from "@/lib/site";
 import styles from "./site.module.css";
 
-type Page = "home" | "chrome" | "connect" | "open-source" | "support" | "privacy" | "terms";
+type Page = "home" | "chrome" | "iphone" | "connect" | "open-source" | "support" | "privacy" | "terms";
 
 // Header and footer for the marketing pages (the boards' shared chrome).
 export function SitePage({ page, dark = false, footerNote, children }: { page: Page; dark?: boolean; footerNote?: ReactNode; children: ReactNode }) {

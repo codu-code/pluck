@@ -20,10 +20,9 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 ## Browser extension
 
 - [ ] Load it unpacked once and go through `docs/loop/BLOCKED.md` (slice 14).
-- [ ] `pnpm --filter @pluck/extension zip`, and for Firefox `pnpm --filter @pluck/extension build:firefox` then `wxt zip -b firefox --mv3`.
+- [ ] `pnpm --filter @pluck/extension zip`. (Firefox is not planned for launch; the build still supports it.)
 - [ ] Chrome Web Store listing: description, screenshots, a 30-second video, privacy policy `https://getpluck.io/privacy`, data-use answers (the page you pluck and its address go to your own Pluck server; nothing else, no selling, no ads).
-- [ ] Firefox Add-ons listing, same answers (id `extension@getpluck.io`).
-- [ ] Once the listings are live, put the store URL in `CHROME_STORE_URL` (it points at the `/chrome` coming-soon page until then) and fill `[FIREFOX ADDONS URL]` in `apps/web/lib/site.ts`.
+- [ ] Once the listings are live, put the store URL in `CHROME_STORE_URL` (it points at the `/chrome` coming-soon page until then).
 
 ## iPhone
 
@@ -32,7 +31,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 - [ ] App Store Connect: privacy labels (email; content you pluck; no tracking), the privacy policy URL, a permanent demo account for review (with a pk_live key or a mailbox you can read), in-app account deletion (Settings opens it on the web), screenshots.
 - [ ] Expect one Guideline 2.1 round. If review objects to "Open Pluck to sign in" in the share extension, change it to a line of text (see `docs/ios.md`).
 - [ ] Stopgap until approval: an iOS Shortcut named "Pluck" that posts the shared URL with an API key.
-- [ ] Fill `[APP STORE URL]` once live.
+- [ ] TestFlight first. Once the App Store listing is live, put its URL in `APP_STORE_URL` in `apps/web/lib/site.ts` (it points at the `/iphone` coming-soon page until then).
 
 ## AI tools
 
