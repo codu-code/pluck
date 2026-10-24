@@ -3,7 +3,7 @@ import { KIND_NAMES, KindGlyph } from "@pluck/ui";
 import { useEffect, useState } from "react";
 import { api, openInPluck, Unreachable } from "@/lib/api";
 import { startSignIn } from "@/lib/auth";
-import { pluckTab, type PluckOutcome } from "@/lib/pluck";
+import { markTab, pluckTab, type PluckOutcome } from "@/lib/pluck";
 import { get, set } from "@/lib/store";
 
 type Tab = { id?: number; url?: string; title?: string; windowId?: number };
@@ -46,7 +46,10 @@ export function Popup() {
       if (!tab?.url || !/^https?:\/\//.test(tab.url)) return setView({ k: "message", text: "Nothing to pluck on this page." });
       try {
         const { item } = await api<{ item: Item | null }>(`/api/v1/items/lookup?url=${encodeURIComponent(tab.url)}`);
-        if (item) return setView({ k: "already", item, tab });
+        if (item) {
+          if (tab.id !== undefined) await markTab(tab.id, true);
+          return setView({ k: "already", item, tab });
+        }
       } catch (e) {
         if (!(e instanceof Unreachable)) return setView({ k: "signedOut" });
       }
@@ -139,8 +142,6 @@ function Plucked({ initial, created, tips }: { initial: Item; created: boolean; 
   };
 
   const pluckAllTabs = async () => {
-    // Reading every tab's address needs the all-sites permission; asked for here, on first use.
-    if (!(await browser.permissions.request({ origins: ["<all_urls>"] }))) return;
     const urls = (await browser.tabs.query({ currentWindow: true })).map((t) => t.url).filter((u): u is string => Boolean(u && /^https?:\/\//.test(u))).slice(0, 50);
     if (!urls.length) return;
     setFooter("Plucking…");
@@ -164,7 +165,12 @@ function Plucked({ initial, created, tips }: { initial: Item; created: boolean; 
           {!tips && <span className="meta ellipsis">{item.title}</span>}
         </div>
         {created && !tips && (
-          <button type="button" className="small" onClick={async () => { await api(`/api/v1/items/${item.id}`, { method: "DELETE" }); window.close(); }}>Undo</button>
+          <button type="button" className="small" onClick={async () => {
+            await api(`/api/v1/items/${item.id}`, { method: "DELETE" });
+            const tab = await targetTab();
+            if (tab?.id !== undefined) await markTab(tab.id, false);
+            window.close();
+          }}>Undo</button>
         )}
       </div>
       {tips ? (

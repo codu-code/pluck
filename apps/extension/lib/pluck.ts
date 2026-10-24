@@ -70,22 +70,21 @@ export async function drain(): Promise<number> {
   return left;
 }
 
-// ---- The toolbar badge: a dot while plucks are queued, a tick on pages already in the library ----------
+// ---- The toolbar: a dot while plucks are queued; the icon fills in on pages already in the library -------
 
 async function showQueued(count: number) {
   await browser.action.setBadgeBackgroundColor({ color: "#C27A3A" });
   await browser.action.setBadgeText({ text: count ? "•" : "" });
 }
 
-async function markTab(tabId: number, plucked: boolean) {
-  if ((await get("queue")).length) return; // the queued dot wins
-  await browser.action.setBadgeBackgroundColor({ tabId, color: "#7FD3AE" });
-  await browser.action.setBadgeTextColor?.({ tabId, color: "#151A13" });
-  await browser.action.setBadgeText({ tabId, text: plucked ? "✓" : "" });
+export async function markTab(tabId: number, plucked: boolean) {
+  const icon = plucked ? "/icon/" : "/icon/empty-";
+  await browser.action.setIcon({ tabId, path: { 16: `${icon}16.png`, 32: `${icon}32.png` } });
+  await browser.action.setTitle({ tabId, title: plucked ? "Plucked" : "Pluck this page" });
 }
 
 export async function refreshBadge(tabId: number, url?: string) {
-  if (!isWeb(url) || !(await get("tokens")) && !(await get("apiKey"))) return;
+  if (!isWeb(url) || !(await get("tokens")) && !(await get("apiKey"))) return markTab(tabId, false);
   const res = await api<{ item: Item | null }>(`/api/v1/items/lookup?url=${encodeURIComponent(url!)}`).catch(() => null);
   if (res) await markTab(tabId, Boolean(res.item));
 }
