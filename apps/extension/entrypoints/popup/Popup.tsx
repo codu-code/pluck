@@ -1,10 +1,12 @@
 import type { Item, Kind, List, PluckResponse, Tag } from "@pluck/shared-schemas";
-import { KIND_NAMES, KindGlyph } from "@pluck/ui";
+import { KIND_NAMES, KindGlyph, Logo } from "@pluck/ui";
 import { useEffect, useState } from "react";
 import { api, openInPluck, Unreachable } from "@/lib/api";
 import { startSignIn } from "@/lib/auth";
 import { markTab, pluckTab, type PluckOutcome } from "@/lib/pluck";
 import { get, set } from "@/lib/store";
+
+const NOTHING = "Nothing to pluck on this page.";
 
 type Tab = { id?: number; url?: string; title?: string; windowId?: number };
 type View =
@@ -43,7 +45,7 @@ export function Popup() {
     (async () => {
       if (!(await get("tokens")) && !(await get("apiKey"))) return setView({ k: "signedOut" });
       const tab = await targetTab();
-      if (!tab?.url || !/^https?:\/\//.test(tab.url)) return setView({ k: "message", text: "Nothing to pluck on this page." });
+      if (!tab?.url || !/^https?:\/\//.test(tab.url)) return setView({ k: "message", text: NOTHING });
       try {
         const { item } = await api<{ item: Item | null }>(`/api/v1/items/lookup?url=${encodeURIComponent(tab.url)}`);
         if (item) {
@@ -59,16 +61,29 @@ export function Popup() {
 
   switch (view.k) {
     case "loading":
-      return <div className="card" aria-busy="true"><span className="meta">Plucking…</span></div>;
+      // The Brand board's moment: the dashes pop off the k while the page is plucked.
+      return (
+        <div className="card center plucking" aria-busy="true">
+          <Logo size={34} />
+          <span className="meta" role="status">Plucking…</span>
+        </div>
+      );
     case "signedOut":
       return (
         <div className="card center">
+          <Logo size={30} />
+          <p className="lede">The page you are on, kept in one click. Sign in once, with your email.</p>
           <button type="button" className="primary wide" onClick={async () => { await startSignIn(); window.close(); }}>Sign in</button>
           <button type="button" className="quiet" onClick={() => browser.runtime.openOptionsPage()}>Use your own server</button>
         </div>
       );
     case "message":
-      return <div className="card"><span>{view.text}</span></div>;
+      return (
+        <div className="card">
+          <b className="title">{view.text}</b>
+          {view.text === NOTHING && <span className="meta">Pluck works on web pages. Open one, then click again.</span>}
+        </div>
+      );
     case "queued":
       return (
         <div className="card row">

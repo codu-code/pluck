@@ -16,9 +16,10 @@ Sign-in, consent, the OAuth error, extension connected, the email's one-tap page
 
 ### Browser extension
 
+Loading draws the logo's three dashes in turn while the page is plucked (the Brand board's "pop off the k"); signed out says what the extension does; "Nothing to pluck on this page" says what to do instead.
+
 | Screen | Built from | What to decide |
 |---|---|---|
-| Loading ("Plucking…") and "Nothing to pluck on this page" | Extension board | Both are a single line today |
 | "Pluck all N tabs" in progress and done | Extension board footer | Progress and the "Plucked N tabs into …" result |
 | Options, API key entry | Extension board options | The key field that replaces the account row |
 
