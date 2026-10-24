@@ -18,7 +18,8 @@ const server = createServer((req, res) => {
   } catch {
     return res.writeHead(404).end();
   }
-  res.writeHead(200, { "content-type": "text/html" }).end(body);
+  const type = { woff2: "font/woff2", woff: "font/woff", ttf: "font/ttf" }[req.url.split(".").pop()] ?? "text/html";
+  res.writeHead(200, { "content-type": type }).end(body);
 }).listen(0, "127.0.0.1", async () => {
   const { port } = server.address();
   const urls = files.map((f) => `http://127.0.0.1:${port}/${f}`);

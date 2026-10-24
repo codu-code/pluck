@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: "e2e",
   fullyParallel: false,
   workers: 1,
-  retries: 0,
+  retries: process.env.CI ? 1 : 0, // a retried pass is reported as flaky, so it still gets fixed
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "retain-on-failure" },
   webServer: {
     // Services first (Playwright starts this before globalSetup), the extension (local build), then the web production build.

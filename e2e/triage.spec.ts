@@ -46,10 +46,14 @@ test("bulk select to the Archive, filters, and Restore", async ({ page }) => {
   await signIn(page);
   await seed(page, ["blog-1", "blog-2", "blog-3"]);
   await page.goto("/inbox");
-  await page.keyboard.press("x");
+  const bar = page.getByRole("toolbar", { name: "Bulk actions" });
+  // The keys listen once the page has hydrated, which a slow CI runner can take a moment to do.
+  await expect(async () => {
+    await page.keyboard.press("x");
+    await expect(bar).toContainText("1 selected", { timeout: 1000 });
+  }).toPass();
   await page.keyboard.press("j");
   await page.keyboard.press("x");
-  const bar = page.getByRole("toolbar", { name: "Bulk actions" });
   await expect(bar).toContainText("2 selected");
   await bar.getByRole("button", { name: "Archive" }).click();
   await expect(page.getByRole("status").filter({ hasText: "2 items. Gone. Well, archived." })).toBeVisible();

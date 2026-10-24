@@ -3,7 +3,7 @@
 A fast, open-source URL saver with a connector for the AI tool you already use. Pluck anything in one tap, from the iPhone share sheet, the browser, email or a chat with your AI. The page is kept, not just the link. Sort it later, by hand or with your AI. There is no AI inside the app; your AI reads and organises your library through the connector, only when you ask.
 
 - **Web:** `apps/web` (Next.js): the app, the marketing site, the REST API for our own clients, and the MCP connector at `/mcp`.
-- **Browser extension:** `apps/extension` (WXT, Chrome and Firefox).
+- **Browser extension:** `apps/extension` (WXT; Chrome, and Firefox builds for self-hosters).
 - **iPhone:** `apps/ios` (Expo) with a SwiftUI share extension.
 - **Packages:** `packages/db` (the only code that touches MongoDB), `packages/extract` (page, PDF and email reading), `packages/mcp` (the connector's tools, resources and prompts), `packages/mcp-stdio` (`npx @pluck/mcp`), `packages/shared-schemas`, `packages/ui`, `packages/blob`.
 - **Infra:** `infra/cdk` (S3 and SES).
@@ -29,6 +29,12 @@ pnpm dev              # http://127.0.0.1:3000; sign-in links arrive in Mailpit a
 ```
 
 Checks: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`, then `pnpm design`. `CLAUDE.md` has the rules of the codebase, and `GLOSSARY.md` the words.
+
+## Contributing
+
+Bug reports, fixes and ideas are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). Found a security problem? Please follow [SECURITY.md](SECURITY.md) instead of opening an issue. Everyone here follows the [code of conduct](CODE_OF_CONDUCT.md).
+
+Questions about using Pluck: [getpluck.io/support](https://getpluck.io/support).
 
 ## Licence
 
