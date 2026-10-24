@@ -1,0 +1,64 @@
+// The API client the extension and the iPhone app share. No platform imports, so it is tested under Node;
+// each app supplies where the server is and how to authenticate.
+
+// Reaching the server failed (offline, DNS, a 5xx, a 429): plucks wait in the queue and try again.
+export class Unreachable extends Error {}
+export class SignedOut extends Error {}
+export class Refused extends Error {
+  constructor(readonly code: string, message: string, readonly status: number, readonly details?: unknown) {
+    super(message);
+  }
+}
+
+export type ClientDeps = {
+  server: () => Promise<string>;
+  auth: () => Promise<string | null>; // "Bearer …", refreshing when it has to; throws Unreachable when it cannot ask
+  onSignedOut: () => Promise<void>;
+  fetch?: typeof fetch;
+  timeoutMs?: number;
+};
+
+export type Init = { method?: string; json?: unknown; body?: BodyInit; contentType?: string };
+export type Client = <T>(path: string, init?: Init) => Promise<T>;
+
+export function createClient({ server, auth, onSignedOut, fetch: f = fetch, timeoutMs = 15_000 }: ClientDeps): Client {
+  return async <T>(path: string, init: Init = {}) => {
+    const header = await auth();
+    if (!header) throw new SignedOut("Sign in to pluck.");
+    const contentType = init.json !== undefined ? "application/json" : init.contentType;
+    let res: Response;
+    try {
+      res = await f(`${await server()}${path}`, {
+        method: init.method ?? (init.json === undefined && init.body === undefined ? "GET" : "POST"),
+        credentials: "omit", // only the token speaks for the person, never a cookie
+        headers: { authorization: header, ...(contentType ? { "content-type": contentType } : {}) },
+        body: init.json !== undefined ? JSON.stringify(init.json) : init.body,
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+    } catch {
+      throw new Unreachable("Couldn't reach Pluck.");
+    }
+    if (res.status === 401) {
+      await onSignedOut();
+      throw new SignedOut("Sign in again to pluck.");
+    }
+    if (res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
+    const body = (await res.json().catch(() => null)) as ({ error?: { code: string; message: string; details?: unknown } } & T) | null;
+    if (!res.ok) throw new Refused(body?.error?.code ?? "error", body?.error?.message ?? "That did not work.", res.status, body?.error?.details);
+    return body as T;
+  };
+}
+
+export type Tokens = { access: string; refresh: string | null; expiresAt: number };
+
+// The OAuth token endpoint. Null means the server said no (the code or refresh token is spent: sign in again).
+// No connection, a 5xx or a 429 is Unreachable, so a device that is offline keeps its sign-in and its queue.
+export async function tokenRequest(server: string, form: Record<string, string>, f: typeof fetch = fetch): Promise<Tokens | null> {
+  const res = await f(`${server}/api/auth/oauth2/token`, {
+    method: "POST", credentials: "omit", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(form).toString(),
+  }).catch(() => null);
+  if (!res || res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
+  if (!res.ok) return null;
+  const t = (await res.json()) as { access_token: string; refresh_token?: string; expires_in: number };
+  return { access: t.access_token, refresh: t.refresh_token ?? null, expiresAt: Date.now() + t.expires_in * 1000 };
+}

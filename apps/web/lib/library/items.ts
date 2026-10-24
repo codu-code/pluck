@@ -1,7 +1,7 @@
 import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
-  listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
+  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, enqueue, findByUrl, getContent, getItem, getItemBlobKeys,
+  hitRateLimit, listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
 import {
@@ -13,6 +13,9 @@ import { extractAttempt } from "../capture";
 
 type Defer = (task: () => Promise<void>) => void;
 const INLINE_TIMEOUT_MS = 5000;
+// Every link is a page we fetch for someone, so one account cannot point Pluck at a site thousands of times
+// (50 a pluck, 120 plucks a minute, would be 6,000). Import has its own path for whole libraries.
+const LINKS_PER_HOUR = 2000;
 
 // Everything POST /items accepts: one URL, many URLs, text with links in it, or a note, todo or thing.
 export async function pluckAny(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<PluckResponse> {
@@ -25,6 +28,8 @@ export async function pluckAny(userId: string, body: CreateItemBody, { defer }: 
     return { results: [{ item, created: true }], rejected: [] };
   }
   const inputs = body.url !== undefined ? [body.url] : (body.urls ?? extractUrls(body.text!));
+  const budget = await hitRateLimit(`links:${userId}`, LINKS_PER_HOUR, 3600, inputs.length);
+  if (!budget.ok) throw new ApiError("rate_limited", "That is a lot of links for one hour. Try again later, or use Import.", 429, { retryAfter: budget.retryAfter });
   if (inputs.length === 1) {
     try {
       return { results: [await pluck(userId, { ...body, url: inputs[0]! }, { defer })], rejected: [] };
@@ -47,20 +52,19 @@ export async function pluckAny(userId: string, body: CreateItemBody, { defer }: 
     results.push({ item, created });
     if (needsExtraction) toExtract.push(item);
   }
-  const work = () => extractMany(userId, toExtract);
-  if (defer) defer(work);
-  else await work();
+  await queueExtraction(userId, toExtract, { defer });
   return { results, rejected };
 }
 
-// Reads many pages after the response, six at a time, each through the same extraction attempt.
-export async function extractMany(userId: string, items: Item[], concurrency = 6): Promise<void> {
-  const queue = [...items];
-  await Promise.all(
-    Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
-      for (let item = queue.shift(); item; item = queue.shift()) await extractAttempt(userId, item, { timeoutMs: 15_000 });
-    }),
-  );
+// Many pages are read by the job queue, so a function cut off at 60 s leaves none of them behind;
+// `defer` starts on them as soon as the response is out, and the cron tick carries on with the rest.
+export async function queueExtraction(userId: string, items: Item[], { defer }: { defer?: Defer } = {}): Promise<void> {
+  for (const item of items) await enqueue("extract", { userId, itemId: item.id });
+  if (!items.length) return;
+  const { runJobs } = await import("../jobs"); // jobs imports the library, so not at the top
+  const work = async () => void (await runJobs({ budgetMs: 40_000 }));
+  if (defer) defer(work);
+  else await work();
 }
 
 export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {

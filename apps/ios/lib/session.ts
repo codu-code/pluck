@@ -2,9 +2,8 @@ import Constants from "expo-constants";
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
-import { createClient } from "./api";
+import { codeFrom, createClient, pkcePair, tokenRequest } from "@pluck/client";
 import { kv } from "./kv";
-import { codeFrom, pkcePair } from "./pkce";
 
 // The signed-in session lives in the Keychain, in the access group the share extension also reads
 // (the app's default group: the first one in keychain-access-groups).
@@ -93,20 +92,11 @@ export async function finishSignIn(url: string): Promise<boolean> {
   WebBrowser.dismissAuthSession();
   const tokens = await tokenRequest(p.server, {
     grant_type: "authorization_code", code, redirect_uri: REDIRECT, client_id: p.clientId, code_verifier: p.verifier, resource: `${p.server}/api/v1`,
-  });
+  }).catch(() => null); // offline at this step: sign in again
   if (!tokens) return false;
   await setSession({ server: p.server, clientId: p.clientId, ...tokens });
   await rememberEmail();
   return true;
-}
-
-async function tokenRequest(server: string, form: Record<string, string>) {
-  const res = await fetch(`${server}/api/auth/oauth2/token`, {
-    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(form).toString(),
-  }).catch(() => null);
-  if (!res?.ok) return null;
-  const t = (await res.json()) as { access_token: string; refresh_token?: string; expires_in: number };
-  return { access: t.access_token, refresh: t.refresh_token ?? null, expiresAt: Date.now() + t.expires_in * 1000 };
 }
 
 let refreshing: Promise<string | null> | null = null;
@@ -117,14 +107,21 @@ export async function authHeader(): Promise<string | null> {
   if (!s) return null;
   if (s.apiKey) return `Bearer ${s.apiKey}`;
   if (s.access && (s.expiresAt ?? 0) - Date.now() > 60_000) return `Bearer ${s.access}`;
-  if (!s.refresh || !s.clientId) return null;
-  refreshing ??= tokenRequest(s.server, { grant_type: "refresh_token", refresh_token: s.refresh, client_id: s.clientId, resource: `${s.server}/api/v1` })
-    .then(async (t) => {
-      if (!t) return null;
-      await setSession({ ...s, ...t });
-      return `Bearer ${t.access}`;
-    })
-    .finally(() => (refreshing = null));
+  refreshing ??= (async () => {
+    // The share extension refreshes too, and a refresh token works once: spending the one this app read at launch
+    // after the extension replaced it signs both out. So read the Keychain again first.
+    current = undefined;
+    const now = await getSession();
+    if (!now?.refresh || !now.clientId) return null;
+    if (now.access && (now.expiresAt ?? 0) - Date.now() > 60_000) return `Bearer ${now.access}`;
+    const t = await tokenRequest(now.server, { grant_type: "refresh_token", refresh_token: now.refresh, client_id: now.clientId, resource: `${now.server}/api/v1` });
+    if (!t) {
+      await setSession({ server: now.server }); // refused: show sign-in rather than screens where every request fails
+      return null;
+    }
+    await setSession({ ...now, ...t });
+    return `Bearer ${t.access}`;
+  })().finally(() => (refreshing = null));
   return refreshing;
 }
 

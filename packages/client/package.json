@@ -1,0 +1,10 @@
+{
+  "name": "@pluck/client",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p ." },
+  "dependencies": { "@pluck/shared-schemas": "workspace:*" }
+}

@@ -7,7 +7,7 @@ import { normalizeUrl, type Item, type List, type Me, type PublicList, type Sett
 import { sendEmail } from "../email";
 import { ApiError } from "../errors";
 import { log } from "../log";
-import { extractMany } from "./items";
+import { queueExtraction } from "./items";
 
 type Defer = (task: () => Promise<void>) => void;
 
@@ -82,9 +82,7 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
     }
   }
   const list = await createList(userId, { name: page.list.name, purpose: page.list.purpose, createdBy: "user", items: entries });
-  const work = () => extractMany(userId, toRead);
-  if (defer) defer(work);
-  else await work();
+  await queueExtraction(userId, toRead, { defer });
   return list;
 }
 

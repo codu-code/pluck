@@ -1,9 +1,8 @@
-import { claimDueDigests, digestFor, editItem, getMe, isEmptyDigest, markOpened, updateSettings } from "@pluck/db";
+import { claimDueDigests, digestFor, editItem, enqueue, getMe, isEmptyDigest, markOpened, updateSettings } from "@pluck/db";
 import type { Digest } from "@pluck/shared-schemas";
 import { digestEmail } from "../digest-email";
 import { sendEmail } from "../email";
 import { ApiError } from "../errors";
-import { log } from "../log";
 import { signTap, verifyTap, type Tap } from "../signed";
 import { archiveItAll } from "./expiry";
 
@@ -36,17 +35,12 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
   return true;
 }
 
-// Monday 06:00 local (or the person's chosen day), once.
-export async function sendDueDigests(now = new Date()): Promise<number> {
-  let sent = 0;
-  for (const u of await claimDueDigests(now)) {
-    try {
-      if (await sendDigest(u.userId)) sent++;
-    } catch (e) {
-      log("error", "digest failed", { userId: u.userId, error: String(e) });
-    }
-  }
-  return sent;
+// Monday 06:00 local (or the person's chosen day), once. Each email is its own job, so thousands due at the
+// same hour go out at the shared send rate across ticks, and a failed send is retried rather than lost.
+export async function queueDueDigests(now = new Date()): Promise<number> {
+  const due = await claimDueDigests(now);
+  for (const u of due) await enqueue("digest", { userId: u.userId });
+  return due.length;
 }
 
 export type TapResult = { action: Tap["a"]; ok: boolean; undo?: string; count?: number };

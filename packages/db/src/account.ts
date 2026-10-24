@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import { apiKeys, contents, db, emailAliases, exportsCol, highlights, imports, items, listRows, lists, oid, reports, tags, users, type ImportDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 import { textForSearch } from "./search.ts";
-import { createTag, setItemTags } from "./tags.ts";
+import { createTag } from "./tags.ts";
 
 // ---- Imports ------------------------------------------------------------------------------------
 
@@ -30,7 +30,8 @@ export async function updateImport(id: string, set: Partial<Pick<ImportDoc, "tot
 
 // One imported link. It goes to the Archive with reason "import" (Archive filter: Imported). A link already
 // in the library is left exactly as it is. Tags are made by name; the person owns them.
-export async function importLink(userId: string, url: string, e: Pick<ImportEntry, "title" | "tags" | "note" | "createdAt">): Promise<{ item: Item; created: boolean }> {
+// The tag counts are left to the caller (`recountTags` once a batch): counting per entry made a big import quadratic.
+export async function importLink(userId: string, url: string, e: Pick<ImportEntry, "title" | "tags" | "note" | "createdAt">): Promise<{ item: Item; created: boolean; tagIds: string[] }> {
   const uid = oid(userId);
   const now = new Date();
   const urlHash = createHash("sha256").update(url).digest("hex");
@@ -49,16 +50,17 @@ export async function importLink(userId: string, url: string, e: Pick<ImportEntr
   );
   const created = !res.lastErrorObject?.updatedExisting;
   let item = toItem(res.value!);
-  if (created && e.tags.length) {
-    const ids = [];
-    for (const name of e.tags.slice(0, 20)) {
-      const t = await createTag(userId, name, "user");
-      if (t) ids.push(t.tag.id);
-    }
-    await setItemTags(userId, item.id, ids, "user");
-    item = toItem((await (await items()).findOne({ _id: res.value!._id }))!);
+  const made = created ? await Promise.all(e.tags.slice(0, 20).map((name) => createTag(userId, name, "user"))) : [];
+  const tagged = [...new Map(made.filter((t) => t !== null).map((t) => [t.tag.id, t])).values()]; // "DB" and "db" are one tag
+  if (tagged.length) {
+    const doc = await (await items()).findOneAndUpdate(
+      { _id: res.value!._id },
+      { $set: { tagIds: tagged.map((t) => oid(t.tag.id)), tagNames: tagged.map((t) => t.tag.name) } },
+      { returnDocument: "after" },
+    );
+    item = toItem(doc!);
   }
-  return { item, created };
+  return { item, created, tagIds: tagged.map((t) => t.tag.id) };
 }
 
 // ---- Export -------------------------------------------------------------------------------------

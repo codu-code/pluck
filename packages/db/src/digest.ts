@@ -59,7 +59,9 @@ export const isEmptyDigest = (d: Digest) => !d.expiring.length && !d.due.length 
 // People whose digest day it is, at or after 06:00 their time, not yet sent today. Claimed atomically.
 export async function claimDueDigests(now = new Date()): Promise<{ userId: string; email: string; name: string; settings: UserSettings; localDate: string }[]> {
   const col = await users();
-  const candidates = await col.find({ "settings.digestDay": { $ne: null } }, { projection: { email: 1, name: 1, settings: 1, digestSentOn: 1 } }).toArray();
+  // Missing settings mean the defaults (expiry and the email on), and `$ne: null` would skip a missing field.
+  // shortcut: reads every person each minute; fine to tens of thousands, then keep a next-due time per person.
+  const candidates = await col.find({ "settings.digestDay": { $not: { $type: "null" } } }, { projection: { email: 1, name: 1, settings: 1, digestSentOn: 1 } }).toArray();
   const due = [];
   for (const u of candidates) {
     const settings = { ...DEFAULT_SETTINGS, ...u.settings };

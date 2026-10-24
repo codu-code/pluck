@@ -25,6 +25,10 @@ async function recount(userId: ObjectId, tagIds: ObjectId[]): Promise<void> {
   );
 }
 
+export async function recountTags(userId: string, tagIds: string[]): Promise<void> {
+  await recount(oid(userId), [...new Set(tagIds)].map(oid));
+}
+
 // The vocabulary, most used first, with how many of each tag's assignments came from an AI tool.
 export async function listTags(userId: string): Promise<Tag[]> {
   const uid = oid(userId);

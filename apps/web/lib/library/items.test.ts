@@ -1,4 +1,4 @@
-import { getContent, getItemBlobKeys, pendingJobCount } from "@pluck/db";
+import { getContent, getItemBlobKeys, hitRateLimit, pendingJobCount } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
@@ -73,6 +73,15 @@ test("urls[] reports the ones it cannot open", async () => {
   const res = await pluckAny(a, { urls: [`${FIX}/news-4.html`, "not a link", `${FIX}/docs-2.html`] });
   expect(res.results).toHaveLength(2);
   expect(res.rejected).toEqual([{ input: "not a link", message: "That is not a link Pluck can open." }]);
+});
+
+test("a person's links an hour are capped, counted per link", async () => {
+  const { a, b } = await twoUsers();
+  const skip = () => {}; // the rows are what count here, not reading the pages
+  const urls = Array.from({ length: 20 }, (_, i) => `${FIX}/more-${i}.html`);
+  await hitRateLimit(`links:${a}`, Infinity, 3600, 1990); // 1,990 of the hour's 2,000 spent
+  await expect(pluckAny(a, { urls }, { defer: skip })).rejects.toMatchObject({ status: 429 });
+  expect((await pluckAny(b, { urls }, { defer: skip })).results).toHaveLength(20);
 });
 
 test("text without links is a note; with a kind it is a todo or a thing with a due date", async () => {

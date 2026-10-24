@@ -45,3 +45,8 @@ test("digests go out on the person's day, at or after 06:00 local, once", async 
   expect((await claimDueDigests(new Date("2026-10-27T11:00:00Z"))).map((u) => u.userId)).not.toContain(a); // Tuesday
   expect((await claimDueDigests(mon7)).map((u) => u.userId)).not.toContain(b);
 });
+
+test("someone who never opened Settings gets the Monday email", async () => {
+  const { a } = await twoUsers(); // no settings stored: the defaults, Monday in UTC
+  expect((await claimDueDigests(new Date("2026-10-26T06:30:00Z"))).map((u) => u.userId)).toContain(a);
+});

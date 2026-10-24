@@ -3,6 +3,7 @@ import { hitRateLimit, isAiConnected, verifyApiKey } from "@pluck/db";
 import { ZodError, type ZodType } from "zod";
 import { API_RESOURCE, auth } from "./auth";
 import { ApiError } from "./errors";
+import { clientIp } from "./ip";
 import { log } from "./log";
 
 export { ApiError };
@@ -36,9 +37,7 @@ async function verifyAppToken(token: string): Promise<Caller | null> {
 // "full" is the signed-in person in their own browser; keys and tokens carry library:* scopes.
 export const hasScope = (caller: Caller, scope: string) => caller.scopes.includes("full") || caller.scopes.includes(scope);
 
-export function clientIp(req: Request): string {
-  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
-}
+export { clientIp };
 
 export async function parseBody<T>(req: Request, schema: ZodType<T>): Promise<T> {
   let raw: unknown;

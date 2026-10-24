@@ -3,9 +3,8 @@ import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMe
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
-import { Unreachable } from "./api";
+import { createQueue, Unreachable } from "@pluck/client";
 import { kv } from "./kv";
-import { createQueue } from "./queue";
 import { api } from "./session";
 
 const GROUP: string = (Constants.expoConfig?.extra as { appGroup?: string } | undefined)?.appGroup ?? "group.io.getpluck.app";
@@ -97,21 +96,29 @@ export async function toSync(): Promise<number> {
   return (await queue.count()) + shared;
 }
 
+type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string } };
+
 // Runs when the app comes to the foreground: the phone's queue, then the share extension's leftovers.
-export async function syncPending(): Promise<number> {
+// One run at a time: opening the app and pulling to refresh must not send the same share twice.
+let syncing: Promise<number> | null = null;
+export const syncPending = (): Promise<number> => (syncing ??= sync().finally(() => (syncing = null)));
+
+async function sync(): Promise<number> {
   await queue.drain((body) => api("/api/v1/items", { json: body }));
   const dir = pendingDir();
   if (dir?.exists) {
     for (const f of dir.list()) {
       if (!(f instanceof File) || !f.name.endsWith(".json")) continue;
+      let record: SharedRecord | null = null;
       try {
-        const record = JSON.parse(await f.text()) as { body?: CreateItemBody; file?: { name: string; contentType: string; path: string } };
+        record = JSON.parse(await f.text()) as SharedRecord;
         if (record.body) await api("/api/v1/items", { json: record.body });
         if (record.file) await uploadShared(record.file);
         f.delete();
       } catch (e) {
         if (e instanceof Unreachable) break; // still offline: try next time
         f.delete(); // refused or unreadable: retrying will not help
+        if (record?.file) removeShared(record.file.path);
       }
     }
   }
@@ -125,9 +132,15 @@ async function uploadShared(file: { name: string; contentType: string; path: str
   const local = new File(container, file.path);
   if (!local.exists) return;
   const { uploadUrl } = await api<{ uploadUrl: string }>("/api/v1/items/files", { json: { name: file.name, contentType: file.contentType, size: local.size ?? 1, source: "ios" } });
-  const res = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.contentType }, body: await local.bytes() });
-  if (!res.ok) throw new Unreachable("upload failed");
+  const res = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.contentType }, body: await local.bytes() }).catch(() => null);
+  if (!res?.ok) throw new Unreachable("upload failed"); // a dropped connection too: keep the share and try again
   local.delete();
+}
+
+function removeShared(path: string) {
+  const container = Paths.appleSharedContainers[GROUP];
+  const local = container ? new File(container, path) : null;
+  if (local?.exists) local.delete();
 }
 
 // The share extension shows two of your tags and "Add to <last list>"; it reads them from the App Group.
