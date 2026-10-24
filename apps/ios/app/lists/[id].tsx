@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Alert, FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
-import { Refused } from "@/lib/api";
+import { Refused } from "@pluck/client";
 import { keys, useList, useMe } from "@/lib/data";
 import { api, getSession } from "@/lib/session";
 import { font, useTheme } from "@/lib/theme";
