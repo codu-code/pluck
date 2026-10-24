@@ -12,6 +12,7 @@ type Props = {
   selecting?: boolean; // bulk select: shows the checkbox
   selected?: boolean;
   leaving?: boolean; // slides out after a move
+  landing?: "draft" | "fresh"; // a pluck arriving: the draft slides in, the real row washes mint then settles
   onToggle?: () => void;
   onPoint?: () => void;
   actions?: ReactNode;
@@ -20,7 +21,7 @@ type Props = {
 };
 
 // One 64px row from the Main board: cover or site tile, title, site and meta, excerpt, kind glyph and when.
-export function ItemRow({ item, now, active, selecting, selected, leaving, onToggle, onPoint, actions, tags, pill }: Props) {
+export function ItemRow({ item, now, active, selecting, selected, leaving, landing, onToggle, onPoint, actions, tags, pill }: Props) {
   const site = rowSite(item);
   return (
     <div
@@ -29,6 +30,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, onTog
       data-active={active || undefined}
       data-selected={selected || undefined}
       data-leaving={leaving || undefined}
+      data-landing={landing}
       onMouseMove={onPoint} // move, not enter: a closing overlay must not steal the keyboard cursor
     >
       {selecting && (

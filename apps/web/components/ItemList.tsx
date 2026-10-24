@@ -40,6 +40,8 @@ function placeholders(d: PluckDraft): Row[] {
   return d.urls.map((url, i) => ({ ...base, id: `draft-${d.key}-${i}`, kind: "link" as const, url, title: url, extraction: { state: "pending" as const, attempts: 0, lastError: null } }));
 }
 
+const LANDING_MS = 4000; // a row created this recently washes mint when it first appears
+
 const settling = (it: Row, now: number) =>
   !it.draft && now - new Date(it.lastTouchedAt).getTime() < WATCH_MS &&
   (it.extraction.state === "pending" || (it.extraction.state === "done" && !it.hasCover && it.kind === "link"));
@@ -363,6 +365,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
                     selecting={selecting && !r.draft}
                     selected={selected.has(r.id)}
                     leaving={leaving.has(r.id)}
+                    landing={r.draft ? "draft" : Date.now() - new Date(r.createdAt).getTime() < LANDING_MS ? "fresh" : undefined}
                     onToggle={() => toggle(r.id)}
                     onPoint={() => index >= 0 && setCursor(index)}
                     tags={chips(r)}
