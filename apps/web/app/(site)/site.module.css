@@ -8,7 +8,7 @@
   --logo-ink: #1E5C45; --logo-spark: #34A07C; --tile-0: #E1E6CF; --tile-1: #E6DCD6;
   background: var(--ground); color: var(--ink); font-size: 17px; line-height: 26px; overflow: hidden; min-height: 100vh;
 }
-.dark, .band, .aiCard, .terminal {
+.dark, .band, .aiCard, .terminal, .bugCard {
   color-scheme: dark;
   --ground: #10130F; --ink: #ECEFE8; --ink2: #A0A898; --surface: #191D17; --line: #2A2F27; --line-strong: #363C33;
   --chip: #252A22; --rail: #161A14; --tint: #191D17; --selected: #1E221C; --clay: #D08A68; --danger: #E07A62;
@@ -202,6 +202,27 @@
 .reason { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 12px 48px; padding: 28px 0; border-bottom: 2px solid var(--ink); }
 .reason b { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; }
 .reason p { margin: 0; font-size: 19px; line-height: 29px; align-self: center; }
+
+/* Support */
+.supportTitle { margin: 0; font-size: clamp(88px, 15vw, 210px); line-height: 0.86; }
+.heroPara a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--accent); }
+.topics { display: flex; flex-wrap: wrap; gap: 8px; }
+.site .topic { display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid var(--line-strong); text-decoration: none; font-size: 15px; font-weight: 500; transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.site .topic:hover { background: var(--tint); border-color: var(--ink); color: var(--ink); }
+.supportTopic { padding-top: 96px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px 48px; align-items: start; scroll-margin-top: 24px; }
+.supportTopicTitle { margin: 0; font-size: clamp(36px, 4.5vw, 60px); line-height: 1; text-wrap: balance; }
+@media (min-width: 900px) { .supportTopic { grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr); } .supportTopicTitle { position: sticky; top: 24px; } }
+.answers { display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
+.answer { display: flex; flex-direction: column; gap: 8px; padding: 24px 0; border-bottom: 1px solid var(--line-strong); scroll-margin-top: 24px; }
+.answer h3 { margin: 0; font-size: 21px; line-height: 28px; font-weight: 600; letter-spacing: -0.015em; text-wrap: balance; }
+.answer p { margin: 0; max-width: 64ch; font-size: 17px; line-height: 27px; color: #394034; text-wrap: pretty; }
+.answer a { font-weight: 600; text-underline-offset: 3px; }
+.answer kbd { display: inline-flex; align-items: center; min-width: 26px; height: 24px; padding: 0 7px; border-radius: 6px; border: 1px solid var(--line-strong); border-bottom-width: 2px; background: var(--surface); font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; line-height: 1; color: var(--ink); vertical-align: 1px; }
+.bugsSection { padding-top: 128px; padding-bottom: 96px; scroll-margin-top: 24px; }
+.bugCard { border-radius: 24px; background: #151A13; color: var(--ink); padding: clamp(32px, 6vw, 72px); display: flex; flex-wrap: wrap; gap: 32px 48px; align-items: flex-end; justify-content: space-between; }
+.bugCopy { flex: 1 1 420px; display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+.bugNote { margin: 0; font-size: 15px; line-height: 23px; color: var(--ink2); }
+.site ::selection { background: var(--highlight); color: #151A13; }
 
 /* Privacy and Terms */
 .legal { max-width: 760px; margin: 0 auto; padding: 64px 24px 96px; display: flex; flex-direction: column; gap: 40px; line-height: 27px; }

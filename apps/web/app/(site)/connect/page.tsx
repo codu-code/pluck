@@ -32,7 +32,7 @@ const TOOL_LIST = [
   { name: "list_lists", does: "Your lists, with purpose, count and visibility." },
   { name: "get_list", does: "One list in order, with notes and ticks." },
   { name: "create_list", does: "A new list with items in order and a note per item. Private." },
-  { name: "update_list", does: "Rename, reorder, add, tick, or make public when you say so." },
+  { name: "update_list", does: "Rename, reorder, add, tick, or make private. Only you make a list public." },
   { name: "get_digest", does: "Expiring, due, oldest and quiet lists. The Monday email, as data." },
 ];
 
@@ -48,7 +48,7 @@ const NEVER = [
   "Make a tag you didn't ask for.",
   "Rename or remove a tag you made.",
   "Rewrite a list's purpose.",
-  "Make a list public without you saying so.",
+  "Make a list public. Only you can, from the list in Pluck.",
 ];
 
 export default function Connect() {

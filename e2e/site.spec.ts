@@ -54,3 +54,17 @@ test("the site: connect your AI with tabs, open source, privacy and terms", asyn
   await page.getByRole("link", { name: "Home", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pluck it.");
 });
+
+test("support: answers by topic, and bugs go to GitHub issues", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("contentinfo").getByRole("link", { name: "Support" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Help.");
+  await page.getByRole("navigation", { name: "Topics" }).getByRole("link", { name: "Your AI" }).click();
+  await expect(page).toHaveURL(/#ai$/);
+  await expect(page.getByRole("heading", { name: "How do I disconnect it?" })).toBeInViewport();
+  for (const topic of ["The extension", "iPhone", "Your AI", "Your library and account", "Running your own"])
+    await expect(page.getByRole("heading", { level: 2, name: topic })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open an issue" })).toHaveAttribute("href", /\/issues$/);
+  await page.getByRole("link", { name: "Connect your AI" }).last().click();
+  await expect(page).toHaveURL(/\/connect$/);
+});
