@@ -59,6 +59,11 @@
 .pasteButton { height: 44px; padding: 0 18px; border-radius: 8px; border: 0; background: var(--highlight); color: #151A13; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
 .pasteButton:disabled { opacity: 0.6; cursor: default; }
 .plucked { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; padding: 8px 14px; border-radius: 10px; background: var(--brand); color: var(--on-brand); }
+.plucked { animation: pluckedIn 360ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.plucked .tickSmall { animation: tickPop 420ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes pluckedIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes tickPop { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .plucked, .plucked .tickSmall { animation: none; } }
 .plucked b { font-weight: 600; }
 .pluckedNote { color: #A0A898; }
 .site .plucked a { color: var(--on-brand); font-weight: 600; }

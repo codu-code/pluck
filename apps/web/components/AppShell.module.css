@@ -8,7 +8,7 @@
 .links { display: flex; flex-direction: column; gap: 2px; }
 .link {
   display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px;
-  border-radius: 6px; text-decoration: none; color: var(--ink);
+  border-radius: 6px; text-decoration: none; color: var(--ink); transition: background-color 120ms ease-out;
 }
 .link:hover { background: var(--rail-active); color: var(--ink); }
 .link[aria-current="page"] { background: var(--rail-active); font-weight: 600; }
