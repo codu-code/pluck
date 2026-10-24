@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   if (!secret || !timingSafeEqual(digest(req.headers.get("authorization") ?? ""), digest(`Bearer ${secret}`))) return new Response("unauthorized", { status: 401 });
   const started = Date.now();
   // A failure in the schedule (an S3 hiccup polling email-in) must not stop this minute's jobs.
-  const scheduled = await runScheduled().catch((e) => (log("error", "scheduled run failed", { error: String(e) }), {}));
+  const scheduled = await runScheduled().catch((e) => (log("error", "scheduled run failed", { error: e }), {}));
   // Jobs get what is left of the 60 s, with room to answer.
   return Response.json({ ...scheduled, ...(await runJobs({ budgetMs: Math.max(0, 50_000 - (Date.now() - started)) })) });
 }

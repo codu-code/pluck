@@ -17,10 +17,10 @@ let lastScheduled = 0;
 while (!stopping) {
   if (Date.now() - lastScheduled > 60_000) {
     lastScheduled = Date.now();
-    await runScheduled().catch((e) => log("error", "scheduled run failed", { error: String(e) }));
+    await runScheduled().catch((e) => log("error", "scheduled run failed", { error: e }));
   }
   const { ran } = await runJobs({ budgetMs: 30_000 }).catch((e) => {
-    log("error", "worker loop error", { error: String(e) });
+    log("error", "worker loop error", { error: e });
     return { ran: 0 };
   });
   if (!ran) await new Promise((r) => setTimeout(r, 2000));

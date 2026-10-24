@@ -105,5 +105,5 @@ export async function report(listId: string, ip: string, reason: string, details
     to,
     subject: `Report: ${reason} on list ${listId}`,
     text: `A public list was reported.\n\nList: ${listId}\nReason: ${reason}\nDetails: ${details ?? "(none)"}\n\nReview it in /admin.\n`,
-  }).catch((e) => log("error", "report email failed", { error: String(e) }));
+  }).catch((e) => log("error", "report email failed", { error: e }));
 }

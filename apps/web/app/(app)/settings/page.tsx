@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { requireUser, MCP_RESOURCE } from "@/lib/auth";
 import { aiTaggedCount, aiToolsOf, archiveItAll, emailInAddress, keysOf, me, tagsOf } from "@/lib/library";
+import { CookiesLink } from "@/components/CookieBanner";
 import { DeleteAccount, ImportExport, KeysSection, SignOut } from "./AccountSections";
 import { AiToolsSection } from "./AiToolsSection";
 import { EmailInSection } from "./EmailInSection";
@@ -23,7 +24,7 @@ export default async function Settings() {
       <div className={styles.head}>
         <h1 className={styles.title}>Settings</h1>
         <span className={styles.meta}>
-          {user.email} · signed in with an email link · <SignOut />
+          {user.email} · signed in with an email link · <SignOut /> · <CookiesLink className={styles.linkButton} />
         </span>
       </div>
       <ProfileSection initial={profile} />

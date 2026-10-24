@@ -28,6 +28,19 @@ xcrun simctl io booted screenshot list.png
 
 Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 
+## TestFlight
+
+1. Put the PostHog project token in `apps/ios/.env.local` (git-ignored) as `EXPO_PUBLIC_POSTHOG_KEY=phc_…`. Metro reads it when it bundles the Release build; without it the app sends nothing and never asks.
+2. `cd apps/ios && pnpm exec expo prebuild -p ios --clean` (no `PLUCK_SERVER`: store builds point at getpluck.io).
+3. Open `ios/Pluck.xcworkspace`. For both targets (Pluck and the share extension) pick the team under Signing & Capabilities, and check the App Group `group.io.getpluck.app` and the Keychain group are there.
+4. Raise the build number (General, Build) for each upload. Product, Archive, then Distribute App, App Store Connect, Upload.
+5. In App Store Connect, the build appears under TestFlight after processing (about 15 minutes). Answer the export compliance question (no non-exempt encryption; `ITSAppUsesNonExemptEncryption` is false already), add testers.
+6. App Privacy (App Store Connect, before external testing or review): Contact info, email (account, linked); User content, other (what you pluck, linked, app functionality); Usage data, product interaction (analytics, linked, only after the in-app yes); Diagnostics, crash data (app functionality, not linked). No tracking in Apple's sense: nothing is shared with data brokers or used across other companies' apps.
+
+## Usage and crash reports
+
+`lib/analytics.ts`: PostHog, EU, only when the build has `EXPO_PUBLIC_POSTHOG_KEY`. Crashes and unhandled errors are sent from first launch under a random id that is never tied to the account. After "Pluck it, I'm in" (asked once, from `components/UsagePrompt.tsx`; the same switch is in Settings, Privacy), screen views and the account id go too. Screens are routes (`/items/<id>`), never their content.
+
 ## How it fits together
 
 - **Sign in:** OAuth 2.1 with PKCE in a web authentication session, for the API resource (`<server>/api/v1`). The app registers itself once per server (dynamic registration, redirect `io.getpluck.app:/oauth`). The email link may open in Mail or Safari instead of the session; the redirect then reaches the app as a link (`app/oauth.tsx`) and finishes there. "Use your own server" takes a server address and, optionally, a personal API key.
