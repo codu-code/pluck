@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import styles from "./signin.module.css";
 
 export function SignInForm({ next = "/inbox" }: { next?: string }) {
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "limited">("idle");
   const [email, setEmail] = useState("");
 
   async function submit(e: FormEvent) {
@@ -15,7 +15,7 @@ export function SignInForm({ next = "/inbox" }: { next?: string }) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, callbackURL: next }),
     });
-    setState(res.ok ? "sent" : "error");
+    setState(res.ok ? "sent" : res.status === 429 ? "limited" : "error");
   }
 
   if (state === "sent") {
@@ -47,6 +47,11 @@ export function SignInForm({ next = "/inbox" }: { next?: string }) {
       {state === "error" && (
         <p className={styles.error} role="alert">
           That did not go through. Check the address and try again.
+        </p>
+      )}
+      {state === "limited" && (
+        <p className={styles.error} role="alert">
+          Too many links asked for. Use the last one we sent, or try again later.
         </p>
       )}
     </form>

@@ -30,4 +30,6 @@ test("rate limits count per key within a window", async () => {
   expect(results.map((r) => r.ok)).toEqual([true, true, true, false]);
   expect(results[3]!.retryAfter).toBeGreaterThan(0);
   expect((await hitRateLimit(`${key}:other`, 3, 60)).ok).toBe(true);
+  expect((await hitRateLimit(`${key}:cost`, 3, 60, 3)).ok).toBe(true);
+  expect((await hitRateLimit(`${key}:cost`, 3, 60)).ok).toBe(false); // one call spent the window
 });

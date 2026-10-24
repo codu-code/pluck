@@ -4,6 +4,7 @@ node_modules/
 .turbo/
 dist/
 cdk.out/
+cdk-outputs.json
 .env*
 !.env.example
 test-results/

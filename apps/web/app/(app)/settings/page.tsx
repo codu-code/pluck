@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { currentUser, MCP_RESOURCE } from "@/lib/auth";
+import { requireUser, MCP_RESOURCE } from "@/lib/auth";
 import { aiTaggedCount, aiToolsOf, archiveItAll, emailInAddress, keysOf, me, tagsOf } from "@/lib/library";
 import { DeleteAccount, ImportExport, KeysSection, SignOut } from "./AccountSections";
 import { AiToolsSection } from "./AiToolsSection";
@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: "Settings · Pluck" };
 
 // Settings from the board, top to bottom.
 export default async function Settings() {
-  const user = (await currentUser())!;
+  const user = await requireUser();
   const [tags, aiWeek, profile, stale, address, keys, aiTools] = await Promise.all([
     tagsOf(user.id), aiTaggedCount(user.id, 7), me(user.id), archiveItAll(user.id, { dryRun: true }), emailInAddress(user.id), keysOf(user.id),
     aiToolsOf(user.id),

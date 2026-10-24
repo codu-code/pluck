@@ -242,7 +242,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "update_list",
       {
-        description: "Rename a list, add, remove or reorder its items, set an item's note or tick, or change who can see it.",
+        description: "Rename a list, add, remove or reorder its items, set an item's note or tick, or make it private; only the person can make a list public, from the list in Pluck.",
         inputSchema: z
           .object({
             id: ObjectIdString,
@@ -252,15 +252,15 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
             entries: z.array(z.object({ itemId: ObjectIdString, note: z.string().max(2000).nullable().optional(), ticked: z.boolean().optional() })).max(100).optional(),
             order: z.array(ObjectIdString).max(1000).optional().describe("Every item in the list, in the new order."),
             visibility: z.enum(["private", "public"]).optional(),
-            personAskedForPublic: z.boolean().optional().describe("True only when the person asked, in this conversation, to make this list public."),
           })
           .strict()
           .describe("The purpose line belongs to the person and cannot be changed here."),
         annotations: WRITE,
       },
-      async ({ id, name, add, remove, entries, order, visibility, personAskedForPublic }) => {
-        if (visibility === "public" && personAskedForPublic !== true)
-          throw Object.assign(new Error("Only make a list public when the person asks for it in this conversation."), { code: "forbidden" });
+      async ({ id, name, add, remove, entries, order, visibility }) => {
+        // Text in a plucked page can steer the AI, so publishing never happens on the AI's word alone.
+        if (visibility === "public")
+          throw Object.assign(new Error("Only the person can make a list public. Ask them to open the list in Pluck and set it to Public there."), { code: "forbidden" });
         await lib.list(id); // missing list: not_found before anything changes
         if (name) await lib.renameList(id, name);
         for (const itemId of remove ?? []) await lib.removeFromList(id, itemId);
