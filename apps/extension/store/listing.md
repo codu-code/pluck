@@ -39,6 +39,7 @@ Needs a free Pluck account at https://getpluck.io.
 | Store icon (128×128) | `../public/icon/128.png` |
 | Screenshots (1280×800) | `1-pluck-this-page.png`, `2-your-inbox.png`, `3-the-reader.png` |
 | Small promo tile (440×280) | `promo-small-440x280.png` |
+| Marquee promo tile (1400×560) | `promo-marquee-1400x560.png` |
 
 **Official URL:** https://getpluck.io (needs the domain verified in Search Console under the same Google account)
 
