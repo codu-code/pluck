@@ -38,3 +38,10 @@ export async function ageItemsOf(email: string, titles: string[], days: number):
     .updateMany({ userId: user._id, title: { $in: titles } }, { $set: { lastTouchedAt: new Date(Date.now() - days * 86_400_000) } });
   return res.modifiedCount;
 }
+
+// e2e: make one person's lists look idle for `days`.
+export async function ageListsOf(email: string, days: number): Promise<number> {
+  const user = await getDb().collection("users").findOne({ email });
+  if (!user) return 0;
+  return (await getDb().collection("lists").updateMany({ userId: user._id }, { $set: { lastActivityAt: new Date(Date.now() - days * 86_400_000) } })).modifiedCount;
+}

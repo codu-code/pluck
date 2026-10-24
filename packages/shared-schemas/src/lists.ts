@@ -62,7 +62,7 @@ export const ExpiryDays = z.union([z.literal(14), z.literal(30), z.literal(60), 
 export const Settings = z.object({
   expiryDays: ExpiryDays,
   expiryScope: z.enum(["inbox_later", "inbox"]),
-  digestDay: z.number().int().min(0).max(6),
+  digestDay: z.number().int().min(0).max(6).nullable(), // null: no weekly email
   timezone: z.string().min(1).max(64),
 });
 export type Settings = z.infer<typeof Settings>;
@@ -114,3 +114,12 @@ export const AdminReport = z.object({
   owner: z.object({ id: ObjectIdString, handle: z.string().nullable(), email: z.string(), closed: z.boolean() }).nullable(),
 });
 export type AdminReport = z.infer<typeof AdminReport>;
+
+export const Digest = z.object({
+  expiryDays: z.number().int().nullable(),
+  expiring: z.array(z.object({ id: ObjectIdString, title: z.string(), site: z.string(), movesOn: z.string() })),
+  due: z.array(z.object({ id: ObjectIdString, title: z.string(), dueAt: z.string() })),
+  oldest: z.array(z.object({ id: ObjectIdString, title: z.string(), site: z.string(), createdAt: z.string() })),
+  quietLists: z.array(z.object({ id: ObjectIdString, name: z.string(), tickedCount: z.number().int(), itemCount: z.number().int(), idleDays: z.number().int() })),
+});
+export type Digest = z.infer<typeof Digest>;

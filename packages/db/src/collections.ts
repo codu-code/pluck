@@ -103,7 +103,7 @@ export type UserDoc = {
 export type UserSettings = {
   expiryDays: 14 | 30 | 60 | 90 | null; // null: never
   expiryScope: "inbox_later" | "inbox";
-  digestDay: number; // 0 Sunday … 6 Saturday; 1 by default
+  digestDay: number | null; // 0 Sunday … 6 Saturday; 1 (Monday) by default; null: no email
   timezone: string; // IANA
 };
 export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC" };

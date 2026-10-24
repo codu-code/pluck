@@ -24,7 +24,13 @@ export function ExpirySection({ initial, staleCount: initialCount }: { initial: 
     setSettings(next);
     const dry = await send("/api/v1/items/archive-stale", "POST", { dryRun: true });
     if (dry.ok) setCount(((await dry.json()) as { count: number }).count);
+    if ("digestDay" in patch) return showToast({ message: next.digestDay === null ? "No weekly email." : "Weekly email day saved." });
     showToast({ message: next.expiryDays ? `Untouched for ${next.expiryDays} days goes to the Archive. Nothing is deleted.` : "Nothing expires now." });
+  }
+
+  async function sendNow() {
+    const res = await send("/api/v1/digest/send", "POST", {});
+    showToast({ message: res.ok ? "Sent. Check your email." : "That did not go through." });
   }
 
   async function archiveAll() {
@@ -62,7 +68,23 @@ export function ExpirySection({ initial, staleCount: initialCount }: { initial: 
             <option value="inbox">Inbox only</option>
           </select>
         </label>
-        <span className={styles.profileHint}>The Monday email warns you a week before.</span>
+        <label className={styles.field}>
+          <span className={styles.label}>Weekly email</span>
+          <select
+            className={styles.selectField}
+            value={settings.digestDay ?? "off"}
+            onChange={(e) => save({ digestDay: e.target.value === "off" ? null : Number(e.target.value) })}
+          >
+            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((d, i) => (
+              <option key={d} value={i}>{d} at 06:00</option>
+            ))}
+            <option value="off">Off</option>
+          </select>
+        </label>
+        <span className={styles.profileHint}>
+          The weekly email warns you a week before.{" "}
+          <button type="button" className={styles.linkButton} onClick={sendNow}>Send me one now</button>
+        </span>
       </div>
       <div className={styles.startClean}>
         <div className={styles.startText}>

@@ -125,3 +125,20 @@ test("tags by id or name; an unknown tag is a 422 with the nearest ones, and not
   expect((await lib.tagsOf(a)).map((t) => t.name).sort()).toEqual(["postgres", "python"]);
   await expect(lib.batch(a, { itemIds: [item.id], patch: { addTagIds: ["nope"] } })).rejects.toMatchObject({ status: 422 });
 });
+
+test("signed taps keep, let go and undo, stop the email, and archive it all only on confirm", async () => {
+  const lib = await import("./index");
+  const { signTap } = await import("../signed");
+  const { a } = await twoUsers();
+  const item = (await pluckAny(a, { text: "Tap target" })).results[0]!.item;
+  expect((await lib.runTap(signTap({ u: a, a: "keep", i: item.id }))).ok).toBe(true);
+  const letGo = await lib.runTap(signTap({ u: a, a: "letgo", i: item.id }));
+  expect((await readItem(a, item.id)).status).toBe("archived");
+  await lib.runTap(letGo.undo!);
+  expect((await readItem(a, item.id)).status).toBe("inbox");
+  await lib.runTap(signTap({ u: a, a: "stop" }));
+  expect((await lib.me(a)).settings.digestDay).toBeNull();
+  expect((await lib.runTap(signTap({ u: a, a: "archive-all" }))).count).toBe(0);
+  await expect(lib.runTap("forged.token")).rejects.toMatchObject({ status: 403 });
+  expect(await lib.sendDigest(a, { force: true })).toBe(true); // to Mailpit
+});

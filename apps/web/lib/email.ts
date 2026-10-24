@@ -1,7 +1,7 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import nodemailer from "nodemailer";
 
-export type Email = { to: string; subject: string; text: string; html?: string };
+export type Email = { to: string; subject: string; text: string; html?: string; headers?: Record<string, string> };
 
 // The email seam: SMTP (Mailpit locally, or a self-hoster's relay) when SMTP_URL is set, SES otherwise.
 export async function sendEmail(email: Email): Promise<void> {
@@ -18,6 +18,7 @@ export async function sendEmail(email: Email): Promise<void> {
         Simple: {
           Subject: { Data: email.subject },
           Body: { Text: { Data: email.text }, ...(email.html ? { Html: { Data: email.html } } : {}) },
+          ...(email.headers ? { Headers: Object.entries(email.headers).map(([Name, Value]) => ({ Name, Value })) } : {}),
         },
       },
     }),

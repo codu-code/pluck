@@ -1,10 +1,10 @@
 import { claimOnce, runDueExpiry } from "@pluck/db";
-import { purgeBinNow } from "./library";
+import { purgeBinNow, sendDueDigests } from "./library";
 import { log } from "./log";
 
 // Time-based work, run from every cron tick and the worker loop. Each piece is claimed in the
 // database, so however many instances call this, it happens once.
-export async function runScheduled(now = new Date()): Promise<{ purged: number; expired: number }> {
+export async function runScheduled(now = new Date()): Promise<{ purged: number; expired: number; digests: number }> {
   let purged = 0;
   if (await claimOnce(`purge-bin:${now.toISOString().slice(0, 10)}`)) {
     purged = await purgeBinNow();
@@ -12,5 +12,7 @@ export async function runScheduled(now = new Date()): Promise<{ purged: number; 
   }
   const expiry = await runDueExpiry(now);
   for (const p of expiry.perUser) log("info", "expiry run", { userId: p.userId, archived: p.archived });
-  return { purged, expired: expiry.archived };
+  const digests = await sendDueDigests(now);
+  if (digests) log("info", "digests sent", { digests });
+  return { purged, expired: expiry.archived, digests };
 }
