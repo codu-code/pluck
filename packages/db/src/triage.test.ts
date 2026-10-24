@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { items } from "./collections.ts";
 import {
   applyExtraction, batchUpdate, countItems, createHighlight, getContent, createTextItem, deleteHighlight, editItem, getItem, listHighlights, listItems, markOpened,
-  moveToBin, pluckLink, purgeBin, restoreFromBin, updateHighlight,
+  createTag, listTags, moveToBin, pluckLink, purgeBin, restoreFromBin, setItemTags, updateHighlight,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -86,6 +86,31 @@ describe("bin", () => {
     expect(res.blobPrefixes).toEqual([`u/${a}/items/${it.id}/`]);
     expect(await getContent(a, it.id)).toBeNull();
     expect(await restoreFromBin(a, it.id)).toBeNull();
+  });
+
+  test("the purge removes files before rows: if the files fail, the rows stay for the next run", async () => {
+    const { a } = await twoUsers();
+    const it = (await pluckLink(a, { url: "https://example.com/purge-fail", source: "web" })).item;
+    await moveToBin(a, it.id);
+    const later = new Date(Date.now() + 31 * 86_400_000);
+    await expect(purgeBin(later, async () => { throw new Error("S3 down"); })).rejects.toThrow("S3 down");
+    expect((await listItems(a, view("bin"))).items.map((i) => i.id)).toContain(it.id);
+  });
+
+  test("a tag's count leaves out the bin, and comes back on restore and on re-pluck", async () => {
+    const { a } = await twoUsers();
+    const it = (await pluckLink(a, { url: "https://example.com/counted", source: "web" })).item;
+    const tag = (await createTag(a, "counted", "user"))!.tag;
+    await setItemTags(a, it.id, [tag.id], "user");
+    const count = async () => (await listTags(a)).find((t) => t.id === tag.id)?.count;
+    expect(await count()).toBe(1);
+    await moveToBin(a, it.id);
+    expect(await count()).toBe(0);
+    await restoreFromBin(a, it.id);
+    expect(await count()).toBe(1);
+    await moveToBin(a, it.id);
+    await pluckLink(a, { url: "https://example.com/counted", source: "web" });
+    expect(await count()).toBe(1);
   });
 });
 

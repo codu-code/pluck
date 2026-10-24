@@ -16,7 +16,8 @@ export const newEmailInAddress = async (userId: string) => `pluck+${await regene
 
 export async function pollInbound(): Promise<number> {
   let queued = 0;
-  for (const { key } of await listKeys(INBOUND, 50)) {
+  // Wide enough that a few messages stuck in retry cannot fill the page and hold everyone else's back.
+  for (const { key } of await listKeys(INBOUND, 500)) {
     if (key.endsWith("AMAZON_SES_SETUP_NOTIFICATION")) {
       await deleteObject(key);
       continue;
@@ -37,7 +38,8 @@ export async function ingestInbound(key: string): Promise<"created" | "duplicate
     return "dropped" as const;
   };
   if (raw.length > MAX_BYTES) return drop("too large");
-  const mail = await parseEmail(raw);
+  const mail = await parseEmail(raw).catch(() => null);
+  if (!mail) return drop("unreadable"); // retrying will not make it parse
   if (mail.spam) return drop("spam or virus verdict");
   let userId: string | null = null;
   for (const t of mail.aliasTokens) if ((userId = await userForAlias(t))) break;

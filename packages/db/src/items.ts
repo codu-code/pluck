@@ -3,6 +3,7 @@ import { deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type It
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
 import { recountList, recountListsOf } from "./lists.ts";
+import { recountTags } from "./tags.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
 export const urlHash = (normalizedUrl: string) => createHash("sha256").update(normalizedUrl).digest("hex");
@@ -87,6 +88,8 @@ export async function pluckLink(
       { returnDocument: "after" },
     ))!;
   }
+  // A re-pluck may have brought the item back from the bin, so its tags and lists count it again.
+  if (!created) await Promise.all([recountTags(userId, doc.tagIds.map((t) => t.toHexString())), recountListsOf([doc._id])]);
   return { item: toItem(doc), created, needsExtraction: created || doc.extraction.state === "failed" };
 }
 
@@ -218,10 +221,11 @@ export async function markOpened(userId: string, itemId: string): Promise<void> 
 }
 
 // The bin: deleted items wait 30 days, then purgeBin removes them for good.
+// Tag and list counts leave out what is in the bin, so both are recounted on the way in and out.
 export async function moveToBin(userId: string, itemId: string): Promise<boolean> {
-  const res = await (await items()).updateOne({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, { $set: { deletedAt: new Date() } });
-  if (res.modifiedCount === 1) await recountListsOf([oid(itemId)]);
-  return res.modifiedCount === 1;
+  const doc = await (await items()).findOneAndUpdate({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, { $set: { deletedAt: new Date() } });
+  if (doc) await Promise.all([recountListsOf([doc._id]), recountTags(userId, doc.tagIds.map((t) => t.toHexString()))]);
+  return Boolean(doc);
 }
 
 export async function restoreFromBin(userId: string, itemId: string): Promise<Item | null> {
@@ -230,19 +234,26 @@ export async function restoreFromBin(userId: string, itemId: string): Promise<It
     { $set: { deletedAt: null, lastTouchedAt: new Date() } },
     { returnDocument: "after" },
   );
-  if (doc) await recountListsOf([doc._id]);
+  if (doc) await Promise.all([recountListsOf([doc._id]), recountTags(userId, doc.tagIds.map((t) => t.toHexString()))]);
   return doc && toItem(doc);
 }
 
 export const BIN_DAYS = 30;
 
 // Hard-deletes items that have been in the bin longer than 30 days, with their contents and highlights.
-// Returns the blob keys so the caller can remove the files too. List rows follow in the lists slice.
-export async function purgeBin(now = new Date()): Promise<{ purged: number; userIds: string[]; blobPrefixes: string[] }> {
+// `removeFiles` deletes their stored files before any row goes.
+export async function purgeBin(
+  now = new Date(),
+  removeFiles: (prefixes: string[]) => Promise<void> = async () => {},
+): Promise<{ purged: number; userIds: string[]; blobPrefixes: string[] }> {
   const col = await items();
   const cutoff = new Date(now.getTime() - BIN_DAYS * 86_400_000);
   const docs = await col.find({ deletedAt: { $lt: cutoff } }, { projection: { _id: 1, userId: 1 } }).toArray();
   if (!docs.length) return { purged: 0, userIds: [], blobPrefixes: [] };
+  const blobPrefixes = docs.map((d) => `u/${d.userId.toHexString()}/items/${d._id.toHexString()}/`);
+  // Files first: if that fails, the rows stay and tomorrow's run tries again. Rows gone first would leave the
+  // files with nothing pointing at them.
+  await removeFiles(blobPrefixes);
   const ids = docs.map((d) => d._id);
   await (await contents()).deleteMany({ itemId: { $in: ids } });
   await (await highlights()).deleteMany({ itemId: { $in: ids } });
@@ -250,11 +261,7 @@ export async function purgeBin(now = new Date()): Promise<{ purged: number; user
   await (await listRows()).deleteMany({ itemId: { $in: ids } });
   await col.deleteMany({ _id: { $in: ids }, deletedAt: { $lt: cutoff } });
   for (const id of listIds) await recountList(id);
-  return {
-    purged: docs.length,
-    userIds: [...new Set(docs.map((d) => d.userId.toHexString()))],
-    blobPrefixes: docs.map((d) => `u/${d.userId.toHexString()}/items/${d._id.toHexString()}/`),
-  };
+  return { purged: docs.length, userIds: [...new Set(docs.map((d) => d.userId.toHexString()))], blobPrefixes };
 }
 
 export async function countItems(userId: string, status: Status): Promise<number> {

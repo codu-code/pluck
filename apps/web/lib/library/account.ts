@@ -1,6 +1,6 @@
 import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiConnections, applyExtraction, createApiKey, disconnectAi, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport, recountTags,
+  aiConnections, applyExtraction, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport, recountTags,
   listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
@@ -41,11 +41,9 @@ export async function beginImport(userId: string, source: ImportSource): Promise
 export async function startImport(userId: string, id: string): Promise<ImportStatus> {
   const record = await getImport(userId, id);
   if (!record) throw new ApiError("not_found", "No such import.", 404);
-  if (record.state === "waiting") {
-    await updateImport(id, { state: "running" });
-    await enqueue("import", { userId, importId: id });
-  }
-  return { ...record, state: record.state === "waiting" ? "running" : record.state };
+  if (await claimImportStart(userId, id)) await enqueue("import", { userId, importId: id });
+  const { blobKey: _blob, ...status } = (await getImport(userId, id))!;
+  return status;
 }
 
 export async function importStatus(userId: string, id: string): Promise<ImportStatus> {
@@ -113,7 +111,6 @@ export async function exportState(userId: string): Promise<{ state: string; url:
   return { state: e.state, createdAt: e.createdAt, url: e.blobKey ? await signedUrl(e.blobKey, 3600) : null };
 }
 
-const slugish = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "list";
 
 // The job: one zip with everything as JSON, a Markdown file per list and one for every item, emailed as a
 // signed link that works for 7 days.
@@ -134,7 +131,7 @@ export async function runExport(userId: string, exportId: string): Promise<void>
       lines.push(`${i + 1}. ${r.ticked ? "[x] " : ""}${it.url ? `[${it.title}](${it.url})` : it.title}`);
       if (r.note) lines.push(`   ${r.note}`);
     });
-    files[`lists/${slugish(l.name)}.md`] = strToU8(`${lines.join("\n")}\n`);
+    files[`lists/${l.slug}.md`] = strToU8(`${lines.join("\n")}\n`); // slugs are unique per person; names need not be
   }
   for (const it of data.items) {
     const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
@@ -159,7 +156,7 @@ export async function deleteAccount(userId: string, confirmEmail: string): Promi
   const me = await getMe(userId);
   if (!me) throw new ApiError("not_found", "No such account.", 404);
   if (confirmEmail.trim().toLowerCase() !== me.email.toLowerCase()) throw new ApiError("bad_request", "Type your email exactly to confirm.", 400);
+  await deletePrefix(`u/${userId}/`); // files first: if this fails the account is still there to try again
   await deleteAccountData(userId);
-  await deletePrefix(`u/${userId}/`);
   log("info", "account deleted", { userId });
 }

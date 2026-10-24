@@ -24,6 +24,11 @@ export async function getImport(userId: string, id: string): Promise<(ImportStat
   return doc && { ...toImport(doc), blobKey: doc.blobKey };
 }
 
+// Waiting → running, once: two clicks on Start (or two tabs) must not start two import chains.
+export async function claimImportStart(userId: string, id: string): Promise<boolean> {
+  return (await (await imports()).updateOne({ _id: oid(id), userId: oid(userId), state: "waiting" }, { $set: { state: "running" } })).modifiedCount === 1;
+}
+
 export async function updateImport(id: string, set: Partial<Pick<ImportDoc, "total" | "done" | "failed" | "state" | "error">>): Promise<void> {
   await (await imports()).updateOne({ _id: oid(id) }, { $set: set });
 }
