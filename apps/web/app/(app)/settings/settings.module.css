@@ -39,22 +39,26 @@
 .profileHint[role="alert"] { color: var(--danger); }
 .fields { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
 .field { display: flex; flex-direction: column; gap: 6px; }
-.selectField { height: 40px; min-width: 200px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
+.selectField { height: 40px; min-width: 200px; max-width: 320px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
 .startClean { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; border-radius: 10px; background: var(--rail); }
 .startText { display: flex; flex-direction: column; gap: 2px; }
 .startText b { font-weight: 600; }
 .inkButton { height: 40px; padding: 0 14px; border-radius: 8px; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 500; cursor: pointer; }
 .inkButton:disabled { opacity: 0.5; cursor: default; }
 .linkButton { padding: 0; border: 0; background: none; color: var(--ink); font: inherit; text-decoration: underline; cursor: pointer; }
-.copyRow { display: flex; gap: 8px; max-width: 560px; }
-.code { flex: 1; min-width: 0; height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong); font: 13px ui-monospace, "SF Mono", Menlo, monospace; overflow: hidden; white-space: nowrap; }
-.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px; padding-top: 32px; border-top: 1px solid var(--line); }
-.sectionPlain { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.keyRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 48px; padding: 0 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong); }
+.copyRow { display: flex; align-items: flex-start; gap: 8px; max-width: 640px; }
+/* Long commands wrap rather than hide their end. */
+.code { flex: 1; min-width: 0; min-height: 40px; display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong); font: 13px/20px var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; overflow-wrap: anywhere; }
+/* Paired sections read as two full sections, one under the other: side by side they never lined up. */
+.pair { display: contents; }
+.sectionPlain { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding-top: 32px; border-top: 1px solid var(--line); }
+/* Keys as a ruled list, like Tags, not a stack of boxes. */
+.keyRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 640px; min-height: 52px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.h2 + .keyRow, .freshKey + .keyRow { border-top: 1px solid var(--line); }
 .keyRow b { font-weight: 600; }
 .small { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
 .freshKey { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 8px; background: var(--highlight-wash); }
-.drop { height: 88px; border-radius: 8px; border: 1.5px dashed var(--line-dashed); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; cursor: pointer; }
+.drop { max-width: 640px; height: 88px; border-radius: 8px; border: 1.5px dashed var(--line-dashed); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; cursor: pointer; }
 .dropTitle { font-weight: 500; }
 .progressBlock { display: flex; flex-direction: column; gap: 6px; }
 .progressHead { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
@@ -69,7 +73,14 @@
 .aiGrid { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
 .aiSteps { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 .aiSide { flex: 0 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-.codeQuiet { height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 8px; background: var(--rail); font: 13px ui-monospace, "SF Mono", Menlo, monospace; overflow: hidden; white-space: nowrap; }
-.gif { height: 180px; border-radius: 8px; background: var(--rail); display: flex; align-items: center; justify-content: center; color: var(--ink2); font-size: 12px; text-align: center; padding: 0 16px; }
+.codeQuiet { min-height: 40px; display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--rail); font: 13px/20px var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; overflow-wrap: anywhere; }
+.chat { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 12px; background: var(--rail); font-size: 13px; line-height: 19px; }
+.chatMe, .chatAi, .chatTool { animation: chatIn 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.chatMe { align-self: flex-end; max-width: 85%; padding: 8px 12px; border-radius: 12px; background: var(--chip); }
+.chatTool { align-self: flex-start; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line-strong); color: var(--ink2); font: 11px/18px var(--font-geist-mono), ui-monospace, monospace; animation-delay: 180ms; }
+.chatAi { align-self: flex-start; max-width: 90%; padding: 8px 12px; border-radius: 12px; background: var(--surface); animation-delay: 360ms; }
+@keyframes chatIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .chatMe, .chatAi, .chatTool { animation: none; } }
+.status + .keyRow { border-top: 1px solid var(--line); }
 .status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .statusDot { width: 8px; height: 8px; border-radius: 4px; flex: none; }

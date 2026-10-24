@@ -56,7 +56,12 @@ export function AiToolsSection({ connectorUrl, keyPrefix, initial, lastCallAt }:
           </div>
         </div>
         <div className={styles.aiSide}>
-          <div className={styles.gif}>[CONNECTOR GIF]</div>
+          {/* What a connected AI does, drawn (a recorded GIF can replace it later). */}
+          <div className={styles.chat} aria-hidden="true">
+            <span className={styles.chatMe}>{TEST_PROMPT}</span>
+            <span className={styles.chatTool}>list_items · status inbox · newest</span>
+            <span className={styles.chatAi}>Six things. Two on MCP auth, one hob for the kitchen, and a talk you said you would write.</span>
+          </div>
           <span className={styles.status}>
             <span aria-hidden="true" className={styles.statusDot} style={{ background: connected ? "var(--accent)" : "var(--line-strong)" }} />
             {connected ? `Connected${lastCall ? ` · last call ${lastCall}` : ""}` : "Not connected yet"}
