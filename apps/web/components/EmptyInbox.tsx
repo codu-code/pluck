@@ -25,7 +25,6 @@ export function EmptyInbox() {
           </span>
           <span className={styles.actions}>
             <Link href="/connect#extension" className={styles.action}>Chrome</Link>
-            <Link href="/connect#extension" className={styles.action}>Firefox</Link>
           </span>
         </li>
         <li className={styles.step}>

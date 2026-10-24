@@ -63,6 +63,13 @@ test("Add to Chrome: a coming-soon page until the store listing is live", async 
   await expect(page.getByRole("link", { name: "Use it on the web" })).toHaveAttribute("href", "/signin");
 });
 
+test("iPhone: a coming-soon page while the app is on TestFlight", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "iPhone", exact: true }).click();
+  await expect(page).toHaveURL(/\/iphone$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Soon.");
+});
+
 test("support: answers by topic, and bugs go to GitHub issues", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("contentinfo").getByRole("link", { name: "Support" }).click();
