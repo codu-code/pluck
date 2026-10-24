@@ -80,6 +80,19 @@
 .pluckedNote { color: #A0A898; }
 .site .plucked a { color: var(--on-brand); font-weight: 600; }
 .tickSmall { width: 22px; height: 22px; flex: none; border-radius: 11px; background: var(--highlight); display: flex; align-items: center; justify-content: center; }
+.keep { display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 14px; background: var(--brand); color: var(--on-brand); animation: pluckedIn 360ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.keep .tickSmall { animation: tickPop 420ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .keep, .keep .tickSmall { animation: none; } }
+.keepStatus { display: flex; flex-direction: column; gap: 6px; padding: 0 2px; }
+.keepHead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.keepHead b { font-weight: 600; }
+.keepMs { color: #CFE0D6; font-size: 15px; }
+.keepNote { color: #CFE0D6; font-size: 15px; line-height: 22px; text-wrap: pretty; }
+.keepNote b { color: var(--on-brand); font-weight: 600; overflow-wrap: anywhere; }
+.keepForm { display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 5px 0 14px; border-radius: 10px; background: var(--surface); }
+.keepForm:focus-within { outline: 2px solid var(--highlight); outline-offset: 2px; }
+.keepForm .pasteButton { height: 42px; }
+.keepError { font-size: 14px; line-height: 20px; color: #FFD9CF; }
 .pasteHint { font-size: 14px; line-height: 21px; color: var(--ink2); text-wrap: balance; }
 .pasteError { font-size: 14px; color: var(--danger); }
 

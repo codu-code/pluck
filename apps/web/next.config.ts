@@ -13,6 +13,8 @@ const config: NextConfig = {
   // Monorepo root, so env and tracing resolve from there.
   outputFileTracingRoot: fileURLToPath(new URL("../..", import.meta.url)),
   poweredByHeader: false,
+  // Dev: .env sets BETTER_AUTH_URL to 127.0.0.1, so the dev server must serve its scripts there too.
+  allowedDevOrigins: ["127.0.0.1"],
   // Public lists live at /@handle/slug. A folder cannot start with "@" (that is a parallel-route slot), so the page is /p/.
   async rewrites() {
     return [{ source: "/@:handle/:slug", destination: "/p/:handle/:slug" }];
