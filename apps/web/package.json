@@ -1,0 +1,26 @@
+{
+  "name": "@pluck/web",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@pluck/db": "workspace:*",
+    "@pluck/shared-schemas": "workspace:*",
+    "@pluck/ui": "workspace:*",
+    "next": "16.4.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
+}

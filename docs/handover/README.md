@@ -6,7 +6,7 @@
 
 1. `pluck-technical-spec-v2.md` — the build spec. Architecture, data model, API, auth, MCP server, extension, iOS, infra, conventions, and a numbered build order at the end.
 2. `pluck-product-spec-v2.md` — what it is, the flows, every screen, the voice, the visual rules, the metrics.
-3. `CLAUDE.md` — the standing rules for the repo. Copy it to the repo root.
+3. `CLAUDE.original.md` — the standing rules as handed over. The live, edited version is the repo-root `CLAUDE.md`.
 4. `CHANGES-since-v1.md` — if you read the v1 docs before, this is what moved.
 
 ## Design

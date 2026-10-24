@@ -1,0 +1,10 @@
+{
+  "name": "@pluck/db",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p ." },
+  "dependencies": { "@pluck/shared-schemas": "workspace:*", "mongodb": "7.7.0" }
+}

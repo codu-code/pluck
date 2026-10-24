@@ -1,0 +1,24 @@
+{
+  "name": "pluck",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.8",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "pnpm --filter @pluck/web dev",
+    "stack": "docker compose -f docker-compose.dev.yml up -d --wait",
+    "stack:down": "docker compose -f docker-compose.dev.yml down",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "^22",
+    "eslint": "10.13.0",
+    "typescript": "^5.9",
+    "typescript-eslint": "8.72.0",
+    "vitest": "5.0.5"
+  }
+}

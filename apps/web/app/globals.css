@@ -1,0 +1,14 @@
+@import "@pluck/ui/tokens.css";
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+}
+a { color: var(--ink); }
+a:hover { color: var(--ink2); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
