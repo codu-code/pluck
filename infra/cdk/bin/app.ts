@@ -8,5 +8,5 @@ const domain: string = app.node.tryGetContext("domain");
 const env = { account: process.env.CDK_DEFAULT_ACCOUNT, region: "eu-west-1" };
 
 const email = new EmailStack(app, "PluckEmail", { env, domain });
-const data = new DataStack(app, "PluckData", { env, emailIdentity: email.identity });
+const data = new DataStack(app, "PluckData", { env, emailIdentity: email.identity, appOrigin: app.node.tryGetContext("appOrigin") });
 new InboundStack(app, "PluckInbound", { env, domain, bucket: data.bucket });

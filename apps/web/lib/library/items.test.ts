@@ -180,3 +180,53 @@ test("email-in: a newsletter dropped in the inbound folder becomes a Read item; 
   await runJobs({ budgetMs: 20_000 });
   expect((await lib.browse(a, { status: "inbox", sort: "newest", limit: 50 })).items.filter((i) => i.source === "email")).toHaveLength(1);
 });
+
+test("import: upload through the signed URL, the job runs in batches, items land in the Archive as imported", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const { makeJobsVisible } = await import("@pluck/db/testing");
+  const lib = await import("./index");
+  const { a } = await twoUsers();
+  const begin = await lib.beginImport(a, "pocket");
+  const csv = readFileSync(join(import.meta.dirname, "../../../../packages/extract/fixtures/imports/pocket.csv"));
+  expect((await fetch(begin.uploadUrl, { method: "PUT", headers: { "content-type": begin.contentType }, body: csv })).ok).toBe(true);
+  await lib.startImport(a, begin.import.id);
+  for (let i = 0; i < 3; i++) {
+    await makeJobsVisible();
+    await runJobs({ budgetMs: 20_000, max: 5 });
+  }
+  expect(await lib.importStatus(a, begin.import.id)).toMatchObject({ state: "done", total: 3, done: 3, failed: 0 });
+  const imported = await lib.browse(a, { status: "archive", archive: "import", sort: "newest", limit: 50 });
+  expect(imported.items.map((i) => i.url).sort()).toEqual(["https://example.com/quoted", "https://example.com/small-teams", "https://example.com/window-functions"]);
+  expect((await lib.tagsOf(a)).map((t) => t.name).sort()).toEqual(["postgres", "teams", "work"]);
+});
+
+test("export: a zip in the bucket with everything, and an email with the link", async () => {
+  const { unzipSync, strFromU8 } = await import("fflate");
+  const { makeJobsVisible } = await import("@pluck/db/testing");
+  const lib = await import("./index");
+  const { a } = await twoUsers();
+  await pluckAny(a, { text: "Export me" });
+  await lib.requestExport(a);
+  await makeJobsVisible();
+  await runJobs({ budgetMs: 20_000, max: 5 });
+  const state = await lib.exportState(a);
+  expect(state?.state).toBe("done");
+  const zip = unzipSync(new Uint8Array(await (await fetch(state!.url!)).arrayBuffer()));
+  const json = JSON.parse(strFromU8(zip["pluck.json"]!));
+  expect(json.items[0].text).toBe("Export me");
+  expect(Object.keys(zip).some((k) => k.startsWith("items/"))).toBe(true);
+});
+
+test("API keys authenticate with their scopes; the session-only and delete routes refuse them", async () => {
+  const { authenticate, hasScope } = await import("../api");
+  const lib = await import("./index");
+  const { a } = await twoUsers();
+  const { key } = await lib.newKey(a, "script");
+  const caller = await authenticate(new Request("http://x/api/v1/items", { headers: { authorization: `Bearer ${key}` } }));
+  expect(caller).toEqual({ userId: a, scopes: ["library:read", "library:write"] });
+  expect(hasScope(caller!, "library:write")).toBe(true);
+  expect(hasScope(caller!, "library:delete")).toBe(false);
+  expect(hasScope(caller!, "full")).toBe(false);
+  expect(await authenticate(new Request("http://x", { headers: { authorization: "Bearer pk_live_nope" } }))).toBeNull();
+});

@@ -123,3 +123,18 @@ export const Digest = z.object({
   quietLists: z.array(z.object({ id: ObjectIdString, name: z.string(), tickedCount: z.number().int(), itemCount: z.number().int(), idleDays: z.number().int() })),
 });
 export type Digest = z.infer<typeof Digest>;
+
+export const API_SCOPES = ["library:read", "library:write", "library:delete"] as const;
+export const ApiKey = z.object({
+  id: ObjectIdString, name: z.string(), prefix: z.string(), scopes: z.array(z.string()), lastUsedAt: z.string().nullable(), createdAt: z.string(),
+});
+export type ApiKey = z.infer<typeof ApiKey>;
+export const CreateApiKeyBody = z.object({ name: z.string().trim().min(1).max(60), scopes: z.array(z.enum(API_SCOPES)).min(1).optional() });
+
+export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "html"]);
+export const ImportStatus = z.object({
+  id: ObjectIdString, source: ImportSourceEnum, total: z.number().int(), done: z.number().int(), failed: z.number().int(),
+  state: z.enum(["waiting", "running", "done", "failed"]), error: z.string().nullable(), createdAt: z.string(),
+});
+export type ImportStatus = z.infer<typeof ImportStatus>;
+export const CreateImportBody = z.object({ source: ImportSourceEnum, size: z.number().int().min(1).max(500_000_000) });

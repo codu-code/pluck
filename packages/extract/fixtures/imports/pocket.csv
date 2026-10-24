@@ -1,0 +1,5 @@
+title,url,time_added,tags,status
+"Small teams ship when the list is short",https://example.com/small-teams,1700000000,work|teams,unread
+"Window functions, finally",https://example.com/window-functions,1700000100,postgres,archive
+"A quote ""inside"" the title",https://example.com/quoted,1700000200,,unread
+Not a link,javascript:alert(1),1700000300,,unread

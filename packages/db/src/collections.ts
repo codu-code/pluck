@@ -118,6 +118,23 @@ export type ReportDoc = {
   state: "open" | "resolved";
 };
 
+export type ApiKeyDoc = { _id: ObjectId; userId: ObjectId; name: string; hash: string; prefix: string; scopes: string[]; lastUsedAt: Date | null; createdAt: Date };
+
+export type ImportDoc = {
+  _id: ObjectId;
+  userId: ObjectId;
+  source: "pocket" | "omnivore" | "raindrop" | "html";
+  blobKey: string;
+  total: number;
+  done: number;
+  failed: number;
+  state: "waiting" | "running" | "done" | "failed";
+  error: string | null;
+  createdAt: Date;
+};
+
+export type ExportDoc = { _id: ObjectId; userId: ObjectId; state: "running" | "done" | "failed"; blobKey: string | null; createdAt: Date };
+
 export type EmailAliasDoc = { _id: ObjectId; userId: ObjectId; token: string; active: boolean; createdAt: Date };
 
 export type HighlightDoc = {
@@ -188,6 +205,9 @@ export function db(): Promise<Db> {
         { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
       ]),
       d.collection("users").createIndexes([{ key: { handle: 1 }, unique: true, partialFilterExpression: { handle: { $type: "string" } } }]),
+      d.collection("apiKeys").createIndexes([{ key: { hash: 1 }, unique: true }, { key: { userId: 1 } }]),
+      d.collection("imports").createIndexes([{ key: { userId: 1, createdAt: -1 } }]),
+      d.collection("exports").createIndexes([{ key: { userId: 1, createdAt: -1 } }]),
       d.collection("emailAliases").createIndexes([{ key: { token: 1 }, unique: true }, { key: { userId: 1, active: 1 } }]),
       d.collection("meta").createIndexes([{ key: { at: 1 }, expireAfterSeconds: 7 * 86_400 }]),
       d.collection("reports").createIndexes([{ key: { state: 1, createdAt: -1 } }]),
@@ -209,6 +229,15 @@ export const LEAN = { projection: { searchBody: 0, searchText: 0, tagNames: 0, l
 
 export async function items(): Promise<Collection<ItemDoc>> {
   return (await db()).collection<ItemDoc>("items");
+}
+export async function apiKeys(): Promise<Collection<ApiKeyDoc>> {
+  return (await db()).collection<ApiKeyDoc>("apiKeys");
+}
+export async function imports(): Promise<Collection<ImportDoc>> {
+  return (await db()).collection<ImportDoc>("imports");
+}
+export async function exportsCol(): Promise<Collection<ExportDoc>> {
+  return (await db()).collection<ExportDoc>("exports");
 }
 export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
   return (await db()).collection<EmailAliasDoc>("emailAliases");

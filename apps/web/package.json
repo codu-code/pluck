@@ -19,6 +19,7 @@
     "@pluck/shared-schemas": "workspace:*",
     "@pluck/ui": "workspace:*",
     "better-auth": "1.7.12",
+    "fflate": "0.8.2",
     "markdown-it": "^14.3.3",
     "next": "16.4.3",
     "nodemailer": "^10.2.1",

@@ -8,7 +8,7 @@ function template() {
   const app = new App();
   const env = { account: "123456789012", region: "eu-west-1" };
   const email = new EmailStack(app, "Email", { env, domain: "getpluck.io" });
-  return Template.fromStack(new DataStack(app, "Data", { env, emailIdentity: email.identity }));
+  return Template.fromStack(new DataStack(app, "Data", { env, emailIdentity: email.identity, appOrigin: "https://getpluck.io" }));
 }
 
 test("the content bucket is private, encrypted, SSL only, retained, and moves to IA at 90 days", () => {
@@ -33,4 +33,10 @@ test("the app user can use the bucket and send email, and its secret key is neve
   expect(policies).toContain("ses:SendEmail");
   t.resourceCountIs("AWS::SecretsManager::Secret", 1);
   expect(JSON.stringify(t.findOutputs("*"))).not.toContain("SecretAccessKey");
+});
+
+test("only the app may PUT uploads to the bucket from a browser", () => {
+  template().hasResourceProperties("AWS::S3::Bucket", {
+    CorsConfiguration: { CorsRules: [{ AllowedMethods: ["PUT"], AllowedOrigins: ["https://getpluck.io"], AllowedHeaders: ["content-type"], MaxAge: 3000 }] },
+  });
 });

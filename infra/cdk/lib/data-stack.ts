@@ -5,7 +5,7 @@ import * as secrets from "aws-cdk-lib/aws-secretsmanager";
 import type * as ses from "aws-cdk-lib/aws-ses";
 import type { Construct } from "constructs";
 
-export type DataStackProps = StackProps & { emailIdentity: ses.IEmailIdentity };
+export type DataStackProps = StackProps & { emailIdentity: ses.IEmailIdentity; appOrigin: string };
 
 // The content bucket and the IAM user the app (on Vercel) uses for S3 and SES.
 export class DataStack extends Stack {
@@ -20,6 +20,8 @@ export class DataStack extends Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,
       removalPolicy: RemovalPolicy.RETAIN,
+      // Imports upload straight from the browser with a signed PUT (bigger than a request body allows).
+      cors: [{ allowedMethods: [s3.HttpMethods.PUT], allowedOrigins: [props.appOrigin], allowedHeaders: ["content-type"], maxAge: 3000 }],
       lifecycleRules: [
         { transitions: [{ storageClass: s3.StorageClass.INFREQUENT_ACCESS, transitionAfter: Duration.days(90) }] },
         { prefix: "tmp/", expiration: Duration.days(2) },

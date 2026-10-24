@@ -9,3 +9,4 @@ export * from "./admin";
 export * from "./expiry";
 export * from "./digest";
 export * from "./email-in";
+export * from "./account";

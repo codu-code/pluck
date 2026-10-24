@@ -1,6 +1,6 @@
 import { claimJob, completeJob, failJob, getItem, retryJob, type Job } from "@pluck/db";
 import { extractAttempt } from "./capture";
-import { ingestInbound } from "./library";
+import { ingestInbound, runExport, runImport } from "./library";
 import { log } from "./log";
 
 // Worker job handlers. A handler that throws is retried with backoff up to five times.
@@ -13,6 +13,12 @@ const handlers: Record<string, (payload: Record<string, unknown>) => Promise<voi
   },
   async "email-in"(p) {
     await ingestInbound(String(p.key));
+  },
+  async import(p) {
+    await runImport(String(p.userId), String(p.importId));
+  },
+  async export(p) {
+    await runExport(String(p.userId), String(p.exportId));
   },
 };
 

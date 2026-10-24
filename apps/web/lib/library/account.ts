@@ -1,0 +1,155 @@
+import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
+import {
+  applyExtraction, createApiKey, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport,
+  listApiKeys, revokeApiKey, startExport, updateImport,
+} from "@pluck/db";
+import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
+import { normalizeUrl, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
+import { strToU8, zipSync } from "fflate";
+import { sendEmail } from "../email";
+import { ApiError } from "../errors";
+import { log } from "../log";
+
+// ---- API keys -------------------------------------------------------------------------------------
+
+export const keysOf = (userId: string): Promise<ApiKey[]> => listApiKeys(userId);
+export const newKey = (userId: string, name: string, scopes?: string[]) => createApiKey(userId, name, scopes);
+export async function revokeKey(userId: string, id: string): Promise<void> {
+  if (!(await revokeApiKey(userId, id))) throw new ApiError("not_found", "No such key.", 404);
+}
+
+// ---- Import ---------------------------------------------------------------------------------------
+
+const BATCH = 200;
+const TYPES: Record<ImportSource, string> = { pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip" };
+
+// Step 1: a record and a URL the browser uploads the file to directly.
+export async function beginImport(userId: string, source: ImportSource): Promise<{ import: ImportStatus; uploadUrl: string; contentType: string }> {
+  const key = `u/${userId}/imports/${Date.now()}-${source}`;
+  const record = await createImport(userId, source, key);
+  return { import: record, uploadUrl: await signedPutUrl(key, TYPES[source]), contentType: TYPES[source] };
+}
+
+// Step 2: once uploaded, the worker takes it from here.
+export async function startImport(userId: string, id: string): Promise<ImportStatus> {
+  const record = await getImport(userId, id);
+  if (!record) throw new ApiError("not_found", "No such import.", 404);
+  if (record.state === "waiting") {
+    await updateImport(id, { state: "running" });
+    await enqueue("import", { userId, importId: id });
+  }
+  return { ...record, state: record.state === "waiting" ? "running" : record.state };
+}
+
+export async function importStatus(userId: string, id: string): Promise<ImportStatus> {
+  const record = await getImport(userId, id);
+  if (!record) throw new ApiError("not_found", "No such import.", 404);
+  const { blobKey: _blob, ...status } = record;
+  return status;
+}
+
+// The job: parse once, then 200 entries per run until done (it re-queues itself, so a big file never hits
+// a time limit). Omnivore's kept pages are read offline; the rest are fetched slowly by the extract queue.
+export async function runImport(userId: string, importId: string): Promise<void> {
+  const record = await getImport(userId, importId);
+  if (!record || record.state !== "running") return;
+  let entries;
+  try {
+    entries = parseImport(record.source, new Uint8Array(await getObject(record.blobKey)));
+  } catch (e) {
+    await updateImport(importId, { state: "failed", error: "That file could not be read. Check it is the export from the right service." });
+    log("warn", "import unreadable", { userId, importId, error: String(e) });
+    return;
+  }
+  if (record.total === 0) await updateImport(importId, { total: entries.length });
+  let { done, failed } = record;
+  for (const e of entries.slice(done + failed, done + failed + BATCH)) {
+    const url = normalizeUrl(e.url);
+    if (!url) {
+      failed++;
+      continue;
+    }
+    const { item, created } = await importLink(userId, url, e);
+    if (created) {
+      const page = e.html ? await extractFromHtml(e.html, url).catch(() => null) : null;
+      if (page && page.wordCount > 0) {
+        await applyExtraction(userId, item.id, {
+          kind: page.kind, title: e.title ?? page.title, siteName: page.siteName, author: page.author, excerpt: page.excerpt,
+          canonicalUrl: page.canonicalUrl, lang: page.lang, wordCount: page.wordCount, markdown: page.markdown, extractor: page.extractor,
+        });
+      } else {
+        // Spread the fetching out: a thousand imports should not hit the network at once.
+        await enqueue("extract", { userId, itemId: item.id }, { delayMs: (done % 1000) * 3000 });
+      }
+    }
+    done++;
+  }
+  const finished = done + failed >= entries.length;
+  await updateImport(importId, { done, failed, state: finished ? "done" : "running" });
+  if (!finished) await enqueue("import", { userId, importId });
+}
+
+// ---- Export ---------------------------------------------------------------------------------------
+
+export async function requestExport(userId: string): Promise<{ id: string }> {
+  const id = await startExport(userId);
+  await enqueue("export", { userId, exportId: id });
+  return { id };
+}
+
+export async function exportState(userId: string): Promise<{ state: string; url: string | null; createdAt: string } | null> {
+  const e = await latestExport(userId);
+  if (!e) return null;
+  return { state: e.state, createdAt: e.createdAt, url: e.blobKey ? await signedUrl(e.blobKey, 3600) : null };
+}
+
+const slugish = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "list";
+
+// The job: one zip with everything as JSON, a Markdown file per list and one for every item, emailed as a
+// signed link that works for 7 days.
+export async function runExport(userId: string, exportId: string): Promise<void> {
+  const me = await getMe(userId);
+  if (!me) return;
+  const data = await exportData(userId);
+  const byId = new Map(data.items.map((i) => [i.id, i]));
+  const files: Record<string, Uint8Array> = {
+    "pluck.json": strToU8(JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle }, ...data }, null, 2)),
+    "README.txt": strToU8("Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n"),
+  };
+  for (const l of data.lists) {
+    const lines = [`# ${l.name}`, ...(l.purpose ? ["", l.purpose] : []), ""];
+    l.items.forEach((r, i) => {
+      const it = byId.get(r.itemId);
+      if (!it) return;
+      lines.push(`${i + 1}. ${r.ticked ? "[x] " : ""}${it.url ? `[${it.title}](${it.url})` : it.title}`);
+      if (r.note) lines.push(`   ${r.note}`);
+    });
+    files[`lists/${slugish(l.name)}.md`] = strToU8(`${lines.join("\n")}\n`);
+  }
+  for (const it of data.items) {
+    const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
+    files[`items/${it.id}.md`] = strToU8(`${head.join("\n")}\n\n${it.text ?? ""}\n`);
+  }
+  const key = `u/${userId}/exports/${new Date().toISOString().slice(0, 10)}-${exportId}.zip`;
+  await putObject(key, Buffer.from(zipSync(files, { level: 6 })), "application/zip");
+  await finishExport(exportId, key);
+  const url = await signedUrl(key, 7 * 86_400);
+  await sendEmail({
+    to: me.email,
+    subject: "Your Pluck export is ready",
+    text: `Your whole library, as JSON and Markdown, in one zip:\n\n${url}\n\nThe link works for 7 days. You can make a fresh one in Settings any time.\n`,
+  });
+}
+
+// ---- Delete account -------------------------------------------------------------------------------
+
+// "Delete everything. No, really.": the person types their email to confirm. Items, text, files, lists,
+// tags, keys and the account go now. Backups age out within 30 days (Privacy page).
+export async function deleteAccount(userId: string, confirmEmail: string): Promise<void> {
+  const me = await getMe(userId);
+  if (!me) throw new ApiError("not_found", "No such account.", 404);
+  if (confirmEmail.trim().toLowerCase() !== me.email.toLowerCase()) throw new ApiError("bad_request", "Type your email exactly to confirm.", 400);
+  await deleteAccountData(userId);
+  await deletePrefix(`u/${userId}/`);
+  log("info", "account deleted", { userId });
+}

@@ -33,7 +33,8 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
   const [name, setName] = useState(initial.list.name);
   const [purpose, setPurpose] = useState(initial.list.purpose);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [dragging, setDragging] = useState<string | null>(null);
+  const [dragging, setDragging] = useState<string | null>(null); // for the look
+  const dragRef = useRef<string | null>(null); // for the logic: set synchronously, before the first dragover
   const [handle, setHandle] = useState(initialHandle);
   const [askHandle, setAskHandle] = useState(false);
   const [handleDraft, setHandleDraft] = useState("");
@@ -262,10 +263,11 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
                 data-active={i === cursor || undefined}
                 data-dragging={dragging === e.item.id || undefined}
                 onMouseMove={() => setCursor(i)}
-                onDragOver={(ev) => dragging && ev.preventDefault()}
+                onDragOver={(ev) => dragRef.current && ev.preventDefault()}
                 onDrop={(ev) => {
                   ev.preventDefault();
-                  if (dragging) void moveTo(dragging, i);
+                  if (dragRef.current) void moveTo(dragRef.current, i);
+                  dragRef.current = null;
                   setDragging(null);
                 }}
               >
@@ -275,10 +277,15 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
                   aria-label={`Drag to reorder ${e.item.title}. Or Shift+J and Shift+K.`}
                   draggable
                   onDragStart={(ev) => {
+                    dragRef.current = e.item.id;
                     setDragging(e.item.id);
                     ev.dataTransfer.effectAllowed = "move";
+                    ev.dataTransfer.setData("text/plain", e.item.title);
                   }}
-                  onDragEnd={() => setDragging(null)}
+                  onDragEnd={() => {
+                    dragRef.current = null;
+                    setDragging(null);
+                  }}
                 >
                   <svg width="12" height="16" viewBox="0 0 12 16" aria-hidden="true">
                     <path d="M4 4h.01M8 4h.01M4 8h.01M8 8h.01M4 12h.01M8 12h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />

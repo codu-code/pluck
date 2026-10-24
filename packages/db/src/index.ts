@@ -25,3 +25,7 @@ export { publicList, publicListById, publicCoverKey, recordView, createReport, P
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
 export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";
+export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOPES } from "./api-keys.ts";
+export {
+  createImport, getImport, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
+} from "./account.ts";

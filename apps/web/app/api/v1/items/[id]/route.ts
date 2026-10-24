@@ -18,7 +18,7 @@ export const PATCH = route<{ id: string }>({ kind: "write" }, async ({ req, call
 });
 
 // Soft delete: the item waits in the bin for 30 days. Web and iOS only; MCP never deletes.
-export const DELETE = route<{ id: string }>({ kind: "write" }, async ({ caller, params }) => {
+export const DELETE = route<{ id: string }>({ kind: "write", scope: "library:delete" }, async ({ caller, params }) => {
   await deleteItem(caller.userId, params.id);
   return new Response(null, { status: 204 });
 });

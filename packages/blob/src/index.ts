@@ -30,6 +30,11 @@ export async function getObject(key: string): Promise<Buffer> {
   return Buffer.from(await res.Body!.transformToByteArray());
 }
 
+// A short-lived URL a browser can PUT a file to directly (imports can be bigger than a request body allows).
+export function signedPutUrl(key: string, contentType: string, expiresIn = 900): Promise<string> {
+  return getSignedUrl(s3(), new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }), { expiresIn });
+}
+
 export function signedUrl(key: string, expiresIn = 300): Promise<string> {
   return getSignedUrl(s3(), new GetObjectCommand({ Bucket: bucket(), Key: key }), { expiresIn });
 }

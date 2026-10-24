@@ -1,4 +1,4 @@
-import { hitRateLimit } from "@pluck/db";
+import { hitRateLimit, verifyApiKey } from "@pluck/db";
 import { ZodError, type ZodType } from "zod";
 import { auth } from "./auth";
 import { ApiError } from "./errors";
@@ -13,11 +13,17 @@ const errorResponse = (e: ApiError, headers?: HeadersInit) =>
 
 export type Caller = { userId: string; scopes: string[] };
 
-// Every API request resolves to a caller here. Session cookie today; OAuth and API keys join in later slices.
+// Every API request resolves to a caller here: a personal API key (Bearer pk_live_…) or the session cookie.
+// OAuth access tokens for MCP clients, the extension and iOS join in slice 13.
 export async function authenticate(req: Request): Promise<Caller | null> {
+  const bearer = req.headers.get("authorization")?.match(/^Bearer\s+(\S+)$/i)?.[1];
+  if (bearer?.startsWith("pk_live_")) return verifyApiKey(bearer);
   const session = await auth.api.getSession({ headers: req.headers });
   return session ? { userId: session.user.id, scopes: ["full"] } : null;
 }
+
+// "full" is the signed-in person in their own browser; keys and tokens carry library:* scopes.
+export const hasScope = (caller: Caller, scope: string) => caller.scopes.includes("full") || caller.scopes.includes(scope);
 
 export function clientIp(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
@@ -43,7 +49,9 @@ export const searchParamsObject = (req: Request) => {
   return out;
 };
 
-type Options = { kind: "read" | "write"; ipLimit?: boolean };
+// `scope` overrides the default (library:read for reads, library:write for writes); "full" means the
+// browser session only (keys, export, delete account), never a key or token.
+type Options = { kind: "read" | "write"; ipLimit?: boolean; scope?: string };
 type Handler<P> = (ctx: { req: Request; caller: Caller; params: P }) => Promise<Response>;
 type PublicHandler<P> = (ctx: { req: Request; params: P }) => Promise<Response>;
 
@@ -66,6 +74,8 @@ export function route<P = Record<string, never>>(opts: Options, handler: Handler
       }
       caller = await authenticate(req);
       if (!caller) throw new ApiError("unauthorized", "Sign in to continue.", 401);
+      const scope = opts.scope ?? (opts.kind === "read" ? "library:read" : "library:write");
+      if (!hasScope(caller, scope)) throw new ApiError("forbidden", "This key cannot do that.", 403, { needs: scope });
       const hit = await limited(`user:${caller.userId}:${opts.kind}`, LIMITS[opts.kind]);
       if (hit) return errorResponse(hit, { "retry-after": String((hit.details as { retryAfter: number }).retryAfter) });
       return await handler({ req, caller, params: await ctx.params });

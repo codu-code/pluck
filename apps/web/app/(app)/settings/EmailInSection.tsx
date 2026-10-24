@@ -10,7 +10,7 @@ export function EmailInSection({ initial }: { initial: string }) {
   const [confirm, setConfirm] = useState(false);
   const [toast, showToast] = useToast();
   return (
-    <section id="email" className={styles.section}>
+    <section id="email" className={styles.sectionPlain}>
       <h2 className={styles.h2}>Email-in</h2>
       <p className={styles.meta}>Forward a newsletter here. It lands as a Read item.</p>
       <span className={styles.copyRow}>
