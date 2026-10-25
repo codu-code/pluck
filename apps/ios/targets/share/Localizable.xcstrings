@@ -57,6 +57,12 @@
             "state": "translated",
             "value": "%1$@에 추가"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到 %1$@"
+          }
         }
       }
     },
@@ -115,6 +121,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@에 추가했어요"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已添加到 %1$@"
           }
         }
       }
@@ -175,6 +187,12 @@
             "state": "translated",
             "value": "서버 주소가 올바르지 않아요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务器地址有误。"
+          }
         }
       }
     },
@@ -233,6 +251,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "잘 안 됐어요."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有成功。"
           }
         }
       }
@@ -293,6 +317,12 @@
             "state": "translated",
             "value": "완료"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
         }
       }
     },
@@ -351,6 +381,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "담지 못했어요."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没能摘下。"
           }
         }
       }
@@ -411,6 +447,12 @@
             "state": "translated",
             "value": "종류"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "类别"
+          }
         }
       }
     },
@@ -469,6 +511,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "이미지"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图片"
           }
         }
       }
@@ -529,6 +577,12 @@
             "state": "translated",
             "value": "메모"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "笔记"
+          }
         }
       }
     },
@@ -584,6 +638,12 @@
           }
         },
         "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -647,6 +707,12 @@
             "state": "translated",
             "value": "글"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阅读"
+          }
         }
       }
     },
@@ -705,6 +771,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "물건"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "物品"
           }
         }
       }
@@ -765,6 +837,12 @@
             "state": "translated",
             "value": "할 일"
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待办"
+          }
         }
       }
     },
@@ -823,6 +901,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "영상"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "观看"
           }
         }
       }
@@ -883,6 +967,12 @@
             "state": "translated",
             "value": "업로드 주소가 없어요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有上传地址。"
+          }
         }
       }
     },
@@ -941,6 +1031,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "왜 담았는지 한 줄로. 선택 사항이에요."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "为什么摘下它，一句话就好。可不填。"
           }
         }
       }
@@ -1001,6 +1097,12 @@
             "state": "translated",
             "value": "여기에는 Pluck이 담을 수 있는 게 없어요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这里没有 Pluck 能留下的内容。"
+          }
         }
       }
     },
@@ -1059,6 +1161,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pluck을 열어 로그인하기"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 Pluck 登录"
           }
         }
       }
@@ -1119,6 +1227,12 @@
             "state": "translated",
             "value": "담았어요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已摘下。"
+          }
         }
       }
     },
@@ -1177,6 +1291,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "담는 중…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在摘下…"
           }
         }
       }
@@ -1237,6 +1357,12 @@
             "state": "translated",
             "value": "지금은 휴대폰에 있어요. 다시 온라인이 되면 올라가요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "它先留在你的手机上，联网后就会上传。"
+          }
         }
       }
     },
@@ -1295,6 +1421,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "담았어요. 곧 동기화돼요."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已摘下，稍后同步。"
           }
         }
       }
@@ -1355,6 +1487,12 @@
             "state": "translated",
             "value": "한 번만 로그인하세요. 그다음부터는 공유 시트가 다 알아서 해요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录一次就好，之后交给分享菜单。"
+          }
         }
       }
     },
@@ -1414,6 +1552,12 @@
             "state": "translated",
             "value": "로그인하지 않았어요."
           }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未登录。"
+          }
         }
       }
     },
@@ -1472,6 +1616,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "태그와 리스트"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标签和清单"
           }
         }
       }
