@@ -244,7 +244,7 @@
     "returnsTo": "Allowing sends you on to <b>{host}</b>. If you do not know that address, do not allow it.",
     "scopes": {
       "read": "Read your library: items, the text Pluck kept, notes, tags and lists",
-      "write": "Pluck and organise: save things, tag, sort, make and edit lists",
+      "write": "Pluck and organise: add things, tag, sort, make and edit lists",
       "delete": "Delete items. Most AI tools never need this.",
       "account": "Manage your account: connected AI tools, exports, and deleting it all. Only Pluck's own apps ask for this."
     },
