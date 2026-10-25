@@ -47,7 +47,7 @@ const config: ExpoConfig = {
     // The Apple Developer team (Membership details). The same value as APPLE_TEAM_ID on the web server, which serves
     // apple-app-site-association; prebuild signs both targets with it, so Xcode never needs the team picked by hand.
     ...(process.env.APPLE_TEAM_ID ? { appleTeamId: process.env.APPLE_TEAM_ID } : {}),
-    buildNumber: "1", // raise for every TestFlight upload (docs/ios.md)
+    buildNumber: "2", // raise for every TestFlight upload (docs/ios.md)
     supportsTablet: false,
     entitlements: {
       "com.apple.security.application-groups": [GROUP],
