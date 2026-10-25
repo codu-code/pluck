@@ -2,6 +2,7 @@ import { LOCALES } from "@pluck/i18n";
 import { z } from "zod";
 import { Kind, Visibility } from "./enums.ts";
 import { Item, ObjectIdString } from "./items.ts";
+import { Facts, Preview } from "./preview.ts";
 
 export const List = z.object({
   id: ObjectIdString,
@@ -97,6 +98,8 @@ export const PublicEntry = z.object({
   url: z.string().nullable(),
   wordCount: z.number().int().nullable(), // for the row's read time
   hasCover: z.boolean(),
+  preview: Preview.nullable(), // the row's facts and the way out, as the owner sees them
+  facts: Facts,
   note: z.string().nullable(),
 });
 export const PublicList = z.object({

@@ -119,7 +119,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
         const item = await lib.item(id);
         if (cursor) return { id, ...textPage(await lib.text(id), readOffset(cursor)) };
         const out: Record<string, unknown> = {
-          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, extraction: item.extraction.state },
+          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, extraction: item.extraction.state, facts: item.facts },
         };
         if (include.includes("text")) {
           const page = textPage(await lib.text(id), 0);

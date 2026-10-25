@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ArchivedReason, ExtractionState, Kind, Source, Status } from "./enums.ts";
+import { Facts, Preview } from "./preview.ts";
 
 export const ObjectIdString = z.string().regex(/^[a-f0-9]{24}$/, "not an id");
 
@@ -14,6 +15,9 @@ export const Item = z.object({
   author: z.string().nullable(),
   excerpt: z.string().nullable(),
   hasCover: z.boolean(),
+  preview: Preview.nullable(), // the screen it opens on: your choice, else what the link looked like; null for Images and text Kinds
+  previewGuess: Preview.nullable(), // what the link looked like, so "Show as preview" can go back to it
+  facts: Facts,
   status: Status,
   archivedReason: ArchivedReason.nullable(),
   dueAt: z.string().nullable(),
@@ -81,6 +85,7 @@ export const UpdateItemBody = z
     status: Status.optional(), // done is for todos and things
     note: z.string().max(10_000).nullable().optional(),
     readingProgress: z.number().min(0).max(1).optional(),
+    preview: Preview.nullable().optional(), // Show as article (reader) or as its preview; null goes back to the guess
     tagIds: z.array(z.string().min(1).max(64)).max(50).optional(), // ids, or existing tag names
   })
   .strict();

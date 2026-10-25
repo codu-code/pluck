@@ -366,6 +366,9 @@ importers:
       '@mozilla/readability':
         specifier: ^0.6.0
         version: 0.6.0
+      '@pluck/shared-schemas':
+        specifier: workspace:*
+        version: link:../shared-schemas
       defuddle:
         specifier: 0.19.5
         version: 0.19.5

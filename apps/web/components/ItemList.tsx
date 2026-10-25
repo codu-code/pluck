@@ -32,13 +32,13 @@ const SLIDE_MS = 150; // motion token: archiveRow
 function placeholders(d: PluckDraft): Row[] {
   const now = new Date().toISOString();
   const base = {
-    canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, status: "inbox" as const,
+    canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, facts: {}, status: "inbox" as const,
     archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0, inList: false,
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };
   if (d.text !== null)
-    return [{ ...base, id: `draft-${d.key}`, kind: d.kind ?? "note", url: null, title: d.text.split("\n")[0]!, extraction: { state: "none", attempts: 0, lastError: null } }];
-  return d.urls.map((url, i) => ({ ...base, id: `draft-${d.key}-${i}`, kind: "link" as const, url, title: url, extraction: { state: "pending" as const, attempts: 0, lastError: null } }));
+    return [{ ...base, id: `draft-${d.key}`, kind: d.kind ?? "note", url: null, preview: null, previewGuess: null, title: d.text.split("\n")[0]!, extraction: { state: "none", attempts: 0, lastError: null } }];
+  return d.urls.map((url, i) => ({ ...base, id: `draft-${d.key}-${i}`, kind: "link" as const, url, preview: "reader" as const, previewGuess: "reader" as const, title: url, extraction: { state: "pending" as const, attempts: 0, lastError: null } }));
 }
 
 const LANDING_MS = 4000; // a row created this recently washes mint when it first appears

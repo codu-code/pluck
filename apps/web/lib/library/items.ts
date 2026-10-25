@@ -121,6 +121,7 @@ export async function updateItem(userId: string, itemId: string, patch: UpdateIt
   if (patch.text !== undefined && isLink) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
   if (patch.kind && isLink !== (LINK_KINDS as readonly string[]).includes(patch.kind))
     throw new ApiError("bad_request", isLink ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
+  if (patch.preview !== undefined && current.preview === null) throw new ApiError("bad_request", "Only links open on a Preview.", 400);
   if (patch.status === "done" && !["todo", "thing"].includes(patch.kind ?? current.kind))
     throw new ApiError("bad_request", "Done is for todos and things.", 400);
   const { tagIds, ...rest } = patch;

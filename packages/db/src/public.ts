@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { PublicList, SharedListSummary } from "@pluck/shared-schemas";
+import { defaultPreview, type PublicList, type SharedListSummary } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { items, listRows, lists, listShares, oid, reports, users, type ListDoc, type UserDoc } from "./collections.ts";
 
@@ -7,7 +7,7 @@ import { items, listRows, lists, listShares, oid, reports, users, type ListDoc, 
 // It reads lists, listItems and a narrow slice of items, and never touches contents, tags, ticks (marks) or status.
 // Its field lists are pinned by public.test.ts.
 
-export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1 } as const;
+export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1, previewGuess: 1, previewOverride: 1, facts: 1 } as const;
 const WEEK_MS = 7 * 86_400_000;
 
 async function findPublic(handle: string, slug: string) {
@@ -35,6 +35,7 @@ async function seeOnly(list: ListDoc, owner: Pick<UserDoc, "_id" | "name" | "han
       ? [{
         id: d._id.toHexString(), kind: d.kind, title: d.title, siteName: d.siteName ?? null, excerpt: d.excerpt ?? null, url: d.url ?? null,
         wordCount: d.wordCount ?? null, hasCover: Boolean(d.coverKey), note: r.note ?? null,
+        preview: d.previewOverride ?? d.previewGuess ?? defaultPreview(d.kind), facts: d.facts ?? {},
       }]
       : [];
   });

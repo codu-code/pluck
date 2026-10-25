@@ -1,10 +1,11 @@
 import { claimOnce, runDueExpiry } from "@pluck/db";
+import { sortBackfill } from "./capture";
 import { pollInbound, purgeBinNow, queueDueDigests } from "./library";
 import { log } from "./log";
 
 // Time-based work, run from every cron tick and the worker loop. Each piece is claimed in the
 // database, so however many instances call this, it happens once.
-export async function runScheduled(now = new Date()): Promise<{ purged: number; expired: number; digests: number; inbound: number }> {
+export async function runScheduled(now = new Date()): Promise<{ purged: number; expired: number; digests: number; inbound: number; sorted: number }> {
   let purged = 0;
   if (await claimOnce(`purge-bin:${now.toISOString().slice(0, 10)}`)) {
     purged = await purgeBinNow();
@@ -15,5 +16,6 @@ export async function runScheduled(now = new Date()): Promise<{ purged: number; 
   const digests = await queueDueDigests(now);
   if (digests) log("info", "digests queued", { digests });
   const inbound = await pollInbound();
-  return { purged, expired: expiry.archived, digests, inbound };
+  const sorted = await sortBackfill(); // until every Item read before Previews has one; then a single lookup
+  return { purged, expired: expiry.archived, digests, inbound, sorted };
 }

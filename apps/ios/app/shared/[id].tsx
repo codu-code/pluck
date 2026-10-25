@@ -20,7 +20,7 @@ const EPOCH = new Date(0).toISOString(); // never shown (hideWhen), but the row 
 // The Inbox row reads an Item; a shared entry has only its public fields, so the rest are the plain defaults.
 const asItem = (e: Entry): Item => ({
   id: e.id, kind: e.kind, url: e.url, canonicalUrl: null, title: e.title, titleIsDerived: false, siteName: e.siteName, author: null, excerpt: e.excerpt,
-  hasCover: e.hasCover, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "copied", wordCount: e.wordCount,
+  hasCover: e.hasCover, preview: e.preview, previewGuess: e.preview, facts: e.facts, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "copied", wordCount: e.wordCount,
   lang: null, extraction: { state: "done", attempts: 0, lastError: null }, readingProgress: 0, inList: true, createdAt: EPOCH, updatedAt: EPOCH, lastTouchedAt: EPOCH,
   statusChangedAt: EPOCH, deletedAt: null,
 });

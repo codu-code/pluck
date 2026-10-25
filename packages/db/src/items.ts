@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { BIN_DAYS, deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
+import { BIN_DAYS, defaultPreview, deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Facts, type Kind, type ListItemsQuery, type Preview, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
 import { markFollowsDone, recountList, recountListsOf } from "./lists.ts";
@@ -22,6 +22,9 @@ export function toItem(d: ItemDoc): Item {
     author: d.author,
     excerpt: d.excerpt,
     hasCover: Boolean(d.coverKey),
+    preview: d.previewOverride ?? d.previewGuess ?? defaultPreview(d.kind),
+    previewGuess: d.previewGuess ?? defaultPreview(d.kind),
+    facts: d.facts ?? {},
     status: d.status,
     archivedReason: d.archivedReason,
     dueAt: iso(d.dueAt),
@@ -145,6 +148,7 @@ export async function createTextItem(userId: string, input: TextItemInput): Prom
 
 export type ItemEdit = {
   title?: string; text?: string; kind?: Kind; dueAt?: Date | null; status?: Status; note?: string | null; readingProgress?: number;
+  preview?: Preview | null; // the person's choice of screen; null goes back to the guess
 };
 
 // The fields a status change sets: archived by the person is "user"; leaving the archive clears the reason.
@@ -188,6 +192,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
   if (edit.dueAt !== undefined) set.dueAt = edit.dueAt;
   if (edit.status !== undefined && edit.status !== current.status) Object.assign(set, statusFields(edit.status, now));
   if (edit.note !== undefined) set.note = edit.note?.trim() || null;
+  if (edit.preview !== undefined) set.previewOverride = edit.preview;
   if (edit.readingProgress !== undefined) {
     // Scrolling is not a touch; only real edits keep an item from expiring.
     set.readingProgress = edit.readingProgress;
@@ -294,6 +299,8 @@ export async function countItems(userId: string, status: Status): Promise<number
 
 export type ExtractionResult = {
   kind: Kind;
+  preview: Preview | null;
+  facts: Facts;
   title: string | null;
   siteName: string | null;
   author: string | null;
@@ -321,6 +328,8 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
     {
       $set: {
         kind: x.kind,
+        previewGuess: x.preview,
+        facts: x.facts,
         // A title the user typed is never replaced by extraction.
         ...(current.titleIsDerived && x.title ? { title: x.title } : {}),
         siteName: x.siteName ?? current.siteName,

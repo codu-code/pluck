@@ -21,8 +21,16 @@ What an Item is: Read, Watch, PDF, Image, Note, Todo or Thing. "Links" is the gr
 _Avoid_: Type, category
 
 **Kept page**:
-The copy of a page's text and HTML stored with a link Item, so it survives the original going away.
+What is worth keeping from a link Item's page, stored with it so it survives the original going away: an article's text and HTML, a post's words, a repo's README, a product's name and price. Never a login wall or an empty app shell.
 _Avoid_: Snapshot, cache, archive copy
+
+**Preview**:
+The screen a link Item opens on, chosen by what the link is: Reader (an article), Player (a video or audio to play), Post (a social post or thread), Code (a repo, issue or snippet), Product (something to buy), Site (a homepage), Document (a PDF or paper) or App (an AI artifact, a design file, a shared doc). Every Preview but Reader leads with one way out to the original.
+_Avoid_: Type, template, card, embed
+
+**Kept on this iPhone**:
+An Item whose Kept page (and pictures, or its file) the phone holds for reading with no connection: the newest ones automatically on Wi-Fi, and any you keep by hand, which stay until you let them go.
+_Avoid_: Download, offline mode, cache
 
 ## Organising
 
