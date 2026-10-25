@@ -14,4 +14,5 @@
 - [ ] Only `packages/db` touches MongoDB, every query is scoped by `userId`, and a new query has a two-user test
 - [ ] New types start as a Zod schema in `packages/shared-schemas`
 - [ ] UI copy uses the product words (`GLOSSARY.md`): no "saved", no exclamation marks, no emoji
+- [ ] A new string is in all ten languages in `packages/i18n` (CONTRIBUTING.md, "Adding a string")
 - [ ] A new env var or MCP tool is in `docs/self-host.md` or `docs/mcp.md` in this same PR

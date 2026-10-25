@@ -1,5 +1,7 @@
 {
   "name": "@pluck/ios",
+  "description": "The Pluck iPhone app and its share extension.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "apps/ios" },
   "version": "0.1.0",
   "private": true,
   "license": "MIT",

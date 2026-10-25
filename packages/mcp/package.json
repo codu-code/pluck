@@ -1,5 +1,7 @@
 {
   "name": "@pluck/mcp-server",
+  "description": "The Pluck connector: MCP tools, resources and prompts over a person's library.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/mcp" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

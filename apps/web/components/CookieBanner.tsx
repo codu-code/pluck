@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { analyticsOn, CONSENT_EVENT, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
+import { analyticsOn, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
 import styles from "./cookie-banner.module.css";
 
 // The Cookies board: asked once a year, two buttons of the same size, nothing pre-ticked. Shown only when this copy
@@ -71,18 +71,6 @@ export function CookiesLink({ className, children }: { className?: string; child
   const t = useTranslations("app.cookies");
   if (!analyticsOn) return null;
   return <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}>{children ?? t("link")}</button>;
-}
-
-// Reads the answer for screens that show it (Settings), kept current as it changes.
-export function useConsent(): Consent | null {
-  const [c, setC] = useState<Consent | null>(null);
-  useEffect(() => {
-    const read = () => setC(readConsent());
-    read();
-    window.addEventListener(CONSENT_EVENT, read);
-    return () => window.removeEventListener(CONSENT_EVENT, read);
-  }, []);
-  return c;
 }
 
 // The drawn cookie from the board, with a bite out of it and the logo's three sparks for crumbs.

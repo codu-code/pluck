@@ -1,5 +1,7 @@
 {
   "name": "@pluck/ui",
+  "description": "Pluck's design tokens, logo, icon and Kind glyphs.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/ui" },
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

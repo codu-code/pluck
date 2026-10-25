@@ -1,5 +1,7 @@
 {
   "name": "@pluck/blob",
+  "description": "Blob storage for Pluck over the S3 API (S3, or MinIO locally and for self-hosting).",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/blob" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

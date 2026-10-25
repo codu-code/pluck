@@ -1,5 +1,6 @@
 {
   "name": "@pluck/mcp",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/mcp-stdio" },
   "version": "0.1.0",
   "description": "Use your Pluck library from any MCP client that speaks stdio, with an API key.",
   "license": "MIT",

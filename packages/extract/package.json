@@ -1,5 +1,7 @@
 {
   "name": "@pluck/extract",
+  "description": "Reads pages, PDFs, email and imports into the text Pluck keeps.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/extract" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

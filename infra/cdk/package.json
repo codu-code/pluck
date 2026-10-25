@@ -1,5 +1,7 @@
 {
   "name": "@pluck/cdk",
+  "description": "AWS CDK stacks for getpluck.io: S3, SES and alerts.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "infra/cdk" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

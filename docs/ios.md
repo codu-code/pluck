@@ -38,6 +38,7 @@ Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 3. Open `ios/Pluck.xcworkspace`. For both targets (Pluck and the share extension) check the team under Signing & Capabilities, and check the App Group `group.io.getpluck.app`, the Keychain group and Associated Domains (`applinks:getpluck.io`) are there. Set `APPLE_TEAM_ID` in Vercel (docs/deploy.md) so shared links open the app.
 4. Each upload needs a new build number: raise `ios.buildNumber` in `apps/ios/app.config.ts` (a clean prebuild resets anything set in Xcode) and prebuild again. The marketing version is `version` beside it. Then Product, Archive, and Distribute App, App Store Connect, Upload.
 5. In App Store Connect, the build appears under TestFlight after processing (about 15 minutes). Answer the export compliance question (no non-exempt encryption; `ITSAppUsesNonExemptEncryption` is false already), add testers.
+6. App Privacy (App Store Connect, before external testing or review). The privacy manifests already say the same (`ios.privacyManifests` in `app.config.ts` for the app, `targets/share/PrivacyInfo.xcprivacy` for the share extension), so keep the three in step: Contact info, email (account, linked); User content, photos or videos (images shared to Pluck, linked, app functionality); User content, other (what you pluck, linked, app functionality); Identifiers, user ID (the account, linked, app functionality and analytics, the analytics part only after the in-app yes); Usage data, product interaction (analytics, linked, only after the in-app yes); Diagnostics, crash data (app functionality, not linked). These six are what App Store Connect declares. No tracking in Apple's sense: nothing is shared with data brokers or used across other companies' apps.
 
 From the command line instead of steps 2 to 4: create an App Store Connect API key (Users and Access, Integrations, App Store Connect API, a Team key with the App Manager role), keep the `.p8` somewhere outside the repo, raise `ios.buildNumber`, then:
 
@@ -46,8 +47,7 @@ APPLE_TEAM_ID=<team id> ASC_KEY_ID=<key id> ASC_ISSUER_ID=<issuer id> ASC_KEY_PA
   apps/ios/scripts/testflight.sh
 ```
 
-It prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Step 5 still applies.
-6. App Privacy (App Store Connect, before external testing or review). The privacy manifests already say the same (`ios.privacyManifests` in `app.config.ts` for the app, `targets/share/PrivacyInfo.xcprivacy` for the share extension), so keep the three in step: Contact info, email (account, linked); User content, photos or videos (images shared to Pluck, linked, app functionality); User content, other (what you pluck, linked, app functionality); Identifiers, user ID (the account, linked, app functionality and analytics, the analytics part only after the in-app yes); Usage data, product interaction (analytics, linked, only after the in-app yes); Diagnostics, crash data (app functionality, not linked). These six are what App Store Connect declares. No tracking in Apple's sense: nothing is shared with data brokers or used across other companies' apps.
+It prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Steps 5 and 6 still apply.
 
 ## Usage and crash reports
 
@@ -61,7 +61,8 @@ It prebuilds, archives, signs and uploads with the key, so Xcode needs no accoun
 - **Offline:** the TanStack Query cache is persisted (SQLite key-value), so the app opens on what it last saw; plucks made with no connection queue on the phone. `expo-network` tells TanStack Query when the connection goes, so queries wait instead of failing and pick up when it is back (plucks go up then too). With no connection the tab bar shows a clay "Offline" pill, which takes the waiting count when there is one ("Offline · 2 waiting"). An Item whose text is not on the phone opens to "Not on this iPhone yet.", not an error.
 - **Keep for offline reading** (Settings, Library; on by default): on Wi-Fi only, when the app opens or comes back, at most every 15 minutes, the app keeps the text of the newest 300 Items across Inbox, Later and Lists (`lib/keep.ts` picks them; images, pages still being plucked and pages that could not be read are left out), and the Lists themselves. Text and highlights only, never pictures. Each Item is one key in SQLite (`kept:<id>`), beside the query cache rather than in it, since the cache is written whole on every change. Only new or changed Items are fetched, one at a time with a pause, well under the API's read limit. Turning it off, "Clear the offline copy" and signing out delete the kept copies. Languages need nothing: every catalog is bundled into the app.
 - **Files** (images, PDFs) from the share sheet: `POST /api/v1/items/files` makes the item and returns a signed upload URL; a background `URLSession` uploads the bytes after the sheet closes, and the worker reads them once they arrive.
-- **Pure modules** (`lib/api.ts`, `lib/queue.ts`, `lib/pkce.ts`, `lib/markdown.ts`, `lib/keep.ts`) have no Expo imports and are tested by the root `pnpm test` (`apps/ios/lib/core.test.ts`, `apps/ios/lib/keep.test.ts`).
+- **Shared with the extension:** the API client, the offline queue and PKCE live in `packages/client` (`createClient`, `createQueue`, `pkcePair`), tested by `packages/client/src/client.test.ts`.
+- **Pure modules** (`lib/markdown.ts`, `lib/keep.ts`, `lib/format.ts`, `lib/plurals.ts`) have no Expo imports and are tested by the root `pnpm test` (`apps/ios/lib/*.test.ts`).
 
 ## Checked automatically
 

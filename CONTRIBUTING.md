@@ -20,7 +20,7 @@ pnpm stack            # MongoDB, Mailpit, MinIO and the fixture pages, on offset
 pnpm dev              # http://127.0.0.1:3000
 ```
 
-Sign in with any address: the link lands in Mailpit at http://127.0.0.1:8035. The extension is in `apps/extension` (`pnpm --filter @pluck/extension dev`), the iPhone app in `apps/ios` (see [docs/ios.md](docs/ios.md)).
+Sign in with any address: the email lands in Mailpit at http://127.0.0.1:8035. Run `pnpm --filter @pluck/web worker` in another terminal for imports, files, email-in and the Monday email. The extension is in `apps/extension` (`PLUCK_LOCAL=1 pnpm --filter @pluck/extension dev`, so it talks to your machine), the iPhone app in `apps/ios` (see [docs/ios.md](docs/ios.md)). [docs/architecture.md](docs/architecture.md) is the map of the code.
 
 ## The gate
 
@@ -30,7 +30,7 @@ Every pull request passes these, in this order. CI runs them too.
 pnpm typecheck
 pnpm lint
 pnpm test       # Vitest; starts the Docker services itself
-pnpm e2e        # Playwright against a production build
+pnpm e2e        # Playwright against a production build (once: pnpm exec playwright install chromium)
 pnpm design     # the impeccable detector on every page the e2e run saved
 ```
 
@@ -49,6 +49,21 @@ These are the ones a review will ask about. [CLAUDE.md](CLAUDE.md) has the full 
 7. **Copy uses the product words:** Pluck (the verb), Plucked, Item, Kind, Status, Tag, List. Never "saved" or "bookmarked". No exclamation marks, no emoji. Say "your AI", never one vendor as the only option.
 8. **Docs move with the code:** a new env var goes in `docs/self-host.md`, a new MCP tool in `docs/mcp.md`, in the same pull request.
 9. **No `any`** without a `// why:` comment.
+
+## Words and tone
+
+Pluck's copy is plain and calm. Use the product words: Pluck (the verb), Plucked (the confirmation), Item, Kind (Read, Watch, PDF, Image, Note, Todo, Thing), Status (Inbox, Later, Archived, Done), Tag, List. Never "saved", "bookmarked", "collection", "smart", "AI-powered" or "magic". No exclamation marks and no emoji, in any language. Say "your AI" or "AI tools", never one vendor as the only option. Copy about expiry says the Item moves "to the Archive" and that "nothing is deleted".
+
+## Adding a string
+
+Every string the person sees is in `packages/i18n/messages/<catalog>/<locale>.json`, in ten languages, and all ten are complete: `pnpm test` fails if a language is missing a key English has. So a new string goes in all ten files in the same pull request.
+
+1. Add the English message to `packages/i18n/messages/<catalog>/en.json` (`site`, `app`, `email`, `ios`, `extension` or `share`) and use the key in code. A key English does not have fails `pnpm typecheck`.
+2. Add the same key to the other nine files (`es`, `pt-BR`, `fr`, `de`, `ja`, `it`, `nl`, `ko`, `zh-Hans`). Each language's glossary in `docs/i18n/<locale>.md` says how the product words are said there. Keep every `{placeholder}` and plural form English has, and only those.
+3. For `extension` or `share`, run `node scripts/i18n-sync.mjs` to regenerate the Chrome `_locales` and the iPhone String Catalog.
+4. Check it at phone width in German (the longest) and Japanese.
+
+If you cannot translate, write your best attempt and say so in the pull request; a maintainer checks it. [docs/i18n.md](docs/i18n.md) has the rest.
 
 ## Style
 
