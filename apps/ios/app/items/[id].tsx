@@ -154,7 +154,7 @@ function Reader({ data }: { data: FullItem }) {
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{row(item).siteMeta}</Text>
         <Text accessibilityRole="header" style={[font.readerTitle, styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
-        {cover && (
+        {cover && item.kind === "image" && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
         )}

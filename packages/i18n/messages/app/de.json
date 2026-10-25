@@ -679,17 +679,16 @@
     "privateOnly": "Nur du kannst diese Liste sehen.",
     "copyAsk": "Für deine KI kopieren: „Frag nach dieser Liste“",
     "export": "Diese Liste exportieren",
-    "ticked": "{ticked} von {count} abgehakt",
     "empty": "Hier ist noch nichts. Drück a bei einem Eintrag im Eingang, um ihn hinzuzufügen.",
     "rowsLabel": "{name}, in Reihenfolge",
     "drag": "Ziehen, um {title} zu verschieben. Oder Shift+J und Shift+K.",
-    "tick": "{title} abhaken",
     "noteLabel": "Notiz zu {title} in dieser Liste",
     "byAi": "von KI",
     "note": "Notiz",
     "takeOut": "Herausnehmen",
     "keys": {
-      "tick": "abhaken",
+      "mark": "abhaken",
+      "select": "auswählen",
       "note": "Notiz",
       "reorder": "verschieben",
       "add": "Aus dem Eingang mit <kbd>a</kbd> hinzufügen oder direkt aus der Erweiterung hineinpflücken"
@@ -698,7 +697,37 @@
       "confirm": "„{name}“ löschen? Ihre Einträge bleiben in deiner Bibliothek.",
       "yes": "Ja, Liste löschen",
       "action": "Diese Liste löschen"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Gelesen",
+        "progress": "{ticked} von {count} gelesen",
+        "a11y": "{title} als gelesen markieren",
+        "bulk": "Als gelesen markieren"
+      },
+      "watched": {
+        "label": "Angesehen",
+        "progress": "{ticked} von {count} angesehen",
+        "a11y": "{title} als angesehen markieren",
+        "bulk": "Als angesehen markieren"
+      },
+      "seen": {
+        "label": "Gesehen",
+        "progress": "{ticked} von {count} gesehen",
+        "a11y": "{title} als gesehen markieren",
+        "bulk": "Als gesehen markieren"
+      },
+      "done": {
+        "label": "Erledigt",
+        "progress": "{ticked} von {count} erledigt",
+        "a11y": "{title} als erledigt markieren",
+        "bulk": "Als erledigt markieren"
+      }
+    },
+    "unmark": "Häkchen entfernen",
+    "toTop": "Nach oben verschieben",
+    "select": "Auswählen",
+    "takenOutMany": "{count, plural, one {# Eintrag} other {# Einträge}} aus „{name}“ herausgenommen. Weiterhin in deiner Bibliothek."
   },
   "people": {
     "added": "Mit {email} geteilt. Die Person bekommt eine E-Mail mit einem Link.",

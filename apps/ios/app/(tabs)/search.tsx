@@ -1,11 +1,13 @@
 import type { Status } from "@pluck/shared-schemas";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActionSheetIOS, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { Icon, ICONS, KINDS, KindGlyph } from "@/components/Glyph";
+import { Icon, ICONS, KINDS } from "@/components/Glyph";
+import { ItemRow } from "@/components/ItemRow";
 import { Empty, TitledList } from "@/components/Screen";
 import { useLists, useSearch, useTags, type SearchFilters } from "@/lib/data";
+import { useRowText } from "@/lib/format";
 import { font, useTheme } from "@/lib/theme";
 
 const STATUSES: Status[] = ["inbox", "later", "archived", "done"];
@@ -31,6 +33,7 @@ export default function Search() {
   const tags = useTags();
   const lists = useLists();
   const results = useSearch(q, f);
+  const rowText = useRowText();
 
   useEffect(() => {
     const id = setTimeout(() => setQ(text.trim()), 250);
@@ -79,19 +82,16 @@ export default function Search() {
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       renderItem={({ item: { item, snippet } }) => (
-        <Pressable onPress={() => router.push(`/items/${item.id}`)} accessibilityRole="button"
-          style={({ pressed }) => [styles.row, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
-          <View style={{ marginTop: 1 }}><KindGlyph kind={item.kind} size={18} color={t.ink} /></View>
-          <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
-            <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{item.title}</Text>
-            {snippet && (
-              <Text style={[font.regular, { color: t.ink2, fontSize: 14, lineHeight: 20 }]} numberOfLines={2}>
-                {snippet.source === "note" ? tr.rich("search.yourNote", { snippet: () => found(snippet) }) : found(snippet)}
-              </Text>
-            )}
-            <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr(`status.${item.status}`)}</Text>
-          </View>
-        </Pressable>
+        // The Inbox row, saying where the item is now, with the words that matched under it.
+        <ItemRow
+          item={item}
+          meta={tr("row.siteMeta", { site: rowText(item).site, meta: tr(`status.${item.status}`) })}
+          below={snippet ? (
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]} numberOfLines={2}>
+              {snippet.source === "note" ? tr.rich("search.yourNote", { snippet: () => found(snippet) }) : found(snippet)}
+            </Text>
+          ) : undefined}
+        />
       )}
       ListEmptyComponent={
         !q ? <Empty title={tr("search.empty.start.title")} body={tr("search.empty.start.body")} />
@@ -106,6 +106,5 @@ export default function Search() {
 const styles = StyleSheet.create({
   field: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1.5 },
   chip: { minHeight: 36, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
-  row: { flexDirection: "row", gap: 12, paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   footer: { padding: 24, textAlign: "center", fontSize: 14 },
 });

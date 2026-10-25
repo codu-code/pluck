@@ -1,6 +1,10 @@
 import { isTextKind, type Item, type Source } from "@pluck/shared-schemas";
 import { useFormatter, useTranslations } from "next-intl";
 
+// What a row needs of an Item. Public and shared Lists have only these; the owner's views have the whole Item.
+export type RowItem = Pick<Item, "id" | "kind" | "title" | "siteName" | "url" | "hasCover" | "excerpt" | "wordCount">
+  & Partial<Pick<Item, "dueAt" | "source" | "extraction" | "createdAt">>;
+
 const DAY = 86_400_000;
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
 
@@ -50,16 +54,16 @@ export function useFormat() {
   }
 
   // The row's "site" slot: the site for links, the kind for notes, todos and things.
-  function site(item: Item): string {
+  function site(item: RowItem): string {
     if (isTextKind(item.kind)) return kind(item.kind);
     return item.siteName ?? (item.url ? new URL(item.url).hostname : item.source === "email" ? t("site.email") : t("site.file"));
   }
 
-  // "12 min", "photo", "Plucking", "Couldn't read", "by you", "due Fri".
-  function meta(item: Item, now = new Date()): string {
-    if (isTextKind(item.kind)) return item.dueAt ? due(item.dueAt, now) : item.source === "mcp" ? t("meta.byAi") : t("meta.byYou");
-    if (item.extraction.state === "failed") return t("meta.failed");
-    if (item.extraction.state === "pending") return t("meta.pending");
+  // "12 min", "photo", "Plucking", "Couldn't read", "by you", "due Fri". Null for a note on someone else's List.
+  function meta(item: RowItem, now = new Date()): string | null {
+    if (isTextKind(item.kind)) return item.dueAt ? due(item.dueAt, now) : !item.source ? null : item.source === "mcp" ? t("meta.byAi") : t("meta.byYou");
+    if (item.extraction?.state === "failed") return t("meta.failed");
+    if (item.extraction?.state === "pending") return t("meta.pending");
     if (item.kind === "image") return t("meta.photo");
     if (item.kind === "video") return t("meta.video");
     if (item.wordCount) return t("meta.minutes", { n: Math.max(1, Math.round(item.wordCount / 230)) });

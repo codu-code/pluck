@@ -679,17 +679,16 @@
     "privateOnly": "Cette liste n’est visible que par vous.",
     "copyAsk": "Copier pour votre IA : « Pose des questions sur cette liste »",
     "export": "Exporter cette liste",
-    "ticked": "{ticked} sur {count} cochés",
     "empty": "Rien ici pour l’instant. Appuyez sur a sur n’importe quel élément de la boîte de réception pour l’ajouter.",
     "rowsLabel": "{name}, dans l’ordre",
     "drag": "Faites glisser pour déplacer {title}. Ou Shift+J et Shift+K.",
-    "tick": "Cocher {title}",
     "noteLabel": "Note sur {title} dans cette liste",
     "byAi": "par l’IA",
     "note": "Note",
     "takeOut": "Retirer",
     "keys": {
-      "tick": "cocher",
+      "mark": "marquer",
+      "select": "sélectionner",
       "note": "note",
       "reorder": "réordonner",
       "add": "Ajoutez depuis la boîte de réception avec <kbd>a</kbd>, ou cueillez directement depuis l’extension"
@@ -698,7 +697,37 @@
       "confirm": "Supprimer « {name} » ? Ses éléments restent dans votre bibliothèque.",
       "yes": "Oui, supprimer la liste",
       "action": "Supprimer cette liste"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Lu",
+        "progress": "{ticked} sur {count} lus",
+        "a11y": "Marquer {title} comme lu",
+        "bulk": "Marquer comme lu"
+      },
+      "watched": {
+        "label": "Vu",
+        "progress": "{ticked} sur {count} vus",
+        "a11y": "Marquer {title} comme vu",
+        "bulk": "Marquer comme vu"
+      },
+      "seen": {
+        "label": "Vu",
+        "progress": "{ticked} sur {count} vus",
+        "a11y": "Marquer {title} comme vu",
+        "bulk": "Marquer comme vu"
+      },
+      "done": {
+        "label": "Terminé",
+        "progress": "{ticked} sur {count} terminés",
+        "a11y": "Marquer {title} comme terminé",
+        "bulk": "Marquer comme terminé"
+      }
+    },
+    "unmark": "Décocher",
+    "toTop": "Placer en haut",
+    "select": "Sélectionner",
+    "takenOutMany": "{count, plural, one {# élément retiré} other {# éléments retirés}} de « {name} ». Toujours dans votre bibliothèque."
   },
   "people": {
     "added": "Partagée avec {email}. Un e-mail avec le lien est envoyé.",

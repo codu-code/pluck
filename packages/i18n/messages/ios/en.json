@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Public · Share",
     "privateShare": "Private · Share",
-    "ticked": "{ticked} of {count} ticked",
     "noteByAi": "{note} · by AI",
-    "tick": "Tick {title}",
     "addA11y": "Add to this list",
     "empty": {
       "title": "Nothing on this list yet.",
       "body": "Tap Add to put plucks on it, or ask your AI to fill it."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Read",
+        "progress": "{ticked} of {count} read",
+        "a11y": "Mark {title} as read",
+        "bulk": "Mark read"
+      },
+      "watched": {
+        "label": "Watched",
+        "progress": "{ticked} of {count} watched",
+        "a11y": "Mark {title} as watched",
+        "bulk": "Mark watched"
+      },
+      "seen": {
+        "label": "Seen",
+        "progress": "{ticked} of {count} seen",
+        "a11y": "Mark {title} as seen",
+        "bulk": "Mark seen"
+      },
+      "done": {
+        "label": "Done",
+        "progress": "{ticked} of {count} done",
+        "a11y": "Mark {title} as done",
+        "bulk": "Mark done"
+      }
+    },
+    "unmark": "Unmark",
+    "toTop": "To top",
+    "takeOut": "Take out",
+    "takenOut": "{count, plural, one {# Item} other {# Items}} taken out. Still in your library."
   },
   "shared": {
     "copied": "Plucked. Your own copy is in Lists.",

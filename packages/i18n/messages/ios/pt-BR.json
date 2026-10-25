@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Pública · Compartilhar",
     "privateShare": "Privada · Compartilhar",
-    "ticked": "{ticked} de {count} marcados",
     "noteByAi": "{note} · pela IA",
-    "tick": "Marcar {title}",
     "addA11y": "Adicionar a esta lista",
     "empty": {
       "title": "Nada nesta lista ainda.",
       "body": "Toque em Adicionar para colocar itens nela, ou peça à sua IA para preenchê-la."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Lido",
+        "progress": "{ticked} de {count} lidos",
+        "a11y": "Marcar {title} como lido",
+        "bulk": "Marcar como lido"
+      },
+      "watched": {
+        "label": "Assistido",
+        "progress": "{ticked} de {count} assistidos",
+        "a11y": "Marcar {title} como assistido",
+        "bulk": "Marcar como assistido"
+      },
+      "seen": {
+        "label": "Visto",
+        "progress": "{ticked} de {count} vistos",
+        "a11y": "Marcar {title} como visto",
+        "bulk": "Marcar como visto"
+      },
+      "done": {
+        "label": "Concluído",
+        "progress": "{ticked} de {count} concluídos",
+        "a11y": "Marcar {title} como concluído",
+        "bulk": "Marcar como concluído"
+      }
+    },
+    "unmark": "Desmarcar",
+    "toTop": "Para o topo",
+    "takeOut": "Tirar da lista",
+    "takenOut": "{count, plural, one {# Item tirado da lista. Continua} other {# Itens tirados da lista. Continuam}} na sua biblioteca."
   },
   "shared": {
     "copied": "Colhido. Sua própria cópia está em Listas.",

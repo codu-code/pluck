@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { FoldHeader, useFolded } from "@/components/Fold";
 import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
 import { useFormat } from "@/components/useFormat";
@@ -25,6 +26,7 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
   const t = useTranslations("app.lists");
   const app = useTranslations("app");
   const f = useFormat();
+  const [sharedFolded, toggleShared] = useFolded("lists:shared");
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -99,9 +101,9 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
           </div>
         )}
         {shared.length > 0 && (
-          <section className={styles.shared} aria-labelledby="shared-with-you">
-            <h2 id="shared-with-you" className={styles.h2}>{t("shared.title")}</h2>
-            <ul className={styles.sharedList}>
+          <section className={styles.shared} aria-label={t("shared.title")}>
+            <FoldHeader id="shared-with-you" label={t("shared.title")} count={shared.length} folded={sharedFolded} onToggle={toggleShared} />
+            <ul id="shared-with-you" className={styles.sharedList} hidden={sharedFolded}>
               {shared.map((l) => (
                 <li key={l.id} className={styles.sharedRow}>
                   <Link href={`/shared/${l.id}`} className={styles.name}>{l.name}</Link>

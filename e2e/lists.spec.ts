@@ -4,11 +4,14 @@ import { linkFromEmail, signIn, uniqueEmail } from "./helpers";
 
 const picker = (page: Page) => page.getByRole("dialog", { name: /Add .*to a list/ });
 
+// A write to this list has landed, so a reload shows it.
+const saved = (page: Page, method: string) => page.waitForResponse((r) => r.url().includes("/api/v1/lists/") && r.request().method() === method);
+
 async function notes(page: Page, texts: string[]) {
   for (const text of texts) expect((await page.request.post("/api/v1/items", { data: { text } })).ok()).toBe(true);
 }
 
-test("build an ordered list from the Inbox, then tick, note, reorder, export and delete it", async ({ page }) => {
+test("build an ordered list from the Inbox, then note, reorder, mark, fold, bulk select, export and delete it", async ({ page }) => {
   await signIn(page);
   await notes(page, ["Demo three", "Demo two", "Demo one"]); // newest first in the Inbox: one, two, three
   await page.goto("/inbox");
@@ -38,8 +41,6 @@ test("build an ordered list from the Inbox, then tick, note, reorder, export and
   await expect(items).toHaveCount(3);
   await expect(items.nth(0)).toContainText("Demo one");
 
-  await page.keyboard.press(" ");
-  await expect(page.getByText("1 of 3 ticked")).toBeVisible();
   await page.keyboard.press("n");
   await page.getByRole("textbox", { name: "Note on Demo one in this list" }).fill("Open with this");
   await page.keyboard.press("Enter");
@@ -47,21 +48,61 @@ test("build an ordered list from the Inbox, then tick, note, reorder, export and
   await page.keyboard.press("Shift+J");
   await expect(items.nth(1)).toContainText("Demo one");
 
-  // Drag the last row to the top.
-  await items.nth(2).getByRole("button", { name: /Drag to reorder/ }).dragTo(items.nth(0));
+  // Drag the last row to the top (the handle shows on hover).
+  await items.nth(2).hover();
+  await Promise.all([saved(page, "PATCH"), items.nth(2).getByRole("button", { name: /Drag to reorder/ }).dragTo(items.nth(0))]);
   await expect(items.nth(0)).toContainText("Demo three");
 
   await page.reload();
   await expect(items.nth(0)).toContainText("Demo three");
   await expect(items.nth(1)).toContainText("Demo two");
   await expect(items.nth(2)).toContainText("Open with this");
-  await expect(page.getByRole("checkbox", { name: "Tick Demo one" })).toBeChecked();
+
+  // Marks are worded by Kind (notes are read). Nothing shows until something is marked; a marked row keeps its number
+  // and moves under a header that folds, remembered after a reload.
+  await expect(page.getByText(/of 3 read/)).toHaveCount(0);
+  await Promise.all([saved(page, "PATCH"), page.getByRole("checkbox", { name: "Mark Demo one as read" }).check()]);
+  await expect(page.getByText("1 of 3 read")).toBeVisible();
+  const read = page.getByRole("list", { name: "Read", exact: true }).getByRole("listitem");
+  await expect(read).toHaveCount(1);
+  await expect(items).toHaveCount(2);
+  await expect(read.first()).toContainText("Open with this");
+  const fold = page.getByRole("button", { name: "Read 1" });
+  await expect(fold).toHaveAttribute("aria-expanded", "true");
+  await fold.click();
+  await expect(fold).toHaveAttribute("aria-expanded", "false");
+  await expect(read).toHaveCount(0);
+  await page.reload();
+  await expect(fold).toHaveAttribute("aria-expanded", "false");
+  await fold.click();
+  await expect(read).toHaveCount(1);
+  await expect(page.getByRole("checkbox", { name: "Mark Demo one as read" })).toBeChecked();
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur()); // off the fold button
+  await page.keyboard.press(" "); // Space marks the row under the cursor: Demo three
+  await expect(page.getByText("2 of 3 read")).toBeVisible();
+
+  // Bulk: select, then unmark, and move to the top.
+  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Select Demo one" }).check();
+  await page.getByRole("checkbox", { name: "Select Demo three" }).check();
+  const bar = page.getByRole("toolbar", { name: "Bulk actions" });
+  await expect(bar).toContainText("2 selected");
+  await bar.getByRole("button", { name: "Unmark" }).click();
+  await expect(page.getByText(/of 3 read/)).toHaveCount(0);
+  await expect(items).toHaveCount(3);
+  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page.getByRole("checkbox", { name: "Select Demo two" }).check();
+  await Promise.all([saved(page, "POST"), page.getByRole("toolbar", { name: "Bulk actions" }).getByRole("button", { name: "Move to top" }).click()]);
+  await expect(items.nth(0)).toContainText("Demo two");
+  await page.reload();
+  await expect(items.nth(0)).toContainText("Demo two");
+  await expect(items.nth(2)).toContainText("Demo one");
 
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Export this list" }).click();
   const md = readFileSync(await (await download).path(), "utf8");
   expect(md).toContain("# Talk on MCP auth");
-  expect(md).toContain("3. ~~Demo one~~\n   Open with this");
+  expect(md).toContain("3. Demo one\n   Open with this");
 
   // The item page shows the list, with the item's place in it.
   await items.nth(2).getByRole("link", { name: "Demo one" }).click();
@@ -107,6 +148,7 @@ test("share a List with one person, See only: the email link, their Lists, no ta
   await expect(visitor.getByRole("heading", { name: "Holiday ideas" })).toBeVisible();
   await expect(visitor.getByText("Book early.")).toBeVisible();
   await expect(visitor.getByText("private-tag")).toHaveCount(0);
+  await expect(visitor.getByRole("checkbox")).toHaveCount(0); // no marks: they are the owner's
   await visitor.goto("/lists");
   await expect(visitor.getByRole("region", { name: "Shared with you" })).toContainText("Holiday ideas");
 

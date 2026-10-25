@@ -4,7 +4,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
 import { FlatList, type ListRenderItem, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
+import { Icon, ICONS } from "@/components/Glyph";
+import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
 import { keys, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
 import { api } from "@/lib/session";
@@ -246,7 +247,11 @@ function AddTo({ listId }: { listId: string }) {
       title={list.data ? tr("addTo", { name: list.data.list.name }) : tr("addToTheList")}
       data={candidates}
       keyOf={(i) => i.id}
-      row={({ item }) => <Row label={item.title} on={inList.has(item.id)} onPress={() => void add(item.id)} left={<KindGlyph kind={item.kind} color={t.ink} />} />}
+      // The Inbox row, so you know it when you see it; a tick once it is on the list.
+      row={({ item }) => (
+        <ItemRow item={item} hideWhen checked={inList.has(item.id)} onPress={() => void add(item.id)}
+          trail={<View style={styles.tick}>{inList.has(item.id) && <Icon d={ICONS.tick} size={18} color={t.actionInk} width={2} />}</View>} />
+      )}
       empty={inbox.isLoading || later.isLoading ? null : <Empty title={tr("nothing")} body={tr("nothingBody")} />}
     />
   );
@@ -256,5 +261,6 @@ const styles = StyleSheet.create({
   head: { flexDirection: "row", alignItems: "center", gap: 12, paddingLeft: 16, paddingRight: 8, paddingBottom: 8 },
   done: { minHeight: 44, minWidth: 44, paddingHorizontal: 8, alignItems: "center", justifyContent: "center" },
   filter: { marginHorizontal: 16, marginBottom: 8, minHeight: 40, borderRadius: 10, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, fontSize: 15 },
+  tick: { width: 22, alignItems: "center" },
   row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 52, paddingVertical: 10, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
 });

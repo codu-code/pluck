@@ -52,6 +52,9 @@ The copy and behaviour departures for the site, the extension, the share sheet, 
 | iOS Inbox, Later, Search, Lists | A large title fixed above the list | The title scrolls with the list and an inline title fades into a bar | How UIKit's large titles behave; at large text sizes it gives the list the room |
 | iOS Inbox row | 72 tall | At least 72; grows with the text size | Fixed rows clipped at large Dynamic Type sizes |
 | iOS tab bar, reader toolbar | Labels at 11 | 11 at every text size | What the system bars do; the labels broke mid-word at large sizes |
+| Lists, web and iPhone (Collection, IOSLists) | A leading tick; a ticked title struck through | Inbox rows with the order number and, on the web, a drag handle on hover; a trailing round mark worded by Kind (Read, Watched, Seen, Done); marked rows soften and gather under a header that folds; bulk select | Owner's call (25 October 2026): Lists look like the Inbox. The boards still draw the old rows |
+| Public and shared Lists (PublicList) | 112 by 72 covers, 18 px titles, serif notes | The same 64 px Inbox rows, the List note as the second line, no marks | The same row everywhere an Item is listed. Worth a designer's look: the public page lost some of its reading feel |
+| Archive, Search (Archive, Main) | Glyph-led rows, one long list | Inbox rows; the Archive in months ("October 2026") whose headers fold, remembered on the device | Owner's call: one row everywhere, and long Archives are easier to scan by month |
 
 ## Placeholders to fill
 

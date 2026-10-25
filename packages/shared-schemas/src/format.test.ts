@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import type { Item } from "./items.ts";
-import { initials, rowSite, tileIndex, when } from "./format.ts";
+import { initials, listMarkWord, markWord, rowSite, tileIndex, when } from "./format.ts";
 
 const now = new Date(2026, 9, 24, 15, 0); // Sat 24 Oct 2026, 15:00
 
@@ -37,4 +37,12 @@ test("an item with no page says where it came from", () => {
   expect(rowSite({ ...file, source: "email" } as Item)).toBe("email-in");
   expect(rowSite({ ...file, source: "ios" } as Item)).toBe("Your file");
   expect(rowSite({ ...file, url: "https://example.com/a.png", source: "ios" } as Item)).toBe("example.com");
+});
+
+test("a List mark is worded by Kind, and a mixed List says done", () => {
+  expect([markWord("link"), markWord("video"), markWord("image"), markWord("todo")]).toEqual(["read", "watched", "seen", "done"]);
+  expect(listMarkWord(["link", "pdf", "note"])).toBe("read");
+  expect(listMarkWord(["video", "video"])).toBe("watched");
+  expect(listMarkWord(["link", "video"])).toBe("done");
+  expect(listMarkWord([])).toBe("done");
 });

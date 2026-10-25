@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
-  addToList, createList, createTextItem, deleteList, getList, listLists, listsForItem, moveToBin, removeFromList, reorderList,
-  restoreFromBin, searchItems, updateEntry, updateList,
+  addToList, batchUpdate, createList, createTextItem, deleteList, editItem, getItem, getList, listLists, listsForItem, markEntries, moveToBin,
+  removeFromList, reorderList, restoreFromBin, searchItems, updateEntry, updateList,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -70,5 +70,56 @@ describe("lists", () => {
 
     await removeFromList(a, list.id, y.id);
     expect((await searchItems(a, { q: "reno", limit: 25 })).total).toBe(1);
+  });
+
+  test("a Todo's mark and its Done stay in step, in every List, for its owner only", async () => {
+    const { a, b } = await twoUsers();
+    const todo = await createTextItem(a, { kind: "todo", text: "Book the venue", source: "web" });
+    const read = await note(a, "Just a note");
+    const talk = await createList(a, { name: "Talk", createdBy: "user", items: [{ itemId: todo.id }, { itemId: read.id }] });
+    const trip = await createList(a, { name: "Trip", createdBy: "user", items: [{ itemId: todo.id }] });
+    const ticks = async (listId: string) => (await getList(a, listId))!.entries.map((e) => [e.item.title, e.ticked]);
+
+    // Marked in one List: Done, and marked in the other.
+    await updateEntry(a, talk.id, todo.id, { ticked: true }, "user");
+    expect((await getItem(a, todo.id))!.status).toBe("done");
+    expect(await ticks(trip.id)).toEqual([["Book the venue", true]]);
+    expect((await listLists(a)).find((l) => l.id === trip.id)!.tickedCount).toBe(1);
+    // A note marked read stays where it is.
+    await updateEntry(a, talk.id, read.id, { ticked: true }, "user");
+    expect((await getItem(a, read.id))!.status).toBe("inbox");
+
+    // Back to the Inbox elsewhere: unmarked everywhere. Done elsewhere: marked everywhere.
+    await editItem(a, todo.id, { status: "inbox" });
+    expect(await ticks(talk.id)).toEqual([["Book the venue", false], ["Just a note", true]]);
+    expect(await ticks(trip.id)).toEqual([["Book the venue", false]]);
+    await batchUpdate(a, [todo.id], { status: "done" });
+    expect(await ticks(trip.id)).toEqual([["Book the venue", true]]);
+    // Archiving a Done one leaves its marks.
+    await editItem(a, todo.id, { status: "archived" });
+    expect(await ticks(trip.id)).toEqual([["Book the venue", true]]);
+
+    // Unmarked in bulk: a Done one goes back to the Inbox.
+    await editItem(a, todo.id, { status: "done" });
+    expect(await markEntries(a, talk.id, [todo.id, read.id], false)).toBe(2);
+    expect((await getItem(a, todo.id))!.status).toBe("inbox");
+    expect(await ticks(trip.id)).toEqual([["Book the venue", false]]);
+
+    // A Done Todo arrives marked in a new List.
+    await editItem(a, todo.id, { status: "done" });
+    const later = await createList(a, { name: "Later on", createdBy: "user", items: [{ itemId: todo.id }] });
+    expect(await ticks(later.id)).toEqual([["Book the venue", true]]);
+
+    // Someone else can neither mark it nor move it, and their own same-named Todo is untouched.
+    const theirs = await createTextItem(b, { kind: "todo", text: "Book the venue", source: "web" });
+    const theirList = await createList(b, { name: "Talk", createdBy: "user", items: [{ itemId: theirs.id }] });
+    expect(await markEntries(b, talk.id, [todo.id], false)).toBeNull();
+    expect(await updateEntry(b, talk.id, todo.id, { ticked: false }, "user")).toBe(false);
+    await editItem(b, todo.id, { status: "inbox" });
+    await batchUpdate(b, [todo.id], { status: "inbox" });
+    expect((await getItem(a, todo.id))!.status).toBe("done");
+    expect(await markEntries(a, theirList.id, [theirs.id], true)).toBeNull();
+    expect((await getItem(b, theirs.id))!.status).toBe("inbox");
+    expect((await getList(b, theirList.id))!.entries[0]!.ticked).toBe(false);
   });
 });

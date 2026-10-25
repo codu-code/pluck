@@ -679,17 +679,16 @@
     "privateOnly": "Solo tu puoi vedere questa lista.",
     "copyAsk": "Copia per la tua IA: “Chiedi di questa lista”",
     "export": "Esporta questa lista",
-    "ticked": "{ticked} di {count} spuntati",
     "empty": "Ancora niente qui. Premi a su qualsiasi elemento dell'Inbox per aggiungerlo.",
     "rowsLabel": "{name}, in ordine",
     "drag": "Trascina per riordinare {title}. Oppure Shift+J e Shift+K.",
-    "tick": "Spunta {title}",
     "noteLabel": "Nota su {title} in questa lista",
     "byAi": "dall'IA",
     "note": "Nota",
     "takeOut": "Togli",
     "keys": {
-      "tick": "spunta",
+      "mark": "segna",
+      "select": "seleziona",
       "note": "nota",
       "reorder": "riordina",
       "add": "Aggiungi dall'Inbox con <kbd>a</kbd>, o prendi direttamente dall'estensione"
@@ -698,7 +697,37 @@
       "confirm": "Eliminare “{name}”? I suoi elementi restano nella tua libreria.",
       "yes": "Sì, elimina la lista",
       "action": "Elimina questa lista"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Letto",
+        "progress": "{ticked} di {count} letti",
+        "a11y": "Segna {title} come letto",
+        "bulk": "Segna come letto"
+      },
+      "watched": {
+        "label": "Guardato",
+        "progress": "{ticked} di {count} guardati",
+        "a11y": "Segna {title} come guardato",
+        "bulk": "Segna come guardato"
+      },
+      "seen": {
+        "label": "Visto",
+        "progress": "{ticked} di {count} visti",
+        "a11y": "Segna {title} come visto",
+        "bulk": "Segna come visto"
+      },
+      "done": {
+        "label": "Fatto",
+        "progress": "{ticked} di {count} fatti",
+        "a11y": "Segna {title} come fatto",
+        "bulk": "Segna come fatto"
+      }
+    },
+    "unmark": "Togli la spunta",
+    "toTop": "Sposta in cima",
+    "select": "Seleziona",
+    "takenOutMany": "{count, plural, one {# elemento tolto} other {# elementi tolti}} da “{name}”. {count, plural, one {Resta} other {Restano}} nella tua libreria."
   },
   "people": {
     "added": "Condivisa con {email}. Riceverà un'email con un link.",

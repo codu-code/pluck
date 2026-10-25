@@ -4,7 +4,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
-import { initials, tileIndex } from "@/lib/format";
+import { ItemRow, RowLead, RowNote } from "@/components/ItemRow";
 import { publicPage } from "@/lib/library";
 import { ReportLink } from "./ReportLink";
 import styles from "./public.module.css";
@@ -79,25 +79,8 @@ export default async function PublicListPage({ params }: Params) {
         </div>
         <ol className={styles.items}>
           {entries.map((e, i) => (
-            <li key={e.id} className={styles.item}>
-              <span className={styles.n}>{i + 1}</span>
-              {e.hasCover ? (
-                // why: covers come from a signed redirect on our own route; next/image would add a hop.
-                <img className={styles.cover} src={`/api/v1/p/cover/${list.id}/${e.id}`} alt="" width={112} height={72} loading="lazy" />
-              ) : (
-                <div className={styles.cover} style={{ background: `var(--tile-${tileIndex(e.siteName ?? e.title)})` }} aria-hidden="true">
-                  {e.url ? initials(e.siteName, e.url) : t("note")}
-                </div>
-              )}
-              <div className={styles.body}>
-                {e.url ? (
-                  <a href={e.url} className={styles.itemTitle} rel="noopener nofollow ugc" target="_blank">{e.title}</a>
-                ) : (
-                  <span className={styles.itemTitle}>{e.title}</span>
-                )}
-                {e.siteName && <span className={styles.meta}>{e.siteName}</span>}
-                {e.note && <p className={styles.note}>{e.note}</p>}
-              </div>
+            <li key={e.id}>
+              <ItemRow item={e} now={null} whenIso={null} href={e.url} cover={`/api/v1/p/cover/${list.id}/${e.id}`} lead={<RowLead n={i + 1} />} below={e.note ? <RowNote text={e.note} /> : undefined} />
             </li>
           ))}
         </ol>

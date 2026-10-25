@@ -679,17 +679,16 @@
     "privateOnly": "只有你能看到这个清单。",
     "copyAsk": "复制给你的 AI：“问问这个清单”",
     "export": "导出这个清单",
-    "ticked": "已勾选 {ticked}/{count}",
     "empty": "这里还没有东西。在收件箱的任意条目上按 a 就能添加。",
     "rowsLabel": "{name}，按顺序排列",
     "drag": "拖动以重新排列“{title}”。也可以用 Shift+J 和 Shift+K。",
-    "tick": "勾选“{title}”",
     "noteLabel": "这个清单中“{title}”的笔记",
     "byAi": "由 AI 添加",
     "note": "笔记",
     "takeOut": "移出",
     "keys": {
-      "tick": "勾选",
+      "mark": "标记",
+      "select": "选择",
       "note": "笔记",
       "reorder": "重新排列",
       "add": "在收件箱里按 <kbd>a</kbd> 添加，或者直接用扩展摘进来"
@@ -698,7 +697,37 @@
       "confirm": "删除“{name}”？里面的条目会留在你的资料库里。",
       "yes": "是的，删除清单",
       "action": "删除这个清单"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "已读",
+        "progress": "已读 {ticked}/{count}",
+        "a11y": "将“{title}”标为已读",
+        "bulk": "标为已读"
+      },
+      "watched": {
+        "label": "已观看",
+        "progress": "已观看 {ticked}/{count}",
+        "a11y": "将“{title}”标为已观看",
+        "bulk": "标为已观看"
+      },
+      "seen": {
+        "label": "已看过",
+        "progress": "已看过 {ticked}/{count}",
+        "a11y": "将“{title}”标为已看过",
+        "bulk": "标为已看过"
+      },
+      "done": {
+        "label": "已完成",
+        "progress": "已完成 {ticked}/{count}",
+        "a11y": "将“{title}”标为已完成",
+        "bulk": "标为已完成"
+      }
+    },
+    "unmark": "取消标记",
+    "toTop": "移到顶部",
+    "select": "选择",
+    "takenOutMany": "已将 {count, plural, other {# 条}}移出“{name}”。仍在你的资料库里。"
   },
   "people": {
     "added": "已与 {email} 共享。对方会收到一封带链接的邮件。",

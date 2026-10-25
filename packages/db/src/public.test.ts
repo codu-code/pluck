@@ -30,18 +30,33 @@ async function publishedList() {
 
 describe("the public projection", () => {
   test("serves exactly the pinned fields and nothing else", async () => {
-    expect(PUBLIC_ITEM_FIELDS).toEqual({ title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1 });
+    expect(PUBLIC_ITEM_FIELDS).toEqual({ title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1 });
     const { it, handle } = await publishedList();
     const page = (await publicList(handle, "best-mcp-reading"))!;
     expect(Object.keys(page).sort()).toEqual(["author", "entries", "list"]);
     expect(Object.keys(page.list).sort()).toEqual(["id", "itemCount", "name", "noindex", "purpose", "updatedAt"]);
     expect(Object.keys(page.author).sort()).toEqual(["handle", "name"]);
     expect(page.entries).toEqual([
-      { id: it.id, title: "How MCP auth works", siteName: "MCP", excerpt: "Tokens and scopes", url: "https://example.com/mcp", hasCover: true, note: "Read first." },
+      {
+        id: it.id, kind: "link", title: "How MCP auth works", siteName: "MCP", excerpt: "Tokens and scopes", url: "https://example.com/mcp", wordCount: 900,
+        hasCover: true, note: "Read first.",
+      },
     ]);
     const all = JSON.stringify(page);
     for (const leak of [SECRET, "private-tag-name", "a private item note", "ticked", "archived", "u/x/cover"]) expect(all).not.toContain(leak);
     expect(page.list.noindex).toBe(true); // a new list
+  });
+
+  test("marks are the owner's alone: marking changes nothing a visitor or a person it is shared with sees", async () => {
+    const { a, b, it, list, handle } = await publishedList();
+    await shareList(a, list.id, (await getMe(b))!.email);
+    const before = [await publicList(handle, "best-mcp-reading"), await sharedList(list.id, (await getMe(b))!.email)];
+    await new Promise((r) => setTimeout(r, 5)); // so a changed "updated" time would show
+    await updateEntry(a, list.id, it.id, { ticked: false }, "user");
+    await updateEntry(a, list.id, it.id, { ticked: true }, "user");
+    const after = [await publicList(handle, "best-mcp-reading"), await sharedList(list.id, (await getMe(b))!.email)];
+    expect(after).toEqual(before);
+    expect(JSON.stringify(after)).not.toMatch(/ticked|marked|"done"/);
   });
 
   test("private, killed, closed accounts and binned items are not served", async () => {
@@ -128,7 +143,7 @@ describe("lists shared with people (See only)", () => {
     expect(await shareList(b, list.id, "x@example.test")).toEqual({ ok: false, reason: "not_found" }); // only the owner shares
 
     const page = (await sharedList(list.id, bEmail))!;
-    expect(Object.keys(page.entries[0]!).sort()).toEqual(["excerpt", "hasCover", "id", "note", "siteName", "title", "url"]); // no tags, ticks or status
+    expect(Object.keys(page.entries[0]!).sort()).toEqual(["excerpt", "hasCover", "id", "kind", "note", "siteName", "title", "url", "wordCount"]); // no tags, ticks or status
     expect(page.entries[0]!.note).toBe("Book early.");
     expect(await listsSharedWith(bEmail)).toMatchObject([{ id: list.id, name: "Holiday ideas", owner: { handle: expect.any(String) } }]);
     expect(await sharedList(list.id, "someone-else@example.test")).toBeNull();

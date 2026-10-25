@@ -1,10 +1,11 @@
 "use client";
 
 import { BIN_DAYS, type ArchiveFilter, type Item, type ItemPage } from "@pluck/shared-schemas";
-import { KindGlyph } from "@pluck/ui";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { FoldHeader, useFolded } from "@/components/Fold";
+import { ItemRow } from "@/components/ItemRow";
 import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
 import { useFormat } from "@/components/useFormat";
@@ -29,7 +30,23 @@ function why(item: Item, bin: boolean, now: Date, expiryDays: number | null) {
   }
 }
 
-// The Archive board: everything archived, done or expired, with Restore. The bin is a view of its own.
+// When an item came here: the move for the Archive, the delete for the bin.
+const movedAt = (item: Item, bin: boolean) => (bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt);
+
+// Rows in runs of one month, newest first (the order they come in), keyed "2026-10".
+function byMonth(items: Item[], bin: boolean): { key: string; first: Date; items: Item[] }[] {
+  const groups: { key: string; first: Date; items: Item[] }[] = [];
+  for (const item of items) {
+    const d = new Date(movedAt(item, bin));
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const last = groups.at(-1);
+    if (last?.key === key) last.items.push(item);
+    else groups.push({ key, first: d, items: [item] });
+  }
+  return groups;
+}
+
+// The Archive board: everything archived, done or expired, with Restore, by month. The bin is a view of its own.
 export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; bin: boolean; expiryDays: number | null }) {
   const [rows, setRows] = useState(initial.items);
   const [nextCursor, setNextCursor] = useState(initial.nextCursor);
@@ -39,6 +56,8 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
   const t = useTranslations("app.archive");
   const app = useTranslations("app");
   const f = useFormat();
+  const format = useFormatter();
+  const month = (d: Date) => format.dateTime(d, { month: "long", year: "numeric", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }); // "October 2026", in the reader's language
   const reason = (item: Item) => {
     const [key, values] = why(item, bin, now ?? new Date(), expiryDays);
     return t(`why.${key}`, values);
@@ -84,17 +103,22 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
             ))}
           </div>
         )}
-        <div className={styles.rows} role="list" aria-label={bin ? t("bin") : t("rowsLabel")}>
-          {rows.map((item) => (
-            <div key={item.id} role="listitem" className={styles.row}>
-              <KindGlyph kind={item.kind} label={app(`kind.${item.kind}`)} />
-              <div className={styles.body}>
-                {bin ? <span className={styles.titleText}>{item.title}</span> : <Link href={`/items/${item.id}`} className={styles.titleText}>{item.title}</Link>}
-                <span className={styles.meta}>{f.site(item)} · {reason(item)}</span>
-              </div>
-              <span className={styles.when}>{now && f.when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
-              <button type="button" className={styles.restore} onClick={() => restore(item)}>{t("restore")}</button>
-            </div>
+        <div className={styles.rows} role="group" aria-label={bin ? t("bin") : t("rowsLabel")}>
+          {byMonth(rows, bin).map((g) => (
+            <Month key={g.key} id={`${bin ? "bin" : "archive"}-${g.key}`} label={month(g.first)} count={g.items.length}>
+              {g.items.map((item) => (
+                <div key={item.id} role="listitem">
+                  <ItemRow
+                    item={item}
+                    now={now}
+                    href={bin ? null : undefined}
+                    meta={`${f.site(item)} · ${reason(item)}`}
+                    whenIso={movedAt(item, bin)}
+                    trail={<button type="button" className={styles.restore} onClick={() => restore(item)}>{t("restore")}</button>}
+                  />
+                </div>
+              ))}
+            </Month>
           ))}
         </div>
         {rows.length === 0 && <p className={styles.none}>{bin ? t("binEmpty") : t("empty")}</p>}
@@ -105,5 +129,16 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
       </div>
       {toast}
     </>
+  );
+}
+
+// One month: its header folds the rows under it, remembered on this device.
+function Month({ id, label, count, children }: { id: string; label: string; count: number; children: ReactNode }) {
+  const [folded, toggle] = useFolded(id);
+  return (
+    <section>
+      <FoldHeader id={id} label={label} count={count} folded={folded} onToggle={toggle} />
+      <div id={id} role="list" aria-label={label} hidden={folded}>{children}</div>
+    </section>
   );
 }

@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "公開 · 共有",
     "privateShare": "非公開 · 共有",
-    "ticked": "{count}件中{ticked}件チェック済み",
     "noteByAi": "{note} · AIによる",
-    "tick": "{title}をチェック",
     "addA11y": "このリストに追加",
     "empty": {
       "title": "このリストにはまだ何もありません。",
       "body": "「追加」をタップしてPluckしたものを入れるか、お使いのAIに入れてもらいましょう。"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "読了",
+        "progress": "{count}件中{ticked}件読了",
+        "a11y": "{title}を読了にする",
+        "bulk": "読了にする"
+      },
+      "watched": {
+        "label": "視聴済み",
+        "progress": "{count}件中{ticked}件視聴済み",
+        "a11y": "{title}を視聴済みにする",
+        "bulk": "視聴済みにする"
+      },
+      "seen": {
+        "label": "閲覧済み",
+        "progress": "{count}件中{ticked}件閲覧済み",
+        "a11y": "{title}を閲覧済みにする",
+        "bulk": "閲覧済みにする"
+      },
+      "done": {
+        "label": "完了",
+        "progress": "{count}件中{ticked}件完了",
+        "a11y": "{title}を完了にする",
+        "bulk": "完了にする"
+      }
+    },
+    "unmark": "チェックを外す",
+    "toTop": "先頭へ",
+    "takeOut": "外す",
+    "takenOut": "{count, plural, other {#件}}を外しました。ライブラリには残っています。"
   },
   "shared": {
     "copied": "Pluckしました。自分用のコピーが「リスト」にあります。",

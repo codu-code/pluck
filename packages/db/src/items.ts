@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { BIN_DAYS, deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Kind, type ListItemsQuery, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
-import { recountList, recountListsOf } from "./lists.ts";
+import { markFollowsDone, recountList, recountListsOf } from "./lists.ts";
 import { recountTags } from "./tags.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
@@ -197,7 +197,15 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
     }
   }
   const doc = await col.findOneAndUpdate({ _id, userId: uid }, { $set: set }, { returnDocument: "after" });
+  if (doc && set.status) await marksFollow(uid, [doc._id], set.status);
   return doc && toItem(doc);
+}
+
+// A Todo or Thing's mark in its Lists follows its Done (see markFollowsDone).
+async function marksFollow(uid: ObjectId, ids: ObjectId[], status: Status): Promise<void> {
+  if (status === "archived") return;
+  const tasks = await (await items()).find({ _id: { $in: ids }, userId: uid, kind: { $in: ["todo", "thing"] } }, { projection: { _id: 1 } }).toArray();
+  await markFollowsDone(uid, tasks.map((t) => t._id), status === "done");
 }
 
 export type BatchEdit = { status?: Status; kind?: Kind; dueAt?: Date | null; note?: string | null };
@@ -224,6 +232,10 @@ export async function batchUpdate(userId: string, itemIds: string[], patch: Batc
   }
   const matched = await col.countDocuments(base);
   const res = await col.updateMany(filter, { $set: set });
+  if (patch.status) {
+    const moved = await col.find({ ...base, status: patch.status }, { projection: { _id: 1 } }).toArray();
+    await marksFollow(base.userId, moved.map((d) => d._id), patch.status);
+  }
   return { matched, updated: res.modifiedCount };
 }
 

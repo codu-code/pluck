@@ -1,5 +1,5 @@
 import {
-  addToList, createList, deleteList, getList, getListMeta, listLists, removeFromList, reorderList, updateEntry, updateList,
+  addToList, createList, deleteList, getList, getListMeta, listLists, markEntries, removeFromList, reorderList, updateEntry, updateList,
 } from "@pluck/db";
 import type { List, ListEntry } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
@@ -56,6 +56,13 @@ export async function editEntry(
   { by = "user" }: { by?: Actor } = {},
 ): Promise<void> {
   if (!(await updateEntry(userId, listId, itemId, edit, by))) throw new ApiError("not_found", "That item is not in this list.", 404);
+}
+
+// Bulk select: mark or unmark many rows at once. A Todo or Thing follows with its Done.
+export async function markMany(userId: string, listId: string, itemIds: string[], ticked: boolean): Promise<{ marked: number }> {
+  const marked = await markEntries(userId, listId, itemIds, ticked);
+  if (marked === null) throw missing();
+  return { marked };
 }
 
 export async function reorder(userId: string, listId: string, itemIds: string[]): Promise<void> {

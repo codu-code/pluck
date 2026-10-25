@@ -148,8 +148,10 @@ export async function addToList(
   const uid = oid(userId);
   const _id = oid(listId);
   if (!(await (await lists()).findOne({ _id, userId: uid }))) return null;
-  const owned = (await (await items()).find({ _id: { $in: itemIds.map(oid) }, userId: uid, deletedAt: null }, { projection: { _id: 1 } }).toArray()).map((d) => d._id);
-  const ordered = itemIds.map(oid).filter((id) => owned.some((o) => o.equals(id)));
+  const docs = await (await items()).find({ _id: { $in: itemIds.map(oid) }, userId: uid, deletedAt: null }, { projection: { _id: 1, kind: 1, status: 1 } }).toArray();
+  const ordered = itemIds.map(oid).filter((id) => docs.some((o) => o._id.equals(id)));
+  // A Todo or Thing that is already Done arrives marked.
+  const done = new Set(docs.filter((d) => isTask(d.kind) && d.status === "done").map((d) => d._id.toHexString()));
   if (!ordered.length) return 0;
   const col = await listRows();
   const last = await col.find({ listId: _id }).sort({ position: -1 }).limit(1).next();
@@ -161,7 +163,8 @@ export async function addToList(
       { userId: uid, itemId, listId: _id },
       {
         $setOnInsert: {
-          position: pos, note: note?.trim() || null, noteBy: note?.trim() ? by : null, ticked: false, tickedAt: null, addedBy: by, addedAt: now,
+          position: pos, note: note?.trim() || null, noteBy: note?.trim() ? by : null, ticked: done.has(itemId.toHexString()),
+          tickedAt: done.has(itemId.toHexString()) ? now : null, addedBy: by, addedAt: now,
         },
       },
       { upsert: true },
@@ -183,7 +186,7 @@ export async function removeFromList(userId: string, listId: string, itemId: str
   const _id = oid(listId);
   const res = await (await listRows()).deleteOne({ listId: _id, userId: uid, itemId: oid(itemId) });
   if (!res.deletedCount) return false;
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date() } });
+  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
   await recountList(_id);
   await syncListNames(uid, [oid(itemId)]);
   return true;
@@ -206,10 +209,59 @@ export async function updateEntry(userId: string, listId: string, itemId: string
   if (edit.position !== undefined) set.position = edit.position;
   const res = await (await listRows()).updateOne({ listId: _id, userId: uid, itemId: oid(itemId) }, { $set: set });
   if (!res.matchedCount) return false;
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date() } });
-  if (edit.ticked !== undefined) await recountList(_id);
+  // A mark is the owner's alone: activity, but not an update anyone else sees ("updated 10 min ago").
+  const seen = edit.note !== undefined || edit.position !== undefined;
+  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), ...(seen ? { updatedAt: new Date() } : {}) } });
+  if (edit.ticked !== undefined) {
+    await recountList(_id);
+    await doneFollowsMark(uid, [oid(itemId)], edit.ticked);
+  }
   if (edit.position !== undefined) await renumberIfCrowded(_id);
   return true;
+}
+
+// Marks or unmarks many entries at once (bulk select). Null when the list is not theirs.
+export async function markEntries(userId: string, listId: string, itemIds: string[], ticked: boolean): Promise<number | null> {
+  const uid = oid(userId);
+  const _id = oid(listId);
+  if (!(await (await lists()).findOne({ _id, userId: uid }, { projection: { _id: 1 } }))) return null;
+  const ids = itemIds.map(oid);
+  const now = new Date();
+  const res = await (await listRows()).updateMany({ listId: _id, userId: uid, itemId: { $in: ids } }, { $set: { ticked, tickedAt: ticked ? now : null } });
+  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: now } });
+  await recountList(_id);
+  await doneFollowsMark(uid, ids, ticked);
+  return res.matchedCount;
+}
+
+const isTask = (kind: string) => kind === "todo" || kind === "thing";
+
+// A Todo or Thing marked in a List is Done; unmarked, a Done one goes back to the Inbox. Its other Lists follow.
+async function doneFollowsMark(uid: ObjectId, itemIds: ObjectId[], ticked: boolean): Promise<void> {
+  const col = await items();
+  const tasks = await col
+    .find({ _id: { $in: itemIds }, userId: uid, kind: { $in: ["todo", "thing"] }, status: ticked ? { $ne: "done" } : "done" }, { projection: { _id: 1 } })
+    .toArray();
+  if (!tasks.length) return;
+  const ids = tasks.map((t) => t._id);
+  const now = new Date();
+  await col.updateMany(
+    { _id: { $in: ids }, userId: uid },
+    { $set: { status: ticked ? "done" : "inbox", statusChangedAt: now, archivedReason: null, updatedAt: now, lastTouchedAt: now } },
+  );
+  await markFollowsDone(uid, ids, ticked);
+}
+
+// The other way: a Todo or Thing set to Done anywhere is marked in every List it is in, and unmarked when it goes
+// back to the Inbox or Later. Archiving leaves the marks as they are.
+export async function markFollowsDone(uid: ObjectId, itemIds: ObjectId[], done: boolean): Promise<void> {
+  if (!itemIds.length) return;
+  const col = await listRows();
+  const filter = { userId: uid, itemId: { $in: itemIds }, ticked: !done };
+  const listIds = await col.distinct("listId", filter);
+  if (!listIds.length) return;
+  await col.updateMany(filter, { $set: { ticked: done, tickedAt: done ? new Date() : null } });
+  for (const id of listIds) await recountList(id);
 }
 
 // Floats between neighbours make a drag one write; when two get too close, the list is renumbered.
@@ -229,7 +281,7 @@ export async function reorderList(userId: string, listId: string, itemIds: strin
   const have = new Set(rows.map((r) => r.itemId.toHexString()));
   if (have.size !== itemIds.length || itemIds.some((id) => !have.has(id))) return false;
   await col.bulkWrite(itemIds.map((id, i) => ({ updateOne: { filter: { listId: _id, itemId: oid(id) }, update: { $set: { position: (i + 1) * GAP } } } })));
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date() } });
+  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
   return true;
 }
 

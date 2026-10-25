@@ -11,12 +11,6 @@
 .pluck:hover { color: var(--on-brand); }
 .tick { width: 20px; height: 20px; border-radius: 10px; background: var(--highlight); display: flex; align-items: center; justify-content: center; }
 .items { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-.item { display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--line); }
-.n { width: 28px; flex: none; font-size: 20px; line-height: 28px; font-weight: 600; color: var(--ink2); }
-.cover { width: 112px; height: 72px; flex: none; border-radius: 6px; object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: light-dark(#394034, #C5CCBD); }
-.body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
-.itemTitle { font-size: 18px; line-height: 24px; font-weight: 600; text-decoration: none; }
-.note { margin: 0; font-family: var(--font-reader); font-size: 17px; line-height: 26px; color: light-dark(#394034, #C5CCBD); }
 .footCard { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 24px; border-radius: 12px; background: var(--rail); }
 .footText { display: flex; flex-direction: column; gap: 4px; }
 .footText b { font-weight: 600; }
@@ -34,7 +28,5 @@
   .main { padding: 40px 16px 48px; }
   .header { padding: 16px 16px 0; }
   .title { font-size: 36px; line-height: 40px; }
-  .cover { width: 72px; height: 48px; }
-  .item { gap: 12px; }
 }
 .leave { padding: 0; border: 0; background: none; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
