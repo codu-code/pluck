@@ -5,7 +5,7 @@
   "signedOutBody": "Melde dich einmal an. Danach erledigt das Teilen-Menü den Rest.",
   "openToSignIn": "Pluck öffnen und anmelden",
   "queuedTitle": "Gepflückt. Wird synchronisiert.",
-  "queuedBody": "Es ist auf deinem iPhone. Sobald du wieder online bist, geht es hoch.",
+  "queuedBody": "Es ist auf deinem iPhone und wird hochgeladen, sobald du wieder online bist.",
   "done": "Fertig",
   "failedTitle": "Das ließ sich nicht pflücken.",
   "nothingToKeep": "Hier gibt es nichts, was Pluck behalten kann.",

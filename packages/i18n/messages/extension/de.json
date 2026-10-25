@@ -55,7 +55,7 @@
       "title": "Gepflückt",
       "undo": "Rückgängig",
       "tips": {
-        "opening": "Schon das Öffnen behält die Seite. Das ist der ganze Trick.",
+        "opening": "Schon das Öffnen pflückt die Seite. Das ist der ganze Trick.",
         "shortcut": "Alt+Shift+P geht auch ohne Klick.",
         "rightClick": "Rechtsklick auf einen Link oder ein Bild pflückt nur das."
       },

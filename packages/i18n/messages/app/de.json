@@ -102,7 +102,7 @@
     "copiedForAi": "Kopiert. Füg es in deine KI ein.",
     "cancel": "Abbrechen",
     "copy": "Kopieren",
-    "save": "Sichern",
+    "save": "Speichern",
     "rename": "Umbenennen",
     "merge": "Zusammenführen",
     "delete": "Löschen",
@@ -141,7 +141,7 @@
       "inbox": "Eingang",
       "waiting": "{count} warten",
       "one": "Der Artikel aus dem Zug",
-      "oneNote": "Wartet hier, geht hoch, sobald du online bist",
+      "oneNote": "Wartet hier, wird hochgeladen, sobald du online bist",
       "two": "Induktionskochfeld kaufen",
       "twoNote": "Aufgabe, wartet auch hier",
       "three": "Postgres-Indizes in 40 Minuten",
@@ -187,7 +187,7 @@
     "aiLede": "Wir schicken dir einen Link per E-Mail. Sobald du drin bist, legst du fest, was dein KI-Tool darf.",
     "title1": "Ein Link.",
     "title2": "Kein Passwort",
-    "lede": "Gib deine E-Mail ein, und wir schicken dir einen Link. Er meldet dich an, oder legt deine Bibliothek an, wenn du neu bist.",
+    "lede": "Gib deine E-Mail ein, und wir schicken dir einen Link. Er meldet dich an oder legt deine Bibliothek an, wenn du neu bist.",
     "email": "E-Mail",
     "emailPlaceholder": "du@beispiel.de",
     "password": "Passwort",
@@ -206,7 +206,7 @@
       "lede": "Vielleicht wurde unterwegs ein Teil abgeschnitten. Schick dir einen neuen.",
       "action": "Neuen Link senden"
     },
-    "title1": "Ein Tippen",
+    "title1": "Einmal tippen",
     "title2": "und du bist drin",
     "lede": "Dieser Link funktioniert einmal, 10 Minuten ab dem Versand.",
     "action": "Bei Pluck anmelden"
@@ -248,7 +248,7 @@
       "delete": "Einträge löschen. Die meisten KI-Tools brauchen das nie.",
       "account": "Dein Konto verwalten: verbundene KI-Tools, Exporte und das Löschen von allem. Nur Plucks eigene Apps fragen danach."
     },
-    "signedInAs": "Angemeldet als {email}. Es kann nie etwas löschen, außer das steht oben, und du kannst es in den Einstellungen trennen."
+    "signedInAs": "Angemeldet als {email}. Löschen kann es nur, wenn das oben steht, und du kannst es jederzeit in den Einstellungen trennen."
   },
   "digest": {
     "open": "Pluck öffnen",
@@ -326,7 +326,7 @@
   },
   "extensionConnected": {
     "title": "Verbunden",
-    "lede": "Ab jetzt kannst du aus deinem Browser pflücken. Schließ diesen Tab, von hier an ist jede Seite nur einen Tastendruck entfernt.",
+    "lede": "Du kannst jetzt aus deinem Browser pflücken. Schließ diesen Tab. Ab hier ist jede Seite nur einen Tastendruck entfernt.",
     "page": "Pflückt die Seite, auf der du bist. Alt ist auf dem Mac die Wahltaste.",
     "selection": "Pflückt deine Auswahl, behalten als Markierung."
   },
@@ -503,10 +503,10 @@
   },
   "topBar": {
     "queued": "Gepflückt. Wird synchronisiert, sobald du wieder online bist.",
-    "rejected": "{count} ließen sich nicht pflücken: {reason}",
+    "rejected": "{count} nicht gepflückt: {reason}",
     "failed": "Das hat nicht geklappt.",
     "label": "Pluck",
-    "placeholder": "Einen Link oder viele einfügen, oder eine Notiz tippen",
+    "placeholder": "Einen Link oder viele einfügen oder eine Notiz tippen",
     "submit": "Pflücken",
     "search": "Suchen",
     "links": "{count} Links. Enter pflückt sie alle.",
@@ -526,7 +526,7 @@
         "body": "Drück l bei einem Eintrag im Eingang, um ihn hier zu behalten."
       }
     },
-    "deleted": "Gelöscht. Er bleibt 30 Tage im Papierkorb.",
+    "deleted": "Gelöscht. Bleibt 30 Tage im Papierkorb.",
     "moveFailed": "Das hat nicht geklappt. Nichts wurde verschoben.",
     "showOnly": "Nur {name} anzeigen",
     "addedTo": "Zu „{name}“ hinzugefügt.",
@@ -542,7 +542,7 @@
     "bulk": {
       "label": "Sammelaktionen",
       "selected": "{count} ausgewählt",
-      "addToList": "Zu Liste",
+      "addToList": "Zur Liste",
       "clear": "Aufheben"
     },
     "actions": {
@@ -570,7 +570,7 @@
       "later": "Später",
       "archive": "Archiv",
       "tag": "Tag",
-      "list": "zu Liste",
+      "list": "zur Liste",
       "select": "auswählen",
       "help": "alle Kürzel"
     },
@@ -661,7 +661,7 @@
     "foot": "Einträge in einer Liste laufen nie ab. Eine Liste ist ein Plan."
   },
   "list": {
-    "takenOut": "Aus „{name}“ genommen. Er ist weiter in deiner Bibliothek.",
+    "takenOut": "Aus „{name}“ genommen. Der Eintrag bleibt in deiner Bibliothek.",
     "nowPublic": "Öffentlich. Jeder mit dem Link kann sie sehen.",
     "nowPrivate": "Wieder privat. Der Link funktioniert ab sofort nicht mehr.",
     "askPrompt": "Lies meine Pluck-Liste „{name}“ und sag mir, was sie abdeckt, was fehlt und in welcher Reihenfolge ich sie am besten lese.",
@@ -691,7 +691,7 @@
       "tick": "abhaken",
       "note": "Notiz",
       "reorder": "verschieben",
-      "add": "Aus dem Eingang mit <kbd>a</kbd> hinzufügen, oder direkt aus der Erweiterung hineinpflücken"
+      "add": "Aus dem Eingang mit <kbd>a</kbd> hinzufügen oder direkt aus der Erweiterung hineinpflücken"
     },
     "delete": {
       "confirm": "„{name}“ löschen? Ihre Einträge bleiben in deiner Bibliothek.",
@@ -707,8 +707,8 @@
     "share": "Teilen",
     "label": "Wer sie sehen kann",
     "stop": "Teilen mit {email} beenden",
-    "some": "Sie können sie sehen, ändern kannst sie nur du.",
-    "none": "Sie sehen sie, nie deine Tags oder Häkchen. Ändern kannst sie nur du."
+    "some": "Sie können sie sehen, ändern kannst nur du sie.",
+    "none": "Sie sehen sie, nie deine Tags oder Häkchen. Ändern kannst nur du sie."
   },
   "admin": {
     "title": "Meldungen",
@@ -733,31 +733,31 @@
       "title": "Diese Seite ließ sich nicht lesen.",
       "retry": "Noch mal",
       "retrying": "Neuer Versuch",
-      "wayback": "Kopie bei der Wayback Machine versuchen",
+      "wayback": "Wayback-Kopie versuchen",
       "loginTitle": "Hinter einem Login?",
-      "loginBody": "Pflück sie mit der Erweiterung, um die Seite zu behalten. Sie sendet, was dein Browser ohnehin sieht.",
+      "loginBody": "Pflück sie mit der Erweiterung, dann bleibt die Seite erhalten. Die Erweiterung sendet, was dein Browser ohnehin sieht.",
       "extension": "Erweiterung holen",
       "keptTitle": "Gehört weiter dir",
-      "keptBody": "Der Link, deine Notiz und deine Tags sind behalten. Die Suche findet den Eintrag über Titel und Notiz."
+      "keptBody": "Link, Notiz und Tags bleiben erhalten. Die Suche findet den Eintrag über Titel und Notiz."
     }
   },
   "note": {
     "untitled": "Notiz ohne Titel",
     "state": {
-      "saved": "Gesichert",
-      "saving": "Wird gesichert",
-      "error": "Nicht gesichert. Neuer Versuch, sobald du tippst."
+      "saved": "Gespeichert",
+      "saving": "Wird gespeichert",
+      "error": "Nicht gespeichert. Neuer Versuch, sobald du tippst."
     },
     "meta": "{kind} · {plucked} · bearbeitet {edited}",
     "title": "Titel",
     "body": "Text",
-    "help": "Die erste Zeile ist der Titel. Reiner Text. Wird beim Tippen gesichert.",
+    "help": "Die erste Zeile ist der Titel. Reiner Text. Wird beim Tippen gespeichert.",
     "about": "{kind, select, note {Zu dieser Notiz} todo {Zu dieser Aufgabe} other {Zu diesem Ding}}",
     "kind": "Art",
     "kindHint": {
       "note": "Mach eine Aufgabe daraus, um ein Fälligkeitsdatum und ein Häkchen hinzuzufügen.",
       "todo": "Eine Aufgabe kann ein Fälligkeitsdatum haben. Erledigt nimmt sie aus dem Eingang.",
-      "thing": "Ein Ding ist etwas, das du besorgen willst. In Listen kommt es zusammen."
+      "thing": "Ein Ding ist etwas, das du besorgen willst. In Listen kommen Dinge zusammen."
     },
     "due": "Fällig",
     "source": "Quelle: {via}",
@@ -798,13 +798,13 @@
     "profile": {
       "label": "Profil",
       "name": "Name",
-      "nameSaved": "Name gesichert.",
+      "nameSaved": "Name gespeichert.",
       "handle": "Handle, für öffentliche Listen",
-      "handleSaved": "Handle gesichert.",
+      "handleSaved": "Handle gespeichert.",
       "makeUp": "Einen ausdenken",
       "move": "{count, plural, =0 {Noch keine öffentlichen Listen, also ändern sich keine Links.} one {Deine öffentliche Liste zieht nach {host}/@{handle}/… um, und Links zur alten Adresse funktionieren nicht mehr. Listen, die du per E-Mail mit Leuten geteilt hast, sind nicht betroffen.} other {Deine # öffentlichen Listen ziehen nach {host}/@{handle}/… um, und Links zur alten Adresse funktionieren nicht mehr. Listen, die du per E-Mail mit Leuten geteilt hast, sind nicht betroffen.}} Danach kannst du ihn erst in einem Monat wieder ändern.",
       "invalid": "3 bis 24 Kleinbuchstaben, Ziffern oder Bindestriche.",
-      "save": "@{handle} sichern",
+      "save": "@{handle} speichern",
       "keep": "@{handle} behalten",
       "hintLocked": "Erscheint nur auf Listen, die du öffentlich machst. Du kannst ihn einmal im Monat ändern.",
       "hint": "Erscheint nur auf Listen, die du öffentlich machst."
@@ -825,20 +825,20 @@
       "notConnected": "Noch nicht verbunden",
       "readsWrites": "liest und ordnet",
       "reads": "liest",
-      "disconnected": "{name} getrennt. Es erreicht deine Bibliothek jetzt nicht mehr.",
+      "disconnected": "{name} getrennt. Kein Zugriff mehr auf deine Bibliothek.",
       "disconnect": "Trennen"
     },
     "expiry": {
       "digestOff": "Keine Wochenmail.",
-      "digestSaved": "Tag der Wochenmail gesichert.",
-      "saved": "Nach {days} Tagen ohne Berührung geht es ins Archiv. Nichts wird gelöscht.",
+      "digestSaved": "Tag der Wochenmail gespeichert.",
+      "saved": "Was {days} Tage unberührt bleibt, kommt ins Archiv. Nichts wird gelöscht.",
       "never": "Jetzt läuft nichts mehr ab.",
       "sent": "Gesendet. Schau in deine E-Mails.",
       "archived": "{count, plural, one {# Eintrag} other {# Einträge}} ins Archiv verschoben. Nichts wird gelöscht.",
       "title": "Ablauf und Archiv",
       "lede": "Was du nicht anfasst, wandert von selbst ins Archiv. Gelöscht wird es nie. Die Suche findet es weiterhin, und Wiederherstellen holt es zurück. Einträge in einer Liste laufen nie ab.",
       "after": "Ins Archiv nach",
-      "days": "{days} Tagen ohne Berührung",
+      "days": "{days} Tagen unberührt",
       "neverOption": "Nie",
       "scope": "Gilt für",
       "scopeInboxLater": "Eingang und Später",
@@ -850,7 +850,7 @@
       "sendNow": "Jetzt eine senden",
       "clean": {
         "title": "Neu anfangen",
-        "body": "Verschiebe jetzt sofort alles {scope, select, inbox {im Eingang} other {in Eingang und Später}}, was älter als {days} Tage ist, ins Archiv. {count, plural, one {# Eintrag} other {# Einträge}}. Listen bleiben, wie sie sind.",
+        "body": "Verschiebe sofort alles {scope, select, inbox {im Eingang} other {in Eingang und Später}}, was älter als {days} Tage ist, ins Archiv. {count, plural, one {# Eintrag} other {# Einträge}}. Listen bleiben, wie sie sind.",
         "confirm": "{count} ins Archiv verschieben? Nichts wird gelöscht.",
         "yes": "Ja, archivieren",
         "action": "Alles archivieren. Ganz im Ernst."

@@ -22,7 +22,7 @@
     "subject": "Danke, dass du Pluck ausprobierst",
     "hi": "Hallo,",
     "intro": "ich bin Niall und mache Pluck. Danke, dass du dich angemeldet hast. Ich wollte dir selbst kurz Hallo sagen.",
-    "plucked": "Wie ich sehe, hast du schon die ersten Sachen gepflückt. Dann kennst du das Wichtigste schon: ein Tippen, egal wo du gerade bist, und Pluck behält die Seite für dich.",
+    "plucked": "Wie ich sehe, hast du schon die ersten Sachen gepflückt. Dann kennst du das Wichtigste: ein Fingertipp, egal wo du gerade bist, und Pluck behält die Seite für dich.",
     "fresh": "Am schnellsten kommst du rein, wenn du eine Sache pflückst, die du diese Woche lesen wolltest: Füg ihren Link oben in deinem Eingang ein, und Pluck behält die Seite für dich.",
     "connect": "Etwas, das die meisten erst spät entdecken: Deine KI kann alles lesen, was du pflückst. Verbinde Pluck in etwa dreißig Sekunden mit Claude, ChatGPT oder Cursor und frag, was du diese Woche gepflückt hast: {url}",
     "expiry": "Und wenn du mal eine Weile nicht reinschaust, geht nichts verloren. Einträge, die du {days, plural, =1 {# Tag} other {# Tage}} nicht angefasst hast, wandern ins Archiv, und nichts wird gelöscht.",
@@ -72,10 +72,10 @@
       "text": "Lieber mit deiner KI? Sag „Mach meinen Wochenrückblick“. Dieselbe Liste, eine Entscheidung nach der anderen."
     },
     "footer": {
-      "note": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein Modell.",
+      "note": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein KI-Modell.",
       "changeDay": "Tag ändern",
       "stop": "Abbestellen",
-      "text": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein Modell. Tag ändern: {settings} . Abbestellen: {stop}"
+      "text": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein KI-Modell. Tag ändern: {settings} . Abbestellen: {stop}"
     }
   }
 }

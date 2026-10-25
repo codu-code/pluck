@@ -29,7 +29,7 @@
     "checkEmail": "Schau in deine E-Mails.",
     "took": "Das waren {ms, number} ms.",
     "sent": "Wir haben einen Link an <b>{email}</b> geschickt. Öffne ihn in diesem Browser, dann landet dein Gepflücktes in deinem Eingang.",
-    "keepNote": "Gib deine E-Mail an, um es zu behalten. Ob neu oder zurück, der Link meldet dich an.",
+    "keepNote": "Gib deine E-Mail an, um es zu behalten. Ob neu oder schon dabei: Der Link meldet dich an.",
     "emailLabel": "Deine E-Mail, um dein Gepflücktes zu behalten",
     "emailPlaceholder": "du@beispiel.de",
     "sending": "Wird gesendet",
@@ -41,11 +41,11 @@
   "home": {
     "meta": {
       "title": "Pluck · Pflück es. Sortier es später.",
-      "description": "Pflück alles mit einem Tippen. Sortier es später, von Hand oder mit deiner KI. Kostenlos und Open Source."
+      "description": "Pflück alles mit einem Fingertipp. Sortier es später, von Hand oder mit deiner KI. Kostenlos und Open Source."
     },
     "hero": {
       "title": "Pflück es<dot>.</dot>",
-      "line1": "Pflück alles mit einem Tippen.",
+      "line1": "Pflück alles mit einem Fingertipp.",
       "line2": "Sortier es später, von Hand oder mit deiner KI.",
       "line3": "Oder lass es. Wir nerven nicht."
     },
@@ -88,9 +88,9 @@
       "small": "Ein Eingang für alles. Pluck behält die Seite, nicht nur den Link, also ist sie noch da, wenn die Website es nicht mehr ist."
     },
     "stats": {
-      "tapNumber": "1 Tippen",
+      "tapNumber": "1 Tipp",
       "tap": "Aus dem Teilen-Menü des iPhones, ohne eine App zu öffnen. Aus Chrome, per E-Mail oder im Chat mit deiner KI. „Gepflückt“ in unter 300 ms. Jedes Mal.",
-      "nagsNumber": "0 Mahnungen",
+      "nagsNumber": "0 Druck",
       "nags": "Keine Streaks, keine Abzeichen, kein schlechtes Gewissen. Nichts wird hinter deinem Rücken getaggt. Was du nie anfasst, wandert nach 30 Tagen ins Archiv (die Zahl bestimmst du), außer es steht auf einer Liste. Nichts wird gelöscht.",
       "secondsNumber": "30 s",
       "seconds": "Um die KI anzuschließen, die du schon nutzt. Claude, ChatGPT, Cursor, alles, was MCP spricht. Lass sie aufräumen, gruppieren oder aus deinem Gepflückten Ideen machen. Sie arbeitet, während du zusiehst, und löscht nie."
@@ -158,9 +158,9 @@
     "chrome": {
       "meta": {
         "title": "Pluck für Chrome · Pluck",
-        "description": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store. Jeden Tag ist es so weit."
+        "description": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store. Es kann jeden Tag so weit sein."
       },
-      "para1": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store, irgendwo hinter ein paar Tausend Gutschein-Findern. Jeden Tag ist es so weit.",
+      "para1": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store, irgendwo hinter ein paar Tausend Gutschein-Findern. Es kann jeden Tag so weit sein.",
       "para2": "Bis dahin funktioniert Pluck im Web: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
     },
     "iphone": {
@@ -225,7 +225,7 @@
       },
       "dot": {
         "q": "Warum ist ein Punkt auf dem Pluck-Button?",
-        "a": "Du hast etwas ohne Verbindung gepflückt. Es wartet auf deinem Computer und geht von selbst hoch, sobald du wieder online bist. Dann verschwindet auch der Punkt."
+        "a": "Du hast etwas ohne Verbindung gepflückt. Es wartet auf deinem Computer und wird von selbst hochgeladen, sobald du wieder online bist. Dann verschwindet auch der Punkt."
       },
       "login": {
         "q": "Eine Seite hinter meinem Login kam leer an.",
@@ -244,7 +244,7 @@
       },
       "offline": {
         "q": "Ich habe offline etwas gepflückt. Wo ist es hin?",
-        "a": "Es wartet auf deinem iPhone und geht hoch, wenn du Pluck das nächste Mal mit Verbindung öffnest."
+        "a": "Es wartet auf deinem iPhone und wird hochgeladen, wenn du Pluck das nächste Mal mit Verbindung öffnest."
       },
       "server": {
         "q": "Kann die App meinen eigenen Server nutzen?",
@@ -401,7 +401,7 @@
       "purpose": "Den Zweck einer Liste umschreiben.",
       "public": "Eine Liste öffentlich machen. Das kannst nur du, in der Liste in Pluck."
     },
-    "neverNote": "Alles, was sie hinzufügt, trägt die Markierung „von KI“. In den Einstellungen entfernst du eine Woche davon mit einem Tippen.",
+    "neverNote": "Alles, was sie hinzufügt, trägt die Markierung „von KI“. In den Einstellungen entfernst du eine Woche davon mit einem Fingertipp.",
     "closing": "Frag deine KI<mark>.</mark>",
     "button": "Pluck holen, dann verbinden"
   },
@@ -446,11 +446,11 @@
       },
       "cookies": {
         "title": "Cookies und Analyse",
-        "body": "Zwei Cookies sind immer aktiv, weil Pluck sie braucht: Eines hält dich angemeldet, und eines bewahrt einen Tag lang auf, was du auf der Startseite einfügst, bis du dich registrierst. Ein drittes ist deine Entscheidung, und wir fragen, bevor es gesetzt wird. Sagst du „Klar, ich bin dabei“, nutzen wir PostHog in der EU, um zu sehen, wie Pluck genutzt wird: welche Seiten du öffnest, was du anklickst und, sobald du angemeldet bist, welches Konto es war. Es sieht nie, was du pflückst: Button- und Linktexte, Seitentitel und Suchbegriffe werden entfernt, bevor irgendetwas deinen Browser verlässt. Sagst du „Finger weg“, passiert nichts davon. So oder so senden wir, wenn etwas kaputtgeht, den Fehler und wo er aufgetreten ist, ohne etwas, das verrät, wer du bist, damit wir ihn beheben können. Du kannst deine Meinung jederzeit ändern, über Cookies unten auf der Website oder in den Einstellungen. Die iPhone-App stellt dieselbe Frage einmal und hat denselben Schalter in ihren Einstellungen."
+        "body": "Zwei Cookies sind immer aktiv, weil Pluck sie braucht: Eines hält dich angemeldet, und eines bewahrt einen Tag lang auf, was du auf der Startseite einfügst, bis du dich registrierst. Ein drittes ist deine Entscheidung, und wir fragen, bevor es gesetzt wird. Sagst du „Klar, ich bin dabei“, nutzen wir PostHog in der EU, um zu sehen, wie Pluck genutzt wird: welche Seiten du öffnest, was du anklickst und, sobald du angemeldet bist, welches Konto es war. PostHog sieht nie, was du pflückst: Button- und Linktexte, Seitentitel und Suchbegriffe werden entfernt, bevor irgendetwas deinen Browser verlässt. Sagst du „Finger weg“, passiert nichts davon. So oder so senden wir, wenn etwas kaputtgeht, den Fehler und wo er aufgetreten ist, ohne etwas, das verrät, wer du bist, damit wir ihn beheben können. Du kannst deine Meinung jederzeit ändern, über Cookies unten auf der Website oder in den Einstellungen. Die iPhone-App stellt dieselbe Frage einmal und hat denselben Schalter in ihren Einstellungen."
       },
       "where": {
         "title": "Wo die Daten liegen",
-        "body": "Unser gehosteter Dienst läuft auf Vercel, MongoDB Atlas und AWS, alles in Irland, und für die oben genannte Analyse und Fehlerberichte auf PostHog in der EU. Wenn du selbst hostest, berührt nichts unsere Server."
+        "body": "Unser gehosteter Dienst läuft auf Vercel, MongoDB Atlas und AWS, alles in Irland, und für die oben genannte Analyse und die Fehlerberichte auf PostHog in der EU. Wenn du selbst hostest, berührt überhaupt nichts unsere Server."
       },
       "export": {
         "title": "Export und Löschen",
@@ -458,7 +458,7 @@
       },
       "rights": {
         "title": "Deine Rechte",
-        "body": "Du kannst eine Kopie deiner Daten verlangen, sie berichtigen oder löschen lassen. Export und Löschen in den Einstellungen erledigen das, ohne dass du uns fragen musst. Wenn du etwas anderes brauchst, schreib uns eine E-Mail. Du kannst dich auch bei der Data Protection Commission in Irland beschweren."
+        "body": "Du kannst eine Kopie deiner Daten verlangen, sie berichtigen oder löschen lassen. Export und Löschen in den Einstellungen erledigen das, ohne dass du uns fragen musst. Wenn du etwas anderes brauchst, schreib uns eine E-Mail. Du kannst dich auch bei der irischen Datenschutzbehörde, der Data Protection Commission, beschweren."
       }
     },
     "box": {
@@ -488,7 +488,7 @@
       },
       "publicLists": {
         "title": "Öffentliche Listen",
-        "body": "Wenn du eine Liste öffentlich machst, veröffentlichst du sie. Du bestätigst, dass du das Recht hast, Titel, Cover und Website jedes Eintrags sowie deine eigene Notiz zu teilen. Veröffentliche keine Listen, die illegale Inhalte enthalten oder auf sie verweisen, ebenso wenig Material, das Minderjährige sexualisiert, Drohungen, Belästigung, Doxing, Spam, Schadsoftware oder Inhalte, die das Urheber- oder Markenrecht anderer verletzen. Wir können eine öffentliche Liste, die gegen diese Regeln verstößt, entfernen und Konten schließen, die das wiederholt tun. Das Entfernen einer Liste löscht sie nicht aus deiner Bibliothek."
+        "body": "Wenn du eine Liste öffentlich machst, veröffentlichst du sie. Du bestätigst, dass du das Recht hast, Titel, Cover und Website jedes Eintrags sowie deine eigene Notiz zu teilen. Veröffentliche keine Listen, die Folgendes enthalten oder darauf verweisen: illegale Inhalte, Material, das Minderjährige sexualisiert, Drohungen, Belästigung, Doxing, Spam, Schadsoftware oder Inhalte, die Urheber- oder Markenrechte anderer verletzen. Wir können eine öffentliche Liste, die gegen diese Regeln verstößt, entfernen und Konten schließen, die das wiederholt tun. Das Entfernen einer Liste löscht sie nicht aus deiner Bibliothek."
       },
       "stored": {
         "title": "Gespeicherte Seiten",
@@ -496,7 +496,7 @@
       },
       "fairUse": {
         "title": "Faire Nutzung des Dienstes",
-        "body": "Nutze Pluck nicht, um Websites massenhaft auszulesen, eine Bot-Farm zu betreiben oder Dinge zu speichern, die zu speichern dir nicht zusteht. Wir begrenzen die Rate von Erfassungen, API- und MCP-Aufrufen, damit der Dienst für alle schnell bleibt. Die Limits sind in der Dokumentation veröffentlicht, und wir sagen dir Bescheid, wenn du sie erreichst."
+        "body": "Nutze Pluck nicht, um Websites massenhaft auszulesen, eine Bot-Farm zu betreiben oder Dinge zu speichern, die zu speichern dir nicht zusteht. Wir begrenzen die Zahl der Erfassungen sowie der API- und MCP-Aufrufe, damit der Dienst für alle schnell bleibt. Die Limits sind in der Dokumentation veröffentlicht, und wir sagen dir Bescheid, wenn du sie erreichst."
       },
       "ai": {
         "title": "KI-Tools",
@@ -513,14 +513,14 @@
     },
     "box": {
       "title": "Eine öffentliche Liste melden",
-      "body": "Jede öffentliche Seite hat unten einen Link zum Melden. Oder schreib an <mail>{email}</mail>, mit dem Link. Wir handeln innerhalb von 3 Werktagen."
+      "body": "Jede öffentliche Seite hat unten einen Link zum Melden. Oder schreib an <mail>{email}</mail>, mit dem Link. Wir reagieren innerhalb von 3 Werktagen."
     }
   },
   "publicList": {
     "meta": {
       "notFound": "Nicht gefunden · Pluck",
       "title": "{name} · eine Liste von {by} · Pluck",
-      "description": "{count, plural, one {# Sache} other {# Sachen}}, ausgewählt von {by}."
+      "description": "{count, plural, one {# Sache} other {# Sachen}}, gepflückt von {by}."
     },
     "what": "Was ist Pluck?",
     "byline": "Eine Liste von {by} · {count, plural, one {# Eintrag} other {# Einträge}} · aktualisiert {when}",
@@ -548,7 +548,7 @@
     "report": {
       "open": "Diese Liste melden",
       "sent": "Danke. Ein Mensch liest jede Meldung.",
-      "reason": "Was ist falsch?",
+      "reason": "Was stimmt nicht?",
       "details": "Was wir wissen sollten (optional)",
       "send": "Meldung senden",
       "cancel": "Abbrechen",

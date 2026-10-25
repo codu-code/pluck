@@ -46,7 +46,9 @@ How Pluck's product words are said in German, and why. Every German catalog (`pa
 | connector | Konnektor | The German form of the word; Claude's and ChatGPT's German UIs are believed to say „Konnektoren“, but the step labels on /connect should be checked against the live apps. | Claude, ChatGPT (de), unverified |
 | Sign in / Sign out | Anmelden / Abmelden | Standard. | Apple, Google |
 | Settings | Einstellungen | Standard. | Apple |
-| Save (button, edit form) | Sichern | Apple's German for Save. Only for saving a form, never for plucking. | Apple |
+| Save / Saved (edit form, note state) | Speichern / Gespeichert | What German users see on every web and iOS form outside Apple's own apps. Apple's older „Sichern“ reads like „secure“ or „back up“ on the web („Name gesichert“). Only for saving a form or a note, never for plucking. | Notion, Todoist, Google („Speichern“) |
+| tap (noun) | Fingertipp; „1 Tipp“ only where the stat needs it short | „ein Tippen“ is not idiomatic German. „mit einem Fingertipp“ is how German marketing says one tap. The verb stays „tippen“. | Apple (de) marketing |
+| goes up (an offline pluck uploads) | wird hochgeladen / übertragen | „geht hoch“ means „explodes“ or „goes upstairs“. | – |
 | Undo | Rückgängig | Standard. | Apple, Gmail |
 
 ## Tone
@@ -54,7 +56,7 @@ How Pluck's product words are said in German, and why. Every German catalog (`pa
 - **Du, never Sie.** Modern consumer apps in German say du: Apple's German UI and support pages („Füge Tags hinzu“), Todoist, Notion, Spotify. Pluck's English is warm and direct; Sie would make it stiff. Du, dein, dir are lowercase in running text, as Apple writes them.
 - **Imperatives use the short form**: „Pflück es“, „Sortier es“, „Prüf die Verbindung“, „Tippe auf Teilen“ (keep the -e where the short form sounds odd: tippe, wähle when it reads better). This is how German apps talk.
 - **Short buttons.** German runs about 30% longer than English, so buttons are infinitives or two words („Pflücken“, „Behalten“, „Noch mal versuchen“), tab and status names one word.
-- **Jokes are kept, not translated.** „Gone. Well, archived.“ is „Weg. Na ja, archiviert.“; the cookie buttons „Pluck it, I'm in“ and „Pluck off“ are „Klar, ich bin dabei“ and „Finger weg“ (the pun on pluck has no German twin; „Finger weg“ keeps the cheek and the hands). Privacy quotes the buttons exactly.
+- **Jokes are kept, not translated.** „Gone. Well, archived.“ is „Weg. Na ja, archiviert.“; „0 nags“ is „0 Druck“ („Mahnungen“ are payment reminders); „picked by“ on public pages is „gepflückt von“; the cookie buttons „Pluck it, I'm in“ and „Pluck off“ are „Klar, ich bin dabei“ and „Finger weg“ (the pun on pluck has no German twin; „Finger weg“ keeps the cheek and the hands). Privacy quotes the buttons exactly.
 - **No exclamation marks, no emoji**, as in English.
 - **Expiry copy** always says the Item moves „ins Archiv“ and „nichts wird gelöscht“.
 
