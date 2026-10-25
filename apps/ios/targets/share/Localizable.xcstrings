@@ -404,7 +404,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Você não entrou."
+            "value": "Você não está conectado."
           }
         }
       }

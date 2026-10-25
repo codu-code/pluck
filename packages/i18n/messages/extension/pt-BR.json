@@ -55,12 +55,12 @@
       "title": "Colhido",
       "undo": "Desfazer",
       "tips": {
-        "opening": "Abrir isto já guarda a página. O truque é só esse.",
+        "opening": "Abrir esta janela já guarda a página. O truque é só esse.",
         "shortcut": "Alt+Shift+P faz isso sem o clique.",
         "rightClick": "Clique com o botão direito num link ou numa imagem para colher só aquilo."
       },
       "tags": "Tags",
-      "tagsPlaceholder": "Busque nas suas tags",
+      "tagsPlaceholder": "Buscar nas suas tags",
       "kind": "Tipo",
       "toList": "Para a lista",
       "noList": "Nenhuma",
@@ -88,7 +88,7 @@
     "account": "Conta",
     "apiKey": "Chave de API",
     "useKey": "Usar chave",
-    "notSignedIn": "Você não entrou",
+    "notSignedIn": "Não conectado",
     "signOut": "Sair",
     "signIn": "Entrar",
     "useApiKey": "Usar uma chave de API",

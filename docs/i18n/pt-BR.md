@@ -46,12 +46,22 @@ How Pluck's product words are said in Brazilian Portuguese, and why. Every pt-BR
 | Email-in | E-mail de entrada | | |
 | share sheet | menu Compartilhar | Apple pt-BR calls the button "Compartilhar". | iOS |
 | Settings (iOS) | Ajustes | Apple pt-BR name for the iOS Settings app. Pluck's own settings on the web are "Configurações". | iOS |
+| triage / to triage | organizar / para organizar | "Triar" is a real verb but reads as hospital or mailroom jargon. "Organizar" is the word the tagline already uses ("Organize depois"). | — |
+| Merge (tags) | Mesclar | The standard pt-BR UI verb; "juntar" sounds like a kitchen instruction. | Google, Microsoft pt-BR |
+| a List's purpose | objetivo | "Propósito" is a calque that reads as life-coaching. "De propósito" (on purpose) stays for Later. | — |
+| what you are making (Lists) | o que você está preparando | "Fazendo" is "doing"; a book, a talk, a trip and a shopping list are all things you prepare. | — |
+| Gone. Well, archived. | Sumiu. Quer dizer, arquivado. | "Foi." alone does not read as "gone". Plural "Sumiram. Quer dizer, arquivados." | — |
+| Not signed in | não conectado | Matches "mantém você conectado" in the cookie copy. | — |
+| Get Pluck (to sign-in) | Comece grátis | The link goes to sign-in, and the hosted service is free. | — |
 
 ## Tone
 
 - **"Você"**, informal and friendly, never "tu", never "o senhor". Imperatives in the "você" form ("Colha", "Toque", "Digite").
 - Short, plain, warm, as the English is. Brazilian colloquial touches are allowed where the English is playful ("tô dentro", "Sério."), never slang that dates.
 - Buttons use the infinitive, as Brazilian apps do ("Arquivar", "Manter", "Compartilhar"), except where the verb is "colher" alone: then the imperative "Colha" so it is not read as "spoon".
+- Placeholders and search hints use the infinitive too ("Buscar nas suas tags", "Encontrar ou criar uma tag"), never the imperative.
+- With "mexer", keep the preposition: "itens em que você não mexe", "marca tudo em que mexeu", never "o que você não mexe".
+- Counted toasts agree in number: "# itens. Guardados para depois.", never a singular participle after a plural count.
 - No exclamation marks, no emoji, no "inteligente", "mágico", "com IA", "salvar", "favoritos" or "coleção" in UI copy. "Salvo" appears only where the English itself says "Saved" (a note's save state) and in the store keywords, which are search terms, not copy.
 
 ## Capitalisation

@@ -3,8 +3,8 @@
     "name": "Pluck: Ler Depois",
     "subtitle": "Colha agora. Organize depois.",
     "promotionalText": "Um toque no menu Compartilhar e é seu: a página, não só o link. Organize depois, à mão ou pedindo à sua IA. Grátis e de código aberto.",
-    "description": "Colha de qualquer app. Toque em Compartilhar e depois em Pluck: a página fica guardada como você viu, e o app nem abre.\n\nOrganize depois. A sua Entrada guarda tudo o que você colheu. Deslize para a direita para Depois, para a esquerda para o Arquivo. Coloque uma tag, adicione a uma Lista ou marque uma Tarefa como concluída.\n\nA página, não só o link. O Pluck guarda o texto de cada página, para você ler num leitor limpo, offline, muito depois de o site ter mudado.\n\nListas são o que você está fazendo. Uma viagem, uma palestra, uma lista de leitura para um amigo. Ordene à mão, adicione uma nota a cada Item, marque o que já foi e compartilhe a Lista com quem precisa dela.\n\nEncontre num segundo. A busca cobre títulos, notas, tags e o texto completo de cada página.\n\nTraga a sua própria IA. Não há IA dentro do Pluck. Conecte as ferramentas de IA que você já usa, como Claude, ChatGPT ou Cursor, e pergunte o que você colheu esta semana, ou peça para arrumar a sua Entrada enquanto você olha.\n\nNada é apagado pelas suas costas. Os Itens em que você não mexe há um tempo vão para o Arquivo, e nada é apagado.\n\nO Pluck é grátis e de código aberto. Use o getpluck.io, ou rode o seu próprio servidor.",
-    "keywords": "salvar,links,lista,leitura,artigos,favoritos,leitor,offline,notícias,notas,tarefas,mcp,web,clipper"
+    "description": "Colha de qualquer app. Toque em Compartilhar e depois em Pluck: a página fica guardada como você viu, e o app nem abre.\n\nOrganize depois. A sua Entrada guarda tudo o que você colheu. Deslize para a direita para Depois, para a esquerda para o Arquivo. Coloque uma tag, adicione a uma Lista ou marque uma Tarefa como concluída.\n\nA página, não só o link. O Pluck guarda o texto de cada página, para você ler num leitor limpo, offline, muito depois de o site ter mudado.\n\nListas são o que você está preparando. Uma viagem, uma palestra, uma lista de leitura para um amigo. Ordene à mão, adicione uma nota a cada Item, marque o que já foi e compartilhe a Lista com quem precisa dela.\n\nEncontre tudo num segundo. A busca cobre títulos, notas, tags e o texto completo de cada página.\n\nTraga a sua própria IA. Não há IA dentro do Pluck. Conecte as ferramentas de IA que você já usa, como Claude, ChatGPT ou Cursor, e pergunte o que você colheu esta semana, ou peça para arrumar a sua Entrada enquanto você olha.\n\nNada é apagado pelas suas costas. Os Itens em que você não mexe há um tempo vão para o Arquivo, e nada é apagado.\n\nO Pluck é grátis e de código aberto. Use o getpluck.io, ou rode o seu próprio servidor.",
+    "keywords": "salvar,links,lista,leitura,artigos,favoritos,leitor,offline,notícias,notas,tarefas,mcp,biblioteca"
   },
   "screenshots": [
     {
@@ -20,11 +20,11 @@
       "subtitle": "Leia em qualquer lugar, mesmo quando o site sumir."
     },
     {
-      "title": "Listas são o que você está fazendo.",
-      "subtitle": "Uma viagem, uma palestra, uma cozinha. Privadas até você dizer."
+      "title": "Listas para os seus projetos.",
+      "subtitle": "Uma viagem, uma palestra, uma reforma. Privadas até você dizer o contrário."
     },
     {
-      "title": "Encontre num segundo.",
+      "title": "Encontre tudo num segundo.",
       "subtitle": "Cada palavra da página, suas notas e suas tags."
     }
   ],

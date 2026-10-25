@@ -11,7 +11,7 @@
     "lists": "Listas",
     "connect": "Conecte sua IA",
     "openSource": "Código aberto",
-    "getPluck": "Comece no Pluck",
+    "getPluck": "Comece grátis",
     "footerHome": "Início",
     "support": "Ajuda",
     "privacy": "Privacidade",
@@ -29,7 +29,7 @@
     "checkEmail": "Confira seu e-mail.",
     "took": "Levou {ms, number} ms.",
     "sent": "Enviamos um link para <b>{email}</b>. Abra neste navegador e o que você colheu vai para a sua Entrada.",
-    "keepNote": "Coloque seu e-mail para não perder. Sendo novo ou não, o link faz você entrar.",
+    "keepNote": "Coloque seu e-mail para não perder. Primeira vez ou não, o link faz você entrar.",
     "emailLabel": "Seu e-mail, para guardar o que você colheu",
     "emailPlaceholder": "voce@exemplo.com",
     "sending": "Enviando",
@@ -52,7 +52,7 @@
     "mock": {
       "label": "O app",
       "inbox": "Entrada",
-      "toTriage": "{count, number} para triar",
+      "toTriage": "{count, number} para organizar",
       "plucked": "Colhido.",
       "rows": {
         "mcp": {
@@ -85,20 +85,20 @@
       "hob": "Um cooktop para a cozinha.",
       "talk": "Uma palestra que você vai dar em novembro.",
       "pdf": "Um PDF que você nunca vai ler.",
-      "small": "Uma Entrada para tudo isso. A página fica guardada, não só o link, então ela continua lá quando o site não estiver mais."
+      "small": "Uma Entrada para tudo isso. A página fica guardada, não só o link, então continua lá mesmo quando o site já não está."
     },
     "stats": {
       "tapNumber": "1 toque",
       "tap": "Pelo menu Compartilhar do iPhone, sem abrir nenhum app. Pelo Chrome, pelo seu e-mail ou numa conversa com a sua IA. “Colhido” em menos de 300 ms. Sempre.",
       "nagsNumber": "0 cobranças",
-      "nags": "Sem sequências, sem medalhas, sem culpa. Nada recebe tags pelas suas costas. O que você nunca mexe vai para o Arquivo depois de 30 dias (você escolhe o número), a menos que esteja numa lista. Nada é apagado.",
+      "nags": "Sem sequências, sem medalhas, sem culpa. Nada recebe tags pelas suas costas. Aquilo em que você nunca mexe vai para o Arquivo depois de 30 dias (você escolhe o número), a menos que esteja numa lista. Nada é apagado.",
       "secondsNumber": "30 s",
       "seconds": "Para conectar a IA que você já usa. Claude, ChatGPT, Cursor, qualquer uma que fale MCP. Peça para arrumar, agrupar ou transformar o que você colheu em ideias. Ela trabalha enquanto você olha, e nunca apaga."
     },
     "lists": {
-      "title": "Listas são o que você está fazendo.",
+      "title": "Listas são o que você está preparando.",
       "para1": "Um livro. Uma edição da newsletter. Uma palestra. Uma viagem. <phrase>Coisas para comprar.</phrase> Coloque qualquer item em quantas listas quiser, cada uma com a sua nota e a sua marcação.",
-      "para2": "Privada por padrão. Pública com um botão. Volta atrás com o mesmo botão.",
+      "para2": "Privada por padrão. Pública com um botão. Desfaça com o mesmo botão.",
       "cardTitle": "Reforma da cozinha, para comprar",
       "progress": "{done, number} de {total, number}",
       "kitchen": {
@@ -119,19 +119,19 @@
           "note": "Perguntar antes aos instaladores sobre a parede."
         }
       },
-      "public": "Pública. Qualquer pessoa pode colher para a dela."
+      "public": "Pública. Qualquer pessoa pode colher uma cópia para si."
     },
     "ai": {
       "eyebrow": "PRONTO PARA A SUA IA",
       "title": "Conecte a IA que você já usa.",
       "ask1": "“O que eu colhi sobre autenticação no MCP?”",
       "ask2": "“Arrume minha Entrada.”",
-      "ask3": "“Monte uma lista de leitura com o que é deste mês, a melhor primeiro.”",
-      "body": "Um link e a sua biblioteca inteira está lá. Ela só muda coisas quando você manda, e marca tudo o que mexeu.",
+      "ask3": "“Monte uma lista de leitura com o que colhi este mês, começando pelo melhor.”",
+      "body": "Um link e a sua biblioteca inteira está lá. Ela só muda coisas quando você manda, e marca tudo em que mexeu.",
       "button": "Como funciona com IA",
       "chatMe1": "Colha isto como ideia: um servidor MCP para os orçamentos da Assemble",
       "chatAi1": "Colhido. Está na sua Entrada como Nota, marcado como colhido por mim.",
-      "chatMe2": "O que está apodrecendo na minha biblioteca?",
+      "chatMe2": "O que está mofando na minha biblioteca?",
       "chatAi2": "Cinco coisas sem mexer há um mês. Quer passar por elas uma de cada vez?"
     },
     "imports": {
@@ -294,15 +294,15 @@
       }
     },
     "selfHost": {
-      "title": "Rodando o seu próprio",
+      "title": "Seu próprio servidor",
       "run": {
-        "q": "Como rodo o Pluck eu mesmo?",
+        "q": "Como rodo o Pluck no meu próprio servidor?",
         "a": "Um comando com Docker. <openSource>Código aberto</openSource> mostra qual, e o guia de hospedagem própria no repositório cobre e-mail, armazenamento e como colocar num servidor."
       }
     },
     "bugs": {
       "title": "Achou um bug<mark>?</mark>",
-      "body": "Abra uma issue no GitHub. Conte o que você fez, o que esperava e o que aconteceu no lugar. Ideias também são bem-vindas por lá.",
+      "body": "Abra uma issue no GitHub. Conte o que você fez, o que esperava e o que aconteceu em vez disso. Ideias também são bem-vindas por lá.",
       "note": "As issues são públicas. Não coloque links, notas ou qualquer outra coisa que você prefira guardar para si.",
       "button": "Abrir uma issue"
     }
@@ -368,25 +368,25 @@
       "batch_update": "Status, tipo, tags e prazos em um ou vários itens.",
       "list_tags": "Suas tags, com contagens.",
       "create_tag": "Uma tag nova, só depois que você disser sim.",
-      "list_lists": "Suas listas, com propósito, contagem e visibilidade.",
+      "list_lists": "Suas listas, com objetivo, contagem e visibilidade.",
       "get_list": "Uma lista em ordem, com notas e marcações.",
       "create_list": "Uma lista nova com itens em ordem e uma nota por item. Privada.",
       "update_list": "Renomear, reordenar, adicionar, marcar ou tornar privada. Só você torna uma lista pública.",
-      "get_digest": "Listas que vão expirar, com prazo, mais antigas e paradas. O e-mail de segunda-feira, em forma de dados."
+      "get_digest": "O que vai expirar, o que tem prazo, os itens mais antigos e as listas paradas. O e-mail de segunda-feira, em forma de dados."
     },
     "asksTitle": "Quatro coisas para perguntar.",
     "asks": {
       "tidy": {
         "say": "“Arrume minha Entrada do Pluck.”",
-        "does": "Sugere tags entre as que você já tem, e manter, depois ou arquivar para cada item. Você diz sim ou edita. Um lote só."
+        "does": "Sugere tags entre as que você já tem e, para cada item, manter, Depois ou arquivar. Você aprova ou edita. Tudo num lote só."
       },
       "reading": {
-        "say": "“Monte uma lista de leitura sobre autenticação no MCP, a melhor primeiro.”",
-        "does": "Busca, lê e monta a lista em ordem, com uma linha sobre por que cada uma importa. Privada até você dizer o contrário."
+        "say": "“Monte uma lista de leitura sobre autenticação no MCP, começando pelo melhor.”",
+        "does": "Busca, lê e monta a lista em ordem, com uma linha sobre por que cada item importa. Privada até você dizer o contrário."
       },
       "ideas": {
         "say": "“Três ideias de post com base no que eu colhi esta semana.”",
-        "does": "Lê as cinco melhores por inteiro e rascunha três abordagens, com fontes. Escolha uma e ela colhe o rascunho de volta como Nota."
+        "does": "Lê por inteiro os cinco melhores itens e rascunha três abordagens, com fontes. Escolha uma e ela colhe o rascunho de volta como Nota."
       },
       "review": {
         "say": "“Faça minha revisão semanal.”",
@@ -398,12 +398,12 @@
       "delete": "Apagar qualquer coisa. Essa permissão não é concedida.",
       "makeTag": "Criar uma tag que você não pediu.",
       "renameTag": "Renomear ou remover uma tag que você criou.",
-      "purpose": "Reescrever o propósito de uma lista.",
+      "purpose": "Reescrever o objetivo de uma lista.",
       "public": "Tornar uma lista pública. Só você pode, pela lista no Pluck."
     },
     "neverNote": "Tudo o que ela adiciona leva a marca “pela IA”. Nas Configurações, você remove uma semana disso com um toque.",
     "closing": "Pergunte à sua IA<mark>.</mark>",
-    "button": "Comece no Pluck e conecte"
+    "button": "Comece grátis e conecte"
   },
   "legal": {
     "translationNotice": "Esta é uma tradução. Se ela e a versão em inglês divergirem, vale a versão em inglês."
@@ -414,7 +414,7 @@
       "description": "O que o Pluck armazena, o que ele nunca faz e como levar tudo com você."
     },
     "title": "Privacidade",
-    "lede": "Versão curta: armazenamos o que você colhe para você ler depois. Não lemos, não vendemos e não damos para nenhum modelo. Última atualização em 24 de outubro de 2026.",
+    "lede": "Versão curta: armazenamos o que você colhe para você ler depois. Não lemos, não vendemos e não usamos para alimentar nenhum modelo. Última atualização em 24 de outubro de 2026.",
     "sections": {
       "store": {
         "title": "O que armazenamos",
@@ -434,7 +434,7 @@
       },
       "publicLists": {
         "title": "Listas públicas",
-        "body": "Uma lista é privada até você torná-la pública. Uma lista pública mostra o nome, o propósito, o seu nome e o seu identificador, o título, a capa, o site e a sua nota de cada item, com links para os originais. Ela nunca mostra o texto guardado das páginas, as suas tags, as marcações nem qualquer outra coisa da sua biblioteca. Volte para privada e a página passa a responder 404 em até um minuto."
+        "body": "Uma lista é privada até você torná-la pública. Uma lista pública mostra o nome, o objetivo, o seu nome e o seu identificador, o título, a capa, o site e a sua nota de cada item, com links para os originais. Ela nunca mostra o texto guardado das páginas, as suas tags, as marcações nem qualquer outra coisa da sua biblioteca. Volte para privada e a página passa a responder 404 em até um minuto."
       },
       "sharing": {
         "title": "Compartilhar uma Lista",
@@ -454,7 +454,7 @@
       },
       "export": {
         "title": "Exportar e apagar",
-        "body": "Exporte tudo em JSON e Markdown pelas Configurações, a qualquer momento. Apague a sua conta pelas Configurações e todos os itens, tags, listas, notas e chaves somem na hora. Os backups são expurgados em até 30 dias."
+        "body": "Exporte tudo em JSON e Markdown pelas Configurações, a qualquer momento. Apague a sua conta pelas Configurações e todos os itens, tags, listas, notas e chaves somem na hora. Os backups são apagados em até 30 dias."
       },
       "rights": {
         "title": "Seus direitos",
@@ -469,10 +469,10 @@
   "terms": {
     "meta": {
       "title": "Termos · Pluck",
-      "description": "A biblioteca é sua, seja decente com as listas públicas, e você sempre pode exportar e hospedar o seu próprio."
+      "description": "A biblioteca é sua, seja decente com as listas públicas, e você sempre pode exportar e hospedar o Pluck você mesmo."
     },
     "title": "Termos",
-    "lede": "Versão curta: a biblioteca é sua, seja decente com as listas públicas, e não podemos prometer que o serviço gratuito vai durar para sempre, e é por isso que você pode exportar e hospedar o seu próprio. Última atualização em 24 de outubro de 2026.",
+    "lede": "Versão curta: a biblioteca é sua, seja decente com as listas públicas, e não podemos prometer que o serviço gratuito vai durar para sempre, e é por isso que você pode exportar e hospedar o Pluck você mesmo. Última atualização em 24 de outubro de 2026.",
     "sections": {
       "service": {
         "title": "O serviço",

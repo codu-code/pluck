@@ -55,13 +55,13 @@
     "deselect": "Desmarcar"
   },
   "moved": {
-    "archived": "Foi. Quer dizer, arquivado.",
+    "archived": "Sumiu. Quer dizer, arquivado.",
     "later": "Guardado para depois.",
     "done": "Concluído.",
     "inbox": "De volta à Entrada."
   },
   "movedMany": {
-    "archived": "{count, plural, one {Foi. Quer dizer, arquivado.} other {# itens. Foram. Quer dizer, arquivados.}}",
+    "archived": "{count, plural, one {Sumiu. Quer dizer, arquivado.} other {# itens. Sumiram. Quer dizer, arquivados.}}",
     "later": "{count, plural, one {Guardado para depois.} other {# itens. Guardados para depois.}}",
     "done": "{count, plural, one {Concluído.} other {# itens. Concluídos.}}",
     "inbox": "{count, plural, one {De volta à Entrada.} other {# itens. De volta à Entrada.}}"
@@ -117,7 +117,7 @@
     "newNote": "Nova nota",
     "newNoteText": "Nova nota",
     "settings": "Ajustes",
-    "toTriage": "{count} para triar",
+    "toTriage": "{count} para organizar",
     "forLater": "{count} para depois",
     "toSync": "{count} para sincronizar",
     "moveFailed": "Não deu certo. Nada saiu do lugar.",
@@ -125,8 +125,8 @@
     "selectAll": "Selecionar tudo",
     "empty": {
       "inbox": {
-        "title": "Nada para triar.",
-        "body": "Toque em Compartilhar em qualquer app e depois em Pluck. Chega aqui."
+        "title": "Nada para organizar.",
+        "body": "Toque em Compartilhar em qualquer app e depois em Pluck. O item chega aqui."
       },
       "later": {
         "title": "Nada para depois.",
@@ -202,7 +202,7 @@
     "rename": "Renomear",
     "renameTitle": "Renomear a tag",
     "deleteTitle": "Apagar “{name}”?",
-    "deleteBody": "Ela sai {count, plural, one {do # item} other {de # itens}}. Os itens ficam.",
+    "deleteBody": "Ela sai de {count, plural, one {# item} other {# itens}}. Os itens ficam.",
     "deleteTag": "Apagar a tag",
     "deleted": "“{name}” foi apagada. Os itens ficam.",
     "hint": "Renomear ou apagar",
@@ -245,7 +245,7 @@
     "badKey": "Essa chave não funcionou neste servidor.",
     "unreachable": "Não deu para falar com {origin}.",
     "title": "Um link.\nSem senha<accent>.</accent>",
-    "lede": "Digite seu e-mail e a gente manda um link. Ele faz você entrar, ou começa a sua biblioteca se você for novo por aqui.",
+    "lede": "Digite seu e-mail e a gente manda um link. Ele faz você entrar ou, se for sua primeira vez, cria a sua biblioteca.",
     "server": "Servidor",
     "key": "Chave de API, se você usa uma",
     "keyA11y": "Chave de API",
@@ -281,7 +281,7 @@
     "sees": {
       "me": "Só você pode ver esta Lista.",
       "people": "As pessoas aqui veem os títulos, sites, capas e suas notas nesta Lista, nunca as suas tags, marcações ou as páginas que o Pluck guardou. Só você muda a Lista.",
-      "anyone": "Pública: qualquer pessoa com este link pode abrir, sem entrar, e ela pode aparecer em buscadores. Elas veem os títulos, sites, capas e suas notas nesta Lista, nunca as suas tags, marcações ou as páginas que o Pluck guardou. Torne privada de novo quando quiser; o link para de funcionar na hora."
+      "anyone": "Pública: qualquer pessoa com este link pode abrir a Lista sem entrar, e ela pode aparecer em buscadores. Essas pessoas veem os títulos, sites, capas e suas notas nesta Lista, nunca as suas tags, marcações ou as páginas que o Pluck guardou. Torne privada de novo quando quiser; o link para de funcionar na hora."
     },
     "options": {
       "me": "Só você",
@@ -308,9 +308,9 @@
   "pick": {
     "tags": "Tags",
     "lists": "Listas",
-    "findTag": "Encontre ou crie uma tag",
+    "findTag": "Encontrar ou criar uma tag",
     "makeTag": "Criar a tag “{name}”",
-    "findList": "Encontre ou comece uma Lista",
+    "findList": "Encontrar ou começar uma Lista",
     "startList": "Começar uma Lista chamada “{name}”",
     "tagsForMany": "Tags para {count}",
     "addMany": "Adicionar {count} a uma Lista",
@@ -388,7 +388,7 @@
     "scopeInbox": "Só a Entrada",
     "moveAfter": "Mover para o Arquivo depois de",
     "moveAfterTitle": "Itens em que você não mexer vão para o Arquivo depois de",
-    "expirySaved": "Sem mexer por {count} dias, vai para o Arquivo. Nada é apagado.",
+    "expirySaved": "Itens parados por {count} dias vão para o Arquivo. Nada é apagado.",
     "noExpiry": "Agora nada expira.",
     "appliesTo": "Vale para",
     "appliesToTitle": "A expiração vale para",
@@ -397,7 +397,7 @@
     "weeklyTitle": "Enviar o e-mail semanal",
     "noWeekly": "Sem e-mail semanal.",
     "weeklyOn": "O e-mail semanal chega {day, select, 0 {aos domingos} 1 {às segundas} 2 {às terças} 3 {às quartas} 4 {às quintas} 5 {às sextas} other {aos sábados}}.",
-    "expiryFootnote": "Itens em que você não mexer vão para o Arquivo, nada é apagado. O e-mail semanal: o que vai mudar de lugar em breve, o que vence, e coisas que você colheu e esqueceu.",
+    "expiryFootnote": "Itens em que você não mexer vão para o Arquivo, nada é apagado. O e-mail semanal: o que vai para o Arquivo em breve, o que vence e coisas que você colheu e esqueceu.",
     "tags": "Tags",
     "export": "Exportar tudo",
     "byEmail": "Por e-mail",
@@ -415,9 +415,9 @@
     "iconDark": "Escuro",
     "iconA11y": "Ícone {name}",
     "iconFootnote": "Só o ícone. O app em si segue o seu celular.",
-    "usage": "Compartilhar como eu uso o Pluck",
+    "usage": "Compartilhar meu uso do Pluck",
     "usageFootnote": "Quais telas você usa, ligadas à sua conta. Nunca o que você colhe. Os relatórios de falha vão de qualquer jeito, sem o seu nome.",
-    "tipTitle": "Coloque o Pluck em primeiro no Compartilhar",
+    "tipTitle": "Coloque o Pluck primeiro no menu Compartilhar",
     "tipBody": "Em qualquer app, toque em Compartilhar, role a fila de apps até Mais e arraste o Pluck para o começo.",
     "deleteAll": "Apagar tudo. Sério.",
     "deleteTitle": "Apagar tudo?",

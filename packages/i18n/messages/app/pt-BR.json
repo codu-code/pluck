@@ -19,15 +19,15 @@
     "done": "Concluído"
   },
   "moved": {
-    "archived": "Foi. Quer dizer, arquivado.",
+    "archived": "Sumiu. Quer dizer, arquivado.",
     "later": "Guardado para depois.",
     "done": "Concluído.",
     "inbox": "De volta à Entrada."
   },
   "movedMany": {
-    "archived": "{count, plural, one {# item} other {# itens}}. Foi. Quer dizer, arquivado.",
-    "later": "{count, plural, one {# item} other {# itens}}. Guardado para depois.",
-    "done": "{count, plural, one {# item} other {# itens}}. Concluído.",
+    "archived": "{count, plural, one {# item. Sumiu. Quer dizer, arquivado.} other {# itens. Sumiram. Quer dizer, arquivados.}}",
+    "later": "{count, plural, one {# item. Guardado para depois.} other {# itens. Guardados para depois.}}",
+    "done": "{count, plural, one {# item. Concluído.} other {# itens. Concluídos.}}",
     "inbox": "{count, plural, one {# item} other {# itens}}. De volta à Entrada."
   },
   "format": {
@@ -98,13 +98,13 @@
   },
   "common": {
     "didNotGoThrough": "Não deu certo.",
-    "pluckedToInbox": "Colhido para a Entrada.",
+    "pluckedToInbox": "Colhido na Entrada.",
     "copiedForAi": "Copiado. Cole na sua IA.",
     "cancel": "Cancelar",
     "copy": "Copiar",
     "save": "Salvar",
     "rename": "Renomear",
-    "merge": "Juntar",
+    "merge": "Mesclar",
     "delete": "Apagar",
     "remove": "Remover",
     "showMore": "Mostrar mais",
@@ -118,7 +118,7 @@
     "title": "Algo quebrou",
     "lede": "Foi do nosso lado, não do seu. Nada do que você colheu se perdeu. Tente de novo e, se continuar acontecendo, conte para a gente.",
     "tryAgain": "Tentar de novo",
-    "report": "Relatar"
+    "report": "Relatar o problema"
   },
   "globalError": {
     "title": "Algo quebrou",
@@ -187,14 +187,14 @@
     "aiLede": "A gente manda um link por e-mail. Depois de entrar, você escolhe o que a sua ferramenta de IA pode fazer.",
     "title1": "Um link.",
     "title2": "Sem senha",
-    "lede": "Digite seu e-mail e a gente manda um link. Ele faz você entrar, ou começa a sua biblioteca se você for novo por aqui.",
+    "lede": "Digite seu e-mail e a gente manda um link. Ele faz você entrar ou, se for sua primeira vez, cria a sua biblioteca.",
     "email": "E-mail",
     "emailPlaceholder": "voce@exemplo.com",
     "password": "Senha",
     "signingIn": "Entrando",
     "signIn": "Entrar",
     "sending": "Enviando",
-    "send": "Me mande um link",
+    "send": "Enviar link por e-mail",
     "error": "Não deu certo. Confira o endereço e tente de novo.",
     "wrong": "Essa senha não funcionou.",
     "limitedTries": "São muitas tentativas. Tente de novo daqui a uma hora.",
@@ -215,7 +215,7 @@
     "title": "Não conectou",
     "lede": "Nada mudou no seu Pluck. Na maioria das vezes, começar de novo resolve.",
     "step1": "Comece a conexão de novo pela sua ferramenta de IA.",
-    "step2": "Ainda falhando? Remova o Pluck de lá e adicione de novo com o link de <connect>Conecte sua IA</connect>.",
+    "step2": "Continua falhando? Remova o Pluck de lá e adicione de novo com o link de <connect>Conecte sua IA</connect>.",
     "step3": "Travou depois disso? A <support>Ajuda</support> tem o resto.",
     "serverSaid": "O que o servidor disse, se a sua ferramenta de IA perguntar"
   },
@@ -278,14 +278,14 @@
         "line": "Ele fica onde está, e a contagem de dias recomeça."
       },
       "letGo": {
-        "title": "Foi. Quer dizer, arquivado",
+        "title": "Sumiu. Quer dizer, arquivado",
         "line": "Nada é apagado."
       },
       "undoLetGo": {
         "title": "De volta ao lugar"
       },
       "stop": {
-        "title": "Sem mais e-mails semanais",
+        "title": "E-mails semanais desligados",
         "line": "Ligue de novo em Configurações quando quiser."
       },
       "archiveAll": {
@@ -358,7 +358,7 @@
     "lede": "Três jeitos de começar. O primeiro leva um segundo.",
     "one": {
       "title": "Aperte Colha, ali em cima",
-      "body": "O link de exemplo já está lá. Veja ele chegar."
+      "body": "O link de exemplo já está lá. Veja o link chegar."
     },
     "two": {
       "title": "Instale a extensão",
@@ -435,7 +435,7 @@
     "link": "Cookies"
   },
   "connectLoop": {
-    "label": "Alguém cola o link do Pluck na sua ferramenta de IA, permite na tela do Pluck, depois pergunta o que colheu sobre autenticação no MCP e recebe três itens de volta.",
+    "label": "Alguém cola o link do Pluck na própria ferramenta de IA, permite na tela do Pluck, depois pergunta o que colheu sobre autenticação no MCP e recebe de volta três coisas que colheu.",
     "cap1": {
       "title": "Cole um link",
       "body": "Em qualquer ferramenta de IA que fale MCP."
@@ -458,7 +458,7 @@
       "twoMeta": "um post de blog · 6 min",
       "three": "Tokens, escopos e a parte que todo mundo erra"
     },
-    "followUp": "Quer elas numa lista, a melhor primeiro?",
+    "followUp": "Quer que eu monte uma lista com elas, a melhor primeiro?",
     "connected": "Pluck conectado",
     "message": "Mensagem",
     "modal": {
@@ -469,7 +469,7 @@
     },
     "consent": {
       "title": "Deixe sua IA entrar",
-      "body": "Sua ferramenta de IA pede para usar a sua biblioteca do Pluck. Ela só muda coisas quando você pede, e marca o que mexeu.",
+      "body": "Sua ferramenta de IA pede para usar a sua biblioteca do Pluck. Ela só muda coisas quando você pede, e marca tudo em que mexeu.",
       "read": "Ler e buscar na sua biblioteca",
       "write": "Colher, colocar tags e ordenar, marcado pela IA",
       "delete": "Apagar qualquer coisa",
@@ -497,7 +497,7 @@
     "remove": "Remover a tag {name}",
     "add": "Adicionar tag",
     "quoted": "“{name}”",
-    "byAi": "{names} {count, plural, one {foi adicionada} other {foram adicionadas}} pela sua IA. Mexa numa tag e ela passa a ser sua.",
+    "byAi": "{names} {count, plural, one {foi adicionada pela sua IA. Mexa nela e ela passa a ser sua.} other {foram adicionadas pela sua IA. Mexa numa delas e ela passa a ser sua.}}",
     "keep": "Manter",
     "pickerTitle": "Tag"
   },
@@ -516,11 +516,11 @@
   },
   "itemList": {
     "inbox": {
-      "subtitle": "{count} para triar · {sort, select, newest {mais novos primeiro} other {sem mexer primeiro}}"
+      "subtitle": "{count} para organizar · {sort, select, newest {mais novos primeiro} other {sem mexer primeiro}}"
     },
     "later": {
       "subtitle": "Guardados de propósito",
-      "expiring": "Guardados de propósito · {count, plural, one {# expira} other {# expiram}} esta semana, para o Arquivo",
+      "expiring": "Guardados de propósito · {count, plural, one {# vai} other {# vão}} para o Arquivo esta semana",
       "empty": {
         "title": "Nada guardado para depois.",
         "body": "Aperte l em qualquer item da Entrada para guardá-lo aqui."
@@ -530,9 +530,9 @@
     "moveFailed": "Não deu certo. Nada saiu do lugar.",
     "showOnly": "Mostrar só {name}",
     "addedTo": "Adicionado a “{name}”.",
-    "takenOut": "Tirado de “{name}”.",
-    "kept": "Mantido. Os {days} dias começam de novo.",
-    "pluckedMany": "{count} colhidos para a Entrada.",
+    "takenOut": "Removido de “{name}”.",
+    "kept": "Mantido. A contagem de {days} dias recomeça.",
+    "pluckedMany": "{count} colhidos na Entrada.",
     "sort": {
       "label": "Ordenar",
       "newest": "Mais novos",
@@ -586,7 +586,7 @@
       "import": "Importados"
     },
     "why": {
-      "bin": "apagado, some de vez em {days, plural, one {# dia} other {# dias}}",
+      "bin": "apagado, some para sempre em {days, plural, one {# dia} other {# dias}}",
       "done": "concluído",
       "expiredAfter": "expirou depois de {days} dias, guardado aqui",
       "expired": "expirou, guardado aqui",
@@ -610,7 +610,7 @@
     "prompt": "O que eu colhi sobre {q}?",
     "promptThis": "O que eu colhi sobre isto?",
     "label": "Buscar",
-    "placeholder": "Busque em títulos, notas, tags e no texto das páginas",
+    "placeholder": "Buscar em títulos, notas, tags e no texto das páginas",
     "filters": {
       "kind": "Tipo",
       "kindAny": "Tipo: qualquer",
@@ -633,21 +633,21 @@
   },
   "lists": {
     "title": "Listas",
-    "subtitle": "O que você está fazendo. Um livro, uma edição, uma palestra, uma viagem, coisas para comprar.",
+    "subtitle": "O que você está preparando. Um livro, uma edição da newsletter, uma palestra, uma viagem, coisas para comprar.",
     "new": "Nova lista",
     "form": {
       "name": "Nome",
       "namePlaceholder": "Palestra sobre autenticação no MCP",
-      "purpose": "Propósito, em uma linha",
+      "purpose": "Objetivo, em uma linha",
       "purposePlaceholder": "Vinte minutos para o meetup de novembro.",
       "make": "Criar a lista"
     },
     "empty": "Nenhuma lista ainda. Aperte a em qualquer item para começar uma, ou crie uma aqui.",
     "table": {
-      "name": "Nome e propósito",
+      "name": "Nome e objetivo",
       "visibility": "Visibilidade",
       "ticked": "Marcados",
-      "lastAdded": "Último adicionado"
+      "lastAdded": "Última adição"
     },
     "byAi": "pela IA",
     "public": "Pública · {views, plural, one {# visualização} other {# visualizações}}",
@@ -661,13 +661,13 @@
     "foot": "Os itens de uma lista nunca expiram. Uma lista é um plano."
   },
   "list": {
-    "takenOut": "Tirado de “{name}”. Ele continua na sua biblioteca.",
+    "takenOut": "Removido de “{name}”. Ele continua na sua biblioteca.",
     "nowPublic": "Pública. Qualquer pessoa com o link pode ver.",
     "nowPrivate": "Privada de novo. O link para de funcionar agora.",
     "askPrompt": "Leia minha lista do Pluck \"{name}\" e me diga o que ela cobre, o que está faltando e a melhor ordem para ler.",
     "crumb": "Listas",
     "nameLabel": "Nome da lista",
-    "purpose": "Propósito",
+    "purpose": "Objetivo",
     "purposePlaceholder": "Uma linha sobre para que serve esta lista",
     "visibility": "Visibilidade",
     "private": "Privada",
@@ -686,7 +686,7 @@
     "noteLabel": "Nota sobre {title} nesta lista",
     "byAi": "pela IA",
     "note": "Nota",
-    "takeOut": "Tirar",
+    "takeOut": "Tirar da lista",
     "keys": {
       "tick": "marcar",
       "note": "nota",
@@ -702,13 +702,13 @@
   "people": {
     "added": "Compartilhada com {email}. A pessoa recebe um e-mail com um link.",
     "removed": "{email} não consegue mais ver.",
-    "placeholder": "Compartilhe com alguém: o e-mail da pessoa",
+    "placeholder": "Compartilhar com alguém: e-mail da pessoa",
     "sharing": "Compartilhando",
     "share": "Compartilhar",
     "label": "Pessoas que podem ver",
     "stop": "Parar de compartilhar com {email}",
-    "some": "Elas podem ver; só você muda.",
-    "none": "Elas veem a lista, nunca as suas tags ou marcações; só você muda."
+    "some": "Elas podem ver; só você pode mudar.",
+    "none": "Elas veem a lista, nunca as suas tags ou marcações; só você pode mudar."
   },
   "admin": {
     "title": "Denúncias",
@@ -746,7 +746,7 @@
     "state": {
       "saved": "Salvo",
       "saving": "Salvando",
-      "error": "Não salvou. Tentamos de novo quando você digitar."
+      "error": "Não foi salvo. Vamos tentar de novo quando você digitar."
     },
     "meta": "{kind} · {plucked} · editado {edited}",
     "title": "Título",
@@ -755,9 +755,9 @@
     "about": "Sobre esta {kind, select, note {nota} todo {tarefa} other {coisa}}",
     "kind": "Tipo",
     "kindHint": {
-      "note": "Transforme em Tarefa para ter prazo e caixa de marcar.",
-      "todo": "Uma Tarefa pode ter prazo. Concluído tira ela da Entrada.",
-      "thing": "Uma Coisa é algo para conseguir. As Listas são onde elas se juntam."
+      "note": "Transforme em Tarefa para adicionar um prazo e poder marcar como concluída.",
+      "todo": "Uma Tarefa pode ter prazo. Marcar como Concluído tira a Tarefa da Entrada.",
+      "thing": "Uma Coisa é algo que você quer ter. As Listas são onde elas se reúnem."
     },
     "due": "Prazo",
     "source": "Origem: {via}",
@@ -825,18 +825,18 @@
       "notConnected": "Ainda não conectado",
       "readsWrites": "lê e organiza",
       "reads": "lê",
-      "disconnected": "{name} desconectado. Ele não alcança mais a sua biblioteca.",
+      "disconnected": "{name} desconectado. Ele não tem mais acesso à sua biblioteca.",
       "disconnect": "Desconectar"
     },
     "expiry": {
       "digestOff": "Sem e-mail semanal.",
       "digestSaved": "Dia do e-mail semanal salvo.",
-      "saved": "Sem mexer por {days} dias, vai para o Arquivo. Nada é apagado.",
+      "saved": "Itens parados por {days} dias vão para o Arquivo. Nada é apagado.",
       "never": "Agora nada expira.",
       "sent": "Enviado. Confira seu e-mail.",
       "archived": "{count, plural, one {# item movido} other {# itens movidos}} para o Arquivo. Nada é apagado.",
       "title": "Expiração e Arquivo",
-      "lede": "O que você não mexe vai sozinho para o Arquivo. Nunca é apagado. A busca continua encontrando, e Restaurar coloca de volta. Os itens de uma lista nunca expiram.",
+      "lede": "Os itens em que você não mexe vão sozinhos para o Arquivo. Nunca são apagados. A busca continua encontrando, e Restaurar os coloca de volta. Os itens de uma lista nunca expiram.",
       "after": "Mover para o Arquivo depois de",
       "days": "{days} dias sem mexer",
       "neverOption": "Nunca",
@@ -847,7 +847,7 @@
       "digestDay": "{day} às 06:00",
       "digestOffOption": "Desligado",
       "warns": "O e-mail semanal avisa você uma semana antes.",
-      "sendNow": "Me mande um agora",
+      "sendNow": "Enviar um agora",
       "clean": {
         "title": "Começar do zero",
         "body": "Mover tudo {scope, select, inbox {da Entrada} other {da Entrada e de Depois}} com mais de {days} dias para o Arquivo, agora mesmo. {count, plural, one {# item} other {# itens}}. As listas ficam como estão.",
@@ -857,14 +857,14 @@
       }
     },
     "tags": {
-      "merged": "“{name}” juntada a “{into}”.",
+      "merged": "“{name}” mesclada com “{into}”.",
       "deleted": "“{name}” foi apagada. Os itens continuam aqui.",
-      "purged": "{count, plural, one {Removida # tag} other {Removidas # tags}} que a sua IA adicionou esta semana.",
+      "purged": "{count, plural, one {# tag que a sua IA adicionou esta semana foi removida.} other {# tags que a sua IA adicionou esta semana foram removidas.}}",
       "title": "Tags",
       "purge": {
         "confirm": "Remover {count, plural, one {# tag} other {# tags}} que a sua IA adicionou esta semana?",
         "yes": "Sim, remover",
-        "action": "Remover tudo o que a IA marcou com tags esta semana · {count}"
+        "action": "Remover as tags que a IA colocou esta semana · {count}"
       },
       "empty": "Nenhuma tag ainda. Aperte t em qualquer item para criar uma.",
       "table": {
@@ -875,8 +875,8 @@
       },
       "newName": "Novo nome para {name}",
       "madeByAi": "criada pela IA",
-      "mergeLabel": "Juntar {name} a",
-      "mergeInto": "Juntar a…",
+      "mergeLabel": "Mesclar {name} com",
+      "mergeInto": "Mesclar com…",
       "delete": {
         "confirm": "Tirar a tag de {count, plural, one {# item} other {# itens}}?",
         "yes": "Sim, apagar a tag"
@@ -905,10 +905,10 @@
         "raindrop": "Raindrop (CSV)",
         "html": "Favoritos do navegador (HTML)"
       },
-      "drop": "Solte um arquivo, ou escolha um",
+      "drop": "Arraste um arquivo para cá, ou escolha um",
       "formats": "CSV do Pocket · zip do Omnivore · CSV do Raindrop · HTML de favoritos",
       "file": "Arquivo para importar",
-      "job": "Importação do {source}",
+      "job": "Importação: {source}",
       "progress": "{done, number} prontos",
       "progressFailed": "{done, number} prontos · {failed, number} falharam",
       "done": "Pronto. Os itens importados estão no seu Arquivo, em Importados, e continuam na busca.",
