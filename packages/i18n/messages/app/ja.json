@@ -1,1 +1,932 @@
-{}
+{
+  "language": {
+    "label": "言語",
+    "hint": "言語を選ぶまでは、ブラウザの言語で表示します。"
+  },
+  "kind": {
+    "link": "記事",
+    "video": "動画",
+    "pdf": "PDF",
+    "image": "画像",
+    "note": "メモ",
+    "todo": "ToDo",
+    "thing": "モノ"
+  },
+  "status": {
+    "inbox": "インボックス",
+    "later": "あとで",
+    "archived": "アーカイブ済み",
+    "done": "完了"
+  },
+  "moved": {
+    "archived": "アーカイブしました。消えてはいません。",
+    "later": "「あとで」に移しました。",
+    "done": "完了しました。",
+    "inbox": "インボックスに戻しました。"
+  },
+  "movedMany": {
+    "archived": "{count, plural, other {#件}}をアーカイブしました。消えてはいません。",
+    "later": "{count, plural, other {#件}}を「あとで」に移しました。",
+    "done": "{count, plural, other {#件}}を完了にしました。",
+    "inbox": "{count, plural, other {#件}}をインボックスに戻しました。"
+  },
+  "format": {
+    "when": {
+      "now": "今",
+      "minutes": "{n}分",
+      "hours": "{n}時間",
+      "yesterday": "昨日"
+    },
+    "ago": {
+      "now": "たった今",
+      "minutes": "{n}分前",
+      "hours": "{n}時間前",
+      "yesterday": "昨日",
+      "on": "{date}"
+    },
+    "due": {
+      "overdue": "期限切れ",
+      "today": "今日まで",
+      "tomorrow": "明日まで",
+      "on": "{date}まで"
+    },
+    "site": {
+      "email": "メール経由",
+      "file": "アップロードしたファイル"
+    },
+    "meta": {
+      "byAi": "AIによる",
+      "byYou": "自分で追加",
+      "failed": "読み込めませんでした",
+      "pending": "Pluck中",
+      "photo": "写真",
+      "video": "動画",
+      "minutes": "{n}分",
+      "pdf": "PDF",
+      "link": "リンク"
+    },
+    "source": {
+      "web": "WebからPluck",
+      "extension": "拡張機能からPluck",
+      "ios": "iOSからPluck",
+      "email": "メールでPluck",
+      "mcp": "お使いのAIがPluck",
+      "import": "インポート",
+      "api": "APIキーでPluck",
+      "copied": "公開リストからPluck"
+    },
+    "sourceAgo": {
+      "web": "WebからPluck · {ago}",
+      "extension": "拡張機能からPluck · {ago}",
+      "ios": "iOSからPluck · {ago}",
+      "email": "メールでPluck · {ago}",
+      "mcp": "お使いのAIがPluck · {ago}",
+      "import": "インポート · {ago}",
+      "api": "APIキーでPluck · {ago}",
+      "copied": "公開リストからPluck · {ago}"
+    },
+    "via": {
+      "web": "Web",
+      "extension": "拡張機能",
+      "ios": "iOS",
+      "email": "メール",
+      "mcp": "お使いのAI",
+      "import": "インポート",
+      "api": "APIキー",
+      "copied": "公開リスト"
+    }
+  },
+  "common": {
+    "didNotGoThrough": "うまくいきませんでした。",
+    "pluckedToInbox": "インボックスにPluckしました。",
+    "copiedForAi": "コピーしました。お使いのAIに貼り付けてください。",
+    "cancel": "キャンセル",
+    "copy": "コピー",
+    "save": "保存",
+    "rename": "名前を変更",
+    "merge": "統合",
+    "delete": "削除",
+    "remove": "外す",
+    "showMore": "もっと見る",
+    "openOriginal": "元のページを開く",
+    "undo": "元に戻す"
+  },
+  "standalone": {
+    "home": "Pluckのホーム"
+  },
+  "error": {
+    "title": "エラーが起きました",
+    "lede": "原因はこちら側にあります。Pluckしたものは何もなくなっていません。もう一度お試しください。何度も起きるようなら、お知らせください。",
+    "tryAgain": "もう一度試す",
+    "report": "報告する"
+  },
+  "globalError": {
+    "title": "エラーが起きました",
+    "lede": "原因はこちら側にあります。Pluckしたものは何もなくなっていません。少ししてからもう一度お試しください。",
+    "tryAgain": "もう一度試す"
+  },
+  "notFound": {
+    "title": "ここには何もありません",
+    "lede": "非公開になったか、もともと公開されていなかったようです。",
+    "home": "Pluckへ",
+    "support": "サポート"
+  },
+  "offline": {
+    "title1": "オフラインです。",
+    "title2": "何もなくなりません",
+    "lede": "最近開いたページはここで読めます。今Pluckしたものは、接続が戻るまでこのデバイスで待機します。",
+    "tryAgain": "もう一度試す",
+    "openInbox": "インボックスを開く",
+    "art": {
+      "inbox": "インボックス",
+      "waiting": "待機中 {count}件",
+      "one": "電車で見つけた記事",
+      "oneNote": "ここで待機中。接続が戻ると送られます",
+      "two": "IHコンロを買う",
+      "twoNote": "ToDo。これもここで待機中",
+      "three": "40分でわかるPostgresのインデックス",
+      "threeNote": "昨日開いたので、今も読めます"
+    }
+  },
+  "meta": {
+    "signin": "サインイン · Pluck",
+    "oauthError": "うまくいきませんでした · Pluck",
+    "consent": "AIと接続 · Pluck",
+    "shared": "あなたと共有 · Pluck",
+    "copy": "このリストをPluck · Pluck",
+    "extensionConnected": "接続しました · Pluck",
+    "inbox": "インボックス · Pluck",
+    "later": "あとで · Pluck",
+    "archive": "アーカイブ · Pluck",
+    "search": "検索 · Pluck",
+    "lists": "リスト · Pluck",
+    "list": "リスト · Pluck",
+    "settings": "設定 · Pluck",
+    "admin": "管理 · Pluck",
+    "item": "{title} · Pluck"
+  },
+  "signin": {
+    "preview": {
+      "sent": "送信しました。",
+      "subject": "Pluckへのリンク",
+      "now": "今",
+      "title": "リンクをお送りします。",
+      "body": "タップするとサインインできます。使えるのは一度だけ、10分間です。覚えておくパスワードはありません。",
+      "button": "Pluckにサインイン"
+    },
+    "sent": {
+      "title": "メールをご確認ください",
+      "lede": "<b>{email}</b>にリンクを送りました。使えるのは一度だけ、10分間です。開いたブラウザでサインインします。",
+      "status": "{email}にリンクを送りました。メールをご確認ください。",
+      "sending": "送信中",
+      "again": "もう一度送る",
+      "different": "別のメールアドレスを使う",
+      "spam": "1分たっても届かない場合は、迷惑メールフォルダを確認してから、もう一度送ってください。"
+    },
+    "aiTitle": "サインインして、お使いのAIと接続",
+    "aiLede": "リンクをメールでお送りします。サインインしたら、AIツールに何を許可するかを選べます。",
+    "title1": "リンクひとつ。",
+    "title2": "パスワードなし",
+    "lede": "メールアドレスを入力すると、リンクをお送りします。それでサインインできます。初めての方は、そのままライブラリが始まります。",
+    "email": "メールアドレス",
+    "emailPlaceholder": "you@example.com",
+    "password": "パスワード",
+    "signingIn": "サインイン中",
+    "signIn": "サインイン",
+    "sending": "送信中",
+    "send": "リンクをメールで受け取る",
+    "error": "うまくいきませんでした。アドレスを確認して、もう一度お試しください。",
+    "wrong": "パスワードが違います。",
+    "limitedTries": "試行回数が多すぎます。1時間後にもう一度お試しください。",
+    "limitedLinks": "リンクの送信が多すぎます。最後に届いたリンクを使うか、1時間後にもう一度お試しください。"
+  },
+  "signinLink": {
+    "broken": {
+      "title": "このリンクは途中で切れています",
+      "lede": "届くまでの間に、リンクの一部が切れてしまったようです。新しいリンクを送ってください。",
+      "action": "新しいリンクを送る"
+    },
+    "title1": "ワンタップで",
+    "title2": "サインイン",
+    "lede": "このリンクが使えるのは一度だけ、送信から10分間です。",
+    "action": "Pluckにサインイン"
+  },
+  "oauthError": {
+    "title": "接続できませんでした",
+    "lede": "Pluckでは何も変わっていません。たいていは、最初からやり直せば直ります。",
+    "step1": "AIツールから、もう一度接続を始めてください。",
+    "step2": "それでもだめなら、AIツールからPluckを外し、<connect>AIと接続</connect>にあるリンクでもう一度追加してください。",
+    "step3": "それでも解決しないときは、<support>サポート</support>をご覧ください。",
+    "serverSaid": "サーバーからのメッセージ（AIツールに聞かれたとき用）"
+  },
+  "consent": {
+    "allow": "許可する",
+    "deny": "許可しない",
+    "anAiTool": "AIツール",
+    "expired": {
+      "title": "このリクエストは期限切れです",
+      "lede": "AIツールから、もう一度接続を始めてください。何も共有されていません。"
+    },
+    "title": "{name}がPluckの使用を求めています",
+    "appLede": "このデバイスから、代わりにPluckと整理をします。",
+    "lede": "代わりに動くのは、使っている間だけです。加えた変更には、すべてAIによる印が付きます。",
+    "art": {
+      "inbox": "インボックス",
+      "after": "整理を頼んだあと",
+      "one": "MCPの認証はこう動く",
+      "oneNote": "タグ：mcp、auth",
+      "two": "40分でわかるPostgresのインデックス",
+      "twoNote": "「あとで」に移動",
+      "three": "3回描き直したキッチンの計画",
+      "threeNote": "そのまま",
+      "byAi": "AIによる"
+    },
+    "returnsTo": "許可すると<b>{host}</b>に移動します。知らないアドレスなら、許可しないでください。",
+    "scopes": {
+      "read": "ライブラリの読み取り：アイテム、Pluckが残した本文、メモ、タグ、リスト",
+      "write": "Pluckと整理：追加、タグ付け、並べ替え、リストの作成と編集",
+      "delete": "アイテムの削除。ほとんどのAIツールには必要ありません。",
+      "account": "アカウントの管理：接続中のAIツール、エクスポート、すべての削除。求めるのはPluck自身のアプリだけです。"
+    },
+    "signedInAs": "{email}でサインイン中。上に書かれていない限り、何も削除できません。接続は設定でいつでも解除できます。"
+  },
+  "digest": {
+    "open": "Pluckを開く",
+    "undo": "元に戻す",
+    "confirm": "確定",
+    "expired": {
+      "title": "このリンクは期限切れです",
+      "lede": "メール内のリンクは7日間有効です。どれもPluckの、元の場所に残っています。"
+    },
+    "archiveAll": {
+      "title1": "すべてアーカイブ。",
+      "title2": "本当に",
+      "count": "<b>{count, number}</b><span>{count, plural, other {件}}のアイテムが、期限の日数を過ぎても手つかずです</span>",
+      "lede": "まとめてアーカイブに移ります。削除はされません。リストの中のものはそのままです。",
+      "confirm": "はい、{count, number}件をアーカイブに移す",
+      "notNow": "今はしない"
+    },
+    "doing": {
+      "keep": "残しています",
+      "letGo": "アーカイブに移しています",
+      "undoLetGo": "元に戻しています",
+      "stop": "週1回のメールを停止しています"
+    },
+    "done": {
+      "keep": {
+        "title": "残しました",
+        "line": "そのまま元の場所に残り、日数はまたゼロから数えます。"
+      },
+      "letGo": {
+        "title": "アーカイブしました。消えてはいません",
+        "line": "削除はされません。"
+      },
+      "undoLetGo": {
+        "title": "元に戻しました"
+      },
+      "stop": {
+        "title": "週1回のメールを停止しました",
+        "line": "設定から、いつでもまたオンにできます。"
+      },
+      "archiveAll": {
+        "title": "{count, plural, other {#件}}をアーカイブに移しました",
+        "line": "削除はされません。"
+      },
+      "done": {
+        "title": "完了"
+      }
+    }
+  },
+  "shared": {
+    "leave": "このリストから退出",
+    "home": "Pluck、インボックスへ",
+    "byNamed": "{name}（@{handle}）",
+    "byHandle": "@{handle}",
+    "meta": "{by}さんが共有 · {count, plural, other {#件}} · 更新：{ago}",
+    "pluck": "このリストをPluck",
+    "seeOnly": "閲覧はできますが、変更できるのは共有した人だけです。Pluckすると、自分用のコピーができます。",
+    "note": "メモ",
+    "noAccess": {
+      "title1": "共有されて",
+      "title2": "いません",
+      "lede": "このリストはもう存在しないか、サインイン中のメールアドレス<b>{email}</b>とは共有されていません。リンクを送ってくれた人がいれば、そのアドレスと共有してもらってください。",
+      "lists": "自分のリスト",
+      "another": "別のメールアドレスを使う"
+    }
+  },
+  "copy": {
+    "failed": "うまくいきませんでした。",
+    "busy": "Pluck中",
+    "action": "このリストをPluck",
+    "title": "このリストをPluck",
+    "lede": "{count, plural, other {#件のアイテム}}がインボックスに届き、<b>{name}</b>の非公開コピーが順番とメモをそのまま引き継ぎます。",
+    "items": "{count, plural, other {#件}}",
+    "note": "メモ",
+    "more": "ほか{count}件"
+  },
+  "extensionConnected": {
+    "title": "接続しました",
+    "lede": "これでブラウザからPluckできます。このタブは閉じてかまいません。これからは、どのページもワンタッチです。",
+    "page": "開いているページをPluckします。MacではAltはOptionです。",
+    "selection": "選択した部分をハイライトとしてPluckします。"
+  },
+  "shell": {
+    "main": "メイン",
+    "nav": {
+      "inbox": "インボックス",
+      "later": "あとで",
+      "lists": "リスト",
+      "archive": "アーカイブ",
+      "settings": "設定"
+    },
+    "settingsNav": {
+      "ai": "AIツール",
+      "email": "メールでPluck",
+      "keys": "APIキー",
+      "language": "言語",
+      "expiry": "期限とアーカイブ",
+      "tags": "タグ",
+      "import": "インポートとエクスポート",
+      "delete": "アカウントの削除"
+    }
+  },
+  "offlineBar": {
+    "text": "オフラインです。接続が戻ると、Pluckしたものを同期します。"
+  },
+  "emptyInbox": {
+    "title": "まだ何もPluckしていません。",
+    "lede": "始め方は3つ。最初のひとつは1秒で終わります。",
+    "one": {
+      "title": "上の「Pluckする」を押す",
+      "body": "サンプルのリンクがもう入っています。届くところを見てください。"
+    },
+    "two": {
+      "title": "拡張機能を追加",
+      "body": "どのページでも、ワンクリックかAlt+Shift+Pで。",
+      "chrome": "Chrome"
+    },
+    "three": {
+      "title": "iPhoneからPluck",
+      "body": "iOSアプリで。公開までは、Pluckのショートカットで。",
+      "ios": "iOSアプリ",
+      "shortcut": "ショートカットを追加"
+    }
+  },
+  "shortcuts": {
+    "title": "ショートカット",
+    "close": "閉じる",
+    "keys": {
+      "search": "検索",
+      "pluckBox": "Pluck入力欄",
+      "move": "下へ、上へ移動",
+      "open": "開く",
+      "later": "あとで（またはインボックスに戻す）",
+      "archive": "アーカイブ",
+      "done": "完了（ToDoとモノ）",
+      "tag": "タグ",
+      "list": "リストに追加",
+      "select": "選択",
+      "escape": "選択を解除、または戻る",
+      "help": "この一覧"
+    }
+  },
+  "tagChip": {
+    "byAi": "AIが付けたタグ"
+  },
+  "kindChips": {
+    "label": "種類",
+    "all": "すべて",
+    "links": "リンク",
+    "note": "メモ",
+    "todo": "ToDo",
+    "thing": "モノ"
+  },
+  "picker": {
+    "hint": "Enterで切り替え · Escで閉じる",
+    "tag": {
+      "label": "タグ",
+      "placeholder": "入力してタグを検索または作成",
+      "options": "タグ",
+      "empty": "タグはまだありません。名前を入力すると作成できます。",
+      "create": "「{name}」を作成"
+    },
+    "list": {
+      "label": "リスト",
+      "placeholder": "入力してリストを検索または作成",
+      "options": "リスト",
+      "empty": "リストはまだありません。名前を入力すると作成できます。",
+      "create": "新しいリスト「{name}」"
+    }
+  },
+  "cookies": {
+    "title": "クッキーはいかがですか",
+    "body": "2つはすでに使っています。サインインの維持と、貼り付けた内容の保持のためです。もうひとつは、Pluckがどう使われているかを知り、使いにくいところを直すためのものです。広告はありません。データを売ることもありません。ほかのサイトまで追いかけることもしません。",
+    "no": {
+      "button": "協力しない",
+      "title": "わかりました。",
+      "note": "クッキーはひとかけらも使いません。"
+    },
+    "yes": {
+      "button": "協力する",
+      "title": "ありがとうございます。",
+      "note": "助かります。"
+    },
+    "more": "それぞれの中身",
+    "link": "クッキー"
+  },
+  "connectLoop": {
+    "label": "PluckのリンクをAIツールに貼り付け、Pluckの画面で許可し、MCPの認証についてPluckしたものを聞くと、Pluckしたものが3件返ってくる様子。",
+    "cap1": {
+      "title": "リンクをひとつ貼る",
+      "body": "MCPに対応したAIツールなら、どれでも。"
+    },
+    "cap2": {
+      "title": "許可する",
+      "body": "Pluckが確認するのは一度だけ。AIは何も削除できません。"
+    },
+    "cap3": {
+      "title": "あとは聞くだけ",
+      "body": "ライブラリのすべてを、いつものチャットで。"
+    },
+    "newChat": "新しいチャット",
+    "chat": "チャット",
+    "question": "MCPの認証について、何をPluckしたっけ？",
+    "answer": "3件あります。新しい順です：",
+    "cards": {
+      "one": "MCPの認証はこう動く",
+      "two": "急いでいる人のためのOAuthスコープ",
+      "twoMeta": "ブログ記事 · 6分",
+      "three": "トークン、スコープ、そしてみんなが間違えるところ"
+    },
+    "followUp": "良い順にリストにまとめましょうか？",
+    "connected": "Pluckに接続済み",
+    "message": "メッセージ",
+    "modal": {
+      "title": "コネクタを追加",
+      "body": "サーバーのリンクを貼り付けてください。次にサインインします。",
+      "cancel": "キャンセル",
+      "add": "追加"
+    },
+    "consent": {
+      "title": "AIを招き入れる",
+      "body": "AIツールがPluckのライブラリの使用を求めています。変更するのは頼んだときだけで、触れたものには印を付けます。",
+      "read": "ライブラリの読み取りと検索",
+      "write": "Pluck、タグ付け、並べ替え（AIの印付き）",
+      "delete": "すべての削除",
+      "cancel": "キャンセル",
+      "allow": "許可する"
+    }
+  },
+  "itemRow": {
+    "select": "{title}を選択"
+  },
+  "itemBar": {
+    "later": "あとで",
+    "archive": "アーカイブ",
+    "done": "完了"
+  },
+  "itemLists": {
+    "inLists": "{count, plural, other {#件のリスト}}に入っています",
+    "lists": "リスト",
+    "public": "公開 · #{place}",
+    "private": "非公開 · #{place}",
+    "add": "リストに追加"
+  },
+  "itemTags": {
+    "title": "タグ",
+    "remove": "タグ「{name}」を外す",
+    "add": "タグを追加",
+    "quoted": "「{name}」",
+    "byAi": "{names}は、お使いのAIが付けた{count, plural, other {タグです}}。触れると、自分のタグになります。",
+    "keep": "残す",
+    "pickerTitle": "タグ"
+  },
+  "topBar": {
+    "queued": "Pluckしました。オンラインに戻ると同期します。",
+    "rejected": "{count}件をPluckできませんでした：{reason}",
+    "failed": "うまくいきませんでした。",
+    "label": "Pluck",
+    "placeholder": "リンクを1つでも複数でも貼り付けるか、メモを入力",
+    "submit": "Pluckする",
+    "search": "検索",
+    "links": "{count}件のリンク。EnterですべてをまとめてPluckします。",
+    "as": "種類",
+    "due": "期限",
+    "enterAs": "Enterで{kind, select, note {メモ} todo {ToDo} other {モノ}}としてPluckします。"
+  },
+  "itemList": {
+    "inbox": {
+      "subtitle": "未整理 {count}件 · {sort, select, newest {新しい順} other {手つかずの順}}"
+    },
+    "later": {
+      "subtitle": "意図して残したもの",
+      "expiring": "意図して残したもの · 今週{count, plural, other {#件}}が期限を迎え、アーカイブに移ります",
+      "empty": {
+        "title": "「あとで」は空です。",
+        "body": "インボックスのアイテムでlを押すと、ここに残せます。"
+      }
+    },
+    "deleted": "削除しました。30日間はゴミ箱に残ります。",
+    "moveFailed": "うまくいきませんでした。何も移動していません。",
+    "showOnly": "{name}だけを表示",
+    "addedTo": "「{name}」に追加しました。",
+    "takenOut": "「{name}」から外しました。",
+    "kept": "残しました。{days}日間をまたゼロから数えます。",
+    "pluckedMany": "{count}件をインボックスにPluckしました。",
+    "sort": {
+      "label": "並べ替え",
+      "newest": "新しい順",
+      "untouched": "手つかずの順"
+    },
+    "stopFilter": "{name}での絞り込みを解除",
+    "bulk": {
+      "label": "一括操作",
+      "selected": "{count}件を選択中",
+      "addToList": "リストに追加",
+      "clear": "解除"
+    },
+    "actions": {
+      "inbox": "インボックス",
+      "later": "あとで",
+      "archive": "アーカイブ",
+      "done": "完了",
+      "tag": "タグ",
+      "list": "リスト",
+      "open": "開く"
+    },
+    "rowsLabel": "{view, select, inbox {インボックス} other {「あとで」}}のアイテム",
+    "pill": {
+      "title": "{days}日間手つかずです。残さなければアーカイブに移ります。削除はされません。",
+      "label": "{title}を残す：まもなくアーカイブに移ります",
+      "days": "{days}日"
+    },
+    "none": {
+      "all": "今、{view, select, inbox {インボックス} other {「あとで」}}には何もありません。",
+      "kind": "{view, select, inbox {インボックス} other {「あとで」}}に、この種類のものはありません。"
+    },
+    "keys": {
+      "move": "移動",
+      "inbox": "インボックス",
+      "later": "あとで",
+      "archive": "アーカイブ",
+      "tag": "タグ",
+      "list": "リストに追加",
+      "select": "選択",
+      "help": "すべてのショートカット"
+    },
+    "listPicker": "{count}件をリストに追加",
+    "tagPicker": "{count}件にタグを付ける"
+  },
+  "archive": {
+    "filter": {
+      "label": "絞り込み",
+      "all": "すべて",
+      "you": "自分で",
+      "expired": "期限切れ",
+      "import": "インポート"
+    },
+    "why": {
+      "bin": "削除済み。{days, plural, other {#日}}後に完全に削除されます",
+      "done": "完了",
+      "expiredAfter": "{days}日で期限切れ。ここに残しています",
+      "expired": "期限切れ。ここに残しています",
+      "bulk": "「すべてアーカイブ」でアーカイブ",
+      "import": "インポート",
+      "you": "自分でアーカイブ"
+    },
+    "outOfBin": "ゴミ箱から戻しました。",
+    "title": "アーカイブ",
+    "bin": "ゴミ箱",
+    "binSubtitle": "削除したもの。それぞれ、削除から30日後に完全に削除されます。",
+    "subtitle": "アーカイブしたもの、終えたもの、期限切れになったもの。削除はされず、検索でも見つかります。",
+    "rowsLabel": "アーカイブ済みのアイテム",
+    "restore": "復元",
+    "binEmpty": "ゴミ箱は空です。",
+    "empty": "まだ何もありません。",
+    "back": "アーカイブに戻る",
+    "binLink": "間違えて削除しましたか？<bin>ゴミ箱</bin>に30日間残っています。"
+  },
+  "search": {
+    "prompt": "{q}について、何をPluckしたっけ？",
+    "promptThis": "これについて、何をPluckしたっけ？",
+    "label": "検索",
+    "placeholder": "タイトル、メモ、タグ、ページの本文を検索",
+    "filters": {
+      "kind": "種類",
+      "kindAny": "種類：すべて",
+      "tag": "タグ",
+      "list": "リスト",
+      "status": "ステータス",
+      "date": "日付",
+      "week": "過去1週間",
+      "month": "過去1か月",
+      "year": "過去1年"
+    },
+    "count": "{count, plural, other {#件}} · タイトル、メモ、タグ、リスト名、本文",
+    "hint": "入力すると、アーカイブも含めたライブラリ全体を検索します。どこからでも/を押すとここに来ます。",
+    "results": "検索結果",
+    "snippet": "{pre}<mark>{hit}</mark>{post}",
+    "noteSnippet": "メモ：「{pre}<mark>{hit}</mark>{post}」",
+    "none": "「{q}」に一致するものはありません。検索は言葉そのものを探します。",
+    "ask": "意味で探したいときは、お使いのAIに聞いてください。",
+    "copy": "「{prompt}」をコピー"
+  },
+  "lists": {
+    "title": "リスト",
+    "subtitle": "作っているもののために。本、ニュースレターの号、発表、旅行、買うもの。",
+    "new": "新しいリスト",
+    "form": {
+      "name": "名前",
+      "namePlaceholder": "MCPの認証についての発表",
+      "purpose": "目的（一行で）",
+      "purposePlaceholder": "11月の勉強会で話す20分。",
+      "make": "リストを作成"
+    },
+    "empty": "リストはまだありません。どのアイテムでもaを押すと始められます。ここで作ることもできます。",
+    "table": {
+      "name": "名前と目的",
+      "visibility": "公開設定",
+      "ticked": "チェック",
+      "lastAdded": "最終追加"
+    },
+    "byAi": "AIによる",
+    "public": "公開 · {views, plural, other {#回表示}}",
+    "private": "非公開",
+    "tickedOf": "{ticked}/{count}",
+    "notYet": "まだなし",
+    "shared": {
+      "title": "あなたと共有",
+      "meta": "{from}さんから · {count, plural, other {#件}} · 閲覧のみ"
+    },
+    "foot": "リストの中のアイテムは期限切れになりません。リストは計画だからです。"
+  },
+  "list": {
+    "takenOut": "「{name}」から外しました。ライブラリには残っています。",
+    "nowPublic": "公開しました。リンクを知っている人は誰でも見られます。",
+    "nowPrivate": "非公開に戻しました。リンクはもう使えません。",
+    "askPrompt": "Pluckのリスト「{name}」を読んで、何が扱われているか、何が足りないか、どの順番で読むのが良いかを教えて。",
+    "crumb": "リスト",
+    "nameLabel": "リスト名",
+    "purpose": "目的",
+    "purposePlaceholder": "このリストが何のためのものかを一行で",
+    "visibility": "公開設定",
+    "private": "非公開",
+    "public": "公開",
+    "linkCopied": "リンクをコピーしました。",
+    "views": "{count, plural, other {#回表示}} · この数字は自分にしか見えません · <a>公開ページを見る</a>",
+    "privateShared": "非公開：自分と、下の人たちだけ。",
+    "privateOnly": "このリストは自分だけが見られます。",
+    "copyAsk": "お使いのAI用にコピー：「このリストについて聞く」",
+    "export": "このリストをエクスポート",
+    "ticked": "{count}件中{ticked}件チェック済み",
+    "empty": "まだ何もありません。インボックスのアイテムでaを押すと追加できます。",
+    "rowsLabel": "{name}（順番どおり）",
+    "drag": "ドラッグして{title}を並べ替え。Shift+JとShift+Kでも並べ替えられます。",
+    "tick": "{title}をチェック",
+    "noteLabel": "このリストでの{title}のメモ",
+    "byAi": "AIによる",
+    "note": "メモ",
+    "takeOut": "外す",
+    "keys": {
+      "tick": "チェック",
+      "note": "メモ",
+      "reorder": "並べ替え",
+      "add": "インボックスから<kbd>a</kbd>で追加するか、拡張機能から直接Pluckできます"
+    },
+    "delete": {
+      "confirm": "「{name}」を削除しますか？中のアイテムはライブラリに残ります。",
+      "yes": "はい、リストを削除する",
+      "action": "このリストを削除"
+    }
+  },
+  "people": {
+    "added": "{email}と共有しました。リンク付きのメールが届きます。",
+    "removed": "{email}はもう見られません。",
+    "placeholder": "共有する相手のメールアドレス",
+    "sharing": "共有中",
+    "share": "共有",
+    "label": "見られる人",
+    "stop": "{email}との共有を停止",
+    "some": "見ることはできますが、変更できるのは自分だけです。",
+    "none": "見えるのは中身だけで、タグやチェックは見えません。変更できるのは自分だけです。"
+  },
+  "admin": {
+    "title": "報告",
+    "open": "未対応 {count}件",
+    "empty": "確認するものはありません。",
+    "table": {
+      "list": "リスト",
+      "reason": "理由",
+      "owner": "所有者",
+      "actions": "操作"
+    },
+    "gone": "削除済み",
+    "takenDown": "取り下げ済み",
+    "closed": "停止済み",
+    "takeDown": "リストを取り下げる",
+    "close": "この人の公開ページを停止",
+    "resolve": "解決"
+  },
+  "item": {
+    "pending": "このページをPluckしています。数秒かかります。",
+    "failed": {
+      "title": "このページを読み込めませんでした。",
+      "retry": "再試行",
+      "retrying": "再試行中",
+      "wayback": "Wayback Machineのコピーを試す",
+      "loginTitle": "ログインが必要なページですか？",
+      "loginBody": "拡張機能からPluckすると、ページを残せます。ブラウザに表示されている内容をそのまま送ります。",
+      "extension": "拡張機能を入手",
+      "keptTitle": "ちゃんと残っています",
+      "keptBody": "リンク、メモ、タグは残っています。タイトルとメモで検索できます。"
+    }
+  },
+  "note": {
+    "untitled": "無題のメモ",
+    "state": {
+      "saved": "保存済み",
+      "saving": "保存中",
+      "error": "保存できませんでした。入力すると再試行します。"
+    },
+    "meta": "{kind} · {plucked} · 編集：{edited}",
+    "title": "タイトル",
+    "body": "本文",
+    "help": "最初の行がタイトルになります。プレーンテキストで、入力すると自動で保存されます。",
+    "about": "この{kind, select, note {メモ} todo {ToDo} other {モノ}}について",
+    "kind": "種類",
+    "kindHint": {
+      "note": "ToDoにすると、期限とチェックを付けられます。",
+      "todo": "ToDoには期限を付けられます。完了にするとインボックスから外れます。",
+      "thing": "モノは手に入れたいもの。リストに集めておけます。"
+    },
+    "due": "期限",
+    "source": "追加元：{via}",
+    "pasteBox": "Webの入力欄",
+    "noHighlights": "メモにはハイライトがありません。テキストを選択するとコピーできます。"
+  },
+  "reader": {
+    "progress": "読んだ割合",
+    "minutes": "{n}分で読めます",
+    "by": "{author}",
+    "selection": "選択範囲",
+    "highlight": "ハイライト",
+    "noteTool": "メモ",
+    "removeHighlight": "ハイライトを外す",
+    "about": "このアイテムについて",
+    "note": "メモ",
+    "kind": "種類",
+    "highlights": "ハイライト · {count}",
+    "noHighlights": "テキストを選択するとハイライトできます。",
+    "highlightNote": "このハイライトへのメモ",
+    "addNote": "メモを追加",
+    "removeLabel": "ハイライトを外す：{quote}",
+    "source": "追加元：{via} · ページを残しています"
+  },
+  "settings": {
+    "title": "設定",
+    "signedIn": "メールのリンクでサインイン中",
+    "signOut": "サインアウト",
+    "emailIn": {
+      "title": "メールでPluck",
+      "lede": "ニュースレターをここに転送すると、記事として届きます。",
+      "copied": "アドレスをコピーしました。",
+      "confirm": "古いアドレスはすぐに使えなくなります。",
+      "ready": "新しいアドレスができました。古いアドレスに転送している設定を更新してください。",
+      "makeNew": "新しく作る",
+      "regenerate": "アドレスを作り直す"
+    },
+    "profile": {
+      "label": "プロフィール",
+      "name": "名前",
+      "nameSaved": "名前を保存しました。",
+      "handle": "ハンドル（公開リスト用）",
+      "handleSaved": "ハンドルを保存しました。",
+      "makeUp": "自動で作る",
+      "move": "{count, plural, =0 {公開リストはまだないので、変わるリンクはありません。} other {#件の公開リストは{host}/@{handle}/…に移り、古いアドレスへのリンクは使えなくなります。メールで共有したリストには影響しません。}}保存すると、次に変更できるのは1か月後です。",
+      "invalid": "小文字の英字、数字、ハイフンで3〜24文字。",
+      "save": "@{handle}を保存",
+      "keep": "@{handle}のままにする",
+      "hintLocked": "公開したリストにだけ表示されます。変更できるのは月に1回です。",
+      "hint": "公開したリストにだけ表示されます。"
+    },
+    "ai": {
+      "testPrompt": "今週は何をPluckした？",
+      "title": "AIツール",
+      "lede": "いつものAIツールで、ライブラリを。設定は30秒です。すべてを読めますが、変更するのは頼んだときだけで、削除は一切できません。",
+      "connector": "コネクタのURL（Claude、ChatGPT、Cursor、そのほかのMCPクライアント用）",
+      "connectorCopied": "コネクタのURLをコピーしました。",
+      "commandCopied": "コマンドをコピーしました。",
+      "selfHost": "公開URLのないセルフホストの場合",
+      "needKey": "下でAPIキーを作成して、ここで使ってください。",
+      "test": "試してみる",
+      "testHint": "お使いのAI用に「{prompt}」をコピーします",
+      "connected": "接続済み",
+      "connectedLast": "接続済み · 最終利用：{ago}",
+      "notConnected": "まだ接続されていません",
+      "readsWrites": "読み取りと整理",
+      "reads": "読み取り",
+      "disconnected": "{name}の接続を解除しました。もうライブラリにはアクセスできません。",
+      "disconnect": "接続を解除"
+    },
+    "expiry": {
+      "digestOff": "週1回のメールは送りません。",
+      "digestSaved": "週1回のメールの曜日を保存しました。",
+      "saved": "{days}日間手つかずのものはアーカイブに移ります。削除はされません。",
+      "never": "期限切れにはなりません。",
+      "sent": "送信しました。メールをご確認ください。",
+      "archived": "{count, plural, other {#件}}をアーカイブに移しました。削除はされません。",
+      "title": "期限とアーカイブ",
+      "lede": "触れていないものは、自動でアーカイブに移ります。削除はされません。検索でも見つかり、「復元」で元に戻せます。リストの中のアイテムは期限切れになりません。",
+      "after": "アーカイブに移すまで",
+      "days": "手つかずのまま{days}日",
+      "neverOption": "しない",
+      "scope": "対象",
+      "scopeInboxLater": "インボックスと「あとで」",
+      "scopeInbox": "インボックスのみ",
+      "digest": "週1回のメール",
+      "digestDay": "{day} 6:00",
+      "digestOffOption": "オフ",
+      "warns": "週1回のメールで、1週間前にお知らせします。",
+      "sendNow": "今すぐ1通送る",
+      "clean": {
+        "title": "まっさらにする",
+        "body": "{scope, select, inbox {インボックス} other {インボックスと「あとで」}}にある{days}日より古いものを、今すぐすべてアーカイブに移します。対象は{count, plural, other {#件}}です。リストの中のものはそのままです。",
+        "confirm": "{count}件をアーカイブに移しますか？削除はされません。",
+        "yes": "はい、アーカイブする",
+        "action": "本当に、すべてアーカイブする"
+      }
+    },
+    "tags": {
+      "merged": "「{name}」を「{into}」に統合しました。",
+      "deleted": "「{name}」を削除しました。アイテムは残っています。",
+      "purged": "今週お使いのAIが付けたタグを{count, plural, other {#件}}外しました。",
+      "title": "タグ",
+      "purge": {
+        "confirm": "今週お使いのAIが付けたタグを{count, plural, other {#件}}外しますか？",
+        "yes": "はい、外す",
+        "action": "今週AIが付けたタグをすべて外す · {count}"
+      },
+      "empty": "タグはまだありません。どのアイテムでもtを押すと作成できます。",
+      "table": {
+        "tag": "タグ",
+        "yours": "自分",
+        "byAi": "AI",
+        "actions": "操作"
+      },
+      "newName": "{name}の新しい名前",
+      "madeByAi": "AIが作成",
+      "mergeLabel": "{name}の統合先",
+      "mergeInto": "統合先…",
+      "delete": {
+        "confirm": "{count, plural, other {#件のアイテム}}から外しますか？",
+        "yes": "はい、タグを削除する"
+      }
+    },
+    "keys": {
+      "title": "APIキー",
+      "fresh": "今すぐこのキーをコピーしてください。表示されるのは一度だけです。",
+      "copied": "キーをコピーしました。",
+      "used": "最終利用：{when}",
+      "unused": "未使用",
+      "revoked": "「{name}」を無効にしました。すぐに使えなくなります。",
+      "revoke": "無効にする",
+      "nameLabel": "キーの名前",
+      "namePlaceholder": "ノートPCのClaude Code",
+      "make": "キーを作成",
+      "new": "新しいキー"
+    },
+    "import": {
+      "uploadFailed": "アップロードできませんでした。もう一度お試しください。",
+      "title": "インポート",
+      "from": "インポート元",
+      "sources": {
+        "pocket": "Pocket（CSV）",
+        "omnivore": "Omnivore（zip）",
+        "raindrop": "Raindrop（CSV）",
+        "html": "ブラウザのブックマーク（HTML）"
+      },
+      "drop": "ファイルをドロップするか、選んでください",
+      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · ブックマークHTML",
+      "file": "インポートするファイル",
+      "job": "{source}のインポート",
+      "progress": "{done, number}件完了",
+      "progressFailed": "{done, number}件完了 · {failed, number}件失敗",
+      "done": "完了しました。インポートしたアイテムはアーカイブの「インポート」にあり、検索もできます。",
+      "running": "バックグラウンドで進みます。このページは閉じてもかまいません。",
+      "export": {
+        "title": "エクスポート",
+        "lede": "pluck.jsonに加えて、アイテムごとに本文とメモを入れたMarkdownファイルと、リストごとのMarkdownファイル。zipにしてメールで送ります。リストはそれぞれのページから個別にエクスポートできます。",
+        "started": "エクスポート中です。リンクは1、2分でメールに届きます。",
+        "busy": "エクスポート中",
+        "action": "すべてをエクスポート"
+      }
+    },
+    "deleteAccount": {
+      "title": "アカウントの削除",
+      "lede": "すべてのアイテム、タグ、メモ、キーが削除されます。先にエクスポートしてください。",
+      "type": "確認のため、{email}と入力してください",
+      "now": "今すぐすべて削除",
+      "action": "本当にすべて削除する"
+    }
+  }
+}
