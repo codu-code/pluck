@@ -1,1 +1,568 @@
-{}
+{
+  "language": {
+    "label": "Taal"
+  },
+  "meta": {
+    "description": "Pluk het. Een snelle opensource-app om links te bewaren, die je AI kan lezen."
+  },
+  "chrome": {
+    "home": "Pluck, startpagina",
+    "nav": "Website",
+    "lists": "Lijsten",
+    "connect": "Verbind je AI",
+    "openSource": "Open source",
+    "getPluck": "Begin met Pluck",
+    "footerHome": "Home",
+    "support": "Hulp",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "cookies": "Cookies",
+    "freeAndOpen": "Pluck is gratis en open source."
+  },
+  "paste": {
+    "label": "Plak een link om het te proberen",
+    "placeholder": "Plak een link. Of vijf. Ga je gang.",
+    "button": "Pluk het",
+    "failed": "Dat lukte niet. Probeer het opnieuw.",
+    "plucked": "Geplukt.",
+    "inInbox": "Het staat in je <inbox>Inbox</inbox>.",
+    "checkEmail": "Kijk in je mail.",
+    "took": "Dat duurde {ms, number} ms.",
+    "sent": "We hebben een link gestuurd naar <b>{email}</b>. Open hem in deze browser en wat je plukte, komt in je Inbox.",
+    "keepNote": "Vul je e-mailadres in om het te bewaren. Nieuw hier of al eerder geweest: de link logt je in.",
+    "emailLabel": "Je e-mailadres, om te bewaren wat je plukte",
+    "emailPlaceholder": "jij@example.com",
+    "sending": "Versturen",
+    "keep": "Bewaar het",
+    "emailFailed": "Dat lukte niet. Controleer het adres en probeer het opnieuw.",
+    "limited": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
+    "hint": "Gratis. Open source. iPhone, Chrome, web en e-mail. Klaar voor je AI."
+  },
+  "home": {
+    "meta": {
+      "title": "Pluck · Pluk het. Sorteer het later.",
+      "description": "Pluk alles met één tik. Sorteer het later, met de hand of met je AI. Gratis en open source."
+    },
+    "hero": {
+      "title": "Pluk het<dot>.</dot>",
+      "line1": "Pluk alles met één tik.",
+      "line2": "Sorteer het later, met de hand of met je AI.",
+      "line3": "Of niet. We zeuren niet."
+    },
+    "mock": {
+      "label": "De app",
+      "inbox": "Inbox",
+      "toTriage": "{count, number} te sorteren",
+      "plucked": "Geplukt.",
+      "rows": {
+        "mcp": {
+          "title": "Hoe MCP-auth echt werkt",
+          "meta": "modelcontextprotocol.io · 12 min",
+          "tag": "mcp"
+        },
+        "postgres": {
+          "title": "Postgres-indexen in 40 minuten",
+          "meta": "youtube.com · 41 min",
+          "tag": "postgres"
+        },
+        "idea": {
+          "title": "Een MCP-server voor de offertes van Assemble",
+          "meta": "Notitie · door jou",
+          "tag": "assemble"
+        },
+        "hob": {
+          "title": "Inductiekookplaat, 60 cm, vier zones",
+          "meta": "Ding · Lijst keukenverbouwing",
+          "tag": "keuken"
+        }
+      }
+    },
+    "band": {
+      "article": "Een artikel.",
+      "recipe": "Een recept.",
+      "thread": "Een draadje.",
+      "idea": "Een half idee.",
+      "hob": "Een kookplaat voor de keuken.",
+      "talk": "Een presentatie die je in november geeft.",
+      "pdf": "Een PDF die je nooit gaat lezen.",
+      "small": "Eén inbox voor alles. De pagina wordt bewaard, niet alleen de link, dus hij is er nog als de site er niet meer is."
+    },
+    "stats": {
+      "tapNumber": "1 tik",
+      "tap": "Vanuit het deelmenu van je iPhone, zonder een app te openen. Vanuit Chrome, je mail of een chat met je AI. “Geplukt” in minder dan 300 ms. Elke keer.",
+      "nagsNumber": "0 gezeur",
+      "nags": "Geen streaks, geen badges, geen schuldgevoel. Niets wordt achter je rug om getagd. Wat je nooit aanraakt, gaat na 30 dagen (jij kiest het aantal) naar het Archief, tenzij het in een lijst staat. Er wordt niets verwijderd.",
+      "secondsNumber": "30 s",
+      "seconds": "Om de AI die je al gebruikt aan te sluiten. Claude, ChatGPT, Cursor, alles wat MCP spreekt. Laat hem opruimen, groeperen of ideeën maken van wat je plukte. Hij werkt terwijl je meekijkt, en verwijdert nooit iets."
+    },
+    "lists": {
+      "title": "Lijsten voor wat je maakt.",
+      "para1": "Een boek. Een nieuwsbrief. Een presentatie. Een reis. <phrase>Dingen om te kopen.</phrase> Zet alles wat je plukt in zoveel lijsten als je wilt, elk met een eigen notitie en een vinkje.",
+      "para2": "Standaard privé. Openbaar met één schakelaar. Terug met dezelfde schakelaar.",
+      "cardTitle": "Keukenverbouwing, te kopen",
+      "progress": "{done, number} van {total, number}",
+      "kitchen": {
+        "hob": {
+          "title": "Inductiekookplaat, 60 cm",
+          "note": "Check de breedte tegen de uitsparing."
+        },
+        "tap": {
+          "title": "Kraan met uittrekbare sproeier",
+          "note": "Geborsteld staal, geen chroom."
+        },
+        "led": {
+          "title": "Ledstrip onder de kastjes",
+          "note": "Met stekker, geen elektricien nodig."
+        },
+        "extractor": {
+          "title": "Afzuigkap, met afvoer naar buiten",
+          "note": "Vraag de monteurs eerst naar de muur."
+        }
+      },
+      "public": "Openbaar. Iedereen kan hem in zijn eigen Pluck plukken."
+    },
+    "ai": {
+      "eyebrow": "KLAAR VOOR JE AI",
+      "title": "Sluit de AI aan die je al gebruikt.",
+      "ask1": "“Wat heb ik geplukt over MCP-auth?”",
+      "ask2": "“Ruim mijn inbox op.”",
+      "ask3": "“Maak een leeslijst van deze maand, beste eerst.”",
+      "body": "Eén link en je hele bibliotheek is er. Hij verandert alleen iets als jij dat zegt, en markeert alles wat hij aanraakte.",
+      "button": "Zo werkt het met AI",
+      "chatMe1": "Pluk dit als idee: een MCP-server voor de offertes van Assemble",
+      "chatAi1": "Geplukt. Het staat in je inbox als Notitie, gemarkeerd als geplukt door mij.",
+      "chatMe2": "Wat ligt er te verstoffen in mijn bibliotheek?",
+      "chatAi2": "Vijf dingen, al een maand niet aangeraakt. Zullen we ze één voor één doorlopen?"
+    },
+    "imports": {
+      "title": "Pocket is gestopt. Omnivore is gestopt.",
+      "body": "Pluck is open source en draait op een database die van jou kan zijn. Het kan niet met twee weken opzegtermijn verdwijnen. Neem je oude bibliotheek in één keer mee.",
+      "anyBrowser": "Elke browser",
+      "pocket": "CSV-export",
+      "omnivore": "Export-zip",
+      "raindrop": "CSV",
+      "browser": "Bladwijzers als HTML",
+      "selfHost": "Host het zelf met één commando"
+    },
+    "closing": {
+      "title": "Sorteer het<br></br>later<dot>.</dot>",
+      "chrome": "Toevoegen aan Chrome",
+      "iphone": "iPhone",
+      "web": "Gebruik het op het web"
+    }
+  },
+  "soon": {
+    "title": "Binnenkort<dot>.</dot>",
+    "web": "Gebruik het op het web",
+    "connect": "Verbind je AI",
+    "chrome": {
+      "meta": {
+        "title": "Pluck voor Chrome · Pluck",
+        "description": "Pluck voor Chrome wacht op beoordeling door de Chrome Web Store. Komt elk moment uit."
+      },
+      "para1": "Pluck voor Chrome wacht op beoordeling door de Chrome Web Store, ergens achter een paar duizend kortingscodezoekers. Komt elk moment uit.",
+      "para2": "Tot die tijd werkt Pluck op het web: plak een link en hij is geplukt. Je AI kan ook voor je plukken."
+    },
+    "iphone": {
+      "meta": {
+        "title": "Pluck voor iPhone · Pluck",
+        "description": "Pluck voor iPhone komt eerst op TestFlight, daarna in de App Store."
+      },
+      "para1": "Pluck voor iPhone komt eerst op TestFlight, daarna in de App Store. Pluk vanuit het deelmenu, lees overal, veeg naar Later.",
+      "para2": "Tot die tijd werkt Pluck in Safari op je telefoon: plak een link en hij is geplukt. Je AI kan ook voor je plukken."
+    }
+  },
+  "openSource": {
+    "meta": {
+      "title": "Open source · Pluck",
+      "description": "Pluck is gratis en open source. Gebruik getpluck.io, of draai je eigen versie met één commando."
+    },
+    "licence": "Licentie: AGPL-3.0 (server) en MIT (apps).",
+    "title": "Gratis.<br></br>Open.<br></br><marker>Van jou.</marker>",
+    "lede": "Read-later-apps verdwijnen keer op keer. Pluck kan dat niet, want de code is openbaar en de data is van jou. Gebruik de onze, of draai je eigen versie met één commando.",
+    "selfHostTitle": "Host het zelf met één commando.",
+    "selfHostBody": "Dezelfde app, extensie, iPhone-app en AI-connector. Kies je eigen server in Instellingen.",
+    "terminalComment": "# daarna, voor AI-tools zonder openbare URL",
+    "reasons": {
+      "export": {
+        "title": "Exporteer met één klik.",
+        "body": "Elk item als JSON, plus één Markdown-bestand per item en per lijst, met je markeringen en notities. Het werkt vanaf dag één, niet pas als wij eraan toekomen."
+      },
+      "page": {
+        "title": "De pagina, niet alleen de link.",
+        "body": "Pluck bewaart wat je plukte. Gaat de site offline of verandert hij, dan is jouw kopie er nog, gewoon leesbaar."
+      },
+      "public": {
+        "title": "Openbaar is openbaar. Privé is privé.",
+        "body": "Een openbare lijst toont titels, covers, je notities en links naar de bron. Hij toont nooit de bewaarde paginatekst. Zet hem terug op privé en de pagina is binnen een minuut weg."
+      },
+      "ai": {
+        "title": "Jouw AI, jouw keuze.",
+        "body": "Pluck stuurt wat je plukt nooit uit zichzelf naar een model. Je AI-tool leest je bibliotheek alleen als je hem verbindt, en doet alleen wat je vraagt."
+      }
+    },
+    "closing": "Pluk het<dot>.</dot>",
+    "use": "Gebruik getpluck.io",
+    "code": "Lees de code"
+  },
+  "support": {
+    "meta": {
+      "title": "Hulp · Pluck",
+      "description": "Antwoorden over de Pluck-extensie, de iPhone-app, je AI en je account, en waar je een bug meldt."
+    },
+    "title": "Hulp<dot>.</dot>",
+    "lede": "Korte antwoorden over de extensie, de iPhone-app, je AI en je account. Werkt er iets niet? <bugs>Laat het ons weten op GitHub</bugs>.",
+    "topicsLabel": "Onderwerpen",
+    "extension": {
+      "title": "De extensie",
+      "pluckPage": {
+        "q": "Hoe pluk ik de pagina waar ik op ben?",
+        "a": "Klik op de Pluck-knop in de werkbalk, of druk op <pluckKeys></pluckKeys>. Klik met rechts op een link of afbeelding om alleen die te plukken."
+      },
+      "quote": {
+        "q": "Kan ik een citaat bewaren in plaats van de hele pagina?",
+        "a": "Selecteer de woorden en druk op <highlightKeys></highlightKeys>. Pluck bewaart de pagina, met je selectie erop als markering."
+      },
+      "dot": {
+        "q": "Waarom staat er een stip op de Pluck-knop?",
+        "a": "Je plukte iets zonder verbinding. Het wacht op je computer en wordt vanzelf verstuurd zodra je weer online bent. Dan verdwijnt ook de stip."
+      },
+      "login": {
+        "q": "Een pagina achter mijn login bleef leeg.",
+        "a": "Zet in de opties van de extensie Pagina-inhoud meesturen bij plukken aan. Pluck bewaart de pagina dan zoals je browser hem toont, niet zoals een buitenstaander hem ziet."
+      },
+      "server": {
+        "q": "Hoe gebruik ik hem met mijn eigen server?",
+        "a": "Bouw de extensie voor je server met de self-host-handleiding in de repository en laad hem in je browser. Log in, of plak een API-sleutel uit Instellingen."
+      }
+    },
+    "iphone": {
+      "title": "iPhone",
+      "share": {
+        "q": "Hoe pluk ik vanuit Safari of een andere app?",
+        "a": "Tik op Deel en dan op Pluck. Zie je Pluck niet, scrol de rij apps dan helemaal door, tik op Meer en voeg Pluck toe aan je favorieten."
+      },
+      "offline": {
+        "q": "Ik plukte iets offline. Waar is het gebleven?",
+        "a": "Het wacht op je telefoon en wordt verstuurd zodra je Pluck weer opent met verbinding."
+      },
+      "server": {
+        "q": "Kan de app mijn eigen server gebruiken?",
+        "a": "Ja. Kies op het inlogscherm Gebruik je eigen server en vul het adres in."
+      }
+    },
+    "ai": {
+      "title": "Je AI",
+      "connect": {
+        "q": "Hoe verbind ik mijn AI-tool?",
+        "a": "Elke tool gebruikt dezelfde link. Bij <connect>Verbind je AI</connect> staan de stappen voor Claude, ChatGPT, Cursor en de rest."
+      },
+      "change": {
+        "q": "Wat kan mijn AI veranderen?",
+        "a": "Hij kan plukken, taggen, sorteren en privélijsten maken als je dat vraagt. Hij kan niets verwijderen, tenzij je dat toestond toen je hem verbond, en hij kan geen lijst openbaar maken: dat kun alleen jij, vanuit de lijst in Pluck. Alles wat hij toevoegt, krijgt het label “door AI”."
+      },
+      "disconnect": {
+        "q": "Hoe koppel ik hem los?",
+        "a": "Instellingen, AI-tools, Loskoppelen. Hij stopt meteen, niet pas aan het eind van zijn sessie."
+      }
+    },
+    "account": {
+      "title": "Je bibliotheek en account",
+      "signIn": {
+        "q": "De inloglink werkte niet.",
+        "a": "Een link werkt één keer, 10 minuten lang. Vraag een nieuwe aan vanuit dezelfde browser. Zegt Pluck dat je er te veel hebt gevraagd, gebruik dan de nieuwste of wacht een uur."
+      },
+      "oldItems": {
+        "q": "Waar zijn mijn oude items gebleven?",
+        "a": "Items die je een tijd niet hebt aangeraakt, gaan naar het Archief, er wordt niets verwijderd. Jij kiest hoe lang, of zet het uit, in Instellingen onder Verlopen en archief."
+      },
+      "deleted": {
+        "q": "Ik heb per ongeluk iets verwijderd.",
+        "a": "Verwijderde items wachten 30 dagen in de Prullenbak. De link staat onder aan het Archief. Open het item en zet het terug."
+      },
+      "monday": {
+        "q": "Hoe stop ik de maandagmail?",
+        "a": "Gebruik de stoplink onder aan een van die mails, of kies een andere dag of geen dag in Instellingen onder Verlopen en archief."
+      },
+      "export": {
+        "q": "Kan ik alles meenemen?",
+        "a": "Instellingen, Alles exporteren. Je krijgt een mail met een zip: elk item als JSON, plus een Markdown-bestand per item en per lijst, met je notities en markeringen."
+      },
+      "delete": {
+        "q": "Hoe verwijder ik mijn account?",
+        "a": "Instellingen, Account verwijderen. Typ je e-mailadres om te bevestigen. Je items, lijsten, bestanden en sleutels zijn meteen weg."
+      }
+    },
+    "selfHost": {
+      "title": "Zelf draaien",
+      "run": {
+        "q": "Hoe draai ik Pluck zelf?",
+        "a": "Eén commando met Docker. <openSource>Open source</openSource> laat het zien, en de self-host-handleiding in de repository gaat over mail, opslag en het op een server zetten."
+      }
+    },
+    "bugs": {
+      "title": "Een bug gevonden<mark>?</mark>",
+      "body": "Open een issue op GitHub. Zeg wat je deed, wat je verwachtte en wat er in plaats daarvan gebeurde. Ideeën zijn daar ook welkom.",
+      "note": "Issues zijn openbaar. Laat links, notities en alles wat je liever voor jezelf houdt weg.",
+      "button": "Open een issue"
+    }
+  },
+  "connect": {
+    "meta": {
+      "title": "Verbind je AI · Pluck",
+      "description": "Pluck spreekt MCP. Eén link en de AI-tool die je al gebruikt, kan je bibliotheek lezen, doorzoeken en sorteren."
+    },
+    "eyebrow": "PLUCK + JE AI · MCP",
+    "title": "Klaar voor je AI. Welke je ook gebruikt.",
+    "lede": "Pluck spreekt MCP, de open standaard waarmee AI-tools op apps aansluiten. Eén link en je AI kan je hele bibliotheek lezen, doorzoeken en sorteren. Hij verandert alleen iets als jij dat zegt, en verwijdert nooit iets.",
+    "loopLabel": "Zo werkt verbinden",
+    "installTitle": "Installeren. Dertig seconden, echt waar.",
+    "installSub": "Log in bij Pluck en kies je tool. De link is voor allemaal hetzelfde.",
+    "tabsLabel": "Je AI-tool",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "tools": {
+      "claude": {
+        "step1": "Open Claude, dan Instellingen, dan Connectors.",
+        "step2": "Kies Aangepaste connector toevoegen en plak de link.",
+        "step3": "Log in bij Pluck als daarom wordt gevraagd. Klaar.",
+        "codeLabel": "Connector-URL",
+        "note": "Eenmaal toegevoegd werkt het op web, desktop en telefoon."
+      },
+      "code": {
+        "step1": "Open een terminal.",
+        "step2": "Voer de regel hiernaast uit.",
+        "step3": "Zeg “wat heb ik deze week geplukt?” om het te testen.",
+        "codeLabel": "Eén regel",
+        "note": "Logt je de eerste keer in via je browser."
+      },
+      "chatgpt": {
+        "step1": "Open ChatGPT, dan Instellingen, dan Connectors.",
+        "step2": "Kies Maken en plak de link als URL van de MCP-server.",
+        "step3": "Log in bij Pluck als daarom wordt gevraagd.",
+        "codeLabel": "URL van de MCP-server",
+        "note": "Je hebt een abonnement nodig waarin aangepaste connectors zijn toegestaan."
+      },
+      "cursor": {
+        "step1": "Open de instellingen van Cursor, dan MCP.",
+        "step2": "Voeg een server toe met de JSON hiernaast.",
+        "step3": "Log in bij Pluck als daarom wordt gevraagd.",
+        "note": "Elke editor of client die remote MCP ondersteunt, werkt op dezelfde manier."
+      },
+      "self": {
+        "label": "Zelf gehost",
+        "step1": "Maak een API-sleutel in Instellingen.",
+        "step2": "Voeg de regel hiernaast aan je AI-tool toe als lokale (stdio-)server.",
+        "step3": "Vraag wat je deze week plukte.",
+        "codeLabel": "Zonder openbare URL",
+        "note": "Dezelfde tools en prompts, doorgeschakeld naar je eigen server."
+      }
+    },
+    "toolsTitle": "Twaalf tools. Heldere namen.",
+    "toolsBody": "Resultaten komen terug als kaarten met de titel voorop, dus een vraag als “wat heb ik deze week geplukt” is één aanroep en één scherm.",
+    "toolList": {
+      "search_items": "Zoeken op tekst in titel, notitie, tags, lijstnamen en paginatekst.",
+      "list_items": "Door Inbox, Later, Archief of Klaar bladeren, nieuwste of onaangeroerd eerst.",
+      "get_item": "Eén item volledig, met de bewaarde paginatekst.",
+      "save_item": "Pluk een link, veel links, een notitie, een taak of een ding. Gemarkeerd als geplukt door AI.",
+      "batch_update": "Status, soort, tags en deadlines van één of veel items.",
+      "list_tags": "Je tags, met aantallen.",
+      "create_tag": "Een nieuwe tag, alleen nadat je ja hebt gezegd.",
+      "list_lists": "Je lijsten, met doel, aantal en zichtbaarheid.",
+      "get_list": "Eén lijst op volgorde, met notities en vinkjes.",
+      "create_list": "Een nieuwe lijst met items op volgorde en een notitie per item. Privé.",
+      "update_list": "Hernoemen, herschikken, toevoegen, afvinken of privé maken. Alleen jij maakt een lijst openbaar.",
+      "get_digest": "Wat verloopt, wat een deadline heeft, het oudste en stille lijsten. De maandagmail, als data."
+    },
+    "asksTitle": "Vier dingen om te vragen.",
+    "asks": {
+      "tidy": {
+        "say": "“Ruim mijn Pluck-inbox op.”",
+        "does": "Stelt tags voor uit de tags die je al hebt, plus per item bewaren, later of archiveren. Jij zegt ja of past aan. Eén batch."
+      },
+      "reading": {
+        "say": "“Maak een leeslijst over MCP-auth, beste eerst.”",
+        "does": "Zoekt, leest en bouwt de lijst op volgorde, met een regel over waarom elk item ertoe doet. Privé tot jij iets anders zegt."
+      },
+      "ideas": {
+        "say": "“Drie blogideeën uit wat ik deze week plukte.”",
+        "does": "Leest de beste vijf helemaal en schetst drie invalshoeken met bronnen. Kies er een en hij plukt het concept terug als Notitie."
+      },
+      "review": {
+        "say": "“Start mijn weekreview.”",
+        "does": "De maandagmail, als gesprek. Eén beslissing tegelijk."
+      }
+    },
+    "neverTitle": "Wat je AI nooit kan",
+    "never": {
+      "delete": "Iets verwijderen. Die bevoegdheid krijgt hij niet.",
+      "makeTag": "Een tag maken waar je niet om vroeg.",
+      "renameTag": "Een tag die jij maakte hernoemen of weghalen.",
+      "purpose": "Het doel van een lijst herschrijven.",
+      "public": "Een lijst openbaar maken. Dat kun alleen jij, vanuit de lijst in Pluck."
+    },
+    "neverNote": "Alles wat hij toevoegt, krijgt een “door AI”-markering. In Instellingen haal je de wijzigingen van een week weg met één tik.",
+    "closing": "Vraag het je AI<mark>.</mark>",
+    "button": "Begin met Pluck en verbind je AI"
+  },
+  "legal": {
+    "translationNotice": "Dit is een vertaling. Als deze afwijkt van de Engelse tekst, geldt de Engelse versie."
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy · Pluck",
+      "description": "Wat Pluck bewaart, wat het nooit doet en hoe je alles meeneemt."
+    },
+    "title": "Privacy",
+    "lede": "Kort gezegd: we bewaren wat je plukt, zodat je het later kunt lezen. We lezen het niet, verkopen het niet en stoppen het niet in een AI-model. Laatst bijgewerkt op 24 oktober 2026.",
+    "sections": {
+      "store": {
+        "title": "Wat we bewaren",
+        "body": "Je e-mailadres en naam. Elk item dat je plukt: de link, de paginatekst en afbeeldingen die we ophaalden, je titel, notitie, tags, soort, status, lijsten, markeringen en leespositie. Het tijdstip waarop je het plukte en waarop je het voor het laatst opende, die de verloopregel en de maandagmail gebruiken. Items die je importeert uit Pocket, Omnivore, Raindrop of een bladwijzerbestand."
+      },
+      "dont": {
+        "title": "Wat we niet doen",
+        "body": "We lezen je bibliotheek niet. Niemand kijkt ernaar, tenzij je ons daarom vraagt als je hulp nodig hebt. We verkopen hem niet en delen hem niet met adverteerders. Er zijn geen advertenties. In de app zit geen AI-model, dus niets wat je plukt wordt door ons naar een model gestuurd."
+      },
+      "extension": {
+        "title": "De browserextensie",
+        "body": "Zolang je bent ingelogd, vraagt de extensie je Pluck-server of de pagina waar je op bent al in je bibliotheek staat, zodat het pictogram kan inkleuren. Dat adres wordt alleen gebruikt om die vraag te beantwoorden: het wordt niet aan je bibliotheek toegevoegd en niet bij je account bewaard. Zet dit uit door uit te loggen in de extensie of door de extensie te verwijderen."
+      },
+      "ai": {
+        "title": "Je AI-tool",
+        "body": "Verbind je een AI-tool via MCP, dan leest die tool je bibliotheek namens jou en stuurt hij wat hij leest naar zijn eigen aanbieder. Dat is tussen jou en die aanbieder. Je kunt de verbinding altijd verbreken in Instellingen. Alles wat de tool verandert, is gemarkeerd als veranderd door AI en kan in één keer ongedaan worden gemaakt."
+      },
+      "publicLists": {
+        "title": "Openbare lijsten",
+        "body": "Een lijst is privé tot je hem openbaar maakt. Een openbare lijst toont de naam, het doel, je naam en gebruikersnaam, en per item de titel, cover, site en je notitie, met links naar de originelen. Hij toont nooit de bewaarde paginatekst, je tags, vinkjes of iets anders uit je bibliotheek. Zet hem terug op privé en de pagina geeft binnen een minuut een 404."
+      },
+      "sharing": {
+        "title": "Een Lijst delen",
+        "body": "Deel je een Lijst met iemand, dan bewaren we het e-mailadres dat je intypte, zodat die persoon kan inloggen en de Lijst kan zien, en sturen we die persoon één mail om dat te laten weten. Die persoon ziet de Lijst zoals een openbare pagina hem toont: titels, sites, covers en je notities bij de Lijst, nooit je tags, vinkjes of de pagina’s die we bewaarden. Haal die persoon weg, verwijder de Lijst of verwijder je account, en het adres verdwijnt ook."
+      },
+      "emailIn": {
+        "title": "E-mail naar Pluck",
+        "body": "Mail die naar je pluck+-adres wordt gestuurd, wordt een item. We bewaren de tekst van het bericht als paginatekst van het item en de afzender als site. We gebruiken dat adres nergens anders voor."
+      },
+      "cookies": {
+        "title": "Cookies en analytics",
+        "body": "Twee cookies staan altijd aan, omdat Pluck ze nodig heeft: één houdt je ingelogd, en één bewaart wat je op de homepage plakt, een dag lang, tot je je aanmeldt. Over een derde beslis jij, en we vragen het voordat die wordt geplaatst. Zeg “Pluk maar, ik doe mee” en we gebruiken PostHog, in de EU, om te zien hoe Pluck wordt gebruikt: de pagina’s die je opent, waar je op klikt en, zodra je bent ingelogd, welk account het was. PostHog ziet nooit wat je plukt: tekst van knoppen en links, paginatitels en zoekwoorden worden verwijderd voordat er iets je browser verlaat. Zeg “Niks plukken” en niets daarvan gebeurt. Hoe dan ook sturen we, als er iets misgaat, de fout en waar die optrad, zonder iets wat zegt wie je bent, zodat we het kunnen oplossen. Je kunt je keuze altijd wijzigen via Cookies onder aan de site of in Instellingen. De iPhone-app stelt dezelfde vraag één keer en heeft dezelfde schakelaar in zijn Instellingen."
+      },
+      "where": {
+        "title": "Waar het staat",
+        "body": "Onze gehoste dienst draait op Vercel, MongoDB Atlas en AWS, allemaal in Ierland, en PostHog in de EU voor de analytics en foutmeldingen hierboven. Host je zelf, dan komt er helemaal niets op onze servers."
+      },
+      "export": {
+        "title": "Exporteren en verwijderen",
+        "body": "Exporteer alles als JSON en Markdown vanuit Instellingen, wanneer je wilt. Verwijder je account in Instellingen en elk item, elke tag, lijst, notitie en sleutel is meteen weg. Back-ups worden binnen 30 dagen gewist."
+      },
+      "rights": {
+        "title": "Je rechten",
+        "body": "Je kunt een kopie van je gegevens vragen, ze laten corrigeren of ze laten wissen. Exporteren en Verwijderen in Instellingen doen dat zonder dat je het ons hoeft te vragen. Heb je iets anders nodig, mail ons dan. Je kunt ook een klacht indienen bij de Data Protection Commission in Ierland."
+      }
+    },
+    "box": {
+      "title": "Vragen",
+      "body": "Mail <mail>{email}</mail> en we antwoorden binnen 30 dagen. Het bedrijf achter Pluck is Codú Limited, Ierland."
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Voorwaarden · Pluck",
+      "description": "Het is jouw bibliotheek, doe netjes met openbare lijsten, en je kunt altijd exporteren en zelf hosten."
+    },
+    "title": "Voorwaarden",
+    "lede": "Kort gezegd: het is jouw bibliotheek, doe netjes met openbare lijsten, en we kunnen niet beloven dat de gratis dienst eeuwig blijft bestaan. Daarom kun je exporteren en zelf hosten. Laatst bijgewerkt op 24 oktober 2026.",
+    "sections": {
+      "service": {
+        "title": "De dienst",
+        "body": "Met Pluck pluk je links, notities, taken en dingen, lees je ze later, zet je ze in lijsten en verbind je een AI-tool via MCP met je bibliotheek. De gehoste dienst op {host} is gratis. De code is open source onder {licence}, en je mag je eigen kopie draaien."
+      },
+      "account": {
+        "title": "Je account",
+        "body": "Je moet 16 jaar of ouder zijn. Houd je inloggegevens en API-sleutels voor jezelf. Je bent verantwoordelijk voor wat ermee wordt gedaan. Eén persoon, één account."
+      },
+      "library": {
+        "title": "Je bibliotheek is van jou",
+        "body": "Wat je plukt en wat je schrijft, is van jou. We claimen er geen rechten op. We bewaren het en tonen het aan jou, en aan anderen alleen waar je een lijst openbaar maakt. Je kunt alles op elk moment exporteren."
+      },
+      "publicLists": {
+        "title": "Openbare lijsten",
+        "body": "Maak je een lijst openbaar, dan publiceer je hem. Je bevestigt dat je het recht hebt om van elk item de titel, cover, site en je eigen notitie te delen. Publiceer geen lijsten die een van de volgende dingen bevatten of ernaar verwijzen: illegale inhoud, materiaal dat minderjarigen seksualiseert, bedreigingen, intimidatie, doxing, spam, malware, of inhoud die inbreuk maakt op het auteursrecht of merkrecht van een ander. We mogen een openbare lijst die deze regels overtreedt offline halen, en we mogen accounts sluiten die dat blijven doen. Een lijst offline halen verwijdert hem niet uit je bibliotheek."
+      },
+      "stored": {
+        "title": "Bewaarde pagina’s",
+        "body": "Pluck bewaart een privékopie van pagina’s die je plukt, zodat je ze later kunt lezen, zoals een browsercache dat doet. Die kopie is alleen voor jou en wordt nooit openbaar getoond. Vraagt een rechthebbende ons een bewaarde kopie van zijn pagina te verwijderen, dan doen we dat."
+      },
+      "fairUse": {
+        "title": "Redelijk gebruik van de dienst",
+        "body": "Gebruik Pluck niet om op grote schaal sites te scrapen, een botfarm te draaien of dingen op te slaan die niet van jou zijn om op te slaan. We beperken hoe vaak pagina’s worden opgehaald en hoeveel API- en MCP-aanroepen er worden gedaan, zodat de dienst voor iedereen snel blijft. De limieten staan in de documentatie en we laten het je weten als je ze bereikt."
+      },
+      "ai": {
+        "title": "AI-tools",
+        "body": "Een AI-tool verbinden is jouw keuze. Wat die tool met je bibliotheek doet, valt onder zijn eigen voorwaarden. We bieden leestools en schrijftools die hun wijzigingen markeren. Een verwijdertool bestaat alleen als je die apart toestaat, en daar vragen we standaard nooit om. We zijn niet verantwoordelijk voor wat een tool van derden doet."
+      },
+      "wayOut": {
+        "title": "Geen beloftes, wel een uitweg",
+        "body": "De gehoste dienst is gratis en wordt geleverd zoals hij is. We doen ons best om hem snel en online te houden, maar we kunnen dat niet garanderen, en we kunnen niet garanderen dat hij eeuwig blijft draaien. Moeten we ooit stoppen, dan laten we dat minstens 90 dagen van tevoren weten, blijft Exporteren werken tot de laatste dag, en blijft zelf hosten altijd mogelijk. Onze aansprakelijkheid tegenover jou is beperkt tot het bedrag dat je ons hebt betaald, en dat is niets."
+      },
+      "law": {
+        "title": "Wijzigingen en recht",
+        "body": "We kunnen deze voorwaarden aanpassen. We zetten de datum bovenaan en mailen je over alles wat ertoe doet. Op deze voorwaarden is het Ierse recht van toepassing."
+      }
+    },
+    "box": {
+      "title": "Een openbare lijst melden",
+      "body": "Elke openbare pagina heeft onderaan een link Melden. Of mail <mail>{email}</mail> met de link. We komen binnen 3 werkdagen in actie."
+    }
+  },
+  "publicList": {
+    "meta": {
+      "notFound": "Niet gevonden · Pluck",
+      "title": "{name} · een lijst van {by} · Pluck",
+      "description": "{count, plural, one {# ding} other {# dingen}}, geplukt door {by}."
+    },
+    "what": "Wat is Pluck?",
+    "byline": "Een lijst van {by} · {count, plural, one {# item} other {# items}} · bijgewerkt {when}",
+    "ago": {
+      "now": "zojuist",
+      "minutes": "{count, number} min geleden",
+      "hours": "{count, number} uur geleden",
+      "yesterday": "gisteren",
+      "on": "op {date}"
+    },
+    "pluck": "Pluk deze lijst",
+    "copies": "Kopieert hem naar je eigen Pluck. Gratis.",
+    "note": "Notitie",
+    "footTitle": "Maak zulke lijsten van wat je plukt.",
+    "footBody": "Pluk het. Sorteer het later. Deel het als het goed is.",
+    "privacy": "Privacy",
+    "terms": "Voorwaarden",
+    "og": "Een lijst van {by} · {count, plural, one {# item} other {# items}}",
+    "notFound": {
+      "title": "<line>Deze Lijst</line><line>is niet openbaar<dot>.</dot></line>",
+      "lede": "Hij bestaat niet meer, of de eigenaar heeft hem privé gemaakt. Heeft iemand je de link gestuurd, vraag dan of die hem met je deelt of weer openbaar maakt.",
+      "what": "Wat is Pluck?",
+      "lists": "Je Lijsten"
+    },
+    "report": {
+      "open": "Deze lijst melden",
+      "sent": "Bedankt. Elke melding wordt door een mens gelezen.",
+      "reason": "Wat is er mis?",
+      "details": "Iets wat we moeten weten (optioneel)",
+      "send": "Melding versturen",
+      "cancel": "Annuleren",
+      "failed": "Dat lukte niet. Probeer het over een minuut opnieuw.",
+      "reasons": {
+        "illegal": "Illegale inhoud",
+        "minors": "Seksualiseert minderjarigen",
+        "harassment": "Intimidatie",
+        "doxxing": "Deelt iemands privégegevens",
+        "spam": "Spam of een linkfarm",
+        "malware": "Malware of phishing",
+        "infringement": "Auteursrecht of merkrecht",
+        "other": "Iets anders"
+      }
+    }
+  }
+}

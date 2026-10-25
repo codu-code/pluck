@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "Geplukt.",
+  "plucking": "Plukken…",
+  "signedOutTitle": "Niet ingelogd.",
+  "signedOutBody": "Log één keer in. Daarna doet het deelmenu de rest.",
+  "openToSignIn": "Open Pluck om in te loggen",
+  "queuedTitle": "Geplukt. Synchroniseert straks.",
+  "queuedBody": "Het staat op je telefoon en wordt verstuurd zodra je weer online bent.",
+  "done": "Klaar",
+  "failedTitle": "Plukken lukte niet.",
+  "nothingToKeep": "Niets wat Pluck hier kan bewaren.",
+  "didNotWork": "Dat werkte niet.",
+  "badServer": "Ongeldig serveradres.",
+  "noUploadAddress": "Geen uploadadres.",
+  "tagsAndList": "Tags en lijst",
+  "kind": "Soort",
+  "addToList": "Toevoegen aan {name}",
+  "addedToList": "Toegevoegd aan {name}",
+  "notePlaceholder": "Waarom je het plukte, in één regel. Optioneel.",
+  "kindRead": "Lezen",
+  "kindWatch": "Kijken",
+  "kindPdf": "PDF",
+  "kindImage": "Afbeelding",
+  "kindTodo": "Taak",
+  "kindNote": "Notitie",
+  "kindThing": "Ding"
+}
