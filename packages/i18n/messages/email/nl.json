@@ -4,7 +4,7 @@
     "intro": "Hier is je link om in te loggen bij Pluck. Hij werkt één keer, de komende 10 minuten.",
     "button": "Inloggen bij Pluck",
     "copy": "Werkt de knop niet? Kopieer deze link naar je browser:",
-    "ignore": "Heb je hier niet om gevraagd, negeer deze mail dan. Er gebeurt niets, tenzij je hem opent en op Inloggen tikt."
+    "ignore": "Heb je hier niet om gevraagd, negeer deze mail dan. Er gebeurt niets, tenzij je de link opent en op Inloggen tikt."
   },
   "sharedList": {
     "subject": "{sharer} heeft een Lijst met je gedeeld: {name}",
@@ -12,11 +12,11 @@
     "text": {
       "intro": "{who} heeft een Lijst met je gedeeld op Pluck: “{name}”.",
       "open": "Open hem hier. Je logt in met je e-mailadres, zonder wachtwoord:",
-      "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Had je dit niet verwacht? Negeer het, of verlaat de Lijst zodra je hem opent."
+      "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Had je dit niet verwacht? Negeer deze mail, of verlaat de Lijst zodra je hem opent."
     },
     "intro": "{who} heeft een Lijst met je gedeeld op Pluck:",
     "button": "Open de Lijst",
-    "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Je logt in met je e-mailadres, zonder wachtwoord. Had je dit niet verwacht? Negeer het, of verlaat de Lijst zodra je hem opent."
+    "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Je logt in met je e-mailadres, zonder wachtwoord. Had je dit niet verwacht? Negeer deze mail, of verlaat de Lijst zodra je hem opent."
   },
   "welcome": {
     "subject": "Bedankt dat je Pluck probeert",
@@ -25,7 +25,7 @@
     "plucked": "Ik zie dat je al je eerste dingen hebt geplukt, dus je kent het belangrijkste al: één tik, waar je ook bent, en Pluck bewaart de pagina voor je.",
     "fresh": "De snelste manier om te beginnen: pluk één ding dat je deze week nog wilde lezen. Plak de link bovenaan je Inbox, en Pluck bewaart de pagina voor je.",
     "connect": "Iets wat de meeste mensen pas laat ontdekken: je AI kan alles lezen wat je plukt. Verbind Pluck in zo’n dertig seconden met Claude, ChatGPT of Cursor, en vraag dan wat je deze week hebt geplukt: {url}",
-    "expiry": "En als je een tijdje niets van je laat horen, raak je niets kwijt. Items die je {days, plural, =1 {# dag} other {# dagen}} niet hebt aangeraakt, gaan naar het Archief, en er wordt niets verwijderd.",
+    "expiry": "En als je er een tijdje niet naar omkijkt, raak je niets kwijt. Items die je {days, plural, =1 {# dag} other {# dagen}} niet hebt aangeraakt, gaan naar het Archief, en er wordt niets verwijderd.",
     "ask": "Mag ik je één ding vragen? Antwoord op deze mail en vertel me waarom je Pluck bent gaan proberen, of wat je hoopte dat het zou doen. Je antwoord komt rechtstreeks bij mij terecht, en ik lees ze allemaal.",
     "signature": "Niall"
   },
@@ -41,10 +41,10 @@
     "greetingNoName": "Goedemorgen. Drie minuten, en dan door met je week.",
     "expiring": {
       "heading": "{days, plural, =1 {# dag} other {# dagen}} niet aangeraakt",
-      "keep": "Houden",
-      "letGo": "Laat gaan",
-      "keepLink": "Houden: {url}",
-      "letGoLink": "Laat gaan: {url}",
+      "keep": "Bewaren",
+      "letGo": "Loslaten",
+      "keepLink": "Bewaren: {url}",
+      "letGoLink": "Loslaten: {url}",
       "moves": "Doe je niets, dan gaan ze op {day} naar je Archief. Nog steeds te vinden, nooit verwijderd."
     },
     "due": {
@@ -52,10 +52,10 @@
       "line": "{title}, {when}"
     },
     "oldest": {
-      "heading": "Het oudst in je inbox"
+      "heading": "Het oudste in je inbox"
     },
     "quiet": {
-      "heading": "Stille lijsten",
+      "heading": "Stilgevallen lijsten",
       "line": "{name}, {ticked, number} van {total, number} afgevinkt, {days, plural, =1 {# dag} other {# dagen}}",
       "ticked": "{ticked, number} van {total, number} afgevinkt",
       "idle": "{days, plural, =1 {# dag} other {# dagen}}"
@@ -68,14 +68,14 @@
     },
     "ai": {
       "title": "Doe je dit liever met je AI?",
-      "body": "Zeg “doe mijn weekoverzicht”. Dezelfde lijst, één beslissing tegelijk.",
-      "text": "Doe je dit liever met je AI? Zeg \"doe mijn weekoverzicht\". Dezelfde lijst, één beslissing tegelijk."
+      "body": "Zeg “start mijn weekreview”. Dezelfde lijst, één beslissing tegelijk.",
+      "text": "Doe je dit liever met je AI? Zeg \"start mijn weekreview\". Dezelfde lijst, één beslissing tegelijk."
     },
     "footer": {
-      "note": "Links werken 7 dagen, zonder inloggen. Gewone regels, geen model.",
+      "note": "Links werken 7 dagen, zonder inloggen. Simpele regels, geen AI-model.",
       "changeDay": "Andere dag kiezen",
-      "stop": "Stoppen met deze mails",
-      "text": "Links werken 7 dagen, zonder inloggen. Gewone regels, geen model. Andere dag kiezen: {settings} . Stoppen met deze mails: {stop}"
+      "stop": "Afmelden",
+      "text": "Links werken 7 dagen, zonder inloggen. Simpele regels, geen AI-model. Andere dag kiezen: {settings} . Afmelden: {stop}"
     }
   }
 }

@@ -43,7 +43,7 @@
     },
     "nothingHint": "Pluck werkt op webpagina’s. Open er een en klik nog eens.",
     "queued": {
-      "title": "Kon Pluck niet bereiken. Probeert het opnieuw.",
+      "title": "Pluck niet bereikbaar. We proberen het opnieuw.",
       "count": "{count, plural, one {# item wacht} other {# items wachten}} in deze browser."
     },
     "already": {
@@ -55,7 +55,7 @@
       "title": "Geplukt",
       "undo": "Ongedaan maken",
       "tips": {
-        "opening": "Door dit te openen is de pagina bewaard. Meer is het niet.",
+        "opening": "Door dit te openen, is de pagina al bewaard. Meer is het niet.",
         "shortcut": "Alt+Shift+P doet het zonder klik.",
         "rightClick": "Klik met rechts op een link of afbeelding om alleen die te plukken."
       },
@@ -76,7 +76,7 @@
       "all": "{count, plural, one {Pluk # tabblad in een nieuwe lijst, “{name}”} other {Pluk alle # tabbladen in een nieuwe lijst, “{name}”}}",
       "plucking": "Plukken…",
       "done": "{count, plural, one {# tabblad geplukt in “{name}”.} other {# tabbladen geplukt in “{name}”.}}",
-      "failed": "Kon Pluck niet bereiken. Probeer het zo opnieuw."
+      "failed": "Pluck niet bereikbaar. Probeer het zo opnieuw."
     }
   },
   "options": {
@@ -84,17 +84,17 @@
     "shortcut": "Sneltoets: Alt+Shift+P · wijzig hem op de sneltoetsenpagina van je browser",
     "server": "Server",
     "defaultKind": "Standaardsoort",
-    "guess": "Raden aan de hand van de pagina",
+    "guess": "Afleiden uit de pagina",
     "account": "Account",
     "apiKey": "API-sleutel",
     "useKey": "Sleutel gebruiken",
     "notSignedIn": "Niet ingelogd",
     "signOut": "Uitloggen",
     "signIn": "Inloggen",
-    "useApiKey": "Gebruik in plaats daarvan een API-sleutel",
+    "useApiKey": "Liever een API-sleutel gebruiken",
     "sendContent": "Pagina-inhoud meesturen bij plukken",
     "sendContentHint": "Zodat pagina’s achter je logins later leesbaar zijn.",
-    "transcripts": "YouTube-transcripties vastleggen",
+    "transcripts": "YouTube-transcripties ophalen",
     "transcriptsHint": "Zodat zoeken en je AI kunnen lezen wat er gezegd werd.",
     "messages": {
       "notAddress": "Dat is geen webadres.",

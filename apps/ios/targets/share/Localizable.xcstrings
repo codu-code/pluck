@@ -98,7 +98,7 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kon dat niet plukken."
+            "value": "Plukken lukte niet."
           }
         }
       }
@@ -353,7 +353,7 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Het staat op je telefoon. Het gaat mee zodra je weer online bent."
+            "value": "Het staat op je telefoon en wordt verstuurd zodra je weer online bent."
           }
         }
       }
@@ -370,7 +370,7 @@
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Geplukt. Volgt zodra je online bent."
+            "value": "Geplukt. Synchroniseert straks."
           }
         }
       }

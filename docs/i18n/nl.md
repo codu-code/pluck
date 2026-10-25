@@ -38,6 +38,12 @@ How Pluck's product words are said in Dutch, and why. Use these and no others in
 | Email-in | E-mail naar Pluck | "Email-in" has no Dutch equivalent; describe it. In an Item's site line: "via e-mail". | |
 | Due | Deadline | "Deadline vandaag", "deadline morgen", "te laat". "Vervalt" would clash with expiry. | Todoist NL ("deadline") |
 | Settings | Instellingen | | Every Dutch app |
+| Keep (an Item from expiry) | bewaren: Bewaren, Bewaard, "Bewaar het" | "Gehouden" is not something a Dutch app says. Keep the AI's tag and keep a handle stay "houden" ("Houden", "@{handle} houden"). In the weekly email the pair is Bewaren / Loslaten. | Pocket NL ("bewaren") |
+| handle | gebruikersnaam | What Instagram, X and Threads NL call it; "handle" is jargon. The URL keeps the @. | Instagram NL, X NL |
+| Disconnect | loskoppelen: "Loskoppelen" (web), "Koppel los" (iPhone) | Matches "is losgekoppeld". "Verbreken" needs an object ("de verbinding verbreken") and reads cut off as a button. | Apple NL |
+| talk (a talk you give) | presentatie | "Talk" is meetup jargon; everyone says presentatie. | |
+| run my weekly review (MCP prompt) | “start mijn weekreview” | "Doe mijn weekoverzicht" mixes up an overview with a review. Weekreview is the GTD word Dutch productivity writers use. | |
+| Lists are what you're making | Lijsten voor wat je maakt / Waar je aan werkt | "Lijsten zijn wat je maakt" is an English sentence in Dutch words. | |
 | sign in / sign out | inloggen / uitloggen | | |
 | share sheet | deelmenu; the button is "Deel" | Apple NL names the button "Deel". | Apple NL, iCulture |
 | weekly email / Monday email | weekmail / maandagmail | One word, like Dutch "nieuwsbrief". | |
@@ -61,7 +67,9 @@ How Pluck's product words are said in Dutch, and why. Use these and no others in
 ## Style
 
 - **Capitalisation:** sentence case for titles and buttons, as Dutch does. Product words are capitalised where the English capitalises them (Inbox, Later, Archief, the Kind names, Lijst when English says List). Lowercase in running text otherwise.
-- **Buttons:** on the web and in the extension, the infinitive ("Annuleren", "Kopiëren", "Archiveren"), as Google and Microsoft do. On the iPhone, the imperative ("Annuleer", "Bewaar", "Kopieer", "Deel"), as Apple's own Dutch apps do.
+- **Buttons:** on the web and in the extension, the infinitive ("Annuleren", "Kopiëren", "Archiveren"), as Google and Microsoft do. On the iPhone, the imperative ("Annuleer", "Bewaar", "Kopieer", "Deel"), as Apple's own Dutch apps do. Longer calls to action on the web may be a sentence in the imperative ("Open de Inbox", "Stuur een nieuwe link").
+- **Busy states** never repeat their button: "Bezig met inloggen" next to "Inloggen", "Wordt opgeslagen" next to "Opslaan", "Wordt geplukt" for Plucking.
+- **Offline sync:** what waits on the device "wordt verstuurd" when you are back, never "gaat mee".
 - **Quotes:** curly double quotes “…”, as in the English source. Apostrophes are the typographic ’ ("pagina’s", "zo’n"); a straight ' is an ICU escape character, so never put one before { or #.
 - **Numbers and time:** "10 minuten", "06:00", "{n} min", "{n} uur geleden".
 - **Plurals:** Dutch has one and other. Always include other; # is the number.

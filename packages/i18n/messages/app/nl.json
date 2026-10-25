@@ -58,7 +58,7 @@
       "byAi": "door AI",
       "byYou": "door jou",
       "failed": "Niet te lezen",
-      "pending": "Plukken",
+      "pending": "Wordt geplukt",
       "photo": "foto",
       "video": "video",
       "minutes": "{n} min",
@@ -116,13 +116,13 @@
   },
   "error": {
     "title": "Dat ging mis",
-    "lede": "Aan onze kant, niet aan de jouwe. Niets wat je plukte is kwijt. Probeer het opnieuw, en laat het ons weten als het blijft gebeuren.",
+    "lede": "Aan onze kant, niet aan de jouwe. Niets wat je hebt geplukt, is kwijt. Probeer het opnieuw, en laat het ons weten als het blijft gebeuren.",
     "tryAgain": "Opnieuw proberen",
     "report": "Meld het"
   },
   "globalError": {
     "title": "Dat ging mis",
-    "lede": "Aan onze kant, niet aan de jouwe. Niets wat je plukte is kwijt. Probeer het zo opnieuw.",
+    "lede": "Aan onze kant, niet aan de jouwe. Niets wat je hebt geplukt, is kwijt. Probeer het zo opnieuw.",
     "tryAgain": "Opnieuw proberen"
   },
   "notFound": {
@@ -141,7 +141,7 @@
       "inbox": "Inbox",
       "waiting": "{count} wachtend",
       "one": "Het artikel uit de trein",
-      "oneNote": "Wacht hier, gaat mee als je terug bent",
+      "oneNote": "Wacht hier, wordt verstuurd als je terug bent",
       "two": "Een inductiekookplaat kopen",
       "twoNote": "Taak, wacht hier ook",
       "three": "Postgres-indexen in 40 minuten",
@@ -187,11 +187,11 @@
     "aiLede": "We mailen je een link. Ben je binnen, dan kies je wat je AI-tool mag doen.",
     "title1": "Eén link.",
     "title2": "Geen wachtwoord",
-    "lede": "Typ je e-mailadres en we sturen een link. Die logt je in, of begint je bibliotheek als je nieuw bent.",
+    "lede": "Typ je e-mailadres en we sturen een link. Die logt je in, of maakt je bibliotheek aan als je nieuw bent.",
     "email": "E-mailadres",
     "emailPlaceholder": "jij@example.com",
     "password": "Wachtwoord",
-    "signingIn": "Inloggen",
+    "signingIn": "Bezig met inloggen",
     "signIn": "Inloggen",
     "sending": "Versturen",
     "send": "Mail me een link",
@@ -212,7 +212,7 @@
     "action": "Inloggen bij Pluck"
   },
   "oauthError": {
-    "title": "Dat verbond niet",
+    "title": "Verbinden lukte niet",
     "lede": "Er is niets veranderd in je Pluck. Meestal helpt het om opnieuw te beginnen.",
     "step1": "Begin de verbinding opnieuw vanuit je AI-tool.",
     "step2": "Lukt het nog steeds niet? Haal Pluck daar weg en voeg het opnieuw toe met de link uit <connect>Verbind je AI</connect>.",
@@ -228,8 +228,8 @@
       "lede": "Begin de verbinding opnieuw vanuit je AI-tool. Er is niets gedeeld."
     },
     "title": "{name} wil je Pluck gebruiken",
-    "appLede": "Het plukt en ordent als jou, vanaf dit apparaat.",
-    "lede": "Het werkt voor jou, alleen terwijl je het gebruikt, en elke wijziging die het maakt, is gemarkeerd als door AI.",
+    "appLede": "Hij plukt en ordent namens jou, vanaf dit apparaat.",
+    "lede": "Hij werkt voor jou, alleen terwijl je hem gebruikt, en elke wijziging die hij maakt, krijgt het label “door AI”.",
     "art": {
       "inbox": "Inbox",
       "after": "nadat je vroeg om op te ruimen",
@@ -238,7 +238,7 @@
       "two": "Postgres-indexen in 40 minuten",
       "twoNote": "Naar Later verplaatst",
       "three": "Een keukenplan in drie versies",
-      "threeNote": "Gelaten zoals het was",
+      "threeNote": "Ongemoeid gelaten",
       "byAi": "door AI"
     },
     "returnsTo": "Als je toestaat, ga je door naar <b>{host}</b>. Ken je dat adres niet, sta het dan niet toe.",
@@ -248,7 +248,7 @@
       "delete": "Items verwijderen. De meeste AI-tools hebben dit nooit nodig.",
       "account": "Je account beheren: verbonden AI-tools, exports en alles verwijderen. Alleen de eigen apps van Pluck vragen hierom."
     },
-    "signedInAs": "Ingelogd als {email}. Het kan nooit iets verwijderen, tenzij dat hierboven staat, en je kunt de verbinding verbreken in Instellingen."
+    "signedInAs": "Ingelogd als {email}. Hij kan nooit iets verwijderen, tenzij dat hierboven staat, en je kunt hem loskoppelen in Instellingen."
   },
   "digest": {
     "open": "Open Pluck",
@@ -261,20 +261,20 @@
     "archiveAll": {
       "title1": "Alles archiveren.",
       "title2": "Echt waar",
-      "count": "<b>{count, number}</b><span>{count, plural, one {item} other {items}} langer niet aangeraakt dan je verlooptermijn</span>",
+      "count": "<b>{count, number}</b><span>{count, plural, one {item dat langer niet is aangeraakt} other {items die langer niet zijn aangeraakt}} dan je verlooptermijn</span>",
       "lede": "Ze gaan in één keer naar het Archief. Er wordt niets verwijderd, en lijsten blijven ongemoeid.",
       "confirm": "Ja, verplaats {count, number} naar het Archief",
       "notNow": "Nu niet"
     },
     "doing": {
-      "keep": "Wordt gehouden",
+      "keep": "Wordt bewaard",
       "letGo": "Gaat naar het Archief",
       "undoLetGo": "Wordt teruggezet",
       "stop": "Weekmail wordt gestopt"
     },
     "done": {
       "keep": {
-        "title": "Gehouden",
+        "title": "Bewaard",
         "line": "Het blijft waar het is, en de dagen beginnen opnieuw."
       },
       "letGo": {
@@ -319,7 +319,7 @@
     "busy": "Plukken",
     "action": "Pluk deze lijst",
     "title": "Pluk deze lijst",
-    "lede": "{count, plural, one {# item komt} other {# items komen}} in je Inbox, en een privékopie van <b>{name}</b> houdt hun volgorde en notities.",
+    "lede": "{count, plural, one {# item komt} other {# items komen}} in je Inbox, en een privékopie van <b>{name}</b> behoudt hun volgorde en notities.",
     "items": "{count, plural, one {# item} other {# items}}",
     "note": "Notitie",
     "more": "en nog {count}"
@@ -367,7 +367,7 @@
     },
     "three": {
       "title": "Pluk vanaf je telefoon",
-      "body": "De iOS-app, of de Pluck-opdracht tot die uitkomt.",
+      "body": "De iOS-app, of de Pluck-opdracht zolang de app er nog niet is.",
       "ios": "iOS-app",
       "shortcut": "Voeg de opdracht toe"
     }
@@ -402,7 +402,7 @@
     "thing": "Dingen"
   },
   "picker": {
-    "hint": "Enter schakelt · Esc sluit",
+    "hint": "Enter zet aan of uit · Esc sluit",
     "tag": {
       "label": "Tag",
       "placeholder": "Typ om een tag te vinden of te maken",
@@ -420,7 +420,7 @@
   },
   "cookies": {
     "title": "Zin in een koekje",
-    "body": "Twee houden je al ingelogd en bewaren wat je plakte. Deze laat ons zien hoe Pluck wordt gebruikt, zodat we oplossen wat in de weg zit. Geen advertenties. Niets verkocht. Hij loopt je niet achterna.",
+    "body": "Twee houden je al ingelogd en bewaren wat je plakte. Deze laat ons zien hoe Pluck wordt gebruikt, zodat we oplossen wat in de weg zit. Geen advertenties. We verkopen niets. Hij volgt je niet naar huis.",
     "no": {
       "button": "Niks plukken",
       "title": "Prima.",
@@ -431,11 +431,11 @@
       "title": "Geplukt.",
       "note": "Dank je."
     },
-    "more": "Wat er in elk zit",
+    "more": "Wat elke cookie doet",
     "link": "Cookies"
   },
   "connectLoop": {
-    "label": "Iemand plakt de link van Pluck in een AI-tool, staat het toe op het scherm van Pluck, vraagt dan wat er geplukt is over MCP-auth en krijgt drie van die items terug.",
+    "label": "Iemand plakt de link van Pluck in een AI-tool, geeft toestemming in het scherm van Pluck, vraagt dan wat er over MCP-auth is geplukt en krijgt drie eigen items terug.",
     "cap1": {
       "title": "Plak één link",
       "body": "In elke AI-tool die MCP spreekt."
@@ -456,7 +456,7 @@
       "one": "Hoe MCP-auth echt werkt",
       "two": "OAuth-scopes voor mensen met haast",
       "twoMeta": "een blogpost · 6 min",
-      "three": "Tokens, scopes en het stukje dat iedereen fout doet"
+      "three": "Tokens, scopes en het stuk waar iedereen de mist in gaat"
     },
     "followUp": "Zal ik ze in een lijst zetten, beste eerst?",
     "connected": "Pluck verbonden",
@@ -471,7 +471,7 @@
       "title": "Laat je AI binnen",
       "body": "Je AI-tool vraagt om je Pluck-bibliotheek te gebruiken. Hij verandert alleen iets als je dat vraagt, en markeert wat hij aanraakte.",
       "read": "Je bibliotheek lezen en doorzoeken",
-      "write": "Plukken, taggen en sorteren, gemarkeerd als door AI",
+      "write": "Plukken, taggen en sorteren, met het label “door AI”",
       "delete": "Iets verwijderen",
       "cancel": "Annuleren",
       "allow": "Toestaan"
@@ -497,7 +497,7 @@
     "remove": "Tag {name} weghalen",
     "add": "Tag toevoegen",
     "quoted": "“{name}”",
-    "byAi": "{names} {count, plural, one {is} other {zijn}} toegevoegd door je AI. Raak het aan en het wordt van jou.",
+    "byAi": "{names} {count, plural, one {is} other {zijn}} toegevoegd door je AI. Raak een tag aan en hij wordt van jou.",
     "keep": "Houden",
     "pickerTitle": "Tag"
   },
@@ -531,14 +531,14 @@
     "showOnly": "Alleen {name} tonen",
     "addedTo": "Toegevoegd aan “{name}”.",
     "takenOut": "Uit “{name}” gehaald.",
-    "kept": "Gehouden. De {days} dagen beginnen opnieuw.",
+    "kept": "Bewaard. De {days} dagen beginnen opnieuw.",
     "pluckedMany": "{count} geplukt naar de Inbox.",
     "sort": {
       "label": "Sorteren",
       "newest": "Nieuwste",
       "untouched": "Onaangeroerd eerst"
     },
-    "stopFilter": "Stop met filteren op {name}",
+    "stopFilter": "Niet meer filteren op {name}",
     "bulk": {
       "label": "Bulkacties",
       "selected": "{count} geselecteerd",
@@ -556,8 +556,8 @@
     },
     "rowsLabel": "Items in {view, select, inbox {Inbox} other {Later}}",
     "pill": {
-      "title": "{days} dagen niet aangeraakt. Houd het, of het gaat naar het Archief. Er wordt niets verwijderd.",
-      "label": "{title} houden: het gaat binnenkort naar het Archief",
+      "title": "{days} dagen niet aangeraakt. Bewaar het, of het gaat naar het Archief. Er wordt niets verwijderd.",
+      "label": "{title} bewaren: het gaat binnenkort naar het Archief",
       "days": "{days} dagen"
     },
     "none": {
@@ -565,7 +565,7 @@
       "kind": "Niets van deze soort in {view, select, inbox {Inbox} other {Later}}."
     },
     "keys": {
-      "move": "bewegen",
+      "move": "navigeren",
       "inbox": "inbox",
       "later": "later",
       "archive": "archiveren",
@@ -627,17 +627,17 @@
     "results": "Resultaten",
     "snippet": "{pre}<mark>{hit}</mark>{post}",
     "noteSnippet": "Je notitie: “{pre}<mark>{hit}</mark>{post}”",
-    "none": "Niets past bij “{q}”. Zoeken kijkt naar de woorden zelf.",
+    "none": "Niets gevonden voor “{q}”. Zoeken kijkt naar de woorden zelf.",
     "ask": "Wil je zoeken op betekenis? Vraag het je AI.",
     "copy": "“{prompt}” kopiëren"
   },
   "lists": {
     "title": "Lijsten",
-    "subtitle": "Wat je maakt. Een boek, een nieuwsbrief, een talk, een reis, dingen om te kopen.",
+    "subtitle": "Waar je aan werkt. Een boek, een nieuwsbrief, een presentatie, een reis, dingen om te kopen.",
     "new": "Nieuwe lijst",
     "form": {
       "name": "Naam",
-      "namePlaceholder": "Talk over MCP-auth",
+      "namePlaceholder": "Presentatie over MCP-auth",
       "purpose": "Doel, in één regel",
       "purposePlaceholder": "Twintig minuten voor de meetup in november.",
       "make": "Lijst maken"
@@ -702,8 +702,8 @@
   "people": {
     "added": "Gedeeld met {email}. Die krijgt een mail met een link.",
     "removed": "{email} kan hem niet meer zien.",
-    "placeholder": "Deel met iemand: het e-mailadres",
-    "sharing": "Delen",
+    "placeholder": "Deel met iemand: e-mailadres",
+    "sharing": "Wordt gedeeld",
     "share": "Delen",
     "label": "Mensen die hem kunnen zien",
     "stop": "Stop met delen met {email}",
@@ -732,7 +732,7 @@
     "failed": {
       "title": "Kon deze pagina niet lezen.",
       "retry": "Opnieuw",
-      "retrying": "Opnieuw proberen",
+      "retrying": "Probeert opnieuw",
       "wayback": "Probeer de Wayback-kopie",
       "loginTitle": "Achter een login?",
       "loginBody": "Pluk hem met de extensie om de pagina te bewaren. Die stuurt mee wat je browser al ziet.",
@@ -745,13 +745,13 @@
     "untitled": "Notitie zonder titel",
     "state": {
       "saved": "Opgeslagen",
-      "saving": "Opslaan",
+      "saving": "Wordt opgeslagen",
       "error": "Niet opgeslagen. Opnieuw zodra je typt."
     },
     "meta": "{kind} · {plucked} · bewerkt {edited}",
     "title": "Titel",
     "body": "Tekst",
-    "help": "De eerste regel is de titel. Platte tekst. Slaat op terwijl je typt.",
+    "help": "De eerste regel is de titel. Platte tekst. Wordt opgeslagen terwijl je typt.",
     "about": "Over {kind, select, note {deze notitie} todo {deze taak} other {dit ding}}",
     "kind": "Soort",
     "kindHint": {
@@ -799,8 +799,8 @@
       "label": "Profiel",
       "name": "Naam",
       "nameSaved": "Naam opgeslagen.",
-      "handle": "Handle, voor openbare lijsten",
-      "handleSaved": "Handle opgeslagen.",
+      "handle": "Gebruikersnaam, voor openbare lijsten",
+      "handleSaved": "Gebruikersnaam opgeslagen.",
       "makeUp": "Verzin er een",
       "move": "{count, plural, =0 {Nog geen openbare Lijsten, dus er veranderen geen links.} one {Je openbare Lijst verhuist naar {host}/@{handle}/… en links naar het oude adres werken niet meer. Lijsten die je per e-mail met mensen deelt, veranderen niet.} other {Je # openbare Lijsten verhuizen naar {host}/@{handle}/… en links naar het oude adres werken niet meer. Lijsten die je per e-mail met mensen deelt, veranderen niet.}} Eenmaal opgeslagen kan hij over een maand weer veranderen.",
       "invalid": "3 tot 24 kleine letters, cijfers of streepjes.",
@@ -826,7 +826,7 @@
       "readsWrites": "leest en ordent",
       "reads": "leest",
       "disconnected": "{name} is losgekoppeld. Hij kan nu niet meer bij je bibliotheek.",
-      "disconnect": "Verbreken"
+      "disconnect": "Loskoppelen"
     },
     "expiry": {
       "digestOff": "Geen weekmail.",
@@ -898,7 +898,7 @@
     "import": {
       "uploadFailed": "Het uploaden lukte niet. Probeer het opnieuw.",
       "title": "Importeren",
-      "from": "Uit",
+      "from": "Bron",
       "sources": {
         "pocket": "Pocket (CSV)",
         "omnivore": "Omnivore (zip)",
@@ -917,13 +917,13 @@
         "title": "Exporteren",
         "lede": "pluck.json, plus één Markdown-bestand per item met de tekst en notities, en één per lijst. Een zip, per e-mail. Elke lijst kun je ook los exporteren vanaf zijn eigen pagina.",
         "started": "Bezig met exporteren. De link komt binnen een paar minuten per e-mail.",
-        "busy": "Exporteren",
+        "busy": "Bezig met exporteren",
         "action": "Alles exporteren"
       }
     },
     "deleteAccount": {
       "title": "Account verwijderen",
-      "lede": "Elk item, elke tag, notitie en sleutel. Exporteer eerst.",
+      "lede": "Alle items, tags, notities en sleutels. Exporteer eerst.",
       "type": "Typ {email} om te bevestigen",
       "now": "Nu alles verwijderen",
       "action": "Alles verwijderen. Echt waar."
