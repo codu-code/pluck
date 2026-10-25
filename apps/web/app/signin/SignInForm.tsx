@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Actions, Dot, Stamp, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
-type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited";
+type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited" | "wrong";
 
 // What lands in their inbox, drawn: so the next step is no surprise.
 function EmailPreview({ sent }: { sent: boolean }) {
@@ -23,6 +23,8 @@ function EmailPreview({ sent }: { sent: boolean }) {
 export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: string; forAiTool?: boolean }) {
   const [state, setState] = useState<State>("idle");
   const [email, setEmail] = useState("");
+  // Set only when the server asks for one: App Review's account, which has no mailbox to open a link in.
+  const [password, setPassword] = useState<string | null>(null);
 
   async function send() {
     setState(state === "sent" ? "resending" : "sending");
@@ -31,12 +33,28 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, callbackURL: next }),
     }).catch(() => null);
+    if (res?.ok && ((await res.json().catch(() => null)) as { password?: boolean } | null)?.password) {
+      setPassword("");
+      return setState("idle");
+    }
     setState(res?.ok ? "sent" : res?.status === 429 ? "limited" : "error");
+  }
+
+  async function signInWithPassword() {
+    setState("sending");
+    const res = await fetch("/api/auth/sign-in/email", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    }).catch(() => null);
+    // A full load: `next` may be the OAuth request to carry on with, which the server answers.
+    if (res?.ok) return window.location.assign(next);
+    setState(res?.status === 401 ? "wrong" : res?.status === 429 ? "limited" : "error");
   }
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    void send();
+    void (password === null ? send() : signInWithPassword());
   };
 
   if (state === "sent" || state === "resending") {
@@ -76,17 +94,38 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
             autoFocus
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setPassword(null);
+            }}
           />
         </label>
+        {password !== null && (
+          <label className={s.field}>
+            <span className={s.label}>Password</span>
+            <input
+              className={s.input}
+              type="password"
+              name="password"
+              required
+              autoComplete="current-password"
+              autoFocus
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        )}
         <button className={s.primary} type="submit" disabled={state === "sending"}>
-          {state === "sending" ? "Sending" : "Email me a link"}
+          {password !== null ? (state === "sending" ? "Signing in" : "Sign in") : state === "sending" ? "Sending" : "Email me a link"}
         </button>
         {state === "error" && (
           <p className={s.error} role="alert">That did not go through. Check the address, then try again.</p>
         )}
+        {state === "wrong" && <p className={s.error} role="alert">That password did not work.</p>}
         {state === "limited" && (
-          <p className={s.error} role="alert">That is a lot of links. Use the newest one we sent, or try again in an hour.</p>
+          <p className={s.error} role="alert">
+            {password !== null ? "That is a lot of tries. Try again in an hour." : "That is a lot of links. Use the newest one we sent, or try again in an hour."}
+          </p>
         )}
       </form>
     </Standalone>

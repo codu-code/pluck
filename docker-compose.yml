@@ -28,6 +28,8 @@ x-app: &app
     ABUSE_EMAIL: ${ABUSE_EMAIL:-}
     EMAIL_IN_DOMAIN: ${EMAIL_IN_DOMAIN:-}
     POSTHOG_HOST: ${POSTHOG_HOST:-}
+    REVIEW_EMAIL: ${REVIEW_EMAIL:-}
+    REVIEW_PASSWORD: ${REVIEW_PASSWORD:-}
   depends_on:
     mongo: { condition: service_healthy }
     minio-init: { condition: service_completed_successfully }

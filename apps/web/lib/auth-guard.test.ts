@@ -38,6 +38,10 @@ test("sign-in links are limited per address, whatever network asks", async () =>
   expect((await post("/sign-in/magic-link", { email: `other-${email}` })).status).toBe(200);
 });
 
+test("with no review account set, nobody signs in with a password", async () => {
+  expect((await post("/sign-in/email", { email: "apple-review@example.test", password: "anything at all" })).status).toBe(401);
+});
+
 test("the caller's address is the one our proxy added, not one the client made up", () => {
   const ipOf = (h: Record<string, string>) => clientIp({ headers: new Headers(h) });
   expect(ipOf({ "x-forwarded-for": "1.2.3.4, 203.0.113.9" })).toBe("203.0.113.9");
