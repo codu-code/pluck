@@ -3,5 +3,106 @@
     "description": "Pluck the page you are on into your Pluck library, with one click.",
     "pluckPage": "Pluck this page",
     "pluckSelection": "Pluck the selection as a highlight"
+  },
+  "menu": {
+    "link": "Pluck link",
+    "selection": "Pluck selection as highlight",
+    "image": "Pluck image",
+    "page": "Pluck page"
+  },
+  "toolbar": {
+    "plucked": "Plucked",
+    "pluckPage": "Pluck this page"
+  },
+  "errors": {
+    "nothing": "Nothing to pluck on this page.",
+    "failed": "That did not work.",
+    "tryAgain": "That did not work. Try again."
+  },
+  "kinds": {
+    "link": "Read",
+    "video": "Watch",
+    "pdf": "PDF",
+    "image": "Image",
+    "note": "Note",
+    "todo": "Todo",
+    "thing": "Thing"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archived": "Archived",
+    "done": "Done"
+  },
+  "popup": {
+    "plucking": "Plucking…",
+    "signedOut": {
+      "lede": "The page you are on, kept in one click. Sign in once, with your email.",
+      "signIn": "Sign in",
+      "ownServer": "Use your own server"
+    },
+    "nothingHint": "Pluck works on web pages. Open one, then click again.",
+    "queued": {
+      "title": "Couldn't reach Pluck. Will retry.",
+      "count": "{count, plural, one {# pluck} other {# plucks}} queued on this browser."
+    },
+    "already": {
+      "meta": "Plucked {date} · {status}",
+      "open": "Open in Pluck",
+      "again": "Pluck it again"
+    },
+    "plucked": {
+      "title": "Plucked",
+      "undo": "Undo",
+      "tips": {
+        "opening": "Opening this saves the page. That's the whole trick.",
+        "shortcut": "Alt+Shift+P does it without the click.",
+        "rightClick": "Right-click a link or an image to pluck just that."
+      },
+      "tags": "Tags",
+      "tagsPlaceholder": "Search your tags",
+      "kind": "Kind",
+      "toList": "To list",
+      "noList": "None",
+      "lastUsed": "{name} (last used)",
+      "note": "Note",
+      "notePlaceholder": "A note, if you like",
+      "later": "Later",
+      "archive": "Archive",
+      "open": "Open in Pluck"
+    },
+    "tabs": {
+      "listName": "{date} tabs",
+      "all": "{count, plural, one {Pluck # tab into a new list, “{name}”} other {Pluck all # tabs into a new list, “{name}”}}",
+      "plucking": "Plucking…",
+      "done": "{count, plural, one {Plucked # tab into “{name}”.} other {Plucked # tabs into “{name}”.}}",
+      "failed": "Couldn't reach Pluck. Try again in a moment."
+    }
+  },
+  "options": {
+    "title": "Pluck options",
+    "shortcut": "Shortcut: Alt+Shift+P · change it in your browser's shortcuts page",
+    "server": "Server",
+    "defaultKind": "Default kind",
+    "guess": "Guess from the page",
+    "account": "Account",
+    "apiKey": "API key",
+    "useKey": "Use key",
+    "notSignedIn": "Not signed in",
+    "signOut": "Sign out",
+    "signIn": "Sign in",
+    "useApiKey": "Use an API key instead",
+    "sendContent": "Send page content with plucks",
+    "sendContentHint": "So pages behind your logins are readable later.",
+    "transcripts": "Capture YouTube transcripts",
+    "transcriptsHint": "So search and your AI can read what was said.",
+    "messages": {
+      "notAddress": "That is not a web address.",
+      "ownServerOnly": "This copy of Pluck only reaches its own server. To use yours, build the extension from the repo: see docs/self-host.md.",
+      "using": "Using {origin}. Sign in there to pluck.",
+      "keySignedIn": "Signed in with your API key.",
+      "keyFailed": "That key did not work on this server.",
+      "signedOut": "Signed out."
+    }
   }
 }
