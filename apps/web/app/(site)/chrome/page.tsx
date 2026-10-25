@@ -14,7 +14,7 @@ export default async function Chrome() {
   const t = await getTranslations("site.soon");
   return (
     <SitePage page="chrome">
-      <section className={`${styles.wrap} ${styles.pageHero}`}>
+      <section className={`${styles.wrap} ${styles.pageHero} ${styles.soon}`}>
         <h1 className={`${styles.display} ${styles.supportTitle}`}>{t.rich("title", { dot: (c) => <span className={styles.dot}>{c}</span> })}</h1>
         <p className={styles.heroPara}>{t("chrome.para1")}</p>
         <p className={styles.heroPara}>{t("chrome.para2")}</p>

@@ -3,7 +3,7 @@
     "label": "Language"
   },
   "meta": {
-    "description": "Pluck it. A fast, open-source URL saver your AI can read."
+    "description": "Pluck it. A fast, open-source home for your links, ready for your AI."
   },
   "chrome": {
     "home": "Pluck home",
@@ -89,7 +89,7 @@
     },
     "stats": {
       "tapNumber": "1 tap",
-      "tap": "From the iPhone share sheet, without opening an app. From Chrome, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.",
+      "tap": "From the iPhone share sheet, without opening an app. From Chrome, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.",
       "nagsNumber": "0 nags",
       "nags": "No streaks, no badges, no guilt. Nothing gets tagged behind your back. Things you never touch move to the Archive after 30 days (you pick the number), unless they're in a list. Nothing is deleted.",
       "secondsNumber": "30 s",

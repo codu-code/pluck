@@ -1,5 +1,5 @@
 import { Icon, Logo } from "@pluck/ui";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import styles from "./standalone.module.css";
@@ -33,8 +33,11 @@ export function Standalone({
   );
 }
 
-// The accent full stop (or question mark) the site ends its big lines with.
-export const Dot = ({ children = "." }: { children?: string }) => <span className={styles.dot}>{children}</span>;
+// The accent full stop (or question mark) the site ends its big lines with: the full-width one in Japanese and Chinese.
+export function Dot({ children }: { children?: string }) {
+  const stop = /^(ja|zh)/.test(useLocale()) ? "。" : ".";
+  return <span className={styles.dot}>{children ?? stop}</span>;
+}
 
 export const Actions = ({ children }: { children: ReactNode }) => <div className={styles.actions}>{children}</div>;
 

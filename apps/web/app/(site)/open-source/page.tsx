@@ -32,7 +32,8 @@ export default async function OpenSource() {
           <span>cd pluck</span>
           <span className={styles.mint}>docker compose up -d</span>
           <span className={`${styles.comment} ${styles.gap}`}>{t("terminalComment")}</span>
-          <span>npx @pluck/mcp --server http://localhost:3000 --key pk_live_…</span>
+          <span>npx @pluck/mcp --server http://localhost:3000 \</span>
+          <span>  --key pk_live_…</span>
         </div>
       </section>
 

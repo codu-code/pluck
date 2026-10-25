@@ -72,7 +72,7 @@ export function digestEmail(to: string, name: string, d: Digest, links: DigestLi
   const section = (title: string, body: string) =>
     `<tr><td style="padding:0 0 28px"><div style="font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#525A4E;padding-bottom:10px">${esc(title)}</div>${body}</td></tr>`;
   const row = (left: string, right: string) =>
-    `<table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #E6EBE2"><tr><td style="padding:10px 0">${left}</td><td align="right" style="padding:10px 0;white-space:nowrap">${right}</td></tr></table>`;
+    `<table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:1px solid #E6EBE2"><tr><td style="padding:10px 0">${left}</td><td align="right" style="padding:10px 0 10px 16px;white-space:nowrap">${right}</td></tr></table>`;
   const a = (href: string, label: string, muted = false) =>
     `<a href="${esc(href)}" style="color:${muted ? "#525A4E" : "#151A13"};font-weight:${muted ? 400 : 600};text-decoration:underline">${esc(label)}</a>`;
 
@@ -99,15 +99,19 @@ export function digestEmail(to: string, name: string, d: Digest, links: DigestLi
       ),
     );
 
-  const html = `<!doctype html><html lang="${locale}"><body style="margin:0;background:#E4E8E0;padding:24px 8px;font-family:Geist,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:22px;color:#151A13">
+  // On a phone (clients that read <style>): less padding, and the Archive-it-all box stacks its button under the words.
+  const html = `<!doctype html><html lang="${locale}"><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>@media (max-width:520px){.card{padding:28px 20px !important}.stack td{display:block !important;width:auto !important;text-align:left !important}.stack td+td{padding-top:0 !important}}</style></head>
+<body style="margin:0;background:#E4E8E0;padding:24px 8px;font-family:Geist,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:22px;color:#151A13">
 <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#FFFFFF;border-radius:12px"><tr><td style="padding:40px 44px">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:640px;background:#FFFFFF;border-radius:12px"><tr><td class="card" style="padding:40px 44px">
 <table width="100%" cellpadding="0" cellspacing="0">
-<tr><td style="padding:0 0 28px;font-size:22px;font-weight:700;color:#1E5C45;letter-spacing:-0.01em">pluck</td></tr>
+<tr><td style="padding:0 0 28px;font-size:20px;font-weight:700;color:#1E5C45;letter-spacing:-0.045em">pluck</td></tr>
 <tr><td style="padding:0 0 28px;font-size:17px;line-height:26px">${esc(greeting)}</td></tr>
 ${parts.join("\n")}
-<tr><td style="padding:0 0 16px"><table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #DDE2D8;border-radius:10px"><tr><td style="padding:14px 16px"><b style="font-weight:600">${esc(t("digest.archive.title"))}</b> <span style="color:#525A4E">${esc(t("digest.archive.body", { days: d.expiryDays ?? 30 }))}</span></td><td align="right" style="padding:14px 16px;white-space:nowrap">${a(links.archiveAll, t("digest.archive.button"))}</td></tr></table></td></tr>
-<tr><td style="padding:16px;background:#EDF0EA;border-radius:10px"><b style="font-weight:600">${esc(t("digest.ai.title"))}</b><br><span style="color:#394034">${esc(t("digest.ai.body"))}</span><br><span style="color:#525A4E;font-size:12px;line-height:18px">${esc(t("digest.footer.note"))} ${a(links.settings, t("digest.footer.changeDay"), true)} · ${a(links.stop, t("digest.footer.stop"), true)}</span></td></tr>
+<tr><td style="padding:0 0 16px"><table class="stack" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #DDE2D8;border-radius:10px"><tr><td style="padding:14px 16px"><b style="font-weight:600">${esc(t("digest.archive.title"))}</b> <span style="color:#525A4E">${esc(t("digest.archive.body", { days: d.expiryDays ?? 30 }))}</span></td><td align="right" style="padding:14px 16px;white-space:nowrap">${a(links.archiveAll, t("digest.archive.button"))}</td></tr></table></td></tr>
+<tr><td style="padding:16px;background:#EDF0EA;border-radius:10px"><b style="font-weight:600">${esc(t("digest.ai.title"))}</b><br><span style="color:#394034">${esc(t("digest.ai.body"))}</span></td></tr>
+<tr><td style="padding:16px 0 0;color:#525A4E;font-size:12px;line-height:18px">${esc(t("digest.footer.note"))} ${a(links.settings, t("digest.footer.changeDay"), true)} · ${a(links.stop, t("digest.footer.stop"), true)}</td></tr>
 </table></td></tr></table></td></tr></table></body></html>`;
 
   return {
