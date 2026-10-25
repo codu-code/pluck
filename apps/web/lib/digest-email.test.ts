@@ -1,3 +1,4 @@
+import { messagesFor } from "@pluck/i18n";
 import type { Digest } from "@pluck/shared-schemas";
 import { expect, test } from "vitest";
 import { digestEmail, subjectFor } from "./digest-email";
@@ -30,15 +31,14 @@ test("the digest reads well as plain text and keeps the copy rules", () => {
   expect(subjectFor({ ...d, expiring: [], oldest: [] })).toBe("Your week in Pluck.");
 });
 
-test("in a language not translated yet the words fall back to English; dates follow the recipient's language and timezone", () => {
-  const en = digestEmail("niall@example.test", "Niall Maher", d, links, new Date("2026-10-26T06:00:00Z"));
+// Whatever the state of a translation (packages/i18n tests fallback to English itself), the email is the
+// recipient's: their catalog's words, their language's dates, their lang attribute.
+test("the Monday email is in the recipient's language and timezone", () => {
   const ja = digestEmail("niall@example.test", "Niall Maher", d, links, new Date("2026-10-26T06:00:00Z"), { locale: "ja" });
-  expect(ja.subject).toBe(en.subject);
-  expect(ja.text).toContain("Morning Niall. Three minutes, then get on with your week.");
-  expect(ja.text).toContain("UNTOUCHED FOR 30 DAYS");
+  expect(ja.subject).toBe(subjectFor(d, "ja"));
   expect(ja.text).toContain("木曜日"); // Thursday, in Japanese
   expect(ja.html).toContain('<html lang="ja">');
-  expect(subjectFor({ ...d, expiring: [], oldest: [] }, "de")).toBe("Your week in Pluck.");
+  expect(subjectFor({ ...d, expiring: [], oldest: [] }, "de")).toBe(messagesFor("email", "de").digest.subjectQuiet);
   // 08:00 UTC on Thursday is still Wednesday evening in Honolulu.
   const hnl = digestEmail("niall@example.test", "", d, links, new Date("2026-10-26T06:00:00Z"), { timeZone: "Pacific/Honolulu" });
   expect(hnl.text).toContain("move to your Archive on Wednesday.");

@@ -1,1 +1,429 @@
-{}
+{
+  "language": {
+    "label": "语言",
+    "hint": "Pluck 跟随 iPhone 的语言。可在 iOS 的“设置”>“Pluck”>“语言”中更改。"
+  },
+  "common": {
+    "cancel": "取消",
+    "done": "完成",
+    "save": "存储",
+    "copy": "拷贝",
+    "add": "添加",
+    "tryAgain": "再试一次",
+    "loading": "正在载入",
+    "backTo": "返回{label}",
+    "backToLists": "返回清单",
+    "items": "{count, plural, other {# 条}}",
+    "failed": {
+      "title": "没有成功",
+      "body": "请检查网络连接，然后再试一次。"
+    }
+  },
+  "kinds": {
+    "link": "阅读",
+    "video": "观看",
+    "pdf": "PDF",
+    "image": "图片",
+    "note": "笔记",
+    "todo": "待办",
+    "thing": "物品"
+  },
+  "status": {
+    "inbox": "收件箱",
+    "later": "稍后",
+    "archived": "已归档",
+    "done": "已完成"
+  },
+  "tabs": {
+    "inbox": "收件箱",
+    "later": "稍后",
+    "search": "搜索",
+    "lists": "清单"
+  },
+  "actions": {
+    "inbox": "收件箱",
+    "later": "稍后",
+    "archive": "归档",
+    "backToInbox": "放回收件箱",
+    "tags": "标签",
+    "list": "清单",
+    "addToList": "添加到清单",
+    "note": "笔记",
+    "share": "分享",
+    "more": "更多",
+    "select": "选择",
+    "deselect": "取消选择"
+  },
+  "moved": {
+    "archived": "没了。好吧，是归档了。",
+    "later": "留着稍后看。",
+    "done": "已完成。",
+    "inbox": "回到收件箱了。"
+  },
+  "movedMany": {
+    "archived": "{count, plural, =1 {没了。好吧，是归档了。} other {# 条。没了。好吧，是归档了。}}",
+    "later": "{count, plural, =1 {留着稍后看。} other {# 条。留着稍后看。}}",
+    "done": "{count, plural, =1 {已完成。} other {# 条。已完成。}}",
+    "inbox": "{count, plural, =1 {回到收件箱了。} other {# 条。回到收件箱了。}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}，{kind}，{site}，{when}",
+    "a11yWithNote": "{title}，{kind}，{site}，{when}，笔记：{note}",
+    "when": {
+      "now": "刚刚",
+      "minutes": "{count} 分钟前",
+      "hours": "{count} 小时前",
+      "yesterday": "昨天"
+    },
+    "due": {
+      "overdue": "已逾期",
+      "today": "今天截止",
+      "tomorrow": "明天截止",
+      "on": "{date}截止"
+    },
+    "meta": {
+      "byAi": "由 AI 添加",
+      "byYou": "由你添加",
+      "failed": "无法读取",
+      "pending": "正在摘下",
+      "photo": "照片",
+      "video": "视频",
+      "minutes": "{count} 分钟",
+      "pdf": "PDF",
+      "link": "链接"
+    },
+    "site": {
+      "email": "邮件摘入",
+      "file": "你的文件"
+    }
+  },
+  "art": {
+    "plucked": "已摘下。",
+    "later": "稍后"
+  },
+  "toast": {
+    "undo": "撤销"
+  },
+  "usage": {
+    "title": "帮 Pluck 变得更好<accent>？</accent>",
+    "body": "分享你常用哪些页面，与你的账号关联，好让我们修掉碍事的地方。没有广告，不卖数据。崩溃报告照常发送，不带你的名字。",
+    "yes": "摘吧，算我一个",
+    "no": "不摘，谢谢"
+  },
+  "items": {
+    "selected": "已选择 {count} 条",
+    "all": "全部",
+    "newNote": "新笔记",
+    "newNoteText": "新笔记",
+    "settings": "设置",
+    "toTriage": "{count} 条待处理",
+    "forLater": "{count} 条留待稍后",
+    "toSync": "{count} 条待同步",
+    "moveFailed": "没有成功，什么都没移动。",
+    "addNote": "添加笔记",
+    "selectAll": "全选",
+    "empty": {
+      "inbox": {
+        "title": "没有待处理的内容。",
+        "body": "在任意 App 里轻点“分享”，再选 Pluck，它就会出现在这里。"
+      },
+      "later": {
+        "title": "没有留待稍后的内容。",
+        "body": "在收件箱里把条目向右轻扫，它就会在这里等你。"
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "与你共享",
+    "sharedA11y": "{name}，{owner} 共享，{count, plural, other {# 条}}",
+    "from": "来自 {owner} · 仅可查看",
+    "a11y": "{name}，{visibility, select, public {公开} other {私密}}，已勾选 {ticked}/{count}",
+    "tickedOf": "{ticked}/{count}",
+    "empty": {
+      "title": "还没有清单。",
+      "body": "在网页版上建一个，或者让你的 AI 用你摘下的内容建一个。"
+    }
+  },
+  "search": {
+    "placeholder": "搜索",
+    "kind": "类别",
+    "anyKind": "任意类别",
+    "tag": "标签",
+    "anyTag": "任意标签",
+    "list": "清单",
+    "anyList": "任意清单",
+    "status": "状态",
+    "anyStatus": "任意状态",
+    "date": "日期",
+    "plucked": "摘下时间",
+    "dates": {
+      "any": "任何时间",
+      "week": "本周",
+      "month": "本月",
+      "year": "今年"
+    },
+    "yourNote": "你的笔记：<snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "重新找到它。",
+        "body": "标题、笔记、标签、清单，还有网页上的文字。"
+      },
+      "error": {
+        "title": "搜索没有响应。",
+        "body": "请检查网络连接，然后再试一次。"
+      },
+      "none": {
+        "title": "你摘下的内容里没有匹配的。",
+        "body": "试试少用几个词，或者换个筛选条件。"
+      }
+    },
+    "byMeaning": "想按意思找？问问你的 AI。"
+  },
+  "oauth": {
+    "signingIn": "正在登录。"
+  },
+  "note": {
+    "title": "笔记",
+    "placeholder": "为什么留下它，或者打算拿它做什么。",
+    "hint": "只有你能看到。搜索能找到它。"
+  },
+  "welcome": {
+    "title": "你已登录。\n现在摘点什么吧。",
+    "lede": "摘下东西从来不用打开这个 App。它就在每个 App 的“分享”里。",
+    "step1": "<b>1.</b> 轻点“分享”，再选 Pluck。",
+    "step2": "<b>2.</b> 就这样。接着读吧。",
+    "tryIt": "现在试试",
+    "tryHint": "在 Safari 中打开一个示例网页，把它分享到 Pluck。",
+    "goToInbox": "前往收件箱"
+  },
+  "tags": {
+    "title": "标签",
+    "rename": "重命名",
+    "renameTitle": "重命名标签",
+    "deleteTitle": "删除“{name}”？",
+    "deleteBody": "它会从{count, plural, other { # 个条目}}上移除，条目本身会保留。",
+    "deleteTag": "删除标签",
+    "deleted": "“{name}”已删除，条目都还在。",
+    "hint": "重命名或删除",
+    "empty": {
+      "title": "还没有标签。",
+      "body": "长按条目，或在阅读器的“标签”里添加。"
+    }
+  },
+  "list": {
+    "publicShare": "公开 · 分享",
+    "privateShare": "私密 · 分享",
+    "ticked": "已勾选 {ticked}/{count}",
+    "noteByAi": "{note} · 由 AI 添加",
+    "tick": "勾选“{title}”",
+    "addA11y": "添加到这个清单",
+    "empty": {
+      "title": "这个清单上还没有东西。",
+      "body": "轻点“添加”放入你摘下的内容，或者让你的 AI 来填满它。"
+    }
+  },
+  "shared": {
+    "copied": "已摘下。你自己的副本在“清单”里。",
+    "leaveTitle": "退出这个清单？",
+    "leaveBody": "它会从你的清单中移除。对方可以再次与你共享。",
+    "leave": "退出",
+    "byNamed": "{name}（@{handle}）与你共享 · 仅可查看",
+    "by": "@{handle} 与你共享 · 仅可查看",
+    "notShared": {
+      "title": "没有与你共享。",
+      "body": "这个清单可能已不存在，或者没有共享给 {email}。如果是别人发给你的链接，请对方把它共享给这个邮箱。",
+      "bodyNoEmail": "这个清单可能已不存在，或者没有共享给你登录用的邮箱。如果是别人发给你的链接，请对方把它共享给这个邮箱。"
+    },
+    "empty": "这个清单上还没有东西。",
+    "pluckHint": "复制一份到你自己的 Pluck",
+    "pluck": "摘进你的 Pluck"
+  },
+  "signin": {
+    "stale": "这个链接来自之前的一次尝试。请打开最新的邮件，或者重新发送链接。",
+    "notServer": "这不是服务器地址。它应以 https:// 开头。",
+    "badKey": "这个密钥在此服务器上无效。",
+    "unreachable": "无法连接 {origin}。",
+    "title": "一个链接。\n不要密码<accent>。</accent>",
+    "lede": "输入邮箱，我们会发给你一个链接。点开就能登录；如果你是新用户，就会开启你的资料库。",
+    "server": "服务器",
+    "key": "API 密钥（如果有）",
+    "keyA11y": "API 密钥",
+    "noKey": "没有密钥？留空即可，我们会从那台服务器给你发送登录链接。",
+    "useKey": "使用这个密钥",
+    "withEmail": "用邮箱登录",
+    "useHost": "使用 {host}",
+    "ownServer": "使用你自己的服务器",
+    "preview": {
+      "a11y": "邮件内容：这是你的链接。轻点即可登录。只能用一次，10 分钟内有效。",
+      "subject": "你的 Pluck 链接",
+      "now": "刚刚",
+      "title": "这是你的链接。",
+      "body": "轻点即可登录。只能用一次，10 分钟内有效。永远不用记密码。",
+      "button": "登录 Pluck"
+    }
+  },
+  "handle": {
+    "title": "用户名",
+    "locked": "{date}后可以再次更改。",
+    "invalid": "3 到 24 个小写字母、数字或连字符。",
+    "hint": "它会出现在你公开的每个清单的链接里。",
+    "makeOne": "随机生成一个",
+    "saved": "你现在是 @{handle}。",
+    "save": "使用 @{handle}",
+    "keep": "保留 @{handle}",
+    "moveNone": "还没有公开的清单，所以没有链接会变。确定后，一个月后才能再改。",
+    "move": "{count, plural, =1 {你的公开清单会移到} other {你的 # 个公开清单会移到}} {host}/@{handle}/…，旧地址的链接将失效。通过邮件共享给他人的清单不受影响。确定后，一个月后才能再改。"
+  },
+  "share": {
+    "title": "分享",
+    "close": "关闭",
+    "sees": {
+      "me": "只有你能看到这个清单。",
+      "people": "这里的人能看到这个清单上的标题、网站、封面和你的笔记，但看不到你的标签、勾选，也看不到 Pluck 留下的网页。只有你能修改它。",
+      "anyone": "公开：任何拿到这个链接的人都能打开它，无需登录，它也可能出现在搜索结果里。他们能看到这个清单上的标题、网站、封面和你的笔记，但看不到你的标签、勾选，也看不到 Pluck 留下的网页。随时可以改回私密，链接会立即失效。"
+    },
+    "options": {
+      "me": "仅你自己",
+      "people": "你选择的人",
+      "anyone": "任何拿到链接的人"
+    },
+    "stopManyTitle": "停止与{count, plural, other { # 人}}共享？",
+    "stopManyBody": "他们将不能再查看。随时可以再次共享。",
+    "stopSharing": "停止共享",
+    "anyoneTitle": "任何拿到链接的人？",
+    "anyoneBody": "它会在你的用户名下得到一个公开页面。永远不会公开标签、勾选或 Pluck 留下的网页。随时可以改回私密。",
+    "makePublic": "设为公开",
+    "sharedWith": "已与 {email} 共享。对方会收到一封带链接的邮件。",
+    "stopOneTitle": "停止与 {email} 共享？",
+    "stopOneBody": "对方将不能再查看。",
+    "whoHasAccess": "谁可以访问",
+    "addByEmail": "通过邮箱添加",
+    "stopA11y": "停止与 {email} 共享",
+    "publicLink": "公开链接",
+    "copyPublic": "拷贝公开链接",
+    "linkCopied": "链接已拷贝。",
+    "shareLink": "分享链接"
+  },
+  "pick": {
+    "tags": "标签",
+    "lists": "清单",
+    "findTag": "查找或新建标签",
+    "makeTag": "新建标签“{name}”",
+    "findList": "查找或新建清单",
+    "startList": "新建清单“{name}”",
+    "tagsForMany": "为 {count} 条添加标签",
+    "addMany": "把 {count} 条添加到清单",
+    "addTo": "添加到 {name}",
+    "addToTheList": "添加到清单",
+    "noTags": "还没有标签。",
+    "noTagsBody": "在上面输入一个。你的 AI 也能打标签。",
+    "noTagsManyBody": "在上面输入一个。",
+    "noLists": "还没有清单。",
+    "noListsBody": "在上面输入名称来新建，或者让你的 AI 建一个。",
+    "noListsManyBody": "在上面输入名称来新建。",
+    "nothing": "收件箱和“稍后”里都没有东西。",
+    "nothingBody": "先摘点什么，它会出现在这里。"
+  },
+  "item": {
+    "back": "返回",
+    "backArchive": "归档",
+    "didntLoad": "这条没有载入。",
+    "didntLoadBody": "可能是它不在了，也可能是网络断了。稍后再试。",
+    "minutesLeft": "{percent} · 还剩 {minutes} 分钟",
+    "openOriginal": "打开原网页",
+    "by": "作者：{author}",
+    "noteA11y": "你的笔记：{note}。编辑",
+    "pending": "正在摘下网页，马上就会显示在这里。",
+    "failed": "无法读取这个网页。",
+    "failedFile": "文件留下了，里面的文字没能读出来。",
+    "failedPage": "有些网页不肯交出它的文字。链接已留下，原网页照样能打开。",
+    "titleA11y": "标题",
+    "titleHint": "标题留空，第一行就是标题。边写边存。",
+    "textA11y": "正文",
+    "textPlaceholder": "写下来。"
+  },
+  "settings": {
+    "title": "设置",
+    "sections": {
+      "account": "账号",
+      "aiTools": "AI 工具",
+      "emailIn": "邮件摘入",
+      "expiry": "到期与每周邮件",
+      "library": "资料库",
+      "appIcon": "App 图标",
+      "privacy": "隐私"
+    },
+    "yourAccount": "你的账号",
+    "name": "名字",
+    "addName": "添加你的名字",
+    "nameTitle": "你的名字",
+    "nameBody": "会显示在你公开的清单上。",
+    "nameSaved": "名字已更新。",
+    "handle": "用户名",
+    "signOut": "退出登录",
+    "signOutTitle": "退出登录？",
+    "signOutBody": "在这台手机上排队等待上传的内容会一直留着，直到你再次登录。",
+    "accountFootnote": "你的名字和用户名只会显示在你公开的清单上，其他地方都不会出现。",
+    "connectorCopied": "已拷贝。把它粘贴到你的 AI 里。",
+    "copied": "已拷贝",
+    "copyConnector": "拷贝连接器地址",
+    "connected": "连接于 {date}",
+    "disconnect": "断开连接",
+    "disconnectA11y": "{name}。断开连接",
+    "disconnectTitle": "断开 {name}？",
+    "disconnectBody": "它会立即停止读取和摘下。随时可以重新连接。",
+    "toolsNeedAccount": "用邮件链接重新登录后，你连接的 AI 工具会显示在这里。",
+    "toolsNone": "还没有连接 AI 工具。在你的 AI 工具里添加一次这个地址，你用它的每台设备上都能用。",
+    "toolsHint": "在你的 AI 工具里添加一次这个地址，你用它的每台设备上都能用。",
+    "addressCopied": "地址已拷贝。",
+    "copyEmailIn": "拷贝邮件摘入地址",
+    "newAddress": "新地址",
+    "newAddressTitle": "换一个新地址？",
+    "newAddressBody": "旧地址会立即失效。请更新所有转发到旧地址的设置。",
+    "emailInFootnote": "把新闻通讯转发到这里，它会作为“阅读”条目进入收件箱。",
+    "days": "{count, plural, other {# 天}}",
+    "never": "永不",
+    "scopeInboxLater": "收件箱和稍后",
+    "scopeInbox": "仅收件箱",
+    "moveAfter": "多久后移到归档",
+    "moveAfterTitle": "没动过的条目多久后移到归档",
+    "expirySaved": "{count} 天没动过就移到归档，不会删除任何东西。",
+    "noExpiry": "现在什么都不会到期。",
+    "appliesTo": "适用于",
+    "appliesToTitle": "到期规则适用于",
+    "weekly": "每周邮件",
+    "off": "关闭",
+    "weeklyTitle": "每周邮件的发送日",
+    "noWeekly": "不发每周邮件。",
+    "weeklyOn": "每周邮件会在{day, select, 0 {每周日} 1 {每周一} 2 {每周二} 3 {每周三} 4 {每周四} 5 {每周五} other {每周六}}送达。",
+    "expiryFootnote": "没动过的条目会移到归档，不会删除任何东西。每周邮件里有：快要移走的、快截止的，还有你摘下后忘了的东西。",
+    "tags": "标签",
+    "export": "全部导出",
+    "byEmail": "通过邮件",
+    "exportingTitle": "正在导出",
+    "exportingBody": "所有内容打包成的 zip 正在发往 {email}。链接一两分钟内就到。",
+    "exportingBodyNoEmail": "所有内容打包成的 zip 正在发往你的邮箱。链接一两分钟内就到。",
+    "offline": "离线副本",
+    "offlineValue": "{count, plural, other {# 条}} · {mb} MB",
+    "clearTitle": "清除离线副本？",
+    "clearBody": "你的资料库仍在服务器上。App 会在你使用时重新下载。",
+    "clear": "清除",
+    "server": "服务器",
+    "serverBody": "这台手机使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。",
+    "iconLight": "浅色",
+    "iconDark": "深色",
+    "iconA11y": "{name}图标",
+    "iconFootnote": "只是图标而已。App 本身跟随你的手机外观。",
+    "usage": "分享我如何使用 Pluck",
+    "usageFootnote": "你常用哪些页面，与你的账号关联。永远不包括你摘下的内容。崩溃报告照常发送，不带你的名字。",
+    "tipTitle": "把 Pluck 放到“分享”最前面",
+    "tipBody": "在任意 App 里轻点“分享”，把 App 那一行滑到“更多”，再把 Pluck 拖到最前面。",
+    "deleteAll": "全部删除。说真的。",
+    "deleteTitle": "全部删除？",
+    "deleteBody": "所有条目、标签、笔记和清单，永久删除。如果想留一份，请先导出。",
+    "continue": "继续",
+    "confirmTitle": "输入你的邮箱以确认",
+    "deleteButton": "全部删除"
+  }
+}

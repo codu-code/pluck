@@ -1,3 +1,4 @@
+import { messagesFor } from "@pluck/i18n";
 import { claimJob, pendingJobCount } from "@pluck/db";
 import { twoUsers } from "@pluck/db/testing";
 import { afterEach, expect, test, vi } from "vitest";
@@ -20,15 +21,15 @@ test("the welcome is a plain note from a person and keeps the copy rules", () =>
   for (const e of [fresh, going]) expect(`${e.subject}${e.text}`).not.toMatch(/!|saved|bookmark|collection|smart|magic/i);
 });
 
-test("in a language not translated yet, each email reads exactly as in English", () => {
+// Fallback to English is tested in packages/i18n; here each email takes its words from the recipient's catalog.
+test("each email is in the recipient's language", () => {
   const o = { plucked: false, expiryDays: 30, connectUrl: "https://x/connect" };
-  expect(welcomeEmail("a@example.test", o, "ko")).toEqual(welcomeEmail("a@example.test", o));
+  expect(welcomeEmail("a@example.test", o, "ko").subject).toBe(messagesFor("email", "ko").welcome.subject);
   const from = { name: "Niall", handle: "niall" };
   const shared = sharedListEmail("b@example.test", from, null, "https://x/shared/1", "nl");
-  expect(shared.subject).toBe("Niall shared a List with you: A List");
-  expect(shared.text).toBe(sharedListEmail("b@example.test", from, null, "https://x/shared/1").text);
   expect(shared.html).toContain('lang="nl"');
-  expect(exportEmail("a@example.test", "https://x/zip", "fr")).toEqual(exportEmail("a@example.test", "https://x/zip"));
+  expect(shared.subject).toContain("Niall");
+  expect(exportEmail("a@example.test", "https://x/zip", "fr").subject).toBe(messagesFor("email", "fr").export.subject);
 });
 
 test("the welcome is hosted only, waits 27 minutes and goes once", async () => {
