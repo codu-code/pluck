@@ -74,12 +74,15 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      // The languages in packages/i18n (LOCALES). Listing them gives Pluck a Language choice in iOS Settings.
+      CFBundleLocalizations: ["en", "es", "pt-BR", "fr", "de", "ja", "it", "nl", "ko", "zh-Hans"],
       // Local servers are plain http.
       ...(server.startsWith("http://") ? { NSAppTransportSecurity: { NSAllowsLocalNetworking: true, NSAllowsArbitraryLoads: true } } : {}),
     },
   },
   plugins: [
     "expo-router",
+    "expo-localization",
     "expo-secure-store",
     "expo-sqlite",
     "expo-web-browser",

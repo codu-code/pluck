@@ -47,6 +47,8 @@
 .footerInner a, .site .footerInner a { color: var(--ink2); }
 .footerButton { padding: 0; border: 0; background: none; font: inherit; color: var(--ink2); text-decoration: underline; cursor: pointer; }
 .footerButton:hover { color: var(--ink); }
+.footerLanguage { display: inline-flex; align-items: center; gap: 6px; }
+.footerLanguage select { font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; }
 .footerBrand { margin-right: auto; display: inline-flex; align-items: center; }
 .footerNote { margin-right: auto; }
 @media (max-width: 600px) { .footerBrand, .footerNote { flex-basis: 100%; margin-bottom: 4px; } }

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 import { fileURLToPath } from "node:url";
 
 // One .env at the repo root for every app. Absent on Vercel, where env comes from the project settings.
@@ -10,7 +11,7 @@ try {
 const posthog = process.env.POSTHOG_HOST || "https://eu.i.posthog.com";
 
 const config: NextConfig = {
-  transpilePackages: ["@pluck/ui", "@pluck/shared-schemas", "@pluck/db", "@pluck/extract", "@pluck/blob"],
+  transpilePackages: ["@pluck/ui", "@pluck/shared-schemas", "@pluck/db", "@pluck/extract", "@pluck/blob", "@pluck/i18n"],
   // Parsers with large or native-ish dependency trees run from node_modules instead of the bundle.
   serverExternalPackages: ["defuddle", "linkedom", "unpdf", "@mozilla/readability", "undici"],
   // Monorepo root, so env and tracing resolve from there.
@@ -30,4 +31,5 @@ const config: NextConfig = {
   },
 };
 
-export default config;
+// Languages: i18n/request.ts picks one per request (packages/i18n holds the catalogs).
+export default createNextIntlPlugin("./i18n/request.ts")(config);

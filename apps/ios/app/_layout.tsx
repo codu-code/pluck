@@ -6,10 +6,12 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { AppState, LogBox, Settings, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { IntlProvider } from "use-intl";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
 import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { locale, messages, timeZone } from "@/lib/i18n";
 import { queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
@@ -65,35 +67,37 @@ export default function Root() {
 
   if (signedIn === null) return <View style={{ flex: 1, backgroundColor: t.ground }} />;
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: 7 * 86_400_000 }}>
-          <StatusBar style="auto" />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.ground } }}>
-            <Stack.Protected guard={signedIn}>
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="items/[id]" />
-              <Stack.Screen name="lists/[id]" />
-              <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
-              <Stack.Screen name="settings" options={{ presentation: "modal" }} />
-              <Stack.Screen name="note" options={{ presentation: "modal" }} />
-              <Stack.Screen name="handle" options={{ presentation: "modal" }} />
-              <Stack.Screen name="tags" options={{ presentation: "modal" }} />
-              <Stack.Screen name="share" options={{ presentation: "modal" }} />
-              <Stack.Screen name="shared/[id]" />
-              <Stack.Screen name="pick" options={{ presentation: "formSheet", sheetAllowedDetents: [0.6, 1] }} />
-            </Stack.Protected>
-            <Stack.Protected guard={!signedIn}>
-              <Stack.Screen name="signin" />
-            </Stack.Protected>
-            <Stack.Screen name="oauth" />
-          </Stack>
-          <Screens />
-          {signedIn && <SignedInAnalytics />}
-          <ToastHost />
-        </PersistQueryClientProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <IntlProvider locale={locale} messages={messages} timeZone={timeZone}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: 7 * 86_400_000 }}>
+            <StatusBar style="auto" />
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.ground } }}>
+              <Stack.Protected guard={signedIn}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="items/[id]" />
+                <Stack.Screen name="lists/[id]" />
+                <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
+                <Stack.Screen name="settings" options={{ presentation: "modal" }} />
+                <Stack.Screen name="note" options={{ presentation: "modal" }} />
+                <Stack.Screen name="handle" options={{ presentation: "modal" }} />
+                <Stack.Screen name="tags" options={{ presentation: "modal" }} />
+                <Stack.Screen name="share" options={{ presentation: "modal" }} />
+                <Stack.Screen name="shared/[id]" />
+                <Stack.Screen name="pick" options={{ presentation: "formSheet", sheetAllowedDetents: [0.6, 1] }} />
+              </Stack.Protected>
+              <Stack.Protected guard={!signedIn}>
+                <Stack.Screen name="signin" />
+              </Stack.Protected>
+              <Stack.Screen name="oauth" />
+            </Stack>
+            <Screens />
+            {signedIn && <SignedInAnalytics />}
+            <ToastHost />
+          </PersistQueryClientProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </IntlProvider>
   );
 }
 

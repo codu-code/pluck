@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "Pluck the page you are on into your Pluck library, with one click."
+  },
+  "pluckPage": {
+    "message": "Pluck this page"
+  },
+  "pluckSelection": {
+    "message": "Pluck the selection as a highlight"
+  }
+}

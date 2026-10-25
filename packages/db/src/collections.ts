@@ -1,3 +1,4 @@
+import type { Locale } from "@pluck/i18n";
 import type { ArchivedReason, ExtractionState, Kind, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
@@ -109,8 +110,9 @@ export type UserSettings = {
   expiryScope: "inbox_later" | "inbox";
   digestDay: number | null; // 0 Sunday … 6 Saturday; 1 (Monday) by default; null: no email
   timezone: string; // IANA
+  locale: Locale | null; // null: follow the browser or phone; set from the sign-up request
 };
-export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC" };
+export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC", locale: null };
 
 export type ReportDoc = {
   _id: ObjectId;

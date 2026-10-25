@@ -2,6 +2,7 @@ import { Logo } from "@pluck/ui";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CookiesLink } from "@/components/CookieBanner";
+import { LanguageSelect } from "@/components/LanguageSelect";
 import { REPO_URL } from "@/lib/site";
 import styles from "./site.module.css";
 
@@ -34,6 +35,7 @@ export function SitePage({ page, dark = false, footerNote, children }: { page: P
           {page !== "privacy" && <Link href="/privacy">Privacy</Link>}
           {page !== "terms" && <Link href="/terms">Terms</Link>}
           <CookiesLink className={styles.footerButton} />
+          <LanguageSelect namespace="site" className={styles.footerLanguage} />
         </div>
       </footer>
     </div>

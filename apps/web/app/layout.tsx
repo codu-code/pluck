@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CookieBanner } from "@/components/CookieBanner";
 import { fredoka, geist, geistMono, sourceSerif } from "./fonts";
@@ -24,12 +26,14 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${geistMono.variable} ${fredoka.variable} ${sourceSerif.variable}`}>
+    <html lang={await getLocale()} className={`${geist.variable} ${geistMono.variable} ${fredoka.variable} ${sourceSerif.variable}`}>
       <body>
-        <CookieBanner />
-        {children}
+        <NextIntlClientProvider>
+          <CookieBanner />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

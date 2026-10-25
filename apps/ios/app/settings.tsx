@@ -1,14 +1,17 @@
+import { LOCALE_NAMES } from "@pluck/i18n";
 import type { AiConnection, Me, Settings as UserSettings } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { ActionSheetIOS, Alert, Image, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { ActionSheetIOS, Alert, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
 import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
+import { locale } from "@/lib/i18n";
 import { kv } from "@/lib/kv";
 import { keys, queryClient, useMe, useTags } from "@/lib/data";
 import { api, getSession, signOut, type Session } from "@/lib/session";
@@ -34,6 +37,7 @@ const failed = (e: unknown) => Alert.alert("That did not go through", e instance
 // Settings (IOSSettings board): everything the web's Settings does, so the phone never needs it.
 // Account things (AI tools, export, delete) need the "account" scope; a phone signed in before it asks to sign in again.
 export default function Settings() {
+  const tl = useTranslations("ios.language");
   const t = useTheme();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
@@ -264,6 +268,13 @@ export default function Settings() {
           {row(<><Text style={label}>Server</Text><Text style={value}>{host}</Text></>, () =>
             Alert.alert("Server", `This phone uses ${host}. To use another server, sign out, then choose "Use your own server".`), true)}
         </View>
+      </View>
+
+      {/* iOS keeps a language per app (Settings, Pluck, Language); changing it restarts Pluck in that language. */}
+      <View style={styles.group}>
+        {section(tl("label"))}
+        <View style={card}>{row(pair(LOCALE_NAMES[locale], ""), () => void Linking.openSettings(), true)}</View>
+        {footnote(tl("hint"))}
       </View>
 
       {appIcons.supported && icon && (

@@ -1,18 +1,24 @@
+import { messagesFor, type Locale } from "@pluck/i18n";
+import { createTranslator } from "next-intl";
 import type { Email } from "./email";
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
-export function magicLinkEmail(to: string, url: string): Email {
+// Email copy lives in packages/i18n (the email catalog), in the language of the person it goes to.
+const emailT = (locale: Locale) => createTranslator({ locale, messages: { email: messagesFor("email", locale) }, namespace: "email" });
+
+export function magicLinkEmail(to: string, url: string, locale: Locale = "en"): Email {
+  const t = emailT(locale);
   return {
     to,
     replyTo: null, // sent from no-reply: a reply has no one to reach
-    subject: "Your Pluck sign-in link",
-    text: `Here is your link to sign in to Pluck. It works once, for the next 10 minutes.\n\n${url}\n\nIf you did not ask for this, ignore it. Nothing happens unless you open it and tap Sign in.\n`,
-    html: `<div style="font-family: Geist, -apple-system, sans-serif; font-size: 15px; line-height: 22px; color: #151A13; max-width: 480px">
-<p>Here is your link to sign in to Pluck. It works once, for the next 10 minutes.</p>
-<p><a href="${escape(url)}" style="display: inline-block; padding: 10px 16px; border-radius: 6px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 500">Sign in to Pluck</a></p>
-<p style="color: #525A4E; font-size: 13px; line-height: 19px">Button not working? Copy this link into your browser:<br><a href="${escape(url)}" style="color: #1E5C45; word-break: break-all">${escape(url)}</a></p>
-<p style="color: #525A4E">If you did not ask for this, ignore it. Nothing happens unless you open it and tap Sign in.</p>
+    subject: t("magicLink.subject"),
+    text: `${t("magicLink.intro")}\n\n${url}\n\n${t("magicLink.ignore")}\n`,
+    html: `<div lang="${locale}" style="font-family: Geist, -apple-system, sans-serif; font-size: 15px; line-height: 22px; color: #151A13; max-width: 480px">
+<p>${escape(t("magicLink.intro"))}</p>
+<p><a href="${escape(url)}" style="display: inline-block; padding: 10px 16px; border-radius: 6px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 500">${escape(t("magicLink.button"))}</a></p>
+<p style="color: #525A4E; font-size: 13px; line-height: 19px">${escape(t("magicLink.copy"))}<br><a href="${escape(url)}" style="color: #1E5C45; word-break: break-all">${escape(url)}</a></p>
+<p style="color: #525A4E">${escape(t("magicLink.ignore"))}</p>
 </div>`,
   };
 }

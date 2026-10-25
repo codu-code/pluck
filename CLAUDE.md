@@ -13,6 +13,8 @@ Pluck is a fast, open-source URL saver with an MCP connector. There is no AI ins
 
 ## Product words
 
+Every user-facing string lives in `packages/i18n` (see `docs/i18n.md`); other languages follow the glossary in `docs/i18n/`.
+
 Use these and no others in UI copy: Pluck (verb), Plucked (confirmation), Item, Kind (Read, Watch, PDF, Image, Note, Todo, Thing), Status (Inbox, Later, Archived, Done), Tag, List. Never "saved", "bookmarked", "collection", "smart", "AI-powered", "magic". Say "your AI" or "AI tools", never one vendor as the only option. Expiry copy always says "to the Archive" and "nothing is deleted". No exclamation marks, no emoji.
 
 ## Stack

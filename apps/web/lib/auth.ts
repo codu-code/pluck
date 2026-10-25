@@ -1,4 +1,4 @@
-import { authAdapter, hitRateLimit } from "@pluck/db";
+import { authAdapter, hitRateLimit, updateSettings } from "@pluck/db";
 import { cimd } from "@better-auth/cimd";
 import { fetchClientMetadataResource } from "@better-auth/cimd/node";
 import { mcp } from "@better-auth/mcp";
@@ -11,6 +11,7 @@ import { cache } from "react";
 import { sendEmail } from "./email";
 import { magicLinkEmail } from "./emails";
 import { linkPageUrl } from "./signin-link";
+import { localeFrom } from "../i18n/request";
 import { clientIp } from "./ip";
 
 const DAY = 60 * 60 * 24;
@@ -73,7 +74,11 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   user: { modelName: "users" },
   // Imported when used: the library reaches site.ts, which imports this file.
-  databaseHooks: { user: { create: { after: async (user) => (await import("./library")).queueWelcome(user.id) } } },
+  // A new account starts in the language of the browser it signed up in, so its emails do too.
+  databaseHooks: { user: { create: { after: async (user, ctx) => {
+    await updateSettings(user.id, { locale: localeFrom(ctx?.headers) });
+    await (await import("./library")).queueWelcome(user.id);
+  } } } },
   session: { modelName: "auth_sessions", expiresIn: 30 * DAY, updateAge: DAY },
   account: { modelName: "auth_accounts" },
   verification: { modelName: "auth_verifications" },
@@ -94,7 +99,7 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       expiresIn: 10 * 60,
-      sendMagicLink: ({ email, url }) => sendEmail(magicLinkEmail(email, linkPageUrl(url))),
+      sendMagicLink: ({ email, url }, ctx) => sendEmail(magicLinkEmail(email, linkPageUrl(url), localeFrom(ctx?.headers))),
     }),
     // OAuth 2.1 for MCP clients, the extension and iOS: JWT access tokens bound to one resource.
     jwt(),
