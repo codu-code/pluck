@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "Pluckしました。",
+  "plucking": "Pluck中…",
+  "signedOutTitle": "サインインしていません。",
+  "signedOutBody": "サインインは一度だけ。あとは共有シートから使えます。",
+  "openToSignIn": "Pluckを開いてサインイン",
+  "queuedTitle": "Pluckしました。あとで同期します。",
+  "queuedBody": "このiPhoneに残してあります。オンラインに戻ると送られます。",
+  "done": "完了",
+  "failedTitle": "Pluckできませんでした。",
+  "nothingToKeep": "ここにはPluckが残せるものがありません。",
+  "didNotWork": "うまくいきませんでした。",
+  "badServer": "サーバーのアドレスが正しくありません。",
+  "noUploadAddress": "アップロード先がありません。",
+  "tagsAndList": "タグとリスト",
+  "kind": "種類",
+  "addToList": "{name}に追加",
+  "addedToList": "{name}に追加しました",
+  "notePlaceholder": "Pluckした理由を一行で。任意です。",
+  "kindRead": "記事",
+  "kindWatch": "動画",
+  "kindPdf": "PDF",
+  "kindImage": "画像",
+  "kindTodo": "ToDo",
+  "kindNote": "メモ",
+  "kindThing": "モノ"
+}

@@ -1,1 +1,932 @@
-{}
+{
+  "language": {
+    "label": "Idioma",
+    "hint": "Pluck usa el idioma de tu navegador hasta que elijas uno."
+  },
+  "kind": {
+    "link": "Leer",
+    "video": "Ver",
+    "pdf": "PDF",
+    "image": "Imagen",
+    "note": "Nota",
+    "todo": "Tarea",
+    "thing": "Cosa"
+  },
+  "status": {
+    "inbox": "Entrada",
+    "later": "Más tarde",
+    "archived": "Archivado",
+    "done": "Hecho"
+  },
+  "moved": {
+    "archived": "Adiós. Bueno, al Archivo.",
+    "later": "Para más tarde.",
+    "done": "Hecho.",
+    "inbox": "De vuelta en la Bandeja de entrada."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {# elemento} other {# elementos}}. Adiós. Bueno, al Archivo.",
+    "later": "{count, plural, one {# elemento} other {# elementos}}. Para más tarde.",
+    "done": "{count, plural, one {# elemento} other {# elementos}}. Hecho.",
+    "inbox": "{count, plural, one {# elemento} other {# elementos}}. De vuelta en la Bandeja de entrada."
+  },
+  "format": {
+    "when": {
+      "now": "ahora",
+      "minutes": "{n} min",
+      "hours": "{n} h",
+      "yesterday": "Ayer"
+    },
+    "ago": {
+      "now": "ahora mismo",
+      "minutes": "hace {n} min",
+      "hours": "hace {n} h",
+      "yesterday": "ayer",
+      "on": "el {date}"
+    },
+    "due": {
+      "overdue": "vencida",
+      "today": "vence hoy",
+      "tomorrow": "vence mañana",
+      "on": "vence el {date}"
+    },
+    "site": {
+      "email": "correo entrante",
+      "file": "Tu archivo"
+    },
+    "meta": {
+      "byAi": "por IA",
+      "byYou": "por ti",
+      "failed": "No se pudo leer",
+      "pending": "Recogiendo",
+      "photo": "foto",
+      "video": "video",
+      "minutes": "{n} min",
+      "pdf": "PDF",
+      "link": "enlace"
+    },
+    "source": {
+      "web": "Recogido en la web",
+      "extension": "Recogido desde la extensión",
+      "ios": "Recogido desde iOS",
+      "email": "Recogido por correo",
+      "mcp": "Recogido por tu IA",
+      "import": "Importado",
+      "api": "Recogido con una clave de API",
+      "copied": "Recogido de una lista pública"
+    },
+    "sourceAgo": {
+      "web": "recogido en la web {ago}",
+      "extension": "recogido desde la extensión {ago}",
+      "ios": "recogido desde iOS {ago}",
+      "email": "recogido por correo {ago}",
+      "mcp": "recogido por tu IA {ago}",
+      "import": "importado {ago}",
+      "api": "recogido con una clave de API {ago}",
+      "copied": "recogido de una lista pública {ago}"
+    },
+    "via": {
+      "web": "en la web",
+      "extension": "desde la extensión",
+      "ios": "desde iOS",
+      "email": "por correo",
+      "mcp": "por tu IA",
+      "import": "Importado",
+      "api": "con una clave de API",
+      "copied": "de una lista pública"
+    }
+  },
+  "common": {
+    "didNotGoThrough": "No se pudo completar.",
+    "pluckedToInbox": "Recogido en la Bandeja de entrada.",
+    "copiedForAi": "Copiado. Pégalo en tu IA.",
+    "cancel": "Cancelar",
+    "copy": "Copiar",
+    "save": "Guardar",
+    "rename": "Cambiar nombre",
+    "merge": "Combinar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "showMore": "Mostrar más",
+    "openOriginal": "Abrir original",
+    "undo": "Deshacer"
+  },
+  "standalone": {
+    "home": "Inicio de Pluck"
+  },
+  "error": {
+    "title": "Algo se rompió",
+    "lede": "Es culpa nuestra, no tuya. No se perdió nada de lo que recogiste. Vuelve a intentarlo y, si sigue pasando, avísanos.",
+    "tryAgain": "Reintentar",
+    "report": "Avisarnos"
+  },
+  "globalError": {
+    "title": "Algo se rompió",
+    "lede": "Es culpa nuestra, no tuya. No se perdió nada de lo que recogiste. Vuelve a intentarlo en un momento.",
+    "tryAgain": "Reintentar"
+  },
+  "notFound": {
+    "title": "Aquí no hay nada",
+    "lede": "Puede que ahora sea privado, o que nunca existiera.",
+    "home": "Ir a Pluck",
+    "support": "Ayuda"
+  },
+  "offline": {
+    "title1": "Sin conexión.",
+    "title2": "Sin perder nada",
+    "lede": "Las páginas que abriste hace poco siguen aquí, y todo lo que recojas ahora espera en este dispositivo hasta que vuelvas.",
+    "tryAgain": "Reintentar",
+    "openInbox": "Abrir la Bandeja de entrada",
+    "art": {
+      "inbox": "Entrada",
+      "waiting": "{count} en espera",
+      "one": "El artículo del tren",
+      "oneNote": "Espera aquí, se sube cuando vuelvas",
+      "two": "Comprar una placa de inducción",
+      "twoNote": "Tarea, también espera aquí",
+      "three": "Índices de Postgres en 40 minutos",
+      "threeNote": "Abierto ayer, todavía se puede leer"
+    }
+  },
+  "meta": {
+    "signin": "Iniciar sesión · Pluck",
+    "oauthError": "No funcionó · Pluck",
+    "consent": "Conecta tu IA · Pluck",
+    "shared": "Compartida contigo · Pluck",
+    "copy": "Recoger esta lista · Pluck",
+    "extensionConnected": "Conectada · Pluck",
+    "inbox": "Bandeja de entrada · Pluck",
+    "later": "Más tarde · Pluck",
+    "archive": "Archivo · Pluck",
+    "search": "Buscar · Pluck",
+    "lists": "Listas · Pluck",
+    "list": "Lista · Pluck",
+    "settings": "Ajustes · Pluck",
+    "admin": "Administración · Pluck",
+    "item": "{title} · Pluck"
+  },
+  "signin": {
+    "preview": {
+      "sent": "Enviado.",
+      "subject": "Tu enlace a Pluck",
+      "now": "ahora",
+      "title": "Aquí tienes tu enlace.",
+      "body": "Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos. Nunca tendrás que recordar una contraseña.",
+      "button": "Iniciar sesión en Pluck"
+    },
+    "sent": {
+      "title": "Revisa tu correo",
+      "lede": "Enviamos un enlace a <b>{email}</b>. Funciona una vez, durante 10 minutos, en el navegador en el que lo abras.",
+      "status": "Enviamos un enlace a {email}. Revisa tu correo.",
+      "sending": "Enviando",
+      "again": "Enviarlo de nuevo",
+      "different": "Usar otro correo",
+      "spam": "¿No llega nada en un minuto? Revisa la carpeta de spam y vuelve a enviarlo."
+    },
+    "aiTitle": "Inicia sesión para conectar tu IA",
+    "aiLede": "Te enviamos un enlace por correo. Una vez dentro, eliges qué puede hacer tu herramienta de IA.",
+    "title1": "Un enlace.",
+    "title2": "Sin contraseña",
+    "lede": "Escribe tu correo y te enviamos un enlace. Con él inicias sesión o, si es tu primera vez, empiezas tu biblioteca.",
+    "email": "Correo",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "password": "Contraseña",
+    "signingIn": "Iniciando sesión",
+    "signIn": "Iniciar sesión",
+    "sending": "Enviando",
+    "send": "Envíame un enlace",
+    "error": "No se pudo completar. Revisa la dirección y vuelve a intentarlo.",
+    "wrong": "Esa contraseña no funcionó.",
+    "limitedTries": "Son muchos intentos. Vuelve a intentarlo en una hora.",
+    "limitedLinks": "Son muchos enlaces. Usa el más reciente que te enviamos, o vuelve a intentarlo en una hora."
+  },
+  "signinLink": {
+    "broken": {
+      "title": "Este enlace no está completo",
+      "lede": "Puede que se haya cortado por el camino. Pide uno nuevo.",
+      "action": "Enviar un enlace nuevo"
+    },
+    "title1": "Un toque",
+    "title2": "y ya estás dentro",
+    "lede": "Este enlace funciona una vez, durante 10 minutos desde que lo enviamos.",
+    "action": "Iniciar sesión en Pluck"
+  },
+  "oauthError": {
+    "title": "No se pudo conectar",
+    "lede": "No cambió nada en tu Pluck. Casi siempre se arregla empezando de nuevo.",
+    "step1": "Vuelve a iniciar la conexión desde tu herramienta de IA.",
+    "step2": "¿Sigue fallando? Quita Pluck allí y vuelve a añadirlo con el enlace de <connect>Conecta tu IA</connect>.",
+    "step3": "¿Sigue sin funcionar? En <support>Ayuda</support> encontrarás más.",
+    "serverSaid": "Lo que dijo el servidor, por si tu herramienta de IA lo pide"
+  },
+  "consent": {
+    "allow": "Permitir",
+    "deny": "Denegar",
+    "anAiTool": "Una herramienta de IA",
+    "expired": {
+      "title": "Esta solicitud caducó",
+      "lede": "Vuelve a iniciar la conexión desde tu herramienta de IA. No se compartió nada."
+    },
+    "title": "{name} quiere usar tu Pluck",
+    "appLede": "Recoge y organiza en tu nombre, desde este dispositivo.",
+    "lede": "Actúa por ti, solo mientras la usas, y cada cambio que hace queda marcado como hecho por IA.",
+    "art": {
+      "inbox": "Entrada",
+      "after": "después de pedirle que ordene",
+      "one": "Cómo funciona de verdad la autenticación de MCP",
+      "oneNote": "Etiquetado mcp, auth",
+      "two": "Índices de Postgres en 40 minutos",
+      "twoNote": "Movido a Más tarde",
+      "three": "Un plan de cocina en tres borradores",
+      "threeNote": "Se quedó como estaba",
+      "byAi": "por IA"
+    },
+    "returnsTo": "Al permitirlo, pasarás a <b>{host}</b>. Si no conoces esa dirección, no lo permitas.",
+    "scopes": {
+      "read": "Leer tu biblioteca: elementos, el texto que Pluck conservó, notas, etiquetas y listas",
+      "write": "Recoger y organizar: añadir cosas, etiquetar, ordenar, crear y editar listas",
+      "delete": "Eliminar elementos. La mayoría de las herramientas de IA nunca lo necesitan.",
+      "account": "Gestionar tu cuenta: herramientas de IA conectadas, exportaciones y eliminarlo todo. Solo las apps de Pluck piden esto."
+    },
+    "signedInAs": "Sesión iniciada como {email}. Nunca puede eliminar nada a menos que aparezca arriba, y puedes desconectarla en Ajustes."
+  },
+  "digest": {
+    "open": "Abrir Pluck",
+    "undo": "Deshacer",
+    "confirm": "Confirmar",
+    "expired": {
+      "title": "Este enlace caducó",
+      "lede": "Los enlaces del correo funcionan durante 7 días. Todo sigue en Pluck, donde lo dejaste."
+    },
+    "archiveAll": {
+      "title1": "Archivarlo todo.",
+      "title2": "En serio",
+      "count": "<b>{count, number}</b><span>{count, plural, one {elemento sin tocar} other {elementos sin tocar}} durante más tiempo que tu plazo de caducidad</span>",
+      "lede": "Pasan al Archivo de una vez. No se borra nada, y las listas no se tocan.",
+      "confirm": "Sí, pasar {count, number} al Archivo",
+      "notNow": "Ahora no"
+    },
+    "doing": {
+      "keep": "Conservándolo",
+      "letGo": "Pasándolo al Archivo",
+      "undoLetGo": "Devolviéndolo a su sitio",
+      "stop": "Desactivando el correo semanal"
+    },
+    "done": {
+      "keep": {
+        "title": "Conservado",
+        "line": "Se queda donde está, y los días vuelven a contar desde cero."
+      },
+      "letGo": {
+        "title": "Adiós. Bueno, al Archivo",
+        "line": "No se borra nada."
+      },
+      "undoLetGo": {
+        "title": "De vuelta donde estaba"
+      },
+      "stop": {
+        "title": "Sin más correos semanales",
+        "line": "Vuelve a activarlos en Ajustes cuando quieras."
+      },
+      "archiveAll": {
+        "title": "{count, plural, one {# elemento pasó} other {# elementos pasaron}} al Archivo",
+        "line": "No se borra nada."
+      },
+      "done": {
+        "title": "Hecho"
+      }
+    }
+  },
+  "shared": {
+    "leave": "Salir de esta Lista",
+    "home": "Pluck, tu Bandeja de entrada",
+    "byNamed": "{name} (@{handle})",
+    "byHandle": "@{handle}",
+    "meta": "Compartida contigo por {by} · {count, plural, one {# elemento} other {# elementos}} · actualizada {ago}",
+    "pluck": "Recoger esta lista",
+    "seeOnly": "Tú puedes verla; solo esa persona la cambia. Recógela para tener tu propia copia.",
+    "note": "Nota",
+    "noAccess": {
+      "title1": "No está compartida",
+      "title2": "contigo",
+      "lede": "O esta Lista ya no existe, o no está compartida con <b>{email}</b>, el correo con el que iniciaste sesión. Si alguien te envió el enlace, pídele que la comparta con esa dirección.",
+      "lists": "Tus Listas",
+      "another": "Usar otro correo"
+    }
+  },
+  "copy": {
+    "failed": "No se pudo completar.",
+    "busy": "Recogiendo",
+    "action": "Recoger esta lista",
+    "title": "Recoger esta lista",
+    "lede": "{count, plural, one {# elemento llega} other {# elementos llegan}} a tu Bandeja de entrada, y una copia privada de <b>{name}</b> conserva su orden y sus notas.",
+    "items": "{count, plural, one {# elemento} other {# elementos}}",
+    "note": "Nota",
+    "more": "y {count} más"
+  },
+  "extensionConnected": {
+    "title": "Conectada",
+    "lede": "Ya puedes recoger desde tu navegador. Cierra esta pestaña; a partir de ahora, cualquier página está a un atajo de distancia.",
+    "page": "Recoge la página en la que estás. En Mac, Alt es Opción.",
+    "selection": "Recoge lo que seleccionaste y lo conserva como destacado."
+  },
+  "shell": {
+    "main": "Principal",
+    "nav": {
+      "inbox": "Entrada",
+      "later": "Más tarde",
+      "lists": "Listas",
+      "archive": "Archivo",
+      "settings": "Ajustes"
+    },
+    "settingsNav": {
+      "ai": "Herramientas de IA",
+      "email": "Correo entrante",
+      "keys": "Claves de API",
+      "language": "Idioma",
+      "expiry": "Caducidad y archivo",
+      "tags": "Etiquetas",
+      "import": "Importar y exportar",
+      "delete": "Eliminar cuenta"
+    }
+  },
+  "offlineBar": {
+    "text": "Sin conexión. Lo que recojas se sincronizará cuando vuelvas."
+  },
+  "emptyInbox": {
+    "title": "Aún no has recogido nada.",
+    "lede": "Tres formas de empezar. La primera tarda un segundo.",
+    "one": {
+      "title": "Pulsa Recógelo, aquí arriba",
+      "body": "El enlace de ejemplo ya está ahí. Míralo llegar."
+    },
+    "two": {
+      "title": "Añade la extensión",
+      "body": "Un clic, o Alt+Shift+P, en cualquier página.",
+      "chrome": "Chrome"
+    },
+    "three": {
+      "title": "Recoge desde tu teléfono",
+      "body": "La app de iOS, o el Atajo de Pluck mientras llega.",
+      "ios": "App de iOS",
+      "shortcut": "Añadir el Atajo"
+    }
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "close": "Cerrar",
+    "keys": {
+      "search": "Buscar",
+      "pluckBox": "Campo de Pluck",
+      "move": "Bajar y subir",
+      "open": "Abrir",
+      "later": "Más tarde (o volver a la Bandeja de entrada)",
+      "archive": "Archivar",
+      "done": "Hecho (tareas y cosas)",
+      "tag": "Etiquetar",
+      "list": "Añadir a una lista",
+      "select": "Seleccionar",
+      "escape": "Quitar la selección, o volver",
+      "help": "Esta lista"
+    }
+  },
+  "tagChip": {
+    "byAi": "Etiquetado por IA"
+  },
+  "kindChips": {
+    "label": "Tipo",
+    "all": "Todo",
+    "links": "Enlaces",
+    "note": "Notas",
+    "todo": "Tareas",
+    "thing": "Cosas"
+  },
+  "picker": {
+    "hint": "Enter marca o desmarca · Esc cierra",
+    "tag": {
+      "label": "Etiqueta",
+      "placeholder": "Escribe para buscar o crear una etiqueta",
+      "options": "etiquetas",
+      "empty": "Aún no hay etiquetas. Escribe un nombre para crear una.",
+      "create": "Crear “{name}”"
+    },
+    "list": {
+      "label": "Lista",
+      "placeholder": "Escribe para buscar o crear una lista",
+      "options": "listas",
+      "empty": "Aún no hay listas. Escribe un nombre para crear una.",
+      "create": "Nueva lista “{name}”"
+    }
+  },
+  "cookies": {
+    "title": "¿Una cookie?",
+    "body": "Ya hay dos que mantienen tu sesión iniciada y guardan lo que pegaste. Esta nos muestra cómo se usa Pluck, para que arreglemos lo que estorba. Sin anuncios. Sin vender tus datos. No te sigue a ninguna parte.",
+    "no": {
+      "button": "Mejor no",
+      "title": "Entendido.",
+      "note": "Ni una miga."
+    },
+    "yes": {
+      "button": "Sí, cuenta conmigo",
+      "title": "Recogido.",
+      "note": "Gracias."
+    },
+    "more": "Qué hace cada una",
+    "link": "Cookies"
+  },
+  "connectLoop": {
+    "label": "Alguien pega el enlace de Pluck en su herramienta de IA, lo permite en la pantalla de Pluck, luego pregunta qué recogió sobre la autenticación de MCP y recibe tres de sus elementos.",
+    "cap1": {
+      "title": "Pega un enlace",
+      "body": "En cualquier herramienta de IA compatible con MCP."
+    },
+    "cap2": {
+      "title": "Di que sí",
+      "body": "Pluck pregunta una vez. Tu IA nunca puede eliminar."
+    },
+    "cap3": {
+      "title": "Pregunta lo que quieras",
+      "body": "Toda tu biblioteca, en el chat que ya usas."
+    },
+    "newChat": "Nuevo chat",
+    "chat": "Chat",
+    "question": "¿Qué recogí sobre la autenticación de MCP?",
+    "answer": "Tres cosas, de la más reciente a la más antigua:",
+    "cards": {
+      "one": "Cómo funciona de verdad la autenticación de MCP",
+      "two": "Scopes de OAuth para gente con prisa",
+      "twoMeta": "una entrada de blog · 6 min",
+      "three": "Tokens, scopes y lo que todo el mundo entiende mal"
+    },
+    "followUp": "¿Te los pongo en una lista, el mejor primero?",
+    "connected": "Pluck conectado",
+    "message": "Mensaje",
+    "modal": {
+      "title": "Añadir un conector",
+      "body": "Pega el enlace del servidor. Después iniciarás sesión en él.",
+      "cancel": "Cancelar",
+      "add": "Añadir"
+    },
+    "consent": {
+      "title": "Deja entrar a tu IA",
+      "body": "Tu herramienta de IA pide usar tu biblioteca de Pluck. Solo cambia cosas cuando se lo pides, y marca lo que tocó.",
+      "read": "Leer y buscar en tu biblioteca",
+      "write": "Recoger, etiquetar y ordenar, marcado “por IA”",
+      "delete": "Eliminar cualquier cosa",
+      "cancel": "Cancelar",
+      "allow": "Permitir"
+    }
+  },
+  "itemRow": {
+    "select": "Seleccionar {title}"
+  },
+  "itemBar": {
+    "later": "Más tarde",
+    "archive": "Archivar",
+    "done": "Hecho"
+  },
+  "itemLists": {
+    "inLists": "En {count, plural, one {# lista} other {# listas}}",
+    "lists": "Listas",
+    "public": "Pública · n.º {place}",
+    "private": "Privada · n.º {place}",
+    "add": "Añadir a una lista"
+  },
+  "itemTags": {
+    "title": "Etiquetas",
+    "remove": "Quitar la etiqueta {name}",
+    "add": "Añadir etiqueta",
+    "quoted": "“{name}”",
+    "byAi": "Tu IA añadió {names}. {count, plural, one {Tócala y pasa a ser tuya.} other {Tócalas y pasan a ser tuyas.}}",
+    "keep": "Conservar",
+    "pickerTitle": "Etiqueta"
+  },
+  "topBar": {
+    "queued": "Recogido. Se sincronizará cuando vuelvas a tener conexión.",
+    "rejected": "{count, plural, one {# no se pudo recoger} other {# no se pudieron recoger}}: {reason}",
+    "failed": "No se pudo completar.",
+    "label": "Pluck",
+    "placeholder": "Pega uno o varios enlaces, o escribe una nota",
+    "submit": "Recógelo",
+    "search": "Buscar",
+    "links": "{count} enlaces. Enter los recoge todos.",
+    "as": "Recoger como",
+    "due": "Vence",
+    "enterAs": "Enter lo recoge como {kind, select, note {Nota} todo {Tarea} other {Cosa}}."
+  },
+  "itemList": {
+    "inbox": {
+      "subtitle": "{count} por revisar · {sort, select, newest {más recientes primero} other {sin tocar primero}}"
+    },
+    "later": {
+      "subtitle": "Conservado a propósito",
+      "expiring": "Conservado a propósito · {count, plural, one {# caduca} other {# caducan}} esta semana y {count, plural, one {pasa} other {pasan}} al Archivo",
+      "empty": {
+        "title": "Nada para más tarde.",
+        "body": "Pulsa l en cualquier elemento de la Bandeja de entrada para conservarlo aquí."
+      }
+    },
+    "deleted": "Eliminado. Se queda en la papelera durante 30 días.",
+    "moveFailed": "No se pudo completar. No se movió nada.",
+    "showOnly": "Mostrar solo {name}",
+    "addedTo": "Añadido a “{name}”.",
+    "takenOut": "Quitado de “{name}”.",
+    "kept": "Conservado. Los {days} días vuelven a empezar.",
+    "pluckedMany": "{count} recogidos en la Bandeja de entrada.",
+    "sort": {
+      "label": "Ordenar",
+      "newest": "Más recientes",
+      "untouched": "Sin tocar primero"
+    },
+    "stopFilter": "Dejar de filtrar por {name}",
+    "bulk": {
+      "label": "Acciones en bloque",
+      "selected": "{count, plural, one {# seleccionado} other {# seleccionados}}",
+      "addToList": "Añadir a una lista",
+      "clear": "Quitar selección"
+    },
+    "actions": {
+      "inbox": "Entrada",
+      "later": "Más tarde",
+      "archive": "Archivar",
+      "done": "Hecho",
+      "tag": "Etiquetar",
+      "list": "Lista",
+      "open": "Abrir"
+    },
+    "rowsLabel": "Elementos de {view, select, inbox {la Bandeja de entrada} other {Más tarde}}",
+    "pill": {
+      "title": "Sin tocar desde hace {days} días. Consérvalo, o pasará al Archivo. No se borra nada.",
+      "label": "Conservar {title}: pasará pronto al Archivo",
+      "days": "{days} días"
+    },
+    "none": {
+      "all": "Ahora mismo no hay nada en {view, select, inbox {la Bandeja de entrada} other {Más tarde}}.",
+      "kind": "No hay nada de este tipo en {view, select, inbox {la Bandeja de entrada} other {Más tarde}}."
+    },
+    "keys": {
+      "move": "mover",
+      "inbox": "entrada",
+      "later": "más tarde",
+      "archive": "archivar",
+      "tag": "etiquetar",
+      "list": "añadir a lista",
+      "select": "seleccionar",
+      "help": "todos los atajos"
+    },
+    "listPicker": "Añadir {count} elementos a una lista",
+    "tagPicker": "Etiquetar {count} elementos"
+  },
+  "archive": {
+    "filter": {
+      "label": "Filtrar",
+      "all": "Todo",
+      "you": "Por ti",
+      "expired": "Caducados",
+      "import": "Importados"
+    },
+    "why": {
+      "bin": "eliminado, desaparece para siempre en {days, plural, one {# día} other {# días}}",
+      "done": "hecho",
+      "expiredAfter": "caducó tras {days} días, se conserva aquí",
+      "expired": "caducó, se conserva aquí",
+      "bulk": "archivado con Archivarlo todo",
+      "import": "importado",
+      "you": "archivado por ti"
+    },
+    "outOfBin": "Fuera de la papelera.",
+    "title": "Archivo",
+    "bin": "Papelera",
+    "binSubtitle": "Lo que eliminaste. Cada elemento desaparece para siempre 30 días después de eliminarlo.",
+    "subtitle": "Todo lo que archivaste, terminaste o dejaste caducar. Nunca se borra nada, y la búsqueda lo sigue encontrando.",
+    "rowsLabel": "Elementos archivados",
+    "restore": "Restaurar",
+    "binEmpty": "La papelera está vacía.",
+    "empty": "Aquí aún no hay nada.",
+    "back": "Volver al Archivo",
+    "binLink": "¿Eliminaste algo por error? <bin>La papelera</bin> lo conserva durante 30 días."
+  },
+  "search": {
+    "prompt": "¿Qué recogí sobre {q}?",
+    "promptThis": "¿Qué recogí sobre esto?",
+    "label": "Buscar",
+    "placeholder": "Busca en títulos, notas, etiquetas y texto de páginas",
+    "filters": {
+      "kind": "Tipo",
+      "kindAny": "Tipo: cualquiera",
+      "tag": "Etiqueta",
+      "list": "Lista",
+      "status": "Estado",
+      "date": "Fecha",
+      "week": "Última semana",
+      "month": "Último mes",
+      "year": "Último año"
+    },
+    "count": "{count, plural, one {# resultado} other {# resultados}} · título, notas, etiquetas, nombres de listas y texto",
+    "hint": "Escribe para buscar en toda tu biblioteca, Archivo incluido. Pulsa / desde cualquier sitio para venir aquí.",
+    "results": "Resultados",
+    "snippet": "{pre}<mark>{hit}</mark>{post}",
+    "noteSnippet": "Tu nota: “{pre}<mark>{hit}</mark>{post}”",
+    "none": "No hay resultados para “{q}”. La búsqueda encuentra las palabras tal como las escribes.",
+    "ask": "¿Lo buscas por su significado? Pregúntale a tu IA.",
+    "copy": "Copiar “{prompt}”"
+  },
+  "lists": {
+    "title": "Listas",
+    "subtitle": "Lo que estás preparando. Un libro, un número de tu boletín, una charla, un viaje, cosas que comprar.",
+    "new": "Nueva lista",
+    "form": {
+      "name": "Nombre",
+      "namePlaceholder": "Charla sobre autenticación de MCP",
+      "purpose": "Propósito, en una línea",
+      "purposePlaceholder": "Veinte minutos para el meetup de noviembre.",
+      "make": "Crear la lista"
+    },
+    "empty": "Aún no hay listas. Pulsa a en cualquier elemento para empezar una, o créala aquí.",
+    "table": {
+      "name": "Nombre y propósito",
+      "visibility": "Visibilidad",
+      "ticked": "Marcados",
+      "lastAdded": "Último añadido"
+    },
+    "byAi": "por IA",
+    "public": "Pública · {views, plural, one {# visita} other {# visitas}}",
+    "private": "Privada",
+    "tickedOf": "{ticked} de {count}",
+    "notYet": "Todavía no",
+    "shared": {
+      "title": "Compartidas contigo",
+      "meta": "De {from} · {count, plural, one {# elemento} other {# elementos}} · solo lectura"
+    },
+    "foot": "Los elementos de una lista nunca caducan. Una lista es un plan."
+  },
+  "list": {
+    "takenOut": "Quitado de “{name}”. Sigue en tu biblioteca.",
+    "nowPublic": "Pública. Cualquiera con el enlace puede verla.",
+    "nowPrivate": "Privada otra vez. El enlace deja de funcionar ahora.",
+    "askPrompt": "Lee mi lista de Pluck \"{name}\" y dime qué cubre, qué le falta y en qué orden conviene leerla.",
+    "crumb": "Listas",
+    "nameLabel": "Nombre de la lista",
+    "purpose": "Propósito",
+    "purposePlaceholder": "Una línea sobre para qué es esta lista",
+    "visibility": "Visibilidad",
+    "private": "Privada",
+    "public": "Pública",
+    "linkCopied": "Enlace copiado.",
+    "views": "{count, plural, one {# visita} other {# visitas}} · solo tú ves esto · <a>Ver la página pública</a>",
+    "privateShared": "Privada: solo tú y las personas de abajo.",
+    "privateOnly": "Solo tú puedes ver esta lista.",
+    "copyAsk": "Copiar para tu IA: “Pregunta sobre esta lista”",
+    "export": "Exportar esta lista",
+    "ticked": "{ticked} de {count} marcados",
+    "empty": "Aquí aún no hay nada. Pulsa a en cualquier elemento de la Bandeja de entrada para añadirlo.",
+    "rowsLabel": "{name}, en orden",
+    "drag": "Arrastra para reordenar {title}. O Shift+J y Shift+K.",
+    "tick": "Marcar {title}",
+    "noteLabel": "Nota sobre {title} en esta lista",
+    "byAi": "por IA",
+    "note": "Nota",
+    "takeOut": "Quitar",
+    "keys": {
+      "tick": "marcar",
+      "note": "nota",
+      "reorder": "reordenar",
+      "add": "Añade desde la Bandeja de entrada con <kbd>a</kbd>, o recoge directamente aquí desde la extensión"
+    },
+    "delete": {
+      "confirm": "¿Eliminar “{name}”? Sus elementos se quedan en tu biblioteca.",
+      "yes": "Sí, eliminar la lista",
+      "action": "Eliminar esta lista"
+    }
+  },
+  "people": {
+    "added": "Compartida con {email}. Le llega un correo con un enlace.",
+    "removed": "{email} ya no puede verla.",
+    "placeholder": "Compártela con alguien: su correo",
+    "sharing": "Compartiendo",
+    "share": "Compartir",
+    "label": "Personas que pueden verla",
+    "stop": "Dejar de compartir con {email}",
+    "some": "Pueden verla; solo tú la cambias.",
+    "none": "La ven, nunca tus etiquetas ni tus marcas; solo tú la cambias."
+  },
+  "admin": {
+    "title": "Denuncias",
+    "open": "{count, plural, one {# abierta} other {# abiertas}}",
+    "empty": "Nada que revisar.",
+    "table": {
+      "list": "Lista",
+      "reason": "Motivo",
+      "owner": "Propietario",
+      "actions": "Acciones"
+    },
+    "gone": "ya no existe",
+    "takenDown": "retirada",
+    "closed": "cerradas",
+    "takeDown": "Retirar la lista",
+    "close": "Cerrar sus páginas públicas",
+    "resolve": "Resolver"
+  },
+  "item": {
+    "pending": "Recogiendo esta página. Tarda unos segundos.",
+    "failed": {
+      "title": "No se pudo leer esta página.",
+      "retry": "Reintentar",
+      "retrying": "Volviendo a intentarlo",
+      "wayback": "Probar la copia de Wayback",
+      "loginTitle": "¿Requiere iniciar sesión?",
+      "loginBody": "Recógela desde la extensión para conservar la página. Envía lo que tu navegador ya ve.",
+      "extension": "Instalar la extensión",
+      "keptTitle": "Sigue siendo tuyo",
+      "keptBody": "El enlace, tu nota y tus etiquetas se conservan. La búsqueda lo encuentra por título y nota."
+    }
+  },
+  "note": {
+    "untitled": "Nota sin título",
+    "state": {
+      "saved": "Guardado",
+      "saving": "Guardando",
+      "error": "Sin guardar. Se reintentará cuando escribas."
+    },
+    "meta": "{kind} · {plucked} · editado {edited}",
+    "title": "Título",
+    "body": "Texto",
+    "help": "La primera línea es el título. Texto sin formato. Se guarda mientras escribes.",
+    "about": "Sobre esta {kind, select, note {nota} todo {tarea} other {cosa}}",
+    "kind": "Tipo",
+    "kindHint": {
+      "note": "Conviértela en Tarea para añadirle fecha de vencimiento y casilla.",
+      "todo": "Una Tarea puede tener fecha de vencimiento. Hecho la saca de la Bandeja de entrada.",
+      "thing": "Una Cosa es algo que conseguir. Las Cosas se reúnen en las listas."
+    },
+    "due": "Vence",
+    "source": "Origen: {via}",
+    "pasteBox": "campo para pegar de la web",
+    "noHighlights": "Las notas no tienen destacados. Selecciona texto para copiarlo."
+  },
+  "reader": {
+    "progress": "Progreso de lectura",
+    "minutes": "{n} min de lectura",
+    "by": "Por {author}",
+    "selection": "Selección",
+    "highlight": "Destacar",
+    "noteTool": "Nota",
+    "removeHighlight": "Quitar destacado",
+    "about": "Sobre este elemento",
+    "note": "Nota",
+    "kind": "Tipo",
+    "highlights": "Destacados · {count}",
+    "noHighlights": "Selecciona texto para destacarlo.",
+    "highlightNote": "Nota sobre este destacado",
+    "addNote": "Añadir una nota",
+    "removeLabel": "Quitar destacado: {quote}",
+    "source": "Origen: {via} · página conservada"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "signedIn": "sesión iniciada con un enlace por correo",
+    "signOut": "Cerrar sesión",
+    "emailIn": {
+      "title": "Correo entrante",
+      "lede": "Reenvía aquí un boletín. Llega como un elemento Leer.",
+      "copied": "Dirección copiada.",
+      "confirm": "La dirección anterior deja de funcionar al instante.",
+      "ready": "Nueva dirección lista. Actualiza todo lo que reenvíe a la anterior.",
+      "makeNew": "Crear una nueva",
+      "regenerate": "Regenerar dirección"
+    },
+    "profile": {
+      "label": "Perfil",
+      "name": "Nombre",
+      "nameSaved": "Nombre guardado.",
+      "handle": "Alias, para listas públicas",
+      "handleSaved": "Alias guardado.",
+      "makeUp": "Inventar uno",
+      "move": "{count, plural, =0 {Aún no tienes Listas públicas, así que no cambia ningún enlace.} one {Tu Lista pública pasa a {host}/@{handle}/… y los enlaces a la dirección anterior dejan de funcionar. Las Listas compartidas con personas por correo no cambian.} other {Tus # Listas públicas pasan a {host}/@{handle}/… y los enlaces a la dirección anterior dejan de funcionar. Las Listas compartidas con personas por correo no cambian.}} Una vez guardado, podrás cambiarlo de nuevo en un mes.",
+      "invalid": "De 3 a 24 letras minúsculas, números o guiones.",
+      "save": "Guardar @{handle}",
+      "keep": "Mantener @{handle}",
+      "hintLocked": "Solo aparece en las listas que hagas públicas. Puedes cambiarlo una vez al mes.",
+      "hint": "Solo aparece en las listas que hagas públicas."
+    },
+    "ai": {
+      "testPrompt": "¿Qué recogí esta semana?",
+      "title": "Herramientas de IA",
+      "lede": "Tu biblioteca, en la herramienta de IA que ya usas, en treinta segundos. Lo lee todo, solo cambia cosas cuando se lo pides y nunca puede eliminar.",
+      "connector": "URL del conector, para Claude, ChatGPT, Cursor y cualquier cliente MCP",
+      "connectorCopied": "URL del conector copiada.",
+      "commandCopied": "Comando copiado.",
+      "selfHost": "Autoalojamiento sin URL pública",
+      "needKey": "Crea una clave de API abajo y úsala aquí.",
+      "test": "Probarlo",
+      "testHint": "Copia “{prompt}” para tu IA",
+      "connected": "Conectada",
+      "connectedLast": "Conectada · última llamada {ago}",
+      "notConnected": "Aún sin conectar",
+      "readsWrites": "lee y organiza",
+      "reads": "lee",
+      "disconnected": "Se desconectó {name}. Ya no puede acceder a tu biblioteca.",
+      "disconnect": "Desconectar"
+    },
+    "expiry": {
+      "digestOff": "Sin correo semanal.",
+      "digestSaved": "Día del correo semanal guardado.",
+      "saved": "Lo que lleve {days} días sin tocar pasa al Archivo. No se borra nada.",
+      "never": "Ahora no caduca nada.",
+      "sent": "Enviado. Revisa tu correo.",
+      "archived": "{count, plural, one {# elemento pasó} other {# elementos pasaron}} al Archivo. No se borra nada.",
+      "title": "Caducidad y archivo",
+      "lede": "Lo que no tocas pasa solo al Archivo. Nunca se borra. La búsqueda lo sigue encontrando, y Restaurar lo devuelve a su sitio. Los elementos de una lista nunca caducan.",
+      "after": "Pasar al Archivo después de",
+      "days": "{days} días sin tocar",
+      "neverOption": "Nunca",
+      "scope": "Se aplica a",
+      "scopeInboxLater": "Bandeja de entrada y Más tarde",
+      "scopeInbox": "Solo Bandeja de entrada",
+      "digest": "Correo semanal",
+      "digestDay": "{day} a las 06:00",
+      "digestOffOption": "Desactivado",
+      "warns": "El correo semanal te avisa una semana antes.",
+      "sendNow": "Envíame uno ahora",
+      "clean": {
+        "title": "Empezar de cero",
+        "body": "Pasa ya al Archivo todo lo de {scope, select, inbox {la Bandeja de entrada} other {la Bandeja de entrada y Más tarde}} que tenga más de {days} días. {count, plural, one {# elemento} other {# elementos}}. Las listas no se tocan.",
+        "confirm": "¿Pasar {count} al Archivo? No se borra nada.",
+        "yes": "Sí, archivarlos",
+        "action": "Archivarlo todo. En serio."
+      }
+    },
+    "tags": {
+      "merged": "“{name}” ahora forma parte de “{into}”.",
+      "deleted": "“{name}” ya no existe. Sus elementos siguen aquí.",
+      "purged": "{count, plural, one {Se quitó # etiqueta} other {Se quitaron # etiquetas}} que tu IA añadió esta semana.",
+      "title": "Etiquetas",
+      "purge": {
+        "confirm": "¿Quitar {count, plural, one {# etiqueta} other {# etiquetas}} que tu IA añadió esta semana?",
+        "yes": "Sí, quitarlas",
+        "action": "Quitar todo lo que la IA etiquetó esta semana · {count}"
+      },
+      "empty": "Aún no hay etiquetas. Pulsa t en cualquier elemento para crear una.",
+      "table": {
+        "tag": "Etiqueta",
+        "yours": "Tuyas",
+        "byAi": "Por IA",
+        "actions": "Acciones"
+      },
+      "newName": "Nuevo nombre para {name}",
+      "madeByAi": "creada por IA",
+      "mergeLabel": "Combinar {name} con",
+      "mergeInto": "Combinar con…",
+      "delete": {
+        "confirm": "¿Quitarla de {count, plural, one {# elemento} other {# elementos}}?",
+        "yes": "Sí, eliminar la etiqueta"
+      }
+    },
+    "keys": {
+      "title": "Claves de API",
+      "fresh": "Copia esta clave ahora. Solo se muestra una vez.",
+      "copied": "Clave copiada.",
+      "used": "usada {when}",
+      "unused": "aún sin usar",
+      "revoked": "“{name}” revocada. Deja de funcionar ahora.",
+      "revoke": "Revocar",
+      "nameLabel": "Nombre de la clave",
+      "namePlaceholder": "Claude Code en mi portátil",
+      "make": "Crear la clave",
+      "new": "Nueva clave"
+    },
+    "import": {
+      "uploadFailed": "La subida no se completó. Vuelve a intentarlo.",
+      "title": "Importar",
+      "from": "Desde",
+      "sources": {
+        "pocket": "Pocket (CSV)",
+        "omnivore": "Omnivore (zip)",
+        "raindrop": "Raindrop (CSV)",
+        "html": "Marcadores del navegador (HTML)"
+      },
+      "drop": "Suelta un archivo, o elige uno",
+      "formats": "CSV de Pocket · zip de Omnivore · CSV de Raindrop · HTML de marcadores",
+      "file": "Archivo para importar",
+      "job": "Importación de {source}",
+      "progress": "{done, plural, one {# importado} other {# importados}}",
+      "progressFailed": "{done, plural, one {# importado} other {# importados}} · {failed, plural, one {# fallido} other {# fallidos}}",
+      "done": "Listo. Los elementos importados están en tu Archivo, en Importados, y se pueden buscar.",
+      "running": "Se ejecuta en segundo plano. Puedes cerrar la página.",
+      "export": {
+        "title": "Exportar",
+        "lede": "pluck.json, más un archivo Markdown por elemento con su texto y notas, y uno por lista. Un zip, por correo. Cada lista se puede exportar desde su propia página.",
+        "started": "Exportando. El enlace llega por correo en un minuto o dos.",
+        "busy": "Exportando",
+        "action": "Exportar todo"
+      }
+    },
+    "deleteAccount": {
+      "title": "Eliminar cuenta",
+      "lede": "Todos tus elementos, etiquetas, notas y claves. Exporta antes.",
+      "type": "Escribe {email} para confirmar",
+      "now": "Eliminar todo ahora",
+      "action": "Eliminar todo. En serio."
+    }
+  }
+}

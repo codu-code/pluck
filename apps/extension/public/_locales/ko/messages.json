@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "보고 있는 페이지를 클릭 한 번으로 Pluck 라이브러리에 담아요."
+  },
+  "pluckPage": {
+    "message": "이 페이지 담기"
+  },
+  "pluckSelection": {
+    "message": "선택한 부분을 하이라이트로 담기"
+  }
+}

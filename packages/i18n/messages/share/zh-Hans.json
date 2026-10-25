@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "已摘下。",
+  "plucking": "正在摘下…",
+  "signedOutTitle": "尚未登录。",
+  "signedOutBody": "登录一次就好，之后交给分享菜单。",
+  "openToSignIn": "打开 Pluck 登录",
+  "queuedTitle": "已摘下，稍后同步。",
+  "queuedBody": "它先留在你的手机上，联网后就会上传。",
+  "done": "完成",
+  "failedTitle": "没能摘下。",
+  "nothingToKeep": "这里没有 Pluck 能留下的内容。",
+  "didNotWork": "没有成功。",
+  "badServer": "服务器地址有误。",
+  "noUploadAddress": "没有上传地址。",
+  "tagsAndList": "标签和清单",
+  "kind": "类别",
+  "addToList": "添加到 {name}",
+  "addedToList": "已添加到 {name}",
+  "notePlaceholder": "为什么摘下它，一句话就好。可不填。",
+  "kindRead": "阅读",
+  "kindWatch": "观看",
+  "kindPdf": "PDF",
+  "kindImage": "图片",
+  "kindTodo": "待办",
+  "kindNote": "笔记",
+  "kindThing": "物品"
+}

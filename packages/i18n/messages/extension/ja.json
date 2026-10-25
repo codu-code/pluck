@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "開いているページを、ワンクリックでPluckのライブラリに。",
+    "pluckPage": "このページをPluck",
+    "pluckSelection": "選択した部分をハイライトとしてPluck"
+  },
+  "menu": {
+    "link": "リンクをPluck",
+    "selection": "選択部分をハイライトとしてPluck",
+    "image": "画像をPluck",
+    "page": "ページをPluck"
+  },
+  "toolbar": {
+    "plucked": "Pluckしました",
+    "pluckPage": "このページをPluck"
+  },
+  "errors": {
+    "nothing": "このページにはPluckできるものがありません。",
+    "failed": "うまくいきませんでした。",
+    "tryAgain": "うまくいきませんでした。もう一度お試しください。"
+  },
+  "kinds": {
+    "link": "記事",
+    "video": "動画",
+    "pdf": "PDF",
+    "image": "画像",
+    "note": "メモ",
+    "todo": "ToDo",
+    "thing": "モノ"
+  },
+  "status": {
+    "inbox": "インボックス",
+    "later": "あとで",
+    "archived": "アーカイブ済み",
+    "done": "完了"
+  },
+  "popup": {
+    "plucking": "Pluck中…",
+    "signedOut": {
+      "lede": "開いているページを、ワンクリックで残せます。サインインはメールで一度だけ。",
+      "signIn": "サインイン",
+      "ownServer": "自分のサーバーを使う"
+    },
+    "nothingHint": "PluckはWebページで使えます。ページを開いてから、もう一度クリックしてください。",
+    "queued": {
+      "title": "Pluckにつながりませんでした。あとで再試行します。",
+      "count": "{count, plural, other {#件のPluckがこのブラウザで待機中です。}}"
+    },
+    "already": {
+      "meta": "{date}にPluck · {status}",
+      "open": "Pluckで開く",
+      "again": "もう一度Pluck"
+    },
+    "plucked": {
+      "title": "Pluckしました",
+      "undo": "元に戻す",
+      "tips": {
+        "opening": "このポップアップを開くだけでページが残ります。仕掛けはそれだけです。",
+        "shortcut": "Alt+Shift+Pなら、クリックなしでPluckできます。",
+        "rightClick": "リンクや画像を右クリックすると、それだけをPluckできます。"
+      },
+      "tags": "タグ",
+      "tagsPlaceholder": "タグを検索",
+      "kind": "種類",
+      "toList": "リストへ",
+      "noList": "なし",
+      "lastUsed": "{name}（前回使用）",
+      "note": "メモ",
+      "notePlaceholder": "メモがあればどうぞ",
+      "later": "あとで",
+      "archive": "アーカイブ",
+      "open": "Pluckで開く"
+    },
+    "tabs": {
+      "listName": "{date}のタブ",
+      "all": "{count, plural, other {#個のタブを新しいリスト「{name}」にPluck}}",
+      "plucking": "Pluck中…",
+      "done": "{count, plural, other {#個のタブを「{name}」にPluckしました。}}",
+      "failed": "Pluckにつながりませんでした。少ししてからもう一度お試しください。"
+    }
+  },
+  "options": {
+    "title": "Pluckの設定",
+    "shortcut": "ショートカット：Alt+Shift+P · ブラウザのショートカット設定で変更できます",
+    "server": "サーバー",
+    "defaultKind": "標準の種類",
+    "guess": "ページから判断",
+    "account": "アカウント",
+    "apiKey": "APIキー",
+    "useKey": "キーを使う",
+    "notSignedIn": "サインインしていません",
+    "signOut": "サインアウト",
+    "signIn": "サインイン",
+    "useApiKey": "代わりにAPIキーを使う",
+    "sendContent": "Pluckするときにページの内容も送る",
+    "sendContentHint": "ログインが必要なページも、あとで読めるようになります。",
+    "transcripts": "YouTubeの文字起こしを取得",
+    "transcriptsHint": "検索やお使いのAIが、話された内容を読めるようになります。",
+    "messages": {
+      "notAddress": "Webアドレスではありません。",
+      "ownServerOnly": "この拡張機能は、ビルド時に決めたサーバーにだけ接続します。ご自身のサーバーを使うには、リポジトリから拡張機能をビルドしてください（docs/self-host.mdを参照）。",
+      "using": "{origin}を使用中です。Pluckするには、そちらでサインインしてください。",
+      "keySignedIn": "APIキーでサインインしました。",
+      "keyFailed": "このキーはこのサーバーで使えませんでした。",
+      "signedOut": "サインアウトしました。"
+    }
+  }
+}
