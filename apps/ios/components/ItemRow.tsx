@@ -6,7 +6,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import ReanimatedSwipeable, { type SwipeableMethods } from "react-native-gesture-handler/ReanimatedSwipeable";
 import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
-import { useCover } from "@/lib/data";
+import { useCover, useKeptByHand } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS, KindGlyph } from "./Glyph";
@@ -40,6 +40,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
   const t = useTheme();
   const tr = useTranslations("ios");
   const cover = useCover(item, coverPath);
+  const kept = useKeptByHand(item.id); // kept on this iPhone by hand: a small mark by the time
   const [noCover, setNoCover] = useState(false); // offline, or gone: the tile the Inbox uses without one
   const text = item.kind === "note" || item.kind === "todo" || item.kind === "thing";
   const ini = text ? "" : initials(item.siteName, item.url);
@@ -117,7 +118,12 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
           </View>
           <View style={styles.right}>
             <KindGlyph kind={item.kind} color={marked ? t.ink2 : t.ink} />
-            {when ? <Text style={[font.regular, styles.when, { color: t.ink2 }]}>{when}</Text> : null}
+            {when || kept ? (
+              <View style={styles.whenRow}>
+                {kept && <Icon d={ICONS.keep} size={11} color={t.ink2} width={1.6} />}
+                {when ? <Text style={[font.regular, styles.when, { color: t.ink2 }]}>{when}</Text> : null}
+              </View>
+            ) : null}
           </View>
           {trail}
           {mark && !selecting && (
@@ -198,6 +204,7 @@ const styles = StyleSheet.create({
   meta: { fontSize: 13, lineHeight: 18 },
   right: { alignItems: "flex-end", gap: 4 },
   when: { fontSize: 12 },
+  whenRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   actionLane: { flex: 1 },
   pill: { position: "absolute", top: 6, bottom: 6, borderRadius: 16, borderCurve: "continuous", overflow: "hidden", alignItems: "center", justifyContent: "center" },
   action: { alignItems: "center", gap: 2, minWidth: 48 },

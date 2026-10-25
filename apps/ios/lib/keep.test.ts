@@ -1,6 +1,6 @@
 import type { Item } from "@pluck/shared-schemas";
 import { expect, test } from "vitest";
-import { onWifi, plan, toKeep } from "./keep";
+import { onWifi, overCap, plan, toKeep } from "./keep";
 
 const at = (n: number) => new Date(Date.UTC(2026, 0, 1) + n * 60_000).toISOString();
 const item = (n: number, over: Partial<Item> = {}) =>
@@ -43,4 +43,21 @@ test("Wi-Fi only: never on mobile data or with no connection", () => {
   expect(onWifi({ type: "WIFI", isInternetReachable: false })).toBe(false);
   expect(onWifi({ type: "NONE" })).toBe(false);
   expect(onWifi({})).toBe(false);
+});
+
+test("Items kept by hand stay, whatever their age or Kind, and are never let go by the newest", () => {
+  const newest = Array.from({ length: 301 }, (_, i) => item(1000 + i));
+  const old = item(1, { status: "archived" });
+  const photo = item(2, { kind: "image" });
+  const hand = new Set(["i1", "i2"]);
+  const keep = toKeep([...newest, old, photo], hand);
+  expect(keep.slice(0, 2).map((i) => i.id).sort()).toEqual(["i1", "i2"]);
+  expect(keep).toHaveLength(302); // the 300 newest, and the two by hand
+  expect(plan([], { i1: { updatedAt: at(1), bytes: 1 }, i9: { updatedAt: at(9), bytes: 1 } }, hand).drop).toEqual(["i9"]);
+});
+
+test("over the cap, the oldest automatic pictures go first, never a hand-kept one", () => {
+  const kept = { a: { updatedAt: at(1), bytes: 10, media: 50 }, b: { updatedAt: at(2), bytes: 10, media: 50 }, c: { updatedAt: at(3), bytes: 10, media: 50 } };
+  expect(overCap(["a", "b", "c"], kept, new Set(["c"]), 100)).toEqual(["b", "a"]); // c is the oldest, but kept by hand
+  expect(overCap(["a", "b", "c"], kept, new Set(), 200)).toEqual([]);
 });

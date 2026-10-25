@@ -504,7 +504,7 @@
     "clearTitle": "Effacer la copie hors ligne ?",
     "clearBody": "Votre bibliothèque reste sur le serveur. L’app la télécharge à nouveau au fil de l’utilisation.",
     "clear": "Effacer",
-    "keepFootnote": "En Wi-Fi, Pluck garde sur cet iPhone le texte de vos {count} éléments les plus récents de Réception, Plus tard et Listes, pour les lire sans connexion. Le texte seulement, sans images.",
+    "keepFootnote": "En Wi-Fi, Pluck garde sur cet iPhone vos {count} éléments les plus récents de Réception, Plus tard et Listes, avec leurs images, pour les lire sans connexion. Touchez la marque de téléchargement d’un autre élément pour le garder ici jusqu’à ce que vous le retiriez.",
     "server": "Serveur",
     "serverBody": "Ce téléphone utilise {host}. Pour changer de serveur, déconnectez-vous, puis choisissez « Utiliser votre propre serveur ».",
     "iconLight": "Clair",
@@ -556,7 +556,7 @@
     "offline": "Lecture possible une fois reconnecté.",
     "keep": "Garder sur cet iPhone",
     "kept": "Gardé sur cet iPhone",
-    "letGo": "Retirer la copie hors ligne",
+    "letGo": "N’est plus gardé sur cet iPhone.",
     "saveFile": "Enregistrer dans Fichiers"
   }
 }

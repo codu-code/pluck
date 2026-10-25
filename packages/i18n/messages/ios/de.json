@@ -504,7 +504,7 @@
     "clearTitle": "Offline-Kopie löschen?",
     "clearBody": "Deine Bibliothek bleibt auf dem Server. Die App lädt sie beim Benutzen wieder herunter.",
     "clear": "Löschen",
-    "keepFootnote": "Im WLAN behält Pluck den Text deiner {count} neuesten Einträge aus Eingang, Später und Listen auf diesem iPhone, damit du sie ohne Verbindung lesen kannst. Nur Text, keine Bilder.",
+    "keepFootnote": "Im WLAN behält Pluck deine {count} neuesten Einträge aus Eingang, Später und Listen mit ihren Bildern auf diesem iPhone, damit du sie ohne Verbindung lesen kannst. Tippe bei jedem anderen Eintrag auf das Download-Zeichen, um ihn hier zu behalten, bis du ihn entfernst.",
     "server": "Server",
     "serverBody": "Dieses iPhone nutzt {host}. Für einen anderen Server meldest du dich ab und wählst dann „Eigenen Server nutzen“.",
     "iconLight": "Hell",
@@ -556,7 +556,7 @@
     "offline": "Spielt, sobald du wieder online bist.",
     "keep": "Auf diesem iPhone behalten",
     "kept": "Auf diesem iPhone behalten",
-    "letGo": "Offline-Kopie entfernen",
+    "letGo": "Nicht mehr auf diesem iPhone behalten.",
     "saveFile": "In Dateien sichern"
   }
 }

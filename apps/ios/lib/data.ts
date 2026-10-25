@@ -6,7 +6,7 @@ import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { createQueue, Unreachable } from "@pluck/client";
-import { KEEP, onWifi, plan, toKeep, type Kept } from "./keep";
+import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
 import { api, authHeader, getSession } from "./session";
 
@@ -64,10 +64,14 @@ export const useItem = (id: string) =>
 
 // An item's cover: an image's picture, a page's preview image. Covers are private, so the request carries the signed-in header.
 // `path` serves a cover from somewhere else, such as a List shared with you.
+// One the phone keeps (Kept on this iPhone) opens from its own copy, with or without a connection.
 export function useCover(item: Pick<Item, "id" | "hasCover">, path?: string): { uri: string; headers: Record<string, string> } | null {
-  const [src, setSrc] = useState<{ uri: string; headers: Record<string, string> } | null>(null);
+  const [src, setSrc] = useState<{ uri: string; headers: Record<string, string> } | null>(() => {
+    const local = !path && item.hasCover ? keptMedia(item.id, "img") : null;
+    return local?.exists ? { uri: local.uri, headers: {} } : null;
+  });
   useEffect(() => {
-    if (!item.hasCover) return;
+    if (!item.hasCover || (!path && keptMedia(item.id, "img").exists)) return;
     let live = true;
     void (async () => {
       const s = await getSession();
@@ -204,9 +208,33 @@ export function shareExtensionCache(tags: Tag[], lists: List[]) {
   storage.set("lastList", last ? JSON.stringify({ id: last.id, name: last.name }) : undefined);
 }
 
-// ---- Keep for offline reading ------------------------------------------------------------------------------
-// On Wi-Fi, the text of the newest 300 Items in Inbox, Later and Lists, one key each beside the query cache (which is
-// written whole on every change, so it stays small), and the Lists themselves. Text only: no pictures.
+// ---- Kept on this iPhone --------------------------------------------------------------------------------------
+// On Wi-Fi, the newest 300 Items in Inbox, Later and Lists and every Item kept by hand: the text, one key each beside
+// the query cache (which is written whole on every change, so it stays small), the picture and, for a PDF kept by
+// hand, the file, on disk. The Lists themselves too. Pictures and files stop at keep.ts's MAX_BYTES.
+
+const media = () => new Directory(Paths.document, "kept");
+const keptMedia = (id: string, ext: "img" | "pdf") => new File(media(), `${id}.${ext}`);
+
+// Kept by hand: stays until let go, whatever its age or where it is now.
+const HAND = "keptByHand";
+let hand = new Set<string>(kv.getSync<string[]>(HAND, []));
+const handWatchers = new Set<() => void>();
+const watchHand = (fn: () => void) => (handWatchers.add(fn), () => void handWatchers.delete(fn));
+export const useKeptByHand = (id: string) => useSyncExternalStore(watchHand, () => hand.has(id));
+
+export async function keepByHand(item: Item, on: boolean): Promise<void> {
+  hand = new Set(hand);
+  if (on) hand.add(item.id);
+  else hand.delete(item.id);
+  await kv.set(HAND, [...hand]);
+  handWatchers.forEach((fn) => fn());
+  if (!on) return; // let go: it leaves with the next keep, unless it is among the newest
+  // Asked for by hand, so kept now, on any connection.
+  const kept = await kv.get<Kept>("kept", {});
+  kept[item.id] = await keepOne(item, true);
+  await kv.set("kept", kept);
+}
 
 const keptKey = (id: string) => `kept:${id}`;
 const keptCopy = (id: string): FullItem | undefined => kv.getSync<FullItem | undefined>(keptKey(id), undefined);
@@ -214,13 +242,49 @@ export const keepSetting = () => kv.get("keepOffline", true);
 
 export async function keptSize(): Promise<{ ids: string[]; bytes: number }> {
   const kept = await kv.get<Kept>("kept", {});
-  return { ids: Object.keys(kept), bytes: Object.values(kept).reduce((n, k) => n + k.bytes, 0) };
+  return { ids: Object.keys(kept), bytes: Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0) };
 }
 
+// Clear the offline copy: everything, the Items kept by hand too.
 export async function clearKept(): Promise<void> {
   const kept = await kv.get<Kept>("kept", {});
   for (const id of Object.keys(kept)) await kv.remove(keptKey(id));
   await kv.remove("kept");
+  if (media().exists) media().delete();
+  hand = new Set();
+  await kv.remove(HAND);
+  handWatchers.forEach((fn) => fn());
+}
+
+// One Item onto the phone: its text, its picture, and (kept by hand) a PDF's file. `withMedia` false keeps the text only.
+async function keepOne(item: Item, withMedia: boolean): Promise<Kept[string]> {
+  const raw = JSON.stringify(await api<FullItem>(`/api/v1/items/${item.id}?include=text,highlights,lists`));
+  await kv.storage.setItem(keptKey(item.id), raw);
+  let bytes = 0;
+  if (withMedia) {
+    if (!media().exists) media().create({ idempotent: true });
+    if (item.hasCover) bytes += (await ours(item.id, "cover", keptMedia(item.id, "img")).catch(() => null))?.size ?? 0;
+    if (item.kind === "pdf" && hand.has(item.id)) bytes += (await fileOf(item, keptMedia(item.id, "pdf")).catch(() => null))?.size ?? 0;
+  }
+  return { updatedAt: item.updatedAt, bytes: raw.length, ...(bytes ? { media: bytes } : {}) };
+}
+
+// A PDF's or an Image's file, for Save to Files: the phone's own copy, else the original, else ours (the original gone).
+export async function fileOf(item: Item, to?: File): Promise<File> {
+  const kept = keptMedia(item.id, item.kind === "pdf" ? "pdf" : "img");
+  if (kept.exists) return kept;
+  const dest = to ?? new File(Paths.cache, `${item.title.replace(/[^\p{L}\p{N} ._-]+/gu, "").slice(0, 80).trim() || item.id}.${item.kind === "pdf" ? "pdf" : "jpg"}`);
+  if (item.url) {
+    const f = await File.downloadFileAsync(item.url, dest, { idempotent: true }).catch(() => null);
+    if (f) return f;
+  }
+  return ours(item.id, item.kind === "pdf" ? "file" : "cover", dest);
+}
+
+// Our copy of a cover or a PDF: the API names a short-lived address in the bucket, fetched with no Authorization header.
+async function ours(id: string, what: "cover" | "file", to: File): Promise<File> {
+  const { url } = await api<{ url: string }>(`/api/v1/items/${id}/${what}${what === "cover" ? "?as=json" : ""}`);
+  return File.downloadFileAsync(url, to, { idempotent: true });
 }
 
 export async function setKeepSetting(on: boolean): Promise<void> {
@@ -259,19 +323,27 @@ async function keep(force: boolean) {
     items.push(...one.entries.map((e) => e.item));
   }
 
+  // Kept by hand but no longer in Inbox, Later or a List (archived, say): still kept.
+  const seen = new Set(items.map((i) => i.id));
+  for (const id of hand) if (!seen.has(id)) items.push((await api<{ item: Item }>(`/api/v1/items/${id}`).catch(() => null))?.item ?? ({ id } as Item));
+  const keep = toKeep(items.filter((i) => i.createdAt), hand);
   const kept = await kv.get<Kept>("kept", {});
-  const { fetch, drop } = plan(toKeep(items), kept);
+  const { fetch, drop } = plan(keep, kept, hand);
   try {
     for (const id of drop) {
       await kv.remove(keptKey(id));
+      for (const ext of ["img", "pdf"] as const) if (keptMedia(id, ext).exists) keptMedia(id, ext).delete();
       delete kept[id];
     }
+    const total = () => Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0);
     for (const item of fetch) {
       if (!(await wifi()) || !(await keepSetting())) break; // off the Wi-Fi, or turned off: stop here
-      const raw = JSON.stringify(await api<FullItem>(`/api/v1/items/${item.id}?include=text,highlights,lists`));
-      await kv.storage.setItem(keptKey(item.id), raw);
-      kept[item.id] = { updatedAt: item.updatedAt, bytes: raw.length };
+      kept[item.id] = await keepOne(item, hand.has(item.id) || total() < MAX_BYTES);
       await pause(250); // gently: well under the API's 600 reads a minute, with room for the app itself
+    }
+    for (const id of overCap(keep.map((i) => i.id), kept, hand)) { // over the cap: the oldest automatic pictures go
+      if (keptMedia(id, "img").exists) keptMedia(id, "img").delete();
+      delete kept[id]!.media;
     }
     keptAt = Date.now();
   } finally {

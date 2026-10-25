@@ -504,7 +504,7 @@
     "clearTitle": "¿Borrar la copia sin conexión?",
     "clearBody": "Tu biblioteca sigue en el servidor. La app la vuelve a descargar a medida que la usas.",
     "clear": "Borrar",
-    "keepFootnote": "Con wifi, Pluck conserva en este iPhone el texto de tus {count} elementos más recientes de Entrada, Más tarde y Listas, para leerlos sin conexión. Solo el texto, sin imágenes.",
+    "keepFootnote": "Con wifi, Pluck conserva en este iPhone tus {count} elementos más recientes de Entrada, Más tarde y Listas, con sus imágenes, para leerlos sin conexión. Toca la marca de descarga en cualquier otro elemento para guardarlo aquí hasta que lo quites.",
     "server": "Servidor",
     "serverBody": "Este teléfono usa {host}. Para usar otro servidor, cierra sesión y elige \"Usar tu propio servidor\".",
     "iconLight": "Claro",
@@ -556,7 +556,7 @@
     "offline": "Se reproduce cuando vuelvas a tener conexión.",
     "keep": "Guardar en este iPhone",
     "kept": "Guardado en este iPhone",
-    "letGo": "Quitar la copia sin conexión",
+    "letGo": "Ya no se guarda en este iPhone.",
     "saveFile": "Guardar en Archivos"
   }
 }
