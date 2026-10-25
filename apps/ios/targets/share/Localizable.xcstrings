@@ -51,6 +51,12 @@
             "state": "translated",
             "value": "Toevoegen aan %1$@"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@에 추가"
+          }
         }
       }
     },
@@ -103,6 +109,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Toegevoegd aan %1$@"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@에 추가했어요"
           }
         }
       }
@@ -157,6 +169,12 @@
             "state": "translated",
             "value": "Ongeldig serveradres."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "서버 주소가 올바르지 않아요."
+          }
         }
       }
     },
@@ -209,6 +227,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dat werkte niet."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "잘 안 됐어요."
           }
         }
       }
@@ -263,6 +287,12 @@
             "state": "translated",
             "value": "Klaar"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "완료"
+          }
         }
       }
     },
@@ -315,6 +345,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plukken lukte niet."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "담지 못했어요."
           }
         }
       }
@@ -369,6 +405,12 @@
             "state": "translated",
             "value": "Soort"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "종류"
+          }
         }
       }
     },
@@ -421,6 +463,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Afbeelding"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미지"
           }
         }
       }
@@ -475,6 +523,12 @@
             "state": "translated",
             "value": "Notitie"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메모"
+          }
         }
       }
     },
@@ -524,6 +578,12 @@
           }
         },
         "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -581,6 +641,12 @@
             "state": "translated",
             "value": "Lezen"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "글"
+          }
         }
       }
     },
@@ -633,6 +699,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ding"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "물건"
           }
         }
       }
@@ -687,6 +759,12 @@
             "state": "translated",
             "value": "Taak"
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "할 일"
+          }
         }
       }
     },
@@ -739,6 +817,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kijken"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "영상"
           }
         }
       }
@@ -793,6 +877,12 @@
             "state": "translated",
             "value": "Geen uploadadres."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "업로드 주소가 없어요."
+          }
         }
       }
     },
@@ -845,6 +935,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Waarom je het plukte, in één regel. Optioneel."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "왜 담았는지 한 줄로. 선택 사항이에요."
           }
         }
       }
@@ -899,6 +995,12 @@
             "state": "translated",
             "value": "Niets wat Pluck hier kan bewaren."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "여기에는 Pluck이 담을 수 있는 게 없어요."
+          }
         }
       }
     },
@@ -951,6 +1053,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open Pluck om in te loggen"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluck을 열어 로그인하기"
           }
         }
       }
@@ -1005,6 +1113,12 @@
             "state": "translated",
             "value": "Geplukt."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "담았어요."
+          }
         }
       }
     },
@@ -1057,6 +1171,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plukken…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "담는 중…"
           }
         }
       }
@@ -1111,6 +1231,12 @@
             "state": "translated",
             "value": "Het staat op je telefoon en wordt verstuurd zodra je weer online bent."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금은 휴대폰에 있어요. 다시 온라인이 되면 올라가요."
+          }
         }
       }
     },
@@ -1163,6 +1289,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Geplukt. Synchroniseert straks."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "담았어요. 곧 동기화돼요."
           }
         }
       }
@@ -1217,6 +1349,12 @@
             "state": "translated",
             "value": "Log één keer in. Daarna doet het deelmenu de rest."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "한 번만 로그인하세요. 그다음부터는 공유 시트가 다 알아서 해요."
+          }
         }
       }
     },
@@ -1270,6 +1408,12 @@
             "state": "translated",
             "value": "Niet ingelogd."
           }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로그인하지 않았어요."
+          }
         }
       }
     },
@@ -1322,6 +1466,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags en lijst"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "태그와 리스트"
           }
         }
       }

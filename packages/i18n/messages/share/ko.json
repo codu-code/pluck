@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "담았어요.",
+  "plucking": "담는 중…",
+  "signedOutTitle": "로그인하지 않았어요.",
+  "signedOutBody": "한 번만 로그인하세요. 그다음부터는 공유 시트가 다 알아서 해요.",
+  "openToSignIn": "Pluck을 열어 로그인하기",
+  "queuedTitle": "담았어요. 곧 동기화돼요.",
+  "queuedBody": "지금은 휴대폰에 있어요. 다시 온라인이 되면 올라가요.",
+  "done": "완료",
+  "failedTitle": "담지 못했어요.",
+  "nothingToKeep": "여기에는 Pluck이 담을 수 있는 게 없어요.",
+  "didNotWork": "잘 안 됐어요.",
+  "badServer": "서버 주소가 올바르지 않아요.",
+  "noUploadAddress": "업로드 주소가 없어요.",
+  "tagsAndList": "태그와 리스트",
+  "kind": "종류",
+  "addToList": "{name}에 추가",
+  "addedToList": "{name}에 추가했어요",
+  "notePlaceholder": "왜 담았는지 한 줄로. 선택 사항이에요.",
+  "kindRead": "글",
+  "kindWatch": "영상",
+  "kindPdf": "PDF",
+  "kindImage": "이미지",
+  "kindTodo": "할 일",
+  "kindNote": "메모",
+  "kindThing": "물건"
+}
