@@ -103,10 +103,12 @@
 /* Sentences that read better one to a line (the hero lede, the AI card's questions). */
 .line { display: block; text-wrap: balance; }
 .lineGap { display: block; margin-top: 12px; }
-.phrase { white-space: nowrap; }
+/* A phrase stays whole on its line, and wraps inside itself only when it is longer than a line (German and
+   Italian phrases can be). */
+.phrase { display: inline-block; max-width: 100%; }
 /* A phrase too long for a phone's width may wrap; the rest stay whole. */
 .phraseLong { white-space: normal; }
-@media (min-width: 701px) { .phraseLong { white-space: nowrap; } }
+@media (min-width: 701px) { .phraseLong { display: inline-block; max-width: 100%; } }
 @media (min-width: 701px) { .bandLine { display: block; } }
 
 /* Landing: the app, drawn */

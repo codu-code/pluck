@@ -333,7 +333,7 @@
   "shell": {
     "main": "Principal",
     "nav": {
-      "inbox": "Boîte de réception",
+      "inbox": "Réception",
       "later": "Plus tard",
       "lists": "Listes",
       "archive": "Archives",
