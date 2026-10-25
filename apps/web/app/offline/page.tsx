@@ -3,9 +3,8 @@ import Link from "next/link";
 import { Actions, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 import { Retry } from "./Retry";
 
-export const dynamic = "force-static";
-
-// What the app shows when it is opened with no connection (the service worker serves this page).
+// What the app shows when it is opened with no connection (the service worker serves this page). Rendered per
+// request, in the reader's language, so the copy the service worker keeps is in it too.
 export default function Offline() {
   const t = useTranslations("app.offline");
   return (

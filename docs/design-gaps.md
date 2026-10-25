@@ -13,6 +13,7 @@ Sign-in, consent, the OAuth error, extension connected, the email's one-tap page
 | Admin | `/admin` | Settings board | Reports queue and kill switches (internal, low priority) |
 | Settings, AI tools: connected tools | `/settings#ai` | Settings board shows one "Connected · last call" line | The list of connected tools (AI tools and our own extension) with Disconnect; whether the extension belongs in "AI tools" at all |
 | Settings, Weekly email, import progress, export, delete account | `/settings` | Settings board (partly) | The states the board does not draw: import running and failed, export ready, delete confirmation |
+| Offline mark in the nav | every app page, offline | The iPhone's sync pill, in clay on a `--clay-line` hairline (the web has no clay wash token) | Whether the ink "offline, will sync" bar under it still earns its place now the nav says so; a clay wash token for the web |
 
 ### Browser extension
 
@@ -33,6 +34,9 @@ Designed in the iPhone polish pass (no board, built from the nearest board and t
 | New note button in the Inbox header | None | Where creating a note on the phone lives |
 | Settings, App icon | IOSSettings rows, the iOS picker pattern | Two rows (Light, Dark) with the icon and a tick; whether a third (the mint tile) earns a place |
 | Share extension: working, failed | IOSShare | Only plucked, signed out and offline are drawn |
+| Offline pill in the tab bar | IOSInbox sync pill (syncBg, syncInk) | Its place (top of the tab bar, so every tab shows it; it pushes the bar up by a row), the cloud-struck-through glyph (drawn for this, on the 16-unit grid) |
+| Reader: "Not on this iPhone yet." | The reader's "This one didn't load" state | Whether it should offer anything (it opens by itself when the connection is back) |
+| Settings, Keep for offline reading | IOSSettings rows, the Privacy switch row | The switch above "Offline copy" and the footnote under Library |
 
 ### Native share sheet
 

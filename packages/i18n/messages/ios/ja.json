@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "オフライン",
+    "waiting": "{count, plural, other {オフライン · #件待機中}}"
+  },
   "lists": {
     "sharedWithYou": "あなたと共有",
     "sharedA11y": "{name}、{owner}さんが共有、{count, plural, other {#件}}",
@@ -330,6 +334,8 @@
     "backArchive": "アーカイブ",
     "didntLoad": "読み込めませんでした。",
     "didntLoadBody": "なくなったか、接続が切れているようです。少ししてからもう一度お試しください。",
+    "notKept": "まだこのiPhoneにありません。",
+    "notKeptBody": "オンラインに戻ると開きます。Wi-Fi接続中に、新しいアイテムをこのiPhoneに残してオフラインで読めるようにします。",
     "minutesLeft": "{percent} · 残り{minutes}分",
     "openOriginal": "元のページを開く",
     "by": "{author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "エクスポート中",
     "exportingBody": "すべてをまとめたzipを{email}に送っています。リンクは1、2分で届きます。",
     "exportingBodyNoEmail": "すべてをまとめたzipをメールで送っています。リンクは1、2分で届きます。",
+    "keep": "オフラインで読む",
     "offline": "オフライン用のコピー",
     "offlineValue": "{count, plural, other {#件}} · {mb} MB",
     "clearTitle": "オフライン用のコピーを消去しますか？",
     "clearBody": "ライブラリはサーバーに残ります。使っているうちに、アプリがまたダウンロードします。",
     "clear": "消去",
+    "keepFootnote": "Wi-Fi接続中に、インボックス・あとで・リストの新しいアイテム{count}件のテキストをこのiPhoneに残し、接続がなくても読めるようにします。テキストのみで、画像は含みません。",
     "server": "サーバー",
     "serverBody": "このiPhoneは{host}を使っています。別のサーバーを使うには、サインアウトしてから「自分のサーバーを使う」を選んでください。",
     "iconLight": "ライト",

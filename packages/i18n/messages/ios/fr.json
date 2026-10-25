@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "Hors ligne",
+    "waiting": "{count, plural, one {Hors ligne · # en attente} other {Hors ligne · # en attente}}"
+  },
   "lists": {
     "sharedWithYou": "Partagées avec vous",
     "sharedA11y": "{name}, partagée par {owner}, {count, plural, one {# élément} other {# éléments}}",
@@ -330,6 +334,8 @@
     "backArchive": "Archives",
     "didntLoad": "Celui-ci ne s’est pas chargé.",
     "didntLoadBody": "Il a peut-être disparu, ou c’est la connexion. Réessayez dans un moment.",
+    "notKept": "Pas encore sur cet iPhone.",
+    "notKeptBody": "Il s’ouvrira à votre retour en ligne. En Wi-Fi, Pluck garde ici vos éléments les plus récents pour les lire hors ligne.",
     "minutesLeft": "{percent} · encore {minutes} min",
     "openOriginal": "Ouvrir l’original",
     "by": "Par {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "Export en cours",
     "exportingBody": "Un zip de tout est en route vers {email}. Le lien arrive d’ici une minute ou deux.",
     "exportingBodyNoEmail": "Un zip de tout est en route vers votre e-mail. Le lien arrive d’ici une minute ou deux.",
+    "keep": "Garder pour lire hors ligne",
     "offline": "Copie hors ligne",
     "offlineValue": "{count, plural, one {# élément} other {# éléments}} · {mb} Mo",
     "clearTitle": "Effacer la copie hors ligne ?",
     "clearBody": "Votre bibliothèque reste sur le serveur. L’app la télécharge à nouveau au fil de l’utilisation.",
     "clear": "Effacer",
+    "keepFootnote": "En Wi-Fi, Pluck garde sur cet iPhone le texte de vos {count} éléments les plus récents de Réception, Plus tard et Listes, pour les lire sans connexion. Le texte seulement, sans images.",
     "server": "Serveur",
     "serverBody": "Ce téléphone utilise {host}. Pour changer de serveur, déconnectez-vous, puis choisissez « Utiliser votre propre serveur ».",
     "iconLight": "Clair",

@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SessionUser } from "@/lib/auth";
-import { OfflineBar } from "./Offline";
+import { OfflineBar, OfflineMark } from "./Offline";
 import { RailNav } from "./RailNav";
 import { TimezoneSync } from "./TimezoneSync";
 import styles from "./AppShell.module.css";
@@ -18,6 +18,7 @@ export function AppShell({ user, counts, timezone, children }: { user: SessionUs
         <Link href="/inbox" aria-label="Pluck" className={styles.home}>
           <Logo size={24} />
         </Link>
+        <OfflineMark />
         <RailNav counts={counts} />
         <div className={styles.me}>
           <span className={styles.avatar} aria-hidden="true">

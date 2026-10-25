@@ -332,6 +332,7 @@
   },
   "shell": {
     "main": "Main",
+    "offline": "Offline",
     "nav": {
       "inbox": "Inbox",
       "later": "Later",

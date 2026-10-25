@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "오프라인",
+    "waiting": "{count, plural, other {오프라인 · 대기 중 #개}}"
+  },
   "lists": {
     "sharedWithYou": "공유받은 리스트",
     "sharedA11y": "{name}, {owner}님이 공유함, {count, plural, other {항목 #개}}",
@@ -330,6 +334,8 @@
     "backArchive": "보관함",
     "didntLoad": "불러오지 못했어요.",
     "didntLoadBody": "항목이 없어졌거나 연결이 끊겼을 수 있어요. 조금 뒤에 다시 해 보세요.",
+    "notKept": "아직 이 iPhone에 없어요.",
+    "notKeptBody": "다시 온라인이 되면 열려요. Wi-Fi에 연결되면 최신 항목을 여기에 보관해서 오프라인으로 읽을 수 있어요.",
     "minutesLeft": "{percent} · {minutes}분 남음",
     "openOriginal": "원본 열기",
     "by": "글: {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "내보내는 중",
     "exportingBody": "전체를 담은 zip 파일을 {email}(으)로 보내고 있어요. 링크는 1~2분 안에 도착해요.",
     "exportingBodyNoEmail": "전체를 담은 zip 파일을 이메일로 보내고 있어요. 링크는 1~2분 안에 도착해요.",
+    "keep": "오프라인에서 읽기",
     "offline": "오프라인 사본",
     "offlineValue": "{count, plural, other {항목 #개}} · {mb}MB",
     "clearTitle": "오프라인 사본을 지울까요?",
     "clearBody": "라이브러리는 서버에 그대로 있어요. 앱을 쓰는 동안 다시 내려받아요.",
     "clear": "지우기",
+    "keepFootnote": "Wi-Fi에 연결되면 수신함, 나중에, 리스트의 최신 항목 {count}개의 텍스트를 이 iPhone에 보관해서 연결 없이도 읽을 수 있어요. 텍스트만 보관하고 이미지는 보관하지 않아요.",
     "server": "서버",
     "serverBody": "이 휴대폰은 {host}을(를) 사용해요. 다른 서버를 쓰려면 로그아웃한 다음 \"내 서버 사용하기\"를 고르세요.",
     "iconLight": "라이트",

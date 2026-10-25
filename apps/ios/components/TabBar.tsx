@@ -8,6 +8,7 @@ import Svg, { Path } from "react-native-svg";
 import { useTranslations } from "use-intl";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ICONS } from "./Glyph";
+import { OfflinePill } from "./Offline";
 
 // `length` is each glyph's stroke length in its 16-unit box (measured with getTotalLength; re-measure if a glyph
 // changes). The draw animates the dash offset over exactly that length.
@@ -46,35 +47,39 @@ export function TabBar({ state, navigateToTab }: BottomTabBarProps) {
   const bottom = useSafeAreaInsets().bottom;
   return (
     <View style={[styles.bar, { backgroundColor: t.rail, borderTopColor: t.line, paddingBottom: Math.max(bottom, 8) }]}>
-      {state.routes.map((route, i) => {
-        const tab = TABS[route.name];
-        if (!tab) return null;
-        const on = state.index === i;
-        const color = on ? t.actionInk : t.ink2; // the place you are on is Pluck green: forest on light, mint on dark
-        return (
-          <Pressable
-            key={route.key}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: on }}
-            accessibilityLabel={tr(tab.label)}
-            style={styles.tab}
-            onPress={() => {
-              if (on) return;
-              void Haptics.selectionAsync();
-              navigateToTab(route.key);
-            }}
-          >
-            <TabGlyph d={tab.icon} length={tab.length} color={color} on={on} />
-            <Text maxFontSizeMultiplier={scale.bar} style={[on ? font.semibold : font.regular, styles.label, { color }]}>{tr(tab.label)}</Text>
-          </Pressable>
-        );
-      })}
+      <OfflinePill />
+      <View style={styles.tabs}>
+        {state.routes.map((route, i) => {
+          const tab = TABS[route.name];
+          if (!tab) return null;
+          const on = state.index === i;
+          const color = on ? t.actionInk : t.ink2; // the place you are on is Pluck green: forest on light, mint on dark
+          return (
+            <Pressable
+              key={route.key}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}
+              accessibilityLabel={tr(tab.label)}
+              style={styles.tab}
+              onPress={() => {
+                if (on) return;
+                void Haptics.selectionAsync();
+                navigateToTab(route.key);
+              }}
+            >
+              <TabGlyph d={tab.icon} length={tab.length} color={color} on={on} />
+              <Text maxFontSizeMultiplier={scale.bar} style={[on ? font.semibold : font.regular, styles.label, { color }]}>{tr(tab.label)}</Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: "row", paddingTop: 6, paddingHorizontal: 8, borderTopWidth: StyleSheet.hairlineWidth * 2 },
+  bar: { paddingTop: 6, paddingHorizontal: 8, borderTopWidth: StyleSheet.hairlineWidth * 2 },
+  tabs: { flexDirection: "row" },
   tab: { flex: 1, height: 48, alignItems: "center", justifyContent: "center", gap: 3 },
   label: { fontSize: 11 },
 });

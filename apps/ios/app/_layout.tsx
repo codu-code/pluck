@@ -1,4 +1,5 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { onlineManager } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { router, Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -13,7 +14,7 @@ import { UsagePrompt } from "@/components/UsagePrompt";
 import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
 import { formatLocale } from "@pluck/i18n";
 import { locale, messages, timeZone } from "@/lib/i18n";
-import { queryClient, syncPending, useMe } from "@/lib/data";
+import { clearKept, keepForOffline, queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
 import { useTheme } from "@/lib/theme";
@@ -45,20 +46,30 @@ export default function Root() {
       // …and the home screen icon (-demoIcon dark), to check the alternate icon without tapping through Settings.
       const icon = demoKey ? (Settings.get("demoIcon") as AppIcon | undefined) : undefined;
       if (icon) void appIcons.set(icon).catch(() => {});
+      // …and no connection (-demoOffline 1), for the Offline pill: the Simulator shares the Mac's network.
+      if (demoKey && Settings.get("demoOffline")) onlineManager.setOnline(false);
     })();
     const off = onSession((s) => {
       setSignedIn(Boolean(s?.access || s?.apiKey));
       if (!s) {
         queryClient.clear();
+        void clearKept();
         forgetUser();
       }
     });
-    // Coming back to the app is when queued plucks (from the app or the share sheet) go up.
-    const sub = AppState.addEventListener("change", (state) => state === "active" && void syncPending().catch(() => {}));
-    void syncPending().catch(() => {});
+    // Coming back to the app, or the connection coming back, is when queued plucks (from the app or the share sheet)
+    // go up and, on Wi-Fi, the newest Items are kept for offline reading.
+    const catchUp = () => {
+      void syncPending().catch(() => {});
+      void keepForOffline();
+    };
+    const sub = AppState.addEventListener("change", (state) => state === "active" && catchUp());
+    const net = onlineManager.subscribe((online) => online && catchUp());
+    catchUp();
     return () => {
       off();
       sub.remove();
+      net();
     };
   }, []);
 

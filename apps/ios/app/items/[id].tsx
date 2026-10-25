@@ -1,3 +1,4 @@
+import { Unreachable } from "@pluck/client";
 import { isTextKind, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
@@ -10,7 +11,7 @@ import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { keys, useCover, useItem, usePatchItem, type FullItem } from "@/lib/data";
+import { keys, useCover, useItem, useOnline, usePatchItem, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
@@ -23,13 +24,22 @@ export default function ItemScreen() {
   const t = useTheme();
   const tr = useTranslations("ios");
   const data = useItem(id);
+  const online = useOnline();
   useEffect(() => void api(`/api/v1/items/${id}/open`, { method: "POST" }).catch(() => {}), [id]); // opening is a touch
   if (!data.data) {
+    // No connection and no copy on the phone: not a failure, it opens when the connection is back (the query waits).
+    const away = !online || data.fetchStatus === "paused" || data.error instanceof Unreachable;
     return (
       <View style={{ flex: 1, backgroundColor: t.ground }}>
         <TopBar label={tr("item.back")} />
-        <View style={styles.centre}>
-          {data.isError ? (
+        <View style={styles.centre} accessibilityLiveRegion="polite">
+          {away ? (
+            <>
+              <Icon d={ICONS.offline} size={28} color={t.ink2} width={1.3} />
+              <Text style={[font.semibold, { color: t.ink, fontSize: 17, textAlign: "center" }]}>{tr("item.notKept")}</Text>
+              <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 21, textAlign: "center", maxWidth: 320 }]}>{tr("item.notKeptBody")}</Text>
+            </>
+          ) : data.isError ? (
             <>
               <Text style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("item.didntLoad")}</Text>
               <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>{tr("item.didntLoadBody")}</Text>

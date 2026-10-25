@@ -1,10 +1,12 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
 import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag } from "@pluck/shared-schemas";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { onlineManager, QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
-import { useEffect, useState } from "react";
+import * as Network from "expo-network";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createQueue, Unreachable } from "@pluck/client";
+import { KEEP, onWifi, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
 import { api, authHeader, getSession } from "./session";
 
@@ -15,6 +17,16 @@ export const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, gcTime: 7 * 86_400_000, retry: 1, networkMode: "offlineFirst" } },
 });
 
+// Queries pause with no connection (the reader shows what the phone kept) instead of failing, and pick up again when
+// it comes back. React Native has no navigator.onLine, so the phone's network state tells TanStack Query.
+onlineManager.setEventListener((setOnline) => {
+  const sub = Network.addNetworkStateListener((s) => setOnline(s.isConnected !== false));
+  void Network.getNetworkStateAsync().then((s) => setOnline(s.isConnected !== false)).catch(() => {});
+  return () => sub.remove();
+});
+const subscribe = (fn: () => void) => onlineManager.subscribe(fn);
+export const useOnline = () => useSyncExternalStore(subscribe, () => onlineManager.isOnline());
+
 export const keys = {
   items: (status: Status) => ["items", status] as const,
   item: (id: string) => ["item", id] as const,
@@ -23,6 +35,7 @@ export const keys = {
   tags: ["tags"] as const,
   me: ["me"] as const,
   search: (q: string, filters: object) => ["search", q, filters] as const,
+  pending: ["pending"] as const,
 };
 
 export type FullItem = { item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
@@ -30,10 +43,13 @@ export type FullItem = { item: Item; text: string; highlights: Highlight[]; list
 export const useItems = (status: Status) =>
   useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`) });
 // While the page is still being plucked, ask again every few seconds so it shows up without leaving the screen.
+// An Item kept for offline reading opens on its kept copy, and the server's copy replaces it once it can be fetched.
 export const useItem = (id: string) =>
   useQuery({
     queryKey: keys.item(id),
     queryFn: () => api<FullItem>(`/api/v1/items/${id}?include=text,highlights,lists`),
+    initialData: () => keptCopy(id),
+    initialDataUpdatedAt: 0, // always stale, so it refreshes as soon as there is a connection
     refetchInterval: (q) => (q.state.data?.item.extraction.state === "pending" ? 3000 : false),
   });
 
@@ -102,6 +118,7 @@ export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; 
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
     await queue.add({ source: "ios", ...body });
+    void queryClient.invalidateQueries({ queryKey: keys.pending });
     return { item: null, queued: true };
   }
 }
@@ -111,6 +128,9 @@ const pendingDir = () => {
   const container = Paths.appleSharedContainers[GROUP];
   return container ? new Directory(container, "pending") : null;
 };
+
+// How many plucks wait to go up: the sync pill, merged into the offline pill when there is no connection.
+export const usePending = () => useQuery({ queryKey: keys.pending, queryFn: toSync, networkMode: "always", staleTime: 0 });
 
 export async function toSync(): Promise<number> {
   const dir = pendingDir();
@@ -145,6 +165,7 @@ async function sync(): Promise<number> {
     }
   }
   void queryClient.invalidateQueries({ queryKey: ["items"] });
+  void queryClient.invalidateQueries({ queryKey: keys.pending });
   return toSync();
 }
 
@@ -171,4 +192,80 @@ export function shareExtensionCache(tags: Tag[], lists: List[]) {
   const last = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? ""))[0];
   storage.set("tags", JSON.stringify([...tags].sort((a, b) => b.count - a.count).slice(0, 12).map((t) => ({ id: t.id, name: t.name }))));
   storage.set("lastList", last ? JSON.stringify({ id: last.id, name: last.name }) : undefined);
+}
+
+// ---- Keep for offline reading ------------------------------------------------------------------------------
+// On Wi-Fi, the text of the newest 300 Items in Inbox, Later and Lists, one key each beside the query cache (which is
+// written whole on every change, so it stays small), and the Lists themselves. Text only: no pictures.
+
+const keptKey = (id: string) => `kept:${id}`;
+const keptCopy = (id: string): FullItem | undefined => kv.getSync<FullItem | undefined>(keptKey(id), undefined);
+export const keepSetting = () => kv.get("keepOffline", true);
+
+export async function keptSize(): Promise<{ ids: string[]; bytes: number }> {
+  const kept = await kv.get<Kept>("kept", {});
+  return { ids: Object.keys(kept), bytes: Object.values(kept).reduce((n, k) => n + k.bytes, 0) };
+}
+
+export async function clearKept(): Promise<void> {
+  const kept = await kv.get<Kept>("kept", {});
+  for (const id of Object.keys(kept)) await kv.remove(keptKey(id));
+  await kv.remove("kept");
+}
+
+export async function setKeepSetting(on: boolean): Promise<void> {
+  await kv.set("keepOffline", on);
+  if (on) await keepForOffline(true);
+  else await clearKept();
+}
+
+// One run at a time, and at most every 15 minutes unless asked (turning the setting on).
+let keeping: Promise<void> | null = null;
+let keptAt = 0;
+export const keepForOffline = (force = false): Promise<void> =>
+  (keeping ??= keep(force).catch(() => {}).finally(() => (keeping = null))); // offline or refused: next time
+
+const wifi = async () => onWifi(await Network.getNetworkStateAsync());
+const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function keep(force: boolean) {
+  if ((!force && Date.now() - keptAt < 15 * 60_000) || !(await keepSetting()) || !(await wifi())) return;
+  const items: Item[] = [];
+  for (const status of ["inbox", "later"] as const) {
+    let cursor: string | null = null;
+    let got = 0;
+    do {
+      const page: ItemPage = await api<ItemPage>(`/api/v1/items?status=${status}&limit=50${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`);
+      items.push(...page.items);
+      got += page.items.length;
+      cursor = page.nextCursor;
+    } while (cursor && got < KEEP);
+  }
+  const lists = (await api<{ lists: List[] }>("/api/v1/lists")).lists;
+  queryClient.setQueryData(keys.lists, lists);
+  for (const l of lists) {
+    const one = await api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${l.id}`);
+    queryClient.setQueryData(keys.list(l.id), one); // the List itself opens offline too
+    items.push(...one.entries.map((e) => e.item));
+  }
+
+  const kept = await kv.get<Kept>("kept", {});
+  const { fetch, drop } = plan(toKeep(items), kept);
+  try {
+    for (const id of drop) {
+      await kv.remove(keptKey(id));
+      delete kept[id];
+    }
+    for (const item of fetch) {
+      if (!(await wifi()) || !(await keepSetting())) break; // off the Wi-Fi, or turned off: stop here
+      const raw = JSON.stringify(await api<FullItem>(`/api/v1/items/${item.id}?include=text,highlights,lists`));
+      await kv.storage.setItem(keptKey(item.id), raw);
+      kept[item.id] = { updatedAt: item.updatedAt, bytes: raw.length };
+      await pause(250); // gently: well under the API's 600 reads a minute, with room for the app itself
+    }
+    keptAt = Date.now();
+  } finally {
+    if (await keepSetting()) await kv.set("kept", kept);
+    else for (const id of Object.keys(kept)) await kv.remove(keptKey(id)); // turned off meanwhile: leave nothing behind
+  }
 }

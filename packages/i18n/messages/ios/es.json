@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "Sin conexión",
+    "waiting": "{count, plural, one {Sin conexión · # en espera} other {Sin conexión · # en espera}}"
+  },
   "lists": {
     "sharedWithYou": "Compartidas contigo",
     "sharedA11y": "{name}, compartida por {owner}, {count, plural, one {# elemento} other {# elementos}}",
@@ -330,6 +334,8 @@
     "backArchive": "Archivo",
     "didntLoad": "No se pudo cargar.",
     "didntLoadBody": "Puede que ya no exista, o que falle la conexión. Vuelve a intentarlo en un rato.",
+    "notKept": "Todavía no está en este iPhone.",
+    "notKeptBody": "Se abre cuando vuelvas a tener conexión. Con wifi, Pluck conserva aquí tus elementos más recientes para leerlos sin conexión.",
     "minutesLeft": "{percent} · quedan {minutes} min",
     "openOriginal": "Abrir el original",
     "by": "Por {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "Exportando",
     "exportingBody": "Un zip con todo va de camino a {email}. El enlace llega en un minuto o dos.",
     "exportingBodyNoEmail": "Un zip con todo va de camino a tu correo. El enlace llega en un minuto o dos.",
+    "keep": "Lectura sin conexión",
     "offline": "Copia sin conexión",
     "offlineValue": "{count, plural, one {# elemento} other {# elementos}} · {mb} MB",
     "clearTitle": "¿Borrar la copia sin conexión?",
     "clearBody": "Tu biblioteca sigue en el servidor. La app la vuelve a descargar a medida que la usas.",
     "clear": "Borrar",
+    "keepFootnote": "Con wifi, Pluck conserva en este iPhone el texto de tus {count} elementos más recientes de Entrada, Más tarde y Listas, para leerlos sin conexión. Solo el texto, sin imágenes.",
     "server": "Servidor",
     "serverBody": "Este teléfono usa {host}. Para usar otro servidor, cierra sesión y elige \"Usar tu propio servidor\".",
     "iconLight": "Claro",

@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "Offline",
+    "waiting": "{count, plural, one {Offline · # wacht} other {Offline · # wachten}}"
+  },
   "lists": {
     "sharedWithYou": "Met je gedeeld",
     "sharedA11y": "{name}, gedeeld door {owner}, {count, plural, one {# item} other {# items}}",
@@ -330,6 +334,8 @@
     "backArchive": "Archief",
     "didntLoad": "Dit item laadde niet.",
     "didntLoadBody": "Misschien is het item weg, of de verbinding. Probeer het straks opnieuw.",
+    "notKept": "Nog niet op deze iPhone.",
+    "notKeptBody": "Het item opent zodra je weer online bent. Op wifi bewaart Pluck je nieuwste items hier om offline te lezen.",
     "minutesLeft": "{percent} · nog {minutes} min",
     "openOriginal": "Open het origineel",
     "by": "Door {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "Bezig met exporteren",
     "exportingBody": "Een zip met alles is onderweg naar {email}. De link komt binnen een paar minuten.",
     "exportingBodyNoEmail": "Een zip met alles is onderweg naar je e-mail. De link komt binnen een paar minuten.",
+    "keep": "Bewaar om offline te lezen",
     "offline": "Offline kopie",
     "offlineValue": "{count, plural, one {# item} other {# items}} · {mb} MB",
     "clearTitle": "Offline kopie wissen?",
     "clearBody": "Je bibliotheek blijft op de server. De app downloadt hem opnieuw terwijl je hem gebruikt.",
     "clear": "Wis",
+    "keepFootnote": "Op wifi bewaart Pluck de tekst van je {count} nieuwste items uit Inbox, Later en Lijsten op deze iPhone, zodat je ze zonder verbinding kunt lezen. Alleen tekst, geen afbeeldingen.",
     "server": "Server",
     "serverBody": "Deze telefoon gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".",
     "iconLight": "Licht",

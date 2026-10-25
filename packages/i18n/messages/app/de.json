@@ -332,6 +332,7 @@
   },
   "shell": {
     "main": "Hauptbereich",
+    "offline": "Offline",
     "nav": {
       "inbox": "Eingang",
       "later": "Später",

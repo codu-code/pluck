@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "离线",
+    "waiting": "{count, plural, other {离线 · # 条等待中}}"
+  },
   "lists": {
     "sharedWithYou": "与你共享",
     "sharedA11y": "{name}，{owner} 共享，{count, plural, other {# 条}}",
@@ -330,6 +334,8 @@
     "backArchive": "归档",
     "didntLoad": "这条没有载入。",
     "didntLoadBody": "可能是它不在了，也可能是网络断了。稍后再试。",
+    "notKept": "这台 iPhone 上还没有它。",
+    "notKeptBody": "联网后就能打开。连接 Wi-Fi 时，Pluck 会把最新的条目留在这里供离线阅读。",
     "minutesLeft": "{percent} · 还剩 {minutes} 分钟",
     "openOriginal": "打开原网页",
     "by": "作者：{author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "正在导出",
     "exportingBody": "所有内容打包成的 zip 正在发往 {email}。链接一两分钟内就到。",
     "exportingBodyNoEmail": "所有内容打包成的 zip 正在发往你的邮箱。链接一两分钟内就到。",
+    "keep": "离线阅读",
     "offline": "离线副本",
     "offlineValue": "{count, plural, other {# 条}} · {mb} MB",
     "clearTitle": "清除离线副本？",
     "clearBody": "你的资料库仍在服务器上。App 会在你使用时重新下载。",
     "clear": "清除",
+    "keepFootnote": "连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目的文字留在这台 iPhone 上，没有网络也能读。只存文字，不含图片。",
     "server": "服务器",
     "serverBody": "这台手机使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。",
     "iconLight": "浅色",

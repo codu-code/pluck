@@ -13,7 +13,8 @@ import { toast } from "@/components/Toast";
 import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
 import { locale } from "@/lib/i18n";
 import { kv } from "@/lib/kv";
-import { keys, queryClient, useMe, useTags } from "@/lib/data";
+import { clearKept, keepSetting, keptSize, keys, queryClient, setKeepSetting, useMe, useTags } from "@/lib/data";
+import { KEEP } from "@/lib/keep";
 import { api, getSession, signOut, type Session } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 import { appIcons, type AppIcon } from "@/modules/app-icon";
@@ -45,12 +46,18 @@ export default function Settings() {
   const [icon, setIcon] = useState<AppIcon | null>(null);
   const [usage, setUsage] = useState<Consent | null>(null);
 
+  const [keep, setKeep] = useState(true);
+  // What the phone holds: Items opened (the query cache) and Items kept for offline reading, each counted once.
+  const measure = async () => {
+    const [raw, kept] = await Promise.all([kv.storage.getItem("queryCache"), keptSize()]);
+    const opened = queryClient.getQueryCache().findAll({ queryKey: ["item"] }).map((q) => String(q.queryKey[1]));
+    setCache({ items: new Set([...opened, ...kept.ids]).size, bytes: (raw?.length ?? 0) + kept.bytes });
+  };
+
   useEffect(() => {
     void getSession().then(setSession);
-    void kv.storage.getItem("queryCache").then((raw) => {
-      const items = queryClient.getQueryCache().findAll({ queryKey: ["item"] }).length;
-      setCache({ items, bytes: raw?.length ?? 0 });
-    });
+    void measure();
+    void keepSetting().then(setKeep);
     if (appIcons.supported) void appIcons.get().then(setIcon);
     void loadConsent().then(setUsage);
     return onConsent(setUsage);
@@ -263,14 +270,22 @@ export default function Settings() {
         <View style={card}>
           {row(pair(tr("tags"), `${tags.data?.length ?? ""}`), () => router.push("/tags"))}
           {row(pair(tr("export"), tr("byEmail")), () => void exportAll())}
+          <View style={[styles.switchRow, { borderBottomColor: t.tint, borderBottomWidth: StyleSheet.hairlineWidth * 2 }]}>
+            <Text style={[label, { flex: 1 }]}>{tr("keep")}</Text>
+            <Switch accessibilityLabel={tr("keep")} value={keep} trackColor={{ true: t.accent }} onValueChange={(on) => {
+              setKeep(on);
+              void setKeepSetting(on).then(measure);
+            }} />
+          </View>
           {row(<><Text style={label}>{tr("offline")}</Text><Text style={value}>{tr("offlineValue", { count: cache.items, mb: Math.max(1, Math.round(cache.bytes / 1_000_000)) })}</Text></>, () =>
             Alert.alert(tr("clearTitle"), tr("clearBody"), [
               { text: tc("cancel"), style: "cancel" },
-              { text: tr("clear"), onPress: () => { queryClient.clear(); void kv.remove("queryCache"); setCache({ items: 0, bytes: 0 }); } },
+              { text: tr("clear"), onPress: async () => { queryClient.clear(); await Promise.all([kv.remove("queryCache"), clearKept()]); setCache({ items: 0, bytes: 0 }); } },
             ]))}
           {row(<><Text style={label}>{tr("server")}</Text><Text style={value}>{host}</Text></>, () =>
             Alert.alert(tr("server"), tr("serverBody", { host })), true)}
         </View>
+        {footnote(tr("keepFootnote", { count: KEEP }))}
       </View>
 
       {/* iOS keeps a language per app (Settings, Pluck, Language); changing it restarts Pluck in that language. */}
