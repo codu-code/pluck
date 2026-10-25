@@ -4,8 +4,8 @@
     "hint": "직접 고르기 전까지 Pluck은 브라우저의 언어를 따라요."
   },
   "kind": {
-    "link": "읽기",
-    "video": "보기",
+    "link": "글",
+    "video": "영상",
     "pdf": "PDF",
     "image": "이미지",
     "note": "메모",
@@ -60,7 +60,7 @@
       "failed": "읽지 못함",
       "pending": "담는 중",
       "photo": "사진",
-      "video": "동영상",
+      "video": "영상",
       "minutes": "{n}분",
       "pdf": "PDF",
       "link": "링크"
@@ -106,7 +106,7 @@
     "rename": "이름 변경",
     "merge": "합치기",
     "delete": "삭제",
-    "remove": "빼기",
+    "remove": "제거",
     "showMore": "더 보기",
     "openOriginal": "원본 열기",
     "undo": "실행 취소"
@@ -116,9 +116,9 @@
   },
   "error": {
     "title": "문제가 생겼어요",
-    "lede": "저희 쪽 문제예요. 담은 건 하나도 잃어버리지 않았어요. 다시 해 보시고, 계속 이러면 알려 주세요.",
+    "lede": "저희 쪽 문제예요. 담은 건 하나도 잃어버리지 않았어요. 다시 해 보시고, 계속 문제가 생기면 알려 주세요.",
     "tryAgain": "다시 시도",
-    "report": "알리기"
+    "report": "문제 알리기"
   },
   "globalError": {
     "title": "문제가 생겼어요",
@@ -127,7 +127,7 @@
   },
   "notFound": {
     "title": "여기엔 아무것도 없어요",
-    "lede": "지금은 비공개가 됐거나, 처음부터 없었을 수 있어요.",
+    "lede": "비공개로 바뀌었거나, 처음부터 없던 페이지일 수 있어요.",
     "home": "Pluck으로 가기",
     "support": "도움말"
   },
@@ -171,7 +171,7 @@
       "subject": "Pluck 로그인 링크",
       "now": "지금",
       "title": "로그인 링크예요.",
-      "body": "탭하면 로그인돼요. 10분 동안, 한 번만 쓸 수 있어요. 외울 비밀번호는 영영 없어요.",
+      "body": "탭하면 로그인돼요. 10분 동안, 한 번만 쓸 수 있어요. 비밀번호를 외울 일은 앞으로도 없어요.",
       "button": "Pluck에 로그인"
     },
     "sent": {
@@ -187,7 +187,7 @@
     "aiLede": "링크를 이메일로 보내 드려요. 로그인하면 AI 도구가 할 수 있는 일을 직접 고를 수 있어요.",
     "title1": "링크 하나.",
     "title2": "비밀번호는 없어요",
-    "lede": "이메일을 입력하면 링크를 보내 드려요. 그 링크로 로그인하거나, 처음이면 라이브러리가 시작돼요.",
+    "lede": "이메일을 입력하면 링크를 보내 드려요. 그 링크로 로그인하고, 처음이라면 라이브러리가 새로 만들어져요.",
     "email": "이메일",
     "emailPlaceholder": "you@example.com",
     "password": "비밀번호",
@@ -208,7 +208,7 @@
     },
     "title1": "한 번 탭하면",
     "title2": "바로 들어가요",
-    "lede": "이 링크는 보낸 때부터 10분 동안, 한 번만 쓸 수 있어요.",
+    "lede": "이 링크는 보낸 시점부터 10분 동안, 한 번만 쓸 수 있어요.",
     "action": "Pluck에 로그인"
   },
   "oauthError": {
@@ -217,7 +217,7 @@
     "step1": "AI 도구에서 연결을 다시 시작하세요.",
     "step2": "그래도 안 되나요? 그곳에서 Pluck을 지운 다음, <connect>내 AI 연결</connect>에 있는 링크로 다시 추가하세요.",
     "step3": "그래도 막히면 <support>도움말</support>을 보세요.",
-    "serverSaid": "AI 도구가 물어볼 경우를 위한 서버 메시지"
+    "serverSaid": "AI 도구가 물어보면 전해 줄 서버 메시지"
   },
   "consent": {
     "allow": "허용",
@@ -261,10 +261,10 @@
     "archiveAll": {
       "title1": "모두 보관하기.",
       "title2": "진짜로요",
-      "count": "<b>{count, number}</b><span>{count, plural, other {개 항목이}} 자동 보관 기간보다 오래 손대지 않은 채 있어요</span>",
+      "count": "<b>{count, number}</b><span>{count, plural, other {자동 보관 기간보다 오래 손대지 않은 항목}}</span>",
       "lede": "한 번에 보관함으로 옮겨져요. 삭제되는 건 없고, 리스트는 그대로 둬요.",
       "confirm": "네, {count, number}개를 보관함으로 옮길게요",
-      "notNow": "나중에 할게요"
+      "notNow": "지금은 안 할게요"
     },
     "doing": {
       "keep": "남기는 중",
@@ -319,14 +319,14 @@
     "busy": "담는 중",
     "action": "이 리스트 담기",
     "title": "이 리스트 담기",
-    "lede": "{count, plural, other {항목 #개가}} 수신함에 들어오고, <b>{name}</b>의 비공개 사본이 순서와 메모를 그대로 지켜요.",
+    "lede": "{count, plural, other {항목 #개가}} 수신함에 들어오고, <b>{name}</b>의 비공개 사본에는 순서와 메모가 그대로 남아요.",
     "items": "{count, plural, other {항목 #개}}",
     "note": "메모",
     "more": "외 {count}개"
   },
   "extensionConnected": {
     "title": "연결됐어요",
-    "lede": "이제 브라우저에서 담을 수 있어요. 이 탭은 닫으세요. 이제 어떤 페이지든 한 번 누르면 돼요.",
+    "lede": "이제 브라우저에서 담을 수 있어요. 이 탭은 닫아도 돼요. 앞으로는 어떤 페이지든 한 번만 누르면 담겨요.",
     "page": "보고 있는 페이지를 담아요. Mac에서는 Alt가 Option이에요.",
     "selection": "선택한 부분을 하이라이트로 담아요."
   },
@@ -402,7 +402,7 @@
     "thing": "물건"
   },
   "picker": {
-    "hint": "Enter로 선택 · Esc로 닫기",
+    "hint": "Enter로 선택·해제 · Esc로 닫기",
     "tag": {
       "label": "태그",
       "placeholder": "입력해서 태그 찾기 또는 만들기",
@@ -468,10 +468,10 @@
       "add": "추가"
     },
     "consent": {
-      "title": "내 AI 들이기",
+      "title": "내 AI 연결",
       "body": "AI 도구가 내 Pluck 라이브러리를 쓰겠다고 요청해요. 요청할 때만 바꾸고, 손댄 곳에는 표시를 남겨요.",
       "read": "라이브러리 읽기와 검색",
-      "write": "담기, 태그, 분류. AI 표시와 함께",
+      "write": "담기, 태그, 분류(AI 표시가 붙어요)",
       "delete": "무엇이든 삭제",
       "cancel": "취소",
       "allow": "허용"
@@ -543,7 +543,7 @@
       "label": "일괄 작업",
       "selected": "{count}개 선택됨",
       "addToList": "리스트에 추가",
-      "clear": "해제"
+      "clear": "선택 해제"
     },
     "actions": {
       "inbox": "수신함",
@@ -561,8 +561,8 @@
       "days": "{days}일"
     },
     "none": {
-      "all": "지금 {view, select, inbox {수신함} other {나중에}}에는 아무것도 없어요.",
-      "kind": "{view, select, inbox {수신함} other {나중에}}에는 이 종류가 없어요."
+      "all": "{view, select, inbox {지금 수신함에는 아무것도 없어요.} other {지금 나중에 볼 항목이 없어요.}}",
+      "kind": "{view, select, inbox {수신함에는 이 종류가 없어요.} other {나중에 볼 항목 중에는 이 종류가 없어요.}}"
     },
     "keys": {
       "move": "이동",
@@ -581,23 +581,23 @@
     "filter": {
       "label": "필터",
       "all": "전체",
-      "you": "내가 보관함",
+      "you": "직접 보관",
       "expired": "자동 보관됨",
       "import": "가져옴"
     },
     "why": {
       "bin": "삭제됨, {days, plural, other {#일}} 뒤 영구 삭제",
       "done": "완료",
-      "expiredAfter": "{days}일 뒤 자동 보관, 여기 보관 중",
-      "expired": "자동 보관, 여기 보관 중",
-      "bulk": "모두 보관하기로 보관함",
+      "expiredAfter": "{days}일 뒤 자동 보관되어 여기 있음",
+      "expired": "자동 보관되어 여기 있음",
+      "bulk": "모두 보관하기로 보관",
       "import": "가져옴",
-      "you": "내가 보관함"
+      "you": "직접 보관"
     },
     "outOfBin": "휴지통에서 꺼냈어요.",
     "title": "보관함",
     "bin": "휴지통",
-    "binSubtitle": "삭제한 것들이에요. 각각 삭제하고 30일이 지나면 영구히 사라져요.",
+    "binSubtitle": "삭제한 항목이에요. 삭제한 날로부터 30일이 지나면 영구히 사라져요.",
     "subtitle": "보관했거나, 끝냈거나, 자동으로 보관된 모든 것. 삭제되는 건 없고, 검색으로 계속 찾을 수 있어요.",
     "rowsLabel": "보관된 항목",
     "restore": "복원",
@@ -627,7 +627,7 @@
     "results": "결과",
     "snippet": "{pre}<mark>{hit}</mark>{post}",
     "noteSnippet": "내 메모: “{pre}<mark>{hit}</mark>{post}”",
-    "none": "“{q}”와 일치하는 게 없어요. 검색은 단어 그대로를 찾아요.",
+    "none": "“{q}” 검색 결과가 없어요. 검색은 단어 그대로를 찾아요.",
     "ask": "뜻으로 찾고 싶나요? 내 AI에게 물어보세요.",
     "copy": "“{prompt}” 복사"
   },
@@ -735,7 +735,7 @@
       "retrying": "다시 시도하는 중",
       "wayback": "Wayback 사본으로 시도",
       "loginTitle": "로그인이 필요한 페이지인가요?",
-      "loginBody": "확장 프로그램으로 담으면 페이지가 담겨요. 브라우저에 이미 보이는 그대로를 보내요.",
+      "loginBody": "확장 프로그램으로 담으면 페이지 내용까지 남길 수 있어요. 브라우저에 이미 보이는 그대로 보내요.",
       "extension": "확장 프로그램 받기",
       "keptTitle": "그래도 내 거예요",
       "keptBody": "링크, 메모, 태그는 그대로 있어요. 제목과 메모로 검색할 수 있어요."
@@ -757,7 +757,7 @@
     "kindHint": {
       "note": "할 일로 바꾸면 마감일과 체크를 넣을 수 있어요.",
       "todo": "할 일에는 마감일을 넣을 수 있어요. 완료하면 수신함에서 빠져요.",
-      "thing": "물건은 구할 무언가예요. 리스트에 모아 두세요."
+      "thing": "물건은 사거나 구할 것이에요. 리스트에 모아 두세요."
     },
     "due": "마감",
     "source": "출처: {via}",
@@ -765,7 +765,7 @@
     "noHighlights": "메모에는 하이라이트가 없어요. 글자를 선택하면 복사할 수 있어요."
   },
   "reader": {
-    "progress": "읽은 정도",
+    "progress": "읽기 진행률",
     "minutes": "{n}분 분량",
     "by": "글: {author}",
     "selection": "선택한 부분",
@@ -788,7 +788,7 @@
     "signOut": "로그아웃",
     "emailIn": {
       "title": "이메일로 담기",
-      "lede": "뉴스레터를 여기로 전달하세요. 읽기 항목으로 들어와요.",
+      "lede": "뉴스레터를 여기로 전달하세요. 글 항목으로 들어와요.",
       "copied": "주소를 복사했어요.",
       "confirm": "이전 주소는 바로 작동을 멈춰요.",
       "ready": "새 주소가 준비됐어요. 이전 주소로 전달하던 곳을 업데이트하세요.",
@@ -801,7 +801,7 @@
       "nameSaved": "이름을 저장했어요.",
       "handle": "핸들, 공개 리스트용",
       "handleSaved": "핸들을 저장했어요.",
-      "makeUp": "아무거나 만들기",
+      "makeUp": "자동으로 만들기",
       "move": "{count, plural, =0 {아직 공개 리스트가 없어서 바뀌는 링크도 없어요.} other {공개 리스트 #개가 {host}/@{handle}/…(으)로 옮겨지고, 이전 주소의 링크는 더 이상 작동하지 않아요. 이메일로 공유한 리스트는 영향을 받지 않아요.}} 저장하면 한 달 뒤에 다시 바꿀 수 있어요.",
       "invalid": "영어 소문자, 숫자, 하이픈으로 3~24자.",
       "save": "@{handle}(으)로 저장",
@@ -819,7 +819,7 @@
       "selfHost": "공개 URL 없이 직접 호스팅할 때",
       "needKey": "아래에서 API 키를 만든 다음 여기에 쓰세요.",
       "test": "테스트",
-      "testHint": "내 AI용으로 “{prompt}”을(를) 복사해요",
+      "testHint": "내 AI에 붙여 넣을 “{prompt}”를 복사해요",
       "connected": "연결됨",
       "connectedLast": "연결됨 · 마지막 호출 {ago}",
       "notConnected": "아직 연결 안 됨",
@@ -847,7 +847,7 @@
       "digestDay": "{day} 06:00",
       "digestOffOption": "끔",
       "warns": "주간 이메일이 일주일 전에 미리 알려 줘요.",
-      "sendNow": "지금 하나 보내기",
+      "sendNow": "지금 받아 보기",
       "clean": {
         "title": "깨끗하게 시작하기",
         "body": "{scope, select, inbox {수신함} other {수신함과 나중에}}에서 {days}일보다 오래된 걸 지금 전부 보관함으로 옮겨요. {count, plural, other {항목 #개}}. 리스트는 그대로 둬요.",

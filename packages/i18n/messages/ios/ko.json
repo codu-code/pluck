@@ -20,8 +20,8 @@
     }
   },
   "kinds": {
-    "link": "읽기",
-    "video": "보기",
+    "link": "글",
+    "video": "영상",
     "pdf": "PDF",
     "image": "이미지",
     "note": "메모",
@@ -88,7 +88,7 @@
       "failed": "읽지 못함",
       "pending": "담는 중",
       "photo": "사진",
-      "video": "동영상",
+      "video": "영상",
       "minutes": "{count}분",
       "pdf": "PDF",
       "link": "링크"
@@ -106,7 +106,7 @@
     "undo": "실행 취소"
   },
   "usage": {
-    "title": "Pluck을 더 좋게 만드는 데 함께할래요<accent>?</accent>",
+    "title": "Pluck이 더 좋아지도록 도와줄래요<accent>?</accent>",
     "body": "어떤 화면을 쓰는지 계정과 함께 알려 주시면, 불편한 점을 고칠게요. 광고 없음. 판매 없음. 오류 보고는 어느 쪽을 골라도 이름 없이 전송돼요.",
     "yes": "좋아요, 함께할게요",
     "no": "사양할게요"
@@ -189,7 +189,7 @@
     "hint": "나만 볼 수 있어요. 검색에도 나와요."
   },
   "welcome": {
-    "title": "들어왔어요.\n이제 하나 담아 보세요.",
+    "title": "준비됐어요.\n이제 하나 담아 보세요.",
     "lede": "담으려고 이 앱을 열 필요는 없어요. 어느 앱이든 공유 메뉴에 있어요.",
     "step1": "<b>1.</b> 공유를 누르고, Pluck을 누르세요.",
     "step2": "<b>2.</b> 끝이에요. 계속 읽으세요.",
@@ -245,7 +245,7 @@
     "badKey": "이 서버에서는 그 키가 작동하지 않아요.",
     "unreachable": "{origin}에 연결하지 못했어요.",
     "title": "링크 하나.\n비밀번호는 없어요<accent>.</accent>",
-    "lede": "이메일을 입력하면 링크를 보내 드려요. 그 링크로 로그인하거나, 처음이면 라이브러리가 시작돼요.",
+    "lede": "이메일을 입력하면 링크를 보내 드려요. 그 링크로 로그인하고, 처음이라면 라이브러리가 새로 만들어져요.",
     "server": "서버",
     "key": "API 키(사용하는 경우)",
     "keyA11y": "API 키",
@@ -259,7 +259,7 @@
       "subject": "Pluck 로그인 링크",
       "now": "지금",
       "title": "로그인 링크예요.",
-      "body": "탭하면 로그인돼요. 10분 동안, 한 번만 쓸 수 있어요. 외울 비밀번호는 영영 없어요.",
+      "body": "탭하면 로그인돼요. 10분 동안, 한 번만 쓸 수 있어요. 비밀번호를 외울 일은 앞으로도 없어요.",
       "button": "Pluck에 로그인"
     }
   },
@@ -268,7 +268,7 @@
     "locked": "{date}에 다시 바꿀 수 있어요.",
     "invalid": "영어 소문자, 숫자, 하이픈으로 3~24자.",
     "hint": "공개하는 모든 리스트의 링크에 들어가요.",
-    "makeOne": "아무거나 만들기",
+    "makeOne": "자동으로 만들기",
     "saved": "@{handle}(으)로 정했어요.",
     "save": "@{handle}(으)로 저장",
     "keep": "@{handle} 유지",
@@ -366,9 +366,9 @@
     "signOutBody": "이 휴대폰에서 기다리는 항목은 다시 로그인할 때까지 여기 남아요.",
     "accountFootnote": "이름과 핸들은 공개한 리스트에만 표시되고, 다른 곳에는 나오지 않아요.",
     "connectorCopied": "복사했어요. 내 AI에 붙여 넣으세요.",
-    "copied": "복사함",
+    "copied": "복사됨",
     "copyConnector": "커넥터 주소 복사",
-    "connected": "{date}에 연결함",
+    "connected": "{date}에 연결됨",
     "disconnect": "연결 해제",
     "disconnectA11y": "{name}. 연결 해제",
     "disconnectTitle": "{name} 연결을 해제할까요?",
@@ -381,12 +381,12 @@
     "newAddress": "새 주소",
     "newAddressTitle": "새 주소를 만들까요?",
     "newAddressBody": "이전 주소는 바로 작동을 멈춰요. 그 주소로 전달하던 곳을 업데이트하세요.",
-    "emailInFootnote": "뉴스레터를 여기로 전달하세요. 읽기 항목으로 수신함에 들어와요.",
+    "emailInFootnote": "뉴스레터를 여기로 전달하세요. 글 항목으로 수신함에 들어와요.",
     "days": "{count, plural, other {#일}}",
     "never": "안 함",
     "scopeInboxLater": "수신함과 나중에",
     "scopeInbox": "수신함만",
-    "moveAfter": "보관함으로 옮기기",
+    "moveAfter": "자동 보관 기간",
     "moveAfterTitle": "손대지 않은 항목을 보관함으로 옮기는 시점",
     "expirySaved": "{count}일 동안 손대지 않으면 보관함으로 가요. 삭제되지 않아요.",
     "noExpiry": "이제 자동으로 보관되는 건 없어요.",

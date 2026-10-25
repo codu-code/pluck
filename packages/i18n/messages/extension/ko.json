@@ -20,8 +20,8 @@
     "tryAgain": "잘 안 됐어요. 다시 해 보세요."
   },
   "kinds": {
-    "link": "읽기",
-    "video": "보기",
+    "link": "글",
+    "video": "영상",
     "pdf": "PDF",
     "image": "이미지",
     "note": "메모",

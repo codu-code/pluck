@@ -13,15 +13,15 @@ How Pluck's product words are said in Korean, and why. Use these in every catalo
 | a pluck (noun, a thing you plucked) | 담은 것, 담은 항목 | Korean has no handy noun from the verb; "what you plucked". | |
 | Item | 항목 | The neutral word for one entry in a list; counted 항목 #개. Not 저장 항목 or 북마크. | Gmail (항목), Apple Reminders and Files (항목), Safari Reading List (항목) |
 | Kind | 종류 | Plain "kind/sort". Not 유형 (type) or 카테고리, which the English avoids. | Apple Files (종류) |
-| Read | 읽기 | Keeps the English verb feel; pairs with 보기. | Safari 읽기 목록 |
-| Watch | 보기 | Pairs with 읽기. Only ever shown next to the other Kinds, so it does not read as the View menu. | |
+| Read | 글 | A Kind is a label on a chip, a picker and a row, and the other Kinds are nouns (메모, 이미지, 물건). 글 is the everyday word for an article or post. 읽기 was tried and dropped with 보기 (below). | Naver Blog and Brunch (글) |
+| Watch | 영상 | 보기 on its own reads as "View" (모두 보기, 보기 메뉴), so a chip or a "종류: 보기" row looks like a menu. 영상 is what Korean users call a video; the row meta says 영상 too. | YouTube (영상) |
 | PDF | PDF | Unchanged. | |
 | Image | 이미지 | Standard. | Apple Photos, Gmail |
 | Note | 메모 | What Korean users call a note. | Apple 메모, Samsung Notes (삼성 노트, 메모) |
 | Todo | 할 일 | Standard. | Todoist (할 일), Microsoft To Do (할 일), Apple Reminders |
 | Thing | 물건 | A Thing is something to get or buy: 물건 is exactly that. 것 alone is too vague to be a label. | |
 | Status | 상태 | Standard. | |
-| Inbox | 수신함 | Pluck's Inbox is not mail, so not 받은 편지함 (Gmail, Apple Mail). Todoist's 관리함 reads as "management box". 수신함 ("where things arrive") is short, neutral and used for non-mail inboxes. | Things 3 (수신함), Todoist (관리함, its help centre), Gmail (받은편지함) |
+| Inbox | 수신함 | Pluck's Inbox is not mail, so not 받은 편지함 (Gmail, Apple Mail). Todoist's 관리함 reads as "management box". 수신함 ("where things arrive") is short, neutral and used for non-mail inboxes. | Notion (수신함), Todoist (관리함), Gmail (받은편지함) |
 | Later | 나중에 | The market already says 나중에 읽기 for read-later. Used as a name: "나중에로" is avoided; sentences say 나중에 볼 항목 or 나중에 보려고 남겨 뒀어요. | Pocket and Korean app store listings (나중에 읽기) |
 | Archived (status) | 보관됨 | Gmail and Apple Mail call archive 보관 and the place 보관함. | Gmail (보관처리, 전체보관함), Apple Mail (보관) |
 | Archive (place) | 보관함 | as above | as above |
@@ -44,6 +44,7 @@ How Pluck's product words are said in Korean, and why. Use these in every catalo
 | weekly email (Digest) | 주간 이메일 | The English UI already says "weekly email". | |
 | Re-pluck | 다시 담기 | | |
 | Archive it all | 모두 보관하기 | | |
+| archived by you (Archive filter) | 직접 보관 | Not 내가 보관함, which reads as "my Archive". | |
 
 Words the English avoids, and Korean avoids too: 저장 (save), 북마크 (bookmark), 스크랩 (clip), 컬렉션 (collection), 스마트 (smart), AI 기반 (AI-powered), 마법 (magic). Two exceptions, both outside the product's own voice: the import source "Browser bookmarks (HTML)" is 브라우저 북마크 (HTML), because that is what the file is; and the App Store keywords use the search words Korean users type (see below). 저장 is used only where the English itself says Save or store: the Save button, "Name saved", the note editor's Saved / Saving states (저장됨 / 저장 중), and the Privacy and Terms pages. Plucking is never 저장. 저장소 in the self-host copy means the code repository.
 

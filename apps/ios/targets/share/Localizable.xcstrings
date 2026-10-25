@@ -183,7 +183,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "읽기"
+            "value": "글"
           }
         }
       }
@@ -234,7 +234,7 @@
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "보기"
+            "value": "영상"
           }
         }
       }
