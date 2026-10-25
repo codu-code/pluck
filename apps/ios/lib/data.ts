@@ -53,19 +53,20 @@ export const useItem = (id: string) =>
     refetchInterval: (q) => (q.state.data?.item.extraction.state === "pending" ? 3000 : false),
   });
 
-// An image item's picture. Covers are private, so the request carries the signed-in header.
-export function useCover(item: Item): { uri: string; headers: Record<string, string> } | null {
+// An item's cover: an image's picture, a page's preview image. Covers are private, so the request carries the signed-in header.
+// `path` serves a cover from somewhere else, such as a List shared with you.
+export function useCover(item: Pick<Item, "id" | "hasCover">, path?: string): { uri: string; headers: Record<string, string> } | null {
   const [src, setSrc] = useState<{ uri: string; headers: Record<string, string> } | null>(null);
   useEffect(() => {
-    if (item.kind !== "image" || !item.hasCover) return;
+    if (!item.hasCover) return;
     let live = true;
     void (async () => {
       const s = await getSession();
       const auth = await authHeader();
-      if (live && s && auth) setSrc({ uri: `${s.server}/api/v1/items/${item.id}/cover`, headers: { authorization: auth } });
+      if (live && s && auth) setSrc({ uri: `${s.server}${path ?? `/api/v1/items/${item.id}/cover`}`, headers: { authorization: auth } });
     })();
     return () => void (live = false);
-  }, [item.id, item.kind, item.hasCover]);
+  }, [item.id, item.hasCover, path]);
   return src;
 }
 export const useLists = () => useQuery({ queryKey: keys.lists, queryFn: async () => (await api<{ lists: List[] }>("/api/v1/lists")).lists });

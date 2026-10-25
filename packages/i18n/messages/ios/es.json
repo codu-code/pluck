@@ -142,7 +142,7 @@
     "sharedWithYou": "Compartidas contigo",
     "sharedA11y": "{name}, compartida por {owner}, {count, plural, one {# elemento} other {# elementos}}",
     "from": "De {owner} · solo lectura",
-    "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} marcados",
+    "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} hechos",
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Aún no hay listas.",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Pública · Compartir",
     "privateShare": "Privada · Compartir",
-    "ticked": "{ticked} de {count} marcados",
     "noteByAi": "{note} · por IA",
-    "tick": "Marcar {title}",
     "addA11y": "Añadir a esta lista",
     "empty": {
       "title": "Esta lista aún está vacía.",
       "body": "Toca Añadir para poner aquí lo que recogiste, o pide a tu IA que la llene."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Leído",
+        "progress": "{ticked} de {count} leídos",
+        "a11y": "Marcar {title} como leído",
+        "bulk": "Marcar como leído"
+      },
+      "watched": {
+        "label": "Visto",
+        "progress": "{ticked} de {count} vistos",
+        "a11y": "Marcar {title} como visto",
+        "bulk": "Marcar como visto"
+      },
+      "seen": {
+        "label": "Visto",
+        "progress": "{ticked} de {count} vistos",
+        "a11y": "Marcar {title} como visto",
+        "bulk": "Marcar como visto"
+      },
+      "done": {
+        "label": "Hecho",
+        "progress": "{ticked} de {count} hechos",
+        "a11y": "Marcar {title} como hecho",
+        "bulk": "Marcar como hecho"
+      }
+    },
+    "unmark": "Desmarcar",
+    "toTop": "Al principio",
+    "takeOut": "Quitar",
+    "takenOut": "{count, plural, one {# elemento quitado. Sigue} other {# elementos quitados. Siguen}} en tu biblioteca."
   },
   "shared": {
     "copied": "Recogido. Tu propia copia está en Listas.",

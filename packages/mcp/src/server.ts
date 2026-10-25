@@ -252,7 +252,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "update_list",
       {
-        description: "Rename a list, add, remove or reorder its items, set an item's note or tick, or make it private; only the person can make a list public, from the list in Pluck.",
+        description: "Rename a list, add, remove or reorder its items, set an item's note or tick (ticking a todo or thing also sets it done), or make it private; only the person can make a list public, from the list in Pluck.",
         inputSchema: z
           .object({
             id: ObjectIdString,

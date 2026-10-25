@@ -1,6 +1,6 @@
 import { LOCALES } from "@pluck/i18n";
 import { z } from "zod";
-import { Visibility } from "./enums.ts";
+import { Kind, Visibility } from "./enums.ts";
 import { Item, ObjectIdString } from "./items.ts";
 
 export const List = z.object({
@@ -57,6 +57,7 @@ export const AddToListBody = z
 export const UpdateEntryBody = z
   .object({ note: z.string().max(2000).nullable().optional(), ticked: z.boolean().optional(), position: z.number().optional() })
   .strict();
+export const MarkEntriesBody = z.object({ itemIds: z.array(ObjectIdString).min(1).max(1000), ticked: z.boolean() }).strict();
 export const ReorderBody = z.object({ itemIds: z.array(ObjectIdString).max(1000) });
 
 export const ExpiryDays = z.union([z.literal(14), z.literal(30), z.literal(60), z.literal(90), z.null()]);
@@ -89,10 +90,12 @@ export const ArchiveStaleBody = z.object({ olderThanDays: z.number().int().min(1
 // What a public page may show. Pinned by packages/db/src/public.test.ts: no text, tags, ticks or status, ever.
 export const PublicEntry = z.object({
   id: ObjectIdString,
+  kind: Kind,
   title: z.string(),
   siteName: z.string().nullable(),
   excerpt: z.string().nullable(),
   url: z.string().nullable(),
+  wordCount: z.number().int().nullable(), // for the row's read time
   hasCover: z.boolean(),
   note: z.string().nullable(),
 });

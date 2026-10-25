@@ -142,7 +142,7 @@
     "sharedWithYou": "Partagées avec vous",
     "sharedA11y": "{name}, partagée par {owner}, {count, plural, one {# élément} other {# éléments}}",
     "from": "De {owner} · consultation seule",
-    "a11y": "{name}, {visibility, select, public {Publique} other {Privée}}, {ticked} sur {count} cochés",
+    "a11y": "{name}, {visibility, select, public {Publique} other {Privée}}, {ticked} sur {count} terminés",
     "tickedOf": "{ticked} sur {count}",
     "empty": {
       "title": "Pas encore de liste.",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Publique · Partager",
     "privateShare": "Privée · Partager",
-    "ticked": "{ticked} sur {count} cochés",
     "noteByAi": "{note} · par l’IA",
-    "tick": "Cocher {title}",
     "addA11y": "Ajouter à cette liste",
     "empty": {
       "title": "Rien dans cette liste pour l’instant.",
       "body": "Touchez Ajouter pour y mettre vos cueillettes, ou demandez à votre IA de la remplir."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Lu",
+        "progress": "{ticked} sur {count} lus",
+        "a11y": "Marquer {title} comme lu",
+        "bulk": "Marquer comme lu"
+      },
+      "watched": {
+        "label": "Vu",
+        "progress": "{ticked} sur {count} vus",
+        "a11y": "Marquer {title} comme vu",
+        "bulk": "Marquer comme vu"
+      },
+      "seen": {
+        "label": "Vu",
+        "progress": "{ticked} sur {count} vus",
+        "a11y": "Marquer {title} comme vu",
+        "bulk": "Marquer comme vu"
+      },
+      "done": {
+        "label": "Terminé",
+        "progress": "{ticked} sur {count} terminés",
+        "a11y": "Marquer {title} comme terminé",
+        "bulk": "Marquer comme terminé"
+      }
+    },
+    "unmark": "Décocher",
+    "toTop": "En haut",
+    "takeOut": "Retirer",
+    "takenOut": "{count, plural, one {# élément retiré} other {# éléments retirés}}. Toujours dans votre bibliothèque."
   },
   "shared": {
     "copied": "Cueillie. Votre propre copie est dans Listes.",

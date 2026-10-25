@@ -1,16 +1,18 @@
 "use client";
 
 import { LINK_KINDS, type List, type SearchResults, type Tag } from "@pluck/shared-schemas";
-import { KindGlyph } from "@pluck/ui";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ItemRow } from "@/components/ItemRow";
 import { useToast } from "@/components/Toast";
 import { useFormat } from "@/components/useFormat";
 import { isTyping } from "@/lib/keys";
 import styles from "./search.module.css";
 import { useNow } from "@/lib/use-now";
+
+// The words before a hit, cut short so the hit itself fits on the row's one line.
+const lead = (pre: string) => (pre.length > 24 ? `…${pre.slice(-24).trimStart()}` : pre);
 
 type Filters = { kind: string; tag: string; list: string; status: string; date: string };
 const NONE: Filters = { kind: "any", tag: "any", list: "any", status: "any", date: "any" };
@@ -140,27 +142,24 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
         {data && data.results.length > 0 && (
           <div className={styles.rows} role="list" aria-label={t("results")}>
             {data.results.map((r, i) => (
-              <div key={r.item.id} role="listitem" className={styles.row} data-active={i === cursor || undefined} onMouseMove={() => setCursor(i)}>
-                <KindGlyph kind={r.item.kind} label={app(`kind.${r.item.kind}`)} />
-                <div className={styles.body}>
-                  <div className={styles.titleLine}>
-                    <Link href={`/items/${r.item.id}`} className={styles.title}>{r.item.title}</Link>
-                    <span className={styles.meta}>
-                      {r.item.siteName ?? (r.item.url ? new URL(r.item.url).hostname : app("kind.note"))} · {app(`status.${r.item.status}`)}
-                    </span>
-                  </div>
-                  {r.snippet && (
-                    <div className={styles.snippet}>
-                      {t.rich(r.snippet.source === "note" ? "noteSnippet" : "snippet", {
-                        pre: r.snippet.pre,
+              <div key={r.item.id} role="listitem">
+                <ItemRow
+                  item={r.item}
+                  now={now}
+                  active={i === cursor}
+                  onPoint={() => setCursor(i)}
+                  meta={`${f.site(r.item)} · ${app(`status.${r.item.status}`)}`}
+                  below={
+                    r.snippet
+                      ? t.rich(r.snippet.source === "note" ? "noteSnippet" : "snippet", {
+                        pre: lead(r.snippet.pre),
                         post: r.snippet.post,
                         hit: r.snippet.hit,
                         mark: (c) => <mark className={styles.mark}>{c}</mark>,
-                      })}
-                    </div>
-                  )}
-                </div>
-                <span className={styles.when}>{now && f.when(r.item.createdAt, now)}</span>
+                      })
+                      : undefined
+                  }
+                />
               </div>
             ))}
           </div>

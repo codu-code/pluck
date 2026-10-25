@@ -305,7 +305,6 @@
     "meta": "Met je gedeeld door {by} · {count, plural, one {# item} other {# items}} · bijgewerkt {ago}",
     "pluck": "Pluk deze lijst",
     "seeOnly": "Jij kunt hem zien; alleen de eigenaar verandert hem. Pluk hem voor een eigen kopie.",
-    "note": "Notitie",
     "noAccess": {
       "title1": "Niet met je",
       "title2": "gedeeld",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Naam en doel",
       "visibility": "Zichtbaarheid",
-      "ticked": "Afgevinkt",
+      "ticked": "Klaar",
       "lastAdded": "Laatst toegevoegd"
     },
     "byAi": "door AI",
@@ -679,17 +678,16 @@
     "privateOnly": "Alleen jij kunt deze lijst zien.",
     "copyAsk": "Kopieer voor je AI: “Vraag over deze lijst”",
     "export": "Deze lijst exporteren",
-    "ticked": "{ticked} van {count} afgevinkt",
     "empty": "Hier staat nog niets. Druk op a bij een item in de Inbox om het toe te voegen.",
     "rowsLabel": "{name}, op volgorde",
     "drag": "Sleep om {title} te verplaatsen. Of Shift+J en Shift+K.",
-    "tick": "{title} afvinken",
     "noteLabel": "Notitie bij {title} in deze lijst",
     "byAi": "door AI",
     "note": "Notitie",
     "takeOut": "Eruit halen",
     "keys": {
-      "tick": "afvinken",
+      "mark": "markeren",
+      "select": "selecteren",
       "note": "notitie",
       "reorder": "herschikken",
       "add": "Voeg toe vanuit de inbox met <kbd>a</kbd>, of pluk direct in de lijst vanuit de extensie"
@@ -698,7 +696,37 @@
       "confirm": "“{name}” verwijderen? De items blijven in je bibliotheek.",
       "yes": "Ja, verwijder de lijst",
       "action": "Deze lijst verwijderen"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Gelezen",
+        "progress": "{ticked} van {count} gelezen",
+        "a11y": "{title} markeren als gelezen",
+        "bulk": "Markeren als gelezen"
+      },
+      "watched": {
+        "label": "Bekeken",
+        "progress": "{ticked} van {count} bekeken",
+        "a11y": "{title} markeren als bekeken",
+        "bulk": "Markeren als bekeken"
+      },
+      "seen": {
+        "label": "Gezien",
+        "progress": "{ticked} van {count} gezien",
+        "a11y": "{title} markeren als gezien",
+        "bulk": "Markeren als gezien"
+      },
+      "done": {
+        "label": "Klaar",
+        "progress": "{ticked} van {count} klaar",
+        "a11y": "{title} markeren als klaar",
+        "bulk": "Markeren als klaar"
+      }
+    },
+    "unmark": "Vinkje weghalen",
+    "toTop": "Naar boven verplaatsen",
+    "select": "Selecteren",
+    "takenOutMany": "{count, plural, one {# item} other {# items}} uit “{name}” gehaald. Nog steeds in je bibliotheek."
   },
   "people": {
     "added": "Gedeeld met {email}. Die krijgt een mail met een link.",

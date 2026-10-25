@@ -305,7 +305,6 @@
     "meta": "{by}さんが共有 · {count, plural, other {#件}} · 更新：{ago}",
     "pluck": "このリストをPluck",
     "seeOnly": "閲覧はできますが、変更できるのは共有した人だけです。Pluckすると、自分用のコピーができます。",
-    "note": "メモ",
     "noAccess": {
       "title1": "共有されて",
       "title2": "いません",
@@ -647,7 +646,7 @@
     "table": {
       "name": "名前と目的",
       "visibility": "公開設定",
-      "ticked": "チェック",
+      "ticked": "完了",
       "lastAdded": "最終追加"
     },
     "byAi": "AIによる",
@@ -679,17 +678,16 @@
     "privateOnly": "このリストは自分だけが見られます。",
     "copyAsk": "お使いのAI用にコピー：「このリストについて聞く」",
     "export": "このリストをエクスポート",
-    "ticked": "{count}件中{ticked}件チェック済み",
     "empty": "まだ何もありません。インボックスのアイテムでaを押すと追加できます。",
     "rowsLabel": "{name}（順番どおり）",
     "drag": "ドラッグして{title}を並べ替え。Shift+JとShift+Kでも並べ替えられます。",
-    "tick": "{title}をチェック",
     "noteLabel": "このリストでの{title}のメモ",
     "byAi": "AIによる",
     "note": "メモ",
     "takeOut": "外す",
     "keys": {
-      "tick": "チェック",
+      "mark": "チェック",
+      "select": "選択",
       "note": "メモ",
       "reorder": "並べ替え",
       "add": "インボックスから<kbd>a</kbd>で追加するか、拡張機能から直接Pluckできます"
@@ -698,7 +696,37 @@
       "confirm": "「{name}」を削除しますか？中のアイテムはライブラリに残ります。",
       "yes": "はい、リストを削除する",
       "action": "このリストを削除"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "読了",
+        "progress": "{count}件中{ticked}件読了",
+        "a11y": "{title}を読了にする",
+        "bulk": "読了にする"
+      },
+      "watched": {
+        "label": "視聴済み",
+        "progress": "{count}件中{ticked}件視聴済み",
+        "a11y": "{title}を視聴済みにする",
+        "bulk": "視聴済みにする"
+      },
+      "seen": {
+        "label": "閲覧済み",
+        "progress": "{count}件中{ticked}件閲覧済み",
+        "a11y": "{title}を閲覧済みにする",
+        "bulk": "閲覧済みにする"
+      },
+      "done": {
+        "label": "完了",
+        "progress": "{count}件中{ticked}件完了",
+        "a11y": "{title}を完了にする",
+        "bulk": "完了にする"
+      }
+    },
+    "unmark": "チェックを外す",
+    "toTop": "先頭へ移動",
+    "select": "選択",
+    "takenOutMany": "{count, plural, other {#件}}を「{name}」から外しました。ライブラリには残っています。"
   },
   "people": {
     "added": "{email}と共有しました。リンク付きのメールが届きます。",

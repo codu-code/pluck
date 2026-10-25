@@ -62,6 +62,15 @@ test("bulk select to the Archive, filters, and Restore", async ({ page }) => {
   await page.goto("/archive");
   await expect(rows(page)).toHaveCount(2);
   await expect(rows(page).first()).toContainText("archived by you");
+  // By month, newest first; a month folds, remembered after a reload.
+  const month = page.getByRole("button", { name: new Date().toLocaleString("en-US", { month: "long", year: "numeric" }) + " 2" });
+  await month.click();
+  await expect(month).toHaveAttribute("aria-expanded", "false");
+  await expect(rows(page)).toHaveCount(0);
+  await page.reload();
+  await expect(month).toHaveAttribute("aria-expanded", "false");
+  await month.click();
+  await expect(rows(page)).toHaveCount(2);
   await page.getByRole("button", { name: "Expired" }).click();
   await expect(page.getByText("Nothing here yet.")).toBeVisible();
   await page.getByRole("button", { name: "By you" }).click();

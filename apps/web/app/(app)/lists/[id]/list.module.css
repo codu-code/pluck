@@ -9,36 +9,33 @@
 .purpose { display: flex; flex-direction: column; gap: 4px; }
 .meta { color: var(--ink2); font-size: 13px; }
 .input { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
-.visibility { flex: 0 1 380px; display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
+.visibility { flex: 0 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding-top: 8px; }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .secondary { height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
 .count { margin-left: auto; color: var(--ink2); font-size: 13px; }
 .rows { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
-.row { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--line); }
-.row[data-active] { background: var(--selected); }
-.row[data-dragging] { opacity: 0.5; }
-.handle { width: 24px; height: 40px; flex: none; border: 0; background: transparent; padding: 0; color: var(--ink2); cursor: grab; }
-.n { width: 24px; flex: none; padding-top: 10px; color: var(--ink2); font-size: 13px; text-align: right; }
-.tick { width: 20px; height: 20px; margin: 10px 0 0; flex: none; accent-color: var(--ink); }
-.body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 8px; }
-.titleLine { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
-.itemTitle { font-weight: 600; text-decoration: none; }
-.itemTitle[data-ticked] { text-decoration: line-through; color: var(--ink2); }
-.note { display: flex; gap: 8px; align-items: baseline; color: light-dark(#394034, #C5CCBD); }
-.ai { color: var(--clay); }
-.dot { width: 6px; height: 6px; flex: none; border-radius: 3px; background: var(--clay-dot); transform: translateY(-1px); }
-.byAi { font-size: 12px; }
+.rows[hidden] { display: none; }
+.underHeader { border-top: 0; }
+.item[data-dragging] { opacity: 0.5; }
 .noteForm { display: flex; }
-.noteForm .input { flex: 1; }
-.rowActions { display: flex; gap: 4px; flex: none; padding-top: 4px; }
+.noteInput { flex: 1; height: 24px; padding: 0 8px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }
 .small { height: 32px; padding: 0 10px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+/* Bulk select: the Inbox's bar. */
+.bulk {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 52px; padding: 8px 8px 8px 16px; border-radius: 8px;
+  background: var(--ink); color: var(--ground);
+}
+.bulkCount { font-weight: 600; margin-right: auto; }
+.bulkButton, .bulkClear { height: 36px; padding: 0 12px; border-radius: 6px; border: 0; font: inherit; font-size: 13px; cursor: pointer; color: var(--ground); }
+.bulkButton { background: light-dark(#30362D, #D5DBCF); }
+.bulkClear { background: transparent; }
 .kbd { font: 11px var(--font-ui); color: var(--ink2); }
 .keys { display: flex; flex-wrap: wrap; gap: 16px; color: var(--ink2); font-size: 12px; }
 .keys kbd { font: inherit; }
 .danger { padding-top: 16px; border-top: 1px solid var(--line); }
 .deleteLink { padding: 0; border: 0; background: none; color: var(--danger); font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; }
 .inline { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--ink2); }
-@media (max-width: 600px) { .page { padding: 16px; } .rowActions, .handle, .keys { display: none; } .count { margin-left: 0; } }
+@media (max-width: 600px) { .page { padding: 16px; } .keys { display: none; } .count { margin-left: 0; } }
 .switch { display: flex; padding: 3px; border-radius: 10px; background: var(--chip); }
 .switchOption { flex: 1; height: 36px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; cursor: pointer; transition: background-color 160ms ease-out, box-shadow 160ms ease-out; }
 .switchOption[aria-checked="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 2px rgba(21, 26, 19, 0.08); }

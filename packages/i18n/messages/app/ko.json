@@ -305,7 +305,6 @@
     "meta": "{by}님이 공유함 · {count, plural, other {항목 #개}} · {ago} 업데이트",
     "pluck": "이 리스트 담기",
     "seeOnly": "보기만 할 수 있고, 바꾸는 건 공유한 사람만 할 수 있어요. 담으면 내 사본이 생겨요.",
-    "note": "메모",
     "noAccess": {
       "title1": "나에게 공유된",
       "title2": "리스트가 아니에요",
@@ -647,7 +646,7 @@
     "table": {
       "name": "이름과 목적",
       "visibility": "공개 범위",
-      "ticked": "체크",
+      "ticked": "완료",
       "lastAdded": "마지막 추가"
     },
     "byAi": "AI가 만듦",
@@ -679,17 +678,16 @@
     "privateOnly": "이 리스트는 나만 볼 수 있어요.",
     "copyAsk": "내 AI용으로 복사: “이 리스트에 관해 묻기”",
     "export": "이 리스트 내보내기",
-    "ticked": "{count}개 중 {ticked}개 체크",
     "empty": "아직 아무것도 없어요. 수신함 항목에서 a를 눌러 추가하세요.",
     "rowsLabel": "{name}, 순서대로",
     "drag": "끌어서 {title} 순서 바꾸기. 또는 Shift+J, Shift+K.",
-    "tick": "{title} 체크",
     "noteLabel": "이 리스트에서 {title}에 단 메모",
     "byAi": "AI가 씀",
     "note": "메모",
     "takeOut": "빼기",
     "keys": {
-      "tick": "체크",
+      "mark": "표시",
+      "select": "선택",
       "note": "메모",
       "reorder": "순서 바꾸기",
       "add": "수신함에서 <kbd>a</kbd>로 추가하거나, 확장 프로그램에서 바로 담으세요"
@@ -698,7 +696,37 @@
       "confirm": "“{name}” 리스트를 삭제할까요? 들어 있던 항목은 라이브러리에 그대로 있어요.",
       "yes": "네, 리스트를 삭제할게요",
       "action": "이 리스트 삭제"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "읽음",
+        "progress": "{count}개 중 {ticked}개 읽음",
+        "a11y": "{title} 읽음으로 표시",
+        "bulk": "읽음으로 표시"
+      },
+      "watched": {
+        "label": "시청함",
+        "progress": "{count}개 중 {ticked}개 시청함",
+        "a11y": "{title} 시청함으로 표시",
+        "bulk": "시청함으로 표시"
+      },
+      "seen": {
+        "label": "봄",
+        "progress": "{count}개 중 {ticked}개 봄",
+        "a11y": "{title} 봄으로 표시",
+        "bulk": "봄으로 표시"
+      },
+      "done": {
+        "label": "완료",
+        "progress": "{count}개 중 {ticked}개 완료",
+        "a11y": "{title} 완료로 표시",
+        "bulk": "완료로 표시"
+      }
+    },
+    "unmark": "표시 해제",
+    "toTop": "맨 위로 이동",
+    "select": "선택",
+    "takenOutMany": "“{name}”에서 {count, plural, other {항목 #개}}를 뺐어요. 라이브러리에는 그대로 있어요."
   },
   "people": {
     "added": "{email}에게 공유했어요. 링크가 담긴 이메일이 가요.",

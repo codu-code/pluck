@@ -142,7 +142,7 @@
     "sharedWithYou": "与你共享",
     "sharedA11y": "{name}，{owner} 共享，{count, plural, other {# 条}}",
     "from": "来自 {owner} · 仅可查看",
-    "a11y": "{name}，{visibility, select, public {公开} other {私密}}，已勾选 {ticked}/{count}",
+    "a11y": "{name}，{visibility, select, public {公开} other {私密}}，已完成 {ticked}/{count}",
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "还没有清单。",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "公开 · 分享",
     "privateShare": "私密 · 分享",
-    "ticked": "已勾选 {ticked}/{count}",
     "noteByAi": "{note} · 由 AI 添加",
-    "tick": "勾选“{title}”",
     "addA11y": "添加到这个清单",
     "empty": {
       "title": "这个清单上还没有东西。",
       "body": "轻点“添加”放入你摘下的内容，或者让你的 AI 来填满它。"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "已读",
+        "progress": "已读 {ticked}/{count}",
+        "a11y": "将“{title}”标为已读",
+        "bulk": "标为已读"
+      },
+      "watched": {
+        "label": "已观看",
+        "progress": "已观看 {ticked}/{count}",
+        "a11y": "将“{title}”标为已观看",
+        "bulk": "标为已观看"
+      },
+      "seen": {
+        "label": "已看过",
+        "progress": "已看过 {ticked}/{count}",
+        "a11y": "将“{title}”标为已看过",
+        "bulk": "标为已看过"
+      },
+      "done": {
+        "label": "已完成",
+        "progress": "已完成 {ticked}/{count}",
+        "a11y": "将“{title}”标为已完成",
+        "bulk": "标为已完成"
+      }
+    },
+    "unmark": "取消标记",
+    "toTop": "移到顶部",
+    "takeOut": "移出",
+    "takenOut": "已移出 {count, plural, other {# 条}}。仍在你的资料库里。"
   },
   "shared": {
     "copied": "已摘下。你自己的副本在“清单”里。",

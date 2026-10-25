@@ -305,7 +305,6 @@
     "meta": "Compartilhada com você por {by} · {count, plural, one {# item} other {# itens}} · atualizada {ago}",
     "pluck": "Colher esta lista",
     "seeOnly": "Você pode ver; só quem compartilhou pode mudar. Colha para ter uma cópia sua.",
-    "note": "Nota",
     "noAccess": {
       "title1": "Não foi compartilhada",
       "title2": "com você",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Nome e objetivo",
       "visibility": "Visibilidade",
-      "ticked": "Marcados",
+      "ticked": "Concluído",
       "lastAdded": "Última adição"
     },
     "byAi": "pela IA",
@@ -679,17 +678,16 @@
     "privateOnly": "Só você pode ver esta lista.",
     "copyAsk": "Copiar para a sua IA: “Perguntar sobre esta lista”",
     "export": "Exportar esta lista",
-    "ticked": "{ticked} de {count} marcados",
     "empty": "Nada aqui ainda. Aperte a em qualquer item da Entrada para adicioná-lo.",
     "rowsLabel": "{name}, em ordem",
     "drag": "Arraste para reordenar {title}. Ou Shift+J e Shift+K.",
-    "tick": "Marcar {title}",
     "noteLabel": "Nota sobre {title} nesta lista",
     "byAi": "pela IA",
     "note": "Nota",
     "takeOut": "Tirar da lista",
     "keys": {
-      "tick": "marcar",
+      "mark": "marcar",
+      "select": "selecionar",
       "note": "nota",
       "reorder": "reordenar",
       "add": "Adicione da Entrada com <kbd>a</kbd>, ou colha direto pela extensão"
@@ -698,7 +696,37 @@
       "confirm": "Apagar “{name}”? Os itens continuam na sua biblioteca.",
       "yes": "Sim, apagar a lista",
       "action": "Apagar esta lista"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Lido",
+        "progress": "{ticked} de {count} lidos",
+        "a11y": "Marcar {title} como lido",
+        "bulk": "Marcar como lido"
+      },
+      "watched": {
+        "label": "Assistido",
+        "progress": "{ticked} de {count} assistidos",
+        "a11y": "Marcar {title} como assistido",
+        "bulk": "Marcar como assistido"
+      },
+      "seen": {
+        "label": "Visto",
+        "progress": "{ticked} de {count} vistos",
+        "a11y": "Marcar {title} como visto",
+        "bulk": "Marcar como visto"
+      },
+      "done": {
+        "label": "Concluído",
+        "progress": "{ticked} de {count} concluídos",
+        "a11y": "Marcar {title} como concluído",
+        "bulk": "Marcar como concluído"
+      }
+    },
+    "unmark": "Desmarcar",
+    "toTop": "Mover para o topo",
+    "select": "Selecionar",
+    "takenOutMany": "{count, plural, one {# Item tirado} other {# Itens tirados}} de “{name}”. {count, plural, one {Continua} other {Continuam}} na sua biblioteca."
   },
   "people": {
     "added": "Compartilhada com {email}. A pessoa recebe um e-mail com um link.",

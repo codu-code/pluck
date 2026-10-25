@@ -142,7 +142,7 @@
     "sharedWithYou": "Met je gedeeld",
     "sharedA11y": "{name}, gedeeld door {owner}, {count, plural, one {# item} other {# items}}",
     "from": "Van {owner} · alleen bekijken",
-    "a11y": "{name}, {visibility, select, public {Openbaar} other {Privé}}, {ticked} van {count} afgevinkt",
+    "a11y": "{name}, {visibility, select, public {Openbaar} other {Privé}}, {ticked} van {count} klaar",
     "tickedOf": "{ticked} van {count}",
     "empty": {
       "title": "Nog geen lijsten.",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Openbaar · Deel",
     "privateShare": "Privé · Deel",
-    "ticked": "{ticked} van {count} afgevinkt",
     "noteByAi": "{note} · door AI",
-    "tick": "Vink {title} af",
     "addA11y": "Voeg toe aan deze lijst",
     "empty": {
       "title": "Nog niets op deze lijst.",
       "body": "Tik op Voeg toe om er iets op te zetten, of vraag je AI hem te vullen."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Gelezen",
+        "progress": "{ticked} van {count} gelezen",
+        "a11y": "{title} markeren als gelezen",
+        "bulk": "Markeren als gelezen"
+      },
+      "watched": {
+        "label": "Bekeken",
+        "progress": "{ticked} van {count} bekeken",
+        "a11y": "{title} markeren als bekeken",
+        "bulk": "Markeren als bekeken"
+      },
+      "seen": {
+        "label": "Gezien",
+        "progress": "{ticked} van {count} gezien",
+        "a11y": "{title} markeren als gezien",
+        "bulk": "Markeren als gezien"
+      },
+      "done": {
+        "label": "Klaar",
+        "progress": "{ticked} van {count} klaar",
+        "a11y": "{title} markeren als klaar",
+        "bulk": "Markeren als klaar"
+      }
+    },
+    "unmark": "Vinkje weghalen",
+    "toTop": "Naar boven",
+    "takeOut": "Eruit halen",
+    "takenOut": "{count, plural, one {# item} other {# items}} eruit gehaald. Nog steeds in je bibliotheek."
   },
   "shared": {
     "copied": "Geplukt. Je eigen kopie staat in Lijsten.",

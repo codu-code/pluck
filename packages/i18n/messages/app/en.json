@@ -305,7 +305,6 @@
     "meta": "Shared with you by {by} · {count, plural, one {# item} other {# items}} · updated {ago}",
     "pluck": "Pluck this list",
     "seeOnly": "You can see it; only they change it. Pluck it for a copy of your own.",
-    "note": "Note",
     "noAccess": {
       "title1": "Not shared",
       "title2": "with you",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Name and purpose",
       "visibility": "Visibility",
-      "ticked": "Ticked",
+      "ticked": "Done",
       "lastAdded": "Last added"
     },
     "byAi": "by AI",
@@ -679,17 +678,16 @@
     "privateOnly": "Only you can see this list.",
     "copyAsk": "Copy for your AI: “Ask about this list”",
     "export": "Export this list",
-    "ticked": "{ticked} of {count} ticked",
     "empty": "Nothing here yet. Press a on any item in the Inbox to add it.",
     "rowsLabel": "{name}, in order",
     "drag": "Drag to reorder {title}. Or Shift+J and Shift+K.",
-    "tick": "Tick {title}",
     "noteLabel": "Note on {title} in this list",
     "byAi": "by AI",
     "note": "Note",
     "takeOut": "Take out",
     "keys": {
-      "tick": "tick",
+      "mark": "mark",
+      "select": "select",
       "note": "note",
       "reorder": "reorder",
       "add": "Add from the inbox with <kbd>a</kbd>, or pluck straight in from the extension"
@@ -698,7 +696,37 @@
       "confirm": "Delete “{name}”? Its items stay in your library.",
       "yes": "Yes, delete the list",
       "action": "Delete this list"
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Read",
+        "progress": "{ticked} of {count} read",
+        "a11y": "Mark {title} as read",
+        "bulk": "Mark read"
+      },
+      "watched": {
+        "label": "Watched",
+        "progress": "{ticked} of {count} watched",
+        "a11y": "Mark {title} as watched",
+        "bulk": "Mark watched"
+      },
+      "seen": {
+        "label": "Seen",
+        "progress": "{ticked} of {count} seen",
+        "a11y": "Mark {title} as seen",
+        "bulk": "Mark seen"
+      },
+      "done": {
+        "label": "Done",
+        "progress": "{ticked} of {count} done",
+        "a11y": "Mark {title} as done",
+        "bulk": "Mark done"
+      }
+    },
+    "unmark": "Unmark",
+    "toTop": "Move to top",
+    "select": "Select",
+    "takenOutMany": "{count, plural, one {# Item} other {# Items}} taken out of “{name}”. Still in your library."
   },
   "people": {
     "added": "Shared with {email}. They get an email with a link.",

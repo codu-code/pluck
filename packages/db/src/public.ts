@@ -4,10 +4,10 @@ import { ObjectId } from "mongodb";
 import { items, listRows, lists, listShares, oid, reports, users, type ListDoc, type UserDoc } from "./collections.ts";
 
 // The only code that serves list data to anyone but its owner: public pages, and Lists shared with people (See only).
-// It reads lists, listItems and a narrow slice of items, and never touches contents, tags, ticks or status.
+// It reads lists, listItems and a narrow slice of items, and never touches contents, tags, ticks (marks) or status.
 // Its field lists are pinned by public.test.ts.
 
-export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1 } as const;
+export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1 } as const;
 const WEEK_MS = 7 * 86_400_000;
 
 async function findPublic(handle: string, slug: string) {
@@ -32,12 +32,16 @@ async function seeOnly(list: ListDoc, owner: Pick<UserDoc, "_id" | "name" | "han
   const entries = rows.flatMap((r) => {
     const d = byId.get(r.itemId.toHexString());
     return d
-      ? [{ id: d._id.toHexString(), title: d.title, siteName: d.siteName ?? null, excerpt: d.excerpt ?? null, url: d.url ?? null, hasCover: Boolean(d.coverKey), note: r.note ?? null }]
+      ? [{
+        id: d._id.toHexString(), kind: d.kind, title: d.title, siteName: d.siteName ?? null, excerpt: d.excerpt ?? null, url: d.url ?? null,
+        wordCount: d.wordCount ?? null, hasCover: Boolean(d.coverKey), note: r.note ?? null,
+      }]
       : [];
   });
   return {
     list: {
-      id: list._id.toHexString(), name: list.name, purpose: list.purpose, updatedAt: list.lastActivityAt.toISOString(), itemCount: entries.length,
+      // updatedAt, not lastActivityAt: marking is the owner's alone and must not show here.
+      id: list._id.toHexString(), name: list.name, purpose: list.purpose, updatedAt: list.updatedAt.toISOString(), itemCount: entries.length,
       // New lists and new accounts stay out of search engines for a week (link farms).
       noindex: now.getTime() - list.createdAt.getTime() < WEEK_MS || now.getTime() - owner.createdAt.getTime() < WEEK_MS,
     },

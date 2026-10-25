@@ -142,7 +142,7 @@
     "sharedWithYou": "Mit dir geteilt",
     "sharedA11y": "{name}, geteilt von {owner}, {count, plural, one {# Eintrag} other {# Einträge}}",
     "from": "Von {owner} · nur ansehen",
-    "a11y": "{name}, {visibility, select, public {Öffentlich} other {Privat}}, {ticked} von {count} abgehakt",
+    "a11y": "{name}, {visibility, select, public {Öffentlich} other {Privat}}, {ticked} von {count} erledigt",
     "tickedOf": "{ticked} von {count}",
     "empty": {
       "title": "Noch keine Listen.",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Öffentlich · Teilen",
     "privateShare": "Privat · Teilen",
-    "ticked": "{ticked} von {count} abgehakt",
     "noteByAi": "{note} · von KI",
-    "tick": "{title} abhaken",
     "addA11y": "Zu dieser Liste hinzufügen",
     "empty": {
       "title": "Noch nichts auf dieser Liste.",
       "body": "Tippe auf Hinzufügen, um Gepflücktes draufzusetzen, oder bitte deine KI, sie zu füllen."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Gelesen",
+        "progress": "{ticked} von {count} gelesen",
+        "a11y": "{title} als gelesen markieren",
+        "bulk": "Als gelesen markieren"
+      },
+      "watched": {
+        "label": "Angesehen",
+        "progress": "{ticked} von {count} angesehen",
+        "a11y": "{title} als angesehen markieren",
+        "bulk": "Als angesehen markieren"
+      },
+      "seen": {
+        "label": "Gesehen",
+        "progress": "{ticked} von {count} gesehen",
+        "a11y": "{title} als gesehen markieren",
+        "bulk": "Als gesehen markieren"
+      },
+      "done": {
+        "label": "Erledigt",
+        "progress": "{ticked} von {count} erledigt",
+        "a11y": "{title} als erledigt markieren",
+        "bulk": "Als erledigt markieren"
+      }
+    },
+    "unmark": "Häkchen entfernen",
+    "toTop": "Nach oben",
+    "takeOut": "Herausnehmen",
+    "takenOut": "{count, plural, one {# Eintrag} other {# Einträge}} herausgenommen. Weiterhin in deiner Bibliothek."
   },
   "shared": {
     "copied": "Gepflückt. Deine eigene Kopie liegt in Listen.",

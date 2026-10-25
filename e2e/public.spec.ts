@@ -32,6 +32,7 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   const html = await visitor.content();
   expect(html).not.toContain("Waiting has a shape"); // a sentence from deep in the kept page
   expect(html).not.toMatch(/ticked/i);
+  await expect(visitor.getByRole("checkbox")).toHaveCount(0); // the owner's mark never shows
   await expect(visitor.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/); // a new list
   await owner.reload();
   await expect(owner.getByText(/1 view · only you see this/)).toBeVisible();

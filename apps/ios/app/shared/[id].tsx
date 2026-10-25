@@ -1,4 +1,4 @@
-import type { List, PublicList } from "@pluck/shared-schemas";
+import { isTextKind, type Item, type List, type PublicList } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
@@ -7,11 +7,23 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
+import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
 import { toast } from "@/components/Toast";
 import { keys, useMe } from "@/lib/data";
 import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
+
+type Entry = PublicList["entries"][number];
+const EPOCH = new Date(0).toISOString(); // never shown (hideWhen), but the row formats it
+
+// The Inbox row reads an Item; a shared entry has only its public fields, so the rest are the plain defaults.
+const asItem = (e: Entry): Item => ({
+  id: e.id, kind: e.kind, url: e.url, canonicalUrl: null, title: e.title, titleIsDerived: false, siteName: e.siteName, author: null, excerpt: e.excerpt,
+  hasCover: e.hasCover, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "copied", wordCount: e.wordCount,
+  lang: null, extraction: { state: "done", attempts: 0, lastError: null }, readingProgress: 0, inList: true, createdAt: EPOCH, updatedAt: EPOCH, lastTouchedAt: EPOCH,
+  statusChangedAt: EPOCH, deletedAt: null,
+});
 
 // A List someone shared with you, See only: what its public page shows, in their order with their notes.
 export default function SharedList() {
@@ -77,15 +89,16 @@ export default function SharedList() {
           ? <Empty title={tr("shared.notShared.title")} body={me.data?.email ? tr("shared.notShared.body", { email: me.data.email }) : tr("shared.notShared.bodyNoEmail")} />
           : <Empty title={tr("shared.empty")} />}
         renderItem={({ item: e, index }) => (
-          <Pressable disabled={!e.url} onPress={() => e.url && void WebBrowser.openBrowserAsync(e.url)} accessibilityRole={e.url ? "link" : "text"}
-            style={({ pressed }) => [styles.entry, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
-            <Text style={[font.regular, styles.n, { color: t.ink2 }]}>{index + 1}</Text>
-            <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
-              <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{e.title}</Text>
-              {e.siteName ? <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{e.siteName}</Text> : null}
-              {e.note ? <Text style={[font.regular, { color: t.ink, fontSize: 14, lineHeight: 19 }]}>{e.note}</Text> : null}
-            </View>
-          </Pressable>
+          // The same row as your own Lists, without the marks: those are the owner's alone.
+          <ItemRow
+            item={asItem(e)}
+            n={index + 1}
+            below={e.note}
+            meta={isTextKind(e.kind) ? tr(`kinds.${e.kind}`) : undefined} // no "by you": it is not
+            hideWhen
+            coverPath={`/api/v1/shared/${id}/items/${e.id}/cover`}
+            onPress={() => e.url && void WebBrowser.openBrowserAsync(e.url)}
+          />
         )}
       />
       {list && (
@@ -104,7 +117,5 @@ const styles = StyleSheet.create({
   leave: { minHeight: 44, paddingHorizontal: 12, justifyContent: "center" },
   head: { paddingTop: 8, paddingHorizontal: 16, paddingBottom: 14, gap: 6, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   title: { fontSize: 28, lineHeight: 34, letterSpacing: -0.84 },
-  entry: { flexDirection: "row", gap: 12, paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
-  n: { width: 20, fontSize: 13, paddingTop: 1 },
   pluck: { position: "absolute", right: 16, minHeight: 48, paddingHorizontal: 18, borderRadius: 24, flexDirection: "row", alignItems: "center", gap: 8 },
 });

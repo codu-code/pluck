@@ -15,7 +15,7 @@ export {
 } from "./tags.ts";
 export { searchItems, snippetFor } from "./search.ts";
 export {
-  createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, reorderList, listsForItem,
+  createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
 export { getMe, markMcpCall, setName, setHandle, updateSettings, type HandleResult } from "./users.ts";

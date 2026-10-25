@@ -142,7 +142,7 @@
     "sharedWithYou": "Condivise con te",
     "sharedA11y": "{name}, condivisa da {owner}, {count, plural, one {# elemento} other {# elementi}}",
     "from": "Da {owner} · solo visualizzazione",
-    "a11y": "{name}, {visibility, select, public {Pubblica} other {Privata}}, {ticked} di {count} spuntati",
+    "a11y": "{name}, {visibility, select, public {Pubblica} other {Privata}}, {ticked} di {count} fatti",
     "tickedOf": "{ticked} di {count}",
     "empty": {
       "title": "Ancora nessuna lista.",
@@ -218,14 +218,42 @@
   "list": {
     "publicShare": "Pubblica · Condividi",
     "privateShare": "Privata · Condividi",
-    "ticked": "{ticked} di {count} spuntati",
     "noteByAi": "{note} · dall'IA",
-    "tick": "Spunta {title}",
     "addA11y": "Aggiungi a questa lista",
     "empty": {
       "title": "Ancora niente in questa lista.",
       "body": "Tocca Aggiungi per metterci quello che hai preso, o chiedi alla tua IA di riempirla."
-    }
+    },
+    "mark": {
+      "read": {
+        "label": "Letto",
+        "progress": "{ticked} di {count} letti",
+        "a11y": "Segna {title} come letto",
+        "bulk": "Segna come letto"
+      },
+      "watched": {
+        "label": "Guardato",
+        "progress": "{ticked} di {count} guardati",
+        "a11y": "Segna {title} come guardato",
+        "bulk": "Segna come guardato"
+      },
+      "seen": {
+        "label": "Visto",
+        "progress": "{ticked} di {count} visti",
+        "a11y": "Segna {title} come visto",
+        "bulk": "Segna come visto"
+      },
+      "done": {
+        "label": "Fatto",
+        "progress": "{ticked} di {count} fatti",
+        "a11y": "Segna {title} come fatto",
+        "bulk": "Segna come fatto"
+      }
+    },
+    "unmark": "Togli la spunta",
+    "toTop": "In cima",
+    "takeOut": "Togli",
+    "takenOut": "{count, plural, one {# elemento tolto. Resta} other {# elementi tolti. Restano}} nella tua libreria."
   },
   "shared": {
     "copied": "Preso. La tua copia è in Liste.",

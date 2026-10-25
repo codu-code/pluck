@@ -1,6 +1,6 @@
 import { isTextKind } from "./notes.ts";
 import type { Item } from "./items.ts";
-import type { Source, Status } from "./enums.ts";
+import type { Kind, Source, Status } from "./enums.ts";
 
 // How an item reads in a row, shared by the web app and the iOS app.
 
@@ -79,6 +79,17 @@ export function initials(siteName: string | null, url: string | null): string {
 }
 
 // Stable tile colour per site, one of six muted steps (see --tile-* in tokens.css).
+// The word on a List's mark, by Kind: links and notes are read, videos watched, images seen, todos and things done.
+export type MarkWord = "read" | "watched" | "seen" | "done";
+const MARK: Record<Kind, MarkWord> = { link: "read", pdf: "read", note: "read", video: "watched", image: "seen", todo: "done", thing: "done" };
+export const markWord = (kind: Kind): MarkWord => MARK[kind];
+
+// One word for a whole List ("3 of 8 read", Mark read): the Kinds' word when they share one, else "done".
+export function listMarkWord(kinds: Kind[]): MarkWord {
+  const words = new Set(kinds.map(markWord));
+  return words.size === 1 ? [...words][0]! : "done";
+}
+
 export function tileIndex(key: string): number {
   let h = 0;
   for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
