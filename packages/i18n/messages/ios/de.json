@@ -277,23 +277,42 @@
     "badKey": "Dieser Schlüssel funktioniert auf diesem Server nicht.",
     "unreachable": "{origin} ist nicht erreichbar.",
     "title": "Ein Link.\nKein Passwort<accent>.</accent>",
-    "lede": "Gib deine E-Mail ein, und wir schicken dir einen Link. Er meldet dich an oder legt deine Bibliothek an, wenn du neu bist.",
+    "lede": "Deine E-Mail, unser Link, du bist drin. Neu hier? Derselbe Link legt deine Bibliothek an.",
     "server": "Server",
     "key": "API-Schlüssel, falls du einen nutzt",
     "keyA11y": "API-Schlüssel",
     "noKey": "Kein Schlüssel? Lass das Feld leer, dann schicken wir dir einen Link von diesem Server.",
     "useKey": "Diesen Schlüssel nutzen",
-    "withEmail": "Mit E-Mail anmelden",
     "useHost": "{host} nutzen",
     "ownServer": "Eigenen Server nutzen",
     "preview": {
-      "caption": "Die E-Mail, die du bekommst",
-      "a11y": "Die E-Mail: Hier ist dein Link. Tippe darauf, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang.",
-      "subject": "Dein Link zu Pluck",
+      "to": "an {email}",
       "now": "jetzt",
       "title": "Hier ist dein Link.",
       "body": "Tippe darauf, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang. Nie wieder ein Passwort merken.",
       "button": "Bei Pluck anmelden"
+    },
+    "email": "E-Mail",
+    "emailPlaceholder": "du@beispiel.de",
+    "send": "Link schicken",
+    "sending": "Wird gesendet",
+    "invalid": "Das sieht nicht nach einer E-Mail-Adresse aus.",
+    "error": "Das hat nicht geklappt. Prüf die Adresse und versuch es dann noch mal.",
+    "limited": "Das sind ganz schön viele Links. Nimm den neuesten, den wir geschickt haben, oder probier es in einer Stunde noch mal.",
+    "sent": {
+      "title": "Schau in deine E-Mails<accent>.</accent>",
+      "lede": "Dein Link ist unterwegs an <b>{email}</b>. Tipp ihn auf diesem iPhone an, und du bist drin.",
+      "another": "Noch einer ist raus. Beide Links funktionieren.",
+      "openMail": "Mail öffnen",
+      "again": "Noch mal senden",
+      "different": "Andere E-Mail nutzen",
+      "spam": "Nach einer Minute noch nichts da? Schau im Spam nach und schick ihn dann noch mal."
+    },
+    "story": {
+      "waiting": "Nächster Halt: dein Postfach.",
+      "landed": "Angekommen. Jetzt antippen.",
+      "waitingA11y": "Ein Umschlag, bereit zum Abschicken.",
+      "sentA11y": "Die E-Mail an {email}: Hier ist dein Link. Tipp ihn an, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang."
     }
   },
   "handle": {

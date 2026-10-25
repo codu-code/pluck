@@ -38,7 +38,8 @@ export function useTheme(): Palette {
   return palettes[useColorScheme() === "dark" ? "dark" : "light"];
 }
 
-// Geist is bundled (expo-font); weights pick the face. Fredoka is only ever the wordmark.
+// Geist is bundled (expo-font); weights pick the face. Fredoka is the wordmark and, as on the site, the big
+// first-run headlines.
 export const font = {
   regular: { fontFamily: "Geist", fontWeight: "400" as const },
   medium: { fontFamily: "Geist", fontWeight: "500" as const },
@@ -47,4 +48,5 @@ export const font = {
   reader: { fontFamily: "Source Serif 4", fontWeight: "400" as const },
   readerTitle: { fontFamily: "Source Serif 4", fontWeight: "600" as const },
   logo: { fontFamily: "Fredoka", fontWeight: "700" as const },
+  display: { fontFamily: "Fredoka", fontWeight: "700" as const },
 };

@@ -277,23 +277,42 @@
     "badKey": "Esa clave no funcionó en este servidor.",
     "unreachable": "No se pudo conectar con {origin}.",
     "title": "Un enlace.\nSin contraseña<accent>.</accent>",
-    "lede": "Escribe tu correo y te enviamos un enlace. Con él inicias sesión o, si es tu primera vez, empiezas tu biblioteca.",
+    "lede": "Tu correo, nuestro enlace y listo. ¿Primera vez? El mismo enlace estrena tu biblioteca.",
     "server": "Servidor",
     "key": "Clave de API, si usas una",
     "keyA11y": "Clave de API",
     "noKey": "¿No tienes clave? Déjalo vacío y te enviamos un enlace desde ese servidor.",
     "useKey": "Usar esta clave",
-    "withEmail": "Iniciar sesión con correo",
     "useHost": "Usar {host}",
     "ownServer": "Usar tu propio servidor",
     "preview": {
-      "caption": "El correo que recibes",
-      "a11y": "El correo: Aquí tienes tu enlace. Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos.",
-      "subject": "Tu enlace a Pluck",
+      "to": "para {email}",
       "now": "ahora",
       "title": "Aquí tienes tu enlace.",
       "body": "Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos. Nunca tendrás que recordar una contraseña.",
       "button": "Iniciar sesión en Pluck"
+    },
+    "email": "Correo",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "send": "Envíame el enlace",
+    "sending": "Enviando",
+    "invalid": "Eso no parece una dirección de correo.",
+    "error": "No se pudo completar. Revisa la dirección y vuelve a intentarlo.",
+    "limited": "Son muchos enlaces. Usa el más reciente que te enviamos, o vuelve a intentarlo en una hora.",
+    "sent": {
+      "title": "Revisa tu correo<accent>.</accent>",
+      "lede": "Tu enlace va camino de <b>{email}</b>. Tócalo en este iPhone y listo.",
+      "another": "Enviamos otro. Funciona cualquiera de los dos.",
+      "openMail": "Abrir Mail",
+      "again": "Enviarlo de nuevo",
+      "different": "Usar otro correo",
+      "spam": "¿No llega nada en un minuto? Revisa la carpeta de spam y vuelve a enviarlo."
+    },
+    "story": {
+      "waiting": "Próxima parada: tu correo.",
+      "landed": "Ya llegó. Ahora tócalo.",
+      "waitingA11y": "Un sobre, listo para salir.",
+      "sentA11y": "El correo para {email}: Aquí tienes tu enlace. Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos."
     }
   },
   "handle": {

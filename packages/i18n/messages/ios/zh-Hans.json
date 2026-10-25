@@ -277,23 +277,42 @@
     "badKey": "这个密钥在此服务器上无效。",
     "unreachable": "无法连接 {origin}。",
     "title": "一个链接。\n不要密码<accent>。</accent>",
-    "lede": "输入邮箱，我们会发给你一个链接。点开就能登录；如果你是新用户，就会开启你的资料库。",
+    "lede": "填上邮箱，点开我们发来的链接，就进来了。第一次来？同一个链接会为你开好资料库。",
     "server": "服务器",
     "key": "API 密钥（如果有）",
     "keyA11y": "API 密钥",
     "noKey": "没有密钥？留空即可，我们会从那台服务器给你发送登录链接。",
     "useKey": "使用这个密钥",
-    "withEmail": "用邮箱登录",
     "useHost": "使用 {host}",
     "ownServer": "使用你自己的服务器",
     "preview": {
-      "caption": "你会收到的邮件",
-      "a11y": "邮件内容：这是你的链接。轻点即可登录。只能用一次，10 分钟内有效。",
-      "subject": "你的 Pluck 链接",
+      "to": "发给 {email}",
       "now": "刚刚",
       "title": "这是你的链接。",
       "body": "轻点即可登录。只能用一次，10 分钟内有效。永远不用记密码。",
       "button": "登录 Pluck"
+    },
+    "email": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "send": "把链接发给我",
+    "sending": "正在发送",
+    "invalid": "这看起来不像邮箱地址。",
+    "error": "没有成功。请检查邮箱地址，然后再试一次。",
+    "limited": "链接发得太多了。请用我们发的最新那封，或者一小时后再试。",
+    "sent": {
+      "title": "查看你的邮箱<accent>。</accent>",
+      "lede": "链接已发往 <b>{email}</b>。在这台 iPhone 上点开，就进来了。",
+      "another": "又发了一封。两个链接都能用。",
+      "openMail": "打开邮件",
+      "again": "重新发送",
+      "different": "换个邮箱",
+      "spam": "一分钟后还没收到？看看垃圾邮件，然后重新发送。"
+    },
+    "story": {
+      "waiting": "下一站：你的收件箱。",
+      "landed": "到了。现在点开它。",
+      "waitingA11y": "一个信封，准备出发。",
+      "sentA11y": "发给 {email} 的邮件：这是你的链接。点开即可登录。只能用一次，10 分钟内有效。"
     }
   },
   "handle": {

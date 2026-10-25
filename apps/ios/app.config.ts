@@ -92,7 +92,7 @@ const config: ExpoConfig = {
         fonts: [
           ...["Regular", "Medium", "SemiBold", "Bold"].map((w) => `./node_modules/geist/dist/fonts/geist-sans/Geist-${w}.ttf`),
           ...["400Regular", "400Regular_Italic", "600SemiBold"].map((w) => `./node_modules/@expo-google-fonts/source-serif-4/${w}/SourceSerif4_${w}.ttf`),
-          "./node_modules/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.ttf", // the wordmark only
+          "./node_modules/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.ttf", // the wordmark and first-run headlines
         ],
       },
     ],

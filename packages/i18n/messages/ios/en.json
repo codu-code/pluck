@@ -277,23 +277,42 @@
     "badKey": "That key did not work on this server.",
     "unreachable": "Couldn't reach {origin}.",
     "title": "One link.\nNo password<accent>.</accent>",
-    "lede": "Type your email and we send a link. It signs you in, or starts your library if you are new.",
+    "lede": "Your email, our link, you're in. New here? Same link, fresh library.",
     "server": "Server",
     "key": "API key, if you use one",
     "keyA11y": "API key",
     "noKey": "No key? Leave it empty and we email you a link from that server.",
     "useKey": "Use this key",
-    "withEmail": "Sign in with email",
     "useHost": "Use {host}",
     "ownServer": "Use your own server",
     "preview": {
-      "caption": "The email you get",
-      "a11y": "The email: Here is your link. Tap it to sign in. It works once, for 10 minutes.",
-      "subject": "Your link to Pluck",
+      "to": "to {email}",
       "now": "now",
       "title": "Here is your link.",
       "body": "Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.",
       "button": "Sign in to Pluck"
+    },
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "send": "Send my link",
+    "sending": "Sending",
+    "invalid": "That doesn't look like an email address.",
+    "error": "That did not go through. Check the address, then try again.",
+    "limited": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
+    "sent": {
+      "title": "Check your email<accent>.</accent>",
+      "lede": "Your link is on its way to <b>{email}</b>. Tap it on this iPhone and you're in.",
+      "another": "Sent another. Either link works.",
+      "openMail": "Open Mail",
+      "again": "Send it again",
+      "different": "Use a different email",
+      "spam": "Nothing after a minute? Look in spam, then send it again."
+    },
+    "story": {
+      "waiting": "Next stop: your inbox.",
+      "landed": "Landed. Now tap it.",
+      "waitingA11y": "An envelope, ready to go.",
+      "sentA11y": "The email to {email}: Here is your link. Tap it to sign in. It works once, for 10 minutes."
     }
   },
   "handle": {

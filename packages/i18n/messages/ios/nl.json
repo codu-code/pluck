@@ -277,23 +277,42 @@
     "badKey": "Die sleutel werkte niet op deze server.",
     "unreachable": "Kon {origin} niet bereiken.",
     "title": "Eén link.\nGeen wachtwoord<accent>.</accent>",
-    "lede": "Typ je e-mailadres en we sturen een link. Die logt je in, of maakt je bibliotheek aan als je nieuw bent.",
+    "lede": "Jouw e-mail, onze link, en je bent binnen. Nieuw hier? Dezelfde link maakt je bibliotheek aan.",
     "server": "Server",
     "key": "API-sleutel, als je die gebruikt",
     "keyA11y": "API-sleutel",
     "noKey": "Geen sleutel? Laat dit leeg en we mailen je een link vanaf die server.",
     "useKey": "Gebruik deze sleutel",
-    "withEmail": "Log in met e-mail",
     "useHost": "Gebruik {host}",
     "ownServer": "Gebruik je eigen server",
     "preview": {
-      "caption": "De e-mail die je krijgt",
-      "a11y": "De mail: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang.",
-      "subject": "Je link naar Pluck",
+      "to": "aan {email}",
       "now": "nu",
       "title": "Hier is je link.",
       "body": "Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang. Nooit een wachtwoord om te onthouden.",
       "button": "Log in bij Pluck"
+    },
+    "email": "E-mailadres",
+    "emailPlaceholder": "jij@example.com",
+    "send": "Stuur mijn link",
+    "sending": "Versturen",
+    "invalid": "Dat lijkt geen e-mailadres.",
+    "error": "Dat lukte niet. Controleer het adres en probeer het opnieuw.",
+    "limited": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
+    "sent": {
+      "title": "Kijk in je mail<accent>.</accent>",
+      "lede": "Je link is onderweg naar <b>{email}</b>. Tik erop op deze iPhone en je bent binnen.",
+      "another": "Nog eentje verstuurd. Beide links werken.",
+      "openMail": "Open Mail",
+      "again": "Stuur hem opnieuw",
+      "different": "Een ander e-mailadres gebruiken",
+      "spam": "Na een minuut nog niets? Kijk in je spam en stuur hem daarna opnieuw."
+    },
+    "story": {
+      "waiting": "Volgende halte: je mailbox.",
+      "landed": "Binnen. Tik er nu op.",
+      "waitingA11y": "Een envelop, klaar om te gaan.",
+      "sentA11y": "De e-mail aan {email}: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang."
     }
   },
   "handle": {

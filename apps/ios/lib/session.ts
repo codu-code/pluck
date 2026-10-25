@@ -3,6 +3,7 @@ import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
 import * as WebBrowser from "expo-web-browser";
 import { codeFrom, createClient, pkcePair, tokenRequest } from "@pluck/client";
+import { locale } from "./i18n";
 import { kv } from "./kv";
 
 // The signed-in session lives in the Keychain, in the access group the share extension also reads
@@ -65,23 +66,54 @@ async function clientIdFor(server: string): Promise<string> {
   return client_id;
 }
 
-type Pending = { server: string; clientId: string; verifier: string; state: string };
+type Pending = { server: string; clientId: string; verifier: string; state: string; challenge?: string; at?: number };
 
-// Opens the sign-in in a web authentication session. The email link may open in Safari instead; then the
-// redirect reaches the app as a link and finishSignIn picks it up from there.
-export async function signIn(server = defaultServer): Promise<boolean> {
+// One PKCE pair per sign-in attempt. Sending another link within the link's 10 minutes reuses it, so the
+// earlier email still works too instead of reading as "from an earlier try".
+async function pendingFor(server: string): Promise<Pending & { challenge: string }> {
+  const raw = await SecureStore.getItemAsync("pending", STORE);
+  const old = raw ? (JSON.parse(raw) as Pending) : null;
+  if (old?.challenge && old.server === server && Date.now() - (old.at ?? 0) < 10 * 60_000) return old as Pending & { challenge: string };
   const clientId = await clientIdFor(server);
   const { verifier, challenge, state } = await pkcePair(
     (n) => Crypto.getRandomBytes(n),
     async (s) => new Uint8Array(await Crypto.digest(Crypto.CryptoDigestAlgorithm.SHA256, new TextEncoder().encode(s))),
   );
-  const pending: Pending = { server, clientId, verifier, state };
+  const pending = { server, clientId, verifier, state, challenge, at: Date.now() };
   await SecureStore.setItemAsync("pending", JSON.stringify(pending), STORE);
-  const q = new URLSearchParams({
-    response_type: "code", client_id: clientId, redirect_uri: REDIRECT, scope: SCOPE, state, code_challenge: challenge,
-    code_challenge_method: "S256", resource: `${server}/api/v1`,
-  });
-  const result = await WebBrowser.openAuthSessionAsync(`${server}/api/auth/oauth2/authorize?${q}`, REDIRECT);
+  return pending;
+}
+
+const authorizePath = (p: Pending & { challenge: string }) =>
+  `/api/auth/oauth2/authorize?${new URLSearchParams({
+    response_type: "code", client_id: p.clientId, redirect_uri: REDIRECT, scope: SCOPE, state: p.state, code_challenge: p.challenge,
+    code_challenge_method: "S256", resource: `${p.server}/api/v1`,
+  })}`;
+
+// Emails a sign-in link from the app itself, no browser sheet. The link carries on with this app's OAuth request,
+// so tapping it (in Safari, from Mail) ends at io.getpluck.app:/oauth and finishSignIn takes it from there.
+// "password" is App Review's account, which has no mailbox: that one signs in through the web sheet.
+export async function sendSignInLink(email: string, server = defaultServer): Promise<"sent" | "password" | "limited" | "error"> {
+  try {
+    const p = await pendingFor(server);
+    const res = await fetch(`${server}/api/auth/sign-in/magic-link`, {
+      method: "POST",
+      // Origin: the server checks it on any request that names a callbackURL.
+      headers: { "content-type": "application/json", "accept-language": locale, origin: server },
+      body: JSON.stringify({ email: email.trim(), callbackURL: authorizePath(p) }),
+    });
+    if (res.status === 429) return "limited";
+    if (!res.ok) return "error";
+    return ((await res.json().catch(() => null)) as { password?: boolean } | null)?.password ? "password" : "sent";
+  } catch {
+    return "error";
+  }
+}
+
+// Signs in in a web authentication session: a self-hosted server's own page, or App Review's password.
+export async function signIn(server = defaultServer): Promise<boolean> {
+  const p = await pendingFor(server);
+  const result = await WebBrowser.openAuthSessionAsync(`${server}${authorizePath(p)}`, REDIRECT);
   return result.type === "success" ? finishSignIn(result.url) : isSignedIn();
 }
 

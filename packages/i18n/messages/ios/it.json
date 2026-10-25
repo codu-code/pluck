@@ -277,23 +277,42 @@
     "badKey": "Questa chiave non funziona su questo server.",
     "unreachable": "Impossibile raggiungere {origin}.",
     "title": "Un link.\nNessuna password<accent>.</accent>",
-    "lede": "Scrivi la tua email e ti mandiamo un link. Ti fa accedere, o crea la tua libreria se è la prima volta.",
+    "lede": "La tua email, il nostro link, e sei dentro. Prima volta? Lo stesso link crea la tua libreria.",
     "server": "Server",
     "key": "Chiave API, se ne usi una",
     "keyA11y": "Chiave API",
     "noKey": "Niente chiave? Lascia vuoto e ti mandiamo un link via email da quel server.",
     "useKey": "Usa questa chiave",
-    "withEmail": "Accedi con l'email",
     "useHost": "Usa {host}",
     "ownServer": "Usa il tuo server",
     "preview": {
-      "caption": "L’email che ricevi",
-      "a11y": "L'email: Ecco il tuo link. Toccalo per accedere. Funziona una volta, per 10 minuti.",
-      "subject": "Il tuo link per Pluck",
+      "to": "a {email}",
       "now": "ora",
       "title": "Ecco il tuo link.",
       "body": "Toccalo per accedere. Funziona una volta, per 10 minuti. Nessuna password da ricordare, mai.",
       "button": "Accedi a Pluck"
+    },
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "send": "Mandami il link",
+    "sending": "Invio in corso",
+    "invalid": "Non sembra un indirizzo email.",
+    "error": "Non è andato a buon fine. Controlla l'indirizzo, poi riprova.",
+    "limited": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
+    "sent": {
+      "title": "Controlla la tua email<accent>.</accent>",
+      "lede": "Il tuo link sta arrivando a <b>{email}</b>. Toccalo su questo iPhone e sei dentro.",
+      "another": "Inviato un altro. Funzionano entrambi.",
+      "openMail": "Apri Mail",
+      "again": "Invialo di nuovo",
+      "different": "Usa un'altra email",
+      "spam": "Dopo un minuto non è arrivato niente? Guarda nello spam, poi invialo di nuovo."
+    },
+    "story": {
+      "waiting": "Prossima fermata: la tua casella.",
+      "landed": "Arrivata. Ora tocca il link.",
+      "waitingA11y": "Una busta, pronta a partire.",
+      "sentA11y": "L’email per {email}: Ecco il tuo link. Toccalo per accedere. Funziona una volta, per 10 minuti."
     }
   },
   "handle": {
