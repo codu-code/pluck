@@ -6,8 +6,8 @@ import { rowText } from "./format";
 
 const now = new Date(2026, 9, 24, 15, 0);
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const t = createTranslator({ locale: "en", messages: { ios: messagesFor("ios", "en") }, namespace: "ios" });
-const f = createFormatter({ locale: "en", timeZone });
+const t = createTranslator({ locale: "en-GB", messages: { ios: messagesFor("ios", "en") }, namespace: "ios" });
+const f = createFormatter({ locale: "en-GB", timeZone });
 const base = { kind: "link", siteName: "Field Notes", url: "https://notes.example/a", source: "ios", extraction: { state: "done" }, wordCount: 1200, dueAt: null } as const;
 
 test.each([
@@ -24,6 +24,6 @@ test.each([
 
 test("dates follow the locale", () => {
   const item = { ...base, createdAt: new Date(2026, 9, 3, 9, 0).toISOString() } as unknown as Item;
-  expect(rowText(t, f, item, now).when).toBe("Oct 3");
+  expect(rowText(t, f, item, now).when).toBe("3 Oct"); // Pluck's English is British
   expect(rowText(t, createFormatter({ locale: "de", timeZone }), item, now).when).toBe("3. Okt.");
 });

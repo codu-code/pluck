@@ -1,4 +1,4 @@
-import { isLocale, matchLocale, messagesFor, parseAcceptLanguage, type Locale } from "@pluck/i18n";
+import { formatLocale, isLocale, matchLocale, messagesFor, parseAcceptLanguage, type Locale } from "@pluck/i18n";
 import { getRequestConfig } from "next-intl/server";
 import { cookies, headers } from "next/headers";
 
@@ -19,5 +19,5 @@ export async function requestLocale(): Promise<Locale> {
 
 export default getRequestConfig(async () => {
   const locale = await requestLocale();
-  return { locale, messages: { site: messagesFor("site", locale), app: messagesFor("app", locale) } };
+  return { locale: formatLocale(locale), messages: { site: messagesFor("site", locale), app: messagesFor("app", locale) } };
 });

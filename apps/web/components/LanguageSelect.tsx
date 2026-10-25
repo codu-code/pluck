@@ -1,6 +1,6 @@
 "use client";
 
-import { LOCALE_NAMES, LOCALES, type Locale } from "@pluck/i18n";
+import { fromIntlLocale, LOCALE_NAMES, LOCALES, type Locale } from "@pluck/i18n";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useId } from "react";
@@ -9,7 +9,7 @@ import { useId } from "react";
 // also keeps it on the account, which is the language emails go out in. Each language is named in its own words.
 export function LanguageSelect({ namespace, account = false, className }: { namespace: "site" | "app"; account?: boolean; className?: string }) {
   const t = useTranslations(`${namespace}.language`);
-  const locale = useLocale();
+  const locale = fromIntlLocale(useLocale());
   const router = useRouter();
   const id = useId();
   const pick = async (next: Locale) => {

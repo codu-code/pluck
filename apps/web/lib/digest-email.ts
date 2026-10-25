@@ -1,3 +1,4 @@
+import { formatLocale } from "@pluck/i18n";
 import type { Locale } from "@pluck/i18n";
 import type { Digest } from "@pluck/shared-schemas";
 import { createFormatter } from "next-intl";
@@ -28,7 +29,7 @@ export function subjectFor(d: Digest, locale: Locale = "en"): string {
 // In the recipient's language and timezone (their settings.locale and settings.timezone).
 export function digestEmail(to: string, name: string, d: Digest, links: DigestLinks, now = new Date(), { locale = "en", timeZone = "UTC" }: { locale?: Locale; timeZone?: string } = {}): Email {
   const t = emailT(locale);
-  const f = createFormatter({ locale, timeZone });
+  const f = createFormatter({ locale: formatLocale(locale), timeZone });
   const first = name.trim().split(/\s+/)[0];
   const greeting = first ? t("digest.greeting", { name: first }) : t("digest.greetingNoName");
   const days = d.expiryDays ?? 0;
