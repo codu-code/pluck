@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import type { PublicList } from "@pluck/shared-schemas";
+import type { PublicList, SharedListSummary } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
-import { items, listRows, lists, oid, reports, users } from "./collections.ts";
+import { items, listRows, lists, listShares, oid, reports, users, type ListDoc, type UserDoc } from "./collections.ts";
 
-// The only code that serves public list data. It reads lists, listItems and a narrow slice of items,
-// and never touches contents, tags, ticks or status. Its field lists are pinned by public.test.ts.
+// The only code that serves list data to anyone but its owner: public pages, and Lists shared with people (See only).
+// It reads lists, listItems and a narrow slice of items, and never touches contents, tags, ticks or status.
+// Its field lists are pinned by public.test.ts.
 
 export const PUBLIC_ITEM_FIELDS = { title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1 } as const;
 const WEEK_MS = 7 * 86_400_000;
@@ -18,8 +19,11 @@ async function findPublic(handle: string, slug: string) {
 
 export async function publicList(handle: string, slug: string, now = new Date()): Promise<PublicList | null> {
   const found = await findPublic(handle, slug);
-  if (!found) return null;
-  const { owner, list } = found;
+  return found && seeOnly(found.list, found.owner, now);
+}
+
+// What anyone but the owner sees of a list: its name, purpose and each item's public fields with the list's note.
+async function seeOnly(list: ListDoc, owner: Pick<UserDoc, "_id" | "name" | "handle" | "createdAt">, now: Date): Promise<PublicList> {
   const rows = await (await listRows()).find({ listId: list._id }, { projection: { itemId: 1, note: 1, position: 1 } }).sort({ position: 1 }).toArray();
   const docs = await (await items())
     .find({ _id: { $in: rows.map((r) => r.itemId) }, userId: owner._id, deletedAt: null }, { projection: PUBLIC_ITEM_FIELDS })
@@ -40,6 +44,43 @@ export async function publicList(handle: string, slug: string, now = new Date())
     author: { name: owner.name || null, handle: owner.handle! },
     entries,
   };
+}
+
+// A list shared with this email (See only), in the public view's shape. Null when it is not shared with them.
+export async function sharedList(listId: string, viewerEmail: string, now = new Date()): Promise<PublicList | null> {
+  const found = await findShared(listId, viewerEmail);
+  return found && seeOnly(found.list, found.owner, now);
+}
+
+async function findShared(listId: string, viewerEmail: string) {
+  const share = await (await listShares()).findOne({ listId: oid(listId), email: viewerEmail.toLowerCase() }, { projection: { _id: 1 } });
+  if (!share) return null;
+  const list = await (await lists()).findOne({ _id: oid(listId), killed: { $ne: true } });
+  if (!list) return null;
+  const owner = await (await users()).findOne({ _id: list.userId, publicKilled: { $ne: true } }, { projection: { _id: 1, name: 1, handle: 1, createdAt: 1 } });
+  return owner ? { list, owner } : null;
+}
+
+// The lists shared with this email, newest share first, for their Lists page.
+export async function listsSharedWith(viewerEmail: string): Promise<SharedListSummary[]> {
+  const shares = await (await listShares()).find({ email: viewerEmail.toLowerCase() }).sort({ createdAt: -1 }).limit(200).toArray();
+  const found = await (await lists()).find({ _id: { $in: shares.map((x) => x.listId) }, killed: { $ne: true } }, { projection: { name: 1, purpose: 1, itemCount: 1, userId: 1 } }).toArray();
+  const owners = await (await users()).find({ _id: { $in: found.map((l) => l.userId) }, publicKilled: { $ne: true } }, { projection: { name: 1, handle: 1 } }).toArray();
+  const listById = new Map(found.map((l) => [l._id.toHexString(), l]));
+  const ownerById = new Map(owners.map((o) => [o._id.toHexString(), o]));
+  return shares.flatMap((x) => {
+    const l = listById.get(x.listId.toHexString());
+    const o = l && ownerById.get(l.userId.toHexString());
+    return l && o ? [{ id: l._id.toHexString(), name: l.name, purpose: l.purpose, itemCount: l.itemCount, owner: { name: o.name || null, handle: o.handle ?? "" }, sharedAt: x.createdAt.toISOString() }] : [];
+  });
+}
+
+// The cover key for one item on a list shared with this email.
+export async function sharedCoverKey(listId: string, itemId: string, viewerEmail: string): Promise<string | null> {
+  const found = await findShared(listId, viewerEmail);
+  if (!found || !(await (await listRows()).findOne({ listId: found.list._id, itemId: oid(itemId) }, { projection: { _id: 1 } }))) return null;
+  const item = await (await items()).findOne({ _id: oid(itemId), userId: found.list.userId, deletedAt: null }, { projection: { coverKey: 1 } });
+  return item?.coverKey ?? null;
 }
 
 // The cover key for one item, only when that item is on a public, live list.

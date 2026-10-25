@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import { Alert, FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import { ActionSheetIOS, Alert, FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
@@ -27,12 +27,7 @@ export default function ListScreen() {
     void qc.invalidateQueries({ queryKey: keys.lists });
   };
 
-  const share = async () => {
-    if (!list) return;
-    if (list.visibility === "public") {
-      const server = (await getSession())?.server ?? "https://getpluck.io";
-      return Share.share({ url: `${server}/@${me.data?.handle}/${list.slug}` });
-    }
+  const makePublic = () =>
     Alert.alert("Make this list public?", "Anyone with the link sees the titles, covers and your notes. Never the kept pages. You can make it private again.", [
       { text: "Cancel", style: "cancel" },
       {
@@ -47,6 +42,17 @@ export default function ListScreen() {
         },
       },
     ]);
+  // Two ways to share: with people, See only, or a public link for anyone.
+  const share = () => {
+    if (!list) return;
+    const options = ["Share with people", list.visibility === "public" ? "Send the public link" : "Make public…"];
+    ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, async (i) => {
+      if (i === 0) router.push({ pathname: "/people", params: { id } });
+      else if (i === 1 && list.visibility === "public") {
+        const server = (await getSession())?.server ?? "https://getpluck.io";
+        void Share.share({ url: `${server}/@${me.data?.handle}/${list.slug}` });
+      } else if (i === 1) makePublic();
+    });
   };
 
   return (
@@ -57,7 +63,7 @@ export default function ListScreen() {
           <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>Lists</Text>
         </Pressable>
         {list && (
-          <Pressable accessibilityRole="button" onPress={() => void share()} hitSlop={{ top: 4, bottom: 4 }} style={[styles.shareButton, { borderColor: t.lineStrong, backgroundColor: t.surface }]}>
+          <Pressable accessibilityRole="button" onPress={share} hitSlop={{ top: 4, bottom: 4 }} style={[styles.shareButton, { borderColor: t.lineStrong, backgroundColor: t.surface }]}>
             <Icon d={list.visibility === "public" ? ICONS.globe : ICONS.lock} size={14} color={t.ink} width={1.5} />
             <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 14 }]}>{list.visibility === "public" ? "Public · Share" : "Private · Share"}</Text>
           </Pressable>

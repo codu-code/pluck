@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { ImportEntry } from "@pluck/extract";
 import type { ImportStatus, Item } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
-import { apiKeys, contents, db, emailAliases, exportsCol, highlights, imports, items, listRows, lists, oid, reports, tags, users, type ImportDoc } from "./collections.ts";
+import { apiKeys, contents, db, emailAliases, exportsCol, highlights, imports, items, listRows, lists, listShares, oid, reports, tags, users, type ImportDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 import { textForSearch } from "./search.ts";
 import { createTag } from "./tags.ts";
@@ -117,6 +117,7 @@ export async function deleteAccountData(userId: string): Promise<void> {
   const uid = oid(userId);
   const d = await db();
   const listIds = (await (await lists()).find({ userId: uid }, { projection: { _id: 1 } }).toArray()).map((l) => l._id);
+  const email = (await (await users()).findOne({ _id: uid }, { projection: { email: 1 } }))?.email.toLowerCase();
   await Promise.all([
     (await items()).deleteMany({ userId: uid }),
     (await contents()).deleteMany({ userId: uid }),
@@ -129,6 +130,8 @@ export async function deleteAccountData(userId: string): Promise<void> {
     (await imports()).deleteMany({ userId: uid }),
     (await exportsCol()).deleteMany({ userId: uid }),
     (await reports()).deleteMany({ listId: { $in: listIds } }),
+    // Their lists stop being shared, and lists shared with them forget their address.
+    (await listShares()).deleteMany({ $or: [{ ownerId: uid }, ...(email ? [{ email }] : [])] }),
     // Better Auth rows: its Mongo adapter stores userId as an ObjectId; cover the string form too.
     d.collection("auth_sessions").deleteMany({ userId: { $in: [uid, userId] } }),
     d.collection("auth_accounts").deleteMany({ userId: { $in: [uid, userId] } }),

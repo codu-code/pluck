@@ -72,6 +72,9 @@ export type ListDoc = {
   killed?: boolean; // taken down by an admin; never served publicly
 };
 
+// One person a List is shared with, by the email they sign in with. See only.
+export type ListShareDoc = { _id: ObjectId; listId: ObjectId; ownerId: ObjectId; email: string; createdAt: Date };
+
 export type ListItemDoc = {
   _id: ObjectId;
   listId: ObjectId;
@@ -222,6 +225,7 @@ export function db(): Promise<Db> {
         { key: { userId: 1, itemId: 1, listId: 1 }, unique: true },
       ]),
       d.collection("users").createIndexes([{ key: { handle: 1 }, unique: true, partialFilterExpression: { handle: { $type: "string" } } }]),
+      d.collection("listShares").createIndexes([{ key: { listId: 1, email: 1 }, unique: true }, { key: { email: 1, createdAt: -1 } }, { key: { ownerId: 1 } }]),
       d.collection("apiKeys").createIndexes([{ key: { hash: 1 }, unique: true }, { key: { userId: 1 } }]),
       d.collection("imports").createIndexes([{ key: { userId: 1, createdAt: -1 } }]),
       d.collection("exports").createIndexes([{ key: { userId: 1, createdAt: -1 } }]),
@@ -286,6 +290,9 @@ export async function contents(): Promise<Collection<ContentDoc>> {
 }
 export async function jobs(): Promise<Collection<JobDoc>> {
   return (await db()).collection<JobDoc>("jobs");
+}
+export async function listShares(): Promise<Collection<ListShareDoc>> {
+  return (await db()).collection<ListShareDoc>("listShares");
 }
 export async function rateLimits(): Promise<Collection<RateLimitDoc>> {
   return (await db()).collection<RateLimitDoc>("rateLimits");

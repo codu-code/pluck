@@ -1,10 +1,12 @@
 import { signedUrl } from "@pluck/blob";
 import {
-  createList, createReport, createTextItem, getMe, hitRateLimit, listOwnedBy, pluckLink, publicCoverKey, publicList, publicListById, recordView,
-  rollHandle, setHandle, setName, setVisibility, updateSettings,
+  createList, createReport, createTextItem, getListMeta, getMe, hitRateLimit, leaveSharedList, listOwnedBy, listsSharedWith, pluckLink, publicCoverKey,
+  publicList, publicListById, recordView, rollHandle, setHandle, setName, setVisibility, sharedCoverKey, sharedList, shareList, sharesOf, unshareList,
+  updateSettings, MAX_PEOPLE,
 } from "@pluck/db";
-import { normalizeUrl, type Item, type List, type Me, type PublicList, type Settings } from "@pluck/shared-schemas";
+import { normalizeUrl, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
+import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 import { queueExtraction } from "./items";
@@ -83,8 +85,9 @@ export async function publicCover(listId: string, itemId: string): Promise<strin
 export async function copyList(userId: string, listId: string, { defer }: { defer?: Defer } = {}): Promise<List> {
   const limit = await hitRateLimit(`copy:${userId}`, 20, 86_400);
   if (!limit.ok) throw new ApiError("rate_limited", "That is 20 lists copied today. Try again tomorrow.", 429, { retryAfter: limit.retryAfter });
-  const page = await publicListById(listId);
-  if (!page) throw new ApiError("not_found", "That list is not public.", 404);
+  // A public list, or one shared with them.
+  const page = (await publicListById(listId)) ?? (await sharedList(listId, (await me(userId)).email));
+  if (!page) throw new ApiError("not_found", "That list is not public or shared with you.", 404);
   const entries: { itemId: string; note: string | null }[] = [];
   const toRead: Item[] = [];
   for (const e of page.entries) {
@@ -113,4 +116,60 @@ export async function report(listId: string, ip: string, reason: string, details
     subject: `Report: ${reason} on list ${listId}`,
     text: `A public list was reported.\n\nList: ${listId}\nReason: ${reason}\nDetails: ${details ?? "(none)"}\n\nReview it in /admin.\n`,
   }).catch((e) => log("error", "report email failed", { error: e }));
+}
+
+// ---- Sharing a List with people, See only ----------------------------------------------------------------
+
+const origin = () => process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+// Each new person is an email we send to an address someone typed: a few a day per account.
+const PEOPLE_PER_DAY = 10;
+
+const SHARE_ERRORS = {
+  not_found: new ApiError("not_found", "No such list.", 404),
+  self: new ApiError("bad_request", "That is you. The List is already yours.", 400),
+  full: new ApiError("conflict", `A List can be shared with ${MAX_PEOPLE} people.`, 409),
+  closed: new ApiError("forbidden", "Sharing is closed for this account.", 403),
+};
+
+export async function shareWith(userId: string, listId: string, email: string): Promise<ListShare> {
+  const budget = await hitRateLimit(`share:${userId}`, PEOPLE_PER_DAY, 86_400);
+  if (!budget.ok) throw new ApiError("rate_limited", "That is a lot of people for one day. Try again tomorrow.", 429, { retryAfter: budget.retryAfter });
+  const res = await shareList(userId, listId, email);
+  if (!res.ok) throw SHARE_ERRORS[res.reason];
+  if (res.created) {
+    const [owner, list] = await Promise.all([me(userId), getListMeta(userId, listId)]);
+    await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? "A List", `${origin()}/shared/${listId}`));
+  }
+  return res.share;
+}
+
+export async function peopleOf(userId: string, listId: string): Promise<ListShare[]> {
+  const people = await sharesOf(userId, listId);
+  if (!people) throw SHARE_ERRORS.not_found;
+  return people;
+}
+
+export async function stopSharing(userId: string, listId: string, shareId: string): Promise<void> {
+  if (!(await unshareList(userId, listId, shareId))) throw new ApiError("not_found", "Not shared with that person.", 404);
+}
+
+// The person it is shared with is whoever signs in with that email (the link proves the address).
+export async function sharedWithMe(userId: string): Promise<SharedListSummary[]> {
+  return listsSharedWith((await me(userId)).email);
+}
+
+export async function readShared(userId: string, listId: string): Promise<PublicList> {
+  const page = await sharedList(listId, (await me(userId)).email);
+  if (!page) throw new ApiError("not_found", "That List is not shared with you, or it has gone.", 404);
+  return page;
+}
+
+export async function leaveShared(userId: string, listId: string): Promise<void> {
+  if (!(await leaveSharedList(listId, (await me(userId)).email))) throw new ApiError("not_found", "That List is not shared with you.", 404);
+}
+
+export async function sharedCoverLocation(userId: string, listId: string, itemId: string): Promise<string> {
+  const key = await sharedCoverKey(listId, itemId, (await me(userId)).email);
+  if (!key) throw new ApiError("not_found", "No cover.", 404);
+  return signedUrl(key, 600);
 }

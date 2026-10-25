@@ -21,7 +21,8 @@ export {
 export { getMe, markMcpCall, rollHandle, setName, setHandle, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type UserSettings } from "./collections.ts";
-export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS } from "./public.ts";
+export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";
+export { shareList, sharesOf, unshareList, leaveSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
 export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";
