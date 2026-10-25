@@ -162,14 +162,6 @@
       },
       "para1": "Chrome版Pluckは、Chromeウェブストアの審査待ちです。数千のクーポン拡張機能の後ろに並んでいます。もうすぐ公開です。",
       "para2": "それまでは、Web版のPluckをお使いください。リンクを貼り付ければPluckできます。お使いのAIにPluckしてもらうこともできます。"
-    },
-    "iphone": {
-      "meta": {
-        "title": "iPhone版Pluck · Pluck",
-        "description": "iPhone版Pluckは、まずTestFlightで、そのあとApp Storeで公開します。"
-      },
-      "para1": "iPhone版Pluckは、まずTestFlightで、そのあとApp Storeで公開します。共有シートからPluckして、どこでも読み、スワイプで「あとで」へ。",
-      "para2": "それまでは、iPhoneのSafariでPluckをお使いください。リンクを貼り付ければPluckできます。お使いのAIにPluckしてもらうこともできます。"
     }
   },
   "openSource": {
@@ -563,5 +555,36 @@
         "other": "その他"
       }
     }
+  },
+  "iphone": {
+    "meta": {
+      "title": "iPhone版Pluck（ベータ） · Pluck",
+      "description": "iPhone版PluckはTestFlightで公開ベータ中です。1分でインストールできます。"
+    },
+    "title": "iPhoneで試す<dot>。</dot>",
+    "lede": "iPhone版Pluckは、App Store公開前のアプリを試せるAppleのアプリ、TestFlightで公開ベータ中です。共有メニューからPluckし、オフラインでもどこでも読めて、スワイプで「あとで」へ。",
+    "join": "TestFlightでベータに参加",
+    "steps": {
+      "get": {
+        "title": "TestFlightを入手",
+        "body": "<app>App StoreからTestFlight</app>をインストールします。無料で、Apple製です。"
+      },
+      "join": {
+        "title": "ベータに参加",
+        "body": "iPhoneで<invite>Pluckの招待</invite>を開き、「同意する」、続いて「インストール」をタップします。"
+      },
+      "signIn": {
+        "title": "サインイン",
+        "body": "Pluckを開き、メールアドレスを入力して、届いた6桁のコードを入力します。初めての方も、同じコードでライブラリが始まります。"
+      },
+      "share": {
+        "title": "Pluckを先頭に",
+        "body": "どのアプリでも共有をタップし、アプリの列を「その他」までスクロールして、Pluckを先頭にドラッグしてください。"
+      }
+    },
+    "needs": "iOS 17以降が必要です。TestFlightがPluckを最新の状態に保ちます。",
+    "desktop": "パソコンでご覧の方は、iPhoneのカメラをこちらに向けてください。",
+    "qrAlt": "TestFlightのPluckベータ用QRコード",
+    "feedback": "おかしな点があれば、Pluckでスクリーンショットを撮るとTestFlightから送信できます。support@getpluck.io へのメールでもどうぞ。"
   }
 }

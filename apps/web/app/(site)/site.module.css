@@ -267,7 +267,19 @@
 .reason p { margin: 0; font-size: 19px; line-height: 29px; align-self: center; }
 
 /* Support */
-.soon { padding-bottom: 112px; } /* the iPhone and Chrome pages: room above the footer */
+.soon { padding-bottom: 112px; }
+/* The iPhone beta: four steps, and a code to scan beside them on a wide screen (a phone has the link already). */
+.beta { margin-top: 48px; display: grid; grid-template-columns: minmax(0, 560px) auto; gap: 56px; align-items: start; }
+.betaStep { margin: 4px 0 0; color: var(--ink2); font-size: 17px; line-height: 26px; text-wrap: pretty; }
+.inlineLink { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.qr { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 208px; text-align: center; font-size: 14px; line-height: 20px; color: var(--ink2); }
+.qr img { width: 176px; height: 176px; padding: 14px; box-sizing: content-box; border-radius: 16px; background: #FFFFFF; border: 1px solid var(--line); }
+.betaNote { margin: 32px 0 0; max-width: 640px; color: var(--ink2); font-size: 16px; line-height: 24px; }
+.betaNote + .betaNote { margin-top: 8px; }
+@media (max-width: 760px) {
+  .beta { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .qr { display: none; }
+} /* the iPhone and Chrome pages: room above the footer */
 .supportTitle { margin: 0; font-size: clamp(88px, 15vw, 210px); line-height: 0.86; }
 .heroPara a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--accent); }
 .topics { display: flex; flex-wrap: wrap; gap: 8px; }

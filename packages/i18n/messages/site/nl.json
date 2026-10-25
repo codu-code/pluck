@@ -162,14 +162,6 @@
       },
       "para1": "Pluck voor Chrome wacht op beoordeling door de Chrome Web Store, ergens achter een paar duizend kortingscodezoekers. Komt elk moment uit.",
       "para2": "Tot die tijd werkt Pluck op het web: plak een link en hij is geplukt. Je AI kan ook voor je plukken."
-    },
-    "iphone": {
-      "meta": {
-        "title": "Pluck voor iPhone · Pluck",
-        "description": "Pluck voor iPhone komt eerst op TestFlight, daarna in de App Store."
-      },
-      "para1": "Pluck voor iPhone komt eerst op TestFlight, daarna in de App Store. Pluk vanuit het deelmenu, lees overal, veeg naar Later.",
-      "para2": "Tot die tijd werkt Pluck in Safari op je telefoon: plak een link en hij is geplukt. Je AI kan ook voor je plukken."
     }
   },
   "openSource": {
@@ -563,5 +555,36 @@
         "other": "Iets anders"
       }
     }
+  },
+  "iphone": {
+    "meta": {
+      "title": "Pluck voor iPhone, in bèta · Pluck",
+      "description": "Pluck voor iPhone is in openbare bèta op TestFlight. In een minuut geïnstalleerd."
+    },
+    "title": "Probeer het op je iPhone<dot>.</dot>",
+    "lede": "Pluck voor iPhone is in openbare bèta op TestFlight, de app van Apple om apps uit te proberen voordat ze in de App Store staan. Pluk via het deelmenu, lees overal, ook offline, en veeg naar Later.",
+    "join": "Doe mee met de bèta op TestFlight",
+    "steps": {
+      "get": {
+        "title": "Haal TestFlight",
+        "body": "Installeer <app>TestFlight uit de App Store</app>. Het is gratis, en van Apple."
+      },
+      "join": {
+        "title": "Doe mee met de bèta",
+        "body": "Open <invite>de Pluck-uitnodiging</invite> op je iPhone, tik op Accepteer en daarna op Installeer."
+      },
+      "signIn": {
+        "title": "Log in",
+        "body": "Open Pluck, typ je e-mail en daarna de 6-cijferige code die we je sturen. Nieuw hier? Dezelfde code maakt je bibliotheek aan."
+      },
+      "share": {
+        "title": "Zet Pluck vooraan",
+        "body": "Tik in een app op Deel, scrol in de rij apps naar Meer en sleep Pluck naar voren."
+      }
+    },
+    "needs": "Werkt vanaf iOS 17. TestFlight houdt Pluck voor je bij.",
+    "desktop": "Op een computer? Richt de camera van je iPhone hierop.",
+    "qrAlt": "QR-code voor de Pluck-bèta op TestFlight",
+    "feedback": "Klopt er iets niet? Maak een screenshot in Pluck en TestFlight biedt aan hem naar ons te sturen. Of mail support@getpluck.io."
   }
 }
