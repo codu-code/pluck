@@ -63,23 +63,13 @@ export default function Settings() {
   const profile = me.data;
   const settings = profile?.settings;
   const initials = ((profile?.name || profile?.email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("")) || "?";
-  const locked = Boolean(profile?.handleChangeableAt && new Date(profile.handleChangeableAt) > new Date());
   const needsAccount = tools.error instanceof Refused && tools.error.status === 403;
 
-  const saveMe = async (body: { name?: string; handle?: string; settings?: Partial<UserSettings> }, said?: string) => {
+  const saveMe = async (body: { name?: string; settings?: Partial<UserSettings> }, said?: string) => {
     try {
       const res = await api<{ me: Me }>("/api/v1/me", { method: "PATCH", json: body });
       qc.setQueryData(keys.me, res.me);
       if (said) toast(said);
-    } catch (e) {
-      failed(e);
-    }
-  };
-  const makeOneUp = async () => {
-    try {
-      const res = await api<{ me: Me }>("/api/v1/me/handle", { method: "POST" });
-      qc.setQueryData(keys.me, res.me);
-      toast(`You're @${res.me.handle}. Not keen? Again.`);
     } catch (e) {
       failed(e);
     }
@@ -89,19 +79,6 @@ export default function Settings() {
       { text: "Cancel", style: "cancel" },
       { text: "Save", onPress: (v?: string) => void saveMe({ name: v ?? "" }, "Name saved.") },
     ], "plain-text", profile?.name ?? "");
-  const editHandle = () =>
-    Alert.prompt(
-      "Your handle",
-      locked ? "It goes in the link to every List you make public. It can change once a month." : "It goes in the link to every List you make public. 3 to 24 lowercase letters, numbers or hyphens.",
-      [
-        { text: "Cancel", style: "cancel" },
-        ...(locked ? [] : [{ text: "Make one up", onPress: () => void makeOneUp() }]),
-        { text: "Save", onPress: (v?: string) => void saveMe({ handle: (v ?? "").trim().toLowerCase() }, "Handle saved.") },
-      ],
-      "plain-text",
-      profile?.handle ?? "",
-      "ascii-capable",
-    );
   const disconnect = (tool: AiConnection) =>
     Alert.alert(`Disconnect ${tool.name}?`, "It stops reading and plucking straight away. Connect it again any time.", [
       { text: "Cancel", style: "cancel" },
@@ -211,7 +188,7 @@ export default function Settings() {
             </View>
           </View>
           {row(pair("Name", profile?.name || "Add your name"), editName)}
-          {row(pair("Handle", profile?.handle ? `@${profile.handle}` : ""), editHandle)}
+          {row(pair("Handle", profile?.handle ? `@${profile.handle}` : ""), () => router.push({ pathname: "/handle", params: { host } }))}
           {row(<Text style={label}>Sign out</Text>, () => Alert.alert("Sign out?", "Plucks queued on this phone stay here until you sign in again.", [
             { text: "Cancel", style: "cancel" },
             { text: "Sign out", style: "destructive", onPress: () => void signOut() },

@@ -77,6 +77,7 @@ export default function Root() {
               <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
               <Stack.Screen name="settings" options={{ presentation: "modal" }} />
               <Stack.Screen name="note" options={{ presentation: "modal" }} />
+              <Stack.Screen name="handle" options={{ presentation: "modal" }} />
               <Stack.Screen name="tags" options={{ presentation: "modal" }} />
               <Stack.Screen name="share" options={{ presentation: "modal" }} />
               <Stack.Screen name="shared/[id]" />
