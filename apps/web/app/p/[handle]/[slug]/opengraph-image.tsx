@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { ImageResponse } from "next/og";
 import { publicPage } from "@/lib/library";
 
@@ -8,6 +9,7 @@ export const contentType = "image/png";
 export default async function OgImage({ params }: { params: Promise<{ handle: string; slug: string }> }) {
   const { handle, slug } = await params;
   const page = await publicPage(handle, slug, { count: false });
+  const t = await getTranslations("site.publicList");
   const name = page?.list.name ?? "Pluck";
   const purpose = page?.list.purpose ?? "";
   const by = page ? (page.author.name ?? `@${page.author.handle}`) : "";
@@ -20,7 +22,7 @@ export default async function OgImage({ params }: { params: Promise<{ handle: st
           {purpose && <div style={{ display: "flex", fontSize: 34, color: "#394034" }}>{purpose}</div>}
         </div>
         <div style={{ display: "flex", fontSize: 28, color: "#525A4E" }}>
-          {page ? `A list by ${by} · ${page.list.itemCount} items` : ""}
+          {page ? t("og", { by, count: page.list.itemCount }) : ""}
         </div>
       </div>
     ),

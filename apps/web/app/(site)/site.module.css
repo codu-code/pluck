@@ -275,6 +275,7 @@
 .legalHead { display: flex; flex-direction: column; gap: 20px; }
 .legalTitle { margin: 0; font-size: clamp(44px, 6vw, 72px); line-height: 1; letter-spacing: -0.03em; }
 .legalLede { margin: 0; max-width: 54ch; font-size: 20px; line-height: 30px; color: var(--ink2); }
+.legalNote { margin: 0; font-size: 15px; line-height: 22px; color: var(--ink2); }
 .legalSection { display: flex; flex-direction: column; gap: 10px; padding-top: 28px; border-top: 1px solid var(--line); }
 .legalSection h2 { margin: 0; font-size: 24px; line-height: 30px; font-weight: 600; letter-spacing: -0.02em; }
 .legalSection p, .legalBox span { margin: 0; max-width: 52ch; } /* Geist's "0" is wide: 52ch holds about 75 letters */

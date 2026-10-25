@@ -1,24 +1,26 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
-export const metadata: Metadata = {
-  title: "Pluck for iPhone · Pluck",
-  description: "Pluck for iPhone is on TestFlight first, then the App Store.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("site.soon.iphone.meta");
+  return { title: t("title"), description: t("description") };
+}
 
 // Where "iPhone" lands until the App Store listing is live (APP_STORE_URL in lib/site.ts).
-export default function IPhone() {
+export default async function IPhone() {
+  const t = await getTranslations("site.soon");
   return (
     <SitePage page="iphone">
       <section className={`${styles.wrap} ${styles.pageHero}`}>
-        <h1 className={`${styles.display} ${styles.supportTitle}`}>Soon<span className={styles.dot}>.</span></h1>
-        <p className={styles.heroPara}>Pluck for iPhone is on TestFlight first, then the App Store. Pluck from the share sheet, read anywhere, swipe to Later.</p>
-        <p className={styles.heroPara}>Until then, Pluck works in Safari on your phone: paste a link and it is plucked. Your AI can pluck for you too.</p>
+        <h1 className={`${styles.display} ${styles.supportTitle}`}>{t.rich("title", { dot: (c) => <span className={styles.dot}>{c}</span> })}</h1>
+        <p className={styles.heroPara}>{t("iphone.para1")}</p>
+        <p className={styles.heroPara}>{t("iphone.para2")}</p>
         <div className={styles.buttons}>
-          <Link href="/signin" className={`${styles.big} ${styles.bigPrimary}`}>Use it on the web</Link>
-          <Link href="/connect" className={`${styles.big} ${styles.bigOutline}`}>Connect your AI</Link>
+          <Link href="/signin" className={`${styles.big} ${styles.bigPrimary}`}>{t("web")}</Link>
+          <Link href="/connect" className={`${styles.big} ${styles.bigOutline}`}>{t("connect")}</Link>
         </div>
       </section>
     </SitePage>
