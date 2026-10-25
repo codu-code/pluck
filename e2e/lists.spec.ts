@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
-import { signIn } from "./helpers";
+import { linkFromEmail, signIn, uniqueEmail } from "./helpers";
 
 const picker = (page: Page) => page.getByRole("dialog", { name: /Add .*to a list/ });
 
@@ -81,4 +81,41 @@ test("build an ordered list from the Inbox, then tick, note, reorder, export and
   await page.getByRole("button", { name: "Yes, delete the list" }).click();
   await expect(page).toHaveURL(/\/lists$/);
   await expect(page.getByText("No lists yet.")).toBeVisible();
+});
+
+test("share a List with one person, See only: the email link, their Lists, no tags, and taking it back", async ({ browser }) => {
+  const owner = await (await browser.newContext()).newPage();
+  await signIn(owner);
+  await owner.request.post("/api/v1/items", { data: { url: "http://127.0.0.1:4180/news-1.html" } });
+  const item = (await (await owner.request.get("/api/v1/items?status=inbox")).json()).items[0];
+  const tag = (await (await owner.request.post("/api/v1/tags", { data: { name: "private-tag" } })).json()).tag;
+  await owner.request.patch(`/api/v1/items/${item.id}`, { data: { tagIds: [tag.id] } });
+  const list = (await (await owner.request.post("/api/v1/lists", { data: { name: "Holiday ideas", purpose: "Somewhere warm." } })).json()).list;
+  await owner.request.post(`/api/v1/lists/${list.id}/items`, { data: { itemId: item.id, note: "Book early." } });
+
+  const friend = uniqueEmail("friend");
+  await owner.goto(`/lists/${list.id}`);
+  const sent = Date.now();
+  await owner.getByLabel("Share with someone: their email").fill(friend);
+  await owner.getByRole("button", { name: "Share", exact: true }).click();
+  await expect(owner.getByRole("list", { name: "People who can see it" })).toContainText(friend);
+
+  // The email's link signs them in and opens the List.
+  const visitor = await (await browser.newContext()).newPage();
+  await visitor.goto(await linkFromEmail(friend, sent));
+  await signIn(visitor, friend, `/shared/${list.id}`);
+  await expect(visitor.getByRole("heading", { name: "Holiday ideas" })).toBeVisible();
+  await expect(visitor.getByText("Book early.")).toBeVisible();
+  await expect(visitor.getByText("private-tag")).toHaveCount(0);
+  await visitor.goto("/lists");
+  await expect(visitor.getByRole("region", { name: "Shared with you" })).toContainText("Holiday ideas");
+
+  // Someone else signed in cannot open it.
+  const stranger = await (await browser.newContext()).newPage();
+  await signIn(stranger);
+  expect((await stranger.request.get(`/api/v1/shared/${list.id}`)).status()).toBe(404);
+
+  // The owner takes it back; it is gone for them at once.
+  await owner.getByRole("button", { name: `Stop sharing with ${friend}` }).click();
+  expect((await visitor.request.get(`/api/v1/shared/${list.id}`)).status()).toBe(404);
 });

@@ -1,6 +1,6 @@
 import type { Item, List, ListEntry, ListMembership } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
-import { items, LEAN, listRows, lists, oid, users, type ListDoc, type ListItemDoc } from "./collections.ts";
+import { items, LEAN, listRows, lists, listShares, oid, users, type ListDoc, type ListItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 import { getMe } from "./users.ts";
 import { slugify } from "./tags.ts";
@@ -133,6 +133,7 @@ export async function deleteList(userId: string, listId: string): Promise<boolea
   if (!res.deletedCount) return false;
   const itemIds = await (await listRows()).distinct("itemId", { listId: _id });
   await (await listRows()).deleteMany({ listId: _id, userId: uid });
+  await (await listShares()).deleteMany({ listId: _id });
   await syncListNames(uid, itemIds);
   return true;
 }

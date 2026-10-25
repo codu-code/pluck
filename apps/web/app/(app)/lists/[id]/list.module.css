@@ -45,3 +45,14 @@
 .linkRow { display: flex; gap: 8px; }
 .link { flex: 1; min-width: 0; height: 36px; display: flex; align-items: center; padding: 0 10px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong); font: 12px ui-monospace, "SF Mono", Menlo, monospace; white-space: nowrap; overflow: hidden; }
 .primarySmall { height: 36px; padding: 0 12px; border-radius: 8px; border: 0; background: var(--brand); color: var(--on-brand); font: inherit; font-size: 13px; cursor: pointer; }
+
+/* People a List is shared with (See only) */
+.people { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; border-top: 1px solid var(--line); margin-top: 4px; }
+.peopleInput { flex: 1; min-width: 0; height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }
+.peopleInput:focus { outline: none; border: 1.5px solid var(--ink); }
+.peopleError { color: var(--danger); font-size: 13px; }
+.peopleList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.person { display: flex; align-items: center; gap: 8px; min-height: 36px; border-bottom: 1px solid var(--line); }
+.personEmail { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.personRemove { height: 30px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; color: var(--ink2); font: inherit; font-size: 13px; cursor: pointer; }
+.personRemove:hover { background: var(--rail); color: var(--danger); }

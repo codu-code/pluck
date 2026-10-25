@@ -1,10 +1,11 @@
 "use client";
 
-import type { List, ListEntry } from "@pluck/shared-schemas";
+import type { List, ListEntry, ListShare } from "@pluck/shared-schemas";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
+import { People } from "./People";
 import { TopBar } from "@/components/TopBar";
 import { rowSite } from "@/lib/format";
 import { isTyping } from "@/lib/keys";
@@ -22,7 +23,7 @@ function between(prev: number | undefined, next: number | undefined): number {
 }
 
 // The Collection board: one list in order, each item with a tick and a note that belong to the list.
-export function ListView({ initial, handle }: { initial: { list: List; entries: ListEntry[] }; handle: string | null }) {
+export function ListView({ initial, handle, people }: { initial: { list: List; entries: ListEntry[] }; handle: string | null; people: ListShare[] }) {
   const router = useRouter();
   const [list, setList] = useState(initial.list);
   const [entries, setEntries] = useState(initial.entries);
@@ -208,8 +209,9 @@ export function ListView({ initial, handle }: { initial: { list: List; entries: 
                 </span>
               </>
             ) : (
-              <span className={styles.meta}>Only you can see this list.</span>
+              <span className={styles.meta}>{people.length ? "Private: only you and the people below." : "Only you can see this list."}</span>
             )}
+            <People listId={list.id} initial={people} say={(message) => showToast({ message })} />
           </div>
         </div>
 

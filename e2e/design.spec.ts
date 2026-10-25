@@ -54,6 +54,7 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await snap("lists");
   await page.request.patch("/api/v1/me", { data: { handle: `d-${Date.now().toString(36)}` } });
   await page.request.patch(`/api/v1/lists/${listId}`, { data: { visibility: "public" } });
+  await page.request.post(`/api/v1/lists/${listId}/people`, { data: { email: "someone@example.test" } }); // the People panel, with one
   await page.goto(`/lists/${listId}`);
   await snap("list");
   const handle = (await (await page.request.get("/api/v1/me")).json()).me.handle;

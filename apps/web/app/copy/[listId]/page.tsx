@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 import { currentUser } from "@/lib/auth";
-import { publicListFor } from "@/lib/library";
+import { publicListFor, readShared } from "@/lib/library";
 import { CopyButton } from "./CopyButton";
 
 export const metadata: Metadata = { title: "Pluck this list · Pluck" };
@@ -14,7 +14,7 @@ export default async function CopyPage({ params }: { params: Promise<{ listId: s
   const { listId } = await params;
   const user = await currentUser();
   if (!user) redirect(`/signin?next=${encodeURIComponent(`/copy/${listId}`)}`);
-  const page = await publicListFor(listId);
+  const page = (await publicListFor(listId)) ?? (await readShared(user.id, listId).catch(() => null)); // public, or shared with them
   if (!page) notFound();
   const n = page.entries.length;
   return (

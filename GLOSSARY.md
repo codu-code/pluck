@@ -42,8 +42,12 @@ _Avoid_: Collection, folder, board, playlist
 The read-only, logged-out view of a Public List at `/@handle/slug`.
 _Avoid_: Share page, unlisted link
 
+**Shared List**:
+A List its owner shared with particular people by email, See only. They read it as its Public page shows it, from Lists, Shared with you, after signing in with that email; only the owner changes it.
+_Avoid_: Collaborator, member, invite
+
 **Handle**:
-A user's public name, set the first time they make a List public.
+A user's public name. Everyone starts with a made-up one (plucky-puffin-42) until they pick their own.
 _Avoid_: Username
 
 **Highlight**:

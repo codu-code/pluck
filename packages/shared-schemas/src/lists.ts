@@ -101,6 +101,20 @@ export const PublicList = z.object({
 });
 export type PublicList = z.infer<typeof PublicList>;
 
+// Sharing a List with people, See only: they read it as a public page reads, from their own Lists.
+export const ShareListBody = z.object({ email: z.string().trim().toLowerCase().email().max(254) });
+export const ListShare = z.object({ id: ObjectIdString, email: z.string(), createdAt: z.string() });
+export type ListShare = z.infer<typeof ListShare>;
+export const SharedListSummary = z.object({
+  id: ObjectIdString,
+  name: z.string(),
+  purpose: z.string(),
+  itemCount: z.number().int(),
+  owner: z.object({ name: z.string().nullable(), handle: z.string() }),
+  sharedAt: z.string(),
+});
+export type SharedListSummary = z.infer<typeof SharedListSummary>;
+
 export const REPORT_REASONS = ["illegal", "minors", "harassment", "doxxing", "spam", "malware", "infringement", "other"] as const;
 export const ReportBody = z.object({ listId: ObjectIdString, reason: z.enum(REPORT_REASONS), details: z.string().max(2000).optional() });
 export const CopyListBody = z.object({ listId: ObjectIdString });

@@ -1,6 +1,6 @@
 "use client";
 
-import type { List } from "@pluck/shared-schemas";
+import type { List, SharedListSummary } from "@pluck/shared-schemas";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
@@ -14,7 +14,7 @@ const LOCK = "M4.5 7.5V5a3.5 3.5 0 0 1 7 0v2.5M3.5 7.5h9v6h-9z";
 const GLOBE = "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM2 8h12M8 2c1.8 1.7 2.6 3.8 2.6 6S9.8 12.3 8 14C6.2 12.3 5.4 10.2 5.4 8S6.2 3.7 8 2z";
 
 // The Lists board: what you are making, newest activity first.
-export function ListsView({ initial }: { initial: List[] }) {
+export function ListsView({ initial, shared }: { initial: List[]; shared: SharedListSummary[] }) {
   const router = useRouter();
   const [making, setMaking] = useState(false);
   const [name, setName] = useState("");
@@ -93,6 +93,20 @@ export function ListsView({ initial }: { initial: List[] }) {
               </tbody>
             </table>
           </div>
+        )}
+        {shared.length > 0 && (
+          <section className={styles.shared} aria-labelledby="shared-with-you">
+            <h2 id="shared-with-you" className={styles.h2}>Shared with you</h2>
+            <ul className={styles.sharedList}>
+              {shared.map((l) => (
+                <li key={l.id} className={styles.sharedRow}>
+                  <Link href={`/shared/${l.id}`} className={styles.name}>{l.name}</Link>
+                  {l.purpose && <div className={styles.purpose}>{l.purpose}</div>}
+                  <div className={styles.purpose}>From {l.owner.name ? `${l.owner.name} (@${l.owner.handle})` : `@${l.owner.handle}`} · {l.itemCount} {l.itemCount === 1 ? "item" : "items"} · see only</div>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
         <p className={styles.foot}>Items in a list never expire. A list is a plan.</p>
       </div>
