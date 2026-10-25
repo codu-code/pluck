@@ -1,1 +1,81 @@
-{}
+{
+  "magicLink": {
+    "subject": "Il tuo link per accedere a Pluck",
+    "intro": "Ecco il tuo link per accedere a Pluck. Funziona una volta sola, per i prossimi 10 minuti.",
+    "button": "Accedi a Pluck",
+    "copy": "Il pulsante non funziona? Copia questo link nel browser:",
+    "ignore": "Se non l'hai chiesto tu, ignora questa email. Non succede niente finché non apri il link e tocchi Accedi."
+  },
+  "sharedList": {
+    "subject": "{sharer} ha condiviso una lista con te: {name}",
+    "untitled": "Una lista",
+    "text": {
+      "intro": "{who} ha condiviso con te una lista su Pluck: “{name}”.",
+      "open": "Aprila qui. Accedi con la tua email, senza password:",
+      "footer": "Tu puoi vederla; solo chi l'ha condivisa può modificarla. Non te l'aspettavi? Ignora questa email, oppure lascia la lista quando la apri."
+    },
+    "intro": "{who} ha condiviso con te una lista su Pluck:",
+    "button": "Apri la lista",
+    "footer": "Tu puoi vederla; solo chi l'ha condivisa può modificarla. Accedi con la tua email, senza password. Non te l'aspettavi? Ignora questa email, oppure lascia la lista quando la apri."
+  },
+  "welcome": {
+    "subject": "Grazie per aver provato Pluck",
+    "hi": "Ciao,",
+    "intro": "Sono Niall, e Pluck lo faccio io. Grazie per l'iscrizione. Volevo salutarti di persona.",
+    "plucked": "Vedo che hai già preso le prime cose, quindi conosci già la parte principale: un tocco da dovunque tu sia, e Pluck ti conserva la pagina.",
+    "fresh": "Il modo più veloce per iniziare è prendere una cosa che volevi leggere questa settimana: incolla il suo link in cima alla tua Inbox, e Pluck ti conserva la pagina.",
+    "connect": "Una cosa che quasi tutti scoprono tardi: la tua IA può leggere tutto quello che prendi. Collega Pluck a Claude, ChatGPT o Cursor in una trentina di secondi, poi chiedile cosa hai preso questa settimana: {url}",
+    "expiry": "E se sparisci per un po', non si perde niente. Gli elementi che non tocchi da {days, plural, =1 {# giorno} other {# giorni}} passano nell'Archivio, e non viene eliminato nulla.",
+    "ask": "Posso chiederti una cosa? Rispondi e dimmi cosa ti ha spinto a provare Pluck, o cosa speravi che facesse. La risposta arriva dritta a me, e le leggo tutte.",
+    "signature": "Niall"
+  },
+  "export": {
+    "subject": "La tua esportazione di Pluck è pronta",
+    "intro": "Tutta la tua libreria, in JSON e Markdown, in un unico zip:",
+    "note": "Il link funziona per 7 giorni. Puoi crearne uno nuovo in Impostazioni quando vuoi."
+  },
+  "digest": {
+    "subject": "{count, plural, =1 {Una cosa che hai preso e dimenticato.} =2 {Due cose che hai preso e dimenticato.} =3 {Tre cose che hai preso e dimenticato.} =4 {Quattro cose che hai preso e dimenticato.} =5 {Cinque cose che hai preso e dimenticato.} =6 {Sei cose che hai preso e dimenticato.} =7 {Sette cose che hai preso e dimenticato.} =8 {Otto cose che hai preso e dimenticato.} =9 {Nove cose che hai preso e dimenticato.} =10 {Dieci cose che hai preso e dimenticato.} other {# cose che hai preso e dimenticato.}}",
+    "subjectQuiet": "La tua settimana in Pluck.",
+    "greeting": "Buongiorno {name}. Tre minuti, poi via con la tua settimana.",
+    "greetingNoName": "Buongiorno. Tre minuti, poi via con la tua settimana.",
+    "expiring": {
+      "heading": "Non toccati da {days, plural, =1 {# giorno} other {# giorni}}",
+      "keep": "Tienilo",
+      "letGo": "Lascialo andare",
+      "keepLink": "Tienilo: {url}",
+      "letGoLink": "Lascialo andare: {url}",
+      "moves": "Se non fai niente, passano nel tuo Archivio {day}. Sempre cercabili, mai eliminati."
+    },
+    "due": {
+      "heading": "In scadenza questa settimana",
+      "line": "{title}, {when}"
+    },
+    "oldest": {
+      "heading": "I più vecchi nella tua Inbox"
+    },
+    "quiet": {
+      "heading": "Liste ferme",
+      "line": "{name}, {ticked, number} di {total, number} spuntati, {days, plural, =1 {# giorno} other {# giorni}}",
+      "ticked": "{ticked, number} di {total, number} spuntati",
+      "idle": "{days, plural, =1 {# giorno} other {# giorni}}"
+    },
+    "archive": {
+      "title": "Troppa roba?",
+      "body": "Archivia in un colpo solo tutto ciò che ha più di {days, plural, =1 {# giorno} other {# giorni}}.",
+      "button": "Archivia tutto. Sì, davvero.",
+      "text": "Troppa roba? Archivia in un colpo solo tutto ciò che ha più di {days, plural, =1 {# giorno} other {# giorni}}: {url}"
+    },
+    "ai": {
+      "title": "Preferisci farlo con la tua IA?",
+      "body": "Di' “fai la mia revisione settimanale”. Stessa lista, una decisione alla volta.",
+      "text": "Preferisci farlo con la tua IA? Di' \"fai la mia revisione settimanale\". Stessa lista, una decisione alla volta."
+    },
+    "footer": {
+      "note": "I link funzionano per 7 giorni, senza accesso. Regole semplici, nessun modello.",
+      "changeDay": "Cambia giorno",
+      "stop": "Non mandarmele più",
+      "text": "I link funzionano per 7 giorni, senza accesso. Regole semplici, nessun modello. Cambia giorno: {settings} . Non mandarmele più: {stop}"
+    }
+  }
+}

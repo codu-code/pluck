@@ -9,6 +9,12 @@
             "state": "translated",
             "value": "Add to %1$@"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi a %1$@"
+          }
         }
       }
     },
@@ -19,6 +25,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Added to %1$@"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiunto a %1$@"
           }
         }
       }
@@ -31,6 +43,12 @@
             "state": "translated",
             "value": "Bad server address."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indirizzo del server non valido."
+          }
         }
       }
     },
@@ -41,6 +59,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "That did not work."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non ha funzionato."
           }
         }
       }
@@ -53,6 +77,12 @@
             "state": "translated",
             "value": "Done"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fine"
+          }
         }
       }
     },
@@ -63,6 +93,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Couldn't pluck that."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile prenderlo."
           }
         }
       }
@@ -75,6 +111,12 @@
             "state": "translated",
             "value": "Kind"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipo"
+          }
         }
       }
     },
@@ -85,6 +127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Image"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immagine"
           }
         }
       }
@@ -97,6 +145,12 @@
             "state": "translated",
             "value": "Note"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
         }
       }
     },
@@ -104,6 +158,12 @@
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "it": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -119,6 +179,12 @@
             "state": "translated",
             "value": "Read"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da leggere"
+          }
         }
       }
     },
@@ -129,6 +195,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thing"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cosa"
           }
         }
       }
@@ -141,6 +213,12 @@
             "state": "translated",
             "value": "Todo"
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da fare"
+          }
         }
       }
     },
@@ -151,6 +229,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Watch"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da guardare"
           }
         }
       }
@@ -163,6 +247,12 @@
             "state": "translated",
             "value": "No upload address."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manca l'indirizzo di caricamento."
+          }
         }
       }
     },
@@ -173,6 +263,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Why you plucked it, in a line. Optional."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Perché l'hai preso, in una riga. Facoltativo."
           }
         }
       }
@@ -185,6 +281,12 @@
             "state": "translated",
             "value": "Nothing Pluck can keep here."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Qui non c'è niente che Pluck possa tenere."
+          }
         }
       }
     },
@@ -195,6 +297,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open Pluck to sign in"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri Pluck per accedere"
           }
         }
       }
@@ -207,6 +315,12 @@
             "state": "translated",
             "value": "Plucked."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preso."
+          }
         }
       }
     },
@@ -217,6 +331,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucking…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lo prendo…"
           }
         }
       }
@@ -229,6 +349,12 @@
             "state": "translated",
             "value": "It's on your phone. It goes up when you're back online."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "È sul tuo telefono. Parte appena torni online."
+          }
         }
       }
     },
@@ -239,6 +365,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucked. Will sync."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preso. Lo sincronizzo dopo."
           }
         }
       }
@@ -251,6 +383,12 @@
             "state": "translated",
             "value": "Sign in once. After that the share sheet does the rest."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accedi una volta. Poi al resto pensa il menu Condividi."
+          }
         }
       }
     },
@@ -262,6 +400,12 @@
             "state": "translated",
             "value": "Not signed in."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accesso non effettuato."
+          }
         }
       }
     },
@@ -272,6 +416,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags and list"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tag e lista"
           }
         }
       }

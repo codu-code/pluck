@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "Preso.",
+  "plucking": "Lo prendo…",
+  "signedOutTitle": "Accesso non effettuato.",
+  "signedOutBody": "Accedi una volta. Poi al resto pensa il menu Condividi.",
+  "openToSignIn": "Apri Pluck per accedere",
+  "queuedTitle": "Preso. Lo sincronizzo dopo.",
+  "queuedBody": "È sul tuo telefono. Parte appena torni online.",
+  "done": "Fine",
+  "failedTitle": "Impossibile prenderlo.",
+  "nothingToKeep": "Qui non c'è niente che Pluck possa tenere.",
+  "didNotWork": "Non ha funzionato.",
+  "badServer": "Indirizzo del server non valido.",
+  "noUploadAddress": "Manca l'indirizzo di caricamento.",
+  "tagsAndList": "Tag e lista",
+  "kind": "Tipo",
+  "addToList": "Aggiungi a {name}",
+  "addedToList": "Aggiunto a {name}",
+  "notePlaceholder": "Perché l'hai preso, in una riga. Facoltativo.",
+  "kindRead": "Da leggere",
+  "kindWatch": "Da guardare",
+  "kindPdf": "PDF",
+  "kindImage": "Immagine",
+  "kindTodo": "Da fare",
+  "kindNote": "Nota",
+  "kindThing": "Cosa"
+}

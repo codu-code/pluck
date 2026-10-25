@@ -1,0 +1,35 @@
+{
+  "appStore": {
+    "name": "Pluck: Leggi più tardi",
+    "subtitle": "Prendilo. Sistemalo dopo.",
+    "promotionalText": "Un tocco nel menu Condividi ed è tuo: la pagina, non solo il link. Sistemalo dopo a mano, o chiedi alla tua IA. Gratis e open source.",
+    "description": "Prendilo da qualsiasi app. Tocca Condividi, poi Pluck: la pagina viene conservata come l'hai vista, e l'app non si apre nemmeno.\n\nSistemalo dopo. La tua Inbox contiene tutto quello che hai preso. Scorri a destra per Più tardi, a sinistra per l'Archivio. Aggiungi un tag, mettilo in una lista, o segna come fatto un Da fare.\n\nLa pagina, non solo il link. Pluck conserva il testo di ogni pagina, così puoi leggerlo in un lettore pulito, offline, anche molto tempo dopo che il sito è cambiato.\n\nLe liste sono quello che stai costruendo. Un viaggio, un intervento, una lista di letture per un amico. Ordinale a mano, aggiungi una nota a ogni elemento, spunta quello che hai fatto e condividi una lista con le persone a cui serve.\n\nRitrovalo in un secondo. La ricerca copre titoli, note, tag e il testo completo di ogni pagina.\n\nPorta la tua IA. Dentro Pluck non c'è nessuna IA. Collega gli strumenti di IA che usi già, come Claude, ChatGPT o Cursor, e chiedi cosa hai preso questa settimana, o falle mettere in ordine la tua Inbox mentre guardi.\n\nNiente viene eliminato alle tue spalle. Gli elementi che non tocchi da un po' passano nell'Archivio, e non viene eliminato nulla.\n\nPluck è gratuito e open source. Usa getpluck.io, o fai girare il tuo server.",
+    "keywords": "leggere dopo,elenco lettura,articoli,link,lettore,offline,newsletter,notizie,liste,note,da fare,mcp"
+  },
+  "screenshots": [
+    {
+      "title": "Prendilo da qualsiasi app.",
+      "subtitle": "Un tocco nel menu Condividi. L'app non si apre nemmeno."
+    },
+    {
+      "title": "Sistemalo dopo.",
+      "subtitle": "Scorri a destra per Più tardi, a sinistra per l'Archivio."
+    },
+    {
+      "title": "La pagina, non solo il link.",
+      "subtitle": "Leggila ovunque, anche quando il sito non c'è più."
+    },
+    {
+      "title": "Le liste sono i tuoi progetti.",
+      "subtitle": "Un viaggio, un intervento, una cucina. Private finché non decidi tu."
+    },
+    {
+      "title": "Ritrovalo in un secondo.",
+      "subtitle": "Ogni parola della pagina, le tue note e i tuoi tag."
+    }
+  ],
+  "chrome": {
+    "summary": "Prendi la pagina in cui sei e mettila nella tua libreria Pluck, con un clic.",
+    "description": "Prendi la pagina in cui sei. Un clic la conserva nella tua libreria Pluck, con il testo come lo vedi tu, così puoi leggerla dopo, ritrovarla o chiederne qualcosa alla tua IA.\n\nFai clic su Pluck, o premi Alt+Shift+P. Compare “Preso” con il titolo, e la finestra ti permette di aggiungere un tag, cambiare il tipo, metterla in una lista, scrivere una nota o mandarla subito in Più tardi o nell'Archivio.\n\nFai clic destro su un link, un'immagine o la pagina per prenderli senza aprirli. Seleziona una frase e premi Alt+Shift+H per tenerla come evidenziazione. Prendi tutte le tue schede in una nuova lista in un colpo solo.\n\nLe pagine dietro i tuoi login vengono conservate come le ha mostrate il tuo browser. I video di YouTube arrivano con la trascrizione, così la ricerca e i tuoi strumenti di IA possono leggere cosa è stato detto.\n\nL'icona di Pluck si riempie sulle pagine che sono già nella tua libreria, così vedi a colpo d'occhio cosa hai già preso.\n\nNiente connessione? Quello che prendi aspetta sul tuo computer e parte quando torni online.\n\nPluck è open source. Usa getpluck.io, o compila l'estensione per un server tutto tuo. Dentro Pluck non c'è nessuna IA: colleghi gli strumenti di IA che usi già, se vuoi.\n\nServe un account Pluck gratuito su https://getpluck.io."
+  }
+}
