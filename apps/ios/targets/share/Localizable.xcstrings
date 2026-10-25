@@ -9,6 +9,12 @@
             "state": "translated",
             "value": "Add to %1$@"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toevoegen aan %1$@"
+          }
         }
       }
     },
@@ -19,6 +25,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Added to %1$@"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toegevoegd aan %1$@"
           }
         }
       }
@@ -31,6 +43,12 @@
             "state": "translated",
             "value": "Bad server address."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ongeldig serveradres."
+          }
         }
       }
     },
@@ -41,6 +59,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "That did not work."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dat werkte niet."
           }
         }
       }
@@ -53,6 +77,12 @@
             "state": "translated",
             "value": "Done"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klaar"
+          }
         }
       }
     },
@@ -63,6 +93,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Couldn't pluck that."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kon dat niet plukken."
           }
         }
       }
@@ -75,6 +111,12 @@
             "state": "translated",
             "value": "Kind"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soort"
+          }
         }
       }
     },
@@ -85,6 +127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Image"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afbeelding"
           }
         }
       }
@@ -97,6 +145,12 @@
             "state": "translated",
             "value": "Note"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notitie"
+          }
         }
       }
     },
@@ -104,6 +158,12 @@
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -119,6 +179,12 @@
             "state": "translated",
             "value": "Read"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lezen"
+          }
         }
       }
     },
@@ -129,6 +195,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thing"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ding"
           }
         }
       }
@@ -141,6 +213,12 @@
             "state": "translated",
             "value": "Todo"
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taak"
+          }
         }
       }
     },
@@ -151,6 +229,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Watch"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kijken"
           }
         }
       }
@@ -163,6 +247,12 @@
             "state": "translated",
             "value": "No upload address."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geen uploadadres."
+          }
         }
       }
     },
@@ -173,6 +263,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Why you plucked it, in a line. Optional."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waarom je het plukte, in één regel. Optioneel."
           }
         }
       }
@@ -185,6 +281,12 @@
             "state": "translated",
             "value": "Nothing Pluck can keep here."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niets wat Pluck hier kan bewaren."
+          }
         }
       }
     },
@@ -195,6 +297,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open Pluck to sign in"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Pluck om in te loggen"
           }
         }
       }
@@ -207,6 +315,12 @@
             "state": "translated",
             "value": "Plucked."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geplukt."
+          }
         }
       }
     },
@@ -217,6 +331,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucking…"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plukken…"
           }
         }
       }
@@ -229,6 +349,12 @@
             "state": "translated",
             "value": "It's on your phone. It goes up when you're back online."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Het staat op je telefoon. Het gaat mee zodra je weer online bent."
+          }
         }
       }
     },
@@ -239,6 +365,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucked. Will sync."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geplukt. Volgt zodra je online bent."
           }
         }
       }
@@ -251,6 +383,12 @@
             "state": "translated",
             "value": "Sign in once. After that the share sheet does the rest."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log één keer in. Daarna doet het deelmenu de rest."
+          }
         }
       }
     },
@@ -262,6 +400,12 @@
             "state": "translated",
             "value": "Not signed in."
           }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niet ingelogd."
+          }
         }
       }
     },
@@ -272,6 +416,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags and list"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tags en lijst"
           }
         }
       }

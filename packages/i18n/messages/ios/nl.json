@@ -1,1 +1,429 @@
-{}
+{
+  "language": {
+    "label": "Taal",
+    "hint": "Pluck gebruikt de taal van je iPhone. Wijzig die in iOS-instellingen, Pluck, Taal."
+  },
+  "common": {
+    "cancel": "Annuleer",
+    "done": "Klaar",
+    "save": "Bewaar",
+    "copy": "Kopieer",
+    "add": "Voeg toe",
+    "tryAgain": "Probeer opnieuw",
+    "loading": "Laden",
+    "backTo": "Terug naar {label}",
+    "backToLists": "Terug naar Lijsten",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "failed": {
+      "title": "Dat lukte niet",
+      "body": "Controleer de verbinding en probeer het opnieuw."
+    }
+  },
+  "kinds": {
+    "link": "Lezen",
+    "video": "Kijken",
+    "pdf": "PDF",
+    "image": "Afbeelding",
+    "note": "Notitie",
+    "todo": "Taak",
+    "thing": "Ding"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archived": "Gearchiveerd",
+    "done": "Klaar"
+  },
+  "tabs": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "search": "Zoek",
+    "lists": "Lijsten"
+  },
+  "actions": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archive": "Archiveer",
+    "backToInbox": "Terug naar de Inbox",
+    "tags": "Tags",
+    "list": "Lijst",
+    "addToList": "Voeg toe aan een Lijst",
+    "note": "Notitie",
+    "share": "Deel",
+    "more": "Meer",
+    "select": "Selecteer",
+    "deselect": "Deselecteer"
+  },
+  "moved": {
+    "archived": "Weg. Nou ja, gearchiveerd.",
+    "later": "Bewaard voor later.",
+    "done": "Klaar.",
+    "inbox": "Terug in de Inbox."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {Weg. Nou ja, gearchiveerd.} other {# items. Weg. Nou ja, gearchiveerd.}}",
+    "later": "{count, plural, one {Bewaard voor later.} other {# items. Bewaard voor later.}}",
+    "done": "{count, plural, one {Klaar.} other {# items. Klaar.}}",
+    "inbox": "{count, plural, one {Terug in de Inbox.} other {# items. Terug in de Inbox.}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}, {kind}, {site}, {when}",
+    "a11yWithNote": "{title}, {kind}, {site}, {when}, notitie: {note}",
+    "when": {
+      "now": "nu",
+      "minutes": "{count} min",
+      "hours": "{count} u",
+      "yesterday": "Gisteren"
+    },
+    "due": {
+      "overdue": "te laat",
+      "today": "deadline vandaag",
+      "tomorrow": "deadline morgen",
+      "on": "deadline {date}"
+    },
+    "meta": {
+      "byAi": "door AI",
+      "byYou": "door jou",
+      "failed": "Niet te lezen",
+      "pending": "Plukken",
+      "photo": "foto",
+      "video": "video",
+      "minutes": "{count} min",
+      "pdf": "PDF",
+      "link": "link"
+    },
+    "site": {
+      "email": "via e-mail",
+      "file": "Je bestand"
+    }
+  },
+  "art": {
+    "plucked": "Geplukt.",
+    "later": "Later"
+  },
+  "toast": {
+    "undo": "Herstel"
+  },
+  "usage": {
+    "title": "Pluck helpen verbeteren<accent>?</accent>",
+    "body": "Deel welke schermen je gebruikt, gekoppeld aan je account, zodat we oplossen wat in de weg zit. Geen advertenties. Niets verkocht. Crashrapporten gaan hoe dan ook mee, zonder je naam erop.",
+    "yes": "Pluk maar, ik doe mee",
+    "no": "Niks plukken"
+  },
+  "items": {
+    "selected": "{count} geselecteerd",
+    "all": "Alles",
+    "newNote": "Nieuwe notitie",
+    "newNoteText": "Nieuwe notitie",
+    "settings": "Instellingen",
+    "toTriage": "{count} te sorteren",
+    "forLater": "{count} voor later",
+    "toSync": "{count} te synchroniseren",
+    "moveFailed": "Dat lukte niet. Er is niets verplaatst.",
+    "addNote": "Voeg een notitie toe",
+    "selectAll": "Selecteer alles",
+    "empty": {
+      "inbox": {
+        "title": "Niets te sorteren.",
+        "body": "Tik in een app op Deel en dan op Pluck. Het komt hier binnen."
+      },
+      "later": {
+        "title": "Niets voor later.",
+        "body": "Veeg een item in de Inbox naar rechts en het wacht hier."
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "Met je gedeeld",
+    "sharedA11y": "{name}, gedeeld door {owner}, {count, plural, one {# item} other {# items}}",
+    "from": "Van {owner} · alleen bekijken",
+    "a11y": "{name}, {visibility, select, public {Openbaar} other {Privé}}, {ticked} van {count} afgevinkt",
+    "tickedOf": "{ticked} van {count}",
+    "empty": {
+      "title": "Nog geen lijsten.",
+      "body": "Maak er een op het web, of vraag je AI er een te bouwen uit wat je plukte."
+    }
+  },
+  "search": {
+    "placeholder": "Zoek",
+    "kind": "Soort",
+    "anyKind": "Elke soort",
+    "tag": "Tag",
+    "anyTag": "Elke tag",
+    "list": "Lijst",
+    "anyList": "Elke lijst",
+    "status": "Status",
+    "anyStatus": "Elke status",
+    "date": "Datum",
+    "plucked": "Geplukt",
+    "dates": {
+      "any": "Altijd",
+      "week": "Deze week",
+      "month": "Deze maand",
+      "year": "Dit jaar"
+    },
+    "yourNote": "Je notitie: <snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "Vind het terug.",
+        "body": "Titels, notities, tags, lijsten en de woorden op de pagina."
+      },
+      "error": {
+        "title": "Zoeken gaf geen antwoord.",
+        "body": "Controleer de verbinding en probeer het opnieuw."
+      },
+      "none": {
+        "title": "Niets geplukts past hierbij.",
+        "body": "Probeer minder woorden, of een ander filter."
+      }
+    },
+    "byMeaning": "Wil je zoeken op betekenis? Vraag het je AI."
+  },
+  "oauth": {
+    "signingIn": "Je wordt ingelogd."
+  },
+  "note": {
+    "title": "Notitie",
+    "placeholder": "Waarom je het bewaarde, of wat je ermee wilt.",
+    "hint": "Alleen jij ziet hem. Zoeken vindt hem."
+  },
+  "welcome": {
+    "title": "Je bent binnen.\nPluk nu iets.",
+    "lede": "Je hoeft deze app nooit te openen om te plukken. Hij zit in Deel, in elke app.",
+    "step1": "<b>1.</b> Tik op Deel en dan op Pluck.",
+    "step2": "<b>2.</b> Dat was het. Lees verder.",
+    "tryIt": "Probeer het nu",
+    "tryHint": "Opent een voorbeeldpagina in Safari. Deel hem met Pluck.",
+    "goToInbox": "Naar de Inbox"
+  },
+  "tags": {
+    "title": "Tags",
+    "rename": "Wijzig naam",
+    "renameTitle": "Wijzig de naam van de tag",
+    "deleteTitle": "“{name}” verwijderen?",
+    "deleteBody": "Hij gaat van {count, plural, one {het item} other {# items}} af. De items blijven.",
+    "deleteTag": "Verwijder de tag",
+    "deleted": "“{name}” is weg. De items blijven.",
+    "hint": "Wijzig naam of verwijder",
+    "empty": {
+      "title": "Nog geen tags.",
+      "body": "Tag iets door het lang in te drukken, of via Tags in de lezer."
+    }
+  },
+  "list": {
+    "publicShare": "Openbaar · Deel",
+    "privateShare": "Privé · Deel",
+    "ticked": "{ticked} van {count} afgevinkt",
+    "noteByAi": "{note} · door AI",
+    "tick": "Vink {title} af",
+    "addA11y": "Voeg toe aan deze lijst",
+    "empty": {
+      "title": "Nog niets op deze lijst.",
+      "body": "Tik op Voeg toe om er iets op te zetten, of vraag je AI hem te vullen."
+    }
+  },
+  "shared": {
+    "copied": "Geplukt. Je eigen kopie staat in Lijsten.",
+    "leaveTitle": "Deze Lijst verlaten?",
+    "leaveBody": "Hij verdwijnt uit je Lijsten. De eigenaar kan hem opnieuw met je delen.",
+    "leave": "Verlaat",
+    "byNamed": "Met je gedeeld door {name} (@{handle}) · alleen bekijken",
+    "by": "Met je gedeeld door @{handle} · alleen bekijken",
+    "notShared": {
+      "title": "Niet met je gedeeld.",
+      "body": "Deze Lijst bestaat niet meer, of hij is niet gedeeld met {email}. Heeft iemand je de link gestuurd, vraag dan of die hem met dat adres deelt.",
+      "bodyNoEmail": "Deze Lijst bestaat niet meer, of hij is niet gedeeld met het e-mailadres waarmee je bent ingelogd. Heeft iemand je de link gestuurd, vraag dan of die hem met dat adres deelt."
+    },
+    "empty": "Nog niets op deze Lijst.",
+    "pluckHint": "Kopieert hem naar je eigen Pluck",
+    "pluck": "Pluk deze lijst"
+  },
+  "signin": {
+    "stale": "Die link was van een eerdere poging. Open de nieuwste mail, of stuur een nieuwe link.",
+    "notServer": "Dat is geen serveradres. Het begint met https://.",
+    "badKey": "Die sleutel werkte niet op deze server.",
+    "unreachable": "Kon {origin} niet bereiken.",
+    "title": "Eén link.\nGeen wachtwoord<accent>.</accent>",
+    "lede": "Typ je e-mailadres en we sturen een link. Die logt je in, of begint je bibliotheek als je nieuw bent.",
+    "server": "Server",
+    "key": "API-sleutel, als je die gebruikt",
+    "keyA11y": "API-sleutel",
+    "noKey": "Geen sleutel? Laat dit leeg en we mailen je een link vanaf die server.",
+    "useKey": "Gebruik deze sleutel",
+    "withEmail": "Log in met e-mail",
+    "useHost": "Gebruik {host}",
+    "ownServer": "Gebruik je eigen server",
+    "preview": {
+      "a11y": "De mail: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang.",
+      "subject": "Je link naar Pluck",
+      "now": "nu",
+      "title": "Hier is je link.",
+      "body": "Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang. Nooit een wachtwoord om te onthouden.",
+      "button": "Log in bij Pluck"
+    }
+  },
+  "handle": {
+    "title": "Handle",
+    "locked": "Hij kan weer veranderen op {date}.",
+    "invalid": "3 tot 24 kleine letters, cijfers of streepjes.",
+    "hint": "Hij staat in de link van elke Lijst die je openbaar maakt.",
+    "makeOne": "Verzin er een",
+    "saved": "Je bent nu @{handle}.",
+    "save": "Bewaar @{handle}",
+    "keep": "Houd @{handle}",
+    "moveNone": "Nog geen openbare Lijsten, dus er veranderen geen links. Eenmaal bewaard kan hij over een maand weer veranderen.",
+    "move": "{count, plural, one {Je openbare Lijst verhuist} other {Je # openbare Lijsten verhuizen}} naar {host}/@{handle}/… en links naar het oude adres werken niet meer. Lijsten die je per e-mail met mensen deelt, veranderen niet. Eenmaal bewaard kan hij over een maand weer veranderen."
+  },
+  "share": {
+    "title": "Deel",
+    "close": "Sluit",
+    "sees": {
+      "me": "Alleen jij kunt deze Lijst zien.",
+      "people": "De mensen hier zien de titels, sites, covers en je notities bij deze Lijst, nooit je tags, vinkjes of de pagina’s die Pluck bewaarde. Alleen jij verandert hem.",
+      "anyone": "Openbaar: iedereen met deze link kan hem openen, zonder in te loggen, en hij kan in zoekmachines opduiken. Ze zien de titels, sites, covers en je notities bij deze Lijst, nooit je tags, vinkjes of de pagina’s die Pluck bewaarde. Maak hem wanneer je wilt weer privé; de link werkt dan meteen niet meer."
+    },
+    "options": {
+      "me": "Alleen jij",
+      "people": "Mensen die jij kiest",
+      "anyone": "Iedereen met de link"
+    },
+    "stopManyTitle": "Stoppen met delen met {count, plural, one {# persoon} other {# mensen}}?",
+    "stopManyBody": "Ze kunnen hem niet meer zien. Je kunt hem altijd opnieuw delen.",
+    "stopSharing": "Stop met delen",
+    "anyoneTitle": "Iedereen met de link?",
+    "anyoneBody": "Hij krijgt een openbare pagina onder je handle. Nooit de tags, vinkjes of pagina’s die Pluck bewaarde. Maak hem wanneer je wilt weer privé.",
+    "makePublic": "Maak openbaar",
+    "sharedWith": "Gedeeld met {email}. Die krijgt een mail met een link.",
+    "stopOneTitle": "Stoppen met delen met {email}?",
+    "stopOneBody": "Die kan hem niet meer zien.",
+    "whoHasAccess": "Wie toegang heeft",
+    "addByEmail": "Voeg iemand toe via e-mail",
+    "stopA11y": "Stop met delen met {email}",
+    "publicLink": "Openbare link",
+    "copyPublic": "Kopieer de openbare link",
+    "linkCopied": "Link gekopieerd.",
+    "shareLink": "Deel link"
+  },
+  "pick": {
+    "tags": "Tags",
+    "lists": "Lijsten",
+    "findTag": "Zoek of maak een tag",
+    "makeTag": "Maak de tag “{name}”",
+    "findList": "Zoek of begin een Lijst",
+    "startList": "Begin een Lijst met de naam “{name}”",
+    "tagsForMany": "Tags voor {count}",
+    "addMany": "Voeg {count} toe aan een Lijst",
+    "addTo": "Voeg toe aan {name}",
+    "addToTheList": "Voeg toe aan de lijst",
+    "noTags": "Nog geen tags.",
+    "noTagsBody": "Typ er hierboven een. Je AI kan ook dingen taggen.",
+    "noTagsManyBody": "Typ er hierboven een.",
+    "noLists": "Nog geen lijsten.",
+    "noListsBody": "Typ hierboven een naam om er een te beginnen, of vraag je AI er een te bouwen.",
+    "noListsManyBody": "Typ hierboven een naam om er een te beginnen.",
+    "nothing": "Niets in de Inbox of Later.",
+    "nothingBody": "Pluk eerst iets. Het verschijnt dan hier."
+  },
+  "item": {
+    "back": "Terug",
+    "backArchive": "Archief",
+    "didntLoad": "Deze laadde niet.",
+    "didntLoadBody": "Misschien is hij weg, of de verbinding. Probeer het straks opnieuw.",
+    "minutesLeft": "{percent} · nog {minutes} min",
+    "openOriginal": "Open het origineel",
+    "by": "Door {author}",
+    "noteA11y": "Je notitie: {note}. Wijzig",
+    "pending": "De pagina wordt geplukt. Hij verschijnt hier zo.",
+    "failed": "Kon deze pagina niet lezen.",
+    "failedFile": "Het bestand is bewaard. De woorden niet.",
+    "failedPage": "Sommige pagina’s houden hun woorden voor zich. De link is bewaard, en het origineel opent nog steeds.",
+    "titleA11y": "Titel",
+    "titleHint": "Laat de titel leeg en de eerste regel wordt de titel. Wordt bewaard terwijl je typt.",
+    "textA11y": "Tekst",
+    "textPlaceholder": "Schrijf het op."
+  },
+  "settings": {
+    "title": "Instellingen",
+    "sections": {
+      "account": "Account",
+      "aiTools": "AI-tools",
+      "emailIn": "E-mail naar Pluck",
+      "expiry": "Verlopen en de weekmail",
+      "library": "Bibliotheek",
+      "appIcon": "App-symbool",
+      "privacy": "Privacy"
+    },
+    "yourAccount": "Je account",
+    "name": "Naam",
+    "addName": "Voeg je naam toe",
+    "nameTitle": "Je naam",
+    "nameBody": "Te zien op Lijsten die je openbaar maakt.",
+    "nameSaved": "Naam bewaard.",
+    "handle": "Handle",
+    "signOut": "Log uit",
+    "signOutTitle": "Uitloggen?",
+    "signOutBody": "Wat op deze telefoon in de wachtrij staat, blijft hier tot je weer inlogt.",
+    "accountFootnote": "Je naam en handle staan op Lijsten die je openbaar maakt, en nergens anders.",
+    "connectorCopied": "Gekopieerd. Plak het in je AI.",
+    "copied": "Gekopieerd",
+    "copyConnector": "Kopieer het connectoradres",
+    "connected": "Verbonden {date}",
+    "disconnect": "Verbreek",
+    "disconnectA11y": "{name}. Verbreek",
+    "disconnectTitle": "{name} loskoppelen?",
+    "disconnectBody": "Hij stopt meteen met lezen en plukken. Je kunt hem altijd opnieuw verbinden.",
+    "toolsNeedAccount": "Je verbonden AI-tools verschijnen hier zodra je weer inlogt met een e-maillink.",
+    "toolsNone": "Nog geen AI-tool verbonden. Voeg het adres één keer toe in je AI-tool; het werkt op elk apparaat waarop je die gebruikt.",
+    "toolsHint": "Voeg het adres één keer toe in je AI-tool. Het werkt op elk apparaat waarop je die gebruikt.",
+    "addressCopied": "Adres gekopieerd.",
+    "copyEmailIn": "Kopieer het adres voor e-mail naar Pluck",
+    "newAddress": "Nieuw adres",
+    "newAddressTitle": "Een nieuw adres?",
+    "newAddressBody": "Het oude werkt meteen niet meer. Pas alles aan wat ernaar doorstuurt.",
+    "emailInFootnote": "Stuur een nieuwsbrief door naar dit adres. Hij komt in de Inbox als item van de soort Lezen.",
+    "days": "{count, plural, one {# dag} other {# dagen}}",
+    "never": "Nooit",
+    "scopeInboxLater": "Inbox en Later",
+    "scopeInbox": "Alleen Inbox",
+    "moveAfter": "Naar het Archief na",
+    "moveAfterTitle": "Onaangeroerde items gaan naar het Archief na",
+    "expirySaved": "Wat {count} dagen niet is aangeraakt, gaat naar het Archief. Er wordt niets verwijderd.",
+    "noExpiry": "Er verloopt nu niets meer.",
+    "appliesTo": "Geldt voor",
+    "appliesToTitle": "Verlopen geldt voor",
+    "weekly": "Weekmail",
+    "off": "Uit",
+    "weeklyTitle": "Stuur de weekmail op",
+    "noWeekly": "Geen weekmail.",
+    "weeklyOn": "De weekmail komt op {day, select, 0 {zondag} 1 {maandag} 2 {dinsdag} 3 {woensdag} 4 {donderdag} 5 {vrijdag} other {zaterdag}}.",
+    "expiryFootnote": "Onaangeroerde items gaan naar het Archief, er wordt niets verwijderd. De weekmail: wat binnenkort verhuist, wat een deadline heeft, en dingen die je plukte en vergat.",
+    "tags": "Tags",
+    "export": "Exporteer alles",
+    "byEmail": "Per e-mail",
+    "exportingTitle": "Bezig met exporteren",
+    "exportingBody": "Een zip met alles is onderweg naar {email}. De link komt binnen een paar minuten.",
+    "exportingBodyNoEmail": "Een zip met alles is onderweg naar je e-mail. De link komt binnen een paar minuten.",
+    "offline": "Offline kopie",
+    "offlineValue": "{count, plural, one {# item} other {# items}} · {mb} MB",
+    "clearTitle": "Offline kopie wissen?",
+    "clearBody": "Je bibliotheek blijft op de server. De app downloadt hem opnieuw terwijl je hem gebruikt.",
+    "clear": "Wis",
+    "server": "Server",
+    "serverBody": "Deze telefoon gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".",
+    "iconLight": "Licht",
+    "iconDark": "Donker",
+    "iconA11y": "Symbool {name}",
+    "iconFootnote": "Alleen het symbool. De app zelf volgt je telefoon.",
+    "usage": "Deel hoe ik Pluck gebruik",
+    "usageFootnote": "Welke schermen je gebruikt, gekoppeld aan je account. Nooit wat je plukt. Crashrapporten gaan hoe dan ook mee, zonder je naam.",
+    "tipTitle": "Zet Pluck vooraan in Deel",
+    "tipBody": "Tik in een app op Deel, scrol in de rij apps naar Meer en sleep Pluck naar voren.",
+    "deleteAll": "Verwijder alles. Echt waar.",
+    "deleteTitle": "Alles verwijderen?",
+    "deleteBody": "Elk item, elke tag, notitie en lijst, voorgoed. Exporteer eerst als je een kopie wilt.",
+    "continue": "Ga door",
+    "confirmTitle": "Typ je e-mailadres om te bevestigen",
+    "deleteButton": "Verwijder alles"
+  }
+}

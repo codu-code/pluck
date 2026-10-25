@@ -1,1 +1,81 @@
-{}
+{
+  "magicLink": {
+    "subject": "Je inloglink voor Pluck",
+    "intro": "Hier is je link om in te loggen bij Pluck. Hij werkt één keer, de komende 10 minuten.",
+    "button": "Inloggen bij Pluck",
+    "copy": "Werkt de knop niet? Kopieer deze link naar je browser:",
+    "ignore": "Heb je hier niet om gevraagd, negeer deze mail dan. Er gebeurt niets, tenzij je hem opent en op Inloggen tikt."
+  },
+  "sharedList": {
+    "subject": "{sharer} heeft een Lijst met je gedeeld: {name}",
+    "untitled": "Een Lijst",
+    "text": {
+      "intro": "{who} heeft een Lijst met je gedeeld op Pluck: “{name}”.",
+      "open": "Open hem hier. Je logt in met je e-mailadres, zonder wachtwoord:",
+      "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Had je dit niet verwacht? Negeer het, of verlaat de Lijst zodra je hem opent."
+    },
+    "intro": "{who} heeft een Lijst met je gedeeld op Pluck:",
+    "button": "Open de Lijst",
+    "footer": "Jij kunt hem zien; alleen de eigenaar verandert hem. Je logt in met je e-mailadres, zonder wachtwoord. Had je dit niet verwacht? Negeer het, of verlaat de Lijst zodra je hem opent."
+  },
+  "welcome": {
+    "subject": "Bedankt dat je Pluck probeert",
+    "hi": "Hoi,",
+    "intro": "Ik ben Niall, en ik maak Pluck. Bedankt voor je aanmelding. Ik wilde je even zelf gedag zeggen.",
+    "plucked": "Ik zie dat je al je eerste dingen hebt geplukt, dus je kent het belangrijkste al: één tik, waar je ook bent, en Pluck bewaart de pagina voor je.",
+    "fresh": "De snelste manier om te beginnen: pluk één ding dat je deze week nog wilde lezen. Plak de link bovenaan je Inbox, en Pluck bewaart de pagina voor je.",
+    "connect": "Iets wat de meeste mensen pas laat ontdekken: je AI kan alles lezen wat je plukt. Verbind Pluck in zo’n dertig seconden met Claude, ChatGPT of Cursor, en vraag dan wat je deze week hebt geplukt: {url}",
+    "expiry": "En als je een tijdje niets van je laat horen, raak je niets kwijt. Items die je {days, plural, =1 {# dag} other {# dagen}} niet hebt aangeraakt, gaan naar het Archief, en er wordt niets verwijderd.",
+    "ask": "Mag ik je één ding vragen? Antwoord op deze mail en vertel me waarom je Pluck bent gaan proberen, of wat je hoopte dat het zou doen. Je antwoord komt rechtstreeks bij mij terecht, en ik lees ze allemaal.",
+    "signature": "Niall"
+  },
+  "export": {
+    "subject": "Je Pluck-export staat klaar",
+    "intro": "Je hele bibliotheek, als JSON en Markdown, in één zip:",
+    "note": "De link werkt 7 dagen. Je kunt altijd een nieuwe maken in Instellingen."
+  },
+  "digest": {
+    "subject": "{count, plural, =1 {Eén ding dat je plukte en vergat.} =2 {Twee dingen die je plukte en vergat.} =3 {Drie dingen die je plukte en vergat.} =4 {Vier dingen die je plukte en vergat.} =5 {Vijf dingen die je plukte en vergat.} =6 {Zes dingen die je plukte en vergat.} =7 {Zeven dingen die je plukte en vergat.} =8 {Acht dingen die je plukte en vergat.} =9 {Negen dingen die je plukte en vergat.} =10 {Tien dingen die je plukte en vergat.} other {# dingen die je plukte en vergat.}}",
+    "subjectQuiet": "Je week in Pluck.",
+    "greeting": "Goedemorgen {name}. Drie minuten, en dan door met je week.",
+    "greetingNoName": "Goedemorgen. Drie minuten, en dan door met je week.",
+    "expiring": {
+      "heading": "{days, plural, =1 {# dag} other {# dagen}} niet aangeraakt",
+      "keep": "Houden",
+      "letGo": "Laat gaan",
+      "keepLink": "Houden: {url}",
+      "letGoLink": "Laat gaan: {url}",
+      "moves": "Doe je niets, dan gaan ze op {day} naar je Archief. Nog steeds te vinden, nooit verwijderd."
+    },
+    "due": {
+      "heading": "Deadline deze week",
+      "line": "{title}, {when}"
+    },
+    "oldest": {
+      "heading": "Het oudst in je inbox"
+    },
+    "quiet": {
+      "heading": "Stille lijsten",
+      "line": "{name}, {ticked, number} van {total, number} afgevinkt, {days, plural, =1 {# dag} other {# dagen}}",
+      "ticked": "{ticked, number} van {total, number} afgevinkt",
+      "idle": "{days, plural, =1 {# dag} other {# dagen}}"
+    },
+    "archive": {
+      "title": "Stapel te hoog?",
+      "body": "Archiveer alles wat ouder is dan {days, plural, =1 {# dag} other {# dagen}} in één keer.",
+      "button": "Alles archiveren. Echt waar.",
+      "text": "Stapel te hoog? Archiveer alles wat ouder is dan {days, plural, =1 {# dag} other {# dagen}} in één keer: {url}"
+    },
+    "ai": {
+      "title": "Doe je dit liever met je AI?",
+      "body": "Zeg “doe mijn weekoverzicht”. Dezelfde lijst, één beslissing tegelijk.",
+      "text": "Doe je dit liever met je AI? Zeg \"doe mijn weekoverzicht\". Dezelfde lijst, één beslissing tegelijk."
+    },
+    "footer": {
+      "note": "Links werken 7 dagen, zonder inloggen. Gewone regels, geen model.",
+      "changeDay": "Andere dag kiezen",
+      "stop": "Stoppen met deze mails",
+      "text": "Links werken 7 dagen, zonder inloggen. Gewone regels, geen model. Andere dag kiezen: {settings} . Stoppen met deze mails: {stop}"
+    }
+  }
+}
