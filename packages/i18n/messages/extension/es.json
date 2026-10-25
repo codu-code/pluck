@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "Recoge la página en la que estás y llévala a tu biblioteca de Pluck, con un clic.",
+    "pluckPage": "Recoger esta página",
+    "pluckSelection": "Recoger la selección como destacado"
+  },
+  "menu": {
+    "link": "Recoger enlace",
+    "selection": "Recoger selección como destacado",
+    "image": "Recoger imagen",
+    "page": "Recoger página"
+  },
+  "toolbar": {
+    "plucked": "Recogido",
+    "pluckPage": "Recoger esta página"
+  },
+  "errors": {
+    "nothing": "No hay nada que recoger en esta página.",
+    "failed": "No funcionó.",
+    "tryAgain": "No funcionó. Inténtalo de nuevo."
+  },
+  "kinds": {
+    "link": "Leer",
+    "video": "Ver",
+    "pdf": "PDF",
+    "image": "Imagen",
+    "note": "Nota",
+    "todo": "Tarea",
+    "thing": "Cosa"
+  },
+  "status": {
+    "inbox": "Entrada",
+    "later": "Más tarde",
+    "archived": "Archivado",
+    "done": "Hecho"
+  },
+  "popup": {
+    "plucking": "Recogiendo…",
+    "signedOut": {
+      "lede": "La página en la que estás, conservada con un clic. Inicia sesión una vez, con tu correo.",
+      "signIn": "Iniciar sesión",
+      "ownServer": "Usar tu propio servidor"
+    },
+    "nothingHint": "Pluck funciona en páginas web. Abre una y vuelve a hacer clic.",
+    "queued": {
+      "title": "No se pudo conectar con Pluck. Lo volverá a intentar.",
+      "count": "{count, plural, one {# elemento en cola} other {# elementos en cola}} en este navegador."
+    },
+    "already": {
+      "meta": "Recogido el {date} · {status}",
+      "open": "Abrir en Pluck",
+      "again": "Recogerlo otra vez"
+    },
+    "plucked": {
+      "title": "Recogido",
+      "undo": "Deshacer",
+      "tips": {
+        "opening": "Al abrir esto, la página queda conservada. Ese es todo el truco.",
+        "shortcut": "Alt+Shift+P lo hace sin hacer clic.",
+        "rightClick": "Haz clic derecho en un enlace o una imagen para recoger solo eso."
+      },
+      "tags": "Etiquetas",
+      "tagsPlaceholder": "Busca en tus etiquetas",
+      "kind": "Tipo",
+      "toList": "A una lista",
+      "noList": "Ninguna",
+      "lastUsed": "{name} (la última que usaste)",
+      "note": "Nota",
+      "notePlaceholder": "Una nota, si quieres",
+      "later": "Más tarde",
+      "archive": "Archivar",
+      "open": "Abrir en Pluck"
+    },
+    "tabs": {
+      "listName": "Pestañas del {date}",
+      "all": "{count, plural, one {Recoger # pestaña en una lista nueva, “{name}”} other {Recoger las # pestañas en una lista nueva, “{name}”}}",
+      "plucking": "Recogiendo…",
+      "done": "{count, plural, one {# pestaña recogida en “{name}”.} other {# pestañas recogidas en “{name}”.}}",
+      "failed": "No se pudo conectar con Pluck. Inténtalo de nuevo en un momento."
+    }
+  },
+  "options": {
+    "title": "Opciones de Pluck",
+    "shortcut": "Atajo: Alt+Shift+P · cámbialo en la página de atajos de tu navegador",
+    "server": "Servidor",
+    "defaultKind": "Tipo predeterminado",
+    "guess": "Deducirlo de la página",
+    "account": "Cuenta",
+    "apiKey": "Clave de API",
+    "useKey": "Usar clave",
+    "notSignedIn": "Sin sesión iniciada",
+    "signOut": "Cerrar sesión",
+    "signIn": "Iniciar sesión",
+    "useApiKey": "Usar una clave de API",
+    "sendContent": "Enviar el contenido de la página al recoger",
+    "sendContentHint": "Así podrás leer después las páginas que requieren tu inicio de sesión.",
+    "transcripts": "Capturar las transcripciones de YouTube",
+    "transcriptsHint": "Así la búsqueda y tu IA pueden leer lo que se dijo.",
+    "messages": {
+      "notAddress": "Eso no es una dirección web.",
+      "ownServerOnly": "Esta copia de Pluck solo se conecta con su propio servidor. Para usar el tuyo, compila la extensión desde el repositorio: consulta docs/self-host.md.",
+      "using": "Usando {origin}. Inicia sesión allí para recoger.",
+      "keySignedIn": "Sesión iniciada con tu clave de API.",
+      "keyFailed": "Esa clave no funcionó en este servidor.",
+      "signedOut": "Sesión cerrada."
+    }
+  }
+}
