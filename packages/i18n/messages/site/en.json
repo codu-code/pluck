@@ -406,46 +406,114 @@
     "button": "Get Pluck, then connect"
   },
   "legal": {
-    "englishOnly": "This page is in English, which is the version that applies.",
-    "privacy": {
-      "meta": {
-        "title": "Privacy · Pluck",
-        "description": "What Pluck stores, what it never does, and how to take it all with you."
-      },
-      "title": "Privacy",
-      "sections": {
-        "store": "What we store",
-        "dont": "What we don't do",
-        "extension": "The browser extension",
-        "ai": "Your AI tool",
-        "publicLists": "Public lists",
-        "sharing": "Sharing a List",
-        "emailIn": "Email-in",
-        "cookies": "Cookies and analytics",
-        "where": "Where it lives",
-        "export": "Export and delete",
-        "rights": "Your rights"
-      },
-      "box": "Questions"
+    "translationNotice": "This is a translation. If it and the English differ, the English version applies."
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy · Pluck",
+      "description": "What Pluck stores, what it never does, and how to take it all with you."
     },
-    "terms": {
-      "meta": {
-        "title": "Terms · Pluck",
-        "description": "It's your library, be decent with public lists, and you can always export and self-host."
+    "title": "Privacy",
+    "lede": "Short version: we store what you pluck so you can read it later. We don't read it, sell it, or feed it to a model. Last updated 24 October 2026.",
+    "sections": {
+      "store": {
+        "title": "What we store",
+        "body": "Your email and name. Every item you pluck: the link, the page text and images we fetched, your title, note, tags, kind, status, lists, highlights and reading position. The time you plucked it and the time you last opened it, which the expiry rule and the Monday email use. Items you import from Pocket, Omnivore, Raindrop or a bookmarks file."
       },
-      "title": "Terms",
-      "sections": {
-        "service": "The service",
-        "account": "Your account",
-        "library": "Your library is yours",
-        "publicLists": "Public lists",
-        "stored": "Stored pages",
-        "fairUse": "Fair use of the service",
-        "ai": "AI tools",
-        "wayOut": "No promises, but a way out",
-        "law": "Changes and law"
+      "dont": {
+        "title": "What we don't do",
+        "body": "We don't read your library. No person looks at it unless you ask us to for support. We don't sell it or share it with advertisers. There are no ads. The app has no AI model inside it, so nothing you pluck is sent to a model by us."
       },
-      "box": "Report a public list"
+      "extension": {
+        "title": "The browser extension",
+        "body": "While you are signed in, the extension asks your Pluck server whether the page you are on is already in your library, so its icon can fill in. That address is only used to answer the question: it is not added to your library or kept with your account. Turn it off by signing out of the extension or removing it."
+      },
+      "ai": {
+        "title": "Your AI tool",
+        "body": "If you connect an AI tool over MCP, that tool reads your library on your behalf and sends what it reads to its own provider. That is between you and them. You can disconnect it at any time in Settings. Everything the tool changes is marked as changed by AI and can be undone in bulk."
+      },
+      "publicLists": {
+        "title": "Public lists",
+        "body": "A list is private until you make it public. A public list shows its name, purpose, your name and handle, each item's title, cover, site and your note, with links out to the originals. It never shows the stored page text, your tags, ticks or anything else in your library. Flip it back to private and the page returns a 404 within a minute."
+      },
+      "sharing": {
+        "title": "Sharing a List",
+        "body": "When you share a List with someone, we keep the email address you typed so that person can sign in and see it, and we send them one email to say so. They see the List as a public page shows it: titles, sites, covers and your notes on the List, never your tags, ticks or the pages we kept. Remove them, delete the List or delete your account and the address goes too."
+      },
+      "emailIn": {
+        "title": "Email-in",
+        "body": "Mail sent to your pluck+ address becomes an item. We keep the message body as the item's page text and the sender as its site. We don't use that address for anything else."
+      },
+      "cookies": {
+        "title": "Cookies and analytics",
+        "body": "Two cookies are always on, because Pluck needs them: one keeps you signed in, and one holds what you paste on the home page for a day until you sign up. A third is up to you, and we ask before it is set. Say “Pluck it, I'm in” and we use PostHog, in the EU, to see how Pluck gets used: the pages you open, what you click, and once you are signed in, which account it was. It never sees what you pluck: button and link text, page titles and search words are stripped before anything leaves your browser. Say “Pluck off” and none of that happens. Either way, when something breaks we send the error and where it happened, with nothing that says who you are, so we can fix it. Change your mind any time from Cookies at the bottom of the site or in Settings. The iPhone app asks the same question once and has the same switch in its Settings."
+      },
+      "where": {
+        "title": "Where it lives",
+        "body": "Our hosted service runs on Vercel, MongoDB Atlas and AWS, all in Ireland, and PostHog in the EU for the analytics and error reports above. If you self-host, nothing touches our servers at all."
+      },
+      "export": {
+        "title": "Export and delete",
+        "body": "Export everything as JSON and Markdown from Settings, any time. Delete your account from Settings and every item, tag, list, note and key is gone at once. Backups are purged within 30 days."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can ask for a copy of your data, correct it, or have it erased. Export and Delete in Settings do this without asking us. If you need something else, email us. You can also complain to the Data Protection Commission in Ireland."
+      }
+    },
+    "box": {
+      "title": "Questions",
+      "body": "Email <mail>{email}</mail> and we answer within 30 days. The company behind Pluck is Codú Limited, Ireland."
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Terms · Pluck",
+      "description": "It's your library, be decent with public lists, and you can always export and self-host."
+    },
+    "title": "Terms",
+    "lede": "Short version: it's your library, be decent with public lists, and we can't promise the free service lasts for ever, which is why you can export and self-host. Last updated 24 October 2026.",
+    "sections": {
+      "service": {
+        "title": "The service",
+        "body": "Pluck lets you pluck links, notes, todos and things, read them later, put them in lists, and connect an AI tool to your library over MCP. The hosted service at {host} is free. The code is open source under {licence}, and you may run your own copy."
+      },
+      "account": {
+        "title": "Your account",
+        "body": "You need to be 16 or over. Keep your sign-in and API keys to yourself. You are responsible for what is done with them. One person, one account."
+      },
+      "library": {
+        "title": "Your library is yours",
+        "body": "You own what you pluck and what you write. We claim no rights over it. We store and show it to you, and to others only where you make a list public. You can export it all at any time."
+      },
+      "publicLists": {
+        "title": "Public lists",
+        "body": "When you make a list public you are publishing it. You confirm you have the right to share each item's title, cover, site and your own note. Don't publish lists that contain or point to illegal content, material that sexualises minors, threats, harassment, doxxing, spam, malware, or content that infringes someone else's copyright or trademark. We may take down a public list that breaks these rules, and may close accounts that keep doing it. Taking a list down does not delete it from your library."
+      },
+      "stored": {
+        "title": "Stored pages",
+        "body": "Pluck keeps a private copy of pages you pluck so you can read them later, the way a browser cache does. That copy is for you alone and is never served publicly. If a rights holder asks us to remove a stored copy of their page, we will."
+      },
+      "fairUse": {
+        "title": "Fair use of the service",
+        "body": "Don't use Pluck to scrape sites at scale, to run a bot farm, or to store things that aren't yours to store. We rate-limit capture, API and MCP calls to keep the service fast for everyone. Limits are published in the docs and we will tell you if you hit them."
+      },
+      "ai": {
+        "title": "AI tools",
+        "body": "Connecting an AI tool is your choice. What that tool does with your library is governed by its own terms. We expose read tools and write tools that mark their changes. A delete tool exists only if you grant it separately, and we never ask for it by default. We are not responsible for what a third-party tool does."
+      },
+      "wayOut": {
+        "title": "No promises, but a way out",
+        "body": "The hosted service is free and provided as is. We will do our best to keep it fast and up, but we can't guarantee it, and we can't guarantee it runs for ever. If we ever have to stop, we will give at least 90 days' notice, keep Export working to the last day, and the self-host option will always exist. Our liability to you is limited to the amount you paid us, which is nothing."
+      },
+      "law": {
+        "title": "Changes and law",
+        "body": "We may update these terms. We'll post the date at the top and email you for anything that matters. These terms are governed by the law of Ireland."
+      }
+    },
+    "box": {
+      "title": "Report a public list",
+      "body": "Every public page has a Report link at the bottom. Or email <mail>{email}</mail> with the link. We act within 3 working days."
     }
   },
   "publicList": {

@@ -4,6 +4,8 @@ import { expect, test } from "vitest";
 
 // Lists every [PLACEHOLDER] left before launch. Informational: it never fails on what it finds.
 const ROOTS = ["apps", "docs"];
+// The site catalog holds the legal pages' text, so their placeholders live there.
+const FILES = ["packages/i18n/messages/site/en.json"];
 const SKIP = new Set(["node_modules", ".next", ".output", "handover"]);
 const PATTERN = /\[[A-Z][A-Z ]{2,}\]/g;
 
@@ -18,7 +20,7 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 test("placeholders left before launch", () => {
-  const found = ROOTS.flatMap((r) => walk(r)).flatMap((file) =>
+  const found = [...ROOTS.flatMap((r) => walk(r)), ...FILES].flatMap((file) =>
     [...readFileSync(file, "utf8").matchAll(PATTERN)].map((m) => `${file}: ${m[0]}`),
   );
   if (found.length) console.info(`Placeholders to fill before launch:\n${found.join("\n")}`);
