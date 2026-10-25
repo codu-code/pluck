@@ -1,0 +1,35 @@
+{
+  "appStore": {
+    "name": "Pluck: Ler Depois",
+    "subtitle": "Colha agora. Organize depois.",
+    "promotionalText": "Um toque no menu Compartilhar e é seu: a página, não só o link. Organize depois, à mão ou pedindo à sua IA. Grátis e de código aberto.",
+    "description": "Colha de qualquer app. Toque em Compartilhar e depois em Pluck: a página fica guardada como você viu, e o app nem abre.\n\nOrganize depois. A sua Entrada guarda tudo o que você colheu. Deslize para a direita para Depois, para a esquerda para o Arquivo. Coloque uma tag, adicione a uma Lista ou marque uma Tarefa como concluída.\n\nA página, não só o link. O Pluck guarda o texto de cada página, para você ler num leitor limpo, offline, muito depois de o site ter mudado.\n\nListas são o que você está fazendo. Uma viagem, uma palestra, uma lista de leitura para um amigo. Ordene à mão, adicione uma nota a cada Item, marque o que já foi e compartilhe a Lista com quem precisa dela.\n\nEncontre num segundo. A busca cobre títulos, notas, tags e o texto completo de cada página.\n\nTraga a sua própria IA. Não há IA dentro do Pluck. Conecte as ferramentas de IA que você já usa, como Claude, ChatGPT ou Cursor, e pergunte o que você colheu esta semana, ou peça para arrumar a sua Entrada enquanto você olha.\n\nNada é apagado pelas suas costas. Os Itens em que você não mexe há um tempo vão para o Arquivo, e nada é apagado.\n\nO Pluck é grátis e de código aberto. Use o getpluck.io, ou rode o seu próprio servidor.",
+    "keywords": "salvar,links,lista,leitura,artigos,favoritos,leitor,offline,notícias,notas,tarefas,mcp,web,clipper"
+  },
+  "screenshots": [
+    {
+      "title": "Colha de qualquer app.",
+      "subtitle": "Um toque no menu Compartilhar. O app nem abre."
+    },
+    {
+      "title": "Organize depois.",
+      "subtitle": "Direita para Depois, esquerda para o Arquivo."
+    },
+    {
+      "title": "A página, não só o link.",
+      "subtitle": "Leia em qualquer lugar, mesmo quando o site sumir."
+    },
+    {
+      "title": "Listas são o que você está fazendo.",
+      "subtitle": "Uma viagem, uma palestra, uma cozinha. Privadas até você dizer."
+    },
+    {
+      "title": "Encontre num segundo.",
+      "subtitle": "Cada palavra da página, suas notas e suas tags."
+    }
+  ],
+  "chrome": {
+    "summary": "Colha a página em que você está para a sua biblioteca do Pluck, com um clique.",
+    "description": "Colha a página em que você está. Um clique guarda a página na sua biblioteca do Pluck, com o texto como você vê, para você ler depois, encontrar de novo ou perguntar sobre ela à sua IA.\n\nClique em Pluck, ou aperte Alt+Shift+P. Aparece “Colhido” com o título, e a janela deixa você adicionar uma tag, mudar o Tipo, colocar numa Lista, escrever uma nota ou mandar direto para Depois ou para o Arquivo.\n\nClique com o botão direito num link, numa imagem ou na página para colher sem abrir. Selecione uma frase e aperte Alt+Shift+H para guardá-la como destaque. Colha todas as suas abas numa nova Lista de uma vez.\n\nAs páginas que pedem seu login são guardadas como o seu navegador mostrou. Os vídeos do YouTube vêm com a transcrição, para a busca e as suas ferramentas de IA lerem o que foi dito.\n\nO ícone do Pluck aparece preenchido nas páginas que já estão na sua biblioteca, para você ver de relance o que já colheu.\n\nSem conexão? O que você colher espera no seu computador e sobe quando você estiver online de novo.\n\nO Pluck é de código aberto. Use o getpluck.io, ou compile a extensão para um servidor que você mesmo roda. Não há IA dentro do Pluck: você conecta as ferramentas de IA que já usa, se quiser.\n\nPrecisa de uma conta gratuita do Pluck em https://getpluck.io."
+  }
+}

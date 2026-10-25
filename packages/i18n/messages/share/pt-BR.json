@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "Colhido.",
+  "plucking": "Colhendo…",
+  "signedOutTitle": "Você não entrou.",
+  "signedOutBody": "Entre uma vez. Depois disso, o menu Compartilhar faz o resto.",
+  "openToSignIn": "Abra o Pluck para entrar",
+  "queuedTitle": "Colhido. Vai sincronizar.",
+  "queuedBody": "Está no seu celular. Sobe quando você estiver online de novo.",
+  "done": "OK",
+  "failedTitle": "Não deu para colher isso.",
+  "nothingToKeep": "Não há nada aqui que o Pluck consiga guardar.",
+  "didNotWork": "Não deu certo.",
+  "badServer": "Endereço de servidor inválido.",
+  "noUploadAddress": "Sem endereço de envio.",
+  "tagsAndList": "Tags e lista",
+  "kind": "Tipo",
+  "addToList": "Adicionar a {name}",
+  "addedToList": "Adicionado a {name}",
+  "notePlaceholder": "Por que você colheu, em uma linha. Opcional.",
+  "kindRead": "Leitura",
+  "kindWatch": "Vídeo",
+  "kindPdf": "PDF",
+  "kindImage": "Imagem",
+  "kindTodo": "Tarefa",
+  "kindNote": "Nota",
+  "kindThing": "Coisa"
+}

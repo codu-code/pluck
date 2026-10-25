@@ -1,1 +1,429 @@
-{}
+{
+  "language": {
+    "label": "Idioma",
+    "hint": "O Pluck usa o idioma do seu iPhone. Mude em Ajustes do iOS, Pluck, Idioma."
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "done": "OK",
+    "save": "Salvar",
+    "copy": "Copiar",
+    "add": "Adicionar",
+    "tryAgain": "Tentar de novo",
+    "loading": "Carregando",
+    "backTo": "Voltar para {label}",
+    "backToLists": "Voltar para Listas",
+    "items": "{count, plural, one {# item} other {# itens}}",
+    "failed": {
+      "title": "Não deu certo",
+      "body": "Confira a conexão e tente de novo."
+    }
+  },
+  "kinds": {
+    "link": "Leitura",
+    "video": "Vídeo",
+    "pdf": "PDF",
+    "image": "Imagem",
+    "note": "Nota",
+    "todo": "Tarefa",
+    "thing": "Coisa"
+  },
+  "status": {
+    "inbox": "Entrada",
+    "later": "Depois",
+    "archived": "Arquivado",
+    "done": "Concluído"
+  },
+  "tabs": {
+    "inbox": "Entrada",
+    "later": "Depois",
+    "search": "Buscar",
+    "lists": "Listas"
+  },
+  "actions": {
+    "inbox": "Entrada",
+    "later": "Depois",
+    "archive": "Arquivar",
+    "backToInbox": "De volta à Entrada",
+    "tags": "Tags",
+    "list": "Lista",
+    "addToList": "Adicionar a uma Lista",
+    "note": "Nota",
+    "share": "Compartilhar",
+    "more": "Mais",
+    "select": "Selecionar",
+    "deselect": "Desmarcar"
+  },
+  "moved": {
+    "archived": "Foi. Quer dizer, arquivado.",
+    "later": "Guardado para depois.",
+    "done": "Concluído.",
+    "inbox": "De volta à Entrada."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {Foi. Quer dizer, arquivado.} other {# itens. Foram. Quer dizer, arquivados.}}",
+    "later": "{count, plural, one {Guardado para depois.} other {# itens. Guardados para depois.}}",
+    "done": "{count, plural, one {Concluído.} other {# itens. Concluídos.}}",
+    "inbox": "{count, plural, one {De volta à Entrada.} other {# itens. De volta à Entrada.}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}, {kind}, {site}, {when}",
+    "a11yWithNote": "{title}, {kind}, {site}, {when}, nota: {note}",
+    "when": {
+      "now": "agora",
+      "minutes": "{count} min",
+      "hours": "{count} h",
+      "yesterday": "Ontem"
+    },
+    "due": {
+      "overdue": "em atraso",
+      "today": "para hoje",
+      "tomorrow": "para amanhã",
+      "on": "para {date}"
+    },
+    "meta": {
+      "byAi": "pela IA",
+      "byYou": "por você",
+      "failed": "Não deu para ler",
+      "pending": "Colhendo",
+      "photo": "foto",
+      "video": "vídeo",
+      "minutes": "{count} min",
+      "pdf": "PDF",
+      "link": "link"
+    },
+    "site": {
+      "email": "e-mail de entrada",
+      "file": "Seu arquivo"
+    }
+  },
+  "art": {
+    "plucked": "Colhido.",
+    "later": "Depois"
+  },
+  "toast": {
+    "undo": "Desfazer"
+  },
+  "usage": {
+    "title": "Quer ajudar a melhorar o Pluck<accent>?</accent>",
+    "body": "Compartilhe quais telas você usa, ligadas à sua conta, para a gente consertar o que atrapalha. Sem anúncios. Sem venda de dados. Os relatórios de falha vão de qualquer jeito, sem o seu nome.",
+    "yes": "Pode colher, tô dentro",
+    "no": "Não, valeu"
+  },
+  "items": {
+    "selected": "{count} selecionados",
+    "all": "Todos",
+    "newNote": "Nova nota",
+    "newNoteText": "Nova nota",
+    "settings": "Ajustes",
+    "toTriage": "{count} para triar",
+    "forLater": "{count} para depois",
+    "toSync": "{count} para sincronizar",
+    "moveFailed": "Não deu certo. Nada saiu do lugar.",
+    "addNote": "Adicionar uma nota",
+    "selectAll": "Selecionar tudo",
+    "empty": {
+      "inbox": {
+        "title": "Nada para triar.",
+        "body": "Toque em Compartilhar em qualquer app e depois em Pluck. Chega aqui."
+      },
+      "later": {
+        "title": "Nada para depois.",
+        "body": "Deslize um item para a direita na Entrada e ele espera aqui."
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "Compartilhadas com você",
+    "sharedA11y": "{name}, compartilhada por {owner}, {count, plural, one {# item} other {# itens}}",
+    "from": "De {owner} · só para ver",
+    "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} marcados",
+    "tickedOf": "{ticked} de {count}",
+    "empty": {
+      "title": "Nenhuma lista ainda.",
+      "body": "Crie uma na web, ou peça à sua IA para montar uma com o que você colheu."
+    }
+  },
+  "search": {
+    "placeholder": "Buscar",
+    "kind": "Tipo",
+    "anyKind": "Qualquer tipo",
+    "tag": "Tag",
+    "anyTag": "Qualquer tag",
+    "list": "Lista",
+    "anyList": "Qualquer lista",
+    "status": "Status",
+    "anyStatus": "Qualquer status",
+    "date": "Data",
+    "plucked": "Colhido",
+    "dates": {
+      "any": "Qualquer data",
+      "week": "Esta semana",
+      "month": "Este mês",
+      "year": "Este ano"
+    },
+    "yourNote": "Sua nota: <snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "Encontre de novo.",
+        "body": "Títulos, notas, tags, listas e as palavras da página."
+      },
+      "error": {
+        "title": "A busca não respondeu.",
+        "body": "Confira a conexão e tente de novo."
+      },
+      "none": {
+        "title": "Nada do que você colheu bate com isso.",
+        "body": "Tente menos palavras, ou outro filtro."
+      }
+    },
+    "byMeaning": "Quer buscar pelo sentido? Pergunte à sua IA."
+  },
+  "oauth": {
+    "signingIn": "Entrando."
+  },
+  "note": {
+    "title": "Nota",
+    "placeholder": "Por que você guardou, ou o que fazer com isso.",
+    "hint": "Só você vê. A busca encontra."
+  },
+  "welcome": {
+    "title": "Você entrou.\nAgora colha alguma coisa.",
+    "lede": "Você nunca precisa abrir este app para colher. Ele fica em Compartilhar, em todos os apps.",
+    "step1": "<b>1.</b> Toque em Compartilhar e depois em Pluck.",
+    "step2": "<b>2.</b> Pronto. Continue lendo.",
+    "tryIt": "Experimente agora",
+    "tryHint": "Abre uma página de exemplo no Safari. Compartilhe com o Pluck.",
+    "goToInbox": "Ir para a Entrada"
+  },
+  "tags": {
+    "title": "Tags",
+    "rename": "Renomear",
+    "renameTitle": "Renomear a tag",
+    "deleteTitle": "Apagar “{name}”?",
+    "deleteBody": "Ela sai {count, plural, one {do # item} other {de # itens}}. Os itens ficam.",
+    "deleteTag": "Apagar a tag",
+    "deleted": "“{name}” foi apagada. Os itens ficam.",
+    "hint": "Renomear ou apagar",
+    "empty": {
+      "title": "Nenhuma tag ainda.",
+      "body": "Coloque uma tag tocando e segurando um item, ou em Tags no leitor."
+    }
+  },
+  "list": {
+    "publicShare": "Pública · Compartilhar",
+    "privateShare": "Privada · Compartilhar",
+    "ticked": "{ticked} de {count} marcados",
+    "noteByAi": "{note} · pela IA",
+    "tick": "Marcar {title}",
+    "addA11y": "Adicionar a esta lista",
+    "empty": {
+      "title": "Nada nesta lista ainda.",
+      "body": "Toque em Adicionar para colocar itens nela, ou peça à sua IA para preenchê-la."
+    }
+  },
+  "shared": {
+    "copied": "Colhido. Sua própria cópia está em Listas.",
+    "leaveTitle": "Sair desta Lista?",
+    "leaveBody": "Ela sai das suas Listas. A pessoa pode compartilhar com você de novo.",
+    "leave": "Sair",
+    "byNamed": "Compartilhada com você por {name} (@{handle}) · só para ver",
+    "by": "Compartilhada com você por @{handle} · só para ver",
+    "notShared": {
+      "title": "Não foi compartilhada com você.",
+      "body": "Ou esta Lista não existe mais, ou não foi compartilhada com {email}. Se alguém mandou o link, peça para compartilhar com esse endereço.",
+      "bodyNoEmail": "Ou esta Lista não existe mais, ou não foi compartilhada com o e-mail que você usou para entrar. Se alguém mandou o link, peça para compartilhar com esse endereço."
+    },
+    "empty": "Nada nesta Lista ainda.",
+    "pluckHint": "Copia para o seu próprio Pluck",
+    "pluck": "Colher esta lista"
+  },
+  "signin": {
+    "stale": "Esse link era de uma tentativa anterior. Abra o e-mail mais recente, ou peça um novo link.",
+    "notServer": "Isso não é um endereço de servidor. Ele começa com https://.",
+    "badKey": "Essa chave não funcionou neste servidor.",
+    "unreachable": "Não deu para falar com {origin}.",
+    "title": "Um link.\nSem senha<accent>.</accent>",
+    "lede": "Digite seu e-mail e a gente manda um link. Ele faz você entrar, ou começa a sua biblioteca se você for novo por aqui.",
+    "server": "Servidor",
+    "key": "Chave de API, se você usa uma",
+    "keyA11y": "Chave de API",
+    "noKey": "Sem chave? Deixe em branco e a gente manda um link por e-mail desse servidor.",
+    "useKey": "Usar esta chave",
+    "withEmail": "Entrar com e-mail",
+    "useHost": "Usar {host}",
+    "ownServer": "Usar seu próprio servidor",
+    "preview": {
+      "a11y": "O e-mail: Aqui está o seu link. Toque nele para entrar. Funciona uma vez, por 10 minutos.",
+      "subject": "Seu link para o Pluck",
+      "now": "agora",
+      "title": "Aqui está o seu link.",
+      "body": "Toque nele para entrar. Funciona uma vez, por 10 minutos. Nenhuma senha para lembrar, nunca.",
+      "button": "Entrar no Pluck"
+    }
+  },
+  "handle": {
+    "title": "Identificador",
+    "locked": "Ele pode mudar de novo em {date}.",
+    "invalid": "De 3 a 24 letras minúsculas, números ou hifens.",
+    "hint": "Ele vai no link de toda Lista que você tornar pública.",
+    "makeOne": "Inventar um",
+    "saved": "Agora você é @{handle}.",
+    "save": "Salvar @{handle}",
+    "keep": "Manter @{handle}",
+    "moveNone": "Nenhuma Lista pública ainda, então nenhum link muda. Depois de salvo, ele só pode mudar de novo daqui a um mês.",
+    "move": "{count, plural, one {Sua Lista pública passa} other {Suas # Listas públicas passam}} para {host}/@{handle}/… e os links do endereço antigo param de funcionar. As Listas compartilhadas com pessoas por e-mail não são afetadas. Depois de salvo, ele só pode mudar de novo daqui a um mês."
+  },
+  "share": {
+    "title": "Compartilhar",
+    "close": "Fechar",
+    "sees": {
+      "me": "Só você pode ver esta Lista.",
+      "people": "As pessoas aqui veem os títulos, sites, capas e suas notas nesta Lista, nunca as suas tags, marcações ou as páginas que o Pluck guardou. Só você muda a Lista.",
+      "anyone": "Pública: qualquer pessoa com este link pode abrir, sem entrar, e ela pode aparecer em buscadores. Elas veem os títulos, sites, capas e suas notas nesta Lista, nunca as suas tags, marcações ou as páginas que o Pluck guardou. Torne privada de novo quando quiser; o link para de funcionar na hora."
+    },
+    "options": {
+      "me": "Só você",
+      "people": "Pessoas que você escolher",
+      "anyone": "Qualquer pessoa com o link"
+    },
+    "stopManyTitle": "Parar de compartilhar com {count, plural, one {# pessoa} other {# pessoas}}?",
+    "stopManyBody": "Elas não vão mais conseguir ver. Compartilhe de novo quando quiser.",
+    "stopSharing": "Parar de compartilhar",
+    "anyoneTitle": "Qualquer pessoa com o link?",
+    "anyoneBody": "Ela ganha uma página pública no seu identificador. Nunca as tags, marcações ou páginas que o Pluck guardou. Torne privada de novo quando quiser.",
+    "makePublic": "Tornar pública",
+    "sharedWith": "Compartilhada com {email}. A pessoa recebe um e-mail com um link.",
+    "stopOneTitle": "Parar de compartilhar com {email}?",
+    "stopOneBody": "A pessoa não vai mais conseguir ver.",
+    "whoHasAccess": "Quem tem acesso",
+    "addByEmail": "Adicionar alguém por e-mail",
+    "stopA11y": "Parar de compartilhar com {email}",
+    "publicLink": "Link público",
+    "copyPublic": "Copiar o link público",
+    "linkCopied": "Link copiado.",
+    "shareLink": "Compartilhar link"
+  },
+  "pick": {
+    "tags": "Tags",
+    "lists": "Listas",
+    "findTag": "Encontre ou crie uma tag",
+    "makeTag": "Criar a tag “{name}”",
+    "findList": "Encontre ou comece uma Lista",
+    "startList": "Começar uma Lista chamada “{name}”",
+    "tagsForMany": "Tags para {count}",
+    "addMany": "Adicionar {count} a uma Lista",
+    "addTo": "Adicionar a {name}",
+    "addToTheList": "Adicionar à lista",
+    "noTags": "Nenhuma tag ainda.",
+    "noTagsBody": "Digite uma acima. A sua IA também pode colocar tags.",
+    "noTagsManyBody": "Digite uma acima.",
+    "noLists": "Nenhuma lista ainda.",
+    "noListsBody": "Digite um nome acima para começar uma, ou peça à sua IA para montar uma.",
+    "noListsManyBody": "Digite um nome acima para começar uma.",
+    "nothing": "Nada na Entrada nem em Depois.",
+    "nothingBody": "Colha alguma coisa primeiro. Ela aparece aqui."
+  },
+  "item": {
+    "back": "Voltar",
+    "backArchive": "Arquivo",
+    "didntLoad": "Este não carregou.",
+    "didntLoadBody": "Talvez ele tenha sumido, ou a conexão. Tente de novo daqui a pouco.",
+    "minutesLeft": "{percent} · faltam {minutes} min",
+    "openOriginal": "Abrir o original",
+    "by": "Por {author}",
+    "noteA11y": "Sua nota: {note}. Editar",
+    "pending": "Colhendo a página. Ela aparece aqui num instante.",
+    "failed": "Não deu para ler esta página.",
+    "failedFile": "O arquivo foi guardado. As palavras dele, não.",
+    "failedPage": "Algumas páginas guardam as palavras para si. O link foi guardado, e o original ainda abre.",
+    "titleA11y": "Título",
+    "titleHint": "Deixe o título em branco e a primeira linha vira o título. Salva enquanto você digita.",
+    "textA11y": "Texto",
+    "textPlaceholder": "Anote aqui."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "sections": {
+      "account": "Conta",
+      "aiTools": "Ferramentas de IA",
+      "emailIn": "E-mail de entrada",
+      "expiry": "Expiração e o e-mail semanal",
+      "library": "Biblioteca",
+      "appIcon": "Ícone do app",
+      "privacy": "Privacidade"
+    },
+    "yourAccount": "Sua conta",
+    "name": "Nome",
+    "addName": "Adicionar seu nome",
+    "nameTitle": "Seu nome",
+    "nameBody": "Aparece nas Listas que você tornar públicas.",
+    "nameSaved": "Nome salvo.",
+    "handle": "Identificador",
+    "signOut": "Sair",
+    "signOutTitle": "Sair?",
+    "signOutBody": "O que estiver na fila neste celular fica aqui até você entrar de novo.",
+    "accountFootnote": "Seu nome e seu identificador aparecem nas Listas que você tornar públicas, e em nenhum outro lugar.",
+    "connectorCopied": "Copiado. Cole na sua IA.",
+    "copied": "Copiado",
+    "copyConnector": "Copiar o endereço do conector",
+    "connected": "Conectado em {date}",
+    "disconnect": "Desconectar",
+    "disconnectA11y": "{name}. Desconectar",
+    "disconnectTitle": "Desconectar {name}?",
+    "disconnectBody": "Ele para de ler e de colher na hora. Conecte de novo quando quiser.",
+    "toolsNeedAccount": "Suas ferramentas de IA conectadas aparecem aqui quando você entrar de novo com um link por e-mail.",
+    "toolsNone": "Nenhuma ferramenta de IA conectada ainda. Adicione o endereço uma vez na sua ferramenta de IA; ele funciona em todos os aparelhos em que você a usa.",
+    "toolsHint": "Adicione o endereço uma vez na sua ferramenta de IA. Ele funciona em todos os aparelhos em que você a usa.",
+    "addressCopied": "Endereço copiado.",
+    "copyEmailIn": "Copiar o endereço de e-mail de entrada",
+    "newAddress": "Novo endereço",
+    "newAddressTitle": "Um novo endereço?",
+    "newAddressBody": "O antigo para de funcionar na hora. Atualize tudo o que encaminha para ele.",
+    "emailInFootnote": "Encaminhe uma newsletter para cá. Ela chega na Entrada como um Item do tipo Leitura.",
+    "days": "{count, plural, one {# dia} other {# dias}}",
+    "never": "Nunca",
+    "scopeInboxLater": "Entrada e Depois",
+    "scopeInbox": "Só a Entrada",
+    "moveAfter": "Mover para o Arquivo depois de",
+    "moveAfterTitle": "Itens em que você não mexer vão para o Arquivo depois de",
+    "expirySaved": "Sem mexer por {count} dias, vai para o Arquivo. Nada é apagado.",
+    "noExpiry": "Agora nada expira.",
+    "appliesTo": "Vale para",
+    "appliesToTitle": "A expiração vale para",
+    "weekly": "E-mail semanal",
+    "off": "Desligado",
+    "weeklyTitle": "Enviar o e-mail semanal",
+    "noWeekly": "Sem e-mail semanal.",
+    "weeklyOn": "O e-mail semanal chega {day, select, 0 {aos domingos} 1 {às segundas} 2 {às terças} 3 {às quartas} 4 {às quintas} 5 {às sextas} other {aos sábados}}.",
+    "expiryFootnote": "Itens em que você não mexer vão para o Arquivo, nada é apagado. O e-mail semanal: o que vai mudar de lugar em breve, o que vence, e coisas que você colheu e esqueceu.",
+    "tags": "Tags",
+    "export": "Exportar tudo",
+    "byEmail": "Por e-mail",
+    "exportingTitle": "Exportando",
+    "exportingBody": "Um zip com tudo está a caminho de {email}. O link chega em um ou dois minutos.",
+    "exportingBodyNoEmail": "Um zip com tudo está a caminho do seu e-mail. O link chega em um ou dois minutos.",
+    "offline": "Cópia offline",
+    "offlineValue": "{count, plural, one {# item} other {# itens}} · {mb} MB",
+    "clearTitle": "Limpar a cópia offline?",
+    "clearBody": "Sua biblioteca continua no servidor. O app baixa de novo conforme você usa.",
+    "clear": "Limpar",
+    "server": "Servidor",
+    "serverBody": "Este celular usa {host}. Para usar outro servidor, saia e escolha \"Usar seu próprio servidor\".",
+    "iconLight": "Claro",
+    "iconDark": "Escuro",
+    "iconA11y": "Ícone {name}",
+    "iconFootnote": "Só o ícone. O app em si segue o seu celular.",
+    "usage": "Compartilhar como eu uso o Pluck",
+    "usageFootnote": "Quais telas você usa, ligadas à sua conta. Nunca o que você colhe. Os relatórios de falha vão de qualquer jeito, sem o seu nome.",
+    "tipTitle": "Coloque o Pluck em primeiro no Compartilhar",
+    "tipBody": "Em qualquer app, toque em Compartilhar, role a fila de apps até Mais e arraste o Pluck para o começo.",
+    "deleteAll": "Apagar tudo. Sério.",
+    "deleteTitle": "Apagar tudo?",
+    "deleteBody": "Todos os itens, tags, notas e listas, para sempre. Exporte antes se quiser uma cópia.",
+    "continue": "Continuar",
+    "confirmTitle": "Digite seu e-mail para confirmar",
+    "deleteButton": "Apagar tudo"
+  }
+}
