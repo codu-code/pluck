@@ -10,10 +10,22 @@
             "value": "Add to %1$@"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadir a %1$@"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Aggiungi a %1$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加到 %1$@"
           }
         }
       }
@@ -27,10 +39,22 @@
             "value": "Added to %1$@"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añadido a %1$@"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Aggiunto a %1$@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已添加到 %1$@"
           }
         }
       }
@@ -44,10 +68,22 @@
             "value": "Bad server address."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La dirección del servidor no es válida."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Indirizzo del server non valido."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "服务器地址有误。"
           }
         }
       }
@@ -61,10 +97,22 @@
             "value": "That did not work."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No funcionó."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Non ha funzionato."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有成功。"
           }
         }
       }
@@ -78,10 +126,22 @@
             "value": "Done"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listo"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Fine"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
           }
         }
       }
@@ -95,10 +155,22 @@
             "value": "Couldn't pluck that."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo recoger."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Impossibile prenderlo."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没能摘下。"
           }
         }
       }
@@ -112,10 +184,22 @@
             "value": "Kind"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipo"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Tipo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "类别"
           }
         }
       }
@@ -129,10 +213,22 @@
             "value": "Image"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imagen"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Immagine"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图片"
           }
         }
       }
@@ -146,10 +242,22 @@
             "value": "Note"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Nota"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "笔记"
           }
         }
       }
@@ -163,7 +271,19 @@
             "value": "PDF"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
         "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -180,10 +300,22 @@
             "value": "Read"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leer"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Da leggere"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "阅读"
           }
         }
       }
@@ -197,10 +329,22 @@
             "value": "Thing"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cosa"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Oggetto"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "物品"
           }
         }
       }
@@ -214,10 +358,22 @@
             "value": "Todo"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarea"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Da fare"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待办"
           }
         }
       }
@@ -231,10 +387,22 @@
             "value": "Watch"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Da guardare"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "观看"
           }
         }
       }
@@ -248,10 +416,22 @@
             "value": "No upload address."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No hay dirección de subida."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Manca l'indirizzo di caricamento."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有上传地址。"
           }
         }
       }
@@ -265,10 +445,22 @@
             "value": "Why you plucked it, in a line. Optional."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Por qué lo recoges, en una línea. Opcional."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Perché l'hai preso, in una riga. Facoltativo."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "为什么摘下它，一句话就好。可不填。"
           }
         }
       }
@@ -282,10 +474,22 @@
             "value": "Nothing Pluck can keep here."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aquí no hay nada que Pluck pueda conservar."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Qui non c'è niente che Pluck possa tenere."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这里没有 Pluck 能留下的内容。"
           }
         }
       }
@@ -299,10 +503,22 @@
             "value": "Open Pluck to sign in"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abre Pluck para iniciar sesión"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Apri Pluck per accedere"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 Pluck 登录"
           }
         }
       }
@@ -316,10 +532,22 @@
             "value": "Plucked."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recogido."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Preso."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已摘下。"
           }
         }
       }
@@ -333,10 +561,22 @@
             "value": "Plucking…"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recogiendo…"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Lo prendo…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在摘下…"
           }
         }
       }
@@ -350,10 +590,22 @@
             "value": "It's on your phone. It goes up when you're back online."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Está en tu teléfono. Se sube cuando vuelvas a tener conexión."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "È sul tuo telefono. Parte appena torni online."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "它先留在你的手机上，联网后就会上传。"
           }
         }
       }
@@ -367,10 +619,22 @@
             "value": "Plucked. Will sync."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recogido. Se sincronizará."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Preso. Lo sincronizzo dopo."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已摘下，稍后同步。"
           }
         }
       }
@@ -384,10 +648,22 @@
             "value": "Sign in once. After that the share sheet does the rest."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inicia sesión una vez. Después, Compartir hace el resto."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Accedi una volta. Poi al resto pensa il menu Condividi."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录一次就好，之后交给分享菜单。"
           }
         }
       }
@@ -401,10 +677,22 @@
             "value": "Not signed in."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No has iniciado sesión."
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Accesso non effettuato."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未登录。"
           }
         }
       }
@@ -418,10 +706,22 @@
             "value": "Tags and list"
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Etiquetas y lista"
+          }
+        },
         "it": {
           "stringUnit": {
             "state": "translated",
             "value": "Tag e lista"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标签和清单"
           }
         }
       }
