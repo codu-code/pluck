@@ -1,4 +1,4 @@
-import { isTextKind, MOVED, rowMeta, rowSite, type Item } from "@pluck/shared-schemas";
+import { isTextKind, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
@@ -6,35 +6,38 @@ import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
 import { keys, useCover, useItem, usePatchItem, type FullItem } from "@/lib/data";
+import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
 
-const BACK: Record<Item["status"], string> = { inbox: "Inbox", later: "Later", archived: "Archive", done: "Archive" };
+const BACK = { inbox: "tabs.inbox", later: "tabs.later", archived: "item.backArchive", done: "item.backArchive" } as const;
 
 export default function ItemScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const t = useTheme();
+  const tr = useTranslations("ios");
   const data = useItem(id);
   useEffect(() => void api(`/api/v1/items/${id}/open`, { method: "POST" }).catch(() => {}), [id]); // opening is a touch
   if (!data.data) {
     return (
       <View style={{ flex: 1, backgroundColor: t.ground }}>
-        <TopBar label="Back" />
+        <TopBar label={tr("item.back")} />
         <View style={styles.centre}>
           {data.isError ? (
             <>
-              <Text style={[font.semibold, { color: t.ink, fontSize: 17 }]}>This one didn't load.</Text>
-              <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>It may be gone, or the connection is. Try again in a bit.</Text>
+              <Text style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("item.didntLoad")}</Text>
+              <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>{tr("item.didntLoadBody")}</Text>
               <Pressable accessibilityRole="button" onPress={() => void data.refetch()} style={[styles.quietButton, { borderColor: t.lineStrong }]}>
-                <Text style={[font.medium, { color: t.ink, fontSize: 15 }]}>Try again</Text>
+                <Text style={[font.medium, { color: t.ink, fontSize: 15 }]}>{tr("common.tryAgain")}</Text>
               </Pressable>
             </>
-          ) : <ActivityIndicator accessibilityLabel="Loading" />}
+          ) : <ActivityIndicator accessibilityLabel={tr("common.loading")} />}
         </View>
       </View>
     );
@@ -44,10 +47,11 @@ export default function ItemScreen() {
 
 function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
   const t = useTheme();
+  const tr = useTranslations("ios.common");
   const top = useSafeAreaInsets().top;
   return (
     <View style={[styles.top, { paddingTop: top + 8 }]}>
-      <Pressable accessibilityRole="button" accessibilityLabel={`Back to ${label}`} onPress={() => router.back()} hitSlop={{ left: 8 }} style={styles.back}>
+      <Pressable accessibilityRole="button" accessibilityLabel={tr("backTo", { label })} onPress={() => router.back()} hitSlop={{ left: 8 }} style={styles.back}>
         <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
         <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{label}</Text>
       </Pressable>
@@ -58,27 +62,31 @@ function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
 
 // The reader's toolbar (IOSReader board): six actions on the rail.
 function Toolbar({ item }: { item: Item }) {
+  const tr = useTranslations("ios");
   const patch = usePatchItem();
   const move = (status: "later" | "archived") => {
     patch.mutate({ id: item.id, patch: { status } });
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(MOVED[status], () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${status}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
     router.back();
   };
   const tools: Tool[] = [
-    { label: "Later", icon: ICONS.later, onPress: () => move("later") },
-    { label: "Archive", icon: ICONS.archive, onPress: () => move("archived") },
-    { label: "Tags", icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } }) },
-    { label: "List", icon: ICONS.lists, a11y: "Add to a List", onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } }) },
-    { label: "Share", icon: ICONS.share, onPress: () => void Share.share(item.url ? { url: item.url } : { message: item.title }) },
+    { label: tr("actions.later"), icon: ICONS.later, onPress: () => move("later") },
+    { label: tr("actions.archive"), icon: ICONS.archive, onPress: () => move("archived") },
+    { label: tr("actions.tags"), icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } }) },
+    { label: tr("actions.list"), icon: ICONS.lists, a11y: tr("actions.addToList"), onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } }) },
+    { label: tr("actions.share"), icon: ICONS.share, onPress: () => void Share.share(item.url ? { url: item.url } : { message: item.title }) },
   ];
   // A link gets a Note between the moves and the sorting; notes, todos and things are their own text.
-  if (!isTextKind(item.kind)) tools.splice(2, 0, { label: "Note", icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
+  if (!isTextKind(item.kind)) tools.splice(2, 0, { label: tr("actions.note"), icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
   return <ToolBar tools={tools} />;
 }
 
 function Reader({ data }: { data: FullItem }) {
   const t = useTheme();
+  const tr = useTranslations("ios");
+  const format = useFormatter();
+  const row = useRowText();
   const { item, text, highlights } = data;
   const patch = usePatchItem();
   const [progress, setProgress] = useState(item.readingProgress);
@@ -112,12 +120,12 @@ function Reader({ data }: { data: FullItem }) {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
-        label={BACK[item.status]}
+        label={tr(BACK[item.status])}
         right={
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{Math.round(progress * 100)}%{minutes ? ` · ${minutes} min left` : ""}</Text>}
+            {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{minutes ? tr("item.minutesLeft", { percent: format.number(progress, { style: "percent" }), minutes }) : format.number(progress, { style: "percent" })}</Text>}
             {item.url && (
-              <Pressable accessibilityRole="button" accessibilityLabel="Open the original" onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={styles.iconButton}>
+              <Pressable accessibilityRole="button" accessibilityLabel={tr("item.openOriginal")} onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={styles.iconButton}>
                 <Icon d={ICONS.original} size={20} color={t.ink} width={1.5} />
               </Pressable>
             )}
@@ -133,38 +141,38 @@ function Reader({ data }: { data: FullItem }) {
           if (room > 0) setProgress((p) => Math.max(p, Math.min(1, e.contentOffset.y / room)));
         }}
       >
-        <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{rowSite(item)} · {rowMeta(item)}</Text>
+        <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{row(item).siteMeta}</Text>
         <Text accessibilityRole="header" style={[font.readerTitle, styles.h1, { color: t.ink }]}>{item.title}</Text>
-        {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>By {item.author}</Text> : null}
+        {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
         {cover && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
         )}
         {item.note ? (
-          <Pressable accessibilityRole="button" accessibilityLabel={`Your note: ${item.note}. Edit`} onPress={() => router.push({ pathname: "/note", params: { id: item.id } })}>
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("item.noteA11y", { note: item.note })} onPress={() => router.push({ pathname: "/note", params: { id: item.id } })}>
             <Text style={[font.regular, styles.note, { color: t.ink, backgroundColor: t.rail }]}>{item.note}</Text>
           </Pressable>
         ) : null}
         {item.extraction.state === "pending" && (
           <View style={[styles.state, { backgroundColor: t.rail }]} accessibilityLiveRegion="polite">
             <ActivityIndicator color={t.ink2} />
-            <Text style={[font.regular, { flex: 1, color: t.ink2, fontSize: 15 }]}>Plucking the page. It shows here in a moment.</Text>
+            <Text style={[font.regular, { flex: 1, color: t.ink2, fontSize: 15 }]}>{tr("item.pending")}</Text>
           </View>
         )}
         {item.extraction.state === "failed" && (
           <View style={[styles.failed, { backgroundColor: t.rail }]}>
-            <Text style={[font.semibold, { color: t.ink, fontSize: 17 }]}>Couldn't read this page.</Text>
+            <Text style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("item.failed")}</Text>
             <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 21 }]}>
-              {item.kind === "image" || item.kind === "pdf" ? "The file is kept. Its words weren't." : "Some pages keep their words to themselves. The link is kept, and the original still opens."}
+              {tr(item.kind === "image" || item.kind === "pdf" ? "item.failedFile" : "item.failedPage")}
             </Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 4 }}>
               {item.url && (
                 <Pressable accessibilityRole="button" onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={[styles.primary, { backgroundColor: t.brand }]}>
-                  <Text style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>Open the original</Text>
+                  <Text style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("item.openOriginal")}</Text>
                 </Pressable>
               )}
               <Pressable accessibilityRole="button" disabled={retrying} onPress={() => void retry()} style={[styles.quietButton, { borderColor: t.lineStrong, opacity: retrying ? 0.6 : 1 }]}>
-                {retrying ? <ActivityIndicator color={t.ink} /> : <Text style={[font.medium, { color: t.ink, fontSize: 15 }]}>Try again</Text>}
+                {retrying ? <ActivityIndicator color={t.ink} /> : <Text style={[font.medium, { color: t.ink, fontSize: 15 }]}>{tr("common.tryAgain")}</Text>}
               </Pressable>
             </View>
           </View>
@@ -197,6 +205,7 @@ function BlockView({ block, quotes, t }: { block: Block; quotes: string[]; t: Pa
 // Notes, todos and things: the text is the item, typed and kept as you go.
 function NoteEditor({ data }: { data: FullItem }) {
   const t = useTheme();
+  const tr = useTranslations("ios");
   const qc = useQueryClient();
   const { item } = data;
   const patch = usePatchItem();
@@ -217,21 +226,21 @@ function NoteEditor({ data }: { data: FullItem }) {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
-        label={BACK[item.status]}
+        label={tr(BACK[item.status])}
         right={item.kind !== "note" ? (
           <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: done }} onPress={() => patch.mutate({ id: item.id, patch: { status: done ? "inbox" : "done" } })} style={styles.doneButton}>
             <View style={[styles.ring, done ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.ringOff }]}>
               {done && <Icon d={ICONS.tick} size={12} color={t.onHighlight} width={2.4} />}
             </View>
-            <Text style={[font.regular, { color: t.ink, fontSize: 15 }]}>Done</Text>
+            <Text style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("common.done")}</Text>
           </Pressable>
         ) : null}
       />
       <ScrollView contentContainerStyle={{ padding: 20, gap: 12 }} keyboardDismissMode="interactive">
-        <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel="Title"
+        <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
-        <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>Leave the title empty and the first line is the title. Saves as you type.</Text>
-        <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel="Text" placeholder="Write it down."
+        <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
+        <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
           placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
       </ScrollView>
       <Toolbar item={item} />

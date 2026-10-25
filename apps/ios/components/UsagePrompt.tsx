@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { analyticsOn, currentConsent, loadConsent, onConsent, setConsent } from "@/lib/analytics";
 import { font, scale, useTheme } from "@/lib/theme";
 
@@ -8,6 +9,7 @@ import { font, scale, useTheme } from "@/lib/theme";
 // Two buttons of the same size and weight; Settings has the same switch.
 export function UsagePrompt() {
   const t = useTheme();
+  const tr = useTranslations("ios.usage");
   const insets = useSafeAreaInsets();
   const [asking, setAsking] = useState(false);
 
@@ -22,16 +24,16 @@ export function UsagePrompt() {
   return (
     <View accessibilityViewIsModal style={[styles.sheet, { backgroundColor: t.surface, borderColor: t.line, paddingBottom: 20 + insets.bottom }]}>
       <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.title, { color: t.ink }]}>
-        Help make Pluck better<Text style={{ color: t.accent }}>?</Text>
+        {tr.rich("title", { accent: (c) => <Text style={{ color: t.accent }}>{c}</Text> })}
       </Text>
       <Text style={[font.regular, styles.body, { color: t.ink2 }]}>
-        Share which screens you use, tied to your account, so we fix what gets in the way. No ads. No selling. Crash reports go either way, without your name on them.
+        {tr("body")}
       </Text>
       <Pressable accessibilityRole="button" onPress={() => void setConsent("yes")} style={({ pressed }) => [button, { backgroundColor: t.brand, borderColor: t.brand, opacity: pressed ? 0.85 : 1 }]}>
-        <Text style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>Pluck it, I'm in</Text>
+        <Text style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("yes")}</Text>
       </Pressable>
       <Pressable accessibilityRole="button" onPress={() => void setConsent("no")} style={({ pressed }) => [button, { borderColor: t.ink, backgroundColor: pressed ? t.rail : "transparent" }]}>
-        <Text style={[font.semibold, { color: t.ink, fontSize: 16 }]}>Pluck off</Text>
+        <Text style={[font.semibold, { color: t.ink, fontSize: 16 }]}>{tr("no")}</Text>
       </Pressable>
     </View>
   );

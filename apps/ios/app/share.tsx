@@ -6,6 +6,7 @@ import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
 import { keys, useList, useMe } from "@/lib/data";
@@ -14,18 +15,12 @@ import { font, scale, useTheme } from "@/lib/theme";
 
 type Access = "me" | "people" | "anyone";
 
-// What anyone it is shared with sees, by who has access. Never the tags, ticks or kept pages (packages/db/src/public.ts).
-const SEES: Record<Access, string> = {
-  me: "Only you can see this List.",
-  people: "The people here see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Only you change it.",
-  anyone: "Public: anyone who has this link can open it, without signing in, and it can turn up in search. They see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Make it private again any time; the link stops working at once.",
-};
-
 // Sharing a List (no board: after Claude's share sheet). What is shared at the top, one choice of who has access,
 // what they see, and the link to send. People you choose get an email; Anyone with the link makes it public.
 export default function ShareList() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const t = useTheme();
+  const tr = useTranslations("ios");
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const data = useList(id);
@@ -40,7 +35,7 @@ export default function ShareList() {
   useEffect(() => void getSession().then((x) => x && setServer(x.server)), []);
   const publicUrl = list && me.data?.handle ? `${server}/@${me.data.handle}/${list.slug}` : null;
 
-  const failed = (e: unknown) => Alert.alert("That did not go through", e instanceof Refused ? e.message : "Check the connection, then try again.");
+  const failed = (e: unknown) => Alert.alert(tr("common.failed.title"), e instanceof Refused ? e.message : tr("common.failed.body"));
   const settle = async () => {
     await Promise.all([data.refetch(), people.refetch()]);
     void qc.invalidateQueries({ queryKey: keys.lists });
@@ -65,15 +60,15 @@ export default function ShareList() {
     };
     const n = people.data?.length ?? 0;
     if (next === "me" && n) {
-      return Alert.alert(`Stop sharing with ${n === 1 ? "1 person" : `${n} people`}?`, "They can no longer see it. Share again any time.", [
-        { text: "Cancel", style: "cancel" },
-        { text: "Stop sharing", style: "destructive", onPress: () => void go() },
+      return Alert.alert(tr("share.stopManyTitle", { count: n }), tr("share.stopManyBody"), [
+        { text: tr("common.cancel"), style: "cancel" },
+        { text: tr("share.stopSharing"), style: "destructive", onPress: () => void go() },
       ]);
     }
     if (next === "anyone") {
-      return Alert.alert("Anyone with the link?", "It gets a public page at your handle. Never the tags, ticks or pages Pluck kept. Make it private again any time.", [
-        { text: "Cancel", style: "cancel" },
-        { text: "Make it public", onPress: () => void go() },
+      return Alert.alert(tr("share.anyoneTitle"), tr("share.anyoneBody"), [
+        { text: tr("common.cancel"), style: "cancel" },
+        { text: tr("share.makePublic"), onPress: () => void go() },
       ]);
     }
     await go();
@@ -85,7 +80,7 @@ export default function ShareList() {
     try {
       const { person } = await api<{ person: ListShare }>(`/api/v1/lists/${id}/people`, { json: { email } });
       setEmail("");
-      toast(`Shared with ${person.email}. They get an email with a link.`);
+      toast(tr("share.sharedWith", { email: person.email }));
       await settle();
     } catch (e) {
       failed(e);
@@ -93,9 +88,9 @@ export default function ShareList() {
     setBusy(null);
   };
   const remove = (p: ListShare) =>
-    Alert.alert(`Stop sharing with ${p.email}?`, "They can no longer see it.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Stop sharing", style: "destructive", onPress: () => void api(`/api/v1/lists/${id}/people/${p.id}`, { method: "DELETE" }).then(settle).catch(failed) },
+    Alert.alert(tr("share.stopOneTitle", { email: p.email }), tr("share.stopOneBody"), [
+      { text: tr("common.cancel"), style: "cancel" },
+      { text: tr("share.stopSharing"), style: "destructive", onPress: () => void api(`/api/v1/lists/${id}/people/${p.id}`, { method: "DELETE" }).then(settle).catch(failed) },
     ]);
 
   const off = access === "me" || (access === "people" && !people.data?.length); // nothing to send yet
@@ -105,19 +100,19 @@ export default function ShareList() {
     void Share.share({ url: access === "anyone" && publicUrl ? publicUrl : `${server}/shared/${list.id}` });
   };
 
-  const options: { key: Access; icon: string; label: string }[] = [
-    { key: "me", icon: ICONS.lock, label: "Only you" },
-    { key: "people", icon: ICONS.people, label: "People you choose" },
-    { key: "anyone", icon: ICONS.globe, label: "Anyone with the link" },
+  const options: { key: Access; icon: string }[] = [
+    { key: "me", icon: ICONS.lock },
+    { key: "people", icon: ICONS.people },
+    { key: "anyone", icon: ICONS.globe },
   ];
 
   return (
     <View style={{ flex: 1, backgroundColor: t.rail }}>
       <View style={styles.head}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Close" onPress={() => router.back()} style={[styles.close, { backgroundColor: t.surface }]}>
+        <Pressable accessibilityRole="button" accessibilityLabel={tr("share.close")} onPress={() => router.back()} style={[styles.close, { backgroundColor: t.surface }]}>
           <Icon d={ICONS.close} size={16} color={t.ink} width={1.8} />
         </Pressable>
-        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 17 }]}>Share</Text>
+        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("share.title")}</Text>
         <View style={{ width: 44 }} />
       </View>
       <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive" contentContainerStyle={[styles.page, { paddingBottom: 24 }]}>
@@ -126,11 +121,11 @@ export default function ShareList() {
           <Icon d={ICONS.lists} size={20} color={t.ink} width={1.5} />
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text numberOfLines={2} style={[font.semibold, { color: t.ink, fontSize: 16 }]}>{list?.name ?? " "}</Text>
-            {list ? <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{list.itemCount} {list.itemCount === 1 ? "item" : "items"}</Text> : null}
+            {list ? <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("common.items", { count: list.itemCount })}</Text> : null}
           </View>
         </View>
 
-        <Text style={[font.regular, styles.section, { color: t.ink2 }]}>Who has access</Text>
+        <Text style={[font.regular, styles.section, { color: t.ink2 }]}>{tr("share.whoHasAccess")}</Text>
         <View style={[styles.card, { backgroundColor: t.surface }]} accessibilityRole="radiogroup">
           {options.map((o, i) => (
             <Pressable
@@ -141,7 +136,7 @@ export default function ShareList() {
               style={({ pressed }) => [styles.option, { borderBottomColor: t.tint, borderBottomWidth: i < options.length - 1 ? StyleSheet.hairlineWidth * 2 : 0, backgroundColor: pressed ? t.selected : "transparent" }]}
             >
               <Icon d={o.icon} size={20} color={t.ink} width={1.5} />
-              <Text style={[font.regular, { flex: 1, color: t.ink, fontSize: 16 }]}>{o.label}</Text>
+              <Text style={[font.regular, { flex: 1, color: t.ink, fontSize: 16 }]}>{tr(`share.options.${o.key}`)}</Text>
               {busy === o.key ? <ActivityIndicator color={t.ink2} /> : access === o.key ? <Icon d={ICONS.tick} size={18} color={t.actionInk} width={2} /> : null}
             </Pressable>
           ))}
@@ -150,17 +145,17 @@ export default function ShareList() {
         {access === "people" && (
           <View style={[styles.card, { backgroundColor: t.surface }]}>
             <View style={[styles.addRow, { borderBottomColor: t.tint, borderBottomWidth: people.data?.length ? StyleSheet.hairlineWidth * 2 : 0 }]}>
-              <TextInput value={email} onChangeText={setEmail} placeholder="Add someone by email" placeholderTextColor={t.ink2} keyboardType="email-address"
+              <TextInput value={email} onChangeText={setEmail} placeholder={tr("share.addByEmail")} placeholderTextColor={t.ink2} keyboardType="email-address"
                 autoCapitalize="none" autoCorrect={false} textContentType="emailAddress" returnKeyType="send" onSubmitEditing={() => void add()}
-                accessibilityLabel="Add someone by email" selectionColor={t.accent} style={[font.regular, { flex: 1, color: t.ink, fontSize: 16, minHeight: 44 }]} />
+                accessibilityLabel={tr("share.addByEmail")} selectionColor={t.accent} style={[font.regular, { flex: 1, color: t.ink, fontSize: 16, minHeight: 44 }]} />
               <Pressable accessibilityRole="button" disabled={busy === "add" || !email.trim()} onPress={() => void add()} style={styles.addButton}>
-                {busy === "add" ? <ActivityIndicator color={t.ink2} /> : <Text style={[font.semibold, { color: email.trim() ? t.actionInk : t.ink2, fontSize: 16 }]}>Add</Text>}
+                {busy === "add" ? <ActivityIndicator color={t.ink2} /> : <Text style={[font.semibold, { color: email.trim() ? t.actionInk : t.ink2, fontSize: 16 }]}>{tr("common.add")}</Text>}
               </Pressable>
             </View>
             {(people.data ?? []).map((p, i, all) => (
               <View key={p.id} style={[styles.person, { borderBottomColor: t.tint, borderBottomWidth: i < all.length - 1 ? StyleSheet.hairlineWidth * 2 : 0 }]}>
                 <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink, fontSize: 15 }]}>{p.email}</Text>
-                <Pressable accessibilityRole="button" accessibilityLabel={`Stop sharing with ${p.email}`} onPress={() => remove(p)} style={styles.removeButton}>
+                <Pressable accessibilityRole="button" accessibilityLabel={tr("share.stopA11y", { email: p.email })} onPress={() => remove(p)} style={styles.removeButton}>
                   <Icon d={ICONS.close} size={14} color={t.ink2} width={1.6} />
                 </Pressable>
               </View>
@@ -173,19 +168,19 @@ export default function ShareList() {
           <View style={[styles.card, styles.publicCard, { backgroundColor: t.surface }]}>
             <View style={styles.publicHead}>
               <Icon d={ICONS.globe} size={16} color={t.actionInk} width={1.6} />
-              <Text style={[font.semibold, { color: t.actionInk, fontSize: 13 }]}>Public link</Text>
+              <Text style={[font.semibold, { color: t.actionInk, fontSize: 13 }]}>{tr("share.publicLink")}</Text>
             </View>
             <View style={styles.publicRow}>
               <Text selectable numberOfLines={2} style={[styles.url, { color: t.ink }]}>{publicUrl.replace(/^https?:\/\//, "")}</Text>
-              <Pressable accessibilityRole="button" accessibilityLabel="Copy the public link" onPress={async () => { await Clipboard.setStringAsync(publicUrl); toast("Link copied."); }}
+              <Pressable accessibilityRole="button" accessibilityLabel={tr("share.copyPublic")} onPress={async () => { await Clipboard.setStringAsync(publicUrl); toast(tr("share.linkCopied")); }}
                 style={[styles.copy, { backgroundColor: t.tint }]}>
-                <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 14 }]}>Copy</Text>
+                <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 14 }]}>{tr("common.copy")}</Text>
               </Pressable>
             </View>
           </View>
         )}
 
-        <Text style={[font.regular, styles.footnote, { color: t.ink2 }]}>{SEES[access]}</Text>
+        <Text style={[font.regular, styles.footnote, { color: t.ink2 }]}>{tr(`share.sees.${access}`)}</Text>
       </ScrollView>
       <View style={[styles.bottom, { paddingBottom: Math.max(insets.bottom, 16) }]}>
         <Pressable
@@ -196,7 +191,7 @@ export default function ShareList() {
           style={({ pressed }) => [styles.shareButton, { backgroundColor: off ? t.railActive : t.brand, opacity: pressed ? 0.85 : 1 }]}
         >
           <Icon d={ICONS.share} size={18} color={off ? t.ink2 : t.onBrand} width={1.6} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: off ? t.ink2 : t.onBrand, fontSize: 16 }]}>Share link</Text>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: off ? t.ink2 : t.onBrand, fontSize: 16 }]}>{tr("share.shareLink")}</Text>
         </Pressable>
       </View>
     </View>

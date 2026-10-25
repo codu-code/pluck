@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
 import { keys, useList } from "@/lib/data";
@@ -11,6 +12,7 @@ import { font, scale, useTheme } from "@/lib/theme";
 // One list (IOSLists board): purpose, ticks, notes, and Add.
 export default function ListScreen() {
   const t = useTheme();
+  const tr = useTranslations("ios");
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const qc = useQueryClient();
@@ -30,14 +32,14 @@ export default function ListScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Back to Lists" onPress={() => router.back()} style={styles.back}>
+        <Pressable accessibilityRole="button" accessibilityLabel={tr("common.backToLists")} onPress={() => router.back()} style={styles.back}>
           <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>Lists</Text>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("tabs.lists")}</Text>
         </Pressable>
         {list && (
           <Pressable accessibilityRole="button" onPress={share} hitSlop={{ top: 4, bottom: 4 }} style={[styles.shareButton, { borderColor: t.lineStrong, backgroundColor: t.surface }]}>
             <Icon d={list.visibility === "public" ? ICONS.globe : ICONS.lock} size={14} color={t.ink} width={1.5} />
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 14 }]}>{list.visibility === "public" ? "Public · Share" : "Private · Share"}</Text>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 14 }]}>{tr(list.visibility === "public" ? "list.publicShare" : "list.privateShare")}</Text>
           </Pressable>
         )}
       </View>
@@ -45,7 +47,7 @@ export default function ListScreen() {
         <View style={styles.head}>
           <Text accessibilityRole="header" style={[font.bold, styles.title, { color: t.ink }]}>{list.name}</Text>
           {list.purpose ? <Text style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{list.purpose}</Text> : null}
-          {entries.length > 0 && <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{entries.filter((e) => e.ticked).length} of {entries.length} ticked</Text>}
+          {entries.length > 0 && <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("list.ticked", { ticked: entries.filter((e) => e.ticked).length, count: entries.length })}</Text>}
         </View>
       )}
       <FlatList
@@ -53,24 +55,24 @@ export default function ListScreen() {
         keyExtractor={(e) => e.item.id}
         style={{ borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: t.line }}
         contentContainerStyle={{ paddingBottom: insets.bottom + 96 }}
-        ListEmptyComponent={data.isLoading ? undefined : <Empty title="Nothing on this list yet." body="Tap Add to put plucks on it, or ask your AI to fill it." />}
+        ListEmptyComponent={data.isLoading ? undefined : <Empty title={tr("list.empty.title")} body={tr("list.empty.body")} />}
         renderItem={({ item: e }) => (
           <View style={[styles.entry, { borderBottomColor: t.line }]}>
-            <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: e.ticked }} accessibilityLabel={`Tick ${e.item.title}`} onPress={() => void tick(e.item.id, !e.ticked)} style={styles.tickHit}>
+            <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: e.ticked }} accessibilityLabel={tr("list.tick", { title: e.item.title })} onPress={() => void tick(e.item.id, !e.ticked)} style={styles.tickHit}>
               <View style={[styles.ring, e.ticked ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.ringOff }]}>
                 {e.ticked && <Icon d={ICONS.tick} size={12} color={t.onHighlight} width={2.4} />}
               </View>
             </Pressable>
             <Pressable onPress={() => router.push(`/items/${e.item.id}`)} accessibilityRole="button" style={{ flex: 1, minWidth: 0, minHeight: 44, gap: 3, paddingTop: 6 }}>
               <Text style={[font.semibold, { color: e.ticked ? t.ink2 : t.ink, fontSize: 15 }]}>{e.item.title}</Text>
-              {e.note ? <Text style={[font.regular, { color: t.ink2, fontSize: 14, lineHeight: 19 }]}>{e.note}{e.noteBy === "mcp" ? " · by AI" : ""}</Text> : null}
+              {e.note ? <Text style={[font.regular, { color: t.ink2, fontSize: 14, lineHeight: 19 }]}>{e.noteBy === "mcp" ? tr("list.noteByAi", { note: e.note }) : e.note}</Text> : null}
             </Pressable>
           </View>
         )}
       />
-      <Pressable onPress={() => router.push({ pathname: "/pick", params: { mode: "add", id } })} accessibilityRole="button" accessibilityLabel="Add to this list" style={[styles.add, { backgroundColor: t.brand, bottom: insets.bottom + 24 }]}>
+      <Pressable onPress={() => router.push({ pathname: "/pick", params: { mode: "add", id } })} accessibilityRole="button" accessibilityLabel={tr("list.addA11y")} style={[styles.add, { backgroundColor: t.brand, bottom: insets.bottom + 24 }]}>
         <Icon d={ICONS.plus} size={16} color={t.highlight} width={1.8} />
-        <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>Add</Text>
+        <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("common.add")}</Text>
       </Pressable>
     </View>
   );

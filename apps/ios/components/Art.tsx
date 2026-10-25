@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import Animated, { Easing, Keyframe } from "react-native-reanimated";
+import { useTranslations } from "use-intl";
 import { font, useTheme } from "@/lib/theme";
 import { Icon, ICONS } from "./Glyph";
 
@@ -13,10 +14,11 @@ const stampIn = new Keyframe({
 
 export function PluckedChip({ stamp = false }: { stamp?: boolean }) {
   const t = useTheme();
+  const tr = useTranslations("ios.art");
   return (
     <Animated.View entering={stamp ? stampIn : undefined} style={[styles.chip, { backgroundColor: t.ground }]}>
       <View style={[styles.tick, { backgroundColor: t.highlight }]}><Icon d={ICONS.tick} size={14} color={t.onHighlight} width={2.2} /></View>
-      <Text style={[font.bold, { color: t.ink, letterSpacing: -0.3 }]}>Plucked.</Text>
+      <Text style={[font.bold, { color: t.ink, letterSpacing: -0.3 }]}>{tr("plucked")}</Text>
     </Animated.View>
   );
 }
@@ -35,9 +37,10 @@ export function ShareRow() {
 // A row part-way through the swipe that sends it to Later.
 export function SwipeToLater() {
   const t = useTheme();
+  const tr = useTranslations("ios.art");
   return (
     <View style={[styles.swipe, { backgroundColor: t.highlight }]}>
-      <Text style={[font.semibold, styles.swipeLabel, { color: t.onHighlight }]}>Later</Text>
+      <Text style={[font.semibold, styles.swipeLabel, { color: t.onHighlight }]}>{tr("later")}</Text>
       <View style={[styles.swipeRow, { backgroundColor: t.ground }]}>
         <View style={[styles.swipeTile, { backgroundColor: t.tiles[0] }]} />
         <View style={{ gap: 6, flex: 1 }}>

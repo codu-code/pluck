@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { Wordmark } from "@/components/Wordmark";
 import { defaultServer, signIn, signInWithKey } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
@@ -11,29 +12,30 @@ import { font, scale, useTheme, type Palette } from "@/lib/theme";
 // pluck://signin?server=https://… opens with that server filled in, for a self-hosted setup page to link to.
 export default function SignIn() {
   const t = useTheme();
+  const tr = useTranslations("ios.signin");
   const insets = useSafeAreaInsets();
   const { server: linked, stale } = useLocalSearchParams<{ server?: string; stale?: string }>();
   const [advanced, setAdvanced] = useState(Boolean(linked));
   const [server, setServer] = useState(linked ?? defaultServer);
   const [key, setKey] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(stale ? "That link was from an earlier try. Open the newest email, or send a new link." : null);
+  const [error, setError] = useState<string | null>(stale ? tr("stale") : null);
 
   const go = async (withKey: boolean) => {
     setBusy(true);
     setError(null);
     const origin = server.trim().replace(/\/+$/, "");
     if (!/^https?:\/\/[^/\s]+/.test(origin)) {
-      setError("That isn't a server address. It starts with https://.");
+      setError(tr("notServer"));
       setBusy(false);
       return;
     }
     try {
       const ok = withKey ? await signInWithKey(origin, key) : await signIn(origin);
       if (ok) router.replace("/welcome");
-      else if (withKey) setError("That key did not work on this server.");
+      else if (withKey) setError(tr("badKey"));
     } catch {
-      setError(`Couldn't reach ${origin}.`);
+      setError(tr("unreachable", { origin }));
     }
     setBusy(false);
   };
@@ -50,30 +52,30 @@ export default function SignIn() {
         <Wordmark size={34} />
         <View style={{ gap: 12 }}>
           <Text accessibilityRole="header" maxFontSizeMultiplier={scale.display} style={[font.bold, styles.h1, { color: t.ink }]}>
-            One link.{"\n"}No password<Text style={{ color: t.accent }}>.</Text>
+            {tr.rich("title", { accent: (c) => <Text style={{ color: t.accent }}>{c}</Text> })}
           </Text>
-          <Text style={[font.regular, styles.lede, { color: t.ink2 }]}>Type your email and we send a link. It signs you in, or starts your library if you are new.</Text>
+          <Text style={[font.regular, styles.lede, { color: t.ink2 }]}>{tr("lede")}</Text>
         </View>
         {!advanced && <EmailPreview t={t} />}
         {advanced && (
           <View style={{ gap: 8 }}>
-            <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>Server</Text>
+            <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("server")}</Text>
             <TextInput value={server} onChangeText={setServer} autoCapitalize="none" autoCorrect={false} keyboardType="url" textContentType="URL"
-              returnKeyType="next" style={field} accessibilityLabel="Server" accessibilityLabelledBy="server-label" />
-            <Text nativeID="key-label" style={[font.medium, { color: t.ink, fontSize: 14, marginTop: 8 }]}>API key, if you use one</Text>
+              returnKeyType="next" style={field} accessibilityLabel={tr("server")} accessibilityLabelledBy="server-label" />
+            <Text nativeID="key-label" style={[font.medium, { color: t.ink, fontSize: 14, marginTop: 8 }]}>{tr("key")}</Text>
             <TextInput value={key} onChangeText={setKey} autoCapitalize="none" autoCorrect={false} secureTextEntry placeholder="pk_live_…" placeholderTextColor={t.ink2}
-              returnKeyType="go" onSubmitEditing={() => void go(useKey)} style={field} accessibilityLabel="API key" accessibilityLabelledBy="key-label" />
-            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>No key? Leave it empty and we email you a link from that server.</Text>
+              returnKeyType="go" onSubmitEditing={() => void go(useKey)} style={field} accessibilityLabel={tr("keyA11y")} accessibilityLabelledBy="key-label" />
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>{tr("noKey")}</Text>
           </View>
         )}
         {error && <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[font.regular, { color: t.danger, fontSize: 15 }]}>{error}</Text>}
         <View style={{ marginTop: "auto", gap: 12 }}>
           <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy }} disabled={busy} onPress={() => void go(useKey)}
             style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy ? 0.6 : pressed ? 0.85 : 1 }]}>
-            {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{useKey ? "Use this key" : "Sign in with email"}</Text>}
+            {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr(useKey ? "useKey" : "withEmail")}</Text>}
           </Pressable>
           <Pressable accessibilityRole="button" onPress={() => { setAdvanced((a) => !a); setError(null); if (advanced) setServer(defaultServer); }} style={styles.quiet}>
-            <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? `Use ${new URL(defaultServer).host}` : "Use your own server"}</Text>
+            <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? tr("useHost", { host: new URL(defaultServer).host }) : tr("ownServer")}</Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -83,19 +85,20 @@ export default function SignIn() {
 
 // What lands in their inbox, drawn, so the next step is no surprise (the web's sign-in page has the same).
 function EmailPreview({ t }: { t: Palette }) {
+  const tr = useTranslations("ios.signin.preview");
   return (
-    <View accessible accessibilityLabel="The email: Here is your link. Tap it to sign in. It works once, for 10 minutes."
+    <View accessible accessibilityLabel={tr("a11y")}
       style={[styles.panel, { backgroundColor: t.surface, borderColor: t.line }]}>
       <View style={[styles.panelHead, { borderBottomColor: t.line }]}>
         <Text style={[font.semibold, { color: t.ink, fontSize: 13 }]}>Pluck</Text>
-        <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 13 }]}>Your link to Pluck</Text>
-        <Text style={[font.regular, { color: t.ink2, fontSize: 12 }]}>now</Text>
+        <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 13 }]}>{tr("subject")}</Text>
+        <Text style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{tr("now")}</Text>
       </View>
       <View style={styles.panelBody}>
-        <Text style={[font.bold, styles.panelTitle, { color: t.ink }]}>Here is your link.</Text>
-        <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.</Text>
+        <Text style={[font.bold, styles.panelTitle, { color: t.ink }]}>{tr("title")}</Text>
+        <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>{tr("body")}</Text>
         <View style={[styles.panelButton, { backgroundColor: t.brand }]}>
-          <Text style={[font.semibold, { color: t.onBrand, fontSize: 14 }]}>Sign in to Pluck</Text>
+          <Text style={[font.semibold, { color: t.onBrand, fontSize: 14 }]}>{tr("button")}</Text>
         </View>
       </View>
     </View>

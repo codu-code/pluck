@@ -1,14 +1,16 @@
 import tokens from "@pluck/ui/tokens.json";
 import Svg, { Path } from "react-native-svg";
+import { useTranslations } from "use-intl";
 
 type Kind = "link" | "video" | "pdf" | "image" | "note" | "todo" | "thing";
 const KEY = { link: "read", video: "watch", pdf: "pdf", image: "image", note: "note", todo: "todo", thing: "thing" } as const;
-export const KIND_NAMES: Record<Kind, string> = { link: "Read", video: "Watch", pdf: "PDF", image: "Image", note: "Note", todo: "Todo", thing: "Thing" };
+export const KINDS = Object.keys(KEY) as Kind[];
 
 // The seven kind glyphs from packages/ui, and the few UI icons the boards draw, on a 16-unit grid.
 export function KindGlyph({ kind, size = 16, color }: { kind: Kind; size?: number; color: string }) {
+  const t = useTranslations("ios.kinds");
   return (
-    <Svg width={size} height={size} viewBox="0 0 16 16" accessibilityLabel={KIND_NAMES[kind]}>
+    <Svg width={size} height={size} viewBox="0 0 16 16" accessibilityLabel={t(kind)}>
       <Path d={tokens.kindGlyphs16[KEY[kind]]} fill="none" stroke={color} strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
