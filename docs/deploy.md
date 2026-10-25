@@ -19,7 +19,7 @@ pnpm exec cdk deploy --all -c alertEmail=<you> --outputs-file cdk-outputs.json  
 
 The address for alarms is passed at deploy time so it never lands in the repo. The four stacks:
 
-- **PluckEmail:** the SES domain identity for getpluck.io with DKIM, a custom MAIL FROM (`mail.getpluck.io`), and DMARC. Outputs the DNS records.
+- **PluckEmail:** the SES domain identity for getpluck.io with DKIM, a custom MAIL FROM (`mail.getpluck.io`), and DMARC, plus two sending subdomains with their own DKIM and MAIL FROM: `notify.getpluck.io` (sign-in links, shared Lists, report alerts) and `updates.getpluck.io` (the Monday email). Each keeps its own reputation, so a spam report on the Monday email never reaches sign-in links or the root domain your own mail uses. Outputs the DNS records.
 - **PluckData:** the `pluck-content` bucket (eu-west-1, Infrequent Access after 90 days, `inbound/` expires after 7 days, CORS PUT from the app origin) and the IAM user `pluck-app` with access to the bucket and permission to send from the identity. Its secret key goes to Secrets Manager as `pluck/app-user`, never to an output.
 - **PluckInbound:** the receipt rule set `pluck-inbound` that writes mail for `in.getpluck.io` (scanned for spam and viruses) to the bucket under `inbound/`.
 - **PluckAlerts:** emails the alert address when SES bounces pass 4% or complaints pass 0.08% (AWS reviews an account at 5% and 0.1%, and can pause sending, which stops sign-in), and when the month's AWS cost passes 80% of the budget or is forecast to pass it.
@@ -43,7 +43,10 @@ Then:
 | `MONGODB_URI` | the Atlas string from step 1 |
 | `BETTER_AUTH_URL` | `https://getpluck.io` (no trailing slash; it is the OAuth issuer and the connector's audience) |
 | `BETTER_AUTH_SECRET` | 32+ random bytes (`openssl rand -base64 32`) |
-| `EMAIL_FROM` | `Pluck <hello@getpluck.io>` |
+| `EMAIL_FROM` | `Pluck <hello@notify.getpluck.io>`. Switch to it only once SES shows `notify.getpluck.io` as verified, or sign-in links stop sending |
+| `DIGEST_FROM` | `Pluck <weekly@updates.getpluck.io>`, once `updates.getpluck.io` is verified. Unset, the Monday email goes from `EMAIL_FROM` |
+| `EMAIL_REPLY_TO` | `hello@getpluck.io`: a real mailbox, since the sending subdomains receive no mail |
+| `WELCOME_FROM` | `Niall at Pluck <niall@getpluck.io>`: the welcome note, sent once 27 minutes after sign-up, from a real mailbox (replies come to you). Leave it off and no welcome is sent |
 | `AWS_REGION` | `eu-west-1` |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | from `pluck/app-user` |
 | `S3_BUCKET` | the `BucketName` output |

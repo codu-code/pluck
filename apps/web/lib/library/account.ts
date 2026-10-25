@@ -1,14 +1,36 @@
 import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiConnections, applyExtraction, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink, latestExport, recountTags,
-  listApiKeys, revokeApiKey, startExport, updateImport,
+  aiConnections, applyExtraction, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
+  latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
 import { normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
+import { welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
+
+// ---- Welcome -------------------------------------------------------------------------------------
+
+// A note from the person who makes Pluck, hosted only (WELCOME_FROM is unset when you self-host). It waits
+// 27 minutes so it lands after a first look around and reads as a reply to it, not as an autoresponder.
+export const WELCOME_DELAY_MS = 27 * 60_000;
+
+export async function queueWelcome(userId: string): Promise<void> {
+  if (process.env.WELCOME_FROM) await enqueue("welcome", { userId }, { delayMs: WELCOME_DELAY_MS });
+}
+
+export async function sendWelcome(userId: string): Promise<boolean> {
+  const from = process.env.WELCOME_FROM;
+  const me = from ? await getMe(userId) : null;
+  // Claimed before sending: a second copy of a personal note reads worse than a lost one.
+  if (!from || !me || !(await claimOnce(`welcome:${userId}`))) return false;
+  const counts = await Promise.all((["inbox", "later", "archived", "done"] as const).map((s) => countItems(userId, s)));
+  const connectUrl = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/connect`;
+  await sendEmail({ ...welcomeEmail(me.email, { plucked: counts.some(Boolean), expiryDays: me.settings.expiryDays, connectUrl }), from, replyTo: from });
+  return true;
+}
 
 // ---- API keys -------------------------------------------------------------------------------------
 

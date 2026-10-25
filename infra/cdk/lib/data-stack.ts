@@ -5,7 +5,7 @@ import * as secrets from "aws-cdk-lib/aws-secretsmanager";
 import type * as ses from "aws-cdk-lib/aws-ses";
 import type { Construct } from "constructs";
 
-export type DataStackProps = StackProps & { emailIdentity: ses.IEmailIdentity; appOrigin: string };
+export type DataStackProps = StackProps & { emailIdentities: ses.IEmailIdentity[]; appOrigin: string };
 
 // The content bucket and the IAM user the app (on Vercel) uses for S3 and SES.
 export class DataStack extends Stack {
@@ -33,7 +33,7 @@ export class DataStack extends Stack {
     const user = new iam.User(this, "AppUser", { userName: "pluck-app" });
     this.bucket.grantReadWrite(user);
     this.bucket.grantDelete(user);
-    props.emailIdentity.grantSendEmail(user);
+    for (const identity of props.emailIdentities) identity.grantSendEmail(user);
 
     // The secret key goes to Secrets Manager, never to a stack output. Copy it into Vercel env by hand.
     const key = new iam.AccessKey(this, "AppUserKey", { user });

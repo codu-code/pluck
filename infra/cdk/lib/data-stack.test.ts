@@ -8,7 +8,7 @@ function template() {
   const app = new App();
   const env = { account: "123456789012", region: "eu-west-1" };
   const email = new EmailStack(app, "Email", { env, domain: "getpluck.io" });
-  return Template.fromStack(new DataStack(app, "Data", { env, emailIdentity: email.identity, appOrigin: "https://getpluck.io" }));
+  return Template.fromStack(new DataStack(app, "Data", { env, emailIdentities: email.identities, appOrigin: "https://getpluck.io" }));
 }
 
 test("the content bucket is private, encrypted, SSL only, retained, and moves to IA at 90 days", () => {

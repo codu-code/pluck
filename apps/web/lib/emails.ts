@@ -31,3 +31,20 @@ export function sharedListEmail(to: string, from: { name: string | null; handle:
 </div>`,
   };
 }
+
+// The welcome, from a person. Plain text only (no HTML, images or tracking) and one link: from a young domain that
+// is what a note from a person looks like, to readers and to spam filters. `plucked`: have they plucked anything yet.
+export function welcomeEmail(to: string, o: { plucked: boolean; expiryDays: number | null; connectUrl: string }): Email {
+  const paras = [
+    "Hi,",
+    "I'm Niall, and I make Pluck. Thanks for signing up. I wanted to say hello myself.",
+    o.plucked
+      ? "I can see you've plucked your first things already, so you know the main part: one tap from wherever you are, and Pluck keeps the page for you."
+      : "The quickest way in is to pluck one thing you meant to read this week: paste its link at the top of your Inbox, and Pluck keeps the page for you.",
+    `One thing most people find late: your AI can read everything you pluck. Connect Pluck to Claude, ChatGPT or Cursor in about thirty seconds, then ask it what you plucked this week: ${o.connectUrl}`,
+    ...(o.expiryDays ? [`And if you go quiet for a while, nothing is lost. Items you have not touched in ${o.expiryDays} days move to the Archive, and nothing is deleted.`] : []),
+    "Can I ask you one thing? Reply and tell me what made you try Pluck, or what you hoped it would do. It comes straight to me, and I read every reply.",
+    "Niall",
+  ];
+  return { to, subject: "Thanks for trying Pluck", text: `${paras.join("\n\n")}\n` };
+}
