@@ -14,6 +14,7 @@ export default defineConfig({
     url: `http://127.0.0.1:${PORT}/api/health`,
     timeout: 240_000,
     reuseExistingServer: false,
-    env: { BETTER_AUTH_URL: `http://127.0.0.1:${PORT}`, AUTH_RATE_LIMIT: "off", NEXT_PUBLIC_POSTHOG_KEY: "" }, // tests never report to PostHog
+    // Tests never report to PostHog. The review account is on, for e2e/review.spec.ts.
+    env: { BETTER_AUTH_URL: `http://127.0.0.1:${PORT}`, AUTH_RATE_LIMIT: "off", NEXT_PUBLIC_POSTHOG_KEY: "", REVIEW_EMAIL: "App-Review@example.test", REVIEW_PASSWORD: "e2e review password" },
   },
 });

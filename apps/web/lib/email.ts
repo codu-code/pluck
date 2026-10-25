@@ -7,6 +7,8 @@ export type Email = { to: string; subject: string; text: string; html?: string; 
 
 // The email seam: SMTP (Mailpit locally, or a self-hoster's relay) when SMTP_URL is set, SES otherwise.
 export async function sendEmail(email: Email): Promise<void> {
+  // The App Review account has no mailbox anyone reads: its welcome and Monday email would only bounce.
+  if (process.env.REVIEW_EMAIL && email.to.toLowerCase() === process.env.REVIEW_EMAIL.trim().toLowerCase()) return;
   const from = email.from ?? process.env.EMAIL_FROM ?? "Pluck <hello@getpluck.io>";
   const replyTo = email.replyTo === null ? undefined : (email.replyTo ?? process.env.EMAIL_REPLY_TO);
   if (process.env.SMTP_URL) {

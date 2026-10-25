@@ -57,6 +57,7 @@ Then:
 | `EMAIL_IN_DOMAIN` | `in.getpluck.io` |
 | `APPLE_TEAM_ID` | the Apple Developer team ID that signs the iPhone app (Membership details). Serves `/.well-known/apple-app-site-association`, so links to `/shared/…`, `/lists/…` and `/items/…` open the app when it is installed |
 | `NEXT_PUBLIC_POSTHOG_KEY` | the PostHog project token (EU project). Read at build time. Turns on the cookie banner, usage analytics after a yes, and error tracking for the browser and the server |
+| `REVIEW_EMAIL`, `REVIEW_PASSWORD` | the App Review account: an address nobody can guess (`apple-review-$(openssl rand -hex 4)@getpluck.io`) and a password (`openssl rand -base64 18`). See "The App Review account" below |
 
 Leave `NEXT_PUBLIC_POSTHOG_KEY` off Preview, so previews never report into the real project. In PostHog, turn on Error tracking (Project settings, Error tracking) and keep Session replay off: Pluck never sends recordings.
 
@@ -75,6 +76,14 @@ Preview deployments build every PR, and the build reads the database, so set `MO
 - Forward a newsletter to your `pluck+…@in.getpluck.io` address (Settings, Email-in); it lands within a minute.
 - Watch the Vercel cron log for `/api/worker/tick` returning 200 every minute.
 - The JWKS (the `jwks` collection) signs every connector token: never delete it.
+
+## The App Review account
+
+App Review needs a username and password and cannot open an email link. With `REVIEW_EMAIL` and `REVIEW_PASSWORD` set, that one address signs in with a password and no other can: typing it on the sign-in page (on the web or in the iPhone app's sign-in sheet) and tapping "Email me a link" shows a Password field instead of sending a link. The account is made at the first password sign-in, and changing `REVIEW_PASSWORD` changes the password at the next one. Pluck sends no email to the address, and nobody can sign up, reset or change a password.
+
+- Give App Store Connect (App Review Information, Sign-in required) the two values, with the note: "Type the email, tap Email me a link, then type the password."
+- Sign in as the account once before submitting and pluck a few real links, a Note and a Todo, tag two and make a List, so the reviewer sees a library and not an empty Inbox. `scripts/demo-seed.mjs` cannot do this: it needs Mailpit and the local fixture pages, so it only fills a local server.
+- Unset both to turn it off. The account and its library stay; nothing is deleted.
 
 ## Later
 

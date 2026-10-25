@@ -26,6 +26,10 @@ export const ACCOUNT_SCOPE = "account";
 // Where the extension and the iPhone app take their sign-in back. Codes sent here never leave our apps.
 export const FIRST_PARTY_REDIRECTS = [`${ORIGIN}/extension/connected`, "io.getpluck.app:/oauth"];
 const LIMITS_ON = process.env.AUTH_RATE_LIMIT !== "off";
+// App Review cannot read a mailbox, so this one address, and no other, signs in with a password. Either unset, it is off.
+export const REVIEW = process.env.REVIEW_EMAIL && process.env.REVIEW_PASSWORD
+  ? { email: process.env.REVIEW_EMAIL.trim().toLowerCase(), password: process.env.REVIEW_PASSWORD }
+  : null;
 
 const firstParty = (uris: unknown) => Array.isArray(uris) && uris.length > 0 && uris.every((u) => FIRST_PARTY_REDIRECTS.includes(u));
 
@@ -39,9 +43,25 @@ const guard = createAuthMiddleware(async (ctx) => {
     if ((wantsApi || wantsAccount || /pluck/i.test(String(body.client_name ?? ""))) && !firstParty(body.redirect_uris))
       throw new APIError("BAD_REQUEST", { error: "invalid_client_metadata", error_description: "Only Pluck's own apps can register for the Pluck API or use its name." });
   }
+  const email = String((ctx.body as { email?: unknown } | undefined)?.email ?? "").trim().toLowerCase();
+  // The review address gets no link: the form asks for its password instead.
+  if (ctx.path === "/sign-in/magic-link" && email === REVIEW?.email) return { password: true };
+  if (ctx.path === "/sign-in/email") {
+    if (!REVIEW || email !== REVIEW.email) throw new APIError("UNAUTHORIZED", { message: "That password did not work." });
+    if (LIMITS_ON)
+      for (const [key, max] of [["review:email", 10], [`review:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 10]] as const)
+        if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many tries. Try again in an hour." });
+    // The account and its password follow the env vars: changing REVIEW_PASSWORD changes the password at the next try.
+    const c = ctx.context.internalAdapter;
+    const found = await c.findUserByEmail(email, { includeAccounts: true });
+    const user = found?.user ?? (await c.createUser({ email, name: "", emailVerified: true }, { method: "email-password" }));
+    const hash = await ctx.context.password.hash(REVIEW.password);
+    const credential = found?.accounts.find((a) => a.providerId === "credential" && a.accountId === user.id);
+    if (credential) await c.updateAccount(credential.id, { password: hash });
+    else await c.linkAccount({ userId: user.id, providerId: "credential", accountId: user.id, password: hash });
+  }
   // Each link is an email we pay for and a mailbox someone else owns: a few an hour per address and per network.
   if (ctx.path === "/sign-in/magic-link" && LIMITS_ON) {
-    const email = String((ctx.body as { email?: unknown } | undefined)?.email ?? "").trim().toLowerCase();
     for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 30]] as const)
       if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in links. Try again in an hour." });
   }
@@ -66,6 +86,9 @@ export const auth = betterAuth({
     enabled: LIMITS_ON,
     customRules: { "/oauth2/register": { window: 3600, max: 20 } },
   },
+  // Passwords exist for the review account only (the guard): nobody signs up, resets or changes one.
+  emailAndPassword: { enabled: REVIEW !== null, disableSignUp: true },
+  disabledPaths: ["/sign-up/email", "/request-password-reset", "/reset-password", "/change-password"],
   hooks: { before: guard },
   onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so
   plugins: [
