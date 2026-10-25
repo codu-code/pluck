@@ -103,7 +103,10 @@ const config: ExpoConfig = {
     ],
     "@bacons/apple-targets",
   ],
-  extra: { server, appGroup: GROUP },
+  // showServer: "Use your own server" on the sign-in screen. Off in store builds (it distracts everyone who is not
+  // self-hosting); on for PLUCK_SHOW_SERVER=1 or a build pointed at another server. A server's own pluck://signin?server=
+  // link opens it in any build.
+  extra: { server, appGroup: GROUP, showServer: process.env.PLUCK_SHOW_SERVER === "1" || server !== "https://getpluck.io" },
   experiments: { typedRoutes: false },
 };
 

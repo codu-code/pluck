@@ -22,6 +22,7 @@ export const REDIRECT = "io.getpluck.app:/oauth";
 // "account": AI tools, export and deleting the account from Settings (the server lets only Pluck's own apps ask).
 const SCOPE = "offline_access library:read library:write account";
 export const defaultServer: string = (Constants.expoConfig?.extra as { server?: string } | undefined)?.server ?? "https://getpluck.io";
+export const showServerChoice = Boolean((Constants.expoConfig?.extra as { showServer?: boolean } | undefined)?.showServer);
 
 let current: Session | null | undefined;
 const listeners = new Set<(s: Session | null) => void>();

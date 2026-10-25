@@ -1,10 +1,11 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { Wordmark } from "@/components/Wordmark";
-import { defaultServer, signIn, signInWithKey } from "@/lib/session";
+import { defaultServer, showServerChoice, signIn, signInWithKey } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
 
 // Sign in (no board of its own: the web's sign-in page, First run and Brand). The email link does the rest;
@@ -74,21 +75,37 @@ export default function SignIn() {
             style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy ? 0.6 : pressed ? 0.85 : 1 }]}>
             {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr(useKey ? "useKey" : "withEmail")}</Text>}
           </Pressable>
-          <Pressable accessibilityRole="button" onPress={() => { setAdvanced((a) => !a); setError(null); if (advanced) setServer(defaultServer); }} style={styles.quiet}>
-            <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? tr("useHost", { host: new URL(defaultServer).host }) : tr("ownServer")}</Text>
-          </Pressable>
+          {(showServerChoice || linked) && (
+            <Pressable accessibilityRole="button" onPress={() => { setAdvanced((a) => !a); setError(null); if (advanced) setServer(defaultServer); }} style={styles.quiet}>
+              <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? tr("useHost", { host: new URL(defaultServer).host }) : tr("ownServer")}</Text>
+            </Pressable>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
-// What lands in their inbox, drawn, so the next step is no surprise (the web's sign-in page has the same).
+// What lands in their inbox, played rather than drawn, so it reads as "this is what happens next" and not as a
+// button on this screen: the email drops in like a notification, then a tap lands on its link, now and again.
+// One description for VoiceOver; with Reduce Motion it simply sits there.
 function EmailPreview({ t }: { t: Palette }) {
   const tr = useTranslations("ios.signin.preview");
+  const reduced = useReducedMotion();
+  const arrive = useSharedValue(reduced ? 1 : 0);
+  const tap = useSharedValue(0);
+  useEffect(() => {
+    if (reduced) return;
+    arrive.value = withDelay(350, withTiming(1, { duration: 420, easing: Easing.out(Easing.cubic) }));
+    // A tap ripple on the link: 1.2 s after it arrives, then every 3.6 s.
+    tap.value = withDelay(1500, withRepeat(withSequence(withTiming(1, { duration: 700, easing: Easing.out(Easing.quad) }), withTiming(0, { duration: 0 }), withDelay(2900, withTiming(0, { duration: 0 }))), -1));
+  }, [reduced, arrive, tap]);
+  const card = useAnimatedStyle(() => ({ opacity: arrive.value, transform: [{ translateY: (1 - arrive.value) * -28 }, { scale: 0.97 + arrive.value * 0.03 }] }));
+  const ripple = useAnimatedStyle(() => ({ opacity: tap.value === 0 ? 0 : 0.45 * (1 - tap.value), transform: [{ scale: 0.4 + tap.value * 1.4 }] }));
+  const pressed = useAnimatedStyle(() => ({ transform: [{ scale: tap.value > 0 && tap.value < 0.25 ? 0.96 : 1 }] }));
   return (
-    <View accessible accessibilityLabel={tr("a11y")}
-      style={[styles.panel, { backgroundColor: t.surface, borderColor: t.line }]}>
+    <Animated.View accessible accessibilityLabel={tr("a11y")}
+      style={[styles.panel, { backgroundColor: t.surface, borderColor: t.line }, card]}>
       <View style={[styles.panelHead, { borderBottomColor: t.line }]}>
         <Text style={[font.semibold, { color: t.ink, fontSize: 13 }]}>Pluck</Text>
         <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 13 }]}>{tr("subject")}</Text>
@@ -97,11 +114,12 @@ function EmailPreview({ t }: { t: Palette }) {
       <View style={styles.panelBody}>
         <Text style={[font.bold, styles.panelTitle, { color: t.ink }]}>{tr("title")}</Text>
         <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>{tr("body")}</Text>
-        <View style={[styles.panelButton, { backgroundColor: t.brand }]}>
+        <Animated.View style={[styles.panelButton, { backgroundColor: t.brand }, pressed]}>
           <Text style={[font.semibold, { color: t.onBrand, fontSize: 14 }]}>{tr("button")}</Text>
-        </View>
+          <Animated.View pointerEvents="none" style={[styles.ripple, { backgroundColor: t.highlight }, ripple]} />
+        </Animated.View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -111,7 +129,8 @@ const styles = StyleSheet.create({
   panelHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   panelBody: { gap: 12, paddingTop: 18, paddingHorizontal: 16, paddingBottom: 20 },
   panelTitle: { fontSize: 24, lineHeight: 26, letterSpacing: -0.48 },
-  panelButton: { alignSelf: "flex-start", minHeight: 40, paddingHorizontal: 16, borderRadius: 10, justifyContent: "center" },
+  panelButton: { alignSelf: "flex-start", minHeight: 40, paddingHorizontal: 16, borderRadius: 10, justifyContent: "center", overflow: "hidden" },
+  ripple: { position: "absolute", width: 44, height: 44, borderRadius: 22, top: -2, right: 18 },
   h1: { fontSize: 40, lineHeight: 42, letterSpacing: -1.6 },
   lede: { fontSize: 16, lineHeight: 23 },
   field: { minHeight: 48, borderWidth: 1, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12, fontSize: 16 },
