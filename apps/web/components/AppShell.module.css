@@ -8,10 +8,12 @@
 .links { display: flex; flex-direction: column; gap: 2px; }
 .link {
   display: flex; justify-content: space-between; align-items: center; height: 36px; padding: 0 8px;
-  border-radius: 6px; text-decoration: none; color: var(--ink); transition: background-color 120ms ease-out;
+  border-radius: 6px; text-decoration: none; color: var(--ink); transition: background-color 160ms ease-out, color 160ms ease-out;
 }
 .link:hover { background: var(--rail-active); color: var(--ink); }
-.link[aria-current="page"] { background: var(--rail-active); font-weight: 600; }
+/* The place you are on is Pluck green: a mint tint and forest (or, on dark, mint) text, eased in, never a stripe. */
+.link[aria-current="page"], .link[aria-current="page"]:hover { background: var(--highlight-wash); color: var(--action-ink); font-weight: 600; }
+.link[aria-current="page"] .count { color: var(--action-ink); }
 .me { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 0 8px; color: var(--ink2); }
 .avatar {
   width: 28px; height: 28px; border-radius: 14px; background: var(--avatar); color: var(--ink);
@@ -36,7 +38,10 @@
   .links { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; flex-direction: row; gap: 0; padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--line); }
   .link { position: relative; flex: 1 1 0; flex-direction: column; justify-content: center; height: 48px; padding: 0; border-radius: 10px; font-size: 12px; font-weight: 500; color: var(--ink2); }
   .link:hover { background: transparent; }
-  .link[aria-current="page"] { background: var(--rail-active); color: var(--ink); font-weight: 600; }
+  .link[aria-current="page"], .link[aria-current="page"]:hover { background: var(--highlight-wash); color: var(--action-ink); font-weight: 600; }
   .count { position: absolute; top: 4px; right: calc(50% - 26px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--brand); color: var(--on-brand); font-size: 10px; line-height: 16px; text-align: center; }
+  .link[aria-current="page"] .count { color: var(--on-brand); } /* the badge stays white on forest */
   .main { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
 }
+
+@media (prefers-reduced-motion: reduce) { .link { transition: none; } }

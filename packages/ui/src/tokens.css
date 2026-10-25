@@ -22,6 +22,7 @@
   --accent: #34A07C;
   --highlight: #7FD3AE;
   --highlight-wash: light-dark(#C9EEDC, #24493A);
+  --action-ink: light-dark(#1E5C45, #7FD3AE); /* the place you are on, text buttons: forest on light, mint on dark (the iPhone's actionInk) */
   --clay: light-dark(#9A5536, #D08A68);
   --clay-dot: #B06A48;
   --clay-line: light-dark(#C9A28E, #7A4C36);
