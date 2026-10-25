@@ -142,7 +142,7 @@
     "sharedWithYou": "Compartidas contigo",
     "sharedA11y": "{name}, compartida por {owner}, {count, plural, one {# elemento} other {# elementos}}",
     "from": "De {owner} · solo lectura",
-    "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} marcados",
+    "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} hechos",
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Aún no hay listas.",

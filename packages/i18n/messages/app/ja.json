@@ -305,7 +305,6 @@
     "meta": "{by}さんが共有 · {count, plural, other {#件}} · 更新：{ago}",
     "pluck": "このリストをPluck",
     "seeOnly": "閲覧はできますが、変更できるのは共有した人だけです。Pluckすると、自分用のコピーができます。",
-    "note": "メモ",
     "noAccess": {
       "title1": "共有されて",
       "title2": "いません",
@@ -647,7 +646,7 @@
     "table": {
       "name": "名前と目的",
       "visibility": "公開設定",
-      "ticked": "チェック",
+      "ticked": "完了",
       "lastAdded": "最終追加"
     },
     "byAi": "AIによる",

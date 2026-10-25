@@ -142,7 +142,7 @@
     "sharedWithYou": "あなたと共有",
     "sharedA11y": "{name}、{owner}さんが共有、{count, plural, other {#件}}",
     "from": "{owner}さんから · 閲覧のみ",
-    "a11y": "{name}、{visibility, select, public {公開} other {非公開}}、{count}件中{ticked}件チェック済み",
+    "a11y": "{name}、{visibility, select, public {公開} other {非公開}}、{count}件中{ticked}件完了",
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "リストはまだありません。",

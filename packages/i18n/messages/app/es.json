@@ -305,7 +305,6 @@
     "meta": "Compartida contigo por {by} · {count, plural, one {# elemento} other {# elementos}} · actualizada {ago}",
     "pluck": "Recoger esta lista",
     "seeOnly": "Tú puedes verla; solo esa persona la cambia. Recógela para tener tu propia copia.",
-    "note": "Nota",
     "noAccess": {
       "title1": "No está compartida",
       "title2": "contigo",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Nombre y propósito",
       "visibility": "Visibilidad",
-      "ticked": "Marcados",
+      "ticked": "Hecho",
       "lastAdded": "Último añadido"
     },
     "byAi": "por IA",

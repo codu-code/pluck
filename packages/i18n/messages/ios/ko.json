@@ -142,7 +142,7 @@
     "sharedWithYou": "공유받은 리스트",
     "sharedA11y": "{name}, {owner}님이 공유함, {count, plural, other {항목 #개}}",
     "from": "{owner}님 · 보기 전용",
-    "a11y": "{name}, {visibility, select, public {공개} other {비공개}}, {count}개 중 {ticked}개 체크",
+    "a11y": "{name}, {visibility, select, public {공개} other {비공개}}, {count}개 중 {ticked}개 완료",
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "아직 리스트가 없어요.",

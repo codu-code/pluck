@@ -305,7 +305,6 @@
     "meta": "{by}님이 공유함 · {count, plural, other {항목 #개}} · {ago} 업데이트",
     "pluck": "이 리스트 담기",
     "seeOnly": "보기만 할 수 있고, 바꾸는 건 공유한 사람만 할 수 있어요. 담으면 내 사본이 생겨요.",
-    "note": "메모",
     "noAccess": {
       "title1": "나에게 공유된",
       "title2": "리스트가 아니에요",
@@ -647,7 +646,7 @@
     "table": {
       "name": "이름과 목적",
       "visibility": "공개 범위",
-      "ticked": "체크",
+      "ticked": "완료",
       "lastAdded": "마지막 추가"
     },
     "byAi": "AI가 만듦",

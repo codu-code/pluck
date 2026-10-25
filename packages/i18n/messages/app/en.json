@@ -305,7 +305,6 @@
     "meta": "Shared with you by {by} · {count, plural, one {# item} other {# items}} · updated {ago}",
     "pluck": "Pluck this list",
     "seeOnly": "You can see it; only they change it. Pluck it for a copy of your own.",
-    "note": "Note",
     "noAccess": {
       "title1": "Not shared",
       "title2": "with you",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Name and purpose",
       "visibility": "Visibility",
-      "ticked": "Ticked",
+      "ticked": "Done",
       "lastAdded": "Last added"
     },
     "byAi": "by AI",

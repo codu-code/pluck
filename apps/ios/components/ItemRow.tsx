@@ -1,7 +1,7 @@
 import { initials, tileIndex, type Item, type Status } from "@pluck/shared-schemas";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import ReanimatedSwipeable, { type SwipeableMethods } from "react-native-gesture-handler/ReanimatedSwipeable";
 import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
@@ -40,6 +40,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
   const t = useTheme();
   const tr = useTranslations("ios");
   const cover = useCover(item, coverPath);
+  const [noCover, setNoCover] = useState(false); // offline, or gone: the tile the Inbox uses without one
   const text = item.kind === "note" || item.kind === "todo" || item.kind === "thing";
   const ini = text ? "" : initials(item.siteName, item.url);
   const words = useRowText()(item);
@@ -97,8 +98,8 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
                 {selected && <Icon d={ICONS.tick} size={13} color={t.onBrand} width={2.4} />}
               </View>
             </View>
-          ) : cover ? (
-            <Image source={cover} style={[styles.tile, marked && styles.soft]} accessibilityIgnoresInvertColors />
+          ) : cover && !noCover ? (
+            <Image source={cover} onError={() => setNoCover(true)} style={[styles.tile, marked && styles.soft]} accessibilityIgnoresInvertColors />
           ) : text ? (
             // A note, todo or thing has no site: its kind glyph in a dashed tile, as on the web.
             <View style={[styles.tile, styles.glyphTile, { borderColor: t.lineDashed }, marked && styles.soft]}><KindGlyph kind={item.kind} size={18} color={t.ink2} /></View>

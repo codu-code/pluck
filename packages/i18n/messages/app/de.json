@@ -305,7 +305,6 @@
     "meta": "Mit dir geteilt von {by} · {count, plural, one {# Eintrag} other {# Einträge}} · aktualisiert {ago}",
     "pluck": "Diese Liste pflücken",
     "seeOnly": "Du kannst sie ansehen, ändern kann sie nur die Person, die sie geteilt hat. Pflück sie für eine eigene Kopie.",
-    "note": "Notiz",
     "noAccess": {
       "title1": "Nicht mit dir",
       "title2": "geteilt",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Name und Zweck",
       "visibility": "Sichtbarkeit",
-      "ticked": "Abgehakt",
+      "ticked": "Erledigt",
       "lastAdded": "Zuletzt hinzugefügt"
     },
     "byAi": "von KI",

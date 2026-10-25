@@ -305,7 +305,6 @@
     "meta": "Met je gedeeld door {by} · {count, plural, one {# item} other {# items}} · bijgewerkt {ago}",
     "pluck": "Pluk deze lijst",
     "seeOnly": "Jij kunt hem zien; alleen de eigenaar verandert hem. Pluk hem voor een eigen kopie.",
-    "note": "Notitie",
     "noAccess": {
       "title1": "Niet met je",
       "title2": "gedeeld",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Naam en doel",
       "visibility": "Zichtbaarheid",
-      "ticked": "Afgevinkt",
+      "ticked": "Klaar",
       "lastAdded": "Laatst toegevoegd"
     },
     "byAi": "door AI",

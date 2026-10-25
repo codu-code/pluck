@@ -305,7 +305,6 @@
     "meta": "Condivisa con te da {by} · {count, plural, one {# elemento} other {# elementi}} · aggiornata {ago}",
     "pluck": "Prendi questa lista",
     "seeOnly": "Tu puoi vederla; solo chi l'ha condivisa può modificarla. Prendila per averne una copia tua.",
-    "note": "Nota",
     "noAccess": {
       "title1": "Non condivisa",
       "title2": "con te",
@@ -647,7 +646,7 @@
     "table": {
       "name": "Nome e scopo",
       "visibility": "Visibilità",
-      "ticked": "Spuntati",
+      "ticked": "Fatto",
       "lastAdded": "Ultima aggiunta"
     },
     "byAi": "dall'IA",

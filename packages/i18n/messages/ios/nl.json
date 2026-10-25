@@ -142,7 +142,7 @@
     "sharedWithYou": "Met je gedeeld",
     "sharedA11y": "{name}, gedeeld door {owner}, {count, plural, one {# item} other {# items}}",
     "from": "Van {owner} · alleen bekijken",
-    "a11y": "{name}, {visibility, select, public {Openbaar} other {Privé}}, {ticked} van {count} afgevinkt",
+    "a11y": "{name}, {visibility, select, public {Openbaar} other {Privé}}, {ticked} van {count} klaar",
     "tickedOf": "{ticked} van {count}",
     "empty": {
       "title": "Nog geen lijsten.",

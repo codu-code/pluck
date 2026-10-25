@@ -305,7 +305,6 @@
     "meta": "{by} 与你共享 · {count, plural, other {# 条}} · {ago}更新",
     "pluck": "摘进你的 Pluck",
     "seeOnly": "你可以查看，只有对方能修改。把它摘进你的 Pluck，就能得到一份自己的副本。",
-    "note": "笔记",
     "noAccess": {
       "title1": "没有",
       "title2": "与你共享",
@@ -647,7 +646,7 @@
     "table": {
       "name": "名称和用途",
       "visibility": "可见性",
-      "ticked": "已勾选",
+      "ticked": "已完成",
       "lastAdded": "最近添加"
     },
     "byAi": "由 AI 添加",

@@ -142,7 +142,7 @@
     "sharedWithYou": "Mit dir geteilt",
     "sharedA11y": "{name}, geteilt von {owner}, {count, plural, one {# Eintrag} other {# Einträge}}",
     "from": "Von {owner} · nur ansehen",
-    "a11y": "{name}, {visibility, select, public {Öffentlich} other {Privat}}, {ticked} von {count} abgehakt",
+    "a11y": "{name}, {visibility, select, public {Öffentlich} other {Privat}}, {ticked} von {count} erledigt",
     "tickedOf": "{ticked} von {count}",
     "empty": {
       "title": "Noch keine Listen.",

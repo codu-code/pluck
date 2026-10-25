@@ -142,7 +142,7 @@
     "sharedWithYou": "与你共享",
     "sharedA11y": "{name}，{owner} 共享，{count, plural, other {# 条}}",
     "from": "来自 {owner} · 仅可查看",
-    "a11y": "{name}，{visibility, select, public {公开} other {私密}}，已勾选 {ticked}/{count}",
+    "a11y": "{name}，{visibility, select, public {公开} other {私密}}，已完成 {ticked}/{count}",
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "还没有清单。",
