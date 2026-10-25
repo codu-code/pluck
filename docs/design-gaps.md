@@ -1,6 +1,6 @@
 # Design gaps
 
-What still needs a designer's eye. Three kinds: screens built without a board of their own (styled from the nearest board and the tokens), places the build departs from a board and why, and placeholders that need real content. Kept up to date by the build loop; tick things off or delete them as they are designed.
+What still needs a designer's eye. Three kinds: screens built without a board of their own (styled from the nearest board and the tokens), places the build departs from a board and why, and placeholders that need real content. Keep it up to date: tick things off or delete them as they are designed.
 
 ## Screens with no board of their own
 

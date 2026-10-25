@@ -5,7 +5,7 @@ Pluck runs as one Docker image (the web app, and the same image again as the wor
 ## Try it
 
 ```sh
-git clone <repo> pluck && cd pluck
+git clone https://github.com/codu-code/pluck && cd pluck
 docker compose up -d
 ```
 

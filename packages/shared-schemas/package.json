@@ -1,5 +1,7 @@
 {
   "name": "@pluck/shared-schemas",
+  "description": "Zod schemas for every Pluck type, shared by the server and every client.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/shared-schemas" },
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

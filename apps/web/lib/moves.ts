@@ -16,5 +16,3 @@ export async function restoreStatuses(items: Pick<Item, "id" | "status">[]): Pro
   for (const it of items) by.set(it.status, [...(by.get(it.status) ?? []), it.id]);
   await Promise.all([...by].map(([status, ids]) => moveItems(ids, status)));
 }
-
-export { MOVED } from "@pluck/shared-schemas";

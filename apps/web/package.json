@@ -1,5 +1,7 @@
 {
   "name": "@pluck/web",
+  "description": "The Pluck web app, marketing site, REST API, MCP connector and worker.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "apps/web" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

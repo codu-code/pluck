@@ -1,5 +1,7 @@
 {
   "name": "@pluck/db",
+  "description": "Every MongoDB collection and query in Pluck, each scoped to one person.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/db" },
   "version": "0.0.0",
   "private": true,
   "license": "AGPL-3.0-only",

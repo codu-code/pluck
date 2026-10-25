@@ -1,5 +1,7 @@
 {
   "name": "@pluck/i18n",
+  "description": "Pluck's words in ten languages, one catalog per surface.",
+  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/i18n" },
   "version": "0.0.0",
   "private": true,
   "license": "MIT",

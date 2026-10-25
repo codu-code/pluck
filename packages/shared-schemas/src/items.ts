@@ -72,7 +72,6 @@ export const PluckResponse = z.object({
 });
 export type PluckResponse = z.infer<typeof PluckResponse>;
 
-// Tags join in slice 5.
 export const UpdateItemBody = z
   .object({
     title: z.string().max(500).optional(), // "" goes back to the derived title
