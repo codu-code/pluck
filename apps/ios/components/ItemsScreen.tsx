@@ -1,10 +1,11 @@
-import { MOVED, type Item, type Status } from "@pluck/shared-schemas";
+import type { Item, Status } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
+import { useTranslations } from "use-intl";
 import { api } from "@/lib/session";
 import { keys, pluck, shareExtensionCache, syncPending, toSync, useCounts, useItems, useLists, useMe, usePatchItem, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
@@ -21,6 +22,7 @@ const avatarOf = (name?: string, email?: string) =>
 // Inbox and Later (IOSInbox board): the count, what is waiting to sync, and the rows.
 export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const t = useTheme();
+  const tr = useTranslations("ios");
   const qc = useQueryClient();
   const items = useItems(status);
   const me = useMe();
@@ -48,7 +50,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     seen.current?.delete(item.id);
     patch.mutate({ id: item.id, patch: { status: to } });
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(MOVED[to], () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${to}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
   };
 
   // Selecting: a long press picks the first row; the toolbar takes the tab bar's place until Done or the last
@@ -76,62 +78,63 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
       void qc.invalidateQueries({ queryKey: ["items"] });
       void qc.invalidateQueries({ queryKey: ["counts"] });
     });
-    await send(to).catch(() => toast("That did not go through. Nothing moved."));
-    toast(ids.length > 1 ? `${ids.length} items. ${MOVED[to]}` : MOVED[to], () => void send(status));
+    await send(to).catch(() => toast(tr("items.moveFailed")));
+    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void send(status));
   };
 
   const away: Status = status === "later" ? "inbox" : "later";
   const one = chosen.length === 1 ? chosen[0]! : null;
   const more = () => {
     const options = [
-      ...(one && one.url ? ["Add a note"] : []),
-      ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["Done"] : []),
-      "Select all",
+      ...(one && one.url ? ["note" as const] : []),
+      ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["done" as const] : []),
+      "all" as const,
     ];
-    ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, (i) => {
+    const names = { note: tr("items.addNote"), done: tr("common.done"), all: tr("items.selectAll") };
+    ActionSheetIOS.showActionSheetWithOptions({ options: [...options.map((o) => names[o]), tr("common.cancel")], cancelButtonIndex: options.length }, (i) => {
       const o = options[i];
-      if (o === "Add a note") router.push({ pathname: "/note", params: { id: one!.id } });
-      else if (o === "Done") void moveMany(chosen, "done");
-      else if (o === "Select all") setPicked(new Set(rows.map((r) => r.id)));
+      if (o === "note") router.push({ pathname: "/note", params: { id: one!.id } });
+      else if (o === "done") void moveMany(chosen, "done");
+      else if (o === "all") setPicked(new Set(rows.map((r) => r.id)));
     });
   };
   const ids = [...(picked ?? [])].join(",");
   // While selecting, the actions sit at the top, under the count.
   const actions = picked ? (
     <ToolBar edge="top" tools={[
-      { label: away === "inbox" ? "Inbox" : "Later", icon: away === "inbox" ? ICONS.inbox : ICONS.later, onPress: () => void moveMany(chosen, away) },
-      { label: "Tags", icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: ids } }) },
-      { label: "List", icon: ICONS.lists, a11y: "Add to a List", onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: ids } }) },
-      { label: "Archive", icon: ICONS.archive, onPress: () => void moveMany(chosen, "archived") },
-      { label: "More", icon: ICONS.more, onPress: more },
+      { label: tr(away === "inbox" ? "actions.inbox" : "actions.later"), icon: away === "inbox" ? ICONS.inbox : ICONS.later, onPress: () => void moveMany(chosen, away) },
+      { label: tr("actions.tags"), icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: ids } }) },
+      { label: tr("actions.list"), icon: ICONS.lists, a11y: tr("actions.addToList"), onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: ids } }) },
+      { label: tr("actions.archive"), icon: ICONS.archive, onPress: () => void moveMany(chosen, "archived") },
+      { label: tr("actions.more"), icon: ICONS.more, onPress: more },
     ]} />
   ) : null;
 
   const newNote = async () => {
-    const { item } = await pluck({ text: "New note", kind: "note" });
+    const { item } = await pluck({ text: tr("items.newNoteText"), kind: "note" });
     if (item) router.push(`/items/${item.id}`);
   };
 
   return (
     <TitledList
-      title={picked ? `${picked.size} selected` : status === "inbox" ? "Inbox" : "Later"}
+      title={picked ? tr("items.selected", { count: picked.size }) : tr(`tabs.${status}`)}
       right={picked ? (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Pressable accessibilityRole="button" onPress={() => setPicked(new Set(rows.map((r) => r.id)))} style={styles.textButton}>
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.actionInk, fontSize: 16 }]}>All</Text>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.actionInk, fontSize: 16 }]}>{tr("items.all")}</Text>
           </Pressable>
           <Pressable accessibilityRole="button" onPress={() => setPicked(null)} style={styles.textButton}>
-            <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>Done</Text>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>{tr("common.done")}</Text>
           </Pressable>
         </View>
       ) : (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {status === "inbox" && (
-            <Pressable accessibilityRole="button" accessibilityLabel="New note" onPress={() => void newNote()} style={styles.headerButton}>
+            <Pressable accessibilityRole="button" accessibilityLabel={tr("items.newNote")} onPress={() => void newNote()} style={styles.headerButton}>
               <Icon d={ICONS.compose} color={t.ink} />
             </Pressable>
           )}
-          <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel="Settings" style={styles.headerButton}>
+          <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel={tr("items.settings")} style={styles.headerButton}>
             <View style={[styles.avatar, { backgroundColor: t.avatar }]}>
               <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 12 }]}>{avatarOf(me.data?.name, me.data?.email)}</Text>
             </View>
@@ -141,12 +144,12 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
       head={actions ?? (
         <View style={styles.sub}>
           <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
-            {counts.data ? `${counts.data[status]} ${status === "inbox" ? "to triage" : "for later"}` : " "}
+            {counts.data ? tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] }) : " "}
           </Text>
           {pending > 0 && (
             <View style={[styles.sync, { backgroundColor: t.syncBg }]}>
               <View style={[styles.syncDot, { backgroundColor: t.syncDot }]} />
-              <Text style={[font.regular, { color: t.syncInk, fontSize: 12 }]}>{pending} to sync</Text>
+              <Text style={[font.regular, { color: t.syncInk, fontSize: 12 }]}>{tr("items.toSync", { count: pending })}</Text>
             </View>
           )}
         </View>
@@ -164,9 +167,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         <RefreshControl refreshing={items.isRefetching} onRefresh={async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); setPending(await toSync()); }} />
       }
       ListEmptyComponent={
-        items.isLoading ? <ActivityIndicator accessibilityLabel="Loading" color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
-          ? <Empty art={<ShareRow />} title="Nothing to triage." body="Tap Share in any app, then Pluck. It lands here." />
-          : <Empty art={<SwipeToLater />} title="Nothing for later." body="Swipe an item right in the Inbox and it waits here." />
+        items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
+          ? <Empty art={<ShareRow />} title={tr("items.empty.inbox.title")} body={tr("items.empty.inbox.body")} />
+          : <Empty art={<SwipeToLater />} title={tr("items.empty.later.title")} body={tr("items.empty.later.body")} />
       }
     />
   );

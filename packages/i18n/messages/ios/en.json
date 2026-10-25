@@ -2,5 +2,428 @@
   "language": {
     "label": "Language",
     "hint": "Pluck uses your iPhone's language. Change it in iOS Settings, Pluck, Language."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "done": "Done",
+    "save": "Save",
+    "copy": "Copy",
+    "add": "Add",
+    "tryAgain": "Try again",
+    "loading": "Loading",
+    "backTo": "Back to {label}",
+    "backToLists": "Back to Lists",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "failed": {
+      "title": "That did not go through",
+      "body": "Check the connection, then try again."
+    }
+  },
+  "kinds": {
+    "link": "Read",
+    "video": "Watch",
+    "pdf": "PDF",
+    "image": "Image",
+    "note": "Note",
+    "todo": "Todo",
+    "thing": "Thing"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archived": "Archived",
+    "done": "Done"
+  },
+  "tabs": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "search": "Search",
+    "lists": "Lists"
+  },
+  "actions": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archive": "Archive",
+    "backToInbox": "Back to the Inbox",
+    "tags": "Tags",
+    "list": "List",
+    "addToList": "Add to a List",
+    "note": "Note",
+    "share": "Share",
+    "more": "More",
+    "select": "Select",
+    "deselect": "Deselect"
+  },
+  "moved": {
+    "archived": "Gone. Well, archived.",
+    "later": "Kept for later.",
+    "done": "Done.",
+    "inbox": "Back in the Inbox."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {Gone. Well, archived.} other {# items. Gone. Well, archived.}}",
+    "later": "{count, plural, one {Kept for later.} other {# items. Kept for later.}}",
+    "done": "{count, plural, one {Done.} other {# items. Done.}}",
+    "inbox": "{count, plural, one {Back in the Inbox.} other {# items. Back in the Inbox.}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}, {kind}, {site}, {when}",
+    "a11yWithNote": "{title}, {kind}, {site}, {when}, note: {note}",
+    "when": {
+      "now": "now",
+      "minutes": "{count}m",
+      "hours": "{count}h",
+      "yesterday": "Yesterday"
+    },
+    "due": {
+      "overdue": "overdue",
+      "today": "due today",
+      "tomorrow": "due tomorrow",
+      "on": "due {date}"
+    },
+    "meta": {
+      "byAi": "by AI",
+      "byYou": "by you",
+      "failed": "Couldn't read",
+      "pending": "Plucking",
+      "photo": "photo",
+      "video": "video",
+      "minutes": "{count} min",
+      "pdf": "PDF",
+      "link": "link"
+    },
+    "site": {
+      "email": "email-in",
+      "file": "Your file"
+    }
+  },
+  "art": {
+    "plucked": "Plucked.",
+    "later": "Later"
+  },
+  "toast": {
+    "undo": "Undo"
+  },
+  "usage": {
+    "title": "Help make Pluck better<accent>?</accent>",
+    "body": "Share which screens you use, tied to your account, so we fix what gets in the way. No ads. No selling. Crash reports go either way, without your name on them.",
+    "yes": "Pluck it, I'm in",
+    "no": "Pluck off"
+  },
+  "items": {
+    "selected": "{count} selected",
+    "all": "All",
+    "newNote": "New note",
+    "newNoteText": "New note",
+    "settings": "Settings",
+    "toTriage": "{count} to triage",
+    "forLater": "{count} for later",
+    "toSync": "{count} to sync",
+    "moveFailed": "That did not go through. Nothing moved.",
+    "addNote": "Add a note",
+    "selectAll": "Select all",
+    "empty": {
+      "inbox": {
+        "title": "Nothing to triage.",
+        "body": "Tap Share in any app, then Pluck. It lands here."
+      },
+      "later": {
+        "title": "Nothing for later.",
+        "body": "Swipe an item right in the Inbox and it waits here."
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "Shared with you",
+    "sharedA11y": "{name}, shared by {owner}, {count, plural, one {# item} other {# items}}",
+    "from": "From {owner} · see only",
+    "a11y": "{name}, {visibility, select, public {Public} other {Private}}, {ticked} of {count} ticked",
+    "tickedOf": "{ticked} of {count}",
+    "empty": {
+      "title": "No lists yet.",
+      "body": "Make one on the web, or ask your AI to build one from what you plucked."
+    }
+  },
+  "search": {
+    "placeholder": "Search",
+    "kind": "Kind",
+    "anyKind": "Any kind",
+    "tag": "Tag",
+    "anyTag": "Any tag",
+    "list": "List",
+    "anyList": "Any list",
+    "status": "Status",
+    "anyStatus": "Any status",
+    "date": "Date",
+    "plucked": "Plucked",
+    "dates": {
+      "any": "Any time",
+      "week": "This week",
+      "month": "This month",
+      "year": "This year"
+    },
+    "yourNote": "Your note: <snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "Find it again.",
+        "body": "Titles, notes, tags, lists and the words on the page."
+      },
+      "error": {
+        "title": "Search didn't answer.",
+        "body": "Check the connection, then try again."
+      },
+      "none": {
+        "title": "Nothing plucked matches that.",
+        "body": "Try fewer words, or another filter."
+      }
+    },
+    "byMeaning": "Want it by meaning? Ask your AI."
+  },
+  "oauth": {
+    "signingIn": "Signing you in."
+  },
+  "note": {
+    "title": "Note",
+    "placeholder": "Why you kept it, or what to do with it.",
+    "hint": "Only you see it. Search finds it."
+  },
+  "welcome": {
+    "title": "You're in.\nNow pluck something.",
+    "lede": "You never need to open this app to pluck. It lives in Share, in every app.",
+    "step1": "<b>1.</b> Tap Share, then Pluck.",
+    "step2": "<b>2.</b> That's it. Keep reading.",
+    "tryIt": "Try it now",
+    "tryHint": "Opens a sample page in Safari. Share it to Pluck.",
+    "goToInbox": "Go to the Inbox"
+  },
+  "tags": {
+    "title": "Tags",
+    "rename": "Rename",
+    "renameTitle": "Rename the tag",
+    "deleteTitle": "Delete “{name}”?",
+    "deleteBody": "It comes off {count, plural, one {the # item} other {# items}}. The items stay.",
+    "deleteTag": "Delete the tag",
+    "deleted": "“{name}” is gone. The items stay.",
+    "hint": "Rename or delete",
+    "empty": {
+      "title": "No tags yet.",
+      "body": "Tag something from its long press, or the reader's Tags."
+    }
+  },
+  "list": {
+    "publicShare": "Public · Share",
+    "privateShare": "Private · Share",
+    "ticked": "{ticked} of {count} ticked",
+    "noteByAi": "{note} · by AI",
+    "tick": "Tick {title}",
+    "addA11y": "Add to this list",
+    "empty": {
+      "title": "Nothing on this list yet.",
+      "body": "Tap Add to put plucks on it, or ask your AI to fill it."
+    }
+  },
+  "shared": {
+    "copied": "Plucked. Your own copy is in Lists.",
+    "leaveTitle": "Leave this List?",
+    "leaveBody": "It comes off your Lists. They can share it with you again.",
+    "leave": "Leave",
+    "byNamed": "Shared with you by {name} (@{handle}) · see only",
+    "by": "Shared with you by @{handle} · see only",
+    "notShared": {
+      "title": "Not shared with you.",
+      "body": "Either this List no longer exists, or it isn't shared with {email}. If someone sent you the link, ask them to share it with that address.",
+      "bodyNoEmail": "Either this List no longer exists, or it isn't shared with the email you signed in with. If someone sent you the link, ask them to share it with that address."
+    },
+    "empty": "Nothing on this List yet.",
+    "pluckHint": "Copies it into your own Pluck",
+    "pluck": "Pluck this list"
+  },
+  "signin": {
+    "stale": "That link was from an earlier try. Open the newest email, or send a new link.",
+    "notServer": "That isn't a server address. It starts with https://.",
+    "badKey": "That key did not work on this server.",
+    "unreachable": "Couldn't reach {origin}.",
+    "title": "One link.\nNo password<accent>.</accent>",
+    "lede": "Type your email and we send a link. It signs you in, or starts your library if you are new.",
+    "server": "Server",
+    "key": "API key, if you use one",
+    "keyA11y": "API key",
+    "noKey": "No key? Leave it empty and we email you a link from that server.",
+    "useKey": "Use this key",
+    "withEmail": "Sign in with email",
+    "useHost": "Use {host}",
+    "ownServer": "Use your own server",
+    "preview": {
+      "a11y": "The email: Here is your link. Tap it to sign in. It works once, for 10 minutes.",
+      "subject": "Your link to Pluck",
+      "now": "now",
+      "title": "Here is your link.",
+      "body": "Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.",
+      "button": "Sign in to Pluck"
+    }
+  },
+  "handle": {
+    "title": "Handle",
+    "locked": "It can change again on {date}.",
+    "invalid": "3 to 24 lowercase letters, numbers or hyphens.",
+    "hint": "It goes in the link to every List you make public.",
+    "makeOne": "Make one up",
+    "saved": "You're @{handle}.",
+    "save": "Save @{handle}",
+    "keep": "Keep @{handle}",
+    "moveNone": "No public Lists yet, so no links change. Once saved, it can change again in a month.",
+    "move": "{count, plural, one {Your public List moves} other {Your # public Lists move}} to {host}/@{handle}/… and links to the old address stop working. Lists shared with people by email are not affected. Once saved, it can change again in a month."
+  },
+  "share": {
+    "title": "Share",
+    "close": "Close",
+    "sees": {
+      "me": "Only you can see this List.",
+      "people": "The people here see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Only you change it.",
+      "anyone": "Public: anyone who has this link can open it, without signing in, and it can turn up in search. They see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Make it private again any time; the link stops working at once."
+    },
+    "options": {
+      "me": "Only you",
+      "people": "People you choose",
+      "anyone": "Anyone with the link"
+    },
+    "stopManyTitle": "Stop sharing with {count, plural, one {# person} other {# people}}?",
+    "stopManyBody": "They can no longer see it. Share again any time.",
+    "stopSharing": "Stop sharing",
+    "anyoneTitle": "Anyone with the link?",
+    "anyoneBody": "It gets a public page at your handle. Never the tags, ticks or pages Pluck kept. Make it private again any time.",
+    "makePublic": "Make it public",
+    "sharedWith": "Shared with {email}. They get an email with a link.",
+    "stopOneTitle": "Stop sharing with {email}?",
+    "stopOneBody": "They can no longer see it.",
+    "whoHasAccess": "Who has access",
+    "addByEmail": "Add someone by email",
+    "stopA11y": "Stop sharing with {email}",
+    "publicLink": "Public link",
+    "copyPublic": "Copy the public link",
+    "linkCopied": "Link copied.",
+    "shareLink": "Share link"
+  },
+  "pick": {
+    "tags": "Tags",
+    "lists": "Lists",
+    "findTag": "Find or make a tag",
+    "makeTag": "Make the tag “{name}”",
+    "findList": "Find or start a List",
+    "startList": "Start a List called “{name}”",
+    "tagsForMany": "Tags for {count}",
+    "addMany": "Add {count} to a List",
+    "addTo": "Add to {name}",
+    "addToTheList": "Add to the list",
+    "noTags": "No tags yet.",
+    "noTagsBody": "Type one above. Your AI can tag things too.",
+    "noTagsManyBody": "Type one above.",
+    "noLists": "No lists yet.",
+    "noListsBody": "Type a name above to start one, or ask your AI to build one.",
+    "noListsManyBody": "Type a name above to start one.",
+    "nothing": "Nothing in the Inbox or Later.",
+    "nothingBody": "Pluck something first. It shows up here."
+  },
+  "item": {
+    "back": "Back",
+    "backArchive": "Archive",
+    "didntLoad": "This one didn't load.",
+    "didntLoadBody": "It may be gone, or the connection is. Try again in a bit.",
+    "minutesLeft": "{percent} · {minutes} min left",
+    "openOriginal": "Open the original",
+    "by": "By {author}",
+    "noteA11y": "Your note: {note}. Edit",
+    "pending": "Plucking the page. It shows here in a moment.",
+    "failed": "Couldn't read this page.",
+    "failedFile": "The file is kept. Its words weren't.",
+    "failedPage": "Some pages keep their words to themselves. The link is kept, and the original still opens.",
+    "titleA11y": "Title",
+    "titleHint": "Leave the title empty and the first line is the title. Saves as you type.",
+    "textA11y": "Text",
+    "textPlaceholder": "Write it down."
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "account": "Account",
+      "aiTools": "AI tools",
+      "emailIn": "Email in",
+      "expiry": "Expiry and the weekly email",
+      "library": "Library",
+      "appIcon": "App icon",
+      "privacy": "Privacy"
+    },
+    "yourAccount": "Your account",
+    "name": "Name",
+    "addName": "Add your name",
+    "nameTitle": "Your name",
+    "nameBody": "Shown on Lists you make public.",
+    "nameSaved": "Name saved.",
+    "handle": "Handle",
+    "signOut": "Sign out",
+    "signOutTitle": "Sign out?",
+    "signOutBody": "Plucks queued on this phone stay here until you sign in again.",
+    "accountFootnote": "Your name and handle show on Lists you make public, and nowhere else.",
+    "connectorCopied": "Copied. Paste it into your AI.",
+    "copied": "Copied",
+    "copyConnector": "Copy the connector address",
+    "connected": "Connected {date}",
+    "disconnect": "Disconnect",
+    "disconnectA11y": "{name}. Disconnect",
+    "disconnectTitle": "Disconnect {name}?",
+    "disconnectBody": "It stops reading and plucking straight away. Connect it again any time.",
+    "toolsNeedAccount": "Your connected AI tools show here once you sign in again with an email link.",
+    "toolsNone": "No AI tool connected yet. Add the address once in your AI tool; it works on every device you use it on.",
+    "toolsHint": "Add the address once in your AI tool. It works on every device you use it on.",
+    "addressCopied": "Address copied.",
+    "copyEmailIn": "Copy the email-in address",
+    "newAddress": "New address",
+    "newAddressTitle": "A new address?",
+    "newAddressBody": "The old one stops working at once. Update anything that forwards to it.",
+    "emailInFootnote": "Forward a newsletter here. It lands in the Inbox as a Read item.",
+    "days": "{count, plural, one {# day} other {# days}}",
+    "never": "Never",
+    "scopeInboxLater": "Inbox and Later",
+    "scopeInbox": "Inbox only",
+    "moveAfter": "Move to the Archive after",
+    "moveAfterTitle": "Untouched items move to the Archive after",
+    "expirySaved": "Untouched for {count} days goes to the Archive. Nothing is deleted.",
+    "noExpiry": "Nothing expires now.",
+    "appliesTo": "Applies to",
+    "appliesToTitle": "Expiry applies to",
+    "weekly": "Weekly email",
+    "off": "Off",
+    "weeklyTitle": "Send the weekly email on",
+    "noWeekly": "No weekly email.",
+    "weeklyOn": "The weekly email comes on {day, select, 0 {Sundays} 1 {Mondays} 2 {Tuesdays} 3 {Wednesdays} 4 {Thursdays} 5 {Fridays} other {Saturdays}}.",
+    "expiryFootnote": "Untouched items move to the Archive, nothing is deleted. The weekly email: what moves soon, what is due, and things you plucked and forgot.",
+    "tags": "Tags",
+    "export": "Export everything",
+    "byEmail": "By email",
+    "exportingTitle": "Exporting",
+    "exportingBody": "A zip of everything is on its way to {email}. The link arrives in a minute or two.",
+    "exportingBodyNoEmail": "A zip of everything is on its way to your email. The link arrives in a minute or two.",
+    "offline": "Offline copy",
+    "offlineValue": "{count, plural, one {# item} other {# items}} · {mb} MB",
+    "clearTitle": "Clear the offline copy?",
+    "clearBody": "Your library stays on the server. The app downloads it again as you use it.",
+    "clear": "Clear",
+    "server": "Server",
+    "serverBody": "This phone uses {host}. To use another server, sign out, then choose \"Use your own server\".",
+    "iconLight": "Light",
+    "iconDark": "Dark",
+    "iconA11y": "{name} icon",
+    "iconFootnote": "Just the icon. The app itself follows your phone.",
+    "usage": "Share how I use Pluck",
+    "usageFootnote": "Which screens you use, tied to your account. Never what you pluck. Crash reports go either way, without your name.",
+    "tipTitle": "Put Pluck first in Share",
+    "tipBody": "In any app, tap Share, scroll the app row to More, and drag Pluck to the front.",
+    "deleteAll": "Delete everything. No, really.",
+    "deleteTitle": "Delete everything?",
+    "deleteBody": "Every item, tag, note and list, for good. Export first if you want a copy.",
+    "continue": "Continue",
+    "confirmTitle": "Type your email to confirm",
+    "deleteButton": "Delete everything"
   }
 }

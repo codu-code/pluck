@@ -5,6 +5,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
 import { toast } from "@/components/Toast";
@@ -15,6 +16,7 @@ import { font, scale, useTheme } from "@/lib/theme";
 // A List someone shared with you, See only: what its public page shows, in their order with their notes.
 export default function SharedList() {
   const t = useTheme();
+  const tr = useTranslations("ios");
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,24 +24,24 @@ export default function SharedList() {
   const page = useQuery({ queryKey: ["shared", id], queryFn: () => api<PublicList>(`/api/v1/shared/${id}`), retry: false });
   const list = page.data?.list;
   const author = page.data?.author;
-  const failed = (e: unknown) => Alert.alert("That did not go through", e instanceof Refused ? e.message : "Check the connection, then try again.");
+  const failed = (e: unknown) => Alert.alert(tr("common.failed.title"), e instanceof Refused ? e.message : tr("common.failed.body"));
 
   const pluckIt = async () => {
     try {
       const { list: mine } = await api<{ list: List }>("/api/v1/lists/copy", { json: { listId: id } });
       void qc.invalidateQueries({ queryKey: keys.lists });
       void qc.invalidateQueries({ queryKey: ["items"] });
-      toast("Plucked. Your own copy is in Lists.");
+      toast(tr("shared.copied"));
       router.replace(`/lists/${mine.id}`);
     } catch (e) {
       failed(e);
     }
   };
   const leave = () =>
-    Alert.alert("Leave this List?", "It comes off your Lists. They can share it with you again.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(tr("shared.leaveTitle"), tr("shared.leaveBody"), [
+      { text: tr("common.cancel"), style: "cancel" },
       {
-        text: "Leave", style: "destructive", onPress: async () => {
+        text: tr("shared.leave"), style: "destructive", onPress: async () => {
           await api(`/api/v1/shared/${id}`, { method: "DELETE" }).catch(failed);
           void qc.invalidateQueries({ queryKey: ["sharedLists"] });
           router.back();
@@ -50,13 +52,13 @@ export default function SharedList() {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Back to Lists" onPress={() => router.back()} style={styles.back}>
+        <Pressable accessibilityRole="button" accessibilityLabel={tr("common.backToLists")} onPress={() => router.back()} style={styles.back}>
           <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>Lists</Text>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("tabs.lists")}</Text>
         </Pressable>
         {list && (
           <Pressable accessibilityRole="button" onPress={leave} style={styles.leave}>
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 15 }]}>Leave</Text>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("shared.leave")}</Text>
           </Pressable>
         )}
       </View>
@@ -66,14 +68,14 @@ export default function SharedList() {
         contentContainerStyle={{ paddingBottom: insets.bottom + 96 }}
         ListHeaderComponent={list && author ? (
           <View style={[styles.head, { borderBottomColor: t.line }]}>
-            <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>Shared with you by {author.name ? `${author.name} (@${author.handle})` : `@${author.handle}`} · see only</Text>
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{author.name ? tr("shared.byNamed", { name: author.name, handle: author.handle }) : tr("shared.by", { handle: author.handle })}</Text>
             <Text accessibilityRole="header" style={[font.bold, styles.title, { color: t.ink }]}>{list.name}</Text>
             {list.purpose ? <Text style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{list.purpose}</Text> : null}
           </View>
         ) : undefined}
         ListEmptyComponent={page.isLoading ? undefined : page.isError
-          ? <Empty title="Not shared with you." body={`Either this List no longer exists, or it isn't shared with ${me.data?.email ?? "the email you signed in with"}. If someone sent you the link, ask them to share it with that address.`} />
-          : <Empty title="Nothing on this List yet." />}
+          ? <Empty title={tr("shared.notShared.title")} body={me.data?.email ? tr("shared.notShared.body", { email: me.data.email }) : tr("shared.notShared.bodyNoEmail")} />
+          : <Empty title={tr("shared.empty")} />}
         renderItem={({ item: e, index }) => (
           <Pressable disabled={!e.url} onPress={() => e.url && void WebBrowser.openBrowserAsync(e.url)} accessibilityRole={e.url ? "link" : "text"}
             style={({ pressed }) => [styles.entry, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
@@ -87,9 +89,9 @@ export default function SharedList() {
         )}
       />
       {list && (
-        <Pressable onPress={() => void pluckIt()} accessibilityRole="button" accessibilityHint="Copies it into your own Pluck" style={[styles.pluck, { backgroundColor: t.brand, bottom: insets.bottom + 24 }]}>
+        <Pressable onPress={() => void pluckIt()} accessibilityRole="button" accessibilityHint={tr("shared.pluckHint")} style={[styles.pluck, { backgroundColor: t.brand, bottom: insets.bottom + 24 }]}>
           <Icon d={ICONS.tick} size={16} color={t.highlight} width={2} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>Pluck this list</Text>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("shared.pluck")}</Text>
         </Pressable>
       )}
     </View>

@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
 import { FlatList, type ListRenderItem, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useTranslations } from "use-intl";
 import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
 import { keys, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
@@ -25,6 +26,7 @@ function Sheet<T>({ title, top, data, keyOf, row, empty }: {
   title: string; top?: ReactNode; data: T[]; keyOf: (x: T) => string; row: ListRenderItem<T>; empty: ReactNode;
 }) {
   const t = useTheme();
+  const tr = useTranslations("ios.common");
   return (
     <FlatList
       style={{ backgroundColor: t.ground }}
@@ -39,7 +41,7 @@ function Sheet<T>({ title, top, data, keyOf, row, empty }: {
           <View style={styles.head}>
             <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.semibold, { flex: 1, color: t.ink, fontSize: 18 }]}>{title}</Text>
             <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
-              <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>Done</Text>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>{tr("done")}</Text>
             </Pressable>
           </View>
           {top}
@@ -64,6 +66,7 @@ function Row({ label, on, onPress, left }: { label: string; on: boolean; onPress
 
 // Search your tags, or make one from what you typed: one tap either way.
 function TagsFor({ itemId }: { itemId: string }) {
+  const tr = useTranslations("ios.pick");
   const qc = useQueryClient();
   const item = useItem(itemId);
   const tags = useTags();
@@ -81,20 +84,21 @@ function TagsFor({ itemId }: { itemId: string }) {
   };
   return (
     <Sheet
-      title="Tags"
-      top={<Finder value={filter} onChange={setFilter} label="Find or make a tag" make={fresh ? { label: `Make the tag “${name}”`, onPress: () => void make() } : undefined} />}
+      title={tr("tags")}
+      top={<Finder value={filter} onChange={setFilter} label={tr("findTag")} make={fresh ? { label: tr("makeTag", { name }), onPress: () => void make() } : undefined} />}
       data={shown}
       keyOf={(x) => x.id}
       row={({ item: tag }) => (
         <Row label={tag.name} on={on.has(tag.id)} onPress={() => patch.mutate({ id: itemId, patch: { tagIds: on.has(tag.id) ? [...on].filter((x) => x !== tag.id) : [...on, tag.id] } })} />
       )}
-      empty={tags.isLoading || fresh ? null : <Empty title="No tags yet." body="Type one above. Your AI can tag things too." />}
+      empty={tags.isLoading || fresh ? null : <Empty title={tr("noTags")} body={tr("noTagsBody")} />}
     />
   );
 }
 
 // The lists an item is in, a tap to add or take it out, and a new list from what you typed.
 function ListsFor({ itemId }: { itemId: string }) {
+  const tr = useTranslations("ios.pick");
   const qc = useQueryClient();
   const item = useItem(itemId);
   const lists = useLists();
@@ -120,12 +124,12 @@ function ListsFor({ itemId }: { itemId: string }) {
   };
   return (
     <Sheet
-      title="Lists"
-      top={<Finder value={filter} onChange={setFilter} label="Find or start a List" make={fresh ? { label: `Start a List called “${name}”`, onPress: () => void start() } : undefined} />}
+      title={tr("lists")}
+      top={<Finder value={filter} onChange={setFilter} label={tr("findList")} make={fresh ? { label: tr("startList", { name }), onPress: () => void start() } : undefined} />}
       data={shown}
       keyOf={(l) => l.id}
       row={({ item: l }) => <Row label={l.name} on={inLists.has(l.id)} onPress={() => void toggle(l.id)} />}
-      empty={lists.isLoading || fresh ? null : <Empty title="No lists yet." body="Type a name above to start one, or ask your AI to build one." />}
+      empty={lists.isLoading || fresh ? null : <Empty title={tr("noLists")} body={tr("noListsBody")} />}
     />
   );
 }
@@ -133,6 +137,7 @@ function ListsFor({ itemId }: { itemId: string }) {
 // Tags for many selected rows: a tag all of them have is ticked, and a tap takes it off all of them; otherwise a
 // tap puts it on all of them. Their tags come from the rows already loaded.
 function TagsForMany({ ids }: { ids: string[] }) {
+  const tr = useTranslations("ios.pick");
   const qc = useQueryClient();
   const tags = useTags();
   const [filter, setFilter] = useState("");
@@ -157,18 +162,19 @@ function TagsForMany({ ids }: { ids: string[] }) {
   };
   return (
     <Sheet
-      title={`Tags for ${ids.length}`}
-      top={<Finder value={filter} onChange={setFilter} label="Find or make a tag" make={fresh ? { label: `Make the tag “${name}”`, onPress: () => void make() } : undefined} />}
+      title={tr("tagsForMany", { count: ids.length })}
+      top={<Finder value={filter} onChange={setFilter} label={tr("findTag")} make={fresh ? { label: tr("makeTag", { name }), onPress: () => void make() } : undefined} />}
       data={shown}
       keyOf={(x) => x.id}
       row={({ item: tag }) => <Row label={tag.name} on={all.has(tag.id)} onPress={() => void apply(tag.id, !all.has(tag.id))} />}
-      empty={tags.isLoading || fresh ? null : <Empty title="No tags yet." body="Type one above." />}
+      empty={tags.isLoading || fresh ? null : <Empty title={tr("noTags")} body={tr("noTagsManyBody")} />}
     />
   );
 }
 
 // Lists for many selected rows: a tap adds them all; a new list can start with them.
 function ListsForMany({ ids }: { ids: string[] }) {
+  const tr = useTranslations("ios.pick");
   const qc = useQueryClient();
   const lists = useLists();
   const [filter, setFilter] = useState("");
@@ -191,12 +197,12 @@ function ListsForMany({ ids }: { ids: string[] }) {
   };
   return (
     <Sheet
-      title={`Add ${ids.length} to a List`}
-      top={<Finder value={filter} onChange={setFilter} label="Find or start a List" make={fresh ? { label: `Start a List called “${name}”`, onPress: () => void start() } : undefined} />}
+      title={tr("addMany", { count: ids.length })}
+      top={<Finder value={filter} onChange={setFilter} label={tr("findList")} make={fresh ? { label: tr("startList", { name }), onPress: () => void start() } : undefined} />}
       data={shown}
       keyOf={(l) => l.id}
       row={({ item: l }) => <Row label={l.name} on={added.has(l.id)} onPress={() => void add(l.id)} />}
-      empty={lists.isLoading || fresh ? null : <Empty title="No lists yet." body="Type a name above to start one." />}
+      empty={lists.isLoading || fresh ? null : <Empty title={tr("noLists")} body={tr("noListsManyBody")} />}
     />
   );
 }
@@ -222,6 +228,7 @@ function Finder({ value, onChange, label, make }: { value: string; onChange: (v:
 
 function AddTo({ listId }: { listId: string }) {
   const t = useTheme();
+  const tr = useTranslations("ios.pick");
   const qc = useQueryClient();
   const list = useList(listId);
   const inbox = useItems("inbox");
@@ -236,11 +243,11 @@ function AddTo({ listId }: { listId: string }) {
   };
   return (
     <Sheet
-      title={`Add to ${list.data?.list.name ?? "the list"}`}
+      title={list.data ? tr("addTo", { name: list.data.list.name }) : tr("addToTheList")}
       data={candidates}
       keyOf={(i) => i.id}
       row={({ item }) => <Row label={item.title} on={inList.has(item.id)} onPress={() => void add(item.id)} left={<KindGlyph kind={item.kind} color={t.ink} />} />}
-      empty={inbox.isLoading || later.isLoading ? null : <Empty title="Nothing in the Inbox or Later." body="Pluck something first. It shows up here." />}
+      empty={inbox.isLoading || later.isLoading ? null : <Empty title={tr("nothing")} body={tr("nothingBody")} />}
     />
   );
 }
