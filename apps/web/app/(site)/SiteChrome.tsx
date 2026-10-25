@@ -25,7 +25,7 @@ export async function SitePage({ page, dark = false, footerNote, children }: { p
         </nav>
         <Link href="/signin" className={styles.cta}>{t("getPluck")}</Link>
       </header>
-      {children}
+      <main>{children}</main>
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           {footerNote ? <span className={styles.footerNote}>{footerNote}</span> : <span className={styles.footerBrand}><Logo size={18} /></span>}

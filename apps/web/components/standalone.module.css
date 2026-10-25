@@ -5,7 +5,7 @@
 .bar { width: 100%; max-width: 1240px; margin: 0 auto; padding: 20px 24px; display: flex; align-items: center; }
 .home { display: inline-flex; text-decoration: none; }
 
-.main { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: clamp(24px, 7vh, 88px) 24px 96px; display: grid; gap: 56px 72px; align-content: center; }
+.main { flex: 1; width: 100%; max-width: 1240px; margin: 0 auto; padding: clamp(24px, 7vh, 88px) 24px 96px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px 72px; align-content: center; }
 @media (min-width: 960px) { .withArt { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: center; } }
 .copy { display: flex; flex-direction: column; gap: 24px; max-width: 560px; }
 .copyWide { max-width: 640px; }
@@ -15,6 +15,12 @@
 .titleLine { display: block; }
 .dot { color: var(--accent); }
 .lede { margin: 0; max-width: 46ch; font-size: 20px; line-height: 30px; color: var(--ink2); text-wrap: pretty; }
+.page:lang(ja) :is(.title, .lede) { word-break: auto-phrase; overflow-wrap: anywhere; } /* Japanese breaks between phrases, not inside a word */
+/* Japanese and Chinese characters are each a full em wide: the big line comes down a size so a phrase fits a line. */
+.page:is(:lang(ja), :lang(zh)) .title { font-size: clamp(40px, 5.2vw, 68px); line-height: 1.1; }
+.page:is(:lang(ja), :lang(zh)) .titleMd { font-size: clamp(32px, 4vw, 52px); }
+.page:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
+.page:lang(ko) .title { overflow-wrap: anywhere; } /* a big line still fits a phone */
 .lede b, .lede strong { color: var(--ink); font-weight: 600; }
 
 /* The next step: one primary, at most one quiet companion. */
@@ -27,7 +33,7 @@
 .secondary:hover { border-color: var(--ink); color: var(--ink); }
 .textLink { color: var(--ink); font-weight: 600; text-underline-offset: 4px; text-decoration-thickness: 2px; text-decoration-color: var(--accent); }
 .textLink:hover { color: var(--ink2); }
-.small { margin: 0; font-size: 15px; line-height: 23px; color: var(--ink2); max-width: 52ch; }
+.small { margin: 0; font-size: 15px; line-height: 23px; color: var(--ink2); max-width: 52ch; overflow-wrap: anywhere; } /* an email address inside Japanese text */
 
 /* Ruled steps or entries, as on the site's lists. */
 .ruled { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; border-top: 2px solid var(--ink); }

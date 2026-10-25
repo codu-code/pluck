@@ -17,6 +17,12 @@
   --chip: #252A22; --rail: #161A14; --tint: #191D17; --selected: #1E221C; --clay: #D08A68; --danger: #E07A62;
   --logo-ink: #ECEFE8; --logo-spark: #7FD3AE;
 }
+/* Headlines break where they balance and paragraphs leave no word alone on their last line, in every language.
+   Japanese breaks between phrases, not inside a word; Korean between words, as Korean is set. */
+.site :is(h1, h2, h3) { text-wrap: balance; }
+.site p { text-wrap: pretty; }
+.site:lang(ja) :is(h1:not(.heroTitle), h2, h3, .bandBig, .heroLede, .aiPara, .heroPara) { word-break: auto-phrase; overflow-wrap: anywhere; }
+.site:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
 .site a { color: var(--ink); }
 .site a:hover { color: var(--ink2); }
 .mono { font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; }
@@ -48,7 +54,10 @@
 .footerButton { padding: 0; border: 0; background: none; font: inherit; color: var(--ink2); text-decoration: underline; cursor: pointer; }
 .footerButton:hover { color: var(--ink); }
 .footerLanguage { display: inline-flex; align-items: center; gap: 6px; }
-.footerLanguage select { font: inherit; color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; }
+.footerLanguage select { appearance: none; height: 32px; padding: 0 28px 0 10px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; color: var(--ink); cursor: pointer;
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23525A4E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center; }
+.dark .footerLanguage select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23A0A898' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.footerLanguage select:hover { border-color: var(--ink2); }
 .footerBrand { margin-right: auto; display: inline-flex; align-items: center; }
 .footerNote { margin-right: auto; }
 @media (max-width: 600px) { .footerBrand, .footerNote { flex-basis: 100%; margin-bottom: 4px; } }
@@ -70,6 +79,7 @@
 .heroLede { margin: 0; flex: 1 1 420px; max-width: 560px; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 500; }
 .paste { flex: 0 1 420px; display: flex; flex-direction: column; gap: 10px; }
 .pasteBox { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 6px 0 16px; border-radius: 12px; background: var(--surface); border: 1.5px solid var(--ink); }
+.pasteBox:has(.pasteInput:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; } /* the input itself draws no ring */
 .pasteInput { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: var(--ink); }
 .pasteInput::placeholder { color: var(--ink2); }
 .pasteButton { height: 44px; padding: 0 18px; border-radius: 8px; border: 0; background: var(--highlight); color: #151A13; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
@@ -150,9 +160,12 @@
 .listsCopy { flex: 1 1 420px; display: flex; flex-direction: column; gap: 24px; }
 .h2Big { margin: 0; font-size: clamp(44px, 6vw, 84px); line-height: 0.96; }
 .para { margin: 0; font-size: 21px; line-height: 31px; max-width: 520px; }
-.listArt { flex: 1 1 440px; position: relative; min-height: 440px; }
-.listCard { position: absolute; left: 0; top: 0; right: 48px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 60px rgba(21, 26, 19, 0.08); }
-.listCardHead { display: flex; justify-content: space-between; align-items: center; }
+/* The card sits in the flow, so a longer language grows it; the public chip keeps clear of it below. */
+.listArt { flex: 1 1 440px; position: relative; min-height: 440px; padding-bottom: 88px; }
+.listCard { position: relative; margin-right: 48px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 60px rgba(21, 26, 19, 0.08); }
+.listCardHead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.listCardHead span { flex: none; white-space: nowrap; }
+@media (max-width: 600px) { .listCard { margin-right: 24px; } }
 .listCardHead b { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 .listCardHead span { font-size: 13px; color: var(--ink2); }
 .entry { display: flex; gap: 12px; align-items: flex-start; }
@@ -183,7 +196,7 @@
 /* Landing: imports */
 .importsSection { padding-top: 128px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 48px; }
 .importsSection .col { gap: 24px; }
-.h2Small { margin: 0; font-size: clamp(40px, 5vw, 64px); line-height: 1; }
+.h2Small { margin: 0; font-size: clamp(34px, 5vw, 64px); line-height: 1; } /* 34: "Omnivore shut down." holds one line on a phone */
 .importList { display: flex; flex-direction: column; gap: 12px; align-self: end; }
 .importRow { display: flex; justify-content: space-between; align-items: center; height: 60px; padding: 0 20px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
 .importRow b { font-weight: 600; }
@@ -243,15 +256,18 @@
 .selfHostCopy { display: flex; flex-direction: column; gap: 20px; }
 .selfHostPara { margin: 0; font-size: 19px; line-height: 29px; color: #394034; }
 .terminal { border-radius: 16px; background: #151A13; color: var(--ink); padding: 24px 28px; font-size: 15px; line-height: 26px; display: flex; flex-direction: column; gap: 2px; overflow-x: auto; }
+.terminal > span { white-space: pre; } /* a command never wraps mid-URL; a narrow screen scrolls the terminal */
 .terminal .comment { color: var(--ink2); }
+@media (max-width: 500px) { .terminal { padding: 20px; font-size: 13px; line-height: 22px; } }
 .terminal .gap { margin-top: 10px; }
 .reasons { padding-top: 112px; }
 .reasonList { display: flex; flex-direction: column; border-top: 2px solid var(--ink); }
 .reason { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 12px 48px; padding: 28px 0; border-bottom: 2px solid var(--ink); }
-.reason b { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; }
+.reason b { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; text-wrap: balance; }
 .reason p { margin: 0; font-size: 19px; line-height: 29px; align-self: center; }
 
 /* Support */
+.soon { padding-bottom: 112px; } /* the iPhone and Chrome pages: room above the footer */
 .supportTitle { margin: 0; font-size: clamp(88px, 15vw, 210px); line-height: 0.86; }
 .heroPara a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--accent); }
 .topics { display: flex; flex-wrap: wrap; gap: 8px; }

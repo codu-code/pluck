@@ -4,8 +4,10 @@
 .main { width: 100%; max-width: 760px; padding: 72px 24px 64px; display: flex; flex-direction: column; gap: 40px; }
 .intro { display: flex; flex-direction: column; gap: 14px; }
 .meta { color: var(--ink2); font-size: 13px; }
-.title { margin: 0; font-size: 52px; line-height: 56px; font-weight: 600; letter-spacing: -0.035em; }
-.purpose { margin: 0; font-family: var(--font-reader); font-size: 21px; line-height: 31px; color: light-dark(#394034, #C5CCBD); }
+.title { margin: 0; font-size: 52px; line-height: 56px; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+.frame:lang(ja) .title { word-break: auto-phrase; overflow-wrap: anywhere; }
+.frame:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
+.purpose { margin: 0; text-wrap: pretty; font-family: var(--font-reader); font-size: 21px; line-height: 31px; color: light-dark(#394034, #C5CCBD); }
 .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
 .pluck { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px; border-radius: 10px; background: var(--brand); color: var(--on-brand); text-decoration: none; font-weight: 600; }
 .pluck:hover { color: var(--on-brand); }

@@ -55,6 +55,16 @@ The copy and behaviour departures for the site, the extension, the share sheet, 
 | Lists, web and iPhone (Collection, IOSLists) | A leading tick; a ticked title struck through | Inbox rows with the order number and, on the web, a drag handle on hover; a trailing round mark worded by Kind (Read, Watched, Seen, Done); marked rows soften and gather under a header that folds; bulk select | Owner's call (25 October 2026): Lists look like the Inbox. The boards still draw the old rows |
 | Public and shared Lists (PublicList) | 112 by 72 covers, 18 px titles, serif notes | The same 64 px Inbox rows, the List note as the second line, no marks | The same row everywhere an Item is listed. Worth a designer's look: the public page lost some of its reading feel |
 | Archive, Search (Archive, Main) | Glyph-led rows, one long list | Inbox rows; the Archive in months ("October 2026") whose headers fold, remembered on the device | Owner's call: one row everywhere, and long Archives are easier to scan by month |
+| Sign-in, not found, errors, consent (the Standalone pages) in Japanese and Chinese | The display line at up to 92 | Up to 68, line height 1.1, and the full-width 。 as the accent stop | Each character is a full em wide, so at 92 "パスワードなし" broke mid-word even on a laptop |
+| Monday email, header | The drawn Logo | The word "pluck" in Geist bold, sized and spaced as the board | An image in the email hurts delivery from a young domain and is blocked by default in many clients |
+| Monday email, Archive-it-all box | Button beside the words, wrapping under them when narrow | Beside them; under them on a phone in clients that read `<style>` | Tables cannot wrap; older clients keep it side by side |
+
+## Left as they are after the 25 October quality pass
+
+- The emails have no dark version. They set their own light colours, so a dark-mode client shows them light (or inverts them, as Gmail's app does to any email).
+- `pnpm design` notes a card inside a card on Connect (the drawn connector dialog inside its panel). It is a picture of another app's dialog, so it stays.
+- The site's GitHub links answer 404 until the repository is public at launch.
+- The one-tap result page (`/d/done`) is titled just "Pluck": it is a moment after a tap, not a page anyone looks for.
 
 ## Placeholders to fill
 

@@ -17,7 +17,7 @@ export async function LegalPage({ page, title, lede, sections, box }: {
   const translated = fromIntlLocale(await getLocale()) !== "en";
   return (
     <SitePage page={page} footerNote={t("chrome.freeAndOpen")}>
-      <main className={styles.legal}>
+      <div className={styles.legal}>
         <div className={styles.legalHead}>
           <h1 className={`${styles.display} ${styles.legalTitle}`}>{title}</h1>
           {translated && <p className={styles.legalNote}>{t("legal.translationNotice")}</p>}
@@ -33,7 +33,7 @@ export async function LegalPage({ page, title, lede, sections, box }: {
           <b>{box.title}</b>
           <span>{box.body}</span>
         </section>
-      </main>
+      </div>
     </SitePage>
   );
 }

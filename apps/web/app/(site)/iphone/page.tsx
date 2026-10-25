@@ -14,7 +14,7 @@ export default async function IPhone() {
   const t = await getTranslations("site.soon");
   return (
     <SitePage page="iphone">
-      <section className={`${styles.wrap} ${styles.pageHero}`}>
+      <section className={`${styles.wrap} ${styles.pageHero} ${styles.soon}`}>
         <h1 className={`${styles.display} ${styles.supportTitle}`}>{t.rich("title", { dot: (c) => <span className={styles.dot}>{c}</span> })}</h1>
         <p className={styles.heroPara}>{t("iphone.para1")}</p>
         <p className={styles.heroPara}>{t("iphone.para2")}</p>
