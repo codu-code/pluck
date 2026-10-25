@@ -319,7 +319,7 @@
     "busy": "Plucking",
     "action": "Pluck this list",
     "title": "Pluck this list",
-    "lede": "{count, plural, one {# item} other {# items}} land in your Inbox, and a private copy of <b>{name}</b> keeps their order and notes.",
+    "lede": "{count, plural, one {# item lands} other {# items land}} in your Inbox, and a private copy of <b>{name}</b> keeps their order and notes.",
     "items": "{count, plural, one {# item} other {# items}}",
     "note": "Note",
     "more": "and {count} more"
@@ -650,7 +650,7 @@
       "lastAdded": "Last added"
     },
     "byAi": "by AI",
-    "public": "Public · {views} views",
+    "public": "Public · {views, plural, one {# view} other {# views}}",
     "private": "Private",
     "tickedOf": "{ticked} of {count}",
     "notYet": "Not yet",

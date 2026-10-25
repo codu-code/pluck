@@ -1,11 +1,11 @@
-import { messagesFor, type Locale } from "@pluck/i18n";
+import { formatLocale, type Locale, messagesFor } from "@pluck/i18n";
 import { createTranslator } from "next-intl";
 import type { Email } from "./email";
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
 // Email copy lives in packages/i18n (the email catalog), in the language of the person it goes to.
-export const emailT = (locale: Locale) => createTranslator({ locale, messages: { email: messagesFor("email", locale) }, namespace: "email" });
+export const emailT = (locale: Locale) => createTranslator({ locale: formatLocale(locale), messages: { email: messagesFor("email", locale) }, namespace: "email" });
 
 export function magicLinkEmail(to: string, url: string, locale: Locale = "en"): Email {
   const t = emailT(locale);

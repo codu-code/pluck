@@ -9,6 +9,12 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   ja: "日本語", it: "Italiano", nl: "Nederlands", ko: "한국어", "zh-Hans": "简体中文",
 };
 
+// Pluck's English is British: dates read 3 Nov, not Nov 3. Formatters (next-intl, use-intl) take this tag; the
+// catalogs, cookies and settings stay "en".
+export type IntlLocale = Exclude<Locale, "en"> | "en-GB";
+export const formatLocale = (l: Locale): IntlLocale => (l === "en" ? "en-GB" : l);
+export const fromIntlLocale = (l: string): Locale => (l === "en-GB" ? "en" : (LOCALES as readonly string[]).includes(l) ? (l as Locale) : DEFAULT_LOCALE);
+
 export const isLocale = (s: unknown): s is Locale => typeof s === "string" && (LOCALES as readonly string[]).includes(s);
 
 // One preferred tag (a browser's, a phone's) to a Locale, or null. Portuguese of any region reads pt-BR; Chinese

@@ -11,6 +11,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
 import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { formatLocale } from "@pluck/i18n";
 import { locale, messages, timeZone } from "@/lib/i18n";
 import { queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
@@ -67,7 +68,7 @@ export default function Root() {
 
   if (signedIn === null) return <View style={{ flex: 1, backgroundColor: t.ground }} />;
   return (
-    <IntlProvider locale={locale} messages={messages} timeZone={timeZone}>
+    <IntlProvider locale={formatLocale(locale)} messages={messages} timeZone={timeZone}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, maxAge: 7 * 86_400_000 }}>

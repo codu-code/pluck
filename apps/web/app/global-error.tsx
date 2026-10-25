@@ -12,7 +12,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable} ${fredoka.variable}`}>
       <body>
-        <NextIntlClientProvider locale="en" messages={{ app: { globalError: en.globalError, standalone: en.standalone } }}>
+        <NextIntlClientProvider locale="en-GB" messages={{ app: { globalError: en.globalError, standalone: en.standalone } }}>
           <Broke reset={reset} />
         </NextIntlClientProvider>
       </body>
