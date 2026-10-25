@@ -9,6 +9,12 @@
             "state": "translated",
             "value": "Add to %1$@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter à %1$@"
+          }
         }
       }
     },
@@ -19,6 +25,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Added to %1$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouté à %1$@"
           }
         }
       }
@@ -31,6 +43,12 @@
             "state": "translated",
             "value": "Bad server address."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse de serveur incorrecte."
+          }
         }
       }
     },
@@ -41,6 +59,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "That did not work."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ça n’a pas marché."
           }
         }
       }
@@ -53,6 +77,12 @@
             "state": "translated",
             "value": "Done"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
         }
       }
     },
@@ -63,6 +93,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Couldn't pluck that."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de cueillir ceci."
           }
         }
       }
@@ -75,6 +111,12 @@
             "state": "translated",
             "value": "Kind"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genre"
+          }
         }
       }
     },
@@ -82,6 +124,12 @@
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Image"
@@ -97,6 +145,12 @@
             "state": "translated",
             "value": "Note"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
         }
       }
     },
@@ -104,6 +158,12 @@
       "extractionState": "manual",
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -119,6 +179,12 @@
             "state": "translated",
             "value": "Read"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À lire"
+          }
         }
       }
     },
@@ -129,6 +195,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thing"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Objet"
           }
         }
       }
@@ -141,6 +213,12 @@
             "state": "translated",
             "value": "Todo"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tâche"
+          }
         }
       }
     },
@@ -151,6 +229,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Watch"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À voir"
           }
         }
       }
@@ -163,6 +247,12 @@
             "state": "translated",
             "value": "No upload address."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune adresse d’envoi."
+          }
         }
       }
     },
@@ -173,6 +263,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Why you plucked it, in a line. Optional."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pourquoi vous l’avez cueilli, en une ligne. Facultatif."
           }
         }
       }
@@ -185,6 +281,12 @@
             "state": "translated",
             "value": "Nothing Pluck can keep here."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien que Pluck puisse garder ici."
+          }
         }
       }
     },
@@ -195,6 +297,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open Pluck to sign in"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir Pluck pour se connecter"
           }
         }
       }
@@ -207,6 +315,12 @@
             "state": "translated",
             "value": "Plucked."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueilli."
+          }
         }
       }
     },
@@ -217,6 +331,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucking…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueillette…"
           }
         }
       }
@@ -229,6 +349,12 @@
             "state": "translated",
             "value": "It's on your phone. It goes up when you're back online."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il est sur votre téléphone. Il part dès que vous êtes de nouveau en ligne."
+          }
         }
       }
     },
@@ -239,6 +365,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Plucked. Will sync."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueilli. Synchronisation à venir."
           }
         }
       }
@@ -251,6 +383,12 @@
             "state": "translated",
             "value": "Sign in once. After that the share sheet does the rest."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous une fois. Ensuite, le menu Partager fait le reste."
+          }
         }
       }
     },
@@ -262,6 +400,12 @@
             "state": "translated",
             "value": "Not signed in."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion requise."
+          }
         }
       }
     },
@@ -272,6 +416,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags and list"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tags et liste"
           }
         }
       }

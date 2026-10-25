@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "Cueillez la page que vous lisez dans votre bibliothèque Pluck, en un clic.",
+    "pluckPage": "Cueillir cette page",
+    "pluckSelection": "Cueillir la sélection comme surlignage"
+  },
+  "menu": {
+    "link": "Cueillir le lien",
+    "selection": "Cueillir la sélection comme surlignage",
+    "image": "Cueillir l’image",
+    "page": "Cueillir la page"
+  },
+  "toolbar": {
+    "plucked": "Cueilli",
+    "pluckPage": "Cueillir cette page"
+  },
+  "errors": {
+    "nothing": "Rien à cueillir sur cette page.",
+    "failed": "Ça n’a pas marché.",
+    "tryAgain": "Ça n’a pas marché. Réessayez."
+  },
+  "kinds": {
+    "link": "À lire",
+    "video": "À voir",
+    "pdf": "PDF",
+    "image": "Image",
+    "note": "Note",
+    "todo": "Tâche",
+    "thing": "Objet"
+  },
+  "status": {
+    "inbox": "Boîte de réception",
+    "later": "Plus tard",
+    "archived": "Archivé",
+    "done": "Terminé"
+  },
+  "popup": {
+    "plucking": "Cueillette…",
+    "signedOut": {
+      "lede": "La page que vous lisez, gardée en un clic. Connectez-vous une fois, avec votre e-mail.",
+      "signIn": "Se connecter",
+      "ownServer": "Utiliser votre propre serveur"
+    },
+    "nothingHint": "Pluck fonctionne sur les pages web. Ouvrez-en une, puis cliquez à nouveau.",
+    "queued": {
+      "title": "Pluck injoignable. Nouvel essai à venir.",
+      "count": "{count, plural, one {# cueillette en attente} other {# cueillettes en attente}} dans ce navigateur."
+    },
+    "already": {
+      "meta": "Cueilli {date} · {status}",
+      "open": "Ouvrir dans Pluck",
+      "again": "Le cueillir à nouveau"
+    },
+    "plucked": {
+      "title": "Cueilli",
+      "undo": "Annuler",
+      "tips": {
+        "opening": "Ouvrir cette fenêtre garde la page. Tout le secret est là.",
+        "shortcut": "Alt+Shift+P fait la même chose, sans clic.",
+        "rightClick": "Clic droit sur un lien ou une image pour ne cueillir que ça."
+      },
+      "tags": "Tags",
+      "tagsPlaceholder": "Chercher dans vos tags",
+      "kind": "Genre",
+      "toList": "Dans la liste",
+      "noList": "Aucune",
+      "lastUsed": "{name} (la dernière utilisée)",
+      "note": "Note",
+      "notePlaceholder": "Une note, si vous voulez",
+      "later": "Plus tard",
+      "archive": "Archiver",
+      "open": "Ouvrir dans Pluck"
+    },
+    "tabs": {
+      "listName": "Onglets du {date}",
+      "all": "{count, plural, one {Cueillir # onglet dans une nouvelle liste, «  {name}  »} other {Cueillir les # onglets dans une nouvelle liste, «  {name}  »}}",
+      "plucking": "Cueillette…",
+      "done": "{count, plural, one {# onglet cueilli dans «  {name}  ».} other {# onglets cueillis dans «  {name}  ».}}",
+      "failed": "Pluck injoignable. Réessayez dans un instant."
+    }
+  },
+  "options": {
+    "title": "Options de Pluck",
+    "shortcut": "Raccourci : Alt+Shift+P · modifiable dans la page des raccourcis de votre navigateur",
+    "server": "Serveur",
+    "defaultKind": "Genre par défaut",
+    "guess": "Deviner d’après la page",
+    "account": "Compte",
+    "apiKey": "Clé d’API",
+    "useKey": "Utiliser la clé",
+    "notSignedIn": "Non connecté",
+    "signOut": "Se déconnecter",
+    "signIn": "Se connecter",
+    "useApiKey": "Utiliser plutôt une clé d’API",
+    "sendContent": "Envoyer le contenu de la page avec chaque cueillette",
+    "sendContentHint": "Pour que les pages derrière vos identifiants restent lisibles plus tard.",
+    "transcripts": "Récupérer les transcriptions YouTube",
+    "transcriptsHint": "Pour que la recherche et votre IA puissent lire ce qui a été dit.",
+    "messages": {
+      "notAddress": "Ce n’est pas une adresse web.",
+      "ownServerOnly": "Cette version de Pluck ne se connecte qu’à son propre serveur. Pour utiliser le vôtre, compilez l’extension depuis le dépôt : voir docs/self-host.md.",
+      "using": "Serveur utilisé : {origin}. Connectez-vous-y pour cueillir.",
+      "keySignedIn": "Connecté avec votre clé d’API.",
+      "keyFailed": "Cette clé ne fonctionne pas sur ce serveur.",
+      "signedOut": "Déconnecté."
+    }
+  }
+}

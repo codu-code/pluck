@@ -1,0 +1,35 @@
+{
+  "appStore": {
+    "name": "Pluck : à lire plus tard",
+    "subtitle": "Cueillez. Triez plus tard.",
+    "promotionalText": "Un geste dans le menu Partager et c’est à vous : la page, pas seulement le lien. Triez plus tard à la main, ou demandez à votre IA. Gratuit et open source.",
+    "description": "Cueillez depuis n’importe quelle app. Touchez Partager, puis Pluck : la page est gardée telle que vous l’avez vue, et l’app ne s’ouvre même pas.\n\nTriez plus tard. Votre boîte de réception contient tout ce que vous avez cueilli. Balayez à droite pour Plus tard, à gauche pour les Archives. Ajoutez un tag, mettez-le dans une liste, ou cochez une tâche.\n\nLa page, pas seulement le lien. Pluck garde le texte de chaque page : vous la lisez dans un lecteur épuré, hors ligne, longtemps après que le site a changé.\n\nLes listes, c’est ce que vous préparez. Un voyage, une conférence, une liste de lecture pour un ami. Ordonnez-les à la main, ajoutez une note à chaque élément, cochez au fur et à mesure, et partagez une liste avec les personnes qui en ont besoin.\n\nRetrouvez-le en une seconde. La recherche couvre les titres, les notes, les tags et le texte intégral de chaque page.\n\nVenez avec votre IA. Il n’y a pas d’IA dans Pluck. Connectez les outils d’IA que vous utilisez déjà, comme Claude, ChatGPT ou Cursor, et demandez-leur ce que vous avez cueilli cette semaine, ou laissez-les ranger votre boîte de réception sous vos yeux.\n\nRien n’est supprimé dans votre dos. Les éléments auxquels vous n’avez pas touché depuis un moment passent aux Archives, et rien n’est supprimé.\n\nPluck est gratuit et open source. Utilisez getpluck.io, ou faites tourner votre propre serveur.",
+    "keywords": "liste de lecture,articles,liens,signets,favoris,marque-pages,hors ligne,veille,notes,tâches,mcp"
+  },
+  "screenshots": [
+    {
+      "title": "Cueillez depuis n’importe quelle app.",
+      "subtitle": "Un geste dans le menu Partager. L’app ne s’ouvre même pas."
+    },
+    {
+      "title": "Triez plus tard.",
+      "subtitle": "Balayez à droite pour Plus tard, à gauche pour les Archives."
+    },
+    {
+      "title": "La page, pas seulement le lien.",
+      "subtitle": "Lisez-la partout, même quand le site a disparu."
+    },
+    {
+      "title": "Les listes, c’est ce que vous préparez.",
+      "subtitle": "Un voyage, une conférence, une cuisine. Privées tant que vous le voulez."
+    },
+    {
+      "title": "Retrouvez-le en une seconde.",
+      "subtitle": "Chaque mot de la page, vos notes et vos tags."
+    }
+  ],
+  "chrome": {
+    "summary": "Cueillez la page que vous lisez dans votre bibliothèque Pluck, en un clic.",
+    "description": "Cueillez la page que vous lisez. Un clic la garde dans votre bibliothèque Pluck, avec le texte tel que vous le voyez, pour la lire plus tard, la retrouver ou interroger votre IA à son sujet.\n\nCliquez sur Pluck, ou appuyez sur Alt+Shift+P. «  Cueilli  » s’affiche avec le titre, et la fenêtre vous permet d’ajouter un tag, de changer le genre, de la mettre dans une liste, d’écrire une note, ou de l’envoyer directement dans Plus tard ou aux Archives.\n\nFaites un clic droit sur un lien, une image ou la page pour la cueillir sans l’ouvrir. Sélectionnez une phrase et appuyez sur Alt+Shift+H pour la garder comme surlignage. Cueillez tous vos onglets d’un coup dans une nouvelle liste.\n\nLes pages derrière vos identifiants sont gardées telles que votre navigateur les a affichées. Les vidéos YouTube arrivent avec leur transcription, pour que la recherche et vos outils d’IA puissent lire ce qui a été dit.\n\nL’icône Pluck se remplit sur les pages déjà dans votre bibliothèque : vous voyez d’un coup d’œil ce que vous avez déjà cueilli.\n\nPas de connexion ? Les cueillettes attendent sur votre ordinateur et partent dès que vous êtes de nouveau en ligne.\n\nPluck est open source. Utilisez getpluck.io, ou compilez l’extension pour un serveur que vous gérez vous-même. Il n’y a pas d’IA dans Pluck : vous connectez les outils d’IA que vous utilisez déjà, si vous le souhaitez.\n\nNécessite un compte Pluck gratuit sur https://getpluck.io."
+  }
+}
