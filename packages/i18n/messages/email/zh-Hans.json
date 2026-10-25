@@ -1,1 +1,81 @@
-{}
+{
+  "magicLink": {
+    "subject": "你的 Pluck 登录链接",
+    "intro": "这是你登录 Pluck 的链接。只能用一次，10 分钟内有效。",
+    "button": "登录 Pluck",
+    "copy": "按钮点不了？把这个链接复制到浏览器里：",
+    "ignore": "如果不是你本人申请的，忽略这封邮件即可。只要你不打开它并点“登录”，什么都不会发生。"
+  },
+  "sharedList": {
+    "subject": "{sharer} 和你分享了一个清单：{name}",
+    "untitled": "一个清单",
+    "text": {
+      "intro": "{who} 在 Pluck 上和你分享了一个清单：“{name}”。",
+      "open": "在这里打开。用邮箱登录，不需要密码：",
+      "footer": "你可以查看，只有对方能修改。没想到会收到这封邮件？忽略它就好，或者打开后退出这个清单。"
+    },
+    "intro": "{who} 在 Pluck 上和你分享了一个清单：",
+    "button": "打开清单",
+    "footer": "你可以查看，只有对方能修改。用邮箱登录，不需要密码。没想到会收到这封邮件？忽略它就好，或者打开后退出这个清单。"
+  },
+  "welcome": {
+    "subject": "谢谢你试用 Pluck",
+    "hi": "你好，",
+    "intro": "我是 Niall，Pluck 是我做的。谢谢你注册。我想亲自跟你打个招呼。",
+    "plucked": "我看到你已经摘下了第一批东西，那最主要的用法你已经会了：不管在哪儿，点一下，Pluck 就替你把网页留下来。",
+    "fresh": "最快的上手方式，是摘下一篇你这周本来就想读的文章：把链接粘贴到收件箱顶部，Pluck 就替你把网页留下来。",
+    "connect": "还有一件事，大多数人很晚才发现：你的 AI 能读到你摘下的所有内容。花三十秒左右把 Pluck 连接到 Claude、ChatGPT 或 Cursor，然后问它你这周摘了些什么：{url}",
+    "expiry": "如果你有一阵子没来，也什么都不会丢。{days, plural, other {# 天}}没动过的条目会移到归档，不会删除任何东西。",
+    "ask": "能问你一件事吗？回复这封邮件，告诉我是什么让你想试试 Pluck，或者你希望它帮你做什么。回复会直接到我这里，每一封我都会读。",
+    "signature": "Niall"
+  },
+  "export": {
+    "subject": "你的 Pluck 导出文件已准备好",
+    "intro": "你的整个资料库，JSON 和 Markdown 格式，打包成一个 zip：",
+    "note": "链接 7 天内有效。随时可以在设置里重新生成。"
+  },
+  "digest": {
+    "subject": "{count, plural, =1 {有一样东西，你摘下后就忘了。} =2 {有两样东西，你摘下后就忘了。} =3 {有三样东西，你摘下后就忘了。} =4 {有四样东西，你摘下后就忘了。} =5 {有五样东西，你摘下后就忘了。} =6 {有六样东西，你摘下后就忘了。} =7 {有七样东西，你摘下后就忘了。} =8 {有八样东西，你摘下后就忘了。} =9 {有九样东西，你摘下后就忘了。} =10 {有十样东西，你摘下后就忘了。} other {有 # 样东西，你摘下后就忘了。}}",
+    "subjectQuiet": "你在 Pluck 的这一周。",
+    "greeting": "{name}，早上好。花三分钟，然后去忙你这一周的事。",
+    "greetingNoName": "早上好。花三分钟，然后去忙你这一周的事。",
+    "expiring": {
+      "heading": "{days, plural, other {# 天}}没动过",
+      "keep": "留着",
+      "letGo": "放下吧",
+      "keepLink": "留着：{url}",
+      "letGoLink": "放下吧：{url}",
+      "moves": "如果你什么都不做，它们会在{day}移到你的归档。照样能搜到，永远不会删除。"
+    },
+    "due": {
+      "heading": "本周到期",
+      "line": "{title}，{when}"
+    },
+    "oldest": {
+      "heading": "收件箱里放得最久的"
+    },
+    "quiet": {
+      "heading": "沉寂的清单",
+      "line": "{name}，已勾选 {ticked, number}/{total, number}，{days, plural, other {# 天}}",
+      "ticked": "已勾选 {ticked, number}/{total, number}",
+      "idle": "{days, plural, other {# 天}}"
+    },
+    "archive": {
+      "title": "堆得太多了？",
+      "body": "一次性把超过 {days, plural, other {# 天}}的东西全部归档。",
+      "button": "全部归档。说真的。",
+      "text": "堆得太多了？一次性把超过 {days, plural, other {# 天}}的东西全部归档：{url}"
+    },
+    "ai": {
+      "title": "想让你的 AI 来做？",
+      "body": "对它说“帮我做每周回顾”。同样的清单，一次只做一个决定。",
+      "text": "想让你的 AI 来做？对它说“帮我做每周回顾”。同样的清单，一次只做一个决定。"
+    },
+    "footer": {
+      "note": "链接 7 天内有效，无需登录。只用简单规则，不用模型。",
+      "changeDay": "更改日期",
+      "stop": "不再接收",
+      "text": "链接 7 天内有效，无需登录。只用简单规则，不用模型。更改日期：{settings} 。不再接收：{stop}"
+    }
+  }
+}
