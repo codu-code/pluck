@@ -4,15 +4,13 @@ import { router } from "expo-router";
 import { useRef } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import ReanimatedSwipeable, { type SwipeableMethods } from "react-native-gesture-handler/ReanimatedSwipeable";
-import Animated, {
-  FadeIn, interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, useReducedMotion, useSharedValue, withSequence, withSpring, withTiming,
-  type SharedValue,
-} from "react-native-reanimated";
+import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { useCover } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS, KIND_NAMES, KindGlyph } from "./Glyph";
 
 const COMMIT = 80; // how far a swipe goes before letting go moves the item
+const GAP = 8; // between the swipe's pill and the row
 
 type Props = {
   item: Item;
@@ -68,14 +66,12 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       {({ pressed }) => (
         <View style={[styles.row, { backgroundColor: pressed || selected ? t.selected : t.ground, borderBottomColor: t.line }]}>
           {selecting ? (
-            // The tile turns into the tick, as Gmail's avatar does.
-            selected ? (
-              <Animated.View entering={FadeIn.duration(120)} style={[styles.tile, { backgroundColor: t.brand }]}>
-                <Icon d={ICONS.tick} size={20} color={t.onBrand} width={2.2} />
-              </Animated.View>
-            ) : (
-              <View style={[styles.tile, styles.glyphTile, { borderColor: t.ringOff }]} />
-            )
+            // The tile's place holds the tick ring todos use for Done: filled when chosen.
+            <View style={styles.tile}>
+              <View style={[styles.ring, selected ? { borderColor: t.brand, backgroundColor: t.brand } : { borderColor: t.ringOff }]}>
+                {selected && <Icon d={ICONS.tick} size={13} color={t.onBrand} width={2.4} />}
+              </View>
+            </View>
           ) : cover ? (
             <Image source={cover} style={styles.tile} accessibilityIgnoresInvertColors />
           ) : text ? (
@@ -122,39 +118,30 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
   );
 }
 
-// The colour behind a swipe and its icon: the icon grows with the drag, then squishes and settles the moment letting
-// go would move the item, with a tick of haptics, as in Mail and Gmail. Reduce Motion keeps the growth, not the squish.
+// The colour behind a swipe: a rounded pill that grows with the drag in the gap the row leaves, its icon and label
+// fading in at its centre. Letting go past COMMIT moves the item, marked by a tick of haptics, not by motion.
 function SwipeAction({ drag, side, label, icon, bg, ink }: { drag: SharedValue<number>; side: "left" | "right"; label: string; icon: string; bg: string; ink: string }) {
-  const still = useReducedMotion();
-  const armed = useSharedValue(0);
-  const squish = useSharedValue(0);
   const tick = () => void Haptics.selectionAsync();
   useAnimatedReaction(
     () => Math.abs(drag.value) >= COMMIT,
     (now, was) => {
-      if (was === null || now === was) return;
-      armed.value = withSpring(now ? 1 : 0, { damping: 14, stiffness: 260 });
-      if (!now) return;
-      if (!still) squish.value = withSequence(withTiming(1, { duration: 90 }), withSpring(0, { damping: 7, stiffness: 320 }));
-      runOnJS(tick)();
+      if (was !== null && now && !was) runOnJS(tick)();
     },
   );
-  const mark = useAnimatedStyle(() => {
-    const grow = interpolate(Math.abs(drag.value), [16, COMMIT], [0.55, 1], "clamp") + armed.value * 0.12;
-    return {
-      opacity: interpolate(Math.abs(drag.value), [12, 40], [0, 1], "clamp"),
-      transform: [{ scaleX: grow * (1 + squish.value * 0.28) }, { scaleY: grow * (1 - squish.value * 0.2) }],
-    };
+  const pill = useAnimatedStyle(() => {
+    const d = side === "left" ? drag.value : -drag.value; // only the side the drag is heading for shows
+    return { width: Math.max(0, d - GAP), opacity: d > GAP ? 1 : 0 };
   });
-  // Both sides' panels fill the row, one over the other: only the one the drag is heading for shows.
-  const mine = useAnimatedStyle(() => ({ opacity: (side === "left" ? drag.value > 0 : drag.value < 0) ? 1 : 0 }));
+  const mark = useAnimatedStyle(() => ({ opacity: interpolate(Math.abs(drag.value), [24, COMMIT * 0.75], [0, 1], "clamp") }));
   return (
-    <Animated.View style={[styles.actionWrap, { backgroundColor: bg }, mine]}>
-      <Animated.View style={[styles.action, side === "left" ? { left: 22 } : { right: 22 }, mark]}>
-        <Icon d={icon} size={24} color={ink} width={1.7} />
-        <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: ink, fontSize: 12 }]}>{label}</Text>
+    <View style={styles.actionLane}>
+      <Animated.View style={[styles.pill, side === "left" ? { left: GAP / 2 } : { right: GAP / 2 }, { backgroundColor: bg }, pill]}>
+        <Animated.View style={[styles.action, mark]}>
+          <Icon d={icon} size={22} color={ink} width={1.6} />
+          <Text numberOfLines={1} maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: ink, fontSize: 11 }]}>{label}</Text>
+        </Animated.View>
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -162,12 +149,14 @@ const styles = StyleSheet.create({
   row: { minHeight: 72, paddingVertical: 10, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", gap: 12, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   tile: { width: 44, height: 44, borderRadius: 8, alignItems: "center", justifyContent: "center" },
   glyphTile: { borderWidth: 1, borderStyle: "dashed" },
+  ring: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
   ini: { fontSize: 12 },
   middle: { flex: 1, minWidth: 0, gap: 2 },
   title: { fontSize: 15, lineHeight: 20 },
   meta: { fontSize: 13, lineHeight: 18 },
   right: { alignItems: "flex-end", gap: 4 },
   when: { fontSize: 12 },
-  actionWrap: { flex: 1, justifyContent: "center" },
-  action: { position: "absolute", alignItems: "center", gap: 2, minWidth: 52 },
+  actionLane: { flex: 1 },
+  pill: { position: "absolute", top: 6, bottom: 6, borderRadius: 16, borderCurve: "continuous", overflow: "hidden", alignItems: "center", justifyContent: "center" },
+  action: { alignItems: "center", gap: 2, minWidth: 48 },
 });

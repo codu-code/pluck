@@ -13,7 +13,7 @@ import { Icon, ICONS } from "./Glyph";
 import { ItemRow } from "./ItemRow";
 import { Empty, TitledList } from "./Screen";
 import { toast } from "./Toast";
-import { setTabBarStandIn, ToolBar } from "./ToolBar";
+import { ToolBar } from "./ToolBar";
 
 const avatarOf = (name?: string, email?: string) =>
   ((name?.trim() || email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?");
@@ -80,37 +80,34 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     toast(ids.length > 1 ? `${ids.length} items. ${MOVED[to]}` : MOVED[to], () => void send(status));
   };
 
-  useEffect(() => {
-    if (!picked) return setTabBarStandIn(null);
-    const away: Status = status === "later" ? "inbox" : "later";
-    const ids = [...picked].join(",");
-    const one = chosen.length === 1 ? chosen[0]! : null;
-    const more = () => {
-      const options = [
-        ...(one && one.url ? ["Add a note"] : []),
-        ...(one ? ["Share"] : []),
-        ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["Done"] : []),
-        "Select all",
-      ];
-      ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, (i) => {
-        const o = options[i];
-        if (o === "Add a note") router.push({ pathname: "/note", params: { id: one!.id } });
-        else if (o === "Share") void Share.share(one!.url ? { url: one!.url } : { message: one!.title });
-        else if (o === "Done") void moveMany(chosen, "done");
-        else if (o === "Select all") setPicked(new Set(rows.map((r) => r.id)));
-      });
-    };
-    setTabBarStandIn(
-      <ToolBar tools={[
-        { label: away === "inbox" ? "Inbox" : "Later", icon: away === "inbox" ? ICONS.inbox : ICONS.later, onPress: () => void moveMany(chosen, away) },
-        { label: "Tags", icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: ids } }) },
-        { label: "List", icon: ICONS.lists, a11y: "Add to a List", onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: ids } }) },
-        { label: "Archive", icon: ICONS.archive, onPress: () => void moveMany(chosen, "archived") },
-        { label: "More", icon: ICONS.more, onPress: more },
-      ]} />,
-    );
-  }, [picked, items.data]); // the toolbar follows the selection and the rows it names
-  useEffect(() => () => setTabBarStandIn(null), []);
+  const away: Status = status === "later" ? "inbox" : "later";
+  const one = chosen.length === 1 ? chosen[0]! : null;
+  const more = () => {
+    const options = [
+      ...(one && one.url ? ["Add a note"] : []),
+      ...(one ? ["Share"] : []),
+      ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["Done"] : []),
+      "Select all",
+    ];
+    ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, (i) => {
+      const o = options[i];
+      if (o === "Add a note") router.push({ pathname: "/note", params: { id: one!.id } });
+      else if (o === "Share") void Share.share(one!.url ? { url: one!.url } : { message: one!.title });
+      else if (o === "Done") void moveMany(chosen, "done");
+      else if (o === "Select all") setPicked(new Set(rows.map((r) => r.id)));
+    });
+  };
+  const ids = [...(picked ?? [])].join(",");
+  // While selecting, the actions sit at the top, under the count.
+  const actions = picked ? (
+    <ToolBar edge="top" tools={[
+      { label: away === "inbox" ? "Inbox" : "Later", icon: away === "inbox" ? ICONS.inbox : ICONS.later, onPress: () => void moveMany(chosen, away) },
+      { label: "Tags", icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: ids } }) },
+      { label: "List", icon: ICONS.lists, a11y: "Add to a List", onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: ids } }) },
+      { label: "Archive", icon: ICONS.archive, onPress: () => void moveMany(chosen, "archived") },
+      { label: "More", icon: ICONS.more, onPress: more },
+    ]} />
+  ) : null;
 
   const newNote = async () => {
     const { item } = await pluck({ text: "New note", kind: "note" });
@@ -143,7 +140,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
           </Pressable>
         </View>
       )}
-      head={
+      head={actions ?? (
         <View style={styles.sub}>
           <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
             {counts.data ? `${counts.data[status]} ${status === "inbox" ? "to triage" : "for later"}` : " "}
@@ -155,7 +152,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
             </View>
           )}
         </View>
-      }
+      )}
       layout
       data={rows}
       extraData={picked} // rows redraw when the selection changes, not only when the data does
