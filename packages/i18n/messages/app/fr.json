@@ -115,13 +115,13 @@
     "home": "Accueil de Pluck"
   },
   "error": {
-    "title": "Quelque chose a cassé",
+    "title": "Quelque chose s’est cassé",
     "lede": "Ça vient de chez nous, pas de vous. Rien de ce que vous avez cueilli n’est perdu. Réessayez, et si ça continue, prévenez-nous.",
     "tryAgain": "Réessayer",
     "report": "Le signaler"
   },
   "globalError": {
-    "title": "Quelque chose a cassé",
+    "title": "Quelque chose s’est cassé",
     "lede": "Ça vient de chez nous, pas de vous. Rien de ce que vous avez cueilli n’est perdu. Réessayez dans un instant.",
     "tryAgain": "Réessayer"
   },
@@ -144,7 +144,7 @@
       "oneNote": "Attend ici, part à votre retour",
       "two": "Acheter une plaque à induction",
       "twoNote": "Tâche, attend ici aussi",
-      "three": "Les index Postgres en 40 minutes",
+      "three": "Les index Postgres en 40 minutes",
       "threeNote": "Ouvert hier, toujours lisible"
     }
   },
@@ -171,12 +171,12 @@
       "subject": "Votre lien pour Pluck",
       "now": "maintenant",
       "title": "Voici votre lien.",
-      "body": "Touchez-le pour vous connecter. Il ne fonctionne qu’une fois, pendant 10 minutes. Aucun mot de passe à retenir, jamais.",
+      "body": "Touchez-le pour vous connecter. Il ne fonctionne qu’une fois, pendant 10 minutes. Aucun mot de passe à retenir, jamais.",
       "button": "Se connecter à Pluck"
     },
     "sent": {
       "title": "Consultez vos e-mails",
-      "lede": "Nous avons envoyé un lien à <b>{email}</b>. Il ne fonctionne qu’une fois, pendant 10 minutes, dans le navigateur où vous l’ouvrez.",
+      "lede": "Nous avons envoyé un lien à <b>{email}</b>. Il ne fonctionne qu’une fois, pendant 10 minutes, dans le navigateur où vous l’ouvrez.",
       "status": "Lien envoyé à {email}. Consultez vos e-mails.",
       "sending": "Envoi en cours",
       "again": "Renvoyer le lien",
@@ -208,7 +208,7 @@
     },
     "title1": "Un geste",
     "title2": "et vous y êtes",
-    "lede": "Ce lien ne fonctionne qu’une fois, pendant 10 minutes à partir de son envoi.",
+    "lede": "Ce lien ne fonctionne qu’une fois, pendant 10 minutes à partir de son envoi.",
     "action": "Se connecter à Pluck"
   },
   "oauthError": {
@@ -216,7 +216,7 @@
     "lede": "Rien n’a changé dans votre Pluck. La plupart du temps, il suffit de recommencer.",
     "step1": "Relancez la connexion depuis votre outil d’IA.",
     "step2": "Toujours rien ? Retirez Pluck de cet outil, puis ajoutez-le à nouveau avec le lien de <connect>Connecter votre IA</connect>.",
-    "step3": "Ça bloque encore ? L’<support>Aide</support> a la suite.",
+    "step3": "Ça bloque encore ? L’<support>Aide</support> prend le relais.",
     "serverSaid": "Ce que le serveur a répondu, si votre outil d’IA le demande"
   },
   "consent": {
@@ -229,13 +229,13 @@
     },
     "title": "{name} veut utiliser votre Pluck",
     "appLede": "Il cueille et range en votre nom, depuis cet appareil.",
-    "lede": "Il agit pour vous, seulement quand vous l’utilisez, et chaque modification qu’il fait porte la mention «  par l’IA  ».",
+    "lede": "Il agit pour vous, seulement quand vous l’utilisez, et chaque modification qu’il fait porte la mention « par l’IA ».",
     "art": {
       "inbox": "Boîte de réception",
       "after": "après lui avoir demandé de ranger",
       "one": "Comment marche vraiment l’authentification MCP",
       "oneNote": "Tagué mcp, auth",
-      "two": "Les index Postgres en 40 minutes",
+      "two": "Les index Postgres en 40 minutes",
       "twoNote": "Passé dans Plus tard",
       "three": "Un plan de cuisine en trois versions",
       "threeNote": "Laissé tel quel",
@@ -256,12 +256,12 @@
     "confirm": "Confirmer",
     "expired": {
       "title": "Ce lien a expiré",
-      "lede": "Les liens de l’e-mail fonctionnent 7 jours. Tout est toujours dans Pluck, là où vous l’avez laissé."
+      "lede": "Les liens de l’e-mail fonctionnent 7 jours. Tout est toujours dans Pluck, là où vous l’avez laissé."
     },
     "archiveAll": {
       "title1": "Tout archiver.",
       "title2": "Pour de vrai",
-      "count": "<b>{count, number}</b><span>{count, plural, one {élément non touché} other {éléments non touchés}} depuis plus longtemps que votre délai d’expiration</span>",
+      "count": "<b>{count, number}</b><span>{count, plural, one {élément laissé de côté} other {éléments laissés de côté}} plus longtemps que votre délai d’expiration</span>",
       "lede": "Ils passent aux Archives d’un coup. Rien n’est supprimé, et les listes ne sont pas touchées.",
       "confirm": "Oui, passer {count, number} aux Archives",
       "notNow": "Pas maintenant"
@@ -322,11 +322,11 @@
     "lede": "{count, plural, one {# élément arrive} other {# éléments arrivent}} dans votre boîte de réception, et une copie privée de <b>{name}</b> garde leur ordre et leurs notes.",
     "items": "{count, plural, one {# élément} other {# éléments}}",
     "note": "Note",
-    "more": "et {count} de plus"
+    "more": "et {count} autres"
   },
   "extensionConnected": {
     "title": "Connecté",
-    "lede": "Vous pouvez désormais cueillir depuis votre navigateur. Fermez cet onglet ; à partir de maintenant, n’importe quelle page est à une touche de distance.",
+    "lede": "Vous pouvez désormais cueillir depuis votre navigateur. Fermez cet onglet ; à partir de maintenant, une touche suffit pour cueillir n’importe quelle page.",
     "page": "Cueille la page que vous lisez. Alt correspond à Option sur Mac.",
     "selection": "Cueille ce que vous avez sélectionné, gardé comme surlignage."
   },
@@ -394,7 +394,7 @@
     "byAi": "Tagué par l’IA"
   },
   "kindChips": {
-    "label": "Genre",
+    "label": "Type",
     "all": "Tout",
     "links": "Liens",
     "note": "Notes",
@@ -408,14 +408,14 @@
       "placeholder": "Saisissez pour trouver ou créer un tag",
       "options": "tags",
       "empty": "Pas encore de tag. Saisissez un nom pour en créer un.",
-      "create": "Créer «  {name}  »"
+      "create": "Créer « {name} »"
     },
     "list": {
       "label": "Liste",
       "placeholder": "Saisissez pour trouver ou créer une liste",
       "options": "listes",
       "empty": "Pas encore de liste. Saisissez un nom pour en créer une.",
-      "create": "Nouvelle liste «  {name}  »"
+      "create": "Nouvelle liste « {name} »"
     }
   },
   "cookies": {
@@ -424,7 +424,7 @@
     "no": {
       "button": "Allez cueillir ailleurs",
       "title": "Entendu.",
-      "note": "Pas une miette prise."
+      "note": "Pas une miette."
     },
     "yes": {
       "button": "Cueillez, j’en suis",
@@ -496,8 +496,8 @@
     "title": "Tags",
     "remove": "Retirer le tag {name}",
     "add": "Ajouter un tag",
-    "quoted": "«  {name}  »",
-    "byAi": "{names} {count, plural, one {a été ajouté} other {ont été ajoutés}} par votre IA. Touchez-y et il devient le vôtre.",
+    "quoted": "« {name} »",
+    "byAi": "{names} {count, plural, one {a été ajouté par votre IA. Touchez-y et il devient le vôtre.} other {ont été ajoutés par votre IA. Touchez-y et ils deviennent les vôtres.}}",
     "keep": "Garder",
     "pickerTitle": "Tag"
   },
@@ -516,27 +516,27 @@
   },
   "itemList": {
     "inbox": {
-      "subtitle": "{count} à trier · {sort, select, newest {les plus récents d’abord} other {les moins touchés d’abord}}"
+      "subtitle": "{count} à trier · {sort, select, newest {les plus récents d’abord} other {les délaissés d’abord}}"
     },
     "later": {
-      "subtitle": "Gardé exprès",
-      "expiring": "Gardé exprès · {count, plural, one {# expire} other {# expirent}} cette semaine, vers les Archives",
+      "subtitle": "Gardés exprès",
+      "expiring": "Gardés exprès · {count, plural, one {# passe} other {# passent}} aux Archives cette semaine",
       "empty": {
         "title": "Rien de gardé pour plus tard.",
         "body": "Appuyez sur l sur n’importe quel élément de la boîte de réception pour le garder ici."
       }
     },
-    "deleted": "Supprimé. Il reste 30 jours dans la corbeille.",
+    "deleted": "Supprimé. Il reste 30 jours dans la corbeille.",
     "moveFailed": "Ça n’est pas passé. Rien n’a bougé.",
     "showOnly": "Afficher seulement {name}",
-    "addedTo": "Ajouté à «  {name}  ».",
-    "takenOut": "Retiré de «  {name}  ».",
-    "kept": "Gardé. Les {days} jours repartent à zéro.",
+    "addedTo": "Ajouté à « {name} ».",
+    "takenOut": "Retiré de « {name} ».",
+    "kept": "Gardé. Les {days} jours repartent à zéro.",
     "pluckedMany": "{count} cueillis dans la boîte de réception.",
     "sort": {
       "label": "Tri",
       "newest": "Plus récents",
-      "untouched": "Moins touchés d’abord"
+      "untouched": "Délaissés d’abord"
     },
     "stopFilter": "Ne plus filtrer par {name}",
     "bulk": {
@@ -556,13 +556,13 @@
     },
     "rowsLabel": "Éléments {view, select, inbox {de la boîte de réception} other {de Plus tard}}",
     "pill": {
-      "title": "Pas touché depuis {days} jours. Gardez-le, sinon il passe aux Archives. Rien n’est supprimé.",
+      "title": "Laissé de côté depuis {days} jours. Gardez-le, sinon il passe aux Archives. Rien n’est supprimé.",
       "label": "Garder {title} : il passe bientôt aux Archives",
-      "days": "{days} jours"
+      "days": "{days} jours"
     },
     "none": {
       "all": "Rien {view, select, inbox {dans la boîte de réception} other {dans Plus tard}} pour l’instant.",
-      "kind": "Rien de ce genre {view, select, inbox {dans la boîte de réception} other {dans Plus tard}}."
+      "kind": "Rien de ce type {view, select, inbox {dans la boîte de réception} other {dans Plus tard}}."
     },
     "keys": {
       "move": "se déplacer",
@@ -586,9 +586,9 @@
       "import": "Importés"
     },
     "why": {
-      "bin": "supprimé, effacé définitivement dans {days, plural, one {# jour} other {# jours}}",
+      "bin": "supprimé, effacé définitivement dans {days, plural, one {# jour} other {# jours}}",
       "done": "terminé",
-      "expiredAfter": "expiré après {days} jours, gardé ici",
+      "expiredAfter": "expiré après {days} jours, gardé ici",
       "expired": "expiré, gardé ici",
       "bulk": "archivé avec Tout archiver",
       "import": "importé",
@@ -597,14 +597,14 @@
     "outOfBin": "Sorti de la corbeille.",
     "title": "Archives",
     "bin": "Corbeille",
-    "binSubtitle": "Ce que vous avez supprimé. Chaque élément est effacé définitivement 30 jours après sa suppression.",
+    "binSubtitle": "Ce que vous avez supprimé. Chaque élément est effacé définitivement 30 jours après sa suppression.",
     "subtitle": "Tout ce que vous avez archivé, terminé ou laissé expirer. Rien n’est jamais supprimé, et la recherche le retrouve toujours.",
     "rowsLabel": "Éléments archivés",
     "restore": "Restaurer",
     "binEmpty": "La corbeille est vide.",
     "empty": "Rien ici pour l’instant.",
     "back": "Retour aux Archives",
-    "binLink": "Vous avez supprimé quelque chose par erreur ? <bin>La corbeille</bin> le garde 30 jours."
+    "binLink": "Vous avez supprimé quelque chose par erreur ? <bin>La corbeille</bin> le garde 30 jours."
   },
   "search": {
     "prompt": "Qu’est-ce que j’ai cueilli sur {q} ?",
@@ -612,8 +612,8 @@
     "label": "Recherche",
     "placeholder": "Chercher dans les titres, les notes, les tags et le texte des pages",
     "filters": {
-      "kind": "Genre",
-      "kindAny": "Genre : tous",
+      "kind": "Type",
+      "kindAny": "Type : tous",
       "tag": "Tag",
       "list": "Liste",
       "status": "Statut",
@@ -626,10 +626,10 @@
     "hint": "Saisissez pour chercher dans toute votre bibliothèque, Archives comprises. Appuyez sur / depuis n’importe où pour venir ici.",
     "results": "Résultats",
     "snippet": "{pre}<mark>{hit}</mark>{post}",
-    "noteSnippet": "Votre note : «  {pre}<mark>{hit}</mark>{post}  »",
-    "none": "Rien ne correspond à «  {q}  ». La recherche cherche les mots eux-mêmes.",
+    "noteSnippet": "Votre note : « {pre}<mark>{hit}</mark>{post} »",
+    "none": "Rien ne correspond à « {q} ». La recherche porte sur les mots exacts.",
     "ask": "Vous cherchez par le sens ? Demandez à votre IA.",
-    "copy": "Copier «  {prompt}  »"
+    "copy": "Copier « {prompt} »"
   },
   "lists": {
     "title": "Listes",
@@ -661,10 +661,10 @@
     "foot": "Les éléments d’une liste n’expirent jamais. Une liste, c’est un projet."
   },
   "list": {
-    "takenOut": "Retiré de «  {name}  ». Il est toujours dans votre bibliothèque.",
+    "takenOut": "Retiré de « {name} ». Il est toujours dans votre bibliothèque.",
     "nowPublic": "Publique. Toute personne ayant le lien peut la voir.",
     "nowPrivate": "De nouveau privée. Le lien cesse de fonctionner dès maintenant.",
-    "askPrompt": "Lis ma liste Pluck «  {name}  » et dis-moi ce qu’elle couvre, ce qui manque, et dans quel ordre la lire.",
+    "askPrompt": "Lis ma liste Pluck « {name} » et dis-moi ce qu’elle couvre, ce qui manque, et dans quel ordre la lire.",
     "crumb": "Listes",
     "nameLabel": "Nom de la liste",
     "purpose": "Objectif",
@@ -676,7 +676,7 @@
     "views": "{count, plural, one {# vue} other {# vues}} · visible par vous seulement · <a>Voir la page publique</a>",
     "privateShared": "Privée : seulement vous et les personnes ci-dessous.",
     "privateOnly": "Cette liste n’est visible que par vous.",
-    "copyAsk": "Copier pour votre IA : «  Pose des questions sur cette liste  »",
+    "copyAsk": "Copier pour votre IA : « Pose des questions sur cette liste »",
     "export": "Exporter cette liste",
     "ticked": "{ticked} sur {count} cochés",
     "empty": "Rien ici pour l’instant. Appuyez sur a sur n’importe quel élément de la boîte de réception pour l’ajouter.",
@@ -694,7 +694,7 @@
       "add": "Ajoutez depuis la boîte de réception avec <kbd>a</kbd>, ou cueillez directement depuis l’extension"
     },
     "delete": {
-      "confirm": "Supprimer «  {name}  » ? Ses éléments restent dans votre bibliothèque.",
+      "confirm": "Supprimer « {name} » ? Ses éléments restent dans votre bibliothèque.",
       "yes": "Oui, supprimer la liste",
       "action": "Supprimer cette liste"
     }
@@ -707,8 +707,8 @@
     "share": "Partager",
     "label": "Personnes qui peuvent la voir",
     "stop": "Arrêter le partage avec {email}",
-    "some": "Ces personnes peuvent la voir ; les modifications restent entre vos mains.",
-    "none": "Elles la voient, jamais vos tags ni vos coches ; les modifications restent entre vos mains."
+    "some": "Ces personnes peuvent la voir ; elle n’est modifiable que par vous.",
+    "none": "Elles la voient, jamais vos tags ni vos coches ; elle n’est modifiable que par vous."
   },
   "admin": {
     "title": "Signalements",
@@ -753,7 +753,7 @@
     "body": "Texte",
     "help": "La première ligne est le titre. Texte brut. Enregistrement automatique pendant la saisie.",
     "about": "À propos de {kind, select, note {cette note} todo {cette tâche} other {cet objet}}",
-    "kind": "Genre",
+    "kind": "Type",
     "kindHint": {
       "note": "Faites-en une tâche pour ajouter une échéance et une case à cocher.",
       "todo": "Une tâche peut avoir une échéance. Terminé la sort de la boîte de réception.",
@@ -774,7 +774,7 @@
     "removeHighlight": "Retirer le surlignage",
     "about": "À propos de cet élément",
     "note": "Note",
-    "kind": "Genre",
+    "kind": "Type",
     "highlights": "Surlignages · {count}",
     "noHighlights": "Sélectionnez du texte pour le surligner.",
     "highlightNote": "Note sur ce surlignage",
@@ -819,7 +819,7 @@
       "selfHost": "Auto-hébergement sans URL publique",
       "needKey": "Créez une clé d’API ci-dessous, puis utilisez-la ici.",
       "test": "Tester",
-      "testHint": "Copie «  {prompt}  » pour votre IA",
+      "testHint": "Copie « {prompt} » pour votre IA",
       "connected": "Connecté",
       "connectedLast": "Connecté · dernier appel {ago}",
       "notConnected": "Pas encore connecté",
@@ -831,14 +831,14 @@
     "expiry": {
       "digestOff": "Pas d’e-mail hebdomadaire.",
       "digestSaved": "Jour de l’e-mail hebdomadaire enregistré.",
-      "saved": "Après {days} jours sans y toucher, direction les Archives. Rien n’est supprimé.",
+      "saved": "Après {days} jours sans y toucher, direction les Archives. Rien n’est supprimé.",
       "never": "Plus rien n’expire.",
       "sent": "Envoyé. Consultez vos e-mails.",
       "archived": "{count, plural, one {# élément passé} other {# éléments passés}} aux Archives. Rien n’est supprimé.",
       "title": "Expiration et archives",
       "lede": "Ce à quoi vous ne touchez pas passe tout seul aux Archives. Rien n’est jamais supprimé. La recherche le retrouve toujours, et Restaurer le remet en place. Les éléments d’une liste n’expirent jamais.",
       "after": "Passer aux Archives après",
-      "days": "{days} jours sans y toucher",
+      "days": "{days} jours sans y toucher",
       "neverOption": "Jamais",
       "scope": "S’applique à",
       "scopeInboxLater": "Boîte de réception et Plus tard",
@@ -850,16 +850,16 @@
       "sendNow": "M’en envoyer un maintenant",
       "clean": {
         "title": "Repartir de zéro",
-        "body": "Passer dès maintenant aux Archives tout ce qui, dans {scope, select, inbox {la boîte de réception} other {la boîte de réception et Plus tard}}, a plus de {days} jours. {count, plural, one {# élément} other {# éléments}}. Les listes ne sont pas touchées.",
-        "confirm": "Passer {count} éléments aux Archives ? Rien n’est supprimé.",
+        "body": "Passer dès maintenant aux Archives tout ce qui, dans {scope, select, inbox {la boîte de réception} other {la boîte de réception et Plus tard}}, a plus de {days} jours. {count, plural, one {# élément} other {# éléments}}. Les listes ne sont pas touchées.",
+        "confirm": "Passer {count, plural, one {# élément} other {# éléments}} aux Archives ? Rien n’est supprimé.",
         "yes": "Oui, les archiver",
         "action": "Tout archiver. Pour de vrai."
       }
     },
     "tags": {
-      "merged": "«  {name}  » fusionné dans «  {into}  ».",
-      "deleted": "«  {name}  » n’existe plus. Ses éléments sont toujours là.",
-      "purged": "{count, plural, one {# tag ajouté} other {# tags ajoutés}} par votre IA cette semaine {count, plural, one {retiré} other {retirés}}.",
+      "merged": "« {name} » fusionné dans « {into} ».",
+      "deleted": "« {name} » n’existe plus. Ses éléments sont toujours là.",
+      "purged": "{count, plural, one {# tag ajouté par votre IA cette semaine a été retiré.} other {# tags ajoutés par votre IA cette semaine ont été retirés.}}",
       "title": "Tags",
       "purge": {
         "confirm": "Retirer {count, plural, one {le # tag ajouté} other {les # tags ajoutés}} par votre IA cette semaine ?",
@@ -869,7 +869,7 @@
       "empty": "Pas encore de tag. Appuyez sur t sur n’importe quel élément pour en créer un.",
       "table": {
         "tag": "Tag",
-        "yours": "Les vôtres",
+        "yours": "Par vous",
         "byAi": "Par l’IA",
         "actions": "Actions"
       },
@@ -888,7 +888,7 @@
       "copied": "Clé copiée.",
       "used": "utilisée {when}",
       "unused": "pas encore utilisée",
-      "revoked": "«  {name}  » révoquée. Elle cesse de fonctionner dès maintenant.",
+      "revoked": "« {name} » révoquée. Elle cesse de fonctionner dès maintenant.",
       "revoke": "Révoquer",
       "nameLabel": "Nom de la clé",
       "namePlaceholder": "Claude Code sur mon portable",

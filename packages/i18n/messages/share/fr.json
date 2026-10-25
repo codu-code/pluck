@@ -13,7 +13,7 @@
   "badServer": "Adresse de serveur incorrecte.",
   "noUploadAddress": "Aucune adresse d’envoi.",
   "tagsAndList": "Tags et liste",
-  "kind": "Genre",
+  "kind": "Type",
   "addToList": "Ajouter à {name}",
   "addedToList": "Ajouté à {name}",
   "notePlaceholder": "Pourquoi vous l’avez cueilli, en une ligne. Facultatif.",

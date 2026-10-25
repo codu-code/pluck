@@ -47,7 +47,7 @@
       "title": "Cueillez<dot>.</dot>",
       "line1": "Cueillez n’importe quoi, d’un geste.",
       "line2": "Triez plus tard, à la main ou avec votre IA.",
-      "line3": "Ou pas. On ne vous harcèlera pas."
+      "line3": "Ou pas. On ne vous relancera pas."
     },
     "mock": {
       "label": "L’app",
@@ -61,7 +61,7 @@
           "tag": "mcp"
         },
         "postgres": {
-          "title": "Les index Postgres en 40 minutes",
+          "title": "Les index Postgres en 40 minutes",
           "meta": "youtube.com · 41 min",
           "tag": "postgres"
         },
@@ -89,16 +89,16 @@
     },
     "stats": {
       "tapNumber": "1 geste",
-      "tap": "Depuis le menu Partager de l’iPhone, sans ouvrir d’app. Depuis Chrome, vos e-mails ou une conversation avec votre IA. «  Cueilli  » en moins de 300 ms. À chaque fois.",
+      "tap": "Depuis le menu Partager de l’iPhone, sans ouvrir d’app. Depuis Chrome, vos e-mails ou une conversation avec votre IA. « Cueilli » en moins de 300 ms. À chaque fois.",
       "nagsNumber": "0 relance",
-      "nags": "Pas de séries, pas de badges, pas de culpabilité. Rien n’est tagué dans votre dos. Ce à quoi vous ne touchez jamais passe aux Archives au bout de 30 jours (vous choisissez le nombre), sauf si c’est dans une liste. Rien n’est supprimé.",
-      "secondsNumber": "30 s",
+      "nags": "Pas de séries, pas de badges, pas de culpabilité. Rien n’est tagué dans votre dos. Ce à quoi vous ne touchez jamais passe aux Archives au bout de 30 jours (vous choisissez le nombre), sauf si c’est dans une liste. Rien n’est supprimé.",
+      "secondsNumber": "30 s",
       "seconds": "Pour brancher l’IA que vous utilisez déjà. Claude, ChatGPT, Cursor, tout ce qui parle MCP. Demandez-lui de ranger, de regrouper ou de transformer vos cueillettes en idées. Elle travaille sous vos yeux, et ne supprime jamais rien."
     },
     "lists": {
       "title": "Les listes, c’est ce que vous préparez.",
       "para1": "Un livre. Un numéro de newsletter. Une conférence. Un voyage. <phrase>Des choses à acheter.</phrase> Mettez chaque cueillette dans autant de listes que vous voulez, chacune avec sa propre note et sa case à cocher.",
-      "para2": "Privée par défaut. Publique d’un simple bouton. Reprenez-la avec le même bouton.",
+      "para2": "Privée par défaut. Publique d’un simple bouton. Le même bouton la rend de nouveau privée.",
       "cardTitle": "Rénovation cuisine, à acheter",
       "progress": "{done, number} sur {total, number}",
       "kitchen": {
@@ -124,15 +124,15 @@
     "ai": {
       "eyebrow": "PRÊT POUR VOTRE IA",
       "title": "Branchez l’IA que vous utilisez déjà.",
-      "ask1": "«  Qu’est-ce que j’ai cueilli sur l’authentification MCP ?  »",
-      "ask2": "«  Range ma boîte de réception.  »",
-      "ask3": "«  Fais une liste de lecture avec ce mois-ci, le meilleur en premier.  »",
-      "body": "Un lien, et toute votre bibliothèque est là. Elle ne change rien sans que vous le disiez, et marque tout ce qu’elle a touché.",
+      "ask1": "« Qu’est-ce que j’ai cueilli sur l’authentification MCP ? »",
+      "ask2": "« Range ma boîte de réception. »",
+      "ask3": "« Fais une liste de lecture de ce mois-ci, les meilleurs d’abord. »",
+      "body": "Un lien, et toute votre bibliothèque est là. Votre IA ne change rien sans que vous le disiez, et marque tout ce qu’elle a touché.",
       "button": "Comment ça marche avec l’IA",
       "chatMe1": "Cueille ça comme idée : un serveur MCP pour les devis d’Assemble",
       "chatAi1": "Cueilli. C’est dans ta boîte de réception, en note, marqué comme cueilli par moi.",
       "chatMe2": "Qu’est-ce qui moisit dans ma bibliothèque ?",
-      "chatAi2": "Cinq choses pas touchées depuis un mois. On les passe en revue une par une ?"
+      "chatAi2": "Cinq choses laissées de côté depuis un mois. On les passe en revue une par une ?"
     },
     "imports": {
       "title": "Pocket a fermé. Omnivore a fermé.",
@@ -179,7 +179,7 @@
     },
     "licence": "Licence : AGPL-3.0 (serveur) et MIT (apps).",
     "title": "Gratuit.<br></br>Ouvert.<br></br><marker>À vous.</marker>",
-    "lede": "Les apps de lecture différée ferment les unes après les autres. Pluck ne peut pas, parce que le code est public et que les données sont à vous. Utilisez le nôtre, ou faites tourner le vôtre en une commande.",
+    "lede": "Les apps de lecture différée ferment les unes après les autres. Pas Pluck : le code est public et les données sont à vous. Utilisez le nôtre, ou faites tourner le vôtre en une commande.",
     "selfHostTitle": "Auto-hébergement en une commande.",
     "selfHostBody": "La même app, la même extension, la même app iPhone et le même connecteur pour l’IA. Pointez-les vers votre serveur dans les Réglages.",
     "terminalComment": "# ensuite, pour les outils d’IA sans URL publique",
@@ -217,7 +217,7 @@
       "title": "L’extension",
       "pluckPage": {
         "q": "Comment cueillir la page que je lis ?",
-        "a": "Cliquez sur le bouton Pluck dans la barre d’outils, ou appuyez sur <pluckKeys></pluckKeys>. Faites un clic droit sur un lien ou une image pour cueillir cela à la place."
+        "a": "Cliquez sur le bouton Pluck dans la barre d’outils, ou appuyez sur <pluckKeys></pluckKeys>. Faites un clic droit sur un lien ou une image pour ne cueillir que ce lien ou cette image."
       },
       "quote": {
         "q": "Puis-je garder une citation, et pas toute la page ?",
@@ -228,7 +228,7 @@
         "a": "Vous avez cueilli quelque chose sans connexion. Ça attend sur votre ordinateur et part tout seul dès que vous êtes de nouveau en ligne. Le point disparaît à ce moment-là."
       },
       "login": {
-        "q": "Une page derrière mon identifiant est arrivée vide.",
+        "q": "Une page qui demande une connexion est arrivée vide.",
         "a": "Dans les options de l’extension, activez Envoyer le contenu de la page avec chaque cueillette. Pluck garde alors la page telle que votre navigateur l’affiche, pas telle qu’un inconnu la voit."
       },
       "server": {
@@ -259,7 +259,7 @@
       },
       "change": {
         "q": "Qu’est-ce que mon IA peut modifier ?",
-        "a": "Elle peut cueillir, taguer, trier et créer des listes privées quand vous le demandez. Elle ne peut rien supprimer, sauf si vous l’avez autorisé au moment de la connecter, et elle ne peut pas rendre une liste publique : c’est à vous de le faire, depuis la liste dans Pluck. Tout ce qu’elle ajoute porte la mention «  par l’IA  »."
+        "a": "Elle peut cueillir, taguer, trier et créer des listes privées quand vous le demandez. Elle ne peut rien supprimer, sauf si vous l’avez autorisé au moment de la connecter, et elle ne peut pas rendre une liste publique : c’est à vous de le faire, depuis la liste dans Pluck. Tout ce qu’elle ajoute porte la mention « par l’IA »."
       },
       "disconnect": {
         "q": "Comment la déconnecter ?",
@@ -270,7 +270,7 @@
       "title": "Votre bibliothèque et votre compte",
       "signIn": {
         "q": "Le lien de connexion n’a pas marché.",
-        "a": "Un lien ne fonctionne qu’une fois, pendant 10 minutes. Demandez-en un nouveau depuis le même navigateur. Si Pluck vous dit que vous en avez demandé trop, utilisez le dernier ou attendez une heure."
+        "a": "Un lien ne fonctionne qu’une fois, pendant 10 minutes. Demandez-en un nouveau depuis le même navigateur. Si Pluck vous dit que vous en avez demandé trop, utilisez le dernier ou attendez une heure."
       },
       "oldItems": {
         "q": "Où sont passés mes anciens éléments ?",
@@ -278,11 +278,11 @@
       },
       "deleted": {
         "q": "J’ai supprimé quelque chose par erreur.",
-        "a": "Les éléments supprimés attendent 30 jours dans la corbeille. Le lien se trouve en bas des Archives. Ouvrez l’élément et restaurez-le."
+        "a": "Les éléments supprimés attendent 30 jours dans la corbeille. Le lien se trouve en bas des Archives. Ouvrez l’élément et restaurez-le."
       },
       "monday": {
         "q": "Comment ne plus recevoir l’e-mail du lundi ?",
-        "a": "Utilisez le lien de désinscription en bas de n’importe lequel d’entre eux, ou choisissez un autre jour, ou aucun, dans les Réglages, sous Expiration et archives."
+        "a": "Utilisez le lien de désinscription en bas de chacun de ces e-mails, ou choisissez un autre jour, ou aucun, dans les Réglages, sous Expiration et archives."
       },
       "export": {
         "q": "Puis-je tout emporter avec moi ?",
@@ -325,14 +325,14 @@
       "claude": {
         "step1": "Ouvrez Claude, puis Paramètres, puis Connecteurs.",
         "step2": "Choisissez Ajouter un connecteur personnalisé et collez le lien.",
-        "step3": "Connectez-vous à Pluck quand c’est demandé. C’est fait.",
+        "step3": "Connectez-vous à Pluck quand c’est demandé. Et voilà.",
         "codeLabel": "URL du connecteur",
         "note": "Fonctionne sur le web, sur ordinateur et sur téléphone une fois ajouté."
       },
       "code": {
         "step1": "Ouvrez un terminal.",
         "step2": "Lancez la ligne de droite.",
-        "step3": "Dites «  qu’est-ce que j’ai cueilli cette semaine ?  » pour tester.",
+        "step3": "Dites « qu’est-ce que j’ai cueilli cette semaine ? » pour tester.",
         "codeLabel": "Une ligne",
         "note": "La première fois, la connexion passe par votre navigateur."
       },
@@ -344,7 +344,7 @@
         "note": "Nécessite un abonnement qui autorise les connecteurs personnalisés."
       },
       "cursor": {
-        "step1": "Ouvrez les réglages de Cursor, puis MCP.",
+        "step1": "Ouvrez les paramètres de Cursor, puis MCP.",
         "step2": "Ajoutez un serveur avec le JSON de droite.",
         "step3": "Connectez-vous à Pluck quand c’est demandé.",
         "note": "Tout éditeur ou client qui prend en charge le MCP distant fonctionne de la même façon."
@@ -359,13 +359,13 @@
       }
     },
     "toolsTitle": "Douze outils. Des noms simples.",
-    "toolsBody": "Les résultats reviennent sous forme de cartes, titres en premier : une question comme «  qu’est-ce que j’ai cueilli cette semaine  » tient en un appel et un écran.",
+    "toolsBody": "Les résultats reviennent sous forme de cartes, titres en premier : une question comme « qu’est-ce que j’ai cueilli cette semaine » tient en un appel et un écran.",
     "toolList": {
       "search_items": "Recherche texte dans le titre, la note, les tags, les noms de listes et le texte.",
-      "list_items": "Parcourir la boîte de réception, Plus tard, les Archives ou Terminé, les plus récents ou les moins touchés d’abord.",
+      "list_items": "Parcourir la boîte de réception, Plus tard, les Archives ou Terminé, les plus récents ou les délaissés d’abord.",
       "get_item": "Un élément en entier, avec le texte de la page gardée.",
       "save_item": "Cueillir un lien, plusieurs liens, une note, une tâche ou un objet. Marqué comme cueilli par l’IA.",
-      "batch_update": "Statut, genre, tags et échéances sur un ou plusieurs éléments.",
+      "batch_update": "Statut, type, tags et échéances sur un ou plusieurs éléments.",
       "list_tags": "Vos tags, avec leur nombre d’éléments.",
       "create_tag": "Un nouveau tag, seulement après votre accord.",
       "list_lists": "Vos listes, avec leur objectif, leur nombre d’éléments et leur visibilité.",
@@ -377,19 +377,19 @@
     "asksTitle": "Quatre choses à demander.",
     "asks": {
       "tidy": {
-        "say": "«  Range ma boîte de réception Pluck.  »",
+        "say": "« Range ma boîte de réception Pluck. »",
         "does": "Propose des tags parmi ceux que vous avez déjà, et pour chaque élément : garder, plus tard ou archiver. Vous acceptez ou vous modifiez. Un seul lot."
       },
       "reading": {
-        "say": "«  Fais une liste de lecture sur l’authentification MCP, le meilleur en premier.  »",
+        "say": "« Fais une liste de lecture sur l’authentification MCP, les meilleurs d’abord. »",
         "does": "Cherche, lit et construit la liste dans l’ordre, avec une ligne sur l’intérêt de chaque élément. Privée tant que vous ne dites pas le contraire."
       },
       "ideas": {
-        "say": "«  Trois idées d’articles de blog à partir de ce que j’ai cueilli cette semaine.  »",
+        "say": "« Trois idées d’articles de blog à partir de ce que j’ai cueilli cette semaine. »",
         "does": "Lit en entier les cinq meilleurs et propose trois angles avec leurs sources. Choisissez-en un et elle cueille le brouillon en note."
       },
       "review": {
-        "say": "«  Fais ma revue de la semaine.  »",
+        "say": "« Fais ma revue de la semaine. »",
         "does": "L’e-mail du lundi, en conversation. Une décision à la fois."
       }
     },
@@ -401,7 +401,7 @@
       "purpose": "Réécrire l’objectif d’une liste.",
       "public": "Rendre une liste publique. C’est à vous de le faire, depuis la liste dans Pluck."
     },
-    "neverNote": "Tout ce qu’elle ajoute porte la mention «  par l’IA  ». Les Réglages retirent une semaine de ses ajouts d’un seul geste.",
+    "neverNote": "Tout ce qu’elle ajoute porte la mention « par l’IA ». Les Réglages retirent une semaine de ses ajouts d’un seul geste.",
     "closing": "Demandez à votre IA<mark>.</mark>",
     "button": "Essayer Pluck, puis le connecter"
   },
@@ -418,11 +418,11 @@
     "sections": {
       "store": {
         "title": "Ce que nous conservons",
-        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son genre, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop ou un fichier de favoris."
+        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son type, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop ou un fichier de favoris."
       },
       "dont": {
         "title": "Ce que nous ne faisons pas",
-        "body": "Nous ne lisons pas votre bibliothèque. Personne ne la consulte, sauf si vous nous le demandez pour une demande d’aide. Nous ne la vendons pas et ne la partageons pas avec des annonceurs. Il n’y a pas de publicité. L’app ne contient aucun modèle d’IA : nous n’envoyons donc rien de ce que vous cueillez à un modèle."
+        "body": "Nous ne lisons pas votre bibliothèque. Personne ne la consulte, sauf si vous nous le demandez pour obtenir de l’aide. Nous ne la vendons pas et ne la partageons pas avec des annonceurs. Il n’y a pas de publicité. L’app ne contient aucun modèle d’IA : nous n’envoyons donc rien de ce que vous cueillez à un modèle."
       },
       "extension": {
         "title": "L’extension de navigateur",
@@ -430,7 +430,7 @@
       },
       "ai": {
         "title": "Votre outil d’IA",
-        "body": "Si vous connectez un outil d’IA via MCP, cet outil lit votre bibliothèque en votre nom et envoie ce qu’il lit à son propre fournisseur. Cela relève de vous et de ce fournisseur. Vous pouvez le déconnecter à tout moment dans les Réglages. Tout ce que l’outil modifie est marqué comme modifié par l’IA et peut être annulé en bloc."
+        "body": "Si vous connectez un outil d’IA via MCP, cet outil lit votre bibliothèque en votre nom et envoie ce qu’il lit à son propre fournisseur. Cela ne concerne que vous et ce fournisseur. Vous pouvez le déconnecter à tout moment dans les Réglages. Tout ce que l’outil modifie est marqué comme modifié par l’IA et peut être annulé en bloc."
       },
       "publicLists": {
         "title": "Listes publiques",
@@ -438,7 +438,7 @@
       },
       "sharing": {
         "title": "Partager une liste",
-        "body": "Quand vous partagez une liste avec quelqu’un, nous conservons l’adresse e-mail que vous avez saisie pour que cette personne puisse se connecter et la voir, et nous lui envoyons un seul e-mail pour l’en informer. Elle voit la liste telle qu’une page publique la montre : titres, sites, images et vos notes sur la liste, jamais vos tags, vos coches ni les pages que nous avons conservées. Retirez-la, supprimez la liste ou supprimez votre compte, et l’adresse disparaît aussi."
+        "body": "Quand vous partagez une liste avec quelqu’un, nous conservons l’adresse e-mail que vous avez saisie pour que cette personne puisse se connecter et la voir, et nous lui envoyons un seul e-mail pour l’en informer. Elle voit la liste telle qu’une page publique la montre : titres, sites, images et vos notes sur la liste, jamais vos tags, vos coches ni les pages que nous avons conservées. Retirez cette personne du partage, supprimez la liste ou supprimez votre compte, et l’adresse disparaît aussi."
       },
       "emailIn": {
         "title": "E-mail entrant",
@@ -446,7 +446,7 @@
       },
       "cookies": {
         "title": "Cookies et mesure d’audience",
-        "body": "Deux cookies sont toujours actifs, parce que Pluck en a besoin : l’un maintient votre connexion, l’autre conserve pendant une journée ce que vous collez sur la page d’accueil, jusqu’à votre inscription. Un troisième dépend de vous, et nous vous demandons votre accord avant de le déposer. Répondez «  Cueillez, j’en suis  » et nous utilisons PostHog, dans l’UE, pour voir comment Pluck est utilisé : les pages que vous ouvrez, ce sur quoi vous cliquez et, une fois la connexion faite, de quel compte il s’agit. Il ne voit jamais ce que vous cueillez : le texte des boutons et des liens, les titres des pages et les mots recherchés sont retirés avant que quoi que ce soit ne quitte votre navigateur. Répondez «  Allez cueillir ailleurs  » et rien de tout cela n’a lieu. Dans les deux cas, quand quelque chose plante, nous envoyons l’erreur et l’endroit où elle s’est produite, sans rien qui permette de savoir qui vous êtes, afin de la corriger. Vous pouvez changer d’avis à tout moment depuis Cookies en bas du site ou dans les Réglages. L’app iPhone pose la même question une fois et propose le même réglage dans ses Réglages."
+        "body": "Deux cookies sont toujours actifs, parce que Pluck en a besoin : l’un maintient votre connexion, l’autre conserve pendant une journée ce que vous collez sur la page d’accueil, jusqu’à votre inscription. Un troisième dépend de vous, et nous vous demandons votre accord avant de le déposer. Répondez « Cueillez, j’en suis » et nous utilisons PostHog, dans l’UE, pour voir comment Pluck est utilisé : les pages que vous ouvrez, ce sur quoi vous cliquez et, une fois la connexion faite, de quel compte il s’agit. Il ne voit jamais ce que vous cueillez : le texte des boutons et des liens, les titres des pages et les mots recherchés sont retirés avant que quoi que ce soit ne quitte votre navigateur. Répondez « Allez cueillir ailleurs » et rien de tout cela n’a lieu. Dans les deux cas, quand quelque chose plante, nous envoyons l’erreur et l’endroit où elle s’est produite, sans rien qui permette de savoir qui vous êtes, afin de la corriger. Vous pouvez changer d’avis à tout moment depuis Cookies en bas du site ou dans les Réglages. L’app iPhone pose la même question une fois et propose le même réglage dans ses Réglages."
       },
       "where": {
         "title": "Où sont vos données",
@@ -454,7 +454,7 @@
       },
       "export": {
         "title": "Export et suppression",
-        "body": "Exportez tout en JSON et en Markdown depuis les Réglages, à tout moment. Supprimez votre compte depuis les Réglages et chaque élément, tag, liste, note et clé disparaît aussitôt. Les sauvegardes sont purgées sous 30 jours."
+        "body": "Exportez tout en JSON et en Markdown depuis les Réglages, à tout moment. Supprimez votre compte depuis les Réglages et chaque élément, tag, liste, note et clé disparaît aussitôt. Les sauvegardes sont purgées sous 30 jours."
       },
       "rights": {
         "title": "Vos droits",
@@ -463,7 +463,7 @@
     },
     "box": {
       "title": "Des questions",
-      "body": "Écrivez à <mail>{email}</mail> et nous vous répondons sous 30 jours. La société derrière Pluck est Codú Limited, en Irlande."
+      "body": "Écrivez à <mail>{email}</mail> et nous vous répondons sous 30 jours. La société derrière Pluck est Codú Limited, en Irlande."
     }
   },
   "terms": {
@@ -480,7 +480,7 @@
       },
       "account": {
         "title": "Votre compte",
-        "body": "Vous devez avoir 16 ans ou plus. Gardez vos identifiants de connexion et vos clés d’API pour vous. Vous êtes responsable de ce qui en est fait. Une personne, un compte."
+        "body": "Vous devez avoir 16 ans ou plus. Gardez vos identifiants de connexion et vos clés d’API pour vous. Vous êtes responsable de ce qui en est fait. Une personne, un compte."
       },
       "library": {
         "title": "Votre bibliothèque vous appartient",
@@ -504,7 +504,7 @@
       },
       "wayOut": {
         "title": "Pas de promesses, mais une porte de sortie",
-        "body": "Le service hébergé est gratuit et fourni en l’état. Nous ferons de notre mieux pour qu’il reste rapide et disponible, mais nous ne pouvons pas le garantir, ni garantir qu’il fonctionnera toujours. Si nous devons un jour l’arrêter, nous vous préviendrons au moins 90 jours à l’avance, l’export fonctionnera jusqu’au dernier jour, et l’option d’auto-hébergement existera toujours. Notre responsabilité envers vous est limitée au montant que vous nous avez payé, c’est-à-dire rien."
+        "body": "Le service hébergé est gratuit et fourni en l’état. Nous ferons de notre mieux pour qu’il reste rapide et disponible, mais nous ne pouvons pas le garantir, ni garantir qu’il fonctionnera toujours. Si nous devons un jour l’arrêter, nous vous préviendrons au moins 90 jours à l’avance, l’export fonctionnera jusqu’au dernier jour, et l’option d’auto-hébergement existera toujours. Notre responsabilité envers vous est limitée au montant que vous nous avez payé, c’est-à-dire rien."
       },
       "law": {
         "title": "Modifications et droit applicable",
@@ -513,7 +513,7 @@
     },
     "box": {
       "title": "Signaler une liste publique",
-      "body": "Chaque page publique a un lien Signaler en bas. Vous pouvez aussi écrire à <mail>{email}</mail> avec le lien. Nous agissons sous 3 jours ouvrés."
+      "body": "Chaque page publique a un lien Signaler en bas. Vous pouvez aussi écrire à <mail>{email}</mail> avec le lien. Nous agissons sous 3 jours ouvrés."
     }
   },
   "publicList": {
@@ -534,8 +534,8 @@
     "pluck": "Cueillir cette liste",
     "copies": "La copie dans votre propre Pluck. Gratuit.",
     "note": "Note",
-    "footTitle": "Faites des listes comme celle-ci avec ce que vous gardez.",
-    "footBody": "Cueillez. Triez plus tard. Partagez quand c’est bien.",
+    "footTitle": "Faites des listes comme celle-ci avec ce que vous cueillez.",
+    "footBody": "Cueillez. Triez plus tard. Partagez quand c’est prêt.",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "og": "Une liste de {by} · {count, plural, one {# élément} other {# éléments}}",

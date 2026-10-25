@@ -49,7 +49,7 @@
     "already": {
       "meta": "Cueilli {date} · {status}",
       "open": "Ouvrir dans Pluck",
-      "again": "Le cueillir à nouveau"
+      "again": "Cueillir à nouveau"
     },
     "plucked": {
       "title": "Cueilli",
@@ -61,10 +61,10 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Chercher dans vos tags",
-      "kind": "Genre",
+      "kind": "Type",
       "toList": "Dans la liste",
       "noList": "Aucune",
-      "lastUsed": "{name} (la dernière utilisée)",
+      "lastUsed": "{name} (dernière utilisée)",
       "note": "Note",
       "notePlaceholder": "Une note, si vous voulez",
       "later": "Plus tard",
@@ -73,9 +73,9 @@
     },
     "tabs": {
       "listName": "Onglets du {date}",
-      "all": "{count, plural, one {Cueillir # onglet dans une nouvelle liste, «  {name}  »} other {Cueillir les # onglets dans une nouvelle liste, «  {name}  »}}",
+      "all": "{count, plural, one {Cueillir # onglet dans une nouvelle liste, « {name} »} other {Cueillir les # onglets dans une nouvelle liste, « {name} »}}",
       "plucking": "Cueillette…",
-      "done": "{count, plural, one {# onglet cueilli dans «  {name}  ».} other {# onglets cueillis dans «  {name}  ».}}",
+      "done": "{count, plural, one {# onglet cueilli dans « {name} ».} other {# onglets cueillis dans « {name} ».}}",
       "failed": "Pluck injoignable. Réessayez dans un instant."
     }
   },
@@ -83,7 +83,7 @@
     "title": "Options de Pluck",
     "shortcut": "Raccourci : Alt+Shift+P · modifiable dans la page des raccourcis de votre navigateur",
     "server": "Serveur",
-    "defaultKind": "Genre par défaut",
+    "defaultKind": "Type par défaut",
     "guess": "Deviner d’après la page",
     "account": "Compte",
     "apiKey": "Clé d’API",

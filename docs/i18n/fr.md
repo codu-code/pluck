@@ -12,7 +12,7 @@ France French. The brand "Pluck" never changes. Everything else follows this tab
 | a pluck (noun, "3 plucks queued") | une cueillette | The natural noun for *cueillir*. Used for queued or recent plucks; elsewhere we say *élément*. "Plucking…" is *Cueillette…* | – |
 | Pluck it (button) | Cueillir | Infinitive on buttons, the French UI convention. Slogans use the imperative: *Cueillez.* | Apple, Gmail: infinitive buttons ("Archiver", "Partager") |
 | Item | élément | The neutral word French apps use for one thing in a list; masculine, so participles agree simply. Never *favori*, *signet* or *fiche*. | Apple (Rappels, Fichiers), Todoist, Notion: "élément" |
-| Kind | genre | The English avoids "Type" and "Category"; *genre* is the plain word for "kind" and avoids *type* and *catégorie* the same way. | – |
+| Kind | type | *Type* is the everyday French word for "kind" (*type de fichier*) and what French users expect on a filter or a picker. *Genre* was rejected in review: it reads as music or film genre, and *changer le genre* also means "change the gender". The English avoids "Type" for English reasons that do not carry over. Never *catégorie*. | Apple Fichiers, Notion FR: "Type" |
 | Read | À lire | The Kind names say what you will do with the Item, like the English verbs. | Safari's reading list and French reading apps use "à lire" |
 | Watch | À voir | Same pattern as Read. | Streaming apps: "À voir" lists |
 | PDF | PDF | Unchanged. | – |
@@ -35,6 +35,7 @@ France French. The brand "Pluck" never changes. Everything else follows this tab
 | Handle | pseudo | What French users call a public @name. Not *nom d'utilisateur* (the English avoids "username"). | X, Twitch FR: "pseudo" |
 | Bin | corbeille | The standard French word for deleted things. | macOS, Gmail FR: "Corbeille" |
 | Expiry | expiration | | – |
+| untouched | laissé de côté (sort: *Délaissés d’abord*) | Says what happened without the clumsy *non touché*. In full sentences *auxquels vous n’avez pas touché* is also fine. | – |
 | Highlight | surlignage (verb: surligner) | | Kindle FR, Apple Books FR: "surlignage" |
 | kept page | page gardée / conservée | *garder* in UI copy, *conserver* in Privacy and Terms. Never *sauvegardée* or *en cache*. | – |
 | Email-in | E-mail entrant | Says what it is, short enough for a settings row. | – |
@@ -47,7 +48,7 @@ France French. The brand "Pluck" never changes. Everything else follows this tab
 
 - **Vous, not tu.** In France, Apple, Google, Todoist, Notion, Raindrop and most consumer apps say *vous*. *Tu* reads young-brand or casual-chat, and Pluck's English is warm but not matey. The warmth comes from short sentences and plain words.
 - **Exception: what the user says to their AI.** Example prompts the user types to an AI tool ("Range ma boîte de réception.", "Fais ma revue de la semaine.") use *tu*, because that is how French users talk to a chatbot. In the mock chats the AI answers in *tu* to match. Pluck itself never says *tu* to the user.
-- **Avoid gendered agreement with the user.** Write "si c'est votre première fois", "après une nouvelle connexion", "les modifications restent entre vos mains" rather than "connecté(e)", "nouveau", "vous seul(e)". A few fixed UI phrases keep the usual generic form ("Connecté en tant que…").
+- **Avoid gendered agreement with the user.** Write "si c'est votre première fois", "après une nouvelle connexion", "elle n’est modifiable que par vous" rather than "connecté(e)", "nouveau", "vous seul(e)". A few fixed UI phrases keep the usual generic form ("Connecté en tant que…").
 - **Buttons are infinitives** (*Cueillir*, *Archiver*, *Tout exporter*). Titles and slogans may use the imperative (*Cueillez.*, *Triez plus tard.*).
 - **Expiry copy** always says the Item *passe aux Archives* and *rien n'est supprimé*.
 - **Words we avoid** because the English does: *enregistrer/sauvegarder* (for plucking), *favori/signet/marque-page* (except the browser's own "Favoris" in Import, and in the App Store keywords, where people search for them), *collection*, *intelligent*, *propulsé par l'IA*, *magique*. *Enregistrer* stays for saving a setting or a note, where the English also says "Save".
@@ -64,3 +65,5 @@ French capitalizes only the first word of a label: *Boîte de réception*, *Plus
 - Typographic apostrophe ’ everywhere. It also keeps ICU from reading a straight `'` as an escape.
 - Times are written the French way: `à 6 h` for 06:00.
 - Keyboard combinations stay as in English (`Alt+Shift+P`, `Shift+J`, the single-letter keys `a`, `l`, `t`, `/`). The key names in prose are the French keyboard's: *Entrée*, *Échap*.
+
+- The App Store name uses an en dash (`Pluck – à lire plus tard`) rather than a colon, so it needs no narrow space that App Store Connect might mangle.
