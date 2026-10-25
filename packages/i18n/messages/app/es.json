@@ -38,7 +38,7 @@
       "yesterday": "Ayer"
     },
     "ago": {
-      "now": "justo ahora",
+      "now": "ahora mismo",
       "minutes": "hace {n} min",
       "hours": "hace {n} h",
       "yesterday": "ayer",
@@ -116,13 +116,13 @@
   },
   "error": {
     "title": "Algo se rompió",
-    "lede": "Es culpa nuestra, no tuya. No se ha perdido nada de lo que recogiste. Vuelve a intentarlo y, si sigue pasando, avísanos.",
+    "lede": "Es culpa nuestra, no tuya. No se perdió nada de lo que recogiste. Vuelve a intentarlo y, si sigue pasando, avísanos.",
     "tryAgain": "Reintentar",
-    "report": "Informar"
+    "report": "Avisarnos"
   },
   "globalError": {
     "title": "Algo se rompió",
-    "lede": "Es culpa nuestra, no tuya. No se ha perdido nada de lo que recogiste. Vuelve a intentarlo en un momento.",
+    "lede": "Es culpa nuestra, no tuya. No se perdió nada de lo que recogiste. Vuelve a intentarlo en un momento.",
     "tryAgain": "Reintentar"
   },
   "notFound": {
@@ -133,7 +133,7 @@
   },
   "offline": {
     "title1": "Sin conexión.",
-    "title2": "No perdido",
+    "title2": "Sin perder nada",
     "lede": "Las páginas que abriste hace poco siguen aquí, y todo lo que recojas ahora espera en este dispositivo hasta que vuelvas.",
     "tryAgain": "Reintentar",
     "openInbox": "Abrir la Bandeja de entrada",
@@ -181,13 +181,13 @@
       "sending": "Enviando",
       "again": "Enviarlo de nuevo",
       "different": "Usar otro correo",
-      "spam": "¿No llega nada en un minuto? Mira en spam y vuelve a enviarlo."
+      "spam": "¿No llega nada en un minuto? Revisa la carpeta de spam y vuelve a enviarlo."
     },
     "aiTitle": "Inicia sesión para conectar tu IA",
     "aiLede": "Te enviamos un enlace por correo. Una vez dentro, eliges qué puede hacer tu herramienta de IA.",
     "title1": "Un enlace.",
     "title2": "Sin contraseña",
-    "lede": "Escribe tu correo y te enviamos un enlace. Inicia tu sesión, o crea tu biblioteca si eres nuevo.",
+    "lede": "Escribe tu correo y te enviamos un enlace. Con él inicias sesión o, si es tu primera vez, empiezas tu biblioteca.",
     "email": "Correo",
     "emailPlaceholder": "tu@ejemplo.com",
     "password": "Contraseña",
@@ -216,7 +216,7 @@
     "lede": "No cambió nada en tu Pluck. Casi siempre se arregla empezando de nuevo.",
     "step1": "Vuelve a iniciar la conexión desde tu herramienta de IA.",
     "step2": "¿Sigue fallando? Quita Pluck allí y vuelve a añadirlo con el enlace de <connect>Conecta tu IA</connect>.",
-    "step3": "¿Sigues atascado? En <support>Ayuda</support> está el resto.",
+    "step3": "¿Sigue sin funcionar? En <support>Ayuda</support> encontrarás más.",
     "serverSaid": "Lo que dijo el servidor, por si tu herramienta de IA lo pide"
   },
   "consent": {
@@ -285,7 +285,7 @@
         "title": "De vuelta donde estaba"
       },
       "stop": {
-        "title": "No más correos semanales",
+        "title": "Sin más correos semanales",
         "line": "Vuelve a activarlos en Ajustes cuando quieras."
       },
       "archiveAll": {
@@ -326,9 +326,9 @@
   },
   "extensionConnected": {
     "title": "Conectada",
-    "lede": "Ya puedes recoger desde tu navegador. Cierra esta pestaña; a partir de ahora, cualquier página está a una tecla.",
+    "lede": "Ya puedes recoger desde tu navegador. Cierra esta pestaña; a partir de ahora, cualquier página está a un atajo de distancia.",
     "page": "Recoge la página en la que estás. En Mac, Alt es Opción.",
-    "selection": "Recoge lo que seleccionaste, conservado como destacado."
+    "selection": "Recoge lo que seleccionaste y lo conserva como destacado."
   },
   "shell": {
     "main": "Principal",
@@ -357,7 +357,7 @@
     "title": "Aún no has recogido nada.",
     "lede": "Tres formas de empezar. La primera tarda un segundo.",
     "one": {
-      "title": "Pulsa Recógelo, arriba",
+      "title": "Pulsa Recógelo, aquí arriba",
       "body": "El enlace de ejemplo ya está ahí. Míralo llegar."
     },
     "two": {
@@ -377,7 +377,7 @@
     "close": "Cerrar",
     "keys": {
       "search": "Buscar",
-      "pluckBox": "Caja de Pluck",
+      "pluckBox": "Campo de Pluck",
       "move": "Bajar y subir",
       "open": "Abrir",
       "later": "Más tarde (o volver a la Bandeja de entrada)",
@@ -386,7 +386,7 @@
       "tag": "Etiquetar",
       "list": "Añadir a una lista",
       "select": "Seleccionar",
-      "escape": "Borrar la selección, o volver",
+      "escape": "Quitar la selección, o volver",
       "help": "Esta lista"
     }
   },
@@ -420,7 +420,7 @@
   },
   "cookies": {
     "title": "¿Una cookie?",
-    "body": "Ya hay dos que mantienen tu sesión iniciada y guardan lo que pegaste. Esta nos muestra cómo se usa Pluck, para que arreglemos lo que estorba. Sin anuncios. Sin vender nada. No te sigue a ninguna parte.",
+    "body": "Ya hay dos que mantienen tu sesión iniciada y guardan lo que pegaste. Esta nos muestra cómo se usa Pluck, para que arreglemos lo que estorba. Sin anuncios. Sin vender tus datos. No te sigue a ninguna parte.",
     "no": {
       "button": "Mejor no",
       "title": "Entendido.",
@@ -438,7 +438,7 @@
     "label": "Alguien pega el enlace de Pluck en su herramienta de IA, lo permite en la pantalla de Pluck, luego pregunta qué recogió sobre la autenticación de MCP y recibe tres de sus elementos.",
     "cap1": {
       "title": "Pega un enlace",
-      "body": "En cualquier herramienta de IA que hable MCP."
+      "body": "En cualquier herramienta de IA compatible con MCP."
     },
     "cap2": {
       "title": "Di que sí",
@@ -471,7 +471,7 @@
       "title": "Deja entrar a tu IA",
       "body": "Tu herramienta de IA pide usar tu biblioteca de Pluck. Solo cambia cosas cuando se lo pides, y marca lo que tocó.",
       "read": "Leer y buscar en tu biblioteca",
-      "write": "Recoger, etiquetar y ordenar, marcado como IA",
+      "write": "Recoger, etiquetar y ordenar, marcado “por IA”",
       "delete": "Eliminar cualquier cosa",
       "cancel": "Cancelar",
       "allow": "Permitir"
@@ -503,7 +503,7 @@
   },
   "topBar": {
     "queued": "Recogido. Se sincronizará cuando vuelvas a tener conexión.",
-    "rejected": "{count} no se pudieron recoger: {reason}",
+    "rejected": "{count, plural, one {# no se pudo recoger} other {# no se pudieron recoger}}: {reason}",
     "failed": "No se pudo completar.",
     "label": "Pluck",
     "placeholder": "Pega uno o varios enlaces, o escribe una nota",
@@ -516,7 +516,7 @@
   },
   "itemList": {
     "inbox": {
-      "subtitle": "{count} por revisar · {sort, select, newest {lo más reciente primero} other {lo no tocado primero}}"
+      "subtitle": "{count} por revisar · {sort, select, newest {más recientes primero} other {sin tocar primero}}"
     },
     "later": {
       "subtitle": "Conservado a propósito",
@@ -541,9 +541,9 @@
     "stopFilter": "Dejar de filtrar por {name}",
     "bulk": {
       "label": "Acciones en bloque",
-      "selected": "{count} seleccionados",
+      "selected": "{count, plural, one {# seleccionado} other {# seleccionados}}",
       "addToList": "Añadir a una lista",
-      "clear": "Borrar selección"
+      "clear": "Quitar selección"
     },
     "actions": {
       "inbox": "Entrada",
@@ -582,8 +582,8 @@
       "label": "Filtrar",
       "all": "Todo",
       "you": "Por ti",
-      "expired": "Caducado",
-      "import": "Importado"
+      "expired": "Caducados",
+      "import": "Importados"
     },
     "why": {
       "bin": "eliminado, desaparece para siempre en {days, plural, one {# día} other {# días}}",
@@ -597,7 +597,7 @@
     "outOfBin": "Fuera de la papelera.",
     "title": "Archivo",
     "bin": "Papelera",
-    "binSubtitle": "Lo que eliminaste. Cada cosa desaparece para siempre 30 días después de eliminarla.",
+    "binSubtitle": "Lo que eliminaste. Cada elemento desaparece para siempre 30 días después de eliminarlo.",
     "subtitle": "Todo lo que archivaste, terminaste o dejaste caducar. Nunca se borra nada, y la búsqueda lo sigue encontrando.",
     "rowsLabel": "Elementos archivados",
     "restore": "Restaurar",
@@ -627,7 +627,7 @@
     "results": "Resultados",
     "snippet": "{pre}<mark>{hit}</mark>{post}",
     "noteSnippet": "Tu nota: “{pre}<mark>{hit}</mark>{post}”",
-    "none": "Nada coincide con “{q}”. La búsqueda busca las palabras exactas.",
+    "none": "No hay resultados para “{q}”. La búsqueda encuentra las palabras tal como las escribes.",
     "ask": "¿Lo buscas por su significado? Pregúntale a tu IA.",
     "copy": "Copiar “{prompt}”"
   },
@@ -656,7 +656,7 @@
     "notYet": "Todavía no",
     "shared": {
       "title": "Compartidas contigo",
-      "meta": "De {from} · {count, plural, one {# elemento} other {# elementos}} · solo ver"
+      "meta": "De {from} · {count, plural, one {# elemento} other {# elementos}} · solo lectura"
     },
     "foot": "Los elementos de una lista nunca caducan. Una lista es un plan."
   },
@@ -712,7 +712,7 @@
   },
   "admin": {
     "title": "Denuncias",
-    "open": "{count} abiertas",
+    "open": "{count, plural, one {# abierta} other {# abiertas}}",
     "empty": "Nada que revisar.",
     "table": {
       "list": "Lista",
@@ -755,13 +755,13 @@
     "about": "Sobre esta {kind, select, note {nota} todo {tarea} other {cosa}}",
     "kind": "Tipo",
     "kindHint": {
-      "note": "Conviértela en Tarea para añadir una fecha de vencimiento y una marca.",
+      "note": "Conviértela en Tarea para añadirle fecha de vencimiento y casilla.",
       "todo": "Una Tarea puede tener fecha de vencimiento. Hecho la saca de la Bandeja de entrada.",
-      "thing": "Una Cosa es algo que conseguir. Las listas son donde se reúnen."
+      "thing": "Una Cosa es algo que conseguir. Las Cosas se reúnen en las listas."
     },
     "due": "Vence",
     "source": "Origen: {via}",
-    "pasteBox": "caja de pegado de la web",
+    "pasteBox": "campo para pegar de la web",
     "noHighlights": "Las notas no tienen destacados. Selecciona texto para copiarlo."
   },
   "reader": {
@@ -816,7 +816,7 @@
       "connector": "URL del conector, para Claude, ChatGPT, Cursor y cualquier cliente MCP",
       "connectorCopied": "URL del conector copiada.",
       "commandCopied": "Comando copiado.",
-      "selfHost": "Autoalojado sin URL pública",
+      "selfHost": "Autoalojamiento sin URL pública",
       "needKey": "Crea una clave de API abajo y úsala aquí.",
       "test": "Probarlo",
       "testHint": "Copia “{prompt}” para tu IA",
@@ -825,7 +825,7 @@
       "notConnected": "Aún sin conectar",
       "readsWrites": "lee y organiza",
       "reads": "lee",
-      "disconnected": "{name} desconectada. Ya no puede acceder a tu biblioteca.",
+      "disconnected": "Se desconectó {name}. Ya no puede acceder a tu biblioteca.",
       "disconnect": "Desconectar"
     },
     "expiry": {
@@ -857,7 +857,7 @@
       }
     },
     "tags": {
-      "merged": "“{name}” combinada con “{into}”.",
+      "merged": "“{name}” ahora forma parte de “{into}”.",
       "deleted": "“{name}” ya no existe. Sus elementos siguen aquí.",
       "purged": "{count, plural, one {Se quitó # etiqueta} other {Se quitaron # etiquetas}} que tu IA añadió esta semana.",
       "title": "Etiquetas",
@@ -909,9 +909,9 @@
       "formats": "CSV de Pocket · zip de Omnivore · CSV de Raindrop · HTML de marcadores",
       "file": "Archivo para importar",
       "job": "Importación de {source}",
-      "progress": "{done, number} hechos",
-      "progressFailed": "{done, number} hechos · {failed, number} fallidos",
-      "done": "Listo. Los elementos importados están en tu Archivo, en Importado, y se pueden buscar.",
+      "progress": "{done, plural, one {# importado} other {# importados}}",
+      "progressFailed": "{done, plural, one {# importado} other {# importados}} · {failed, plural, one {# fallido} other {# fallidos}}",
+      "done": "Listo. Los elementos importados están en tu Archivo, en Importados, y se pueden buscar.",
       "running": "Se ejecuta en segundo plano. Puedes cerrar la página.",
       "export": {
         "title": "Exportar",
@@ -923,7 +923,7 @@
     },
     "deleteAccount": {
       "title": "Eliminar cuenta",
-      "lede": "Cada elemento, etiqueta, nota y clave. Exporta antes.",
+      "lede": "Todos tus elementos, etiquetas, notas y claves. Exporta antes.",
       "type": "Escribe {email} para confirmar",
       "now": "Eliminar todo ahora",
       "action": "Eliminar todo. En serio."

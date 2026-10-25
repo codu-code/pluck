@@ -29,7 +29,7 @@
     "checkEmail": "Revisa tu correo.",
     "took": "Tardó {ms, number} ms.",
     "sent": "Enviamos un enlace a <b>{email}</b>. Ábrelo en este navegador y lo que recogiste llegará a tu Bandeja de entrada.",
-    "keepNote": "Añade tu correo para conservarlo. Seas nuevo o no, el enlace inicia tu sesión.",
+    "keepNote": "Añade tu correo para conservarlo. Si es tu primera vez o si vuelves, el enlace inicia tu sesión.",
     "emailLabel": "Tu correo, para conservar lo que recogiste",
     "emailPlaceholder": "tu@ejemplo.com",
     "sending": "Enviando",
@@ -90,15 +90,15 @@
     "stats": {
       "tapNumber": "1 toque",
       "tap": "Desde el menú Compartir del iPhone, sin abrir ninguna app. Desde Chrome, tu correo o un chat con tu IA. “Recogido” en menos de 300 ms. Siempre.",
-      "nagsNumber": "0 avisos",
+      "nagsNumber": "0 agobios",
       "nags": "Sin rachas, sin insignias, sin culpa. Nada se etiqueta a tus espaldas. Lo que nunca tocas pasa al Archivo después de 30 días (tú eliges el número), a menos que esté en una lista. No se borra nada.",
       "secondsNumber": "30 s",
-      "seconds": "Para conectar la IA que ya usas. Claude, ChatGPT, Cursor, cualquiera que hable MCP. Pídele que ordene, agrupe o convierta lo que recogiste en ideas. Trabaja mientras miras, y nunca elimina."
+      "seconds": "Para conectar la IA que ya usas. Claude, ChatGPT, Cursor o cualquiera compatible con MCP. Pídele que ordene, agrupe o convierta lo que recogiste en ideas. Trabaja mientras miras, y nunca elimina."
     },
     "lists": {
       "title": "Las listas son lo que estás preparando.",
       "para1": "Un libro. Un número de tu boletín. Una charla. Un viaje. <phrase>Cosas que comprar.</phrase> Pon cualquier elemento en tantas listas como quieras, cada una con su propia nota y su marca.",
-      "para2": "Privadas por defecto. Públicas con un interruptor. Vuelve atrás con el mismo interruptor.",
+      "para2": "Privadas por defecto. Públicas con un interruptor. Y privadas otra vez con el mismo interruptor.",
       "cardTitle": "Reforma de la cocina, para comprar",
       "progress": "{done, number} de {total, number}",
       "kitchen": {
@@ -119,7 +119,7 @@
           "note": "Preguntar antes a los instaladores por la pared."
         }
       },
-      "public": "Pública. Cualquiera puede recogerla en la suya."
+      "public": "Pública. Cualquiera puede recogerla en su Pluck."
     },
     "ai": {
       "eyebrow": "LISTO PARA TU IA",
@@ -131,12 +131,12 @@
       "button": "Cómo funciona con IA",
       "chatMe1": "Recoge esto como idea: un servidor MCP para los presupuestos de Assemble",
       "chatAi1": "Recogido. Está en tu bandeja de entrada como Nota, marcado como recogido por mí.",
-      "chatMe2": "¿Qué se está quedando olvidado en mi biblioteca?",
+      "chatMe2": "¿Qué tengo olvidado en mi biblioteca?",
       "chatAi2": "Cinco cosas sin tocar desde hace un mes. ¿Las repasamos una por una?"
     },
     "imports": {
       "title": "Pocket cerró. Omnivore cerró.",
-      "body": "Pluck es de código abierto y funciona sobre una base de datos que puede ser tuya. No puede cerrar avisando con dos semanas. Trae tu biblioteca anterior de una sola vez.",
+      "body": "Pluck es de código abierto y funciona sobre una base de datos que puede ser tuya. No puede cerrar con dos semanas de aviso. Trae tu biblioteca anterior de una sola vez.",
       "anyBrowser": "Cualquier navegador",
       "pocket": "Exportación CSV",
       "omnivore": "Zip de exportación",
@@ -168,7 +168,7 @@
         "title": "Pluck para iPhone · Pluck",
         "description": "Pluck para iPhone llega primero a TestFlight y después a la App Store."
       },
-      "para1": "Pluck para iPhone llega primero a TestFlight y después a la App Store. Recoge desde el menú Compartir, lee en cualquier sitio, desliza para Más tarde.",
+      "para1": "Pluck para iPhone llega primero a TestFlight y después a la App Store. Recoge desde el menú Compartir, lee en cualquier sitio, desliza para mandarlo a Más tarde.",
       "para2": "Mientras tanto, Pluck funciona en Safari en tu teléfono: pega un enlace y queda recogido. Tu IA también puede recoger por ti."
     }
   },
@@ -181,7 +181,7 @@
     "title": "Gratis.<br></br>Abierto.<br></br><marker>Tuyo.</marker>",
     "lede": "Las apps para leer más tarde no paran de cerrar. Pluck no puede, porque el código es público y los datos son tuyos. Usa el nuestro, o ejecuta el tuyo con un solo comando.",
     "selfHostTitle": "Alójalo tú con un solo comando.",
-    "selfHostBody": "La misma app, la extensión, la app de iPhone y el conector de IA. Apúntalos a tu servidor en Ajustes.",
+    "selfHostBody": "La misma app, la extensión, la app de iPhone y el conector de IA. Indícales tu servidor en Ajustes.",
     "terminalComment": "# después, para herramientas de IA sin URL pública",
     "reasons": {
       "export": {
@@ -362,7 +362,7 @@
     "toolsBody": "Los resultados llegan como tarjetas, con el título primero, así que una pregunta como “qué recogí esta semana” es una llamada y una pantalla.",
     "toolList": {
       "search_items": "Búsqueda de texto en título, nota, etiquetas, nombres de listas y texto.",
-      "list_items": "Explora la Bandeja de entrada, Más tarde, Archivo o Hecho, lo más reciente o lo no tocado primero.",
+      "list_items": "Explora la Bandeja de entrada, Más tarde, el Archivo o Hecho, con lo más reciente o lo que lleva más tiempo sin tocar primero.",
       "get_item": "Un elemento completo, incluido el texto conservado de la página.",
       "save_item": "Recoge un enlace, varios enlaces, una nota, una tarea o una cosa. Marcado como recogido por IA.",
       "batch_update": "Estado, tipo, etiquetas y fechas de vencimiento de uno o varios elementos.",
@@ -378,15 +378,15 @@
     "asks": {
       "tidy": {
         "say": "“Ordena mi bandeja de entrada de Pluck.”",
-        "does": "Propone etiquetas a partir de las que ya tienes, y conservar, más tarde o archivar para cada elemento. Tú dices que sí o lo editas. Un solo lote."
+        "does": "Propone etiquetas de entre las que ya tienes y, para cada elemento, si conservarlo, dejarlo para más tarde o archivarlo. Tú dices que sí o lo editas. Todo en un solo lote."
       },
       "reading": {
         "say": "“Haz una lista de lectura sobre autenticación de MCP, lo mejor primero.”",
-        "does": "Busca, lee y arma la lista en orden, con una línea sobre por qué importa cada elemento. Privada hasta que digas lo contrario."
+        "does": "Busca, lee y crea la lista en orden, con una línea sobre por qué importa cada elemento. Privada hasta que digas lo contrario."
       },
       "ideas": {
         "say": "“Tres ideas para el blog a partir de lo que recogí esta semana.”",
-        "does": "Lee completos los cinco mejores y redacta tres enfoques con fuentes. Elige uno y recoge el borrador de vuelta como Nota."
+        "does": "Lee completos los cinco mejores y redacta tres enfoques con fuentes. Elige uno y recoge el borrador en tu Pluck como Nota."
       },
       "review": {
         "say": "“Haz mi revisión semanal.”",
@@ -401,9 +401,9 @@
       "purpose": "Reescribir el propósito de una lista.",
       "public": "Hacer pública una lista. Solo tú puedes, desde la lista en Pluck."
     },
-    "neverNote": "Todo lo que añade lleva una marca “por IA”. En Ajustes quitas una semana entera de una vez.",
+    "neverNote": "Todo lo que añade lleva la marca “por IA”. En Ajustes puedes quitar lo de toda una semana con un toque.",
     "closing": "Pregúntale a tu IA<mark>.</mark>",
-    "button": "Consigue Pluck y conéctala"
+    "button": "Consigue Pluck y conecta tu IA"
   },
   "legal": {
     "translationNotice": "Esto es una traducción. Si difiere de la versión en inglés, prevalece la versión en inglés."
@@ -438,7 +438,7 @@
       },
       "sharing": {
         "title": "Compartir una Lista",
-        "body": "Cuando compartes una Lista con alguien, guardamos la dirección de correo que escribiste para que esa persona pueda iniciar sesión y verla, y le enviamos un correo para avisarle. Ve la Lista tal como la muestra una página pública: títulos, sitios, portadas y tus notas de la Lista, nunca tus etiquetas, tus marcas ni las páginas que conservamos. Si la quitas, eliminas la Lista o eliminas tu cuenta, la dirección también se elimina."
+        "body": "Cuando compartes una Lista con alguien, guardamos la dirección de correo que escribiste para que esa persona pueda iniciar sesión y verla, y le enviamos un correo para avisarle. Ve la Lista tal como la muestra una página pública: títulos, sitios, portadas y tus notas de la Lista, nunca tus etiquetas, tus marcas ni las páginas que conservamos. Si quitas a esa persona, eliminas la Lista o eliminas tu cuenta, la dirección también se elimina."
       },
       "emailIn": {
         "title": "Correo entrante",
@@ -469,10 +469,10 @@
   "terms": {
     "meta": {
       "title": "Términos · Pluck",
-      "description": "Es tu biblioteca, sé respetuoso con las listas públicas, y siempre puedes exportar y alojarlo tú."
+      "description": "Es tu biblioteca, usa las listas públicas con respeto y siempre puedes exportar y alojarlo tú."
     },
     "title": "Términos",
-    "lede": "En resumen: es tu biblioteca, sé respetuoso con las listas públicas, y no podemos prometer que el servicio gratuito dure para siempre, por eso puedes exportar y alojarlo tú. Última actualización: 24 de octubre de 2026.",
+    "lede": "En resumen: es tu biblioteca, usa las listas públicas con respeto, y no podemos prometer que el servicio gratuito dure para siempre, por eso puedes exportar y alojarlo tú. Última actualización: 24 de octubre de 2026.",
     "sections": {
       "service": {
         "title": "El servicio",
@@ -484,7 +484,7 @@
       },
       "library": {
         "title": "Tu biblioteca es tuya",
-        "body": "Eres dueño de lo que recoges y de lo que escribes. No reclamamos ningún derecho sobre ello. Lo almacenamos y te lo mostramos a ti, y a otras personas solo cuando haces pública una lista. Puedes exportarlo todo en cualquier momento."
+        "body": "Lo que recoges y lo que escribes es tuyo. No reclamamos ningún derecho sobre ello. Lo almacenamos y te lo mostramos a ti, y a otras personas solo cuando haces pública una lista. Puedes exportarlo todo en cualquier momento."
       },
       "publicLists": {
         "title": "Listas públicas",
@@ -504,7 +504,7 @@
       },
       "wayOut": {
         "title": "Sin promesas, pero con salida",
-        "body": "El servicio alojado es gratuito y se ofrece tal cual. Haremos lo posible para que sea rápido y esté disponible, pero no podemos garantizarlo, ni garantizar que funcione para siempre. Si alguna vez tenemos que cerrarlo, avisaremos con al menos 90 días de antelación, mantendremos Exportar funcionando hasta el último día, y la opción de alojarlo tú siempre existirá. Nuestra responsabilidad ante ti se limita a la cantidad que nos hayas pagado, que es nada."
+        "body": "El servicio alojado es gratuito y se ofrece tal cual. Haremos lo posible para que sea rápido y esté disponible, pero no podemos garantizarlo, ni garantizar que funcione para siempre. Si alguna vez tenemos que cerrarlo, avisaremos con al menos 90 días de antelación, mantendremos Exportar funcionando hasta el último día, y la opción de alojarlo tú siempre existirá. Nuestra responsabilidad ante ti se limita a la cantidad que nos hayas pagado, es decir, nada."
       },
       "law": {
         "title": "Cambios y legislación",
@@ -525,7 +525,7 @@
     "what": "¿Qué es Pluck?",
     "byline": "Una lista de {by} · {count, plural, one {# elemento} other {# elementos}} · actualizada {when}",
     "ago": {
-      "now": "justo ahora",
+      "now": "ahora mismo",
       "minutes": "hace {count, number} min",
       "hours": "hace {count, number} h",
       "yesterday": "ayer",
@@ -541,7 +541,7 @@
     "og": "Una lista de {by} · {count, plural, one {# elemento} other {# elementos}}",
     "notFound": {
       "title": "<line>Esta Lista</line><line>no es pública<dot>.</dot></line>",
-      "lede": "O ya no existe, o su propietario la hizo privada. Si alguien te envió el enlace, pídele que la comparta contigo, o que vuelva a hacerla pública.",
+      "lede": "O ya no existe, o quien la creó la hizo privada. Si alguien te envió el enlace, pídele que la comparta contigo, o que vuelva a hacerla pública.",
       "what": "¿Qué es Pluck?",
       "lists": "Tus Listas"
     },

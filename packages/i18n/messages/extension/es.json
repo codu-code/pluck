@@ -56,7 +56,7 @@
       "undo": "Deshacer",
       "tips": {
         "opening": "Al abrir esto, la página queda conservada. Ese es todo el truco.",
-        "shortcut": "Alt+Shift+P lo hace sin hacer clic.",
+        "shortcut": "Alt+Shift+P hace lo mismo sin clic.",
         "rightClick": "Haz clic derecho en un enlace o una imagen para recoger solo eso."
       },
       "tags": "Etiquetas",
@@ -64,7 +64,7 @@
       "kind": "Tipo",
       "toList": "A una lista",
       "noList": "Ninguna",
-      "lastUsed": "{name} (la última que usaste)",
+      "lastUsed": "{name} (la última usada)",
       "note": "Nota",
       "notePlaceholder": "Una nota, si quieres",
       "later": "Más tarde",

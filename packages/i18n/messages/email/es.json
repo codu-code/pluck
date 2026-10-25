@@ -21,11 +21,11 @@
   "welcome": {
     "subject": "Gracias por probar Pluck",
     "hi": "Hola:",
-    "intro": "Soy Niall y hago Pluck. Gracias por registrarte. Quería saludarte yo mismo.",
+    "intro": "Soy Niall, la persona detrás de Pluck. Gracias por registrarte. Quería saludarte yo mismo.",
     "plucked": "Veo que ya recogiste tus primeras cosas, así que conoces lo principal: un toque desde donde estés, y Pluck te conserva la página.",
     "fresh": "La forma más rápida de empezar es recoger algo que tenías pensado leer esta semana: pega su enlace arriba en tu Bandeja de entrada y Pluck te conserva la página.",
     "connect": "Algo que mucha gente descubre tarde: tu IA puede leer todo lo que recoges. Conecta Pluck a Claude, ChatGPT o Cursor en unos treinta segundos y pregúntale qué recogiste esta semana: {url}",
-    "expiry": "Y si desapareces un tiempo, no se pierde nada. Los elementos que llevan {days, plural, =1 {# día} other {# días}} sin tocar pasan al Archivo, y no se borra nada.",
+    "expiry": "Y si pasas un tiempo sin entrar, no se pierde nada. Los elementos que llevan {days, plural, =1 {# día} other {# días}} sin tocar pasan al Archivo, y no se borra nada.",
     "ask": "¿Puedo pedirte una cosa? Responde a este correo y cuéntame qué te hizo probar Pluck, o qué esperabas que hiciera. Me llega directamente a mí y leo todas las respuestas.",
     "signature": "Niall"
   },
@@ -72,10 +72,10 @@
       "text": "¿Prefieres hacerlo con tu IA? Dile \"haz mi revisión semanal\". La misma lista, una decisión cada vez."
     },
     "footer": {
-      "note": "Los enlaces funcionan durante 7 días, sin iniciar sesión. Reglas sencillas, ningún modelo.",
+      "note": "Los enlaces funcionan durante 7 días, sin iniciar sesión. Reglas sencillas, sin modelos de IA.",
       "changeDay": "Cambiar el día",
       "stop": "No recibir más",
-      "text": "Los enlaces funcionan durante 7 días, sin iniciar sesión. Reglas sencillas, ningún modelo. Cambiar el día: {settings} . No recibir más: {stop}"
+      "text": "Los enlaces funcionan durante 7 días, sin iniciar sesión. Reglas sencillas, sin modelos de IA. Cambiar el día: {settings} . No recibir más: {stop}"
     }
   }
 }

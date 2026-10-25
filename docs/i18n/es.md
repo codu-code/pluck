@@ -42,11 +42,12 @@ One Spanish for Spain and Latin America. It should read naturally in Mexico, Arg
 | Email-in | **Correo entrante** | | |
 | tick (in a List) | **marcar**, ticked = **marcados** | | |
 | triage | **por revisar** | *Triar* is not an everyday word. | |
-| Settings | **Ajustes** | Apple's Spanish name, which the iPhone app sits next to. | iOS, macOS |
+| Settings | **Ajustes** | Short and understood everywhere. Apple says *Ajustes* in Spain but *Configuración* in Latin America, so a string that sends you to the iPhone's own Settings app names both: *Ajustes (o Configuración) de iOS*. Other apps' screens keep their own word (Claude and ChatGPT say *Configuración*). | iOS (Spain), macOS |
 | sign in / sign out | **Iniciar sesión** / **Cerrar sesión** | Universal. | |
 | share sheet | **el menú Compartir**, or just **Compartir** | | Apple support (es) |
 | Archive it all | **Archivarlo todo** | | |
-| Delete (button) | **Eliminar**; nothing is deleted = **no se borra nada** | Apple uses *Eliminar* on buttons. *Borrar* reads more naturally in the promise. | Apple, Gmail |
+| Delete (button) | **Eliminar**; nothing is deleted = **no se borra nada** | Apple uses *Eliminar* on buttons. *Borrar* reads more naturally in the promise, so keep *borrar* for the promise and never use it for something that is not deleted: Clear (a selection) is **Quitar selección**. | Apple, Gmail |
+| see only (a shared List) | **solo lectura** | What Google Drive and Apple say for a view-only share. *Solo ver* reads as a calque. | Google Drive, Apple |
 
 ## Rules that hold in every string
 
@@ -61,4 +62,7 @@ One Spanish for Spain and Latin America. It should read naturally in Mexico, Arg
 - **Numbers and dates** come from the formatter. Weekdays are lowercase in Spanish (*lunes*), so put the article before them: *el {day}*, *vence el {date}*.
 - **Tone:** short, plain and warm, like the English. The cheeky lines are rewritten, not translated word for word: *Gone. Well, archived.* is *Adiós. Bueno, al Archivo.* and *No, really.* is *En serio.*
 - **Pluck off / Pluck it, I'm in** (the consent buttons) are *Mejor no* / *Sí, cuenta conmigo*. The pun does not survive. The Privacy page quotes these labels, so change all three places together.
+- **Speak to everyone:** Spanish words about the reader carry a gender, so rephrase instead of picking one: *si es tu primera vez*, not *si eres nuevo*; *¿Sigue sin funcionar?*, not *¿Sigues atascado?*; *Lo que recoges es tuyo*, not *Eres dueño*.
+- **Regional verbs:** *crear* a List, not *armar* (Latin America) or *montar* (Spain).
+- **Plurals:** a bare count before a noun or adjective (*{count} seleccionados*) needs a plural form in Spanish even where the English has none.
 - **video**, not *vídeo*: the spelling most of Latin America uses, and accepted by the RAE.

@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Idioma",
-    "hint": "Pluck usa el idioma de tu iPhone. Cámbialo en Ajustes de iOS, Pluck, Idioma."
+    "hint": "Pluck usa el idioma de tu iPhone. Cámbialo en Ajustes (o Configuración) de iOS, Pluck, Idioma."
   },
   "common": {
     "cancel": "Cancelar",
@@ -107,12 +107,12 @@
   },
   "usage": {
     "title": "¿Nos ayudas a mejorar Pluck<accent>?</accent>",
-    "body": "Comparte qué pantallas usas, vinculado a tu cuenta, para que arreglemos lo que estorba. Sin anuncios. Sin vender nada. Los informes de fallos se envían en cualquier caso, sin tu nombre.",
+    "body": "Comparte qué pantallas usas, asociadas a tu cuenta, para que arreglemos lo que estorba. Sin anuncios. Sin vender tus datos. Los informes de fallos se envían en cualquier caso, sin tu nombre.",
     "yes": "Sí, cuenta conmigo",
     "no": "Mejor no"
   },
   "items": {
-    "selected": "{count} seleccionados",
+    "selected": "{count, plural, one {# seleccionado} other {# seleccionados}}",
     "all": "Todo",
     "newNote": "Nota nueva",
     "newNoteText": "Nota nueva",
@@ -137,12 +137,12 @@
   "lists": {
     "sharedWithYou": "Compartidas contigo",
     "sharedA11y": "{name}, compartida por {owner}, {count, plural, one {# elemento} other {# elementos}}",
-    "from": "De {owner} · solo ver",
+    "from": "De {owner} · solo lectura",
     "a11y": "{name}, {visibility, select, public {Pública} other {Privada}}, {ticked} de {count} marcados",
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Aún no hay listas.",
-      "body": "Crea una en la web, o pide a tu IA que arme una con lo que recogiste."
+      "body": "Crea una en la web, o pide a tu IA que cree una con lo que recogiste."
     }
   },
   "search": {
@@ -166,7 +166,7 @@
     "yourNote": "Tu nota: <snippet></snippet>",
     "empty": {
       "start": {
-        "title": "Encuéntralo de nuevo.",
+        "title": "Vuelve a encontrarlo.",
         "body": "Títulos, notas, etiquetas, listas y las palabras de la página."
       },
       "error": {
@@ -226,10 +226,10 @@
   "shared": {
     "copied": "Recogido. Tu propia copia está en Listas.",
     "leaveTitle": "¿Salir de esta Lista?",
-    "leaveBody": "Desaparece de tus Listas. Pueden volver a compartirla contigo.",
+    "leaveBody": "Desaparece de tus Listas. Esa persona puede volver a compartirla contigo.",
     "leave": "Salir",
-    "byNamed": "Compartida contigo por {name} (@{handle}) · solo ver",
-    "by": "Compartida contigo por @{handle} · solo ver",
+    "byNamed": "Compartida contigo por {name} (@{handle}) · solo lectura",
+    "by": "Compartida contigo por @{handle} · solo lectura",
     "notShared": {
       "title": "No está compartida contigo.",
       "body": "O esta Lista ya no existe, o no está compartida con {email}. Si alguien te envió el enlace, pídele que la comparta con esa dirección.",
@@ -245,7 +245,7 @@
     "badKey": "Esa clave no funcionó en este servidor.",
     "unreachable": "No se pudo conectar con {origin}.",
     "title": "Un enlace.\nSin contraseña<accent>.</accent>",
-    "lede": "Escribe tu correo y te enviamos un enlace. Inicia tu sesión, o crea tu biblioteca si eres nuevo.",
+    "lede": "Escribe tu correo y te enviamos un enlace. Con él inicias sesión o, si es tu primera vez, empiezas tu biblioteca.",
     "server": "Servidor",
     "key": "Clave de API, si usas una",
     "keyA11y": "Clave de API",
@@ -320,7 +320,7 @@
     "noTagsBody": "Escribe una arriba. Tu IA también puede etiquetar.",
     "noTagsManyBody": "Escribe una arriba.",
     "noLists": "Aún no hay listas.",
-    "noListsBody": "Escribe un nombre arriba para empezar una, o pide a tu IA que arme una.",
+    "noListsBody": "Escribe un nombre arriba para empezar una, o pide a tu IA que cree una.",
     "noListsManyBody": "Escribe un nombre arriba para empezar una.",
     "nothing": "No hay nada en la Bandeja de entrada ni en Más tarde.",
     "nothingBody": "Primero recoge algo. Aparecerá aquí."
@@ -328,7 +328,7 @@
   "item": {
     "back": "Atrás",
     "backArchive": "Archivo",
-    "didntLoad": "Esto no se cargó.",
+    "didntLoad": "No se pudo cargar.",
     "didntLoadBody": "Puede que ya no exista, o que falle la conexión. Vuelve a intentarlo en un rato.",
     "minutesLeft": "{percent} · quedan {minutes} min",
     "openOriginal": "Abrir el original",
@@ -337,7 +337,7 @@
     "pending": "Recogiendo la página. Aparecerá aquí en un momento.",
     "failed": "No se pudo leer esta página.",
     "failedFile": "El archivo se conserva. Sus palabras, no.",
-    "failedPage": "Algunas páginas se guardan sus palabras para sí. El enlace se conserva, y el original sigue abriéndose.",
+    "failedPage": "Algunas páginas se guardan sus palabras para sí. El enlace se conserva, y el original se puede seguir abriendo.",
     "titleA11y": "Título",
     "titleHint": "Deja el título vacío y la primera línea será el título. Se guarda mientras escribes.",
     "textA11y": "Texto",
@@ -397,7 +397,7 @@
     "weeklyTitle": "Enviar el correo semanal el",
     "noWeekly": "Sin correo semanal.",
     "weeklyOn": "El correo semanal llega los {day, select, 0 {domingos} 1 {lunes} 2 {martes} 3 {miércoles} 4 {jueves} 5 {viernes} other {sábados}}.",
-    "expiryFootnote": "Los elementos sin tocar pasan al Archivo, no se borra nada. El correo semanal: lo que se mueve pronto, lo que vence y lo que recogiste y olvidaste.",
+    "expiryFootnote": "Los elementos sin tocar pasan al Archivo, no se borra nada. El correo semanal: lo que pasará pronto al Archivo, lo que vence y lo que recogiste y olvidaste.",
     "tags": "Etiquetas",
     "export": "Exportar todo",
     "byEmail": "Por correo",
@@ -416,12 +416,12 @@
     "iconA11y": "Icono {name}",
     "iconFootnote": "Solo el icono. La app en sí sigue el modo de tu teléfono.",
     "usage": "Compartir cómo uso Pluck",
-    "usageFootnote": "Qué pantallas usas, vinculado a tu cuenta. Nunca lo que recoges. Los informes de fallos se envían en cualquier caso, sin tu nombre.",
+    "usageFootnote": "Qué pantallas usas, asociadas a tu cuenta. Nunca lo que recoges. Los informes de fallos se envían en cualquier caso, sin tu nombre.",
     "tipTitle": "Pon Pluck primero en Compartir",
     "tipBody": "En cualquier app, toca Compartir, desliza la fila de apps hasta Más y arrastra Pluck al principio.",
     "deleteAll": "Eliminar todo. En serio.",
     "deleteTitle": "¿Eliminar todo?",
-    "deleteBody": "Cada elemento, etiqueta, nota y lista, para siempre. Exporta antes si quieres una copia.",
+    "deleteBody": "Todos tus elementos, etiquetas, notas y listas, para siempre. Exporta antes si quieres una copia.",
     "continue": "Continuar",
     "confirmTitle": "Escribe tu correo para confirmar",
     "deleteButton": "Eliminar todo"
