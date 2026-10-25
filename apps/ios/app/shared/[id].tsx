@@ -1,4 +1,4 @@
-import { isTextKind, type Item, type List, type PublicList } from "@pluck/shared-schemas";
+import { isTextKind, withReferral, type Item, type List, type PublicList } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
@@ -97,7 +97,7 @@ export default function SharedList() {
             meta={isTextKind(e.kind) ? tr(`kinds.${e.kind}`) : undefined} // no "by you": it is not
             hideWhen
             coverPath={`/api/v1/shared/${id}/items/${e.id}/cover`}
-            onPress={() => e.url && void WebBrowser.openBrowserAsync(e.url)}
+            onPress={() => e.url && void WebBrowser.openBrowserAsync(withReferral(e.url))}
           />
         )}
       />

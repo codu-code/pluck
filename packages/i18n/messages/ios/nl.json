@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count} geselecteerd",
     "all": "Alles",
-    "newNote": "Nieuwe notitie",
-    "newNoteText": "Nieuwe notitie",
     "settings": "Instellingen",
     "toTriage": "{count} te sorteren",
     "forLater": "{count} voor later",
@@ -503,5 +501,14 @@
       "import": "geïmporteerd",
       "you": "door jou gearchiveerd"
     }
+  },
+  "add": {
+    "title": "Pluk",
+    "placeholder": "Plak een of meer links, of typ een notitie",
+    "submit": "Pluk het",
+    "as": "Pluk als",
+    "queued": "Geplukt. Wordt gesynchroniseerd als je weer online bent.",
+    "failed": "Dat lukte niet.",
+    "plucked": "Geplukt naar de Inbox."
   }
 }

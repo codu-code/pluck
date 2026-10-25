@@ -1,3 +1,4 @@
+import { withReferral } from "@pluck/shared-schemas";
 import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -80,7 +81,7 @@ export default async function PublicListPage({ params }: Params) {
         <ol className={styles.items}>
           {entries.map((e, i) => (
             <li key={e.id}>
-              <ItemRow item={e} now={null} whenIso={null} href={e.url} cover={`/api/v1/p/cover/${list.id}/${e.id}`} lead={<RowLead n={i + 1} />} below={e.note ? <RowNote text={e.note} /> : undefined} />
+              <ItemRow item={e} now={null} whenIso={null} href={e.url && withReferral(e.url)} cover={`/api/v1/p/cover/${list.id}/${e.id}`} lead={<RowLead n={i + 1} />} below={e.note ? <RowNote text={e.note} /> : undefined} />
             </li>
           ))}
         </ol>
