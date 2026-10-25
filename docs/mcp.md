@@ -42,7 +42,7 @@ A tool is only listed when the token carries its scope.
 |---|---|
 | `search_items` | Text search; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
 | `list_items` | Browse by status; `status, kinds[], sort (newest, untouched), limit (max 25), cursor` |
-| `get_item` | One item with its kept text (paged at about 20k tokens, follow `textCursor`), note, highlights and lists |
+| `get_item` | One item with its facts, its kept text (paged at about 20k tokens, follow `textCursor`), note, highlights and lists |
 | `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. Unknown `tagIds` or `listId` refuse the call before anything is saved |
 | `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here |
 | `list_tags` | Tags with counts, and whether an AI made them; paged with `cursor` |
@@ -54,7 +54,7 @@ A tool is only listed when the token carries its scope.
 | `get_digest` | What is expiring, due, oldest in the Inbox, and quiet lists |
 | `delete_item` | Moves an item to the bin (30 days). Only with `library:delete` |
 
-Results are cards: `id, title, kind, siteName, excerpt, tags, savedAt, url`. Responses stay around 8k tokens; anything longer pages with an opaque `nextCursor`. Errors come back as `{ "error": { "code", "message", "details"? } }` with `isError: true`.
+Results are cards: `id, title, kind, preview, siteName, excerpt, tags, savedAt, url`. `preview` says what a link is beyond its Kind: `reader` (an article), `player` (a video or audio), `post` (a social post), `code` (a repo, issue, PR, gist, package or question), `product` (something to buy), `site` (a homepage), `document` (a PDF or paper) or `app` (an AI artifact or share, a design file, a shared doc); null for images, notes, todos and things. `get_item` adds `facts`: whichever of `seconds, handle, price {amount, currency}, code, language, stars, pages, pdfUrl, app, postedAt` the page made known. Responses stay around 8k tokens; anything longer pages with an opaque `nextCursor`. Errors come back as `{ "error": { "code", "message", "details"? } }` with `isError: true`.
 
 Everything an AI tool changes is marked "by AI" in Pluck: its tags until the person touches them, its list notes, its lists and its saves (`source: mcp`). Settings has "Remove everything AI tagged this week".
 

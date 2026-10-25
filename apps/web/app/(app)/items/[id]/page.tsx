@@ -43,7 +43,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     const [text, highlights] = await Promise.all([readText(user.id, item.id), highlightsOf(user.id, item.id)]);
     // The kept page usually carries its own lead image; show the cover only when it does not.
     const showCover = item.hasCover && !/!\[[^\]]*\]\(/.test(text);
-    return <Reader item={item} html={renderReader(text)} initialHighlights={highlights} showCover={showCover} tags={tags} lists={lists} />;
+    return <Reader item={item} html={renderReader(text)} text={text} initialHighlights={highlights} showCover={showCover} tags={tags} lists={lists} />;
   }
 
   const url = item.url;

@@ -94,6 +94,39 @@
       "import": "インポート",
       "api": "APIキー",
       "copied": "公開リスト"
+    },
+    "fact": {
+      "post": "投稿",
+      "code": {
+        "repo": "リポジトリ",
+        "issue": "Issue",
+        "pull": "プルリクエスト",
+        "gist": "Gist",
+        "file": "ファイル",
+        "package": "パッケージ",
+        "snippet": "スニペット",
+        "question": "質問"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "トップページ",
+      "pages": "{count}ページ",
+      "app": {
+        "claude": "Claudeのアーティファクト",
+        "claude-chat": "Claudeのチャット",
+        "chatgpt": "ChatGPTのチャット",
+        "gemini": "Geminiのチャット",
+        "v0": "v0のアプリ",
+        "bolt": "Boltのアプリ",
+        "lovable": "Lovableのアプリ",
+        "perplexity": "Perplexityのページ",
+        "replit": "Replitのアプリ",
+        "figma": "Figmaファイル",
+        "google-docs": "Googleドキュメント",
+        "google-drive": "Driveのファイル",
+        "notion": "Notionのページ",
+        "canva": "Canvaのデザイン",
+        "miro": "Miroのボード"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "このハイライトへのメモ",
     "addNote": "メモを追加",
     "removeLabel": "ハイライトを外す：{quote}",
-    "source": "追加元：{via} · ページを残しています"
+    "source": "追加元：{via} · ページを残しています",
+    "sourceOnly": "追加元：{via}"
   },
   "settings": {
     "title": "設定",
@@ -964,5 +998,15 @@
       "now": "今すぐすべて削除",
       "action": "本当にすべて削除する"
     }
+  },
+  "preview": {
+    "open": "{site}で開く",
+    "openPdf": "PDFを開く",
+    "playA11y": "{title}を再生",
+    "playNote": "{site}から再生します。再生を押すまで、{site}からは何も読み込みません。",
+    "asArticle": "記事として表示",
+    "asPreview": "プレビューとして表示",
+    "stars": "スター{count}",
+    "pages": "{count}ページ"
   }
 }

@@ -94,6 +94,39 @@
       "import": "Imported",
       "api": "with an API key",
       "copied": "from a public list"
+    },
+    "fact": {
+      "post": "post",
+      "code": {
+        "repo": "repo",
+        "issue": "issue",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "file",
+        "package": "package",
+        "snippet": "snippet",
+        "question": "question"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "homepage",
+      "pages": "{count, plural, one {# page} other {# pages}}",
+      "app": {
+        "claude": "Claude artifact",
+        "claude-chat": "Claude chat",
+        "chatgpt": "ChatGPT chat",
+        "gemini": "Gemini chat",
+        "v0": "v0 app",
+        "bolt": "Bolt app",
+        "lovable": "Lovable app",
+        "perplexity": "Perplexity page",
+        "replit": "Replit app",
+        "figma": "Figma file",
+        "google-docs": "Google Doc",
+        "google-drive": "Drive file",
+        "notion": "Notion page",
+        "canva": "Canva design",
+        "miro": "Miro board"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "Note on this highlight",
     "addNote": "Add a note",
     "removeLabel": "Remove highlight: {quote}",
-    "source": "Source: {via} · page kept"
+    "source": "Source: {via} · page kept",
+    "sourceOnly": "Source: {via}"
   },
   "settings": {
     "title": "Settings",
@@ -964,5 +998,15 @@
       "now": "Delete everything now",
       "action": "Delete everything. No, really."
     }
+  },
+  "preview": {
+    "open": "Open on {site}",
+    "openPdf": "Open the PDF",
+    "playA11y": "Play {title}",
+    "playNote": "Plays from {site}. Nothing loads from there until you press play.",
+    "asArticle": "Show as article",
+    "asPreview": "Show as preview",
+    "stars": "{count, plural, one {# star} other {# stars}}",
+    "pages": "{count, plural, one {# page} other {# pages}}"
   }
 }

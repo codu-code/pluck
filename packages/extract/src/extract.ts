@@ -2,12 +2,17 @@ import { Readability } from "@mozilla/readability";
 import { Defuddle } from "defuddle/node";
 import { parseHTML } from "linkedom";
 import { extractText, getDocumentProxy } from "unpdf";
+import type { Facts, Preview } from "@pluck/shared-schemas";
+import { fromAddress, fromPage, isoSeconds } from "./classify.ts";
 import { guardedFetch } from "./fetch.ts";
+import { isGenericImage, isGenericTitle, sourceFor, withoutPrefix, type Found } from "./sources.ts";
 
 export type ExtractedKind = "link" | "video" | "pdf" | "image";
 
 export type Extracted = {
   kind: ExtractedKind;
+  preview: Preview | null; // null for an Image
+  facts: Facts;
   url: string;
   canonicalUrl: string | null;
   title: string | null;
@@ -28,11 +33,10 @@ const clean = (s: string | null | undefined) => (s && s.replace(/\s+/g, " ").tri
 // Plain text for the row's second line: markdown escapes and markup removed.
 const excerptOf = (text: string) =>
   clean(text.replace(/\\([\\`*_{}[\]()#+\-.!>|])/g, "$1").replace(/[#>*_`[\]()!]|^-\s/gm, " ").slice(0, 400))?.slice(0, 200) ?? null;
-const VIDEO_HOSTS = /(^|\.)(youtube\.com|youtu\.be|vimeo\.com)$/;
 
 function meta(doc: Document, ...names: string[]): string | null {
   for (const n of names) {
-    const el = doc.querySelector(`meta[property="${n}"], meta[name="${n}"]`);
+    const el = doc.querySelector(`meta[property="${n}"], meta[name="${n}"], meta[itemprop="${n}"]`);
     const v = clean(el?.getAttribute("content"));
     if (v) return v;
   }
@@ -49,7 +53,8 @@ const absolute = (href: string | null, base: string) => {
 };
 
 // Pure: no network. Turns page HTML into the item's fields and its markdown.
-export async function extractFromHtml(html: string, url: string): Promise<Extracted> {
+// `asArticle`: the person chose Show as article, so the body is kept whatever the link looks like.
+export async function extractFromHtml(html: string, url: string, { asArticle = false }: { asArticle?: boolean } = {}): Promise<Extracted> {
   const { document } = parseHTML(html);
   const doc = document as unknown as Document;
   const ogTitle = meta(doc, "og:title", "twitter:title");
@@ -57,8 +62,6 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
   const coverUrl = absolute(meta(doc, "og:image", "og:image:url", "twitter:image"), url);
   const canonicalUrl = absolute(doc.querySelector('link[rel="canonical"]')?.getAttribute("href") ?? null, url);
   const lang = clean(doc.documentElement?.getAttribute("lang"))?.split("-")[0]?.toLowerCase() ?? null;
-  const host = new URL(url).hostname;
-  const kind: ExtractedKind = VIDEO_HOSTS.test(host) || meta(doc, "og:type")?.startsWith("video") ? "video" : "link";
 
   let markdown = "";
   let extractor: Extracted["extractor"] = "meta";
@@ -86,10 +89,24 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
       author = author ?? clean(article?.byline);
     }
   }
-  // A page with no readable body (an SPA shell, a video page) keeps its description as the text.
-  const words = countWords(markdown);
+  // What the link is: its address first (sites whose pages are not articles), else what the page says about itself.
+  const found = countWords(markdown);
+  const guess = fromAddress(url);
+  const { preview, facts } = guess ?? fromPage(doc, url, found);
+  const kind: ExtractedKind = guess?.kind ?? (meta(doc, "og:type")?.startsWith("video") ? "video" : "link");
+  if (preview === "player") {
+    const seconds = isoSeconds(meta(doc, "duration")) ?? (Number(meta(doc, "og:video:duration", "video:duration")) || undefined);
+    if (seconds) facts.seconds = seconds;
+  }
+  // Only an article (and a repo's README, a paper) is worth its body. For anything else the page's text is a sign-in
+  // wall, an app shell or a shop's furniture, so what is kept is what the page says it is.
+  const keepsBody = asArticle || preview === "reader" || preview === "code" || preview === "document";
+  if (!keepsBody) markdown = description ?? "";
+  const words = keepsBody ? found : countWords(markdown);
   return {
     kind,
+    preview,
+    facts,
     url,
     canonicalUrl,
     title,
@@ -100,8 +117,8 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
     coverUrl,
     markdown: words > 0 ? markdown : (description ?? ""),
     wordCount: words,
-    extractor,
-    raw: { contentType: "text/html; charset=utf-8", body: Buffer.from(html) },
+    extractor: keepsBody ? extractor : "meta",
+    raw: asArticle || preview === "reader" ? { contentType: "text/html; charset=utf-8", body: Buffer.from(html) } : null, // the page itself only when it is the thing
   };
 }
 
@@ -132,7 +149,7 @@ async function extractPdf(url: string, body: Buffer): Promise<Extracted> {
   const info = (await pdf.getMetadata().catch(() => null))?.info as { Title?: string; Author?: string } | undefined;
   const fileName = fileNameOf(url);
   return {
-    kind: "pdf", url, canonicalUrl: null, title: clean(info?.Title) ?? fileName, siteName: new URL(url).hostname, author: clean(info?.Author),
+    kind: "pdf", preview: "document", facts: pdf.numPages ? { pages: pdf.numPages } : {}, url, canonicalUrl: null, title: clean(info?.Title) ?? fileName, siteName: new URL(url).hostname, author: clean(info?.Author),
     excerpt: excerptOf(text), lang: null, coverUrl: null, markdown: text.trim(), wordCount: countWords(text), extractor: "unpdf",
     raw: { contentType: "application/pdf", body },
   };
@@ -145,25 +162,65 @@ export async function extractFile({ body, contentType, fileName }: { body: Buffe
     return { ...x, url: "", siteName: null, title: x.title === fileName ? fileName.replace(/\.pdf$/i, "") : x.title };
   }
   return {
-    kind: "image", url: "", canonicalUrl: null, title: fileName.replace(/\.[a-z0-9]+$/i, "") || null, siteName: null, author: null, excerpt: null,
+    kind: "image", preview: null, facts: {}, url: "", canonicalUrl: null, title: fileName.replace(/\.[a-z0-9]+$/i, "") || null, siteName: null, author: null, excerpt: null,
     lang: null, coverUrl: null, markdown: "", wordCount: 0, extractor: "none", raw: { contentType, body },
   };
 }
 
 export type ExtractInput = { url: string; html?: string | null };
 
-// Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch.
-export async function extract({ url, html }: ExtractInput, { signal }: { signal?: AbortSignal } = {}): Promise<Extracted> {
-  if (html) return extractFromHtml(html, url);
+// What a link says with nothing fetched: the Preview its address gives, and nothing else.
+function fromAddressOnly(url: string): Extracted {
+  const guess = fromAddress(url);
+  return {
+    kind: guess?.kind ?? "link", preview: guess?.preview ?? "site", facts: guess?.facts ?? {}, url, canonicalUrl: null, title: null,
+    siteName: new URL(url).hostname.replace(/^www\./, ""), author: null, excerpt: null, lang: null, coverUrl: null, markdown: "", wordCount: 0, extractor: "meta", raw: null,
+  };
+}
+
+// A source's own answer laid over what the page said: its fields win where it has them, its facts join the page's.
+// Except over a page the person's browser sent: what they saw beats a guess from the address.
+function merge(x: Extracted, f: Found | null, sent = false): Extracted {
+  const out = { ...x, title: isGenericTitle(x.title) ? null : withoutPrefix(x.title), coverUrl: isGenericImage(x.coverUrl) ? null : x.coverUrl };
+  if (!f) return out;
+  for (const k of ["title", "author", "siteName", "excerpt", "coverUrl"] as const) if (f[k] && !(sent && out[k])) out[k] = f[k];
+  if (f.preview) out.preview = f.preview;
+  if (f.kind) out.kind = f.kind;
+  out.facts = { ...x.facts, ...f.facts };
+  if (f.markdown && !(sent && x.wordCount)) {
+    out.markdown = f.markdown;
+    out.wordCount = countWords(f.markdown);
+    out.extractor = "meta";
+  }
+  return out;
+}
+
+// Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch, except
+// from the sites whose own pages are no use to a server, which answer through their APIs (sources.ts) instead.
+export async function extract({ url, html }: ExtractInput, { signal, asArticle }: { signal?: AbortSignal; asArticle?: boolean } = {}): Promise<Extracted> {
+  const source = sourceFor(url);
+  const found = source?.resolve ? source.resolve(new URL(url), signal).catch(() => null) : Promise.resolve(null);
+  let page: Extracted | null = null;
+  try {
+    if (html) page = await extractFromHtml(html, url, { asArticle });
+    else if (!source?.only) page = await fetchAndRead(url, signal, asArticle);
+  } catch (e) {
+    if (!source) throw e; // a site we know still has its address and its API to go on
+  }
+  return merge(page ?? fromAddressOnly(url), await found, Boolean(html && page));
+}
+
+async function fetchAndRead(url: string, signal?: AbortSignal, asArticle?: boolean): Promise<Extracted> {
   const res = await guardedFetch(url, { signal });
   const type = res.contentType.toLowerCase();
-  if (type.includes("application/pdf")) return extractPdf(res.url, res.body);
+  // Some hosts (Google Drive among them) send a PDF as plain bytes; its first bytes say what it is.
+  if (type.includes("application/pdf") || res.body.subarray(0, 5).toString("latin1") === "%PDF-") return extractPdf(res.url, res.body);
   if (type.startsWith("image/")) {
     const name = fileNameOf(res.url);
     return {
-      kind: "image", url: res.url, canonicalUrl: null, title: name, siteName: new URL(res.url).hostname, author: null, excerpt: null,
+      kind: "image", preview: null, facts: {}, url: res.url, canonicalUrl: null, title: name, siteName: new URL(res.url).hostname, author: null, excerpt: null,
       lang: null, coverUrl: res.url, markdown: "", wordCount: 0, extractor: "none", raw: { contentType: type, body: res.body },
     };
   }
-  return extractFromHtml(decodeHtml(res.body, res.contentType), res.url);
+  return extractFromHtml(decodeHtml(res.body, res.contentType), res.url, { asArticle });
 }

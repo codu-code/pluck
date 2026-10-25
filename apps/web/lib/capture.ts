@@ -1,5 +1,5 @@
-import { keys, putObject } from "@pluck/blob";
-import { applyExtraction, enqueue, recordExtractionFailure, setBlobKeys, type ExtractionResult } from "@pluck/db";
+import { getObject, keys, putObject } from "@pluck/blob";
+import { applyExtraction, enqueue, nextUnsorted, recordExtractionFailure, setBlobKeys, type ExtractionResult } from "@pluck/db";
 import { extract, FetchError, guardedFetch, type Extracted } from "@pluck/extract";
 import type { Item } from "@pluck/shared-schemas";
 import { log } from "./log";
@@ -20,7 +20,7 @@ export function isPermanent(e: unknown): boolean {
 const errorText = (e: unknown) => (e instanceof Error ? (e.name === "TimeoutError" ? "Timed out" : e.message) : String(e));
 
 const toResult = (x: Extracted): ExtractionResult => ({
-  kind: x.kind, title: x.title, siteName: x.siteName, author: x.author, excerpt: x.excerpt,
+  kind: x.kind, preview: x.preview, facts: x.facts, title: x.title, siteName: x.siteName, author: x.author, excerpt: x.excerpt,
   canonicalUrl: x.canonicalUrl, lang: x.lang, wordCount: x.wordCount, markdown: x.markdown, extractor: x.extractor,
 });
 
@@ -65,7 +65,9 @@ export async function extractAttempt(
 ): Promise<Item> {
   const started = Date.now();
   try {
-    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs) }), transcript);
+    // Shown as an article by the person's choice: its body is kept, whatever the link looks like.
+    const asArticle = item.preview === "reader" && item.previewGuess !== "reader";
+    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs), asArticle }), transcript);
     const updated = (await applyExtraction(userId, item.id, toResult(x))) ?? item;
     const blobs = () =>
       storeBlobs(userId, item.id, x).catch(async (e) => {
@@ -83,4 +85,20 @@ export async function extractAttempt(
     log("warn", "extraction failed", { userId, itemId: item.id, durationMs: Date.now() - started, attempt, final, error: errorText(e) });
     return updated;
   }
+}
+
+// Items read before Previews, sorted again a few at a time from the page kept with them, so the sites see nothing;
+// one with no kept page is fetched again. A title or Preview the person chose stays theirs (applyExtraction).
+export async function sortBackfill(limit = 10): Promise<number> {
+  const page = await nextUnsorted(limit);
+  if (!page) return 0;
+  for (const u of page) {
+    try {
+      const html = u.htmlKey ? (await getObject(u.htmlKey)).toString("utf8") : null;
+      await applyExtraction(u.userId, u.itemId, toResult(await extract({ url: u.url, html }, { signal: AbortSignal.timeout(10_000) })));
+    } catch (e) {
+      log("warn", "preview backfill skipped an item", { userId: u.userId, itemId: u.itemId, error: errorText(e) }); // it keeps its old look
+    }
+  }
+  return page.length;
 }

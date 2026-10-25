@@ -40,3 +40,18 @@
 .original { font-weight: 500; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 600px) { .layout { padding: 24px 16px 48px; gap: 32px; } .title { font-size: 30px; line-height: 36px; } }
+.postImage { width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; background: var(--rail); }
+.said { margin: 0; font-size: 18px; line-height: 29px; white-space: pre-line; overflow-wrap: anywhere; }
+.price { font-family: var(--font-ui); font-size: 20px; font-weight: 600; }
+.ways { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--font-ui); }
+.primary {
+  display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 8px; background: var(--brand); color: var(--on-brand);
+  font-weight: 500; text-decoration: none;
+}
+.primary:hover { color: var(--on-brand); opacity: 0.92; }
+.secondary {
+  display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 8px; border: 1px solid var(--line-strong);
+  background: var(--surface); color: var(--ink); font-weight: 500; text-decoration: none;
+}
+.switch { align-self: flex-start; height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; cursor: pointer; }
+.switch:disabled { opacity: 0.6; }

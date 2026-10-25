@@ -103,7 +103,7 @@ export async function runImport(userId: string, importId: string): Promise<void>
       const page = e.html ? await extractFromHtml(e.html(), url).catch(() => null) : null;
       if (page && page.wordCount > 0) {
         await applyExtraction(userId, item.id, {
-          kind: page.kind, title: e.title ?? page.title, siteName: page.siteName, author: page.author, excerpt: page.excerpt,
+          kind: page.kind, preview: page.preview, facts: page.facts, title: e.title ?? page.title, siteName: page.siteName, author: page.author, excerpt: page.excerpt,
           canonicalUrl: page.canonicalUrl, lang: page.lang, wordCount: page.wordCount, markdown: page.markdown, extractor: page.extractor,
         });
       } else {

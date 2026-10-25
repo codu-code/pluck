@@ -9,7 +9,7 @@ import { twoUsers } from "./testing.ts";
 const q = (text: string, extra = {}) => ({ q: text, limit: 25, ...extra });
 const extracted = (markdown: string, title = "A page") => ({
   kind: "link" as const, title, siteName: "Example", author: null, excerpt: markdown.slice(0, 80), canonicalUrl: null, lang: "en",
-  wordCount: 10, markdown, extractor: "defuddle",
+  wordCount: 10, markdown, extractor: "defuddle", preview: "reader" as const, facts: {},
 });
 
 describe("search", () => {

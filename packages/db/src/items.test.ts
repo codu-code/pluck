@@ -8,7 +8,7 @@ import { twoUsers } from "./testing.ts";
 const page = { status: "inbox" as const, sort: "newest" as const, limit: 50 };
 const extraction = {
   kind: "link" as const, title: "Extracted title", siteName: "Example", author: null, excerpt: "An excerpt",
-  canonicalUrl: null, lang: "en", wordCount: 120, markdown: "Body text", extractor: "defuddle",
+  canonicalUrl: null, lang: "en", wordCount: 120, markdown: "Body text", extractor: "defuddle", preview: "reader" as const, facts: {},
 };
 
 describe("two-user scoping", () => {

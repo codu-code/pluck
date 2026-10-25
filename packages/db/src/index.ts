@@ -32,3 +32,4 @@ export {
 } from "./account.ts";
 export { aiConnections, disconnectAi, isAiConnected } from "./ai-tools.ts";
 export { holdTry, takeTry } from "./tries.ts";
+export { nextUnsorted, type Unsorted } from "./backfill.ts";

@@ -1,14 +1,15 @@
 import { Unreachable } from "@pluck/client";
-import { isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
+import { isCardPreview, isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
+import { Player } from "@/components/Player";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
 import { keys, useCover, useItem, useOnline, usePatchItem, type FullItem } from "@/lib/data";
@@ -109,7 +110,17 @@ function Reader({ data }: { data: FullItem }) {
   const [ratio, setRatio] = useState(4 / 3);
   const [retrying, setRetrying] = useState(false);
   const qc = useQueryClient();
-  const reading = blocks.length > 0;
+  // A video, a post, a product, a homepage or an app is shown as what it is, with the way out; the rest is read here.
+  const card = isCardPreview(item.preview);
+  const reading = !card && blocks.length > 0;
+  const site = row(item).site;
+  const [switching, setSwitching] = useState(false);
+  const switchTo = async (preview: "reader" | null) => {
+    setSwitching(true);
+    await patch.mutateAsync({ id: item.id, patch: { preview } }).catch(() => toast(tr("common.failed.title")));
+    await qc.invalidateQueries({ queryKey: keys.item(item.id) }); // Show as article reads the page again, with its body
+    setSwitching(false);
+  };
 
   const retry = async () => {
     setRetrying(true);
@@ -156,6 +167,31 @@ function Reader({ data }: { data: FullItem }) {
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{row(item).siteMeta}</Text>
         <Text accessibilityRole="header" style={[font.readerTitle, styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
+        <Facts item={item} />
+        {card && item.preview === "player" && item.facts.player ? <Player facts={item.facts} title={item.title} site={site} cover={cover} /> : card && cover && (
+          <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail, maxHeight: 520 }]} resizeMode="cover" accessibilityIgnoresInvertColors
+            onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.6, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
+        )}
+        {card && text ? <Text selectable style={[font.reader, styles.body, { color: t.ink }]}>{text}</Text> : null}
+        {item.url && item.extraction.state === "done" && (card || item.preview === "code" || item.preview === "document") && (
+          <View style={styles.ways}>
+            {/* The site's own app when it has one (a universal link), else Safari. */}
+            <Pressable accessibilityRole="button" onPress={() => void Linking.openURL(withReferral(item.url!))} style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: pressed ? 0.85 : 1 }]}>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("preview.open", { site })}</Text>
+            </Pressable>
+            {item.facts.pdfUrl && (
+              <Pressable accessibilityRole="button" onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.facts.pdfUrl!))} style={[styles.quietButton, { borderColor: t.lineStrong }]}>
+                <Text style={[font.medium, { color: t.ink, fontSize: 15 }]}>{tr("preview.openPdf")}</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+        {item.previewGuess && item.previewGuess !== "reader" && item.extraction.state === "done" && (
+          // The guess can be wrong: an article that looks like a homepage, a blog's front page that is the read.
+          <Pressable accessibilityRole="button" disabled={switching} onPress={() => void switchTo(item.preview === "reader" ? null : "reader")} style={styles.switch}>
+            {switching ? <ActivityIndicator color={t.ink2} /> : <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr(item.preview === "reader" ? "preview.asPreview" : "preview.asArticle")}</Text>}
+          </Pressable>
+        )}
         {cover && item.kind === "image" && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
@@ -189,11 +225,27 @@ function Reader({ data }: { data: FullItem }) {
             </View>
           </View>
         )}
-        {blocks.map((b, i) => <BlockView key={i} block={b} quotes={quotes} t={t} />)}
+        {!card && blocks.map((b, i) => <BlockView key={i} block={b} quotes={quotes} t={t} />)}
       </ScrollView>
       <Toolbar item={item} />
     </View>
   );
+}
+
+// Under the title: a product's price, a repo's language and stars, a paper's pages.
+function Facts({ item }: { item: Item }) {
+  const t = useTheme();
+  const tr = useTranslations("ios.preview");
+  const format = useFormatter();
+  const x = item.facts;
+  const bits = [
+    item.preview === "product" && x.price && format.number(x.price.amount, { style: "currency", currency: x.price.currency }),
+    x.language,
+    typeof x.stars === "number" && tr("stars", { count: x.stars }),
+    x.pages && tr("pages", { count: x.pages }),
+  ].filter(Boolean);
+  if (!bits.length) return null;
+  return <Text style={item.preview === "product" ? [font.semibold, { color: t.ink, fontSize: 20 }] : [font.regular, { color: t.ink2, fontSize: 13 }]}>{bits.join(" · ")}</Text>;
 }
 
 function BlockView({ block, quotes, t }: { block: Block; quotes: string[]; t: Palette }) {
@@ -276,6 +328,8 @@ const styles = StyleSheet.create({
   primary: { minHeight: 44, paddingHorizontal: 16, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   quietButton: { minHeight: 44, minWidth: 96, paddingHorizontal: 16, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
   iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+  ways: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  switch: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center" },
   doneButton: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 12 },
   ring: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
 });

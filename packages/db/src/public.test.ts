@@ -16,7 +16,7 @@ async function publishedList() {
   const it = (await pluckLink(a, { url: "https://example.com/mcp", source: "web" })).item;
   await applyExtraction(a, it.id, {
     kind: "link", title: "How MCP auth works", siteName: "MCP", author: null, excerpt: "Tokens and scopes", canonicalUrl: null, lang: "en",
-    wordCount: 900, markdown: SECRET, extractor: "defuddle",
+    wordCount: 900, markdown: SECRET, extractor: "defuddle", preview: "reader" as const, facts: {},
   });
   await setBlobKeys(a, it.id, { coverKey: "u/x/cover" });
   const tag = (await createTag(a, "private-tag-name", "user"))!.tag;
@@ -30,7 +30,7 @@ async function publishedList() {
 
 describe("the public projection", () => {
   test("serves exactly the pinned fields and nothing else", async () => {
-    expect(PUBLIC_ITEM_FIELDS).toEqual({ title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1 });
+    expect(PUBLIC_ITEM_FIELDS).toEqual({ title: 1, siteName: 1, excerpt: 1, coverKey: 1, url: 1, kind: 1, wordCount: 1, previewGuess: 1, previewOverride: 1, facts: 1 });
     const { it, handle } = await publishedList();
     const page = (await publicList(handle, "best-mcp-reading"))!;
     expect(Object.keys(page).sort()).toEqual(["author", "entries", "list"]);
@@ -39,7 +39,7 @@ describe("the public projection", () => {
     expect(page.entries).toEqual([
       {
         id: it.id, kind: "link", title: "How MCP auth works", siteName: "MCP", excerpt: "Tokens and scopes", url: "https://example.com/mcp", wordCount: 900,
-        hasCover: true, note: "Read first.",
+        hasCover: true, note: "Read first.", preview: "reader", facts: {},
       },
     ]);
     const all = JSON.stringify(page);
@@ -143,7 +143,7 @@ describe("lists shared with people (See only)", () => {
     expect(await shareList(b, list.id, "x@example.test")).toEqual({ ok: false, reason: "not_found" }); // only the owner shares
 
     const page = (await sharedList(list.id, bEmail))!;
-    expect(Object.keys(page.entries[0]!).sort()).toEqual(["excerpt", "hasCover", "id", "kind", "note", "siteName", "title", "url", "wordCount"]); // no tags, ticks or status
+    expect(Object.keys(page.entries[0]!).sort()).toEqual(["excerpt", "facts", "hasCover", "id", "kind", "note", "preview", "siteName", "title", "url", "wordCount"]); // no tags, ticks or status
     expect(page.entries[0]!.note).toBe("Book early.");
     expect(await listsSharedWith(bEmail)).toMatchObject([{ id: list.id, name: "Holiday ideas", owner: { handle: expect.any(String) } }]);
     expect(await sharedList(list.id, "someone-else@example.test")).toBeNull();

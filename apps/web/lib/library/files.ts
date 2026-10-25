@@ -25,7 +25,7 @@ export async function finishFile(userId: string, itemId: string, key: string, co
   const x = await extractFile({ body, contentType, fileName: name });
   if (x.kind === "image") await setBlobKeys(userId, itemId, { coverKey: key });
   await applyExtraction(userId, itemId, {
-    kind: x.kind, title: x.title, siteName: x.siteName, author: x.author, excerpt: x.excerpt, canonicalUrl: null, lang: x.lang,
+    kind: x.kind, preview: x.preview, facts: x.facts, title: x.title, siteName: x.siteName, author: x.author, excerpt: x.excerpt, canonicalUrl: null, lang: x.lang,
     wordCount: x.wordCount, markdown: x.markdown, extractor: x.extractor,
   });
 }

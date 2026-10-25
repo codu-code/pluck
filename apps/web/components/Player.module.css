@@ -1,0 +1,19 @@
+.player { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.frame { position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: var(--ink); }
+.bar { position: relative; width: 100%; height: 152px; border-radius: 12px; overflow: hidden; background: var(--rail); }
+.iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.poster {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 0 24px;
+  border: 0; background: transparent; color: var(--ink); cursor: pointer; font: inherit;
+}
+.image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.play {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; flex: none;
+  border-radius: 50%; background: var(--brand); color: var(--on-brand); transition: transform 150ms ease-out;
+}
+.play svg { margin-left: 3px; }
+.poster:hover .play { transform: scale(1.05); }
+.poster:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+.barTitle { position: relative; flex: 1; min-width: 0; text-align: left; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.note { color: var(--ink2); font-size: 13px; font-family: var(--font-ui); }
+@media (prefers-reduced-motion: reduce) { .play { transition: none; } .poster:hover .play { transform: none; } }

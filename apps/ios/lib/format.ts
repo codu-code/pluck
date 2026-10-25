@@ -1,4 +1,4 @@
-import { isTextKind, type Item } from "@pluck/shared-schemas";
+import { isTextKind, rowFact, type Item, type RowFact } from "@pluck/shared-schemas";
 import { useFormatter, useTranslations } from "use-intl";
 
 type T = ReturnType<typeof useTranslations<"ios">>;
@@ -33,10 +33,12 @@ export function rowText(t: T, f: F, item: Item, now = new Date()) {
   const site = isTextKind(item.kind)
     ? t(`kinds.${item.kind}`)
     : item.siteName ?? (item.url ? new URL(item.url).hostname : item.source === "email" ? t("row.site.email") : t("row.site.file"));
+  const fact = item.extraction.state === "done" ? rowFact(item) : null;
   const meta = isTextKind(item.kind) ? (item.dueAt ? due(item.dueAt) : item.source === "mcp" ? t("row.meta.byAi") : t("row.meta.byYou"))
     : item.extraction.state === "failed" ? t("row.meta.failed")
       : item.extraction.state === "pending" ? t("row.meta.pending")
         : item.kind === "image" ? t("row.meta.photo")
+        : fact ? said(t, f, fact)
           : item.kind === "video" ? t("row.meta.video")
             : item.wordCount ? t("row.meta.minutes", { count: Math.max(1, Math.round(item.wordCount / 230)) })
               : item.kind === "pdf" ? t("row.meta.pdf") : t("row.meta.link");
@@ -47,4 +49,18 @@ export function useRowText() {
   const t = useTranslations("ios");
   const f = useFormatter();
   return (item: Item) => rowText(t, f, item);
+}
+
+// What a Preview's row says in place of the read time: "4 min", "@niall", "repo · TypeScript", "£24.99", "homepage".
+function said(t: T, f: F, x: RowFact): string {
+  switch (x.key) {
+    case "length": return t("row.meta.minutes", { count: x.minutes });
+    case "handle": return x.handle;
+    case "post": return t("row.fact.post");
+    case "code": return x.language ? t("row.fact.withLanguage", { what: t(`row.fact.code.${x.what}`), language: x.language }) : t(`row.fact.code.${x.what}`);
+    case "price": return f.number(x.amount, { style: "currency", currency: x.currency });
+    case "homepage": return t("row.fact.homepage");
+    case "pages": return t("row.fact.pages", { count: x.count });
+    case "app": return t(`row.fact.app.${x.app}`);
+  }
 }

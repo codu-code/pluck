@@ -94,6 +94,39 @@
       "import": "Importiert",
       "api": "mit einem API-Schlüssel",
       "copied": "aus einer öffentlichen Liste"
+    },
+    "fact": {
+      "post": "Beitrag",
+      "code": {
+        "repo": "Repo",
+        "issue": "Issue",
+        "pull": "Pull Request",
+        "gist": "Gist",
+        "file": "Datei",
+        "package": "Paket",
+        "snippet": "Snippet",
+        "question": "Frage"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "Startseite",
+      "pages": "{count, plural, one {# Seite} other {# Seiten}}",
+      "app": {
+        "claude": "Claude-Artefakt",
+        "claude-chat": "Claude-Chat",
+        "chatgpt": "ChatGPT-Chat",
+        "gemini": "Gemini-Chat",
+        "v0": "v0-App",
+        "bolt": "Bolt-App",
+        "lovable": "Lovable-App",
+        "perplexity": "Perplexity-Seite",
+        "replit": "Replit-App",
+        "figma": "Figma-Datei",
+        "google-docs": "Google-Dokument",
+        "google-drive": "Drive-Datei",
+        "notion": "Notion-Seite",
+        "canva": "Canva-Design",
+        "miro": "Miro-Board"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "Notiz zu dieser Markierung",
     "addNote": "Notiz hinzufügen",
     "removeLabel": "Markierung entfernen: {quote}",
-    "source": "Quelle: {via} · Seite behalten"
+    "source": "Quelle: {via} · Seite behalten",
+    "sourceOnly": "Quelle: {via}"
   },
   "settings": {
     "title": "Einstellungen",
@@ -964,5 +998,15 @@
       "now": "Jetzt alles löschen",
       "action": "Alles löschen. Ganz im Ernst."
     }
+  },
+  "preview": {
+    "open": "Auf {site} öffnen",
+    "openPdf": "PDF öffnen",
+    "playA11y": "{title} abspielen",
+    "playNote": "Spielt von {site}. Von dort lädt nichts, bevor du auf Abspielen drückst.",
+    "asArticle": "Als Artikel zeigen",
+    "asPreview": "Als Vorschau zeigen",
+    "stars": "{count, plural, one {# Stern} other {# Sterne}}",
+    "pages": "{count, plural, one {# Seite} other {# Seiten}}"
   }
 }

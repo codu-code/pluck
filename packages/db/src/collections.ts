@@ -1,5 +1,5 @@
 import type { Locale } from "@pluck/i18n";
-import type { ArchivedReason, ExtractionState, Kind, Source, Status } from "@pluck/shared-schemas";
+import type { ArchivedReason, ExtractionState, Facts, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
 import { getDb } from "./client.ts";
@@ -18,6 +18,9 @@ export type ItemDoc = {
   excerpt: string | null;
   coverKey: string | null;
   htmlKey: string | null;
+  previewGuess?: Preview | null; // what the link looked like when last read; absent on Items read before Previews
+  previewOverride?: Preview | null; // Show as article / Show as preview, by the person; kept through re-plucks
+  facts?: Facts;
   status: Status;
   archivedReason: z.infer<typeof ArchivedReason> | null;
   dueAt: Date | null;
@@ -266,8 +269,10 @@ export async function exportsCol(): Promise<Collection<ExportDoc>> {
 export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
   return (await db()).collection<EmailAliasDoc>("emailAliases");
 }
-export async function meta(): Promise<Collection<{ _id: string; at: Date }>> {
-  return (await db()).collection<{ _id: string; at: Date }>("meta");
+// One-off claims (claimOnce) and the place a long-running pass (the Preview backfill) keeps its cursor.
+export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean };
+export async function meta(): Promise<Collection<MetaDoc>> {
+  return (await db()).collection<MetaDoc>("meta");
 }
 export async function users(): Promise<Collection<UserDoc>> {
   return (await db()).collection<UserDoc>("users");

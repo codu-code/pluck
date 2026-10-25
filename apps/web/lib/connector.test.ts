@@ -46,7 +46,7 @@ test("save_item plucks a link marked as from the AI, tags it and adds it to a li
   const list = await newList(a, { name: "Sources" });
   const first = await call("save_item", { url: `${FIX}/news-1.html`, tagIds: [tag.id], listId: list.id, note: "for the essay" });
   expect(first.saved[0]).toMatchObject({ title: "Small teams ship when the list is short", tags: ["Reading"], created: true });
-  expect(Object.keys(first.saved[0]).sort()).toEqual(["created", "excerpt", "id", "kind", "savedAt", "siteName", "tags", "title", "url"]);
+  expect(Object.keys(first.saved[0]).sort()).toEqual(["created", "excerpt", "id", "kind", "preview", "savedAt", "siteName", "tags", "title", "url"]);
   const item = await readItem(a, first.saved[0].id);
   expect(item.source).toBe("mcp");
   expect(item.aiTagIds).toEqual([tag.id]);

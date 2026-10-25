@@ -94,6 +94,39 @@
       "import": "导入",
       "api": "API 密钥",
       "copied": "公开清单"
+    },
+    "fact": {
+      "post": "帖子",
+      "code": {
+        "repo": "仓库",
+        "issue": "Issue",
+        "pull": "拉取请求",
+        "gist": "Gist",
+        "file": "文件",
+        "package": "软件包",
+        "snippet": "代码片段",
+        "question": "问题"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "主页",
+      "pages": "{count} 页",
+      "app": {
+        "claude": "Claude 制品",
+        "claude-chat": "Claude 对话",
+        "chatgpt": "ChatGPT 对话",
+        "gemini": "Gemini 对话",
+        "v0": "v0 应用",
+        "bolt": "Bolt 应用",
+        "lovable": "Lovable 应用",
+        "perplexity": "Perplexity 页面",
+        "replit": "Replit 应用",
+        "figma": "Figma 文件",
+        "google-docs": "Google 文档",
+        "google-drive": "Drive 文件",
+        "notion": "Notion 页面",
+        "canva": "Canva 设计",
+        "miro": "Miro 白板"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "这条高亮的笔记",
     "addNote": "添加笔记",
     "removeLabel": "移除高亮：{quote}",
-    "source": "来源：{via} · 网页已留下"
+    "source": "来源：{via} · 网页已留下",
+    "sourceOnly": "来源：{via}"
   },
   "settings": {
     "title": "设置",
@@ -964,5 +998,15 @@
       "now": "立即全部删除",
       "action": "全部删除。说真的。"
     }
+  },
+  "preview": {
+    "open": "在 {site} 打开",
+    "openPdf": "打开 PDF",
+    "playA11y": "播放{title}",
+    "playNote": "从 {site} 播放。按下播放之前，不会从那里加载任何内容。",
+    "asArticle": "以文章显示",
+    "asPreview": "以预览显示",
+    "stars": "{count} 颗星",
+    "pages": "{count} 页"
   }
 }

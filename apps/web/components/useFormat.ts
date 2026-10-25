@@ -1,9 +1,9 @@
-import { isTextKind, type Item, type Source } from "@pluck/shared-schemas";
+import { isTextKind, rowFact, type Item, type Source } from "@pluck/shared-schemas";
 import { useFormatter, useTranslations } from "next-intl";
 
 // What a row needs of an Item. Public and shared Lists have only these; the owner's views have the whole Item.
 export type RowItem = Pick<Item, "id" | "kind" | "title" | "siteName" | "url" | "hasCover" | "excerpt" | "wordCount">
-  & Partial<Pick<Item, "dueAt" | "source" | "extraction" | "createdAt">>;
+  & Partial<Pick<Item, "dueAt" | "source" | "extraction" | "createdAt" | "preview" | "facts">>;
 
 const DAY = 86_400_000;
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
@@ -65,9 +65,25 @@ export function useFormat() {
     if (item.extraction?.state === "failed") return t("meta.failed");
     if (item.extraction?.state === "pending") return t("meta.pending");
     if (item.kind === "image") return t("meta.photo");
+    const fact = item.preview && item.facts ? rowFact({ preview: item.preview, facts: item.facts }) : null;
+    if (fact) return said(fact);
     if (item.kind === "video") return t("meta.video");
     if (item.wordCount) return t("meta.minutes", { n: Math.max(1, Math.round(item.wordCount / 230)) });
     return item.kind === "pdf" ? t("meta.pdf") : t("meta.link");
+  }
+
+  // What a Preview's row says in place of the read time: "4 min", "@niall", "repo · TypeScript", "£24.99", "homepage".
+  function said(f: NonNullable<ReturnType<typeof rowFact>>): string {
+    switch (f.key) {
+      case "length": return t("meta.minutes", { n: f.minutes });
+      case "handle": return f.handle;
+      case "post": return t("fact.post");
+      case "code": return f.language ? t("fact.withLanguage", { what: t(`fact.code.${f.what}`), language: f.language }) : t(`fact.code.${f.what}`);
+      case "price": return format.number(f.amount, { style: "currency", currency: f.currency });
+      case "homepage": return t("fact.homepage");
+      case "pages": return t("fact.pages", { count: f.count });
+      case "app": return t(`fact.app.${f.app}`);
+    }
   }
 
   const source = (s: Source) => t(`source.${s}`);

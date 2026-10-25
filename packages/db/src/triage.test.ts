@@ -77,7 +77,7 @@ describe("bin", () => {
     expect(await restoreFromBin(b, it.id)).toBeNull();
     expect((await restoreFromBin(a, it.id))?.id).toBe(it.id);
 
-    await applyExtraction(a, it.id, { kind: "link", title: "t", siteName: null, author: null, excerpt: null, canonicalUrl: null, lang: null, wordCount: 1, markdown: "kept", extractor: "defuddle" });
+    await applyExtraction(a, it.id, { kind: "link", title: "t", siteName: null, author: null, excerpt: null, canonicalUrl: null, lang: null, wordCount: 1, markdown: "kept", extractor: "defuddle", preview: "reader", facts: {} });
     await moveToBin(a, it.id);
     expect((await purgeBin()).purged).toBe(0);
     const later = new Date(Date.now() + 31 * 86_400_000);

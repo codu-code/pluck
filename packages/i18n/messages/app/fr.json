@@ -94,6 +94,39 @@
       "import": "Importé",
       "api": "avec une clé d’API",
       "copied": "dans une liste publique"
+    },
+    "fact": {
+      "post": "publication",
+      "code": {
+        "repo": "dépôt",
+        "issue": "ticket",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "fichier",
+        "package": "paquet",
+        "snippet": "extrait",
+        "question": "question"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "page d’accueil",
+      "pages": "{count, plural, one {# page} other {# pages}}",
+      "app": {
+        "claude": "artefact Claude",
+        "claude-chat": "conversation Claude",
+        "chatgpt": "conversation ChatGPT",
+        "gemini": "conversation Gemini",
+        "v0": "app v0",
+        "bolt": "app Bolt",
+        "lovable": "app Lovable",
+        "perplexity": "page Perplexity",
+        "replit": "app Replit",
+        "figma": "fichier Figma",
+        "google-docs": "document Google",
+        "google-drive": "fichier Drive",
+        "notion": "page Notion",
+        "canva": "design Canva",
+        "miro": "tableau Miro"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "Note sur ce surlignage",
     "addNote": "Ajouter une note",
     "removeLabel": "Retirer le surlignage : {quote}",
-    "source": "Source : {via} · page gardée"
+    "source": "Source : {via} · page gardée",
+    "sourceOnly": "Source : {via}"
   },
   "settings": {
     "title": "Réglages",
@@ -964,5 +998,15 @@
       "now": "Tout supprimer maintenant",
       "action": "Tout supprimer. Pour de vrai."
     }
+  },
+  "preview": {
+    "open": "Ouvrir sur {site}",
+    "openPdf": "Ouvrir le PDF",
+    "playA11y": "Lire {title}",
+    "playNote": "Lecture depuis {site}. Rien ne se charge depuis ce site avant que vous appuyiez sur lecture.",
+    "asArticle": "Afficher comme article",
+    "asPreview": "Afficher comme aperçu",
+    "stars": "{count, plural, one {# étoile} other {# étoiles}}",
+    "pages": "{count, plural, one {# page} other {# pages}}"
   }
 }

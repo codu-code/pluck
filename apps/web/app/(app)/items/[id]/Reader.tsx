@@ -9,6 +9,7 @@ import { ItemTags } from "@/components/ItemTags";
 import { useFormat } from "@/components/useFormat";
 import { coverSrc } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
+import { isCard, OpenOriginal, PreviewCard, PreviewFacts, PreviewSwitch } from "./Preview";
 import styles from "./reader.module.css";
 
 type Toolbar = { x: number; y: number } & ({ kind: "new"; selector: Highlight["selector"] } | { kind: "existing"; id: string });
@@ -16,7 +17,10 @@ type Toolbar = { x: number; y: number } & ({ kind: "new"; selector: Highlight["s
 const json = (method: string, body: unknown) => ({ method, headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 // The reader (Item board): kept text in serif, highlights from a selection, the note, kind and source alongside.
-export function Reader({ item, html, initialHighlights, showCover, tags, lists }: { item: Item; html: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[]; lists: ListMembership[] }) {
+// A link that is not for reading here (a video, a post, a product, a homepage, an app) shows its Preview instead,
+// with the same note, tags and lists alongside; a repo or a paper reads as an article under its facts.
+export function Reader({ item, html, text, initialHighlights, showCover, tags, lists }: { item: Item; html: string; text: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[]; lists: ListMembership[] }) {
+  const card = isCard(item);
   const article = useRef<HTMLDivElement>(null);
   const [highlights, setHighlights] = useState(initialHighlights);
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
@@ -117,17 +121,17 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
     return () => window.removeEventListener("keydown", onKey, true);
   });
 
-  const minutes = item.wordCount ? Math.max(1, Math.round(item.wordCount / 230)) : null;
+  const minutes = item.wordCount && !card ? Math.max(1, Math.round(item.wordCount / 230)) : null;
 
   return (
     <>
       <ItemBar
         item={item}
-        top={
+        top={card ? undefined : (
           <div className={styles.progress} role="progressbar" aria-label={t("progress")} aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
             <div className={styles.progressFill} style={{ width: `${progress * 100}%` }} />
           </div>
-        }
+        )}
       />
       <div className={styles.layout}>
         <article className={styles.article}>
@@ -137,7 +141,10 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
             </span>
             <h1 className={styles.title}>{item.title}</h1>
             {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
+            <PreviewFacts item={item} />
           </div>
+          {card ? <PreviewCard item={item} text={text} /> : <>
+          {(item.preview === "code" || item.preview === "document") && <OpenOriginal item={item} />}
           {showCover && item.kind !== "image" && <img className={styles.cover} src={coverSrc(item.id)} alt="" />}
           {item.kind === "image" && <img className={styles.image} src={coverSrc(item.id)} alt={item.title} />}
           <div
@@ -170,6 +177,7 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
               )}
             </div>
           )}
+          </>}
         </article>
         <aside aria-label={t("about")} className={styles.aside}>
           <label className={styles.group}>
@@ -199,8 +207,9 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
               ))}
             </select>
           </label>
+          <PreviewSwitch item={item} />
           <ItemLists itemId={item.id} initial={lists} />
-          <div className={styles.group}>
+          {!card && <div className={styles.group}>
             <span className={styles.groupTitle}>{t("highlights", { count: highlights.length })}</span>
             {highlights.length === 0 && <span className={styles.meta}>{t("noHighlights")}</span>}
             {highlights.map((h) => (
@@ -222,10 +231,11 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
                 </button>
               </div>
             ))}
-          </div>
+          </div>}
           <div className={styles.foot}>
-            <span>{t("source", { via: app(`format.via.${item.source}`) })}</span>
-            {item.url && <a href={withReferral(item.url)} target="_blank" rel="noopener" className={styles.original}>{app("common.openOriginal")}</a>}
+            {/* A card kept what the link said, not the page; its way out is already the main button. */}
+            <span>{t(card ? "sourceOnly" : "source", { via: app(`format.via.${item.source}`) })}</span>
+            {item.url && !card && <a href={withReferral(item.url)} target="_blank" rel="noopener" className={styles.original}>{app("common.openOriginal")}</a>}
             <DeleteButton id={item.id} />
           </div>
         </aside>
