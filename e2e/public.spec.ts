@@ -4,7 +4,7 @@ import { signIn } from "./helpers";
 const FIX = "http://127.0.0.1:4180";
 
 test("make a list public, share it, copy it, report it, take it down", async ({ browser }) => {
-  // The owner builds a list and flips it to Public, choosing a handle on the way.
+  // The owner builds a list, picks a handle and flips the list to Public.
   const owner = await (await browser.newContext()).newPage();
   await signIn(owner);
   const handle = `e2e-${Date.now().toString(36)}`;
@@ -14,10 +14,10 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   await owner.request.post(`/api/v1/lists/${list.id}/items`, { data: { itemId: item.id, note: "Read this first." } });
   await owner.request.patch(`/api/v1/lists/${list.id}/items/${item.id}`, { data: { ticked: true } });
 
+  await owner.request.patch("/api/v1/me", { data: { handle } }); // in place of the made-up one
+
   await owner.goto(`/lists/${list.id}`);
   await owner.getByRole("radio", { name: "Public" }).click();
-  await owner.getByLabel("Pick a handle for the link.").fill(handle);
-  await owner.getByRole("button", { name: "Use it" }).click();
   await expect(owner.getByRole("radio", { name: "Public" })).toHaveAttribute("aria-checked", "true");
   await expect(owner.locator("code")).toContainText(`/@${handle}/best-mcp-reading`);
 

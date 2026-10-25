@@ -42,7 +42,7 @@ export default function ListScreen() {
             await api(`/api/v1/lists/${id}`, { method: "PATCH", json: { visibility: "public" } });
             await data.refetch();
           } catch (e) {
-            Alert.alert("Not yet", e instanceof Refused && e.code === "handle_required" ? "Pick a handle first, in Settings on the web. It goes in the link." : "That did not work. Try again.");
+            Alert.alert("Not yet", e instanceof Refused ? e.message : "That did not work. Try again.");
           }
         },
       },

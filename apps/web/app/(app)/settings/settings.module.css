@@ -33,6 +33,7 @@
 .profileInput { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
 .handleBox { display: flex; align-items: center; height: 40px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); overflow: hidden; }
 .handleBox:focus-within { border: 1.5px solid var(--ink); }
+.handleBox .textButton { flex: none; margin-right: 4px; }
 .prefix { padding: 0 4px 0 12px; color: var(--ink2); }
 .handleInput { flex: 1; min-width: 0; height: 38px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; }
 .profileHint { flex: 1 1 200px; color: var(--ink2); font-size: 13px; padding-bottom: 10px; }

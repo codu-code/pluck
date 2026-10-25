@@ -2,6 +2,7 @@ import type { Item, List, ListEntry, ListMembership } from "@pluck/shared-schema
 import { ObjectId } from "mongodb";
 import { items, LEAN, listRows, lists, oid, users, type ListDoc, type ListItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
+import { getMe } from "./users.ts";
 import { slugify } from "./tags.ts";
 
 const GAP = 1024;
@@ -257,7 +258,7 @@ export async function setVisibility(userId: string, listId: string, visibility: 
   if (visibility === "public") {
     const owner = await (await users()).findOne({ _id: uid }, { projection: { handle: 1, publicKilled: 1 } });
     if (owner?.publicKilled || list.killed) return { ok: false, reason: "closed" };
-    if (!owner?.handle) return { ok: false, reason: "handle_required" };
+    if (!owner?.handle && !(await getMe(userId))?.handle) return { ok: false, reason: "handle_required" }; // getMe gives one
   }
   const now = new Date();
   const doc = await col.findOneAndUpdate(
