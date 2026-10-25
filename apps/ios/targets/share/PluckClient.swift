@@ -82,7 +82,7 @@ final class PluckClient {
 
   private func call(_ method: String, _ path: String, _ body: [String: Any]?) async throws -> [String: Any] {
     let (server, auth) = try await bearer()
-    guard let url = URL(string: server + path) else { throw PluckError.refused("Bad server address.") }
+    guard let url = URL(string: server + path) else { throw PluckError.refused(String(localized: "badServer")) }
     var req = URLRequest(url: url, timeoutInterval: 5) // the share sheet must answer fast; slower means "will sync"
     req.httpMethod = method
     req.setValue(auth, forHTTPHeaderField: "authorization")
@@ -95,7 +95,7 @@ final class PluckClient {
     let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
     if status == 401 { throw PluckError.signedOut }
     if status >= 500 || status == 429 { throw PluckError.offline }
-    if status >= 400 { throw PluckError.refused(((json["error"] as? [String: Any])?["message"] as? String) ?? "That did not work.") }
+    if status >= 400 { throw PluckError.refused(((json["error"] as? [String: Any])?["message"] as? String) ?? String(localized: "didNotWork")) }
     return json
   }
 
@@ -121,7 +121,7 @@ final class PluckClient {
   func pluckFile(_ file: URL, name: String, contentType: String) async throws -> PluckedItem? {
     let size = (try? FileManager.default.attributesOfItem(atPath: file.path)[.size] as? Int) ?? 1
     let json = try await call("POST", "/api/v1/items/files", ["name": name, "contentType": contentType, "size": max(size, 1), "source": "ios"])
-    guard let upload = (json["uploadUrl"] as? String).flatMap(URL.init(string:)) else { throw PluckError.refused("No upload address.") }
+    guard let upload = (json["uploadUrl"] as? String).flatMap(URL.init(string:)) else { throw PluckError.refused(String(localized: "noUploadAddress")) }
     var req = URLRequest(url: upload)
     req.httpMethod = "PUT"
     req.setValue(contentType, forHTTPHeaderField: "content-type")
