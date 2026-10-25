@@ -67,7 +67,10 @@ final class PluckClient {
                        .init(name: "client_id", value: clientId), .init(name: "resource", value: "\(s.server)/api/v1")]
     req.httpBody = form.percentEncodedQuery?.data(using: .utf8)
     let (data, res) = try await send(req)
-    guard (res as? HTTPURLResponse)?.statusCode == 200,
+    // Busy or down is not signed out: the pluck waits and goes later, as the app's client does.
+    let status = (res as? HTTPURLResponse)?.statusCode ?? 0
+    if status >= 500 || status == 429 { throw PluckError.offline }
+    guard status == 200,
           let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let access = json["access_token"] as? String else { throw PluckError.signedOut }
     s.access = access
     s.refresh = (json["refresh_token"] as? String) ?? s.refresh

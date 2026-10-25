@@ -39,6 +39,11 @@ function writeQueue(q: Queued[]) {
   }
 }
 
+// One flush at a time, across every open tab: mount, the online event and a re-render can all start one, and two
+// walking the same queue would send a queued Note twice (a link is safe either way: plucking it again never makes a
+// second Item). A Web Lock where the browser has one, else one per page.
+let flushing: Promise<void> | null = null;
+
 const post = (body: Record<string, unknown>) =>
   fetch("/api/v1/items", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
@@ -55,8 +60,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
 
   // Send anything queued while offline, now and whenever the network comes back.
   useEffect(() => {
-    async function flush() {
-      if (!navigator.onLine) return;
+    async function send() {
       for (const q of readQueue()) {
         const res = await post(q.body).catch(() => null);
         // Offline, signed out, busy or down: it stays queued, and so does everything after it.
@@ -66,7 +70,16 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
         if (result) onPlucked?.(q.draft, result);
       }
     }
-    void flush();
+    function flush() {
+      if (!navigator.onLine || flushing) return;
+      flushing = (navigator.locks
+        ? navigator.locks.request(QUEUE_KEY, { ifAvailable: true }, async (lock) => {
+            if (lock) await send();
+          }).then(() => undefined)
+        : send()
+      ).finally(() => (flushing = null));
+    }
+    flush();
     window.addEventListener("online", flush);
     return () => window.removeEventListener("online", flush);
   }, [onPlucked]);

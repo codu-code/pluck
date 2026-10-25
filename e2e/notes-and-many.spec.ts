@@ -64,3 +64,23 @@ test("pick Todo with a due date in the paste box, and filter by kind", async ({ 
   await page.getByRole("button", { name: "All" }).click();
   await expect(rows(page)).toHaveCount(2);
 });
+
+test("a Note plucked offline is sent once when the network is back, even with two tabs open", async ({ page, context }) => {
+  await signIn(page);
+  const other = await context.newPage();
+  await other.goto("/inbox");
+  const text = `Offline note ${Date.now()}`;
+  const count = async () => {
+    const { items } = (await (await page.request.get("/api/v1/items?status=inbox&limit=50")).json()) as { items: { title: string }[] };
+    return items.filter((i) => i.title === text).length;
+  };
+  await context.setOffline(true);
+  await box(page).fill(text);
+  await box(page).press("Enter");
+  // Back online: both tabs hear it, then both mount again; every one of those starts a flush of the same queue.
+  await context.setOffline(false);
+  await Promise.all([page.reload(), other.reload()]);
+  await expect.poll(count).toBe(1);
+  await page.waitForTimeout(1500);
+  expect(await count()).toBe(1);
+});
