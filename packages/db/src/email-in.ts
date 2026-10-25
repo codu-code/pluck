@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import type { Item } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { contents, emailAliases, items, oid } from "./collections.ts";
-import { toItem } from "./items.ts";
+import { recountAround, toItem } from "./items.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
 // Email-in: each person has one active address, pluck+<token>@<domain>. Regenerating retires the old one.
@@ -52,7 +52,10 @@ export async function createEmailItem(userId: string, m: EmailItemInput): Promis
       { $set: { status: "inbox", archivedReason: null, deletedAt: null, lastTouchedAt: now, updatedAt: now, statusChangedAt: now } },
       { returnDocument: "after" },
     );
-    if (existing) return { item: toItem(existing), created: false };
+    if (existing) {
+      await recountAround(userId, existing); // it may have come back from the Bin
+      return { item: toItem(existing), created: false };
+    }
   }
   const _id = new ObjectId();
   await col.insertOne({

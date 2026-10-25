@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { aliasOf, createEmailItem, getContent, regenerateAlias, searchItems, userForAlias } from "./index.ts";
+import { aliasOf, createEmailItem, createTag, getContent, listTags, moveToBin, regenerateAlias, searchItems, setItemTags, userForAlias } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
 const mail = { subject: "Writing for engineers who skim", fromName: "Field Notes", fromAddress: "hi@fieldnotes.example", messageId: "<x@y>", markdown: "Lead with the decision.", excerpt: "Lead with the decision.", wordCount: 4 };
@@ -26,4 +26,15 @@ test("an email becomes a Read item with its text kept and searchable; the same m
   const again = await createEmailItem(a, mail);
   expect(again).toMatchObject({ created: false, item: { id: first.item.id } });
   expect((await createEmailItem(b, mail)).created).toBe(true); // same message, another person
+});
+
+test("the same message after the Bin comes back and its Tags count it again", async () => {
+  const { a } = await twoUsers();
+  const { item } = await createEmailItem(a, { ...mail, messageId: "<bin@y>" });
+  const { tag } = (await createTag(a, "letters", "user"))!;
+  await setItemTags(a, item.id, [tag.id], "user");
+  await moveToBin(a, item.id);
+  expect((await listTags(a))[0]?.count).toBe(0);
+  await createEmailItem(a, { ...mail, messageId: "<bin@y>" });
+  expect((await listTags(a))[0]?.count).toBe(1);
 });

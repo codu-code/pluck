@@ -137,7 +137,8 @@ test("opening touches; reading progress alone does not", async () => {
   const { a } = await twoUsers();
   const it = (await pluckLink(a, { url: "https://example.com/o", source: "web" })).item;
   await (await items()).updateOne({ url: it.url }, { $set: { lastTouchedAt: new Date(0) } });
-  await editItem(a, it.id, { readingProgress: 0.4 });
+  // The shape updateItem sends: every field key present, only readingProgress set.
+  await editItem(a, it.id, { readingProgress: 0.4, dueAt: undefined, title: undefined });
   expect((await getItem(a, it.id))?.lastTouchedAt).toBe(new Date(0).toISOString());
   expect((await getItem(a, it.id))?.readingProgress).toBe(0.4);
   await markOpened(a, it.id);

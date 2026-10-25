@@ -88,10 +88,23 @@ export async function pluckLink(
       { returnDocument: "after" },
     ))!;
   }
+  // A page that failed before gets a fresh try, so the extract job does not skip it as settled.
+  const retry = !created && doc.extraction.state === "failed";
+  if (retry) {
+    doc = (await col.findOneAndUpdate(
+      { _id: doc._id, userId: uid },
+      { $set: { extraction: { state: "pending", attempts: 0, lastError: null } } },
+      { returnDocument: "after" },
+    ))!;
+  }
   // A re-pluck may have brought the item back from the bin, so its tags and lists count it again.
-  if (!created) await Promise.all([recountTags(userId, doc.tagIds.map((t) => t.toHexString())), recountListsOf([doc._id])]);
-  return { item: toItem(doc), created, needsExtraction: created || doc.extraction.state === "failed" };
+  if (!created) await recountAround(userId, doc);
+  return { item: toItem(doc), created, needsExtraction: created || retry };
 }
+
+// Tag and List counts leave out the Bin, so any write that moves an Item in or out of it recounts both.
+export const recountAround = (userId: string, doc: Pick<ItemDoc, "_id" | "tagIds">) =>
+  Promise.all([recountTags(userId, doc.tagIds.map((t) => t.toHexString())), recountListsOf([doc._id])]);
 
 // An Image or PDF shared as a file: no URL, the bytes arrive in blob storage and the worker reads them.
 export async function createFileItem(userId: string, input: { kind: "image" | "pdf"; title: string; source: Source }): Promise<Item> {
@@ -178,7 +191,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
   if (edit.readingProgress !== undefined) {
     // Scrolling is not a touch; only real edits keep an item from expiring.
     set.readingProgress = edit.readingProgress;
-    if (Object.keys(edit).length === 1) {
+    if (Object.entries(edit).every(([k, v]) => k === "readingProgress" || v === undefined)) {
       delete set.lastTouchedAt;
       delete set.updatedAt;
     }
@@ -221,10 +234,9 @@ export async function markOpened(userId: string, itemId: string): Promise<void> 
 }
 
 // The bin: deleted items wait 30 days, then purgeBin removes them for good.
-// Tag and list counts leave out what is in the bin, so both are recounted on the way in and out.
 export async function moveToBin(userId: string, itemId: string): Promise<boolean> {
   const doc = await (await items()).findOneAndUpdate({ _id: oid(itemId), userId: oid(userId), deletedAt: null }, { $set: { deletedAt: new Date() } });
-  if (doc) await Promise.all([recountListsOf([doc._id]), recountTags(userId, doc.tagIds.map((t) => t.toHexString()))]);
+  if (doc) await recountAround(userId, doc);
   return Boolean(doc);
 }
 
@@ -234,7 +246,7 @@ export async function restoreFromBin(userId: string, itemId: string): Promise<It
     { $set: { deletedAt: null, lastTouchedAt: new Date() } },
     { returnDocument: "after" },
   );
-  if (doc) await Promise.all([recountListsOf([doc._id]), recountTags(userId, doc.tagIds.map((t) => t.toHexString()))]);
+  if (doc) await recountAround(userId, doc);
   return doc && toItem(doc);
 }
 
