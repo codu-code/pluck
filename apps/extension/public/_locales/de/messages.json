@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "Pflück die Seite, auf der du bist, mit einem Klick in deine Pluck-Bibliothek."
+  },
+  "pluckPage": {
+    "message": "Diese Seite pflücken"
+  },
+  "pluckSelection": {
+    "message": "Auswahl als Markierung pflücken"
+  }
+}

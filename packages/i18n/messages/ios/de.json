@@ -1,1 +1,429 @@
-{}
+{
+  "language": {
+    "label": "Sprache",
+    "hint": "Pluck nutzt die Sprache deines iPhones. Ändern kannst du sie in den iOS-Einstellungen unter Pluck, Sprache."
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "done": "Fertig",
+    "save": "Sichern",
+    "copy": "Kopieren",
+    "add": "Hinzufügen",
+    "tryAgain": "Noch mal versuchen",
+    "loading": "Wird geladen",
+    "backTo": "Zurück zu {label}",
+    "backToLists": "Zurück zu Listen",
+    "items": "{count, plural, one {# Eintrag} other {# Einträge}}",
+    "failed": {
+      "title": "Das hat nicht geklappt",
+      "body": "Prüf die Verbindung und versuch es dann noch mal."
+    }
+  },
+  "kinds": {
+    "link": "Lesen",
+    "video": "Ansehen",
+    "pdf": "PDF",
+    "image": "Bild",
+    "note": "Notiz",
+    "todo": "Aufgabe",
+    "thing": "Ding"
+  },
+  "status": {
+    "inbox": "Eingang",
+    "later": "Später",
+    "archived": "Archiviert",
+    "done": "Erledigt"
+  },
+  "tabs": {
+    "inbox": "Eingang",
+    "later": "Später",
+    "search": "Suche",
+    "lists": "Listen"
+  },
+  "actions": {
+    "inbox": "Eingang",
+    "later": "Später",
+    "archive": "Archiv",
+    "backToInbox": "Zurück in den Eingang",
+    "tags": "Tags",
+    "list": "Liste",
+    "addToList": "Zu einer Liste",
+    "note": "Notiz",
+    "share": "Teilen",
+    "more": "Mehr",
+    "select": "Auswählen",
+    "deselect": "Abwählen"
+  },
+  "moved": {
+    "archived": "Weg. Na ja, archiviert.",
+    "later": "Für später behalten.",
+    "done": "Erledigt.",
+    "inbox": "Zurück im Eingang."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {Weg. Na ja, archiviert.} other {# Einträge. Weg. Na ja, archiviert.}}",
+    "later": "{count, plural, one {Für später behalten.} other {# Einträge. Für später behalten.}}",
+    "done": "{count, plural, one {Erledigt.} other {# Einträge. Erledigt.}}",
+    "inbox": "{count, plural, one {Zurück im Eingang.} other {# Einträge. Zurück im Eingang.}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}, {kind}, {site}, {when}",
+    "a11yWithNote": "{title}, {kind}, {site}, {when}, Notiz: {note}",
+    "when": {
+      "now": "jetzt",
+      "minutes": "{count} Min.",
+      "hours": "{count} Std.",
+      "yesterday": "Gestern"
+    },
+    "due": {
+      "overdue": "überfällig",
+      "today": "heute fällig",
+      "tomorrow": "morgen fällig",
+      "on": "fällig am {date}"
+    },
+    "meta": {
+      "byAi": "von KI",
+      "byYou": "von dir",
+      "failed": "Nicht lesbar",
+      "pending": "Wird gepflückt",
+      "photo": "Foto",
+      "video": "Video",
+      "minutes": "{count} Min.",
+      "pdf": "PDF",
+      "link": "Link"
+    },
+    "site": {
+      "email": "per E-Mail",
+      "file": "Deine Datei"
+    }
+  },
+  "art": {
+    "plucked": "Gepflückt.",
+    "later": "Später"
+  },
+  "toast": {
+    "undo": "Rückgängig"
+  },
+  "usage": {
+    "title": "Pluck besser machen<accent>?</accent>",
+    "body": "Teile, welche Bildschirme du nutzt, verknüpft mit deinem Konto, damit wir beheben, was im Weg ist. Keine Werbung. Kein Verkauf. Absturzberichte gehen so oder so raus, ohne deinen Namen.",
+    "yes": "Klar, ich bin dabei",
+    "no": "Finger weg"
+  },
+  "items": {
+    "selected": "{count} ausgewählt",
+    "all": "Alle",
+    "newNote": "Neue Notiz",
+    "newNoteText": "Neue Notiz",
+    "settings": "Einstellungen",
+    "toTriage": "{count} zu sichten",
+    "forLater": "{count} für später",
+    "toSync": "{count} zu synchronisieren",
+    "moveFailed": "Das hat nicht geklappt. Nichts wurde verschoben.",
+    "addNote": "Notiz hinzufügen",
+    "selectAll": "Alle auswählen",
+    "empty": {
+      "inbox": {
+        "title": "Nichts zu sichten.",
+        "body": "Tippe in einer beliebigen App auf Teilen, dann auf Pluck. Es landet hier."
+      },
+      "later": {
+        "title": "Nichts für später.",
+        "body": "Wisch einen Eintrag im Eingang nach rechts, dann wartet er hier."
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "Mit dir geteilt",
+    "sharedA11y": "{name}, geteilt von {owner}, {count, plural, one {# Eintrag} other {# Einträge}}",
+    "from": "Von {owner} · nur ansehen",
+    "a11y": "{name}, {visibility, select, public {Öffentlich} other {Privat}}, {ticked} von {count} abgehakt",
+    "tickedOf": "{ticked} von {count}",
+    "empty": {
+      "title": "Noch keine Listen.",
+      "body": "Leg eine im Web an, oder bitte deine KI, eine aus deinem Gepflückten zu bauen."
+    }
+  },
+  "search": {
+    "placeholder": "Suchen",
+    "kind": "Art",
+    "anyKind": "Jede Art",
+    "tag": "Tag",
+    "anyTag": "Jeder Tag",
+    "list": "Liste",
+    "anyList": "Jede Liste",
+    "status": "Status",
+    "anyStatus": "Jeder Status",
+    "date": "Datum",
+    "plucked": "Gepflückt",
+    "dates": {
+      "any": "Jederzeit",
+      "week": "Diese Woche",
+      "month": "Diesen Monat",
+      "year": "Dieses Jahr"
+    },
+    "yourNote": "Deine Notiz: <snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "Wiederfinden.",
+        "body": "Titel, Notizen, Tags, Listen und die Wörter auf der Seite."
+      },
+      "error": {
+        "title": "Die Suche hat nicht geantwortet.",
+        "body": "Prüf die Verbindung und versuch es dann noch mal."
+      },
+      "none": {
+        "title": "Nichts Gepflücktes passt dazu.",
+        "body": "Versuch es mit weniger Wörtern oder einem anderen Filter."
+      }
+    },
+    "byMeaning": "Lieber nach Bedeutung? Frag deine KI."
+  },
+  "oauth": {
+    "signingIn": "Du wirst angemeldet."
+  },
+  "note": {
+    "title": "Notiz",
+    "placeholder": "Warum du es behalten hast, oder was du damit vorhast.",
+    "hint": "Nur du siehst sie. Die Suche findet sie."
+  },
+  "welcome": {
+    "title": "Du bist drin.\nJetzt pflück etwas.",
+    "lede": "Zum Pflücken musst du diese App nie öffnen. Sie steckt in Teilen, in jeder App.",
+    "step1": "<b>1.</b> Tippe auf Teilen, dann auf Pluck.",
+    "step2": "<b>2.</b> Das war’s. Lies weiter.",
+    "tryIt": "Jetzt ausprobieren",
+    "tryHint": "Öffnet eine Beispielseite in Safari. Teile sie mit Pluck.",
+    "goToInbox": "Zum Eingang"
+  },
+  "tags": {
+    "title": "Tags",
+    "rename": "Umbenennen",
+    "renameTitle": "Tag umbenennen",
+    "deleteTitle": "„{name}“ löschen?",
+    "deleteBody": "Er verschwindet von {count, plural, one {dem # Eintrag} other {# Einträgen}}. Die Einträge bleiben.",
+    "deleteTag": "Tag löschen",
+    "deleted": "„{name}“ ist weg. Die Einträge bleiben.",
+    "hint": "Umbenennen oder löschen",
+    "empty": {
+      "title": "Noch keine Tags.",
+      "body": "Tagge etwas per langem Drücken oder über Tags im Reader."
+    }
+  },
+  "list": {
+    "publicShare": "Öffentlich · Teilen",
+    "privateShare": "Privat · Teilen",
+    "ticked": "{ticked} von {count} abgehakt",
+    "noteByAi": "{note} · von KI",
+    "tick": "{title} abhaken",
+    "addA11y": "Zu dieser Liste hinzufügen",
+    "empty": {
+      "title": "Noch nichts auf dieser Liste.",
+      "body": "Tippe auf Hinzufügen, um Gepflücktes draufzusetzen, oder bitte deine KI, sie zu füllen."
+    }
+  },
+  "shared": {
+    "copied": "Gepflückt. Deine eigene Kopie liegt in Listen.",
+    "leaveTitle": "Diese Liste verlassen?",
+    "leaveBody": "Sie verschwindet aus deinen Listen. Sie kann wieder mit dir geteilt werden.",
+    "leave": "Verlassen",
+    "byNamed": "Mit dir geteilt von {name} (@{handle}) · nur ansehen",
+    "by": "Mit dir geteilt von @{handle} · nur ansehen",
+    "notShared": {
+      "title": "Nicht mit dir geteilt.",
+      "body": "Entweder gibt es diese Liste nicht mehr, oder sie ist nicht mit {email} geteilt. Wenn dir jemand den Link geschickt hat, bitte die Person, sie mit dieser Adresse zu teilen.",
+      "bodyNoEmail": "Entweder gibt es diese Liste nicht mehr, oder sie ist nicht mit der E-Mail geteilt, mit der du angemeldet bist. Wenn dir jemand den Link geschickt hat, bitte die Person, sie mit dieser Adresse zu teilen."
+    },
+    "empty": "Noch nichts auf dieser Liste.",
+    "pluckHint": "Kopiert sie in dein eigenes Pluck",
+    "pluck": "Diese Liste pflücken"
+  },
+  "signin": {
+    "stale": "Dieser Link stammt von einem früheren Versuch. Öffne die neueste E-Mail oder schick dir einen neuen Link.",
+    "notServer": "Das ist keine Serveradresse. Sie beginnt mit https://.",
+    "badKey": "Dieser Schlüssel funktioniert auf diesem Server nicht.",
+    "unreachable": "{origin} ist nicht erreichbar.",
+    "title": "Ein Link.\nKein Passwort<accent>.</accent>",
+    "lede": "Gib deine E-Mail ein, und wir schicken dir einen Link. Er meldet dich an, oder legt deine Bibliothek an, wenn du neu bist.",
+    "server": "Server",
+    "key": "API-Schlüssel, falls du einen nutzt",
+    "keyA11y": "API-Schlüssel",
+    "noKey": "Kein Schlüssel? Lass das Feld leer, dann schicken wir dir einen Link von diesem Server.",
+    "useKey": "Diesen Schlüssel nutzen",
+    "withEmail": "Mit E-Mail anmelden",
+    "useHost": "{host} nutzen",
+    "ownServer": "Eigenen Server nutzen",
+    "preview": {
+      "a11y": "Die E-Mail: Hier ist dein Link. Tippe darauf, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang.",
+      "subject": "Dein Link zu Pluck",
+      "now": "jetzt",
+      "title": "Hier ist dein Link.",
+      "body": "Tippe darauf, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang. Nie wieder ein Passwort merken.",
+      "button": "Bei Pluck anmelden"
+    }
+  },
+  "handle": {
+    "title": "Handle",
+    "locked": "Du kannst ihn am {date} wieder ändern.",
+    "invalid": "3 bis 24 Kleinbuchstaben, Ziffern oder Bindestriche.",
+    "hint": "Er steht im Link jeder Liste, die du öffentlich machst.",
+    "makeOne": "Einen ausdenken",
+    "saved": "Du bist jetzt @{handle}.",
+    "save": "@{handle} sichern",
+    "keep": "@{handle} behalten",
+    "moveNone": "Noch keine öffentlichen Listen, also ändern sich keine Links. Danach kannst du ihn erst in einem Monat wieder ändern.",
+    "move": "{count, plural, one {Deine öffentliche Liste zieht} other {Deine # öffentlichen Listen ziehen}} nach {host}/@{handle}/… um, und Links zur alten Adresse funktionieren nicht mehr. Listen, die du per E-Mail mit Leuten geteilt hast, sind nicht betroffen. Danach kannst du ihn erst in einem Monat wieder ändern."
+  },
+  "share": {
+    "title": "Teilen",
+    "close": "Schließen",
+    "sees": {
+      "me": "Nur du kannst diese Liste sehen.",
+      "people": "Die Leute hier sehen die Titel, Websites, Cover und deine Notizen auf dieser Liste, nie deine Tags, Häkchen oder die Seiten, die Pluck behalten hat. Ändern kannst sie nur du.",
+      "anyone": "Öffentlich: Jeder mit diesem Link kann sie öffnen, ohne Anmeldung, und sie kann in Suchmaschinen auftauchen. Man sieht die Titel, Websites, Cover und deine Notizen auf dieser Liste, nie deine Tags, Häkchen oder die Seiten, die Pluck behalten hat. Du kannst sie jederzeit wieder privat machen, dann funktioniert der Link sofort nicht mehr."
+    },
+    "options": {
+      "me": "Nur du",
+      "people": "Ausgewählte Leute",
+      "anyone": "Jeder mit dem Link"
+    },
+    "stopManyTitle": "Teilen mit {count, plural, one {# Person} other {# Personen}} beenden?",
+    "stopManyBody": "Sie können sie dann nicht mehr sehen. Du kannst jederzeit wieder teilen.",
+    "stopSharing": "Teilen beenden",
+    "anyoneTitle": "Jeder mit dem Link?",
+    "anyoneBody": "Sie bekommt eine öffentliche Seite unter deinem Handle. Nie mit Tags, Häkchen oder den Seiten, die Pluck behalten hat. Du kannst sie jederzeit wieder privat machen.",
+    "makePublic": "Öffentlich machen",
+    "sharedWith": "Mit {email} geteilt. Die Person bekommt eine E-Mail mit einem Link.",
+    "stopOneTitle": "Teilen mit {email} beenden?",
+    "stopOneBody": "Die Person kann sie dann nicht mehr sehen.",
+    "whoHasAccess": "Wer Zugriff hat",
+    "addByEmail": "Jemanden per E-Mail hinzufügen",
+    "stopA11y": "Teilen mit {email} beenden",
+    "publicLink": "Öffentlicher Link",
+    "copyPublic": "Öffentlichen Link kopieren",
+    "linkCopied": "Link kopiert.",
+    "shareLink": "Link teilen"
+  },
+  "pick": {
+    "tags": "Tags",
+    "lists": "Listen",
+    "findTag": "Tag suchen oder anlegen",
+    "makeTag": "Tag „{name}“ anlegen",
+    "findList": "Liste suchen oder anlegen",
+    "startList": "Liste „{name}“ anlegen",
+    "tagsForMany": "Tags für {count}",
+    "addMany": "{count} zu einer Liste hinzufügen",
+    "addTo": "Zu {name} hinzufügen",
+    "addToTheList": "Zur Liste hinzufügen",
+    "noTags": "Noch keine Tags.",
+    "noTagsBody": "Gib oben einen ein. Auch deine KI kann taggen.",
+    "noTagsManyBody": "Gib oben einen ein.",
+    "noLists": "Noch keine Listen.",
+    "noListsBody": "Gib oben einen Namen ein, um eine anzulegen, oder bitte deine KI, eine zu bauen.",
+    "noListsManyBody": "Gib oben einen Namen ein, um eine anzulegen.",
+    "nothing": "Nichts im Eingang oder in Später.",
+    "nothingBody": "Pflück zuerst etwas. Dann taucht es hier auf."
+  },
+  "item": {
+    "back": "Zurück",
+    "backArchive": "Archiv",
+    "didntLoad": "Das hat nicht geladen.",
+    "didntLoadBody": "Vielleicht ist es weg, oder die Verbindung. Versuch es gleich noch mal.",
+    "minutesLeft": "{percent} · noch {minutes} Min.",
+    "openOriginal": "Original öffnen",
+    "by": "Von {author}",
+    "noteA11y": "Deine Notiz: {note}. Bearbeiten",
+    "pending": "Die Seite wird gepflückt. Gleich erscheint sie hier.",
+    "failed": "Diese Seite ließ sich nicht lesen.",
+    "failedFile": "Die Datei ist behalten. Ihre Wörter nicht.",
+    "failedPage": "Manche Seiten behalten ihre Wörter für sich. Der Link ist behalten, und das Original lässt sich weiter öffnen.",
+    "titleA11y": "Titel",
+    "titleHint": "Lass den Titel leer, dann wird die erste Zeile zum Titel. Wird beim Tippen gesichert.",
+    "textA11y": "Text",
+    "textPlaceholder": "Schreib es auf."
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "sections": {
+      "account": "Konto",
+      "aiTools": "KI-Tools",
+      "emailIn": "Per E-Mail",
+      "expiry": "Ablauf und Wochenmail",
+      "library": "Bibliothek",
+      "appIcon": "App-Symbol",
+      "privacy": "Datenschutz"
+    },
+    "yourAccount": "Dein Konto",
+    "name": "Name",
+    "addName": "Namen hinzufügen",
+    "nameTitle": "Dein Name",
+    "nameBody": "Erscheint auf Listen, die du öffentlich machst.",
+    "nameSaved": "Name gesichert.",
+    "handle": "Handle",
+    "signOut": "Abmelden",
+    "signOutTitle": "Abmelden?",
+    "signOutBody": "Was auf diesem iPhone noch wartet, bleibt hier, bis du dich wieder anmeldest.",
+    "accountFootnote": "Dein Name und dein Handle erscheinen auf Listen, die du öffentlich machst, und sonst nirgends.",
+    "connectorCopied": "Kopiert. Füg es in deine KI ein.",
+    "copied": "Kopiert",
+    "copyConnector": "Konnektor-Adresse kopieren",
+    "connected": "Verbunden am {date}",
+    "disconnect": "Trennen",
+    "disconnectA11y": "{name}. Trennen",
+    "disconnectTitle": "{name} trennen?",
+    "disconnectBody": "Es hört sofort auf zu lesen und zu pflücken. Du kannst es jederzeit wieder verbinden.",
+    "toolsNeedAccount": "Deine verbundenen KI-Tools erscheinen hier, sobald du dich wieder mit einem E-Mail-Link anmeldest.",
+    "toolsNone": "Noch kein KI-Tool verbunden. Füg die Adresse einmal in deinem KI-Tool hinzu, dann funktioniert sie auf jedem Gerät, auf dem du es nutzt.",
+    "toolsHint": "Füg die Adresse einmal in deinem KI-Tool hinzu. Sie funktioniert auf jedem Gerät, auf dem du es nutzt.",
+    "addressCopied": "Adresse kopiert.",
+    "copyEmailIn": "E-Mail-Adresse zum Pflücken kopieren",
+    "newAddress": "Neue Adresse",
+    "newAddressTitle": "Eine neue Adresse?",
+    "newAddressBody": "Die alte funktioniert sofort nicht mehr. Pass alles an, was an sie weiterleitet.",
+    "emailInFootnote": "Leite einen Newsletter hierher weiter. Er landet als Lesen-Eintrag im Eingang.",
+    "days": "{count, plural, one {# Tag} other {# Tage}}",
+    "never": "Nie",
+    "scopeInboxLater": "Eingang und Später",
+    "scopeInbox": "Nur Eingang",
+    "moveAfter": "Ins Archiv nach",
+    "moveAfterTitle": "Unberührte Einträge wandern ins Archiv nach",
+    "expirySaved": "Nach {count} Tagen ohne Berührung geht es ins Archiv. Nichts wird gelöscht.",
+    "noExpiry": "Jetzt läuft nichts mehr ab.",
+    "appliesTo": "Gilt für",
+    "appliesToTitle": "Ablauf gilt für",
+    "weekly": "Wochenmail",
+    "off": "Aus",
+    "weeklyTitle": "Wochenmail senden am",
+    "noWeekly": "Keine Wochenmail.",
+    "weeklyOn": "Die Wochenmail kommt {day, select, 0 {sonntags} 1 {montags} 2 {dienstags} 3 {mittwochs} 4 {donnerstags} 5 {freitags} other {samstags}}.",
+    "expiryFootnote": "Unberührte Einträge wandern ins Archiv, nichts wird gelöscht. Die Wochenmail: was bald wandert, was fällig ist und was du gepflückt und vergessen hast.",
+    "tags": "Tags",
+    "export": "Alles exportieren",
+    "byEmail": "Per E-Mail",
+    "exportingTitle": "Wird exportiert",
+    "exportingBody": "Eine ZIP-Datei mit allem ist unterwegs an {email}. Der Link kommt in ein, zwei Minuten.",
+    "exportingBodyNoEmail": "Eine ZIP-Datei mit allem ist unterwegs an deine E-Mail. Der Link kommt in ein, zwei Minuten.",
+    "offline": "Offline-Kopie",
+    "offlineValue": "{count, plural, one {# Eintrag} other {# Einträge}} · {mb} MB",
+    "clearTitle": "Offline-Kopie löschen?",
+    "clearBody": "Deine Bibliothek bleibt auf dem Server. Die App lädt sie beim Benutzen wieder herunter.",
+    "clear": "Löschen",
+    "server": "Server",
+    "serverBody": "Dieses iPhone nutzt {host}. Für einen anderen Server meldest du dich ab und wählst dann „Eigenen Server nutzen“.",
+    "iconLight": "Hell",
+    "iconDark": "Dunkel",
+    "iconA11y": "Symbol {name}",
+    "iconFootnote": "Nur das Symbol. Die App selbst richtet sich nach deinem iPhone.",
+    "usage": "Teilen, wie ich Pluck nutze",
+    "usageFootnote": "Welche Bildschirme du nutzt, verknüpft mit deinem Konto. Nie, was du pflückst. Absturzberichte gehen so oder so raus, ohne deinen Namen.",
+    "tipTitle": "Pluck in Teilen nach vorn holen",
+    "tipBody": "Tippe in einer beliebigen App auf Teilen, wisch in der App-Reihe bis Mehr und zieh Pluck nach vorn.",
+    "deleteAll": "Alles löschen. Ganz im Ernst.",
+    "deleteTitle": "Alles löschen?",
+    "deleteBody": "Jeder Eintrag, jeder Tag, jede Notiz und jede Liste, endgültig. Exportier vorher, wenn du eine Kopie willst.",
+    "continue": "Weiter",
+    "confirmTitle": "Gib zur Bestätigung deine E-Mail ein",
+    "deleteButton": "Alles löschen"
+  }
+}

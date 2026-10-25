@@ -1,1 +1,81 @@
-{}
+{
+  "magicLink": {
+    "subject": "Dein Anmeldelink für Pluck",
+    "intro": "Hier ist dein Link, um dich bei Pluck anzumelden. Er funktioniert einmal, in den nächsten 10 Minuten.",
+    "button": "Bei Pluck anmelden",
+    "copy": "Der Button funktioniert nicht? Kopier diesen Link in deinen Browser:",
+    "ignore": "Wenn du das nicht angefordert hast, ignorier diese E-Mail. Es passiert nichts, solange du sie nicht öffnest und auf Anmelden tippst."
+  },
+  "sharedList": {
+    "subject": "{sharer} hat eine Liste mit dir geteilt: {name}",
+    "untitled": "Eine Liste",
+    "text": {
+      "intro": "{who} hat auf Pluck eine Liste mit dir geteilt: „{name}“.",
+      "open": "Hier kannst du sie öffnen. Du meldest dich mit deiner E-Mail an, ohne Passwort:",
+      "footer": "Du kannst sie ansehen, ändern kann sie nur die Person, die sie geteilt hat. Nicht erwartet? Ignorier diese E-Mail, oder verlass die Liste, sobald du sie öffnest."
+    },
+    "intro": "{who} hat auf Pluck eine Liste mit dir geteilt:",
+    "button": "Liste öffnen",
+    "footer": "Du kannst sie ansehen, ändern kann sie nur die Person, die sie geteilt hat. Du meldest dich mit deiner E-Mail an, ohne Passwort. Nicht erwartet? Ignorier diese E-Mail, oder verlass die Liste, sobald du sie öffnest."
+  },
+  "welcome": {
+    "subject": "Danke, dass du Pluck ausprobierst",
+    "hi": "Hallo,",
+    "intro": "ich bin Niall und mache Pluck. Danke, dass du dich angemeldet hast. Ich wollte dir selbst kurz Hallo sagen.",
+    "plucked": "Wie ich sehe, hast du schon die ersten Sachen gepflückt. Dann kennst du das Wichtigste schon: ein Tippen, egal wo du gerade bist, und Pluck behält die Seite für dich.",
+    "fresh": "Am schnellsten kommst du rein, wenn du eine Sache pflückst, die du diese Woche lesen wolltest: Füg ihren Link oben in deinem Eingang ein, und Pluck behält die Seite für dich.",
+    "connect": "Etwas, das die meisten erst spät entdecken: Deine KI kann alles lesen, was du pflückst. Verbinde Pluck in etwa dreißig Sekunden mit Claude, ChatGPT oder Cursor und frag, was du diese Woche gepflückt hast: {url}",
+    "expiry": "Und wenn du mal eine Weile nicht reinschaust, geht nichts verloren. Einträge, die du {days, plural, =1 {# Tag} other {# Tage}} nicht angefasst hast, wandern ins Archiv, und nichts wird gelöscht.",
+    "ask": "Darf ich dich etwas fragen? Antworte einfach und erzähl mir, warum du Pluck ausprobiert hast oder was du dir davon erhoffst. Die Antwort landet direkt bei mir, und ich lese jede einzelne.",
+    "signature": "Niall"
+  },
+  "export": {
+    "subject": "Dein Pluck-Export ist fertig",
+    "intro": "Deine ganze Bibliothek, als JSON und Markdown, in einer ZIP-Datei:",
+    "note": "Der Link funktioniert 7 Tage lang. In den Einstellungen kannst du jederzeit einen neuen erstellen."
+  },
+  "digest": {
+    "subject": "{count, plural, =1 {Eine Sache, die du gepflückt und vergessen hast.} =2 {Zwei Sachen, die du gepflückt und vergessen hast.} =3 {Drei Sachen, die du gepflückt und vergessen hast.} =4 {Vier Sachen, die du gepflückt und vergessen hast.} =5 {Fünf Sachen, die du gepflückt und vergessen hast.} =6 {Sechs Sachen, die du gepflückt und vergessen hast.} =7 {Sieben Sachen, die du gepflückt und vergessen hast.} =8 {Acht Sachen, die du gepflückt und vergessen hast.} =9 {Neun Sachen, die du gepflückt und vergessen hast.} =10 {Zehn Sachen, die du gepflückt und vergessen hast.} other {# Sachen, die du gepflückt und vergessen hast.}}",
+    "subjectQuiet": "Deine Woche in Pluck.",
+    "greeting": "Guten Morgen, {name}. Drei Minuten, dann ab in deine Woche.",
+    "greetingNoName": "Guten Morgen. Drei Minuten, dann ab in deine Woche.",
+    "expiring": {
+      "heading": "Seit {days, plural, =1 {# Tag} other {# Tagen}} unberührt",
+      "keep": "Behalten",
+      "letGo": "Loslassen",
+      "keepLink": "Behalten: {url}",
+      "letGoLink": "Loslassen: {url}",
+      "moves": "Wenn du nichts tust, wandern sie am {day} in dein Archiv. Weiter auffindbar, nie gelöscht."
+    },
+    "due": {
+      "heading": "Diese Woche fällig",
+      "line": "{title}, {when}"
+    },
+    "oldest": {
+      "heading": "Am längsten in deinem Eingang"
+    },
+    "quiet": {
+      "heading": "Eingeschlafene Listen",
+      "line": "{name}, {ticked, number} von {total, number} abgehakt, {days, plural, =1 {# Tag} other {# Tage}}",
+      "ticked": "{ticked, number} von {total, number} abgehakt",
+      "idle": "{days, plural, =1 {# Tag} other {# Tage}}"
+    },
+    "archive": {
+      "title": "Zu viel angesammelt?",
+      "body": "Archiviere alles, was älter als {days, plural, =1 {# Tag} other {# Tage}} ist, auf einen Schlag.",
+      "button": "Alles archivieren. Ganz im Ernst.",
+      "text": "Zu viel angesammelt? Archiviere alles, was älter als {days, plural, =1 {# Tag} other {# Tage}} ist, auf einen Schlag: {url}"
+    },
+    "ai": {
+      "title": "Lieber mit deiner KI?",
+      "body": "Sag „Mach meinen Wochenrückblick“. Dieselbe Liste, eine Entscheidung nach der anderen.",
+      "text": "Lieber mit deiner KI? Sag „Mach meinen Wochenrückblick“. Dieselbe Liste, eine Entscheidung nach der anderen."
+    },
+    "footer": {
+      "note": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein Modell.",
+      "changeDay": "Tag ändern",
+      "stop": "Abbestellen",
+      "text": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein Modell. Tag ändern: {settings} . Abbestellen: {stop}"
+    }
+  }
+}
