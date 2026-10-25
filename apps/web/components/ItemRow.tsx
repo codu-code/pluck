@@ -25,6 +25,7 @@ type Props = {
 // One 64px row from the Main board: cover or site tile, title, site and meta, excerpt, kind glyph and when.
 export function ItemRow({ item, now, active, selecting, selected, leaving, landing, onToggle, onPoint, actions, tags, pill }: Props) {
   const t = useTranslations("app.itemRow");
+  const kind = useTranslations("app.kind");
   const f = useFormat();
   const site = f.site(item);
   return (
@@ -49,7 +50,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
         </div>
       ) : (
         <div className={`${styles.tile} ${styles.glyphTile}`} aria-hidden="true">
-          <KindGlyph kind={item.kind} size={18} />
+          <KindGlyph kind={item.kind} label={kind(item.kind)} size={18} />
         </div>
       )}
       <div className={styles.body}>
@@ -66,7 +67,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
       {pill}
       {active && actions ? <div className={styles.actions}>{actions}</div> : tags ? <div className={styles.tags}>{tags}</div> : null}
       <div className={styles.side}>
-        <KindGlyph kind={item.kind} />
+        <KindGlyph kind={item.kind} label={kind(item.kind)} />
         <span>{now && f.when(item.createdAt, now)}</span>
       </div>
     </div>

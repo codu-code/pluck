@@ -141,7 +141,7 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
           <div className={styles.rows} role="list" aria-label={t("results")}>
             {data.results.map((r, i) => (
               <div key={r.item.id} role="listitem" className={styles.row} data-active={i === cursor || undefined} onMouseMove={() => setCursor(i)}>
-                <KindGlyph kind={r.item.kind} />
+                <KindGlyph kind={r.item.kind} label={app(`kind.${r.item.kind}`)} />
                 <div className={styles.body}>
                   <div className={styles.titleLine}>
                     <Link href={`/items/${r.item.id}`} className={styles.title}>{r.item.title}</Link>

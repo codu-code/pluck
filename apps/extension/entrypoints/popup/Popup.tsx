@@ -230,7 +230,7 @@ function Plucked({ initial, created, tips }: { initial: Item; created: boolean; 
                   disabled={!LINK_KINDS.has(k)}
                   onClick={() => void patch({ kind: k })}
                 >
-                  <KindGlyph kind={k} />
+                  <KindGlyph kind={k} label={t(`kinds.${k}`)} />
                 </button>
               ))}
             </div>

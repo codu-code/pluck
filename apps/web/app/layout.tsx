@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { CookieBanner } from "@/components/CookieBanner";
 import { fredoka, geist, geistMono, sourceSerif } from "./fonts";
@@ -27,10 +27,14 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
+  // The browser gets the site words and the two app pieces every page can show. The app's routes add the rest in
+  // their own layouts, so a public page never carries the signed-in app's catalog.
+  const { site, app } = await getMessages();
+  const messages = { site, app: { cookies: app.cookies, error: app.error } };
   return (
     <html lang={await getLocale()} className={`${geist.variable} ${geistMono.variable} ${fredoka.variable} ${sourceSerif.variable}`}>
       <body>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
           <CookieBanner />
           {children}
         </NextIntlClientProvider>

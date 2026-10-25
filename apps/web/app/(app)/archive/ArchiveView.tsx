@@ -87,7 +87,7 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
         <div className={styles.rows} role="list" aria-label={bin ? t("bin") : t("rowsLabel")}>
           {rows.map((item) => (
             <div key={item.id} role="listitem" className={styles.row}>
-              <KindGlyph kind={item.kind} />
+              <KindGlyph kind={item.kind} label={app(`kind.${item.kind}`)} />
               <div className={styles.body}>
                 {bin ? <span className={styles.titleText}>{item.title}</span> : <Link href={`/items/${item.id}`} className={styles.titleText}>{item.title}</Link>}
                 <span className={styles.meta}>{f.site(item)} · {reason(item)}</span>
