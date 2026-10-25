@@ -1,8 +1,9 @@
 {
   "magicLink": {
-    "subject": "Je inloglink voor Pluck",
-    "intro": "Hier is je link om in te loggen bij Pluck. Hij werkt één keer, de komende 10 minuten.",
+    "subject": "Je inlog voor Pluck: {code}",
+    "intro": "Tik op de knop om in te loggen bij Pluck, of typ de code waar je hem hebt aangevraagd. Allebei werken ze één keer, de komende 10 minuten.",
     "button": "Inloggen bij Pluck",
+    "codeLabel": "Of typ deze code:",
     "copy": "Werkt de knop niet? Kopieer deze link naar je browser:",
     "ignore": "Heb je hier niet om gevraagd, negeer deze mail dan. Er gebeurt niets, tenzij je de link opent en op Inloggen tikt."
   },

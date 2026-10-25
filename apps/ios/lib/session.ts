@@ -110,6 +110,25 @@ export async function sendSignInLink(email: string, server = defaultServer): Pro
   }
 }
 
+// The other way in: the 6-digit code from the same email, typed in the app (the email may be open on another device).
+// The server spends the code on this app's pending request and returns the redirect the link would have reached.
+export async function signInWithCode(email: string, code: string, server = defaultServer): Promise<"ok" | "bad" | "spent" | "limited" | "error"> {
+  try {
+    const p = await pendingFor(server);
+    const res = await fetch(`${server}/api/v1/signin/code`, {
+      method: "POST",
+      headers: { "content-type": "application/json", "accept-language": locale },
+      body: JSON.stringify({ email: email.trim(), code, authorize: authorizePath(p).split("?")[1] }),
+    });
+    if (res.status === 429) return "limited";
+    const body = (await res.json().catch(() => null)) as { url?: string; error?: { code?: string } } | null;
+    if (!res.ok) return body?.error?.code === "bad_code" ? "bad" : body?.error?.code === "code_spent" ? "spent" : "error";
+    return body?.url && (await finishSignIn(body.url)) ? "ok" : "error";
+  } catch {
+    return "error";
+  }
+}
+
 // Signs in in a web authentication session: a self-hosted server's own page, or App Review's password.
 export async function signIn(server = defaultServer): Promise<boolean> {
   const p = await pendingFor(server);

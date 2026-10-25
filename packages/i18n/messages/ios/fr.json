@@ -301,10 +301,11 @@
     "limited": "Ça fait beaucoup de liens. Utilisez le plus récent, ou réessayez dans une heure.",
     "sent": {
       "title": "Consultez vos e-mails<accent>.</accent>",
-      "lede": "Votre lien file vers <b>{email}</b>. Touchez-le sur cet iPhone, et c’est fait.",
+      "lede": "Un lien et un code filent vers <b>{email}</b>. Touchez le lien sur cet iPhone, ou saisissez le code ci-dessous.",
       "another": "Un autre est parti. Les deux liens marchent.",
       "openMail": "Ouvrir Mail",
       "again": "Renvoyer le lien",
+      "wait": "Renvoyer dans {seconds} s",
       "different": "Utiliser une autre adresse",
       "spam": "Rien au bout d’une minute ? Regardez dans les spams, puis renvoyez-le."
     },
@@ -313,6 +314,14 @@
       "landed": "Arrivé. Touchez le lien.",
       "waitingA11y": "Une enveloppe, prête à partir.",
       "sentA11y": "L’e-mail pour {email} : Voici votre lien. Touchez-le pour vous connecter. Il marche une fois, pendant 10 minutes."
+    },
+    "code": {
+      "label": "Ou saisissez le code à 6 chiffres",
+      "a11y": "Code à 6 chiffres reçu par e-mail",
+      "checking": "Vérification du code",
+      "bad": "Ce code n’a pas marché. Vérifiez-le et réessayez.",
+      "spent": "Ce code a expiré ou a eu trop d’essais. Demandez-en un nouveau.",
+      "limited": "Ça fait beaucoup d’essais. Réessayez dans une heure."
     }
   },
   "handle": {

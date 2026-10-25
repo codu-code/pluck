@@ -4,7 +4,7 @@ import { fetchClientMetadataResource } from "@better-auth/cimd/node";
 import { mcp } from "@better-auth/mcp";
 import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware } from "better-auth/api";
-import { jwt, magicLink } from "better-auth/plugins";
+import { emailOTP, jwt, magicLink } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -63,8 +63,15 @@ const guard = createAuthMiddleware(async (ctx) => {
   }
   // Each link is an email we pay for and a mailbox someone else owns: a few an hour per address and per network.
   if (ctx.path === "/sign-in/magic-link" && LIMITS_ON) {
+    // One a minute per address (the apps count the minute down on Send again), then a few an hour.
+    if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another link." });
     for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 30]] as const)
       if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in links. Try again in an hour." });
+  }
+  // Each code allows 5 tries; these cap guessing across codes.
+  if (ctx.path === "/sign-in/email-otp" && LIMITS_ON) {
+    for (const [key, max] of [[`code:email:${email}`, 15], [`code:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 60]] as const)
+      if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many tries. Try again in an hour." });
   }
 });
 
@@ -93,14 +100,21 @@ export const auth = betterAuth({
   },
   // Passwords exist for the review account only (the guard): nobody signs up, resets or changes one.
   emailAndPassword: { enabled: REVIEW !== null, disableSignUp: true },
-  disabledPaths: ["/sign-up/email", "/request-password-reset", "/reset-password", "/change-password"],
+  // Codes only ever go out inside the sign-in email, so the email-code plugin's own sending and account routes are off.
+  disabledPaths: [
+    "/sign-up/email", "/request-password-reset", "/reset-password", "/change-password",
+    "/email-otp/send-verification-otp", "/email-otp/check-verification-otp", "/email-otp/verify-email", "/email-otp/request-password-reset",
+    "/forget-password/email-otp", "/email-otp/reset-password", "/email-otp/request-email-change", "/email-otp/change-email",
+  ],
   hooks: { before: guard },
   onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so
   plugins: [
     magicLink({
       expiresIn: 10 * 60,
-      sendMagicLink: ({ email, url }, ctx) => sendEmail(magicLinkEmail(email, linkPageUrl(url), localeFrom(ctx?.headers))),
+      sendMagicLink: async ({ email, url }, ctx) => sendEmail(magicLinkEmail(email, linkPageUrl(url), await signInCode(email), localeFrom(ctx?.headers))),
     }),
+    // The code in that email: POST /sign-in/email-otp. Hashed at rest, 10 minutes, 5 tries; the newest code is the one that works.
+    emailOTP({ otpLength: 6, expiresIn: 10 * 60, storeOTP: "hashed", allowedAttempts: 5, sendVerificationOTP: async () => {} }),
     // OAuth 2.1 for MCP clients, the extension and iOS: JWT access tokens bound to one resource.
     jwt(),
     mcp({
@@ -126,6 +140,11 @@ export const auth = betterAuth({
     }),
   ],
 });
+
+// The sign-in email carries a 6-digit code beside the link, for reading it on another device than the one signing in.
+function signInCode(email: string): Promise<string> {
+  return auth.api.createVerificationOTP({ body: { email, type: "sign-in" } });
+}
 
 export type SessionUser = { id: string; email: string; name: string };
 

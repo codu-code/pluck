@@ -1,8 +1,9 @@
 {
   "magicLink": {
-    "subject": "Seu link para entrar no Pluck",
-    "intro": "Aqui está o seu link para entrar no Pluck. Ele funciona uma vez, nos próximos 10 minutos.",
+    "subject": "Seu acesso ao Pluck: {code}",
+    "intro": "Toque no botão para entrar no Pluck, ou digite o código onde você pediu. Qualquer um dos dois funciona uma vez, nos próximos 10 minutos.",
     "button": "Entrar no Pluck",
+    "codeLabel": "Ou digite este código:",
     "copy": "O botão não funciona? Copie este link no seu navegador:",
     "ignore": "Se não foi você que pediu, ignore. Nada acontece a menos que você abra o link e toque em Entrar."
   },

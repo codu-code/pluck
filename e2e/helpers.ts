@@ -21,6 +21,22 @@ export async function linkFromEmail(to: string, after = 0): Promise<string> {
   throw new Error(`no email to ${to}`);
 }
 
+// The 6-digit code in the newest sign-in email to `to`.
+export async function codeFromEmail(to: string, after = 0): Promise<string> {
+  for (let i = 0; i < 40; i++) {
+    const res = await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:"${to}"`)}`);
+    const { messages } = (await res.json()) as { messages: { ID: string; Created: string }[] };
+    const fresh = messages.find((m) => new Date(m.Created).getTime() >= after - 1000);
+    if (fresh) {
+      const msg = (await (await fetch(`${MAILPIT}/api/v1/message/${fresh.ID}`)).json()) as { Text: string };
+      const code = msg.Text.match(/\b(\d{6})\b/)?.[1];
+      if (code) return code;
+    }
+    await new Promise((r) => setTimeout(r, 250));
+  }
+  throw new Error(`no code to ${to}`);
+}
+
 // Opens a sign-in email's link the way a person does, after a mail scanner has fetched it first: the fetch must
 // not spend it (lib/signin-link.ts), and the tap must.
 export async function openSignInLink(page: Page, link: string): Promise<void> {

@@ -176,10 +176,11 @@
     },
     "sent": {
       "title": "Schau in deine E-Mails",
-      "lede": "Wir haben einen Link an <b>{email}</b> geschickt. Er funktioniert einmal, 10 Minuten lang, in dem Browser, in dem du ihn öffnest.",
+      "lede": "Wir haben einen Link und einen Code an <b>{email}</b> geschickt. Öffne den Link in diesem Browser oder gib den Code hier ein. Beides funktioniert einmal, 10 Minuten lang.",
       "status": "Link an {email} gesendet. Schau in deine E-Mails.",
       "sending": "Wird gesendet",
       "again": "Noch mal senden",
+      "wait": "Erneut senden in {seconds} s",
       "different": "Andere E-Mail nutzen",
       "spam": "Nach einer Minute noch nichts da? Schau im Spam nach und schick ihn dann noch mal."
     },
@@ -198,7 +199,13 @@
     "error": "Das hat nicht geklappt. Prüf die Adresse und versuch es dann noch mal.",
     "wrong": "Dieses Passwort hat nicht funktioniert.",
     "limitedTries": "Das sind ganz schön viele Versuche. Probier es in einer Stunde noch mal.",
-    "limitedLinks": "Das sind ganz schön viele Links. Nimm den neuesten, den wir geschickt haben, oder probier es in einer Stunde noch mal."
+    "limitedLinks": "Das sind ganz schön viele Links. Nimm den neuesten, den wir geschickt haben, oder probier es in einer Stunde noch mal.",
+    "code": {
+      "label": "Oder gib den 6-stelligen Code ein",
+      "checking": "Code wird geprüft",
+      "bad": "Der Code hat nicht funktioniert. Prüf ihn und versuch es noch mal.",
+      "spent": "Der Code ist abgelaufen oder hatte zu viele Versuche. Fordere einen neuen an."
+    }
   },
   "signinLink": {
     "broken": {

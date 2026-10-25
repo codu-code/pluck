@@ -301,10 +301,11 @@
     "limited": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
     "sent": {
       "title": "Check your email<accent>.</accent>",
-      "lede": "Your link is on its way to <b>{email}</b>. Tap it on this iPhone and you're in.",
+      "lede": "A link and a code are on their way to <b>{email}</b>. Tap the link on this iPhone, or type the code below.",
       "another": "Sent another. Either link works.",
       "openMail": "Open Mail",
       "again": "Send it again",
+      "wait": "Send again in {seconds}s",
       "different": "Use a different email",
       "spam": "Nothing after a minute? Look in spam, then send it again."
     },
@@ -313,6 +314,14 @@
       "landed": "Landed. Now tap it.",
       "waitingA11y": "An envelope, ready to go.",
       "sentA11y": "The email to {email}: Here is your link. Tap it to sign in. It works once, for 10 minutes."
+    },
+    "code": {
+      "label": "Or type the 6-digit code",
+      "a11y": "6-digit code from the email",
+      "checking": "Checking the code",
+      "bad": "That code didn't work. Check it and try again.",
+      "spent": "That code has expired or had too many tries. Send a new one.",
+      "limited": "That is a lot of tries. Try again in an hour."
     }
   },
   "handle": {

@@ -176,10 +176,11 @@
     },
     "sent": {
       "title": "Check your email",
-      "lede": "We sent a link to <b>{email}</b>. It works once, for 10 minutes, in the browser you open it in.",
+      "lede": "We sent a link and a code to <b>{email}</b>. Open the link in this browser, or type the code here. Either works once, for 10 minutes.",
       "status": "Sent a link to {email}. Check your email.",
       "sending": "Sending",
       "again": "Send it again",
+      "wait": "Send again in {seconds}s",
       "different": "Use a different email",
       "spam": "Nothing after a minute? Look in spam, then send it again."
     },
@@ -198,7 +199,13 @@
     "error": "That did not go through. Check the address, then try again.",
     "wrong": "That password did not work.",
     "limitedTries": "That is a lot of tries. Try again in an hour.",
-    "limitedLinks": "That is a lot of links. Use the newest one we sent, or try again in an hour."
+    "limitedLinks": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
+    "code": {
+      "label": "Or type the 6-digit code",
+      "checking": "Checking the code",
+      "bad": "That code didn't work. Check it and try again.",
+      "spent": "That code has expired or had too many tries. Send a new one."
+    }
   },
   "signinLink": {
     "broken": {

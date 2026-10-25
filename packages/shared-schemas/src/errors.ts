@@ -11,6 +11,8 @@ export const ErrorCode = z.enum([
   "unknown_tags",
   "rate_limited",
   "internal",
+  "bad_code", // a sign-in code that does not match
+  "code_spent", // a sign-in code that expired or had too many tries
 ]);
 export type ErrorCode = z.infer<typeof ErrorCode>;
 

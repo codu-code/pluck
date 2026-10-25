@@ -6,16 +6,19 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { useTranslations } from "use-intl";
 import { Wordmark } from "@/components/Wordmark";
-import { defaultServer, sendSignInLink, showServerChoice, signIn, signInWithKey } from "@/lib/session";
+import { defaultServer, sendSignInLink, showServerChoice, signIn, signInWithCode, signInWithKey } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
 
 type State = "idle" | "sending" | "sent" | "resending" | "resent" | "invalid" | "error" | "limited";
+type CodeState = "idle" | "checking" | "bad" | "spent" | "limited" | "error";
 const looksLikeEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
+const RESEND_AFTER = 60_000; // the server allows one link a minute per address too
 
-// Sign in (no board of its own: the web's sign-in page, First run and Brand). One field, the email; the link we
-// send does the rest. Above the field is a picture that follows what is happening, never a control: a slot
-// waiting for the email, then the email landing and being tapped. "Use your own server" (self-hosting builds
-// only) takes a server address and, optionally, an API key.
+// Sign in (no board of its own: the web's sign-in page, First run and Brand). One field, the email. The email we send
+// has a link and a 6-digit code: tap the link on this iPhone, or type the code here if the email is open somewhere
+// else. Beside the field is a picture that follows what is happening, never a control: a slot waiting for the email,
+// then the email landing and being tapped. "Use your own server" (self-hosting builds only) takes a server address
+// and, optionally, an API key.
 // pluck://signin?server=https://… opens with that server filled in, for a self-hosted setup page to link to.
 export default function SignIn() {
   const t = useTheme();
@@ -28,9 +31,20 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<string | null>(stale ? tr("stale") : null);
+  const [code, setCode] = useState("");
+  const [codeState, setCodeState] = useState<CodeState>("idle");
+  const [resendAt, setResendAt] = useState(0);
+  const [now, setNow] = useState(Date.now());
   const sent = state === "sent" || state === "resending" || state === "resent";
   const busy = state === "sending" || state === "resending";
+  const wait = Math.max(0, Math.ceil((resendAt - now) / 1000));
   const target = () => (advanced ? server.trim().replace(/\/+$/, "") : defaultServer);
+
+  useEffect(() => {
+    if (resendAt <= Date.now()) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [resendAt]);
 
   const send = async () => {
     setError(null);
@@ -44,7 +58,24 @@ export default function SignIn() {
       if (await signIn(target())) router.replace("/welcome");
       return;
     }
+    if (result === "sent") {
+      setResendAt(Date.now() + RESEND_AFTER);
+      setNow(Date.now());
+      setCode("");
+      setCodeState("idle");
+    }
+    if (sent && result !== "sent") {
+      // A resend that did not go: the email already sent still stands.
+      setState("sent");
+      return setError(tr(result === "limited" ? "limited" : "error"));
+    }
     setState(result === "sent" ? (sent ? "resent" : "sent") : result);
+  };
+  const tryCode = async (value: string) => {
+    setCodeState("checking");
+    const result = await signInWithCode(email, value, target());
+    if (result === "ok") return router.replace("/welcome");
+    setCodeState(result);
   };
   const withKey = async () => {
     setError(null);
@@ -59,6 +90,7 @@ export default function SignIn() {
   };
 
   const message = error ?? (state === "invalid" ? tr("invalid") : state === "error" ? tr("error") : state === "limited" ? tr("limited") : null);
+  const codeMessage = codeState === "bad" ? tr("code.bad") : codeState === "spent" ? tr("code.spent") : codeState === "limited" ? tr("code.limited") : codeState === "error" ? tr("error") : null;
   const field = [styles.field, font.regular, { borderColor: state === "invalid" ? t.danger : t.lineStrong, backgroundColor: t.surface, color: t.ink }];
   const useKey = advanced && key.trim().length > 0;
   return (
@@ -78,18 +110,36 @@ export default function SignIn() {
           </Text>
         </View>
 
-        {!advanced && <Story t={t} sent={sent} sending={busy && !sent} email={email.trim()} />}
-
-        {!sent && (
-          <View style={{ gap: 8 }}>
-            <Text nativeID="email-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("email")}</Text>
-            <TextInput value={email} onChangeText={(v) => { setEmail(v); if (state === "invalid") setState("idle"); }}
-              autoCapitalize="none" autoCorrect={false} autoComplete="email" keyboardType="email-address" textContentType="emailAddress"
-              placeholder={tr("emailPlaceholder")} placeholderTextColor={t.ink2} returnKeyType="send" editable={!busy}
-              onSubmitEditing={() => void (useKey ? withKey() : send())}
-              style={field} accessibilityLabel={tr("email")} accessibilityLabelledBy="email-label" />
-          </View>
-        )}
+        {/* The picture and the one thing to type sit together. */}
+        <View style={{ gap: 14 }}>
+          {!advanced && <Story t={t} sent={sent} sending={busy && !sent} email={email.trim()} />}
+          {sent ? (
+            <View style={{ gap: 8 }}>
+              <Text nativeID="code-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("code.label")}</Text>
+              <TextInput value={code} maxLength={6} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code"
+                editable={codeState !== "checking"} placeholder="000000" placeholderTextColor={t.lineStrong}
+                onChangeText={(v) => {
+                  const digits = v.replace(/\D/g, "").slice(0, 6);
+                  setCode(digits);
+                  if (codeState !== "checking") setCodeState("idle");
+                  if (digits.length === 6) void tryCode(digits);
+                }}
+                style={[styles.code, font.semibold, { borderColor: codeMessage ? t.danger : t.lineStrong, backgroundColor: t.surface, color: t.ink }]}
+                accessibilityLabel={tr("code.a11y")} accessibilityLabelledBy="code-label" />
+              {codeState === "checking" && <Text style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("code.checking")}</Text>}
+              {codeMessage && <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{codeMessage}</Text>}
+            </View>
+          ) : (
+            <View style={{ gap: 8 }}>
+              <Text nativeID="email-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("email")}</Text>
+              <TextInput value={email} onChangeText={(v) => { setEmail(v); if (state === "invalid") setState("idle"); }}
+                autoCapitalize="none" autoCorrect={false} autoComplete="email" keyboardType="email-address" textContentType="emailAddress"
+                placeholder={tr("emailPlaceholder")} placeholderTextColor={t.ink2} returnKeyType="send" editable={!busy}
+                onSubmitEditing={() => void (useKey ? withKey() : send())}
+                style={field} accessibilityLabel={tr("email")} accessibilityLabelledBy="email-label" />
+            </View>
+          )}
+        </View>
         {advanced && !sent && (
           <View style={{ gap: 8 }}>
             <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("server")}</Text>
@@ -112,10 +162,12 @@ export default function SignIn() {
                 <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("sent.openMail")}</Text>
               </Pressable>
               <View style={styles.row}>
-                <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy }} disabled={busy} onPress={() => void send()} style={styles.quiet}>
-                  <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{busy ? tr("sending") : tr("sent.again")}</Text>
+                <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy || wait > 0 }} disabled={busy || wait > 0} onPress={() => void send()} style={styles.quiet}>
+                  <Text style={[font.medium, { color: wait > 0 ? t.ink2 : t.actionInk, fontSize: 15, fontVariant: ["tabular-nums"] }]}>
+                    {busy ? tr("sending") : wait > 0 ? tr("sent.wait", { seconds: wait }) : tr("sent.again")}
+                  </Text>
                 </Pressable>
-                <Pressable accessibilityRole="button" onPress={() => { setState("idle"); setError(null); }} style={styles.quiet}>
+                <Pressable accessibilityRole="button" onPress={() => { setState("idle"); setError(null); setCodeState("idle"); setCode(""); }} style={styles.quiet}>
                   <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr("sent.different")}</Text>
                 </Pressable>
               </View>
@@ -146,7 +198,7 @@ export default function SignIn() {
 function Story({ t, sent, sending, email }: { t: Palette; sent: boolean; sending: boolean; email: string }) {
   const tr = useTranslations("ios.signin.story");
   return (
-    <View style={{ minHeight: 236 }} accessible accessibilityLabel={sent ? tr("sentA11y", { email }) : tr("waitingA11y")}>
+    <View accessible accessibilityLabel={sent ? tr("sentA11y", { email }) : tr("waitingA11y")}>
       {sent ? (
         <Animated.View key="sent" entering={FadeIn.duration(200)} style={{ gap: 10 }}>
           <Text style={[font.medium, { color: t.ink2, fontSize: 13 }]}>{tr("landed")}</Text>
@@ -179,10 +231,11 @@ function Slot({ t, sending }: { t: Palette; sending: boolean }) {
   return (
     <View style={[styles.slot, { borderColor: t.lineStrong }]}>
       <Animated.View style={envelope}>
-        <Svg width={72} height={56} viewBox="-2 -4 68 56">
+        {/* The envelope, and the wordmark's three sparks off its top-right corner (60, 6), clear of the edges. */}
+        <Svg width={84} height={62} viewBox="0 -10 80 58">
           <Path d="M6 6h52a2 2 0 0 1 2 2v32a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" fill={t.surface} stroke={t.brand} strokeWidth={2.5} strokeLinejoin="round" />
           <Path d="M5 9l27 19L59 9" fill="none" stroke={t.brand} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />
-          <Path d="M52 0.5L53 -2.5M57 3.5L60 1M58 8.5L61.5 8" fill="none" stroke={t.accent} strokeWidth={2.5} strokeLinecap="round" />
+          <Path d="M63.5 0.5L65 -5.5M67.5 3.5L72.5 -0.5M68.5 8.5L74.5 7.5" fill="none" stroke={t.accent} strokeWidth={2.5} strokeLinecap="round" />
         </Svg>
       </Animated.View>
     </View>
@@ -247,7 +300,7 @@ function EmailLanding({ t, email }: { t: Palette; email: string }) {
 
 const styles = StyleSheet.create({
   page: { flexGrow: 1, paddingHorizontal: 24, gap: 24 },
-  slot: { height: 206, borderRadius: 16, borderWidth: 1.5, borderStyle: "dashed", alignItems: "center", justifyContent: "center" },
+  slot: { height: 168, borderRadius: 16, borderWidth: 1.5, borderStyle: "dashed", alignItems: "center", justifyContent: "center" },
   panel: { borderRadius: 16, borderWidth: StyleSheet.hairlineWidth * 2, shadowColor: "#151A13", shadowOpacity: 0.1, shadowRadius: 28, shadowOffset: { width: 0, height: 14 } },
   panelHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   panelBody: { gap: 12, paddingTop: 18, paddingHorizontal: 16, paddingBottom: 20 },
@@ -259,6 +312,7 @@ const styles = StyleSheet.create({
   lede: { fontSize: 16, lineHeight: 23 },
   field: { minHeight: 52, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontSize: 17 },
   primary: { minHeight: 52, borderRadius: 12, alignItems: "center", justifyContent: "center", paddingVertical: 12 },
+  code: { minHeight: 60, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, fontSize: 28, letterSpacing: 10, textAlign: "center", fontVariant: ["tabular-nums"] },
   row: { flexDirection: "row", justifyContent: "center", gap: 24 },
   quiet: { alignItems: "center", justifyContent: "center", minHeight: 44 },
 });

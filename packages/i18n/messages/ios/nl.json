@@ -301,10 +301,11 @@
     "limited": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
     "sent": {
       "title": "Kijk in je mail<accent>.</accent>",
-      "lede": "Je link is onderweg naar <b>{email}</b>. Tik erop op deze iPhone en je bent binnen.",
+      "lede": "Een link en een code zijn onderweg naar <b>{email}</b>. Tik op de link op deze iPhone, of typ de code hieronder.",
       "another": "Nog eentje verstuurd. Beide links werken.",
       "openMail": "Open Mail",
       "again": "Stuur hem opnieuw",
+      "wait": "Opnieuw sturen over {seconds} s",
       "different": "Een ander e-mailadres gebruiken",
       "spam": "Na een minuut nog niets? Kijk in je spam en stuur hem daarna opnieuw."
     },
@@ -313,6 +314,14 @@
       "landed": "Binnen. Tik er nu op.",
       "waitingA11y": "Een envelop, klaar om te gaan.",
       "sentA11y": "De e-mail aan {email}: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang."
+    },
+    "code": {
+      "label": "Of typ de 6-cijferige code",
+      "a11y": "6-cijferige code uit de e-mail",
+      "checking": "Code controleren",
+      "bad": "Die code werkte niet. Controleer hem en probeer het opnieuw.",
+      "spent": "Die code is verlopen of te vaak geprobeerd. Vraag een nieuwe aan.",
+      "limited": "Dat zijn veel pogingen. Probeer het over een uur opnieuw."
     }
   },
   "handle": {

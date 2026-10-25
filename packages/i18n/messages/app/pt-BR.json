@@ -176,10 +176,11 @@
     },
     "sent": {
       "title": "Confira seu e-mail",
-      "lede": "Enviamos um link para <b>{email}</b>. Ele funciona uma vez, por 10 minutos, no navegador em que você abrir.",
+      "lede": "Mandamos um link e um código para <b>{email}</b>. Abra o link neste navegador, ou digite o código aqui. Qualquer um dos dois funciona uma vez, por 10 minutos.",
       "status": "Enviamos um link para {email}. Confira seu e-mail.",
       "sending": "Enviando",
       "again": "Enviar de novo",
+      "wait": "Enviar de novo em {seconds} s",
       "different": "Usar outro e-mail",
       "spam": "Nada depois de um minuto? Olhe no spam e envie de novo."
     },
@@ -198,7 +199,13 @@
     "error": "Não deu certo. Confira o endereço e tente de novo.",
     "wrong": "Essa senha não funcionou.",
     "limitedTries": "São muitas tentativas. Tente de novo daqui a uma hora.",
-    "limitedLinks": "São muitos links. Use o mais recente que enviamos, ou tente de novo daqui a uma hora."
+    "limitedLinks": "São muitos links. Use o mais recente que enviamos, ou tente de novo daqui a uma hora.",
+    "code": {
+      "label": "Ou digite o código de 6 dígitos",
+      "checking": "Conferindo o código",
+      "bad": "Esse código não funcionou. Confira e tente de novo.",
+      "spent": "Esse código expirou ou teve tentativas demais. Peça um novo."
+    }
   },
   "signinLink": {
     "broken": {

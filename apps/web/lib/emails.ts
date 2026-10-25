@@ -7,16 +7,18 @@ const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").rep
 // Email copy lives in packages/i18n (the email catalog), in the language of the person it goes to.
 export const emailT = (locale: Locale) => createTranslator({ locale: formatLocale(locale), messages: { email: messagesFor("email", locale) }, namespace: "email" });
 
-export function magicLinkEmail(to: string, url: string, locale: Locale = "en"): Email {
+export function magicLinkEmail(to: string, url: string, code: string, locale: Locale = "en"): Email {
   const t = emailT(locale);
   return {
     to,
     replyTo: null, // sent from no-reply: a reply has no one to reach
-    subject: t("magicLink.subject"),
-    text: `${t("magicLink.intro")}\n\n${url}\n\n${t("magicLink.ignore")}\n`,
+    subject: t("magicLink.subject", { code }),
+    text: `${t("magicLink.intro")}\n\n${url}\n\n${t("magicLink.codeLabel")} ${code}\n\n${t("magicLink.ignore")}\n`,
     html: `<div lang="${locale}" style="font-family: Geist, -apple-system, sans-serif; font-size: 15px; line-height: 22px; color: #151A13; max-width: 480px">
 <p>${escape(t("magicLink.intro"))}</p>
 <p><a href="${escape(url)}" style="display: inline-block; padding: 10px 16px; border-radius: 6px; background: #1E5C45; color: #F6F8F4; text-decoration: none; font-weight: 500">${escape(t("magicLink.button"))}</a></p>
+<p style="margin: 20px 0 4px; color: #525A4E; font-size: 13px; line-height: 19px">${escape(t("magicLink.codeLabel"))}</p>
+<p style="margin: 0 0 20px; font-family: 'Geist Mono', ui-monospace, Menlo, monospace; font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: 6px">${escape(code)}</p>
 <p style="color: #525A4E; font-size: 13px; line-height: 19px">${escape(t("magicLink.copy"))}<br><a href="${escape(url)}" style="color: #1E5C45; word-break: break-all">${escape(url)}</a></p>
 <p style="color: #525A4E">${escape(t("magicLink.ignore"))}</p>
 </div>`,

@@ -176,10 +176,11 @@
     },
     "sent": {
       "title": "Kijk in je mail",
-      "lede": "We hebben een link gestuurd naar <b>{email}</b>. Hij werkt één keer, 10 minuten lang, in de browser waarin je hem opent.",
+      "lede": "We hebben een link en een code naar <b>{email}</b> gestuurd. Open de link in deze browser, of typ de code hier. Allebei werken ze één keer, 10 minuten lang.",
       "status": "Link gestuurd naar {email}. Kijk in je mail.",
       "sending": "Versturen",
       "again": "Stuur hem opnieuw",
+      "wait": "Opnieuw sturen over {seconds} s",
       "different": "Een ander e-mailadres gebruiken",
       "spam": "Na een minuut nog niets? Kijk in je spam en stuur hem daarna opnieuw."
     },
@@ -198,7 +199,13 @@
     "error": "Dat lukte niet. Controleer het adres en probeer het opnieuw.",
     "wrong": "Dat wachtwoord werkte niet.",
     "limitedTries": "Dat zijn veel pogingen. Probeer het over een uur opnieuw.",
-    "limitedLinks": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw."
+    "limitedLinks": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
+    "code": {
+      "label": "Of typ de 6-cijferige code",
+      "checking": "Code controleren",
+      "bad": "Die code werkte niet. Controleer hem en probeer het opnieuw.",
+      "spent": "Die code is verlopen of te vaak geprobeerd. Vraag een nieuwe aan."
+    }
   },
   "signinLink": {
     "broken": {

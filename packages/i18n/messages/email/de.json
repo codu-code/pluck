@@ -1,8 +1,9 @@
 {
   "magicLink": {
-    "subject": "Dein Anmeldelink für Pluck",
-    "intro": "Hier ist dein Link, um dich bei Pluck anzumelden. Er funktioniert einmal, in den nächsten 10 Minuten.",
+    "subject": "Deine Anmeldung bei Pluck: {code}",
+    "intro": "Tipp auf den Button, um dich bei Pluck anzumelden, oder gib den Code dort ein, wo du ihn angefordert hast. Beides funktioniert einmal, in den nächsten 10 Minuten.",
     "button": "Bei Pluck anmelden",
+    "codeLabel": "Oder gib diesen Code ein:",
     "copy": "Der Button funktioniert nicht? Kopier diesen Link in deinen Browser:",
     "ignore": "Wenn du das nicht angefordert hast, ignorier diese E-Mail. Es passiert nichts, solange du sie nicht öffnest und auf Anmelden tippst."
   },

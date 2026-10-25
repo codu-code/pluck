@@ -176,10 +176,11 @@
     },
     "sent": {
       "title": "Controlla la tua email",
-      "lede": "Abbiamo mandato un link a <b>{email}</b>. Funziona una volta, per 10 minuti, nel browser in cui lo apri.",
+      "lede": "Abbiamo inviato un link e un codice a <b>{email}</b>. Apri il link in questo browser, oppure scrivi qui il codice. Funzionano entrambi una volta sola, per 10 minuti.",
       "status": "Link inviato a {email}. Controlla la tua email.",
       "sending": "Invio in corso",
       "again": "Invialo di nuovo",
+      "wait": "Invia di nuovo tra {seconds} s",
       "different": "Usa un'altra email",
       "spam": "Dopo un minuto non è arrivato niente? Guarda nello spam, poi invialo di nuovo."
     },
@@ -198,7 +199,13 @@
     "error": "Non è andato a buon fine. Controlla l'indirizzo, poi riprova.",
     "wrong": "Questa password non ha funzionato.",
     "limitedTries": "Sono tanti tentativi. Riprova tra un'ora.",
-    "limitedLinks": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora."
+    "limitedLinks": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
+    "code": {
+      "label": "Oppure scrivi il codice di 6 cifre",
+      "checking": "Controllo del codice",
+      "bad": "Quel codice non ha funzionato. Controllalo e riprova.",
+      "spent": "Quel codice è scaduto o ha avuto troppi tentativi. Chiedine uno nuovo."
+    }
   },
   "signinLink": {
     "broken": {

@@ -301,10 +301,11 @@
     "limited": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
     "sent": {
       "title": "Controlla la tua email<accent>.</accent>",
-      "lede": "Il tuo link sta arrivando a <b>{email}</b>. Toccalo su questo iPhone e sei dentro.",
+      "lede": "Un link e un codice stanno arrivando a <b>{email}</b>. Tocca il link su questo iPhone, oppure scrivi il codice qui sotto.",
       "another": "Inviato un altro. Funzionano entrambi.",
       "openMail": "Apri Mail",
       "again": "Invialo di nuovo",
+      "wait": "Invia di nuovo tra {seconds} s",
       "different": "Usa un'altra email",
       "spam": "Dopo un minuto non è arrivato niente? Guarda nello spam, poi invialo di nuovo."
     },
@@ -313,6 +314,14 @@
       "landed": "Arrivata. Ora tocca il link.",
       "waitingA11y": "Una busta, pronta a partire.",
       "sentA11y": "L’email per {email}: Ecco il tuo link. Toccalo per accedere. Funziona una volta, per 10 minuti."
+    },
+    "code": {
+      "label": "Oppure scrivi il codice di 6 cifre",
+      "a11y": "Codice di 6 cifre dell’email",
+      "checking": "Controllo del codice",
+      "bad": "Quel codice non ha funzionato. Controllalo e riprova.",
+      "spent": "Quel codice è scaduto o ha avuto troppi tentativi. Chiedine uno nuovo.",
+      "limited": "Sono tanti tentativi. Riprova tra un'ora."
     }
   },
   "handle": {
