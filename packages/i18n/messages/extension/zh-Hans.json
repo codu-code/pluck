@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "点一下，就把当前网页摘进你的 Pluck 资料库。",
+    "pluckPage": "摘下此页",
+    "pluckSelection": "把选中的文字摘为高亮"
+  },
+  "menu": {
+    "link": "摘下链接",
+    "selection": "把选中内容摘为高亮",
+    "image": "摘下图片",
+    "page": "摘下网页"
+  },
+  "toolbar": {
+    "plucked": "已摘下",
+    "pluckPage": "摘下此页"
+  },
+  "errors": {
+    "nothing": "这个网页上没有可摘的内容。",
+    "failed": "没有成功。",
+    "tryAgain": "没有成功，请再试一次。"
+  },
+  "kinds": {
+    "link": "阅读",
+    "video": "观看",
+    "pdf": "PDF",
+    "image": "图片",
+    "note": "笔记",
+    "todo": "待办",
+    "thing": "物品"
+  },
+  "status": {
+    "inbox": "收件箱",
+    "later": "稍后",
+    "archived": "已归档",
+    "done": "已完成"
+  },
+  "popup": {
+    "plucking": "正在摘下…",
+    "signedOut": {
+      "lede": "当前网页，点一下就留下。用邮箱登录一次即可。",
+      "signIn": "登录",
+      "ownServer": "使用你自己的服务器"
+    },
+    "nothingHint": "Pluck 只在网页上工作。打开一个网页，再点一次。",
+    "queued": {
+      "title": "连不上 Pluck，稍后重试。",
+      "count": "{count, plural, other {# 条}}正在这个浏览器里排队。"
+    },
+    "already": {
+      "meta": "{date}摘下 · {status}",
+      "open": "在 Pluck 中打开",
+      "again": "再摘一次"
+    },
+    "plucked": {
+      "title": "已摘下",
+      "undo": "撤销",
+      "tips": {
+        "opening": "打开这个窗口就会留下网页，诀窍就这么简单。",
+        "shortcut": "按 Alt+Shift+P，连点都不用点。",
+        "rightClick": "右键点击链接或图片，就只摘下它。"
+      },
+      "tags": "标签",
+      "tagsPlaceholder": "搜索你的标签",
+      "kind": "类别",
+      "toList": "加入清单",
+      "noList": "无",
+      "lastUsed": "{name}（上次使用）",
+      "note": "笔记",
+      "notePlaceholder": "想写就写一句",
+      "later": "稍后",
+      "archive": "归档",
+      "open": "在 Pluck 中打开"
+    },
+    "tabs": {
+      "listName": "{date}的标签页",
+      "all": "{count, plural, =1 {把这 1 个标签页摘进新清单“{name}”} other {把全部 # 个标签页摘进新清单“{name}”}}",
+      "plucking": "正在摘下…",
+      "done": "{count, plural, other {已把 # 个标签页摘进“{name}”。}}",
+      "failed": "连不上 Pluck，请稍后再试。"
+    }
+  },
+  "options": {
+    "title": "Pluck 选项",
+    "shortcut": "快捷键：Alt+Shift+P · 可在浏览器的快捷键页面修改",
+    "server": "服务器",
+    "defaultKind": "默认类别",
+    "guess": "根据网页判断",
+    "account": "账号",
+    "apiKey": "API 密钥",
+    "useKey": "使用密钥",
+    "notSignedIn": "未登录",
+    "signOut": "退出登录",
+    "signIn": "登录",
+    "useApiKey": "改用 API 密钥",
+    "sendContent": "摘下时发送网页内容",
+    "sendContentHint": "这样，需要登录才能看的网页以后也能读。",
+    "transcripts": "获取 YouTube 字幕文本",
+    "transcriptsHint": "这样，搜索和你的 AI 都能读到视频里说了什么。",
+    "messages": {
+      "notAddress": "这不是网址。",
+      "ownServerOnly": "这份 Pluck 只能连接它自己的服务器。要用你的服务器，请从代码仓库构建扩展：见 docs/self-host.md。",
+      "using": "正在使用 {origin}。在那里登录后即可摘下。",
+      "keySignedIn": "已用你的 API 密钥登录。",
+      "keyFailed": "这个密钥在此服务器上无效。",
+      "signedOut": "已退出登录。"
+    }
+  }
+}

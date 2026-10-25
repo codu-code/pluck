@@ -1,1 +1,568 @@
-{}
+{
+  "language": {
+    "label": "Lingua"
+  },
+  "meta": {
+    "description": "Prendilo. Un'app veloce e open source per tenere i link, che la tua IA può leggere."
+  },
+  "chrome": {
+    "home": "Home di Pluck",
+    "nav": "Sito",
+    "lists": "Liste",
+    "connect": "Collega la tua IA",
+    "openSource": "Open source",
+    "getPluck": "Prova Pluck",
+    "footerHome": "Home",
+    "support": "Assistenza",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "cookies": "Cookie",
+    "freeAndOpen": "Pluck è gratuito e open source."
+  },
+  "paste": {
+    "label": "Incolla un link per provarlo",
+    "placeholder": "Incolla un link. O cinque. Dai.",
+    "button": "Prendilo",
+    "failed": "Non è andato a buon fine. Riprova.",
+    "plucked": "Preso.",
+    "inInbox": "È nella tua <inbox>Inbox</inbox>.",
+    "checkEmail": "Controlla la tua email.",
+    "took": "Ci sono voluti {ms, number} ms.",
+    "sent": "Abbiamo mandato un link a <b>{email}</b>. Aprilo in questo browser e quello che hai preso arriva nella tua Inbox.",
+    "keepNote": "Aggiungi la tua email per tenerlo. Che sia la prima volta o no, il link ti fa accedere.",
+    "emailLabel": "La tua email, per tenere quello che hai preso",
+    "emailPlaceholder": "you@example.com",
+    "sending": "Invio in corso",
+    "keep": "Tienilo",
+    "emailFailed": "Non è andato a buon fine. Controlla l'indirizzo, poi riprova.",
+    "limited": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
+    "hint": "Gratis. Open source. iPhone, Chrome, web ed email. Pronto per la tua IA."
+  },
+  "home": {
+    "meta": {
+      "title": "Pluck · Prendilo. Sistemalo dopo.",
+      "description": "Prendi qualsiasi cosa con un tocco. Sistemala dopo, a mano o con la tua IA. Gratis e open source."
+    },
+    "hero": {
+      "title": "Prendilo<dot>.</dot>",
+      "line1": "Prendi qualsiasi cosa con un tocco.",
+      "line2": "Sistemala dopo, a mano o con la tua IA.",
+      "line3": "Oppure no. Non insistiamo."
+    },
+    "mock": {
+      "label": "L'app",
+      "inbox": "Inbox",
+      "toTriage": "{count, number} da smistare",
+      "plucked": "Preso.",
+      "rows": {
+        "mcp": {
+          "title": "Come funziona davvero l'autenticazione MCP",
+          "meta": "modelcontextprotocol.io · 12 min",
+          "tag": "mcp"
+        },
+        "postgres": {
+          "title": "Gli indici di Postgres in 40 minuti",
+          "meta": "youtube.com · 41 min",
+          "tag": "postgres"
+        },
+        "idea": {
+          "title": "Un server MCP per i preventivi di Assemble",
+          "meta": "Nota · da te",
+          "tag": "assemble"
+        },
+        "hob": {
+          "title": "Piano a induzione, 60 cm, quattro zone",
+          "meta": "Oggetto · lista Ristrutturazione cucina",
+          "tag": "cucina"
+        }
+      }
+    },
+    "band": {
+      "article": "Un articolo.",
+      "recipe": "Una ricetta.",
+      "thread": "Un thread.",
+      "idea": "Mezza idea.",
+      "hob": "Un piano cottura per la cucina.",
+      "talk": "Un intervento che farai a novembre.",
+      "pdf": "Un PDF che non leggerai mai.",
+      "small": "Un'unica Inbox per tutto. Pluck conserva la pagina, non solo il link, così resta lì anche quando il sito non c'è più."
+    },
+    "stats": {
+      "tapNumber": "1 tocco",
+      "tap": "Dal menu Condividi dell'iPhone, senza aprire un'app. Da Chrome, dalla tua email o da una chat con la tua IA. “Preso” in meno di 300 ms. Ogni volta.",
+      "nagsNumber": "0 assilli",
+      "nags": "Niente serie da mantenere, niente badge, niente sensi di colpa. Nessun tag messo alle tue spalle. Le cose che non tocchi mai passano nell'Archivio dopo 30 giorni (il numero lo scegli tu), a meno che non siano in una lista. Non viene eliminato nulla.",
+      "secondsNumber": "30 s",
+      "seconds": "Per collegare l'IA che usi già. Claude, ChatGPT, Cursor, qualsiasi strumento che parli MCP. Chiedile di fare ordine, raggruppare o trasformare quello che hai preso in idee. Lavora sotto i tuoi occhi, e non elimina mai."
+    },
+    "lists": {
+      "title": "Le liste sono quello che stai costruendo.",
+      "para1": "Un libro. Un numero della newsletter. Un intervento. Un viaggio. <phrase>Cose da comprare.</phrase> Metti qualsiasi elemento in quante liste vuoi, ognuna con la sua nota e la sua spunta.",
+      "para2": "Private per impostazione predefinita. Pubbliche con un interruttore. Le ritiri con lo stesso interruttore.",
+      "cardTitle": "Ristrutturazione cucina, da comprare",
+      "progress": "{done, number} di {total, number}",
+      "kitchen": {
+        "hob": {
+          "title": "Piano a induzione, 60 cm",
+          "note": "Controlla la larghezza rispetto al foro nel top."
+        },
+        "tap": {
+          "title": "Rubinetto con doccetta estraibile",
+          "note": "Acciaio spazzolato, non cromato."
+        },
+        "led": {
+          "title": "Striscia LED sottopensile",
+          "note": "Con spina, niente elettricista."
+        },
+        "extractor": {
+          "title": "Cappa, a evacuazione esterna",
+          "note": "Prima chiedi ai montatori se il muro va bene."
+        }
+      },
+      "public": "Pubblica. Chiunque può prenderla nel suo Pluck."
+    },
+    "ai": {
+      "eyebrow": "PRONTO PER LA TUA IA",
+      "title": "Collega l'IA che usi già.",
+      "ask1": "“Cosa ho preso sull'autenticazione MCP?”",
+      "ask2": "“Metti in ordine la mia Inbox.”",
+      "ask3": "“Fammi una lista di lettura con le cose di questo mese, partendo dalle migliori.”",
+      "body": "Un link e tutta la tua libreria è lì. Cambia le cose solo quando lo dici tu, e segna tutto quello che ha toccato.",
+      "button": "Come funziona con l'IA",
+      "chatMe1": "Prendi questa come idea: un server MCP per i preventivi di Assemble",
+      "chatAi1": "Preso. È nella tua Inbox come Nota, segnata come presa da me.",
+      "chatMe2": "Cosa sta ammuffendo nella mia libreria?",
+      "chatAi2": "Cinque cose non toccate da un mese. Le vediamo una alla volta?"
+    },
+    "imports": {
+      "title": "Pocket ha chiuso. Omnivore ha chiuso.",
+      "body": "Pluck è open source e gira su un database che può essere tuo. Non può chiudere con due settimane di preavviso. Porta qui la tua vecchia libreria in un colpo solo.",
+      "anyBrowser": "Qualsiasi browser",
+      "pocket": "Esportazione CSV",
+      "omnivore": "Zip di esportazione",
+      "raindrop": "CSV",
+      "browser": "HTML dei segnalibri",
+      "selfHost": "Self-hosting con un solo comando"
+    },
+    "closing": {
+      "title": "Sistemalo<br></br>dopo<dot>.</dot>",
+      "chrome": "Aggiungi a Chrome",
+      "iphone": "iPhone",
+      "web": "Usalo sul web"
+    }
+  },
+  "soon": {
+    "title": "Presto<dot>.</dot>",
+    "web": "Usalo sul web",
+    "connect": "Collega la tua IA",
+    "chrome": {
+      "meta": {
+        "title": "Pluck per Chrome · Pluck",
+        "description": "Pluck per Chrome è in coda per la revisione del Chrome Web Store. Esce a giorni."
+      },
+      "para1": "Pluck per Chrome è in coda per la revisione del Chrome Web Store, da qualche parte dietro qualche migliaio di estensioni per i coupon. Esce a giorni.",
+      "para2": "Nel frattempo, Pluck funziona sul web: incolla un link ed è preso. Anche la tua IA può prenderli per te."
+    },
+    "iphone": {
+      "meta": {
+        "title": "Pluck per iPhone · Pluck",
+        "description": "Pluck per iPhone arriva prima su TestFlight, poi sull'App Store."
+      },
+      "para1": "Pluck per iPhone arriva prima su TestFlight, poi sull'App Store. Prendi dal menu Condividi, leggi ovunque, scorri per Più tardi.",
+      "para2": "Nel frattempo, Pluck funziona in Safari sul telefono: incolla un link ed è preso. Anche la tua IA può prenderli per te."
+    }
+  },
+  "openSource": {
+    "meta": {
+      "title": "Open source · Pluck",
+      "description": "Pluck è gratuito e open source. Usa getpluck.io, o fai girare il tuo con un solo comando."
+    },
+    "licence": "Licenza: AGPL-3.0 (server) e MIT (app).",
+    "title": "Gratis.<br></br>Aperto.<br></br><marker>Tuo.</marker>",
+    "lede": "Le app per leggere più tardi continuano a chiudere. Pluck non può, perché il codice è pubblico e i dati sono tuoi. Usa il nostro, o fai girare il tuo con un solo comando.",
+    "selfHostTitle": "Self-hosting con un solo comando.",
+    "selfHostBody": "La stessa app, l'estensione, l'app per iPhone e il connettore per l'IA. Puntali al tuo server in Impostazioni.",
+    "terminalComment": "# poi, per gli strumenti di IA senza un URL pubblico",
+    "reasons": {
+      "export": {
+        "title": "Esporta con un clic.",
+        "body": "Ogni elemento in JSON, più un file Markdown per ogni elemento e per ogni lista, con le tue evidenziazioni e le note. Funziona dal primo giorno, non quando troveremo il tempo."
+      },
+      "page": {
+        "title": "La pagina, non solo il link.",
+        "body": "Pluck conserva quello che hai preso. Quando il sito va offline o cambia, la tua copia è ancora lì, leggibile."
+      },
+      "public": {
+        "title": "Pubblico vuol dire pubblico. Privato vuol dire privato.",
+        "body": "Una lista pubblica mostra titoli, copertine, le tue note e i link agli originali. Non mostra mai il testo delle pagine conservate. Rendila di nuovo privata e la pagina sparisce entro un minuto."
+      },
+      "ai": {
+        "title": "La tua IA, la tua scelta.",
+        "body": "Pluck non manda mai di sua iniziativa quello che prendi a un modello. Il tuo strumento di IA legge la tua libreria solo quando lo colleghi, e fa solo quello che chiedi."
+      }
+    },
+    "closing": "Prendilo<dot>.</dot>",
+    "use": "Usa getpluck.io",
+    "code": "Leggi il codice"
+  },
+  "support": {
+    "meta": {
+      "title": "Assistenza · Pluck",
+      "description": "Risposte sull'estensione di Pluck, l'app per iPhone, la tua IA e il tuo account, e dove segnalare un bug."
+    },
+    "title": "Aiuto<dot>.</dot>",
+    "lede": "Risposte brevi su estensione, app per iPhone, la tua IA e il tuo account. Qualcosa non va? <bugs>Diccelo su GitHub</bugs>.",
+    "topicsLabel": "Argomenti",
+    "extension": {
+      "title": "L'estensione",
+      "pluckPage": {
+        "q": "Come prendo la pagina in cui sono?",
+        "a": "Fai clic sul pulsante Pluck nella barra degli strumenti, o premi <pluckKeys></pluckKeys>. Fai clic destro su un link o un'immagine per prendere solo quello."
+      },
+      "quote": {
+        "q": "Posso tenere una citazione, non tutta la pagina?",
+        "a": "Seleziona le parole e premi <highlightKeys></highlightKeys>. Pluck conserva la pagina con la tua selezione come evidenziazione."
+      },
+      "dot": {
+        "q": "Perché c'è un pallino sul pulsante di Pluck?",
+        "a": "Hai preso qualcosa senza connessione. Aspetta sul tuo computer e parte da solo appena torni online. Il pallino sparisce quando parte."
+      },
+      "login": {
+        "q": "Una pagina dietro il mio login è uscita vuota.",
+        "a": "Nelle opzioni dell'estensione, attiva Invia il contenuto della pagina. Così Pluck conserva la pagina come la mostra il tuo browser, non come la vedrebbe un estraneo."
+      },
+      "server": {
+        "q": "Come la uso con il mio server?",
+        "a": "Compila l'estensione per il tuo server seguendo la guida al self-hosting nel repository, poi caricala nel browser. Accedi, o incolla una chiave API da Impostazioni."
+      }
+    },
+    "iphone": {
+      "title": "iPhone",
+      "share": {
+        "q": "Come prendo da Safari o da un'altra app?",
+        "a": "Tocca Condividi, poi Pluck. Se non lo vedi, scorri la riga delle app fino in fondo, tocca Altro e aggiungi Pluck ai preferiti."
+      },
+      "offline": {
+        "q": "Ho preso qualcosa offline. Dov'è finito?",
+        "a": "Aspetta sul telefono e parte la prossima volta che apri Pluck con una connessione."
+      },
+      "server": {
+        "q": "L'app può usare il mio server?",
+        "a": "Sì. Nella schermata di accesso, scegli Usa il tuo server e inserisci il suo indirizzo."
+      }
+    },
+    "ai": {
+      "title": "La tua IA",
+      "connect": {
+        "q": "Come collego il mio strumento di IA?",
+        "a": "Ogni strumento usa lo stesso link. In <connect>Collega la tua IA</connect> trovi i passaggi per Claude, ChatGPT, Cursor e gli altri."
+      },
+      "change": {
+        "q": "Cosa può cambiare la mia IA?",
+        "a": "Può prendere, mettere tag, smistare e creare liste private quando glielo chiedi. Non può eliminare niente a meno che tu non l'abbia permesso quando l'hai collegata, e non può rendere pubblica una lista: puoi farlo solo tu, dalla lista in Pluck. Tutto quello che aggiunge è segnato come fatto dall'IA."
+      },
+      "disconnect": {
+        "q": "Come la scollego?",
+        "a": "Impostazioni, Strumenti di IA, Scollega. Smette di funzionare subito, non alla fine della sua sessione."
+      }
+    },
+    "account": {
+      "title": "La tua libreria e il tuo account",
+      "signIn": {
+        "q": "Il link di accesso non ha funzionato.",
+        "a": "Un link funziona una volta, per 10 minuti. Chiedine uno nuovo dallo stesso browser. Se Pluck dice che ne hai chiesti troppi, usa l'ultimo o aspetta un'ora."
+      },
+      "oldItems": {
+        "q": "Dove sono finiti i miei vecchi elementi?",
+        "a": "Gli elementi che non tocchi da un po' passano nell'Archivio, non viene eliminato nulla. Scegli tu dopo quanto tempo, o disattiva la scadenza, in Impostazioni alla voce Scadenza e archivio."
+      },
+      "deleted": {
+        "q": "Ho eliminato qualcosa per sbaglio.",
+        "a": "Gli elementi eliminati aspettano nel Cestino per 30 giorni. Il link è in fondo all'Archivio. Apri l'elemento e ripristinalo."
+      },
+      "monday": {
+        "q": "Come fermo l'email del lunedì?",
+        "a": "Usa il link per disattivarla in fondo a una qualsiasi di queste email, o scegli un altro giorno, o nessuno, in Impostazioni alla voce Scadenza e archivio."
+      },
+      "export": {
+        "q": "Posso portare via tutto?",
+        "a": "Impostazioni, Esporta tutto. Ricevi un'email con uno zip: ogni elemento in JSON, più un file Markdown per ogni elemento e ogni lista, con le tue note ed evidenziazioni."
+      },
+      "delete": {
+        "q": "Come elimino il mio account?",
+        "a": "Impostazioni, Elimina account. Scrivi la tua email per confermare. Elementi, liste, file e chiavi spariscono subito."
+      }
+    },
+    "selfHost": {
+      "title": "Farlo girare da te",
+      "run": {
+        "q": "Come faccio girare Pluck da me?",
+        "a": "Un solo comando con Docker. <openSource>Open source</openSource> lo mostra, e la guida al self-hosting nel repository spiega email, archiviazione e come metterlo su un server."
+      }
+    },
+    "bugs": {
+      "title": "Hai trovato un bug<mark>?</mark>",
+      "body": "Apri una issue su GitHub. Scrivi cosa hai fatto, cosa ti aspettavi e cosa è successo invece. Lì sono benvenute anche le idee.",
+      "note": "Le issue sono pubbliche. Lascia fuori link, note o qualsiasi altra cosa che preferisci tenere per te.",
+      "button": "Apri una issue"
+    }
+  },
+  "connect": {
+    "meta": {
+      "title": "Collega la tua IA · Pluck",
+      "description": "Pluck parla MCP. Un link e lo strumento di IA che usi già può leggere, cercare e mettere in ordine la tua libreria."
+    },
+    "eyebrow": "PLUCK + LA TUA IA · MCP",
+    "title": "Pronto per la tua IA. Qualunque tu usi.",
+    "lede": "Pluck parla MCP, lo standard aperto che gli strumenti di IA usano per collegarsi alle app. Un link e la tua IA può leggere, cercare e mettere in ordine tutta la tua libreria. Cambia le cose solo quando lo dici tu, e non elimina mai.",
+    "loopLabel": "Come funziona il collegamento",
+    "installTitle": "Installa. Trenta secondi, davvero.",
+    "installSub": "Accedi a Pluck, poi scegli il tuo strumento. Il link è lo stesso per tutti.",
+    "tabsLabel": "Il tuo strumento di IA",
+    "copy": "Copia",
+    "copied": "Copiato",
+    "tools": {
+      "claude": {
+        "step1": "Apri Claude, poi Impostazioni, poi Connettori.",
+        "step2": "Scegli Aggiungi connettore personalizzato e incolla il link.",
+        "step3": "Accedi a Pluck quando te lo chiede. Fatto.",
+        "codeLabel": "URL del connettore",
+        "note": "Una volta aggiunto, funziona sul web, sul desktop e sul telefono."
+      },
+      "code": {
+        "step1": "Apri un terminale.",
+        "step2": "Esegui la riga a destra.",
+        "step3": "Di' “cosa ho preso questa settimana?” per provarlo.",
+        "codeLabel": "Una riga",
+        "note": "La prima volta ti fa accedere dal browser."
+      },
+      "chatgpt": {
+        "step1": "Apri ChatGPT, poi Impostazioni, poi Connettori.",
+        "step2": "Scegli Crea e incolla il link come URL del server MCP.",
+        "step3": "Accedi a Pluck quando te lo chiede.",
+        "codeLabel": "URL del server MCP",
+        "note": "Serve un piano che consenta i connettori personalizzati."
+      },
+      "cursor": {
+        "step1": "Apri le impostazioni di Cursor, poi MCP.",
+        "step2": "Aggiungi un server con il JSON a destra.",
+        "step3": "Accedi a Pluck quando te lo chiede.",
+        "note": "Qualsiasi editor o client che supporta MCP remoto funziona allo stesso modo."
+      },
+      "self": {
+        "label": "Self-hosting",
+        "step1": "Crea una chiave API in Impostazioni.",
+        "step2": "Aggiungi la riga a destra al tuo strumento di IA come server locale (stdio).",
+        "step3": "Chiedigli cosa hai preso questa settimana.",
+        "codeLabel": "Senza un URL pubblico",
+        "note": "Gli stessi strumenti e prompt, collegati al tuo server."
+      }
+    },
+    "toolsTitle": "Dodici strumenti. Nomi semplici.",
+    "toolsBody": "I risultati tornano come schede con i titoli in primo piano, così una domanda come “cosa ho preso questa settimana” è una chiamata e una schermata.",
+    "toolList": {
+      "search_items": "Ricerca testuale su titolo, nota, tag, nomi delle liste e testo.",
+      "list_items": "Sfoglia Inbox, Più tardi, Archivio o Fatto, prima i più recenti o prima i non toccati.",
+      "get_item": "Un elemento completo, compreso il testo della pagina conservata.",
+      "save_item": "Prende un link, più link, una nota, un Da fare o un Oggetto. Segnato come preso dall'IA.",
+      "batch_update": "Stato, tipo, tag e scadenze su uno o più elementi.",
+      "list_tags": "I tuoi tag, con i conteggi.",
+      "create_tag": "Un nuovo tag, solo dopo che hai detto sì.",
+      "list_lists": "Le tue liste, con scopo, numero di elementi e visibilità.",
+      "get_list": "Una lista in ordine, con note e spunte.",
+      "create_list": "Una nuova lista con gli elementi in ordine e una nota per ciascuno. Privata.",
+      "update_list": "Rinomina, riordina, aggiunge, spunta o rende privata. Solo tu rendi pubblica una lista.",
+      "get_digest": "Cosa scade, cosa è da fare, i più vecchi e le liste ferme. L'email del lunedì, come dati."
+    },
+    "asksTitle": "Quattro cose da chiedere.",
+    "asks": {
+      "tidy": {
+        "say": "“Metti in ordine la mia Inbox di Pluck.”",
+        "does": "Propone tag tra quelli che hai già, più tieni, più tardi o archivia per ogni elemento. Tu dici sì o modifichi. Un solo passaggio."
+      },
+      "reading": {
+        "say": "“Fammi una lista di lettura sull'autenticazione MCP, partendo dalle migliori.”",
+        "does": "Cerca, legge e costruisce la lista in ordine, con una riga sul perché conta ciascuna voce. Privata finché non dici altrimenti."
+      },
+      "ideas": {
+        "say": "“Tre idee per il blog da quello che ho preso questa settimana.”",
+        "does": "Legge per intero le cinque cose migliori e abbozza tre angolazioni con le fonti. Scegline una e rimette la bozza in Pluck come Nota."
+      },
+      "review": {
+        "say": "“Fai la mia revisione settimanale.”",
+        "does": "L'email del lunedì, in forma di conversazione. Una decisione alla volta."
+      }
+    },
+    "neverTitle": "Cosa la tua IA non può mai fare",
+    "never": {
+      "delete": "Eliminare qualsiasi cosa. Il permesso non le viene concesso.",
+      "makeTag": "Creare un tag che non hai chiesto.",
+      "renameTag": "Rinominare o rimuovere un tag che hai creato tu.",
+      "purpose": "Riscrivere lo scopo di una lista.",
+      "public": "Rendere pubblica una lista. Puoi farlo solo tu, dalla lista in Pluck."
+    },
+    "neverNote": "Tutto quello che aggiunge porta il segno “dall'IA”. In Impostazioni rimuovi una settimana di modifiche con un tocco.",
+    "closing": "Chiedi alla tua IA<mark>.</mark>",
+    "button": "Prova Pluck, poi collegala"
+  },
+  "legal": {
+    "translationNotice": "Questa è una traduzione. In caso di differenze, prevale la versione inglese."
+  },
+  "privacy": {
+    "meta": {
+      "title": "Privacy · Pluck",
+      "description": "Cosa conserva Pluck, cosa non fa mai e come portare via tutto."
+    },
+    "title": "Privacy",
+    "lede": "In breve: conserviamo quello che prendi, così puoi leggerlo dopo. Non lo leggiamo, non lo vendiamo e non lo diamo in pasto a un modello. Ultimo aggiornamento: 24 ottobre 2026.",
+    "sections": {
+      "store": {
+        "title": "Cosa conserviamo",
+        "body": "La tua email e il tuo nome. Ogni elemento che prendi: il link, il testo e le immagini della pagina che abbiamo scaricato, il tuo titolo, la nota, i tag, il tipo, lo stato, le liste, le evidenziazioni e il punto di lettura. Il momento in cui l'hai preso e quello in cui l'hai aperto l'ultima volta, che servono alla regola di scadenza e all'email del lunedì. Gli elementi che importi da Pocket, Omnivore, Raindrop o da un file di segnalibri."
+      },
+      "dont": {
+        "title": "Cosa non facciamo",
+        "body": "Non leggiamo la tua libreria. Nessuna persona la guarda, a meno che tu non ce lo chieda per l'assistenza. Non la vendiamo e non la condividiamo con inserzionisti. Non ci sono pubblicità. L'app non contiene alcun modello di IA, quindi niente di quello che prendi viene inviato da noi a un modello."
+      },
+      "extension": {
+        "title": "L'estensione del browser",
+        "body": "Mentre hai effettuato l'accesso, l'estensione chiede al tuo server Pluck se la pagina in cui sei è già nella tua libreria, così la sua icona può riempirsi. Quell'indirizzo serve solo a rispondere alla domanda: non viene aggiunto alla tua libreria né conservato con il tuo account. Per disattivare questa funzione, esci dall'estensione o rimuovila."
+      },
+      "ai": {
+        "title": "Il tuo strumento di IA",
+        "body": "Se colleghi uno strumento di IA tramite MCP, quello strumento legge la tua libreria per conto tuo e invia ciò che legge al proprio fornitore. Questo riguarda te e loro. Puoi scollegarlo in qualsiasi momento in Impostazioni. Tutto ciò che lo strumento modifica è segnato come modificato dall'IA e può essere annullato in blocco."
+      },
+      "publicLists": {
+        "title": "Liste pubbliche",
+        "body": "Una lista è privata finché non la rendi pubblica. Una lista pubblica mostra il nome, lo scopo, il tuo nome e il tuo handle e, per ogni elemento, titolo, copertina, sito e la tua nota, con i link agli originali. Non mostra mai il testo delle pagine conservate, i tuoi tag, le spunte o qualsiasi altra cosa della tua libreria. Rendila di nuovo privata e la pagina restituisce un 404 entro un minuto."
+      },
+      "sharing": {
+        "title": "Condividere una lista",
+        "body": "Quando condividi una lista con qualcuno, conserviamo l'indirizzo email che hai scritto perché quella persona possa accedere e vederla, e le mandiamo un'email per avvisarla. Vede la lista come la mostra una pagina pubblica: titoli, siti, copertine e le tue note sulla lista, mai i tuoi tag, le spunte o le pagine che abbiamo conservato. Se rimuovi quella persona, elimini la lista o elimini il tuo account, anche l'indirizzo viene eliminato."
+      },
+      "emailIn": {
+        "title": "Email in entrata",
+        "body": "La posta inviata al tuo indirizzo pluck+ diventa un elemento. Conserviamo il corpo del messaggio come testo della pagina dell'elemento e il mittente come suo sito. Non usiamo quell'indirizzo per nient'altro."
+      },
+      "cookies": {
+        "title": "Cookie e statistiche",
+        "body": "Due cookie sono sempre attivi, perché Pluck ne ha bisogno: uno mantiene l'accesso, e uno conserva per un giorno quello che incolli nella home page, finché non ti registri. Un terzo dipende da te, e te lo chiediamo prima di impostarlo. Se dici “Va bene, ci sto” usiamo PostHog, nell'UE, per vedere come viene usato Pluck: le pagine che apri, cosa clicchi e, una volta effettuato l'accesso, di quale account si tratta. Non vede mai quello che prendi: il testo di pulsanti e link, i titoli delle pagine e le parole cercate vengono rimossi prima che qualsiasi cosa lasci il tuo browser. Se dici “Lascia stare” non succede niente di tutto questo. In ogni caso, quando qualcosa si rompe inviamo l'errore e il punto in cui è avvenuto, senza nulla che dica chi sei, così possiamo correggerlo. Puoi cambiare idea in qualsiasi momento da Cookie in fondo al sito o in Impostazioni. L'app per iPhone fa la stessa domanda una volta e ha lo stesso interruttore nelle sue Impostazioni."
+      },
+      "where": {
+        "title": "Dove si trovano i dati",
+        "body": "Il nostro servizio ospitato gira su Vercel, MongoDB Atlas e AWS, tutti in Irlanda, e su PostHog nell'UE per le statistiche e i report di errore descritti sopra. Se fai self-hosting, niente passa dai nostri server."
+      },
+      "export": {
+        "title": "Esportazione ed eliminazione",
+        "body": "Esporta tutto in JSON e Markdown da Impostazioni, in qualsiasi momento. Elimina il tuo account da Impostazioni e ogni elemento, tag, lista, nota e chiave sparisce subito. I backup vengono cancellati entro 30 giorni."
+      },
+      "rights": {
+        "title": "I tuoi diritti",
+        "body": "Puoi chiedere una copia dei tuoi dati, correggerli o farli cancellare. Esporta ed Elimina in Impostazioni lo fanno senza bisogno di chiedercelo. Se ti serve altro, scrivici. Puoi anche presentare reclamo all'autorità irlandese per la protezione dei dati (Data Protection Commission)."
+      }
+    },
+    "box": {
+      "title": "Domande",
+      "body": "Scrivi a <mail>{email}</mail> e rispondiamo entro 30 giorni. La società dietro Pluck è Codú Limited, Irlanda."
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Termini · Pluck",
+      "description": "La libreria è tua, comportati bene con le liste pubbliche, e puoi sempre esportare e fare self-hosting."
+    },
+    "title": "Termini",
+    "lede": "In breve: la libreria è tua, comportati bene con le liste pubbliche, e non possiamo promettere che il servizio gratuito duri per sempre, per questo puoi esportare e fare self-hosting. Ultimo aggiornamento: 24 ottobre 2026.",
+    "sections": {
+      "service": {
+        "title": "Il servizio",
+        "body": "Pluck ti permette di prendere link, note, Da fare e Oggetti, leggerli più tardi, metterli in liste e collegare uno strumento di IA alla tua libreria tramite MCP. Il servizio ospitato su {host} è gratuito. Il codice è open source con licenza {licence}, e puoi far girare una tua copia."
+      },
+      "account": {
+        "title": "Il tuo account",
+        "body": "Devi avere almeno 16 anni. Tieni per te i tuoi dati di accesso e le tue chiavi API. Sei responsabile di ciò che viene fatto con essi. Una persona, un account."
+      },
+      "library": {
+        "title": "La tua libreria è tua",
+        "body": "Quello che prendi e quello che scrivi è tuo. Non rivendichiamo alcun diritto su di esso. Lo conserviamo e lo mostriamo a te, e ad altri solo quando rendi pubblica una lista. Puoi esportarlo tutto in qualsiasi momento."
+      },
+      "publicLists": {
+        "title": "Liste pubbliche",
+        "body": "Quando rendi pubblica una lista, la stai pubblicando. Confermi di avere il diritto di condividere il titolo, la copertina e il sito di ogni elemento e la tua nota. Non pubblicare liste che contengono o rimandano a contenuti illegali, materiale che sessualizza minori, minacce, molestie, doxxing, spam, malware o contenuti che violano il diritto d'autore o il marchio di qualcun altro. Possiamo rimuovere una lista pubblica che viola queste regole, e possiamo chiudere gli account che continuano a farlo. Rimuovere una lista non la elimina dalla tua libreria."
+      },
+      "stored": {
+        "title": "Pagine conservate",
+        "body": "Pluck conserva una copia privata delle pagine che prendi, così puoi leggerle più tardi, come fa la cache di un browser. Quella copia è solo per te e non viene mai servita pubblicamente. Se un titolare dei diritti ci chiede di rimuovere una copia conservata della sua pagina, lo facciamo."
+      },
+      "fairUse": {
+        "title": "Uso corretto del servizio",
+        "body": "Non usare Pluck per fare scraping di siti su larga scala, gestire una bot farm o conservare cose che non hai il diritto di conservare. Limitiamo la frequenza delle catture e delle chiamate API e MCP per mantenere il servizio veloce per tutti. I limiti sono pubblicati nella documentazione e ti avvisiamo se li raggiungi."
+      },
+      "ai": {
+        "title": "Strumenti di IA",
+        "body": "Collegare uno strumento di IA è una tua scelta. Ciò che quello strumento fa con la tua libreria è regolato dai suoi termini. Mettiamo a disposizione strumenti di lettura e strumenti di scrittura che segnano le proprie modifiche. Uno strumento di eliminazione esiste solo se lo concedi separatamente, e non lo chiediamo mai per impostazione predefinita. Non siamo responsabili di ciò che fa uno strumento di terze parti."
+      },
+      "wayOut": {
+        "title": "Nessuna promessa, ma una via d'uscita",
+        "body": "Il servizio ospitato è gratuito e fornito così com'è. Faremo del nostro meglio per mantenerlo veloce e attivo, ma non possiamo garantirlo, né possiamo garantire che funzioni per sempre. Se un giorno dovessimo chiudere, daremo almeno 90 giorni di preavviso, terremo l'esportazione funzionante fino all'ultimo giorno, e l'opzione di self-hosting esisterà sempre. La nostra responsabilità nei tuoi confronti è limitata all'importo che ci hai pagato, cioè zero."
+      },
+      "law": {
+        "title": "Modifiche e legge applicabile",
+        "body": "Possiamo aggiornare questi termini. Pubblicheremo la data in alto e ti scriveremo per qualsiasi modifica importante. Questi termini sono regolati dalla legge irlandese."
+      }
+    },
+    "box": {
+      "title": "Segnala una lista pubblica",
+      "body": "Ogni pagina pubblica ha un link Segnala in fondo. Oppure scrivi a <mail>{email}</mail> con il link. Interveniamo entro 3 giorni lavorativi."
+    }
+  },
+  "publicList": {
+    "meta": {
+      "notFound": "Non trovata · Pluck",
+      "title": "{name} · una lista di {by} · Pluck",
+      "description": "{count, plural, one {# cosa scelta} other {# cose scelte}} da {by}."
+    },
+    "what": "Cos'è Pluck?",
+    "byline": "Una lista di {by} · {count, plural, one {# elemento} other {# elementi}} · aggiornata {when}",
+    "ago": {
+      "now": "proprio ora",
+      "minutes": "{count, number} min fa",
+      "hours": "{count, number} h fa",
+      "yesterday": "ieri",
+      "on": "il {date}"
+    },
+    "pluck": "Prendi questa lista",
+    "copies": "La copia nel tuo Pluck. Gratis.",
+    "note": "Nota",
+    "footTitle": "Crea liste come questa con quello che prendi.",
+    "footBody": "Prendilo. Sistemalo dopo. Condividilo quando ne vale la pena.",
+    "privacy": "Privacy",
+    "terms": "Termini",
+    "og": "Una lista di {by} · {count, plural, one {# elemento} other {# elementi}}",
+    "notFound": {
+      "title": "<line>Questa lista</line><line>non è pubblica<dot>.</dot></line>",
+      "lede": "O non esiste più, o chi l'ha creata l'ha resa privata. Se qualcuno ti ha mandato il link, chiedigli di condividerla con te, o di renderla di nuovo pubblica.",
+      "what": "Cos'è Pluck?",
+      "lists": "Le tue liste"
+    },
+    "report": {
+      "open": "Segnala questa lista",
+      "sent": "Grazie. Ogni segnalazione viene letta da una persona.",
+      "reason": "Cosa c'è che non va?",
+      "details": "Altro che dovremmo sapere (facoltativo)",
+      "send": "Invia la segnalazione",
+      "cancel": "Annulla",
+      "failed": "Non è andato a buon fine. Riprova tra un minuto.",
+      "reasons": {
+        "illegal": "Contenuti illegali",
+        "minors": "Sessualizza minori",
+        "harassment": "Molestie",
+        "doxxing": "Diffonde dati privati di qualcuno",
+        "spam": "Spam o link farm",
+        "malware": "Malware o phishing",
+        "infringement": "Diritto d'autore o marchio",
+        "other": "Altro"
+      }
+    }
+  }
+}

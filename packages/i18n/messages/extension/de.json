@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "Pflück die Seite, auf der du bist, mit einem Klick in deine Pluck-Bibliothek.",
+    "pluckPage": "Diese Seite pflücken",
+    "pluckSelection": "Auswahl als Markierung pflücken"
+  },
+  "menu": {
+    "link": "Link pflücken",
+    "selection": "Auswahl als Markierung pflücken",
+    "image": "Bild pflücken",
+    "page": "Seite pflücken"
+  },
+  "toolbar": {
+    "plucked": "Gepflückt",
+    "pluckPage": "Diese Seite pflücken"
+  },
+  "errors": {
+    "nothing": "Auf dieser Seite gibt es nichts zu pflücken.",
+    "failed": "Das hat nicht geklappt.",
+    "tryAgain": "Das hat nicht geklappt. Versuch es noch mal."
+  },
+  "kinds": {
+    "link": "Lesen",
+    "video": "Ansehen",
+    "pdf": "PDF",
+    "image": "Bild",
+    "note": "Notiz",
+    "todo": "Aufgabe",
+    "thing": "Ding"
+  },
+  "status": {
+    "inbox": "Eingang",
+    "later": "Später",
+    "archived": "Archiviert",
+    "done": "Erledigt"
+  },
+  "popup": {
+    "plucking": "Wird gepflückt …",
+    "signedOut": {
+      "lede": "Die Seite, auf der du bist, mit einem Klick behalten. Melde dich einmal an, mit deiner E-Mail.",
+      "signIn": "Anmelden",
+      "ownServer": "Eigenen Server nutzen"
+    },
+    "nothingHint": "Pluck funktioniert auf Webseiten. Öffne eine und klick noch mal.",
+    "queued": {
+      "title": "Pluck nicht erreichbar. Neuer Versuch folgt.",
+      "count": "{count, plural, one {# Eintrag wartet} other {# Einträge warten}} in diesem Browser."
+    },
+    "already": {
+      "meta": "Gepflückt {date} · {status}",
+      "open": "In Pluck öffnen",
+      "again": "Erneut pflücken"
+    },
+    "plucked": {
+      "title": "Gepflückt",
+      "undo": "Rückgängig",
+      "tips": {
+        "opening": "Schon das Öffnen pflückt die Seite. Das ist der ganze Trick.",
+        "shortcut": "Alt+Shift+P geht auch ohne Klick.",
+        "rightClick": "Rechtsklick auf einen Link oder ein Bild pflückt nur das."
+      },
+      "tags": "Tags",
+      "tagsPlaceholder": "Deine Tags durchsuchen",
+      "kind": "Art",
+      "toList": "In Liste",
+      "noList": "Keine",
+      "lastUsed": "{name} (zuletzt genutzt)",
+      "note": "Notiz",
+      "notePlaceholder": "Eine Notiz, wenn du magst",
+      "later": "Später",
+      "archive": "Archiv",
+      "open": "In Pluck öffnen"
+    },
+    "tabs": {
+      "listName": "Tabs vom {date}",
+      "all": "{count, plural, one {# Tab in eine neue Liste pflücken: „{name}“} other {Alle # Tabs in eine neue Liste pflücken: „{name}“}}",
+      "plucking": "Wird gepflückt …",
+      "done": "{count, plural, one {# Tab in „{name}“ gepflückt.} other {# Tabs in „{name}“ gepflückt.}}",
+      "failed": "Pluck nicht erreichbar. Versuch es gleich noch mal."
+    }
+  },
+  "options": {
+    "title": "Pluck-Optionen",
+    "shortcut": "Tastenkürzel: Alt+Shift+P · ändern kannst du es auf der Seite für Tastenkürzel deines Browsers",
+    "server": "Server",
+    "defaultKind": "Standard-Art",
+    "guess": "Aus der Seite erraten",
+    "account": "Konto",
+    "apiKey": "API-Schlüssel",
+    "useKey": "Schlüssel nutzen",
+    "notSignedIn": "Nicht angemeldet",
+    "signOut": "Abmelden",
+    "signIn": "Anmelden",
+    "useApiKey": "Stattdessen einen API-Schlüssel nutzen",
+    "sendContent": "Seiteninhalt beim Pflücken mitsenden",
+    "sendContentHint": "Damit Seiten hinter deinen Logins später lesbar sind.",
+    "transcripts": "YouTube-Transkripte mitnehmen",
+    "transcriptsHint": "Damit die Suche und deine KI lesen können, was gesagt wurde.",
+    "messages": {
+      "notAddress": "Das ist keine Webadresse.",
+      "ownServerOnly": "Diese Version von Pluck erreicht nur ihren eigenen Server. Für deinen eigenen baust du die Erweiterung aus dem Repo: siehe docs/self-host.md.",
+      "using": "Verbunden mit {origin}. Melde dich dort an, um zu pflücken.",
+      "keySignedIn": "Mit deinem API-Schlüssel angemeldet.",
+      "keyFailed": "Dieser Schlüssel funktioniert auf diesem Server nicht.",
+      "signedOut": "Abgemeldet."
+    }
+  }
+}
