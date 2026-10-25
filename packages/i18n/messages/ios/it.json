@@ -184,9 +184,6 @@
     },
     "byMeaning": "Lo cerchi per significato? Chiedi alla tua IA."
   },
-  "oauth": {
-    "signingIn": "Accesso in corso."
-  },
   "note": {
     "title": "Nota",
     "placeholder": "Perché l'hai tenuto, o cosa farne.",
@@ -272,12 +269,11 @@
     "pluck": "Prendi questa lista"
   },
   "signin": {
-    "stale": "Quel link era di un tentativo precedente. Apri l'email più recente, o fatti mandare un nuovo link.",
     "notServer": "Questo non è l'indirizzo di un server. Inizia con https://.",
     "badKey": "Questa chiave non funziona su questo server.",
     "unreachable": "Impossibile raggiungere {origin}.",
-    "title": "Un link.\nNessuna password<accent>.</accent>",
-    "lede": "La tua email, il nostro link, e sei dentro. Prima volta? Lo stesso link crea la tua libreria.",
+    "title": "Un codice.\nNiente password<accent>.</accent>",
+    "lede": "La tua email, il nostro codice, e sei dentro. Prima volta? Lo stesso codice crea la tua libreria.",
     "server": "Server",
     "key": "Chiave API, se ne usi una",
     "keyA11y": "Chiave API",
@@ -285,43 +281,47 @@
     "useKey": "Usa questa chiave",
     "useHost": "Usa {host}",
     "ownServer": "Usa il tuo server",
-    "preview": {
-      "to": "a {email}",
-      "now": "ora",
-      "title": "Ecco il tuo link.",
-      "body": "Toccalo per accedere. Funziona una volta, per 10 minuti. Nessuna password da ricordare, mai.",
-      "button": "Accedi a Pluck"
-    },
     "email": "Email",
     "emailPlaceholder": "you@example.com",
-    "send": "Mandami il link",
-    "sending": "Invio in corso",
+    "send": "Mandami il codice",
     "invalid": "Non sembra un indirizzo email.",
     "error": "Non è andato a buon fine. Controlla l'indirizzo, poi riprova.",
-    "limited": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
+    "limited": "Sono tanti codici. Usa il più recente, o riprova tra un’ora.",
     "sent": {
       "title": "Controlla la tua email<accent>.</accent>",
-      "lede": "Un link e un codice stanno arrivando a <b>{email}</b>. Tocca il link su questo iPhone, oppure scrivi il codice qui sotto.",
-      "another": "Inviato un altro. Funzionano entrambi.",
+      "lede": "Abbiamo inviato un codice di 6 cifre a <b>{email}</b>. Funziona una volta sola, per 10 minuti.",
+      "another": "Inviato un nuovo codice. Funziona solo il più recente.",
       "openMail": "Apri Mail",
       "again": "Invialo di nuovo",
       "wait": "Invia di nuovo tra {seconds} s",
       "different": "Usa un'altra email",
       "spam": "Dopo un minuto non è arrivato niente? Guarda nello spam, poi invialo di nuovo."
     },
-    "story": {
-      "waiting": "Prossima fermata: la tua casella.",
-      "landed": "Arrivata. Ora tocca il link.",
-      "waitingA11y": "Una busta, pronta a partire.",
-      "sentA11y": "L’email per {email}: Ecco il tuo link. Toccalo per accedere. Funziona una volta, per 10 minuti."
-    },
     "code": {
-      "label": "Oppure scrivi il codice di 6 cifre",
+      "label": "Il codice di 6 cifre",
       "a11y": "Codice di 6 cifre dell’email",
       "checking": "Controllo del codice",
-      "bad": "Quel codice non ha funzionato. Controllalo e riprova.",
+      "bad": "Quel codice non ha funzionato. Controllalo, o chiedine uno nuovo.",
       "spent": "Quel codice è scaduto o ha avuto troppi tentativi. Chiedine uno nuovo.",
       "limited": "Sono tanti tentativi. Riprova tra un'ora."
+    },
+    "password": {
+      "title": "Una password<accent>.</accent>",
+      "lede": "<b>{email}</b> non ha una casella di posta, quindi accede con una password.",
+      "label": "Password",
+      "signIn": "Accedi",
+      "bad": "Questa password non ha funzionato."
+    },
+    "story": {
+      "waiting": "Prossima fermata: la tua casella.",
+      "landed": "Arrivata. Sei cifre, dieci minuti.",
+      "waitingA11y": "Una busta, pronta a partire.",
+      "sentA11y": "Un’email di Pluck con il tuo codice di 6 cifre."
+    },
+    "card": {
+      "subject": "Il tuo codice Pluck",
+      "now": "ora",
+      "body": "Scrivilo nell’app Pluck. Funziona una volta sola, per 10 minuti."
     }
   },
   "handle": {

@@ -101,7 +101,6 @@ export default function Root() {
               <Stack.Protected guard={!signedIn}>
                 <Stack.Screen name="signin" />
               </Stack.Protected>
-              <Stack.Screen name="oauth" />
             </Stack>
             <Screens />
             {signedIn && <SignedInAnalytics />}

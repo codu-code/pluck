@@ -184,9 +184,6 @@
     },
     "byMeaning": "Want it by meaning? Ask your AI."
   },
-  "oauth": {
-    "signingIn": "Signing you in."
-  },
   "note": {
     "title": "Note",
     "placeholder": "Why you kept it, or what to do with it.",
@@ -272,12 +269,11 @@
     "pluck": "Pluck this list"
   },
   "signin": {
-    "stale": "That link was from an earlier try. Open the newest email, or send a new link.",
     "notServer": "That isn't a server address. It starts with https://.",
     "badKey": "That key did not work on this server.",
     "unreachable": "Couldn't reach {origin}.",
-    "title": "One link.\nNo password<accent>.</accent>",
-    "lede": "Your email, our link, you're in. New here? Same link, fresh library.",
+    "title": "One code.\nNo password<accent>.</accent>",
+    "lede": "Your email, our code, you're in. New here? Same code, fresh library.",
     "server": "Server",
     "key": "API key, if you use one",
     "keyA11y": "API key",
@@ -285,43 +281,47 @@
     "useKey": "Use this key",
     "useHost": "Use {host}",
     "ownServer": "Use your own server",
-    "preview": {
-      "to": "to {email}",
-      "now": "now",
-      "title": "Here is your link.",
-      "body": "Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.",
-      "button": "Sign in to Pluck"
-    },
     "email": "Email",
     "emailPlaceholder": "you@example.com",
-    "send": "Send my link",
-    "sending": "Sending",
+    "send": "Send my code",
     "invalid": "That doesn't look like an email address.",
     "error": "That did not go through. Check the address, then try again.",
-    "limited": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
+    "limited": "That's a lot of codes. Use the newest one, or try again in an hour.",
     "sent": {
       "title": "Check your email<accent>.</accent>",
-      "lede": "A link and a code are on their way to <b>{email}</b>. Tap the link on this iPhone, or type the code below.",
-      "another": "Sent another. Either link works.",
+      "lede": "We sent a 6-digit code to <b>{email}</b>. It works once, for 10 minutes.",
+      "another": "Sent a new one. Only the newest code works.",
       "openMail": "Open Mail",
       "again": "Send it again",
       "wait": "Send again in {seconds}s",
       "different": "Use a different email",
       "spam": "Nothing after a minute? Look in spam, then send it again."
     },
-    "story": {
-      "waiting": "Next stop: your inbox.",
-      "landed": "Landed. Now tap it.",
-      "waitingA11y": "An envelope, ready to go.",
-      "sentA11y": "The email to {email}: Here is your link. Tap it to sign in. It works once, for 10 minutes."
-    },
     "code": {
-      "label": "Or type the 6-digit code",
+      "label": "The 6-digit code",
       "a11y": "6-digit code from the email",
       "checking": "Checking the code",
-      "bad": "That code didn't work. Check it and try again.",
+      "bad": "That code didn't work. Check it, or send a new one.",
       "spent": "That code has expired or had too many tries. Send a new one.",
       "limited": "That is a lot of tries. Try again in an hour."
+    },
+    "password": {
+      "title": "One password<accent>.</accent>",
+      "lede": "<b>{email}</b> has no mailbox, so it signs in with a password.",
+      "label": "Password",
+      "signIn": "Sign in",
+      "bad": "That password did not work."
+    },
+    "story": {
+      "waiting": "Next stop: your inbox.",
+      "landed": "Landed. Six digits, ten minutes.",
+      "waitingA11y": "An envelope, ready to go.",
+      "sentA11y": "An email from Pluck with your 6-digit code."
+    },
+    "card": {
+      "subject": "Your Pluck code",
+      "now": "now",
+      "body": "Type it in the Pluck app. It works once, for 10 minutes."
     }
   },
   "handle": {

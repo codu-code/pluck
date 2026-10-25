@@ -7,6 +7,11 @@
     "copy": "¿El botón no funciona? Copia este enlace en tu navegador:",
     "ignore": "Si no lo pediste, ignora este correo. No pasa nada a menos que lo abras y toques Iniciar sesión."
   },
+  "appCode": {
+    "subject": "{code} es tu código de Pluck",
+    "intro": "Escribe este código en la app de Pluck para iniciar sesión. Funciona una vez, durante los próximos 10 minutos.",
+    "ignore": "Si no lo pediste, ignóralo. Nadie entra sin el código."
+  },
   "sharedList": {
     "subject": "{sharer} compartió una Lista contigo: {name}",
     "untitled": "Una Lista",

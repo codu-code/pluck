@@ -25,6 +25,23 @@ export function magicLinkEmail(to: string, url: string, code: string, locale: Lo
   };
 }
 
+// The iPhone app's sign-in: a code and nothing to tap. A link would have to come back to the app through a URL scheme,
+// which another app on the phone could claim; a code typed in the app never leaves it.
+export function appCodeEmail(to: string, code: string, locale: Locale = "en"): Email {
+  const t = emailT(locale);
+  return {
+    to,
+    replyTo: null, // sent from no-reply: a reply has no one to reach
+    subject: t("appCode.subject", { code }),
+    text: `${t("appCode.intro")}\n\n${code}\n\n${t("appCode.ignore")}\n`,
+    html: `<div lang="${locale}" style="font-family: Geist, -apple-system, sans-serif; font-size: 15px; line-height: 22px; color: #151A13; max-width: 480px">
+<p>${escape(t("appCode.intro"))}</p>
+<p style="margin: 20px 0; font-family: 'Geist Mono', ui-monospace, Menlo, monospace; font-size: 32px; line-height: 38px; font-weight: 600; letter-spacing: 8px">${escape(code)}</p>
+<p style="color: #525A4E">${escape(t("appCode.ignore"))}</p>
+</div>`,
+  };
+}
+
 // A List shared with someone (See only). Their words are few and escaped: a name and a list name are all anyone controls.
 // `listName` null: the List is gone; it still says who shared something.
 export function sharedListEmail(to: string, from: { name: string | null; handle: string }, listName: string | null, url: string, locale: Locale = "en"): Email {

@@ -7,6 +7,11 @@
     "copy": "Werkt de knop niet? Kopieer deze link naar je browser:",
     "ignore": "Heb je hier niet om gevraagd, negeer deze mail dan. Er gebeurt niets, tenzij je de link opent en op Inloggen tikt."
   },
+  "appCode": {
+    "subject": "{code} is je Pluck-code",
+    "intro": "Typ deze code in de Pluck-app om in te loggen. Hij werkt één keer, de komende 10 minuten.",
+    "ignore": "Heb je hier niet om gevraagd? Negeer hem dan. Zonder de code komt niemand binnen."
+  },
   "sharedList": {
     "subject": "{sharer} heeft een Lijst met je gedeeld: {name}",
     "untitled": "Een Lijst",
