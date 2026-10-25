@@ -8,6 +8,7 @@ import { ActivityIndicator, Image, Pressable, ScrollView, Share, StyleSheet, Tex
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
+import { ToolBar, type Tool } from "@/components/ToolBar";
 import { keys, useCover, useItem, usePatchItem, type FullItem } from "@/lib/data";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
@@ -57,8 +58,6 @@ function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
 
 // The reader's toolbar (IOSReader board): six actions on the rail.
 function Toolbar({ item }: { item: Item }) {
-  const t = useTheme();
-  const bottom = useSafeAreaInsets().bottom;
   const patch = usePatchItem();
   const move = (status: "later" | "archived") => {
     patch.mutate({ id: item.id, patch: { status } });
@@ -66,24 +65,16 @@ function Toolbar({ item }: { item: Item }) {
     toast(MOVED[status], () => patch.mutate({ id: item.id, patch: { status: item.status } }));
     router.back();
   };
-  const tools: [string, string, () => void][] = [
-    ["Later", ICONS.later, () => move("later")],
-    ["Archive", ICONS.archive, () => move("archived")],
-    ["Tags", ICONS.tag, () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } })],
-    ["List", ICONS.lists, () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } })],
-    ["Share", ICONS.share, () => void Share.share(item.url ? { url: item.url } : { message: item.title })],
-    ["Original", ICONS.original, () => item.url && void WebBrowser.openBrowserAsync(item.url)],
+  const tools: Tool[] = [
+    { label: "Later", icon: ICONS.later, onPress: () => move("later") },
+    { label: "Archive", icon: ICONS.archive, onPress: () => move("archived") },
+    { label: "Tags", icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } }) },
+    { label: "List", icon: ICONS.lists, a11y: "Add to a List", onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } }) },
+    { label: "Share", icon: ICONS.share, onPress: () => void Share.share(item.url ? { url: item.url } : { message: item.title }) },
   ];
-  return (
-    <View style={[styles.toolbar, { backgroundColor: t.rail, borderTopColor: t.line, paddingBottom: Math.max(bottom, 8) }]}>
-      {tools.filter(([label]) => label !== "Original" || item.url).map(([label, d, onPress]) => (
-        <Pressable key={label} accessibilityRole="button" accessibilityLabel={label === "Original" ? "Open the original" : label} onPress={onPress} style={styles.tool}>
-          <Icon d={d} color={t.ink} />
-          <Text maxFontSizeMultiplier={scale.bar} style={[font.regular, { color: t.ink, fontSize: 11 }]}>{label}</Text>
-        </Pressable>
-      ))}
-    </View>
-  );
+  // A link gets a Note between the moves and the sorting; notes, todos and things are their own text.
+  if (!isTextKind(item.kind)) tools.splice(2, 0, { label: "Note", icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
+  return <ToolBar tools={tools} />;
 }
 
 function Reader({ data }: { data: FullItem }) {
@@ -122,7 +113,16 @@ function Reader({ data }: { data: FullItem }) {
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
         label={BACK[item.status]}
-        right={reading ? <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 12 }]}>{Math.round(progress * 100)}%{minutes ? ` · ${minutes} min left` : ""}</Text> : null}
+        right={
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{Math.round(progress * 100)}%{minutes ? ` · ${minutes} min left` : ""}</Text>}
+            {item.url && (
+              <Pressable accessibilityRole="button" accessibilityLabel="Open the original" onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={styles.iconButton}>
+                <Icon d={ICONS.original} size={20} color={t.ink} width={1.5} />
+              </Pressable>
+            )}
+          </View>
+        }
       />
       <View style={[styles.track, { backgroundColor: t.line }]}>{reading && <View style={{ width: `${Math.round(progress * 100)}%`, height: 2, backgroundColor: t.accent }} />}</View>
       <ScrollView
@@ -140,7 +140,11 @@ function Reader({ data }: { data: FullItem }) {
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
         )}
-        {item.note ? <Text style={[font.regular, styles.note, { color: t.ink, backgroundColor: t.rail }]}>{item.note}</Text> : null}
+        {item.note ? (
+          <Pressable accessibilityRole="button" accessibilityLabel={`Your note: ${item.note}. Edit`} onPress={() => router.push({ pathname: "/note", params: { id: item.id } })}>
+            <Text style={[font.regular, styles.note, { color: t.ink, backgroundColor: t.rail }]}>{item.note}</Text>
+          </Pressable>
+        ) : null}
         {item.extraction.state === "pending" && (
           <View style={[styles.state, { backgroundColor: t.rail }]} accessibilityLiveRegion="polite">
             <ActivityIndicator color={t.ink2} />
@@ -250,8 +254,7 @@ const styles = StyleSheet.create({
   failed: { gap: 6, padding: 16, borderRadius: 10 },
   primary: { minHeight: 44, paddingHorizontal: 16, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   quietButton: { minHeight: 44, minWidth: 96, paddingHorizontal: 16, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
-  toolbar: { flexDirection: "row", paddingTop: 6, paddingHorizontal: 8, borderTopWidth: StyleSheet.hairlineWidth * 2 },
-  tool: { flex: 1, minHeight: 48, alignItems: "center", justifyContent: "center", gap: 3 },
+  iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   doneButton: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 12 },
   ring: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
 });
