@@ -30,15 +30,15 @@ test("the digest reads well as plain text and keeps the copy rules", () => {
   expect(subjectFor({ ...d, expiring: [], oldest: [] })).toBe("Your week in Pluck.");
 });
 
-test("in a language not translated yet the words fall back to English; dates follow the recipient's language and timezone", () => {
+test("the digest goes out in the recipient's language, with dates in their language and timezone", () => {
   const en = digestEmail("niall@example.test", "Niall Maher", d, links, new Date("2026-10-26T06:00:00Z"));
   const ja = digestEmail("niall@example.test", "Niall Maher", d, links, new Date("2026-10-26T06:00:00Z"), { locale: "ja" });
-  expect(ja.subject).toBe(en.subject);
-  expect(ja.text).toContain("Morning Niall. Three minutes, then get on with your week.");
-  expect(ja.text).toContain("UNTOUCHED FOR 30 DAYS");
+  expect(ja.subject).not.toBe(en.subject);
+  expect(ja.text).not.toContain("Three minutes");
+  expect(ja.text).toContain("Niall");
   expect(ja.text).toContain("木曜日"); // Thursday, in Japanese
   expect(ja.html).toContain('<html lang="ja">');
-  expect(subjectFor({ ...d, expiring: [], oldest: [] }, "de")).toBe("Your week in Pluck.");
+  expect(subjectFor({ ...d, expiring: [], oldest: [] }, "de")).not.toBe("Your week in Pluck.");
   // 08:00 UTC on Thursday is still Wednesday evening in Honolulu.
   const hnl = digestEmail("niall@example.test", "", d, links, new Date("2026-10-26T06:00:00Z"), { timeZone: "Pacific/Honolulu" });
   expect(hnl.text).toContain("move to your Archive on Wednesday.");
