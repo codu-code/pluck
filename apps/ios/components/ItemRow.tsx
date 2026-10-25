@@ -30,8 +30,11 @@ export function ItemRow({ item, onMove }: { item: Item; onMove?: (status: "later
     >
       {cover ? (
         <Image source={cover} style={styles.tile} accessibilityIgnoresInvertColors />
+      ) : text ? (
+        // A note, todo or thing has no site: its kind glyph in a dashed tile, as on the web.
+        <View style={[styles.tile, styles.glyphTile, { borderColor: t.lineDashed }]}><KindGlyph kind={item.kind} size={18} color={t.ink2} /></View>
       ) : (
-        <View style={[styles.tile, { backgroundColor: text || ini === "?" ? t.rail : t.tiles[tileIndex(item.siteName ?? item.url ?? item.id)] }]}>
+        <View style={[styles.tile, { backgroundColor: ini === "?" ? t.rail : t.tiles[tileIndex(item.siteName ?? item.url ?? item.id)] }]}>
           {ini !== "?" && <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, styles.ini, { color: t.ink }]}>{ini}</Text>}
         </View>
       )}
@@ -63,6 +66,7 @@ export function ItemRow({ item, onMove }: { item: Item; onMove?: (status: "later
 const styles = StyleSheet.create({
   row: { minHeight: 72, paddingVertical: 10, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", gap: 12, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   tile: { width: 44, height: 44, borderRadius: 8, alignItems: "center", justifyContent: "center" },
+  glyphTile: { borderWidth: 1, borderStyle: "dashed" },
   ini: { fontSize: 12 },
   middle: { flex: 1, minWidth: 0, gap: 2 },
   title: { fontSize: 15, lineHeight: 20 },

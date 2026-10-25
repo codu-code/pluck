@@ -1,11 +1,13 @@
-import { isTextKind, rowMeta, rowSite, type Item } from "@pluck/shared-schemas";
+import { isTextKind, MOVED, rowMeta, rowSite, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
+import { toast } from "@/components/Toast";
 import { keys, useCover, useItem, usePatchItem, type FullItem } from "@/lib/data";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
@@ -60,6 +62,8 @@ function Toolbar({ item }: { item: Item }) {
   const patch = usePatchItem();
   const move = (status: "later" | "archived") => {
     patch.mutate({ id: item.id, patch: { status } });
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    toast(MOVED[status], () => patch.mutate({ id: item.id, patch: { status: item.status } }));
     router.back();
   };
   const tools: [string, string, () => void][] = [

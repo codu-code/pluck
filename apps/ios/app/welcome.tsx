@@ -23,7 +23,7 @@ export default function Welcome() {
           <Text style={[font.regular, styles.caption, { color: t.ink }]}><Text style={font.semibold}>1.</Text> Tap Share, then Pluck.</Text>
         </View>
         <View style={styles.cell}>
-          <View style={[styles.art, { backgroundColor: t.art }]} importantForAccessibility="no-hide-descendants"><PluckedChip /></View>
+          <View style={[styles.art, { backgroundColor: t.art }]} importantForAccessibility="no-hide-descendants"><PluckedChip stamp /></View>
           <Text style={[font.regular, styles.caption, { color: t.ink }]}><Text style={font.semibold}>2.</Text> That's it. Keep reading.</Text>
         </View>
       </View>

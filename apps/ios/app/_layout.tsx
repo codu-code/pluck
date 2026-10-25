@@ -1,11 +1,13 @@
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { router, Stack, usePathname } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { AppState, LogBox, Settings, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
 import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
 import { queryClient, syncPending, useMe } from "@/lib/data";
@@ -19,6 +21,10 @@ import { appIcons, type AppIcon } from "@/modules/app-icon";
 LogBox.ignoreLogs(["Sending `onAnimatedValueUpdate` with no listeners registered.", "Linking found multiple possible URI schemes"]);
 
 const persister = createAsyncStoragePersister({ storage: kv.storage, key: "queryCache" });
+
+// The launch screen stays until we know which screen to open, then fades into it.
+void SplashScreen.preventAutoHideAsync();
+SplashScreen.setOptions({ fade: true, duration: 250 });
 
 export default function Root() {
   const t = useTheme();
@@ -53,6 +59,10 @@ export default function Root() {
     };
   }, []);
 
+  useEffect(() => {
+    if (signedIn !== null) SplashScreen.hide();
+  }, [signedIn]);
+
   if (signedIn === null) return <View style={{ flex: 1, backgroundColor: t.ground }} />;
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -75,6 +85,7 @@ export default function Root() {
           </Stack>
           <Screens />
           {signedIn && <SignedInAnalytics />}
+          <ToastHost />
         </PersistQueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

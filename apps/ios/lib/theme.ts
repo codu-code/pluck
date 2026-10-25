@@ -11,6 +11,8 @@ export const palettes = {
     // The drawn bits of product (first run, empty states) and the open tick ring, from the IOSFirstRun and IOSLists boards.
     art: "#E4E8E0", artPanel: "#F2F3F1", artTile: "#DFE4DA", ringOff: "#9AA392", onHighlight: "#151A13",
     actionInk: "#1E5C45", // text buttons and ticks: forest on light; forest is too dark to read on the dark ground
+    logoInk: "#1E5C45", logoSpark: "#34A07C", // --logo-ink and --logo-spark
+    toastAction: "#7FD3AE", // Undo on the toast, which is drawn inverted (ink ground)
   },
   dark: {
     ground: "#10130F", rail: "#161A14", railActive: "#252A22", tint: "#191D17", selected: "#1E221C", surface: "#191D17", field: "#191D17",
@@ -20,6 +22,8 @@ export const palettes = {
     tiles: ["#263020", "#33302A", "#26292B", "#292E25", "#2A2A26", "#20251E"],
     art: "#191D17", artPanel: "#252A22", artTile: "#363C33", ringOff: "#5E6658", onHighlight: "#151A13",
     actionInk: "#7FD3AE",
+    logoInk: "#ECEFE8", logoSpark: "#7FD3AE",
+    toastAction: "#1E5C45",
   },
 };
 export type Palette = typeof palettes.light;
@@ -32,7 +36,7 @@ export function useTheme(): Palette {
   return palettes[useColorScheme() === "dark" ? "dark" : "light"];
 }
 
-// Geist is bundled (expo-font); weights pick the face.
+// Geist is bundled (expo-font); weights pick the face. Fredoka is only ever the wordmark.
 export const font = {
   regular: { fontFamily: "Geist", fontWeight: "400" as const },
   medium: { fontFamily: "Geist", fontWeight: "500" as const },
@@ -40,4 +44,5 @@ export const font = {
   bold: { fontFamily: "Geist", fontWeight: "700" as const },
   reader: { fontFamily: "Source Serif 4", fontWeight: "400" as const },
   readerTitle: { fontFamily: "Source Serif 4", fontWeight: "600" as const },
+  logo: { fontFamily: "Fredoka", fontWeight: "700" as const },
 };

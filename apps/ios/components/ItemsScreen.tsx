@@ -1,8 +1,9 @@
-import type { Item } from "@pluck/shared-schemas";
+import { MOVED, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
+import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
 import { keys, pluck, shareExtensionCache, syncPending, toSync, useCounts, useItems, useLists, useMe, usePatchItem, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
@@ -10,6 +11,7 @@ import { ShareRow, SwipeToLater } from "./Art";
 import { Icon, ICONS } from "./Glyph";
 import { ItemRow } from "./ItemRow";
 import { Empty, TitledList } from "./Screen";
+import { toast } from "./Toast";
 
 const avatarOf = (name?: string, email?: string) =>
   ((name?.trim() || email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?");
@@ -43,6 +45,8 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => i.id !== item.id) } : old));
     seen.current?.delete(item.id);
     patch.mutate({ id: item.id, patch: { status: to } });
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    toast(MOVED[to], () => patch.mutate({ id: item.id, patch: { status: item.status } }));
   };
 
   const newNote = async () => {
@@ -92,7 +96,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         <RefreshControl refreshing={items.isRefetching} onRefresh={async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); setPending(await toSync()); }} />
       }
       ListEmptyComponent={
-        items.isLoading ? undefined : status === "inbox"
+        items.isLoading ? <ActivityIndicator accessibilityLabel="Loading" color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
           ? <Empty art={<ShareRow />} title="Nothing to triage." body="Tap Share in any app, then Pluck. It lands here." />
           : <Empty art={<SwipeToLater />} title="Nothing for later." body="Swipe an item right in the Inbox and it waits here." />
       }
