@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { cache } from "react";
 import { sendEmail } from "./email";
 import { magicLinkEmail } from "./emails";
+import { linkPageUrl } from "./signin-link";
 import { clientIp } from "./ip";
 
 const DAY = 60 * 60 * 24;
@@ -70,7 +71,7 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       expiresIn: 10 * 60,
-      sendMagicLink: ({ email, url }) => sendEmail(magicLinkEmail(email, url)),
+      sendMagicLink: ({ email, url }) => sendEmail(magicLinkEmail(email, linkPageUrl(url))),
     }),
     // OAuth 2.1 for MCP clients, the extension and iOS: JWT access tokens bound to one resource.
     jwt(),

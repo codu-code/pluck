@@ -26,7 +26,7 @@ The address for alarms is passed at deploy time so it never lands in the repo. T
 
 Then:
 
-1. **DNS on Vercel.** Add every `Dns*` output to the domain: `node scripts/vercel-dns.mjs infra/cdk/cdk-outputs.json getpluck.io` prints the `vercel dns add` commands; add `--apply` to run them with your Vercel login.
+1. **DNS on Vercel.** Add every `Dns*` output to the domain: `node scripts/vercel-dns.mjs infra/cdk/cdk-outputs.json getpluck.io` prints the `vercel dns add` commands; add `--apply` to run them with your Vercel login. The domain belongs to the `codu` team: run `vercel switch codu` first, or every add is refused with `permission_denied`.
 2. **Activate the receipt rule set** (CloudFormation cannot): run the `ActivateRuleSet` output.
 3. **SES out of the sandbox:** in the SES console, request production access for eu-west-1 (transactional mail: sign-in links and a weekly digest people opt into). Until then SES only sends to verified addresses.
 4. **Confirm the alert subscription:** AWS emails the alert address a link; alarms reach it only after you click it.
@@ -43,9 +43,9 @@ Then:
 | `MONGODB_URI` | the Atlas string from step 1 |
 | `BETTER_AUTH_URL` | `https://getpluck.io` (no trailing slash; it is the OAuth issuer and the connector's audience) |
 | `BETTER_AUTH_SECRET` | 32+ random bytes (`openssl rand -base64 32`) |
-| `EMAIL_FROM` | `Pluck <hello@notify.getpluck.io>`. Switch to it only once SES shows `notify.getpluck.io` as verified, or sign-in links stop sending |
+| `EMAIL_FROM` | `Pluck <no-reply@notify.getpluck.io>`: sign-in links (sent with no Reply-To) and shared Lists. Switch to it only once SES shows `notify.getpluck.io` as verified, or sign-in links stop sending |
 | `DIGEST_FROM` | `Pluck <weekly@updates.getpluck.io>`, once `updates.getpluck.io` is verified. Unset, the Monday email goes from `EMAIL_FROM` |
-| `EMAIL_REPLY_TO` | `hello@getpluck.io`: a real mailbox, since the sending subdomains receive no mail |
+| `EMAIL_REPLY_TO` | `niall@getpluck.io`: a real mailbox, since the sending subdomains receive no mail |
 | `WELCOME_FROM` | `Niall at Pluck <niall@getpluck.io>`: the welcome note, sent once 27 minutes after sign-up, from a real mailbox (replies come to you). Leave it off and no welcome is sent |
 | `AWS_REGION` | `eu-west-1` |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | from `pluck/app-user` |
