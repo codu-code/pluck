@@ -4,7 +4,7 @@ import { CATALOGS, LOCALES, matchLocale, messagesFor, parseAcceptLanguage, type 
 
 // Locales whose every catalog is fully translated. A locale joins this list when its translation lands, and from
 // then on a missing key fails here instead of quietly showing English.
-const COMPLETE: readonly string[] = ["zh-Hans"];
+const COMPLETE: readonly string[] = ["zh-Hans", "es"];
 
 const flat = (m: Messages, prefix = ""): Record<string, string> =>
   Object.fromEntries(Object.entries(m).flatMap(([k, v]) => (typeof v === "string" ? [[prefix + k, v]] : Object.entries(flat(v, `${prefix}${k}.`)))));
