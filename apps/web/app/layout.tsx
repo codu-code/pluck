@@ -16,6 +16,8 @@ export const generateMetadata = async (): Promise<Metadata> => ({
     apple: [{ url: "/icon-180.png", sizes: "180x180" }],
   },
   appleWebApp: { capable: true, title: "Pluck", statusBarStyle: "default" },
+  // Every page has a 1200 x 630 card (opengraph-image.tsx, lib/og.tsx); X shows it large too.
+  twitter: { card: "summary_large_image" },
 });
 
 export const viewport: Viewport = {
