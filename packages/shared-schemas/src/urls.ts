@@ -69,8 +69,9 @@ export function extractUrls(text: string): string[] {
 // The tag on a link as it is opened from Pluck, so the site can see who sent it the visit (as Pocket's
 // utm_source did). Only when opening: never stored, never on a copied or shared link. A link that already names its
 // source, or whose query is signed (one more parameter would break the signature), goes as it is.
-export const REFERRAL = { utm_source: "getpluck.io" } as const;
-const SIGNED = /^(x-amz-signature|x-amz-credential|signature|sig|key-pair-id|x-goog-signature|token|hmac|hash)$/i;
+export const REFERRAL = "utm_source=getpluck.io";
+// Signed and one-time links (S3, GCS, CloudFront, HMAC tokens) put every other parameter under the signature.
+const SIGNED = /^(x-amz-.+|x-goog-.+|signature|sig|key-pair-id|expires|token|hmac|hash)$/i;
 
 export function withReferral(url: string): string {
   let u: URL;
@@ -81,6 +82,8 @@ export function withReferral(url: string): string {
   }
   if ((u.protocol !== "https:" && u.protocol !== "http:") || /(^|\.)getpluck\.io$/i.test(u.hostname)) return url;
   if ([...u.searchParams.keys()].some((k) => k.toLowerCase() === "utm_source" || SIGNED.test(k))) return url;
-  for (const [k, v] of Object.entries(REFERRAL)) u.searchParams.append(k, v);
-  return u.toString();
+  // Added to the query as written, before any #fragment: re-serialising it (searchParams) would change q=a%20b to q=a+b.
+  const hash = url.indexOf("#");
+  const [head, tail] = hash < 0 ? [url, ""] : [url.slice(0, hash), url.slice(hash)];
+  return `${head}${head.includes("?") ? (head.endsWith("?") || head.endsWith("&") ? "" : "&") : "?"}${REFERRAL}${tail}`;
 }
