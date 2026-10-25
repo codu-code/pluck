@@ -7,7 +7,7 @@ import { router } from "expo-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { ActionSheetIOS, Alert, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTranslations } from "use-intl";
+import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { toast } from "@/components/Toast";
 import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
@@ -18,26 +18,20 @@ import { api, getSession, signOut, type Session } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 import { appIcons, type AppIcon } from "@/modules/app-icon";
 
-const ICONS_SHOWN: { id: AppIcon; label: string; art: number }[] = [
-  { id: "light", label: "Light", art: require("../assets/icon.png") },
-  { id: "dark", label: "Dark", art: require("../assets/icon-dark.png") },
+const ICONS_SHOWN: { id: AppIcon; label: "iconLight" | "iconDark"; art: number }[] = [
+  { id: "light", label: "iconLight", art: require("../assets/icon.png") },
+  { id: "dark", label: "iconDark", art: require("../assets/icon-dark.png") },
 ];
-const EXPIRY: [string, UserSettings["expiryDays"]][] = [["14 days", 14], ["30 days", 30], ["60 days", 60], ["90 days", 90], ["Never", null]];
-const SCOPES: [string, UserSettings["expiryScope"]][] = [["Inbox and Later", "inbox_later"], ["Inbox only", "inbox"]];
-const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-// One of a few choices from the system action sheet.
-function choose(title: string, options: string[], done: (i: number) => void) {
-  ActionSheetIOS.showActionSheetWithOptions({ title, options: [...options, "Cancel"], cancelButtonIndex: options.length }, (i) => {
-    if (i < options.length) done(i);
-  });
-}
-const failed = (e: unknown) => Alert.alert("That did not go through", e instanceof Refused ? e.message : "Check the connection, then try again.");
+const EXPIRY: UserSettings["expiryDays"][] = [14, 30, 60, 90, null];
+const SCOPES: ["scopeInboxLater" | "scopeInbox", UserSettings["expiryScope"]][] = [["scopeInboxLater", "inbox_later"], ["scopeInbox", "inbox"]];
 
 // Settings (IOSSettings board): everything the web's Settings does, so the phone never needs it.
 // Account things (AI tools, export, delete) need the "account" scope; a phone signed in before it asks to sign in again.
 export default function Settings() {
   const tl = useTranslations("ios.language");
+  const tc = useTranslations("ios.common");
+  const tr = useTranslations("ios.settings");
+  const format = useFormatter();
   const t = useTheme();
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
@@ -68,6 +62,17 @@ export default function Settings() {
   const settings = profile?.settings;
   const initials = ((profile?.name || profile?.email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("")) || "?";
   const needsAccount = tools.error instanceof Refused && tools.error.status === 403;
+  // Sunday first, as digestDay counts: 7 Jan 2024 was a Sunday.
+  const days = [0, 1, 2, 3, 4, 5, 6].map((d) => format.dateTime(new Date(2024, 0, 7 + d), { weekday: "long" }));
+  const expiryName = (d: UserSettings["expiryDays"]) => (d ? tr("days", { count: d }) : tr("never"));
+  const scope = SCOPES.find(([, s]) => s === settings?.expiryScope)?.[0];
+
+  // One of a few choices from the system action sheet.
+  const choose = (title: string, options: string[], done: (i: number) => void) =>
+    ActionSheetIOS.showActionSheetWithOptions({ title, options: [...options, tc("cancel")], cancelButtonIndex: options.length }, (i) => {
+      if (i < options.length) done(i);
+    });
+  const failed = (e: unknown) => Alert.alert(tc("failed.title"), e instanceof Refused ? e.message : tc("failed.body"));
 
   const saveMe = async (body: { name?: string; settings?: Partial<UserSettings> }, said?: string) => {
     try {
@@ -79,25 +84,25 @@ export default function Settings() {
     }
   };
   const editName = () =>
-    Alert.prompt("Your name", "Shown on Lists you make public.", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Save", onPress: (v?: string) => void saveMe({ name: v ?? "" }, "Name saved.") },
+    Alert.prompt(tr("nameTitle"), tr("nameBody"), [
+      { text: tc("cancel"), style: "cancel" },
+      { text: tc("save"), onPress: (v?: string) => void saveMe({ name: v ?? "" }, tr("nameSaved")) },
     ], "plain-text", profile?.name ?? "");
   const disconnect = (tool: AiConnection) =>
-    Alert.alert(`Disconnect ${tool.name}?`, "It stops reading and plucking straight away. Connect it again any time.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(tr("disconnectTitle", { name: tool.name }), tr("disconnectBody"), [
+      { text: tc("cancel"), style: "cancel" },
       {
-        text: "Disconnect", style: "destructive", onPress: async () => {
+        text: tr("disconnect"), style: "destructive", onPress: async () => {
           await api("/api/v1/ai-tools/disconnect", { json: { clientId: tool.clientId } }).catch(failed);
           void tools.refetch();
         },
       },
     ]);
   const newAddress = () =>
-    Alert.alert("A new address?", "The old one stops working at once. Update anything that forwards to it.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(tr("newAddressTitle"), tr("newAddressBody"), [
+      { text: tc("cancel"), style: "cancel" },
       {
-        text: "New address", onPress: async () => {
+        text: tr("newAddress"), onPress: async () => {
           const res = await api<{ address: string }>("/api/v1/email-in/regenerate", { method: "POST" }).catch(failed);
           if (res) qc.setQueryData(["emailIn"], res.address);
         },
@@ -105,18 +110,18 @@ export default function Settings() {
     ]);
   const exportAll = async () => {
     await api("/api/v1/export", { method: "POST" })
-      .then(() => Alert.alert("Exporting", `A zip of everything is on its way to ${profile?.email ?? "your email"}. The link arrives in a minute or two.`))
+      .then(() => Alert.alert(tr("exportingTitle"), profile?.email ? tr("exportingBody", { email: profile.email }) : tr("exportingBodyNoEmail")))
       .catch(failed);
   };
   const deleteAll = () =>
-    Alert.alert("Delete everything?", "Every item, tag, note and list, for good. Export first if you want a copy.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(tr("deleteTitle"), tr("deleteBody"), [
+      { text: tc("cancel"), style: "cancel" },
       {
-        text: "Continue", style: "destructive", onPress: () =>
-          Alert.prompt("Type your email to confirm", profile?.email, [
-            { text: "Cancel", style: "cancel" },
+        text: tr("continue"), style: "destructive", onPress: () =>
+          Alert.prompt(tr("confirmTitle"), profile?.email, [
+            { text: tc("cancel"), style: "cancel" },
             {
-              text: "Delete everything", style: "destructive", onPress: async (typed?: string) => {
+              text: tr("deleteButton"), style: "destructive", onPress: async (typed?: string) => {
                 try {
                   await api("/api/v1/me", { method: "DELETE", json: { confirm: typed ?? "" } });
                   await signOut();
@@ -166,7 +171,7 @@ export default function Settings() {
     <View style={[styles.row, { borderBottomColor: t.tint, borderBottomWidth: StyleSheet.hairlineWidth * 2 }]}>
       <Text selectable style={[mono ? { fontFamily: "Menlo", fontSize: 13 } : [font.regular, { fontSize: 15 }], { color: t.ink, flexShrink: 1 }]}>{text}</Text>
       <Pressable accessibilityRole="button" accessibilityLabel={a11y} onPress={onCopy} hitSlop={4} style={[styles.copy, { backgroundColor: t.brand }]}>
-        <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.onBrand, fontSize: 14 }]}>Copy</Text>
+        <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.onBrand, fontSize: 14 }]}>{tc("copy")}</Text>
       </Pressable>
     </View>
   );
@@ -175,98 +180,96 @@ export default function Settings() {
     // A sheet: it already sits below the status bar, so no top inset.
     <ScrollView style={{ backgroundColor: t.rail }} contentContainerStyle={[styles.page, { paddingTop: 20, paddingBottom: insets.bottom + 24 }]}>
       <View style={styles.head}>
-        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.title, { color: t.ink }]}>Settings</Text>
+        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.title, { color: t.ink }]}>{tr("title")}</Text>
         <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
-          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>Done</Text>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tc("done")}</Text>
         </Pressable>
       </View>
 
       <View style={styles.group}>
-        {section("Account")}
+        {section(tr("sections.account"))}
         <View style={card}>
           <View style={[styles.account, { borderBottomColor: t.tint }]}>
             <View style={[styles.avatar, { backgroundColor: t.avatar }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 13 }]}>{initials}</Text></View>
             <View style={{ flex: 1, minWidth: 0 }}>
-              <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{profile?.name || "Your account"}</Text>
+              <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{profile?.name || tr("yourAccount")}</Text>
               <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{profile?.email ?? session?.email ?? ""}</Text>
             </View>
           </View>
-          {row(pair("Name", profile?.name || "Add your name"), editName)}
-          {row(pair("Handle", profile?.handle ? `@${profile.handle}` : ""), () => router.push({ pathname: "/handle", params: { host } }))}
-          {row(<Text style={label}>Sign out</Text>, () => Alert.alert("Sign out?", "Plucks queued on this phone stay here until you sign in again.", [
-            { text: "Cancel", style: "cancel" },
-            { text: "Sign out", style: "destructive", onPress: () => void signOut() },
+          {row(pair(tr("name"), profile?.name || tr("addName")), editName)}
+          {row(pair(tr("handle"), profile?.handle ? `@${profile.handle}` : ""), () => router.push({ pathname: "/handle", params: { host } }))}
+          {row(<Text style={label}>{tr("signOut")}</Text>, () => Alert.alert(tr("signOutTitle"), tr("signOutBody"), [
+            { text: tc("cancel"), style: "cancel" },
+            { text: tr("signOut"), style: "destructive", onPress: () => void signOut() },
           ]), true)}
         </View>
-        {footnote("Your name and handle show on Lists you make public, and nowhere else.")}
+        {footnote(tr("accountFootnote"))}
       </View>
 
       <View style={styles.group}>
-        {section("AI tools")}
+        {section(tr("sections.aiTools"))}
         <View style={card}>
-          {copyRow(`${host}/mcp`, true, async () => { await Clipboard.setStringAsync(`${server}/mcp`); setCopied(true); toast("Copied. Paste it into your AI."); }, copied ? "Copied" : "Copy the connector address")}
+          {copyRow(`${host}/mcp`, true, async () => { await Clipboard.setStringAsync(`${server}/mcp`); setCopied(true); toast(tr("connectorCopied")); }, copied ? tr("copied") : tr("copyConnector"))}
           {(tools.data ?? []).map((tool) => row(
             <>
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text style={label}>{tool.name}</Text>
-                <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>Connected {new Date(tool.connectedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</Text>
+                <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("connected", { date: format.dateTime(new Date(tool.connectedAt), { day: "numeric", month: "short" }) })}</Text>
               </View>
-              <Text style={[font.regular, { color: t.danger, fontSize: 15 }]}>Disconnect</Text>
+              <Text style={[font.regular, { color: t.danger, fontSize: 15 }]}>{tr("disconnect")}</Text>
             </>,
             () => disconnect(tool),
             false,
-            `${tool.name}. Disconnect`,
+            tr("disconnectA11y", { name: tool.name }),
           ))}
           <Text style={[font.regular, styles.caption, { color: t.ink2 }]}>
-            {needsAccount ? "Your connected AI tools show here once you sign in again with an email link."
-              : tools.data?.length === 0 ? "No AI tool connected yet. Add the address once in your AI tool; it works on every device you use it on."
-                : "Add the address once in your AI tool. It works on every device you use it on."}
+            {tr(needsAccount ? "toolsNeedAccount" : tools.data?.length === 0 ? "toolsNone" : "toolsHint")}
           </Text>
         </View>
       </View>
 
       <View style={styles.group}>
-        {section("Email in")}
+        {section(tr("sections.emailIn"))}
         <View style={card}>
-          {address.data ? copyRow(address.data, false, async () => { await Clipboard.setStringAsync(address.data!); toast("Address copied."); }, "Copy the email-in address") : null}
-          {row(<Text style={[font.regular, styles.label, { color: t.actionInk }]}>New address</Text>, newAddress, true)}
+          {address.data ? copyRow(address.data, false, async () => { await Clipboard.setStringAsync(address.data!); toast(tr("addressCopied")); }, tr("copyEmailIn")) : null}
+          {row(<Text style={[font.regular, styles.label, { color: t.actionInk }]}>{tr("newAddress")}</Text>, newAddress, true)}
         </View>
-        {footnote("Forward a newsletter here. It lands in the Inbox as a Read item.")}
+        {footnote(tr("emailInFootnote"))}
       </View>
 
       {settings && (
         <View style={styles.group}>
-          {section("Expiry and the weekly email")}
+          {section(tr("sections.expiry"))}
           <View style={card}>
-            {row(pair("Move to the Archive after", EXPIRY.find(([, d]) => d === settings.expiryDays)?.[0] ?? "Never"), () =>
-              choose("Untouched items move to the Archive after", EXPIRY.map(([n]) => n), (i) => {
-                const days = EXPIRY[i]![1];
-                void saveMe({ settings: { expiryDays: days } }, days ? `Untouched for ${days} days goes to the Archive. Nothing is deleted.` : "Nothing expires now.");
+            {row(pair(tr("moveAfter"), expiryName(EXPIRY.includes(settings.expiryDays) ? settings.expiryDays : null)), () =>
+              choose(tr("moveAfterTitle"), EXPIRY.map(expiryName), (i) => {
+                const n = EXPIRY[i]!;
+                void saveMe({ settings: { expiryDays: n } }, n ? tr("expirySaved", { count: n }) : tr("noExpiry"));
               }))}
-            {row(pair("Applies to", SCOPES.find(([, s]) => s === settings.expiryScope)?.[0] ?? ""), () =>
-              choose("Expiry applies to", SCOPES.map(([n]) => n), (i) => void saveMe({ settings: { expiryScope: SCOPES[i]![1] } })))}
-            {row(pair("Weekly email", settings.digestDay === null ? "Off" : DAYS[settings.digestDay]!), () =>
-              choose("Send the weekly email on", [...DAYS, "Off"], (i) => {
+            {row(pair(tr("appliesTo"), scope ? tr(scope) : ""), () =>
+              choose(tr("appliesToTitle"), SCOPES.map(([n]) => tr(n)), (i) => void saveMe({ settings: { expiryScope: SCOPES[i]![1] } })))}
+            {row(pair(tr("weekly"), settings.digestDay === null ? tr("off") : days[settings.digestDay]!), () =>
+              choose(tr("weeklyTitle"), [...days, tr("off")], (i) => {
                 const day = i < 7 ? i : null;
-                void saveMe({ settings: { digestDay: day } }, day === null ? "No weekly email." : `The weekly email comes on ${DAYS[day]}s.`);
+                void saveMe({ settings: { digestDay: day } }, day === null ? tr("noWeekly") : tr("weeklyOn", { day: String(day) }));
               }), true)}
           </View>
-          {footnote("Untouched items move to the Archive, nothing is deleted. The weekly email: what moves soon, what is due, and things you plucked and forgot.")}
+          {footnote(tr("expiryFootnote"))}
         </View>
       )}
 
       <View style={styles.group}>
-        {section("Library")}
+        {section(tr("sections.library"))}
         <View style={card}>
-          {row(pair("Tags", `${tags.data?.length ?? ""}`), () => router.push("/tags"))}
-          {row(pair("Export everything", "By email"), () => void exportAll())}
-          {row(<><Text style={label}>Offline copy</Text><Text style={value}>{cache.items} {cache.items === 1 ? "item" : "items"} · {Math.max(1, Math.round(cache.bytes / 1_000_000))} MB</Text></>, () =>
-            Alert.alert("Clear the offline copy?", "Your library stays on the server. The app downloads it again as you use it.", [
-              { text: "Cancel", style: "cancel" },
-              { text: "Clear", onPress: () => { queryClient.clear(); void kv.remove("queryCache"); setCache({ items: 0, bytes: 0 }); } },
+          {row(pair(tr("tags"), `${tags.data?.length ?? ""}`), () => router.push("/tags"))}
+          {row(pair(tr("export"), tr("byEmail")), () => void exportAll())}
+          {row(<><Text style={label}>{tr("offline")}</Text><Text style={value}>{tr("offlineValue", { count: cache.items, mb: Math.max(1, Math.round(cache.bytes / 1_000_000)) })}</Text></>, () =>
+            Alert.alert(tr("clearTitle"), tr("clearBody"), [
+              { text: tc("cancel"), style: "cancel" },
+              { text: tr("clear"), onPress: () => { queryClient.clear(); void kv.remove("queryCache"); setCache({ items: 0, bytes: 0 }); } },
             ]))}
-          {row(<><Text style={label}>Server</Text><Text style={value}>{host}</Text></>, () =>
-            Alert.alert("Server", `This phone uses ${host}. To use another server, sign out, then choose "Use your own server".`), true)}
+          {row(<><Text style={label}>{tr("server")}</Text><Text style={value}>{host}</Text></>, () =>
+            Alert.alert(tr("server"), tr("serverBody", { host })), true)}
         </View>
       </View>
 
@@ -279,50 +282,50 @@ export default function Settings() {
 
       {appIcons.supported && icon && (
         <View style={styles.group}>
-          {section("App icon")}
+          {section(tr("sections.appIcon"))}
           <View style={card} accessibilityRole="radiogroup">
             {ICONS_SHOWN.map((o, i) => (
               <Pressable
                 key={o.id}
                 accessibilityRole="radio"
                 accessibilityState={{ checked: icon === o.id }}
-                accessibilityLabel={`${o.label} icon`}
+                accessibilityLabel={tr("iconA11y", { name: tr(o.label) })}
                 onPress={() => void chooseIcon(o.id)}
                 style={({ pressed }) => [styles.iconRow, { borderBottomColor: t.tint, borderBottomWidth: i === ICONS_SHOWN.length - 1 ? 0 : StyleSheet.hairlineWidth * 2, backgroundColor: pressed ? t.selected : "transparent" }]}
               >
                 <Image source={o.art} style={[styles.iconPreview, { borderColor: t.line }]} accessibilityIgnoresInvertColors />
-                <Text style={[label, { flex: 1 }]}>{o.label}</Text>
+                <Text style={[label, { flex: 1 }]}>{tr(o.label)}</Text>
                 {icon === o.id && <Icon d={ICONS.tick} size={18} color={t.actionInk} width={2} />}
               </Pressable>
             ))}
           </View>
-          {footnote("Just the icon. The app itself follows your phone.")}
+          {footnote(tr("iconFootnote"))}
         </View>
       )}
 
       {analyticsOn && (
         <View style={styles.group}>
-          {section("Privacy")}
+          {section(tr("sections.privacy"))}
           <View style={card}>
             <View style={[styles.switchRow]}>
-              <Text style={[label, { flex: 1 }]}>Share how I use Pluck</Text>
-              <Switch accessibilityLabel="Share how I use Pluck" value={usage === "yes"} onValueChange={(on) => void setConsent(on ? "yes" : "no")} trackColor={{ true: t.accent }} />
+              <Text style={[label, { flex: 1 }]}>{tr("usage")}</Text>
+              <Switch accessibilityLabel={tr("usage")} value={usage === "yes"} onValueChange={(on) => void setConsent(on ? "yes" : "no")} trackColor={{ true: t.accent }} />
             </View>
           </View>
-          {footnote("Which screens you use, tied to your account. Never what you pluck. Crash reports go either way, without your name.")}
+          {footnote(tr("usageFootnote"))}
         </View>
       )}
 
       <View style={[styles.tip, { backgroundColor: t.surface }]}>
         <Image source={require("../assets/icon.png")} style={{ width: 36, height: 36, borderRadius: 8 }} />
         <View style={{ flex: 1, gap: 2 }}>
-          <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>Put Pluck first in Share</Text>
-          <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>In any app, tap Share, scroll the app row to More, and drag Pluck to the front.</Text>
+          <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tr("tipTitle")}</Text>
+          <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>{tr("tipBody")}</Text>
         </View>
       </View>
 
       <Pressable accessibilityRole="button" onPress={deleteAll} style={[styles.delete, { backgroundColor: t.surface }]}>
-        <Text style={[font.medium, { color: t.danger, fontSize: 15, textAlign: "center" }]}>Delete everything. No, really.</Text>
+        <Text style={[font.medium, { color: t.danger, fontSize: 15, textAlign: "center" }]}>{tr("deleteAll")}</Text>
       </Pressable>
     </ScrollView>
   );

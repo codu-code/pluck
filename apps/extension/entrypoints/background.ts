@@ -1,14 +1,15 @@
 import { finishSignIn } from "@/lib/auth";
 import { drain, pluckTab, pluckUrl, refreshBadge, type PluckOutcome } from "@/lib/pluck";
+import { t } from "@/lib/t";
 
 // The service worker can stop after 30 seconds idle: every handler reads what it needs from storage.
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(() => {
     browser.contextMenus.removeAll().then(() => {
-      browser.contextMenus.create({ id: "pluck-link", title: "Pluck link", contexts: ["link"] });
-      browser.contextMenus.create({ id: "pluck-selection", title: "Pluck selection as highlight", contexts: ["selection"] });
-      browser.contextMenus.create({ id: "pluck-image", title: "Pluck image", contexts: ["image"] });
-      browser.contextMenus.create({ id: "pluck-page", title: "Pluck page", contexts: ["page"] });
+      browser.contextMenus.create({ id: "pluck-link", title: t("menu.link"), contexts: ["link"] });
+      browser.contextMenus.create({ id: "pluck-selection", title: t("menu.selection"), contexts: ["selection"] });
+      browser.contextMenus.create({ id: "pluck-image", title: t("menu.image"), contexts: ["image"] });
+      browser.contextMenus.create({ id: "pluck-page", title: t("menu.page"), contexts: ["page"] });
     });
   });
 

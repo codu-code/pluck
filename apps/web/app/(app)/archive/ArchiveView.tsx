@@ -2,28 +2,30 @@
 
 import { BIN_DAYS, type ArchiveFilter, type Item, type ItemPage } from "@pluck/shared-schemas";
 import { KindGlyph } from "@pluck/ui";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
-import { rowSite, when } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
 import { moveItems } from "@/lib/moves";
 import styles from "./archive.module.css";
 import { useNow } from "@/lib/use-now";
 
-const FILTERS: [ArchiveFilter, string][] = [["all", "All"], ["you", "By you"], ["expired", "Expired"], ["import", "Imported"]];
+const FILTERS: ArchiveFilter[] = ["all", "you", "expired", "import"];
 
-function why(item: Item, bin: boolean, now: Date, expiryDays: number | null): string {
+// Why an item is here, as an app.archive.why key and its values.
+function why(item: Item, bin: boolean, now: Date, expiryDays: number | null) {
   if (bin) {
     const left = BIN_DAYS - Math.floor((now.getTime() - new Date(item.deletedAt ?? item.updatedAt).getTime()) / 86_400_000);
-    return `deleted, gone for good in ${Math.max(left, 1)} day${left === 1 ? "" : "s"}`;
+    return ["bin", { days: Math.max(left, 1) }] as const;
   }
-  if (item.status === "done") return "done";
+  if (item.status === "done") return ["done", {}] as const;
   switch (item.archivedReason) {
-    case "expired": return expiryDays ? `expired after ${expiryDays} days, kept here` : "expired, kept here";
-    case "bulk": return "archived with Archive it all";
-    case "import": return "imported";
-    default: return "archived by you";
+    case "expired": return expiryDays ? (["expiredAfter", { days: expiryDays }] as const) : (["expired", {}] as const);
+    case "bulk": return ["bulk", {}] as const;
+    case "import": return ["import", {}] as const;
+    default: return ["you", {}] as const;
   }
 }
 
@@ -34,6 +36,13 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
   const [filter, setFilter] = useState<ArchiveFilter>("all");
   const [toast, showToast] = useToast();
   const now = useNow();
+  const t = useTranslations("app.archive");
+  const app = useTranslations("app");
+  const f = useFormat();
+  const reason = (item: Item) => {
+    const [key, values] = why(item, bin, now ?? new Date(), expiryDays);
+    return t(`why.${key}`, values);
+  };
 
   async function load(f: ArchiveFilter, after?: string) {
     const qs = new URLSearchParams({ status: bin ? "bin" : "archive", archive: f, ...(after ? { cursor: after } : {}) });
@@ -46,10 +55,10 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
 
   async function restore(item: Item) {
     const ok = bin ? (await fetch(`/api/v1/items/${item.id}/restore`, { method: "POST" })).ok : await moveItems([item.id], "inbox");
-    if (!ok) return showToast({ message: "That did not go through." });
+    if (!ok) return showToast({ message: app("common.didNotGoThrough") });
     setRows((cur) => cur.filter((r) => r.id !== item.id));
     showToast({
-      message: bin ? "Out of the bin." : "Back in the Inbox.",
+      message: bin ? t("outOfBin") : app("moved.inbox"),
       undo: bin
         ? () => void fetch(`/api/v1/items/${item.id}`, { method: "DELETE" }).then(() => load(filter))
         : () => void moveItems([item.id], item.status).then(() => load(filter)),
@@ -58,42 +67,40 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
 
   return (
     <>
-      <TopBar onPluck={() => showToast({ message: "Plucked to the Inbox." })} />
+      <TopBar onPluck={() => showToast({ message: app("common.pluckedToInbox") })} />
       <div className={styles.page}>
         <div className={styles.head}>
-          <h1 className={styles.title}>{bin ? "Bin" : "Archive"}</h1>
+          <h1 className={styles.title}>{bin ? t("bin") : t("title")}</h1>
           <span className={styles.subtitle}>
-            {bin
-              ? "Things you deleted. Each one is gone for good 30 days after you deleted it."
-              : "Everything you archived, finished, or let expire. Nothing is ever deleted, and search still finds it."}
+            {bin ? t("binSubtitle") : t("subtitle")}
           </span>
         </div>
         {!bin && (
-          <div role="group" aria-label="Filter" className={styles.chips}>
-            {FILTERS.map(([value, label]) => (
+          <div role="group" aria-label={t("filter.label")} className={styles.chips}>
+            {FILTERS.map((value) => (
               <button key={value} type="button" aria-pressed={filter === value} className={styles.chip} onClick={() => { setFilter(value); void load(value); }}>
-                {label}
+                {t(`filter.${value}`)}
               </button>
             ))}
           </div>
         )}
-        <div className={styles.rows} role="list" aria-label={bin ? "Bin" : "Archived items"}>
+        <div className={styles.rows} role="list" aria-label={bin ? t("bin") : t("rowsLabel")}>
           {rows.map((item) => (
             <div key={item.id} role="listitem" className={styles.row}>
-              <KindGlyph kind={item.kind} />
+              <KindGlyph kind={item.kind} label={app(`kind.${item.kind}`)} />
               <div className={styles.body}>
                 {bin ? <span className={styles.titleText}>{item.title}</span> : <Link href={`/items/${item.id}`} className={styles.titleText}>{item.title}</Link>}
-                <span className={styles.meta}>{rowSite(item)} · {why(item, bin, now ?? new Date(), expiryDays)}</span>
+                <span className={styles.meta}>{f.site(item)} · {reason(item)}</span>
               </div>
-              <span className={styles.when}>{now && when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
-              <button type="button" className={styles.restore} onClick={() => restore(item)}>Restore</button>
+              <span className={styles.when}>{now && f.when(bin ? (item.deletedAt ?? item.updatedAt) : item.statusChangedAt, now)}</span>
+              <button type="button" className={styles.restore} onClick={() => restore(item)}>{t("restore")}</button>
             </div>
           ))}
         </div>
-        {rows.length === 0 && <p className={styles.none}>{bin ? "The bin is empty." : "Nothing here yet."}</p>}
-        {nextCursor && <button type="button" className={styles.more} onClick={() => load(filter, nextCursor)}>Show more</button>}
+        {rows.length === 0 && <p className={styles.none}>{bin ? t("binEmpty") : t("empty")}</p>}
+        {nextCursor && <button type="button" className={styles.more} onClick={() => load(filter, nextCursor)}>{app("common.showMore")}</button>}
         <p className={styles.foot}>
-          {bin ? <Link href="/archive">Back to the Archive</Link> : <>Deleted something by mistake? <Link href="/archive?view=bin">The bin</Link> keeps it for 30 days.</>}
+          {bin ? <Link href="/archive">{t("back")}</Link> : t.rich("binLink", { bin: (c) => <Link href="/archive?view=bin">{c}</Link> })}
         </p>
       </div>
       {toast}

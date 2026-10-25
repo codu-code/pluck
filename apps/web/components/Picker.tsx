@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import styles from "./Picker.module.css";
 
@@ -15,7 +16,7 @@ type Props<O extends PickerOption> = {
   onCreate: (name: string) => Promise<O | null>;
   onClose: () => void;
   title: string;
-  noun: string; // "tag", "list"
+  noun: "tag" | "list";
   createLabel: (name: string) => string;
 };
 
@@ -25,6 +26,8 @@ export function Picker<O extends PickerOption>({ options: all, state, onToggle, 
   const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const listId = useId();
+  const t = useTranslations(`app.picker.${noun}`);
+  const picker = useTranslations("app.picker");
   const options = useMemo(() => {
     const s = slug(q);
     const slugOf = (o: O) => o.slug ?? slug(o.name);
@@ -58,8 +61,8 @@ export function Picker<O extends PickerOption>({ options: all, state, onToggle, 
           aria-expanded="true"
           aria-controls={listId}
           aria-activedescendant={options[active] ? `${listId}-${active}` : undefined}
-          aria-label={noun[0]!.toUpperCase() + noun.slice(1)}
-          placeholder={`Type to find or make a ${noun}`}
+          aria-label={t("label")}
+          placeholder={t("placeholder")}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
@@ -72,7 +75,7 @@ export function Picker<O extends PickerOption>({ options: all, state, onToggle, 
             e.stopPropagation();
           }}
         />
-        <ul id={listId} role="listbox" aria-label={`${noun}s`} aria-multiselectable="true" className={styles.list}>
+        <ul id={listId} role="listbox" aria-label={t("options")} aria-multiselectable="true" className={styles.list}>
           {options.map((o, i) => {
             const st = o.tag ? state(o.tag.id) : "off";
             return (
@@ -107,9 +110,9 @@ export function Picker<O extends PickerOption>({ options: all, state, onToggle, 
               </li>
             );
           })}
-          {options.length === 0 && <li className={styles.empty}>No {noun}s yet. Type a name to make one.</li>}
+          {options.length === 0 && <li className={styles.empty}>{t("empty")}</li>}
         </ul>
-        <span className={styles.hint}>Enter toggles · Esc closes</span>
+        <span className={styles.hint}>{picker("hint")}</span>
       </div>
     </div>
   );

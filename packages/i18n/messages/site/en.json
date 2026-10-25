@@ -1,5 +1,500 @@
 {
   "language": {
     "label": "Language"
+  },
+  "meta": {
+    "description": "Pluck it. A fast, open-source URL saver your AI can read."
+  },
+  "chrome": {
+    "home": "Pluck home",
+    "nav": "Site",
+    "lists": "Lists",
+    "connect": "Connect your AI",
+    "openSource": "Open source",
+    "getPluck": "Get Pluck",
+    "footerHome": "Home",
+    "support": "Support",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies",
+    "freeAndOpen": "Pluck is free and open source."
+  },
+  "paste": {
+    "label": "Paste a link to try it",
+    "placeholder": "Paste a link. Or five. Go on.",
+    "button": "Pluck it",
+    "failed": "That did not go through. Try again.",
+    "plucked": "Plucked.",
+    "inInbox": "It's in your <inbox>Inbox</inbox>.",
+    "checkEmail": "Check your email.",
+    "took": "That was {ms, number} ms.",
+    "sent": "We sent a link to <b>{email}</b>. Open it in this browser and your plucks land in your Inbox.",
+    "keepNote": "Add your email to keep it. New or back, the link signs you in.",
+    "emailLabel": "Your email, to keep what you plucked",
+    "emailPlaceholder": "you@example.com",
+    "sending": "Sending",
+    "keep": "Keep it",
+    "emailFailed": "That did not go through. Check the address, then try again.",
+    "limited": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
+    "hint": "Free. Open source. iPhone, Chrome, web and email. Ready for your AI."
+  },
+  "home": {
+    "meta": {
+      "title": "Pluck · Pluck it. Sort it later.",
+      "description": "Pluck anything in one tap. Sort it later, by hand or with your AI. Free and open source."
+    },
+    "hero": {
+      "title": "Pluck it<dot>.</dot>",
+      "line1": "Pluck anything in one tap.",
+      "line2": "Sort it later, by hand or with your AI.",
+      "line3": "Or don't. We won't nag."
+    },
+    "mock": {
+      "label": "The app",
+      "inbox": "Inbox",
+      "toTriage": "{count, number} to triage",
+      "plucked": "Plucked.",
+      "rows": {
+        "mcp": {
+          "title": "How MCP auth actually works",
+          "meta": "modelcontextprotocol.io · 12 min",
+          "tag": "mcp"
+        },
+        "postgres": {
+          "title": "Postgres indexes in 40 minutes",
+          "meta": "youtube.com · 41 min",
+          "tag": "postgres"
+        },
+        "idea": {
+          "title": "An MCP server for Assemble's estimates",
+          "meta": "Note · by you",
+          "tag": "assemble"
+        },
+        "hob": {
+          "title": "Induction hob, 60 cm, four zones",
+          "meta": "Thing · Kitchen reno list",
+          "tag": "kitchen"
+        }
+      }
+    },
+    "band": {
+      "article": "An article.",
+      "recipe": "A recipe.",
+      "thread": "A thread.",
+      "idea": "Half an idea.",
+      "hob": "A hob for the kitchen.",
+      "talk": "A talk you'll give in November.",
+      "pdf": "A PDF you will never read.",
+      "small": "One inbox for all of it. The page is kept, not just the link, so it's still there when the site isn't."
+    },
+    "stats": {
+      "tapNumber": "1 tap",
+      "tap": "From the iPhone share sheet, without opening an app. From Chrome, your email, or a chat with your AI. “Plucked” in under 300 ms. Every time.",
+      "nagsNumber": "0 nags",
+      "nags": "No streaks, no badges, no guilt. Nothing gets tagged behind your back. Things you never touch move to the Archive after 30 days (you pick the number), unless they're in a list. Nothing is deleted.",
+      "secondsNumber": "30 s",
+      "seconds": "To plug in the AI you already use. Claude, ChatGPT, Cursor, anything that speaks MCP. Ask it to tidy, group or turn your plucks into ideas. It works while you watch, and never deletes."
+    },
+    "lists": {
+      "title": "Lists are what you're making.",
+      "para1": "A book. A newsletter issue. A talk. A trip. <phrase>Things to buy.</phrase> Put any pluck in as many lists as you like, each with its own note and a tick.",
+      "para2": "Private by default. Public with one switch. Take it back with the same switch.",
+      "cardTitle": "Kitchen reno, to buy",
+      "progress": "{done, number} of {total, number}",
+      "kitchen": {
+        "hob": {
+          "title": "Induction hob, 60 cm",
+          "note": "Check the width against the cut-out."
+        },
+        "tap": {
+          "title": "Tap with a pull-out spray",
+          "note": "Brushed steel, not chrome."
+        },
+        "led": {
+          "title": "Under-cabinet LED strip",
+          "note": "Plug-in, no electrician."
+        },
+        "extractor": {
+          "title": "Extractor, ducted",
+          "note": "Ask the fitters about the wall first."
+        }
+      },
+      "public": "Public. Anyone can pluck it into theirs."
+    },
+    "ai": {
+      "eyebrow": "READY FOR YOUR AI",
+      "title": "Plug in the AI you already use.",
+      "ask1": "“What did I pluck about MCP auth?”",
+      "ask2": "“Tidy my inbox.”",
+      "ask3": "“Make a reading list from this month, best first.”",
+      "body": "One link and your whole library is there. It changes things only when you say so, and marks everything it touched.",
+      "button": "How it works with AI",
+      "chatMe1": "Pluck this as an idea: an MCP server for Assemble's estimates",
+      "chatAi1": "Plucked. It's in your inbox as a Note, marked as plucked by me.",
+      "chatMe2": "What's rotting in my library?",
+      "chatAi2": "Five things untouched for a month. Want to go through them one at a time?"
+    },
+    "imports": {
+      "title": "Pocket shut down. Omnivore shut down.",
+      "body": "Pluck is open source and runs on a database you can own. It can't close with two weeks' notice. Bring your old library across in one go.",
+      "anyBrowser": "Any browser",
+      "pocket": "CSV export",
+      "omnivore": "Export zip",
+      "raindrop": "CSV",
+      "browser": "Bookmarks HTML",
+      "selfHost": "Self-host it in one command"
+    },
+    "closing": {
+      "title": "Sort it<br></br>later<dot>.</dot>",
+      "chrome": "Add to Chrome",
+      "iphone": "iPhone",
+      "web": "Use it on the web"
+    }
+  },
+  "soon": {
+    "title": "Soon<dot>.</dot>",
+    "web": "Use it on the web",
+    "connect": "Connect your AI",
+    "chrome": {
+      "meta": {
+        "title": "Pluck for Chrome · Pluck",
+        "description": "Pluck for Chrome is in the Chrome Web Store's review queue. Out any day now."
+      },
+      "para1": "Pluck for Chrome is in the Chrome Web Store's review queue, somewhere behind a few thousand coupon finders. Out any day now.",
+      "para2": "Until then, Pluck works on the web: paste a link and it is plucked. Your AI can pluck for you too."
+    },
+    "iphone": {
+      "meta": {
+        "title": "Pluck for iPhone · Pluck",
+        "description": "Pluck for iPhone is on TestFlight first, then the App Store."
+      },
+      "para1": "Pluck for iPhone is on TestFlight first, then the App Store. Pluck from the share sheet, read anywhere, swipe to Later.",
+      "para2": "Until then, Pluck works in Safari on your phone: paste a link and it is plucked. Your AI can pluck for you too."
+    }
+  },
+  "openSource": {
+    "meta": {
+      "title": "Open source · Pluck",
+      "description": "Pluck is free and open source. Use getpluck.io, or run your own in one command."
+    },
+    "licence": "Licence: AGPL-3.0 (server) and MIT (apps).",
+    "title": "Free.<br></br>Open.<br></br><marker>Yours.</marker>",
+    "lede": "Read-it-later apps keep closing. Pluck can't, because the code is public and the data is yours. Use ours, or run your own in one command.",
+    "selfHostTitle": "Self-host in one command.",
+    "selfHostBody": "The same app, extension, iPhone app and AI connector. Point them at your server in Settings.",
+    "terminalComment": "# then, for AI tools without a public URL",
+    "reasons": {
+      "export": {
+        "title": "Export in one click.",
+        "body": "Every item as JSON, plus one Markdown file per item and per list, with your highlights and notes. It works on day one, not when we get round to it."
+      },
+      "page": {
+        "title": "The page, not just the link.",
+        "body": "Pluck keeps what you plucked. When the site goes down or changes, your copy is still there, readable."
+      },
+      "public": {
+        "title": "Public means public. Private means private.",
+        "body": "A public list shows titles, covers, your notes and links out. It never serves the stored page text. Flip it back to private and the page is gone within a minute."
+      },
+      "ai": {
+        "title": "Your AI, your call.",
+        "body": "Pluck never sends what you pluck to a model on its own. Your AI tool reads your library only when you connect it, and only does what you ask."
+      }
+    },
+    "closing": "Pluck it<dot>.</dot>",
+    "use": "Use getpluck.io",
+    "code": "Read the code"
+  },
+  "support": {
+    "meta": {
+      "title": "Support · Pluck",
+      "description": "Answers for the Pluck extension, the iPhone app, your AI and your account, and where to report a bug."
+    },
+    "title": "Help<dot>.</dot>",
+    "lede": "Short answers for the extension, the iPhone app, your AI and your account. Something broken? <bugs>Tell us on GitHub</bugs>.",
+    "topicsLabel": "Topics",
+    "extension": {
+      "title": "The extension",
+      "pluckPage": {
+        "q": "How do I pluck the page I am on?",
+        "a": "Click the Pluck button in the toolbar, or press <pluckKeys></pluckKeys>. Right-click a link or an image to pluck that instead."
+      },
+      "quote": {
+        "q": "Can I keep a quote, not the whole page?",
+        "a": "Select the words and press <highlightKeys></highlightKeys>. Pluck keeps the page with your selection as a highlight on it."
+      },
+      "dot": {
+        "q": "Why is there a dot on the Pluck button?",
+        "a": "You plucked something with no connection. It waits on your computer and goes up by itself once you are back online. The dot goes when it does."
+      },
+      "login": {
+        "q": "A page behind my login came out empty.",
+        "a": "In the extension's options, turn on Send page content with plucks. Pluck then keeps the page as your browser shows it, not as it looks to a stranger."
+      },
+      "server": {
+        "q": "How do I use it with my own server?",
+        "a": "Build the extension for your server with the self-host guide in the repository, then load it in your browser. Sign in, or paste an API key from Settings."
+      }
+    },
+    "iphone": {
+      "title": "iPhone",
+      "share": {
+        "q": "How do I pluck from Safari or another app?",
+        "a": "Tap Share, then Pluck. If you cannot see it, scroll the row of apps to the end, tap More, and add Pluck to your favourites."
+      },
+      "offline": {
+        "q": "I plucked something offline. Where did it go?",
+        "a": "It waits on your phone and goes up the next time you open Pluck with a connection."
+      },
+      "server": {
+        "q": "Can the app use my own server?",
+        "a": "Yes. On the sign-in screen, choose Use your own server and enter its address."
+      }
+    },
+    "ai": {
+      "title": "Your AI",
+      "connect": {
+        "q": "How do I connect my AI tool?",
+        "a": "Every tool takes the same link. <connect>Connect your AI</connect> has the steps for Claude, ChatGPT, Cursor and the rest."
+      },
+      "change": {
+        "q": "What can my AI change?",
+        "a": "It can pluck, tag, sort and make private lists when you ask. It cannot delete anything unless you allowed that when you connected it, and it cannot make a list public: only you can, from the list in Pluck. Everything it adds is marked by AI."
+      },
+      "disconnect": {
+        "q": "How do I disconnect it?",
+        "a": "Settings, AI tools, Disconnect. It stops working at once, not at the end of its session."
+      }
+    },
+    "account": {
+      "title": "Your library and account",
+      "signIn": {
+        "q": "The sign-in link did not work.",
+        "a": "A link works once, for 10 minutes. Ask for a new one from the same browser. If Pluck says you asked for too many, use the latest one or wait an hour."
+      },
+      "oldItems": {
+        "q": "Where did my old items go?",
+        "a": "Items you have not touched in a while move to the Archive, nothing is deleted. You choose how long, or turn it off, in Settings under Expiry and archive."
+      },
+      "deleted": {
+        "q": "I deleted something by mistake.",
+        "a": "Deleted items wait in the Bin for 30 days. It is linked at the bottom of the Archive. Open the item and restore it."
+      },
+      "monday": {
+        "q": "How do I stop the Monday email?",
+        "a": "Use the stop link at the bottom of any of them, or pick another day or none in Settings under Expiry and archive."
+      },
+      "export": {
+        "q": "Can I take everything with me?",
+        "a": "Settings, Export everything. You get an email with a zip: every item as JSON, plus a Markdown file for each item and each list, with your notes and highlights."
+      },
+      "delete": {
+        "q": "How do I delete my account?",
+        "a": "Settings, Delete account. Type your email to confirm. Your items, lists, files and keys go straight away."
+      }
+    },
+    "selfHost": {
+      "title": "Running your own",
+      "run": {
+        "q": "How do I run Pluck myself?",
+        "a": "One command with Docker. <openSource>Open source</openSource> shows it, and the self-host guide in the repository covers mail, storage and putting it on a server."
+      }
+    },
+    "bugs": {
+      "title": "Found a bug<mark>?</mark>",
+      "body": "Open an issue on GitHub. Say what you did, what you expected, and what happened instead. Ideas are welcome there too.",
+      "note": "Issues are public. Leave out links, notes or anything else you would rather keep to yourself.",
+      "button": "Open an issue"
+    }
+  },
+  "connect": {
+    "meta": {
+      "title": "Connect your AI · Pluck",
+      "description": "Pluck speaks MCP. One link and the AI tool you already use can read, search and sort your library."
+    },
+    "eyebrow": "PLUCK + YOUR AI · MCP",
+    "title": "Ready for your AI. Whichever one you use.",
+    "lede": "Pluck speaks MCP, the open standard AI tools use to plug into apps. One link and your AI can read, search and sort your whole library. It changes things only when you say so, and never deletes.",
+    "loopLabel": "How connecting works",
+    "installTitle": "Install. Thirty seconds, honestly.",
+    "installSub": "Sign in to Pluck, then pick your tool. The link is the same for all of them.",
+    "tabsLabel": "Your AI tool",
+    "copy": "Copy",
+    "copied": "Copied",
+    "tools": {
+      "claude": {
+        "step1": "Open Claude, then Settings, then Connectors.",
+        "step2": "Choose Add custom connector and paste the link.",
+        "step3": "Sign in to Pluck when it asks. Done.",
+        "codeLabel": "Connector URL",
+        "note": "Works on web, desktop and phone once added."
+      },
+      "code": {
+        "step1": "Open a terminal.",
+        "step2": "Run the one line on the right.",
+        "step3": "Say “what did I pluck this week?” to test it.",
+        "codeLabel": "One line",
+        "note": "Signs you in through your browser the first time."
+      },
+      "chatgpt": {
+        "step1": "Open ChatGPT, then Settings, then Connectors.",
+        "step2": "Choose Create and paste the link as the MCP server URL.",
+        "step3": "Sign in to Pluck when it asks.",
+        "codeLabel": "MCP server URL",
+        "note": "Needs a plan that allows custom connectors."
+      },
+      "cursor": {
+        "step1": "Open Cursor settings, then MCP.",
+        "step2": "Add a server with the JSON on the right.",
+        "step3": "Sign in to Pluck when it asks.",
+        "note": "Any editor or client that supports remote MCP works the same way."
+      },
+      "self": {
+        "label": "Self-hosted",
+        "step1": "Make an API key in Settings.",
+        "step2": "Add the line on the right to your AI tool as a local (stdio) server.",
+        "step3": "Ask it what you plucked this week.",
+        "codeLabel": "Without a public URL",
+        "note": "The same tools and prompts, bridged to your own server."
+      }
+    },
+    "toolsTitle": "Twelve tools. Plain names.",
+    "toolsBody": "Results come back as cards with titles first, so a question like “what did I pluck this week” is one call and one screen.",
+    "toolList": {
+      "search_items": "Text search over title, note, tags, list names and body.",
+      "list_items": "Browse Inbox, Later, Archive or Done, newest or untouched first.",
+      "get_item": "One item in full, including the stored page text.",
+      "save_item": "Pluck a link, many links, a note, a todo or a thing. Marked as plucked by AI.",
+      "batch_update": "Status, kind, tags and due dates on one or many items.",
+      "list_tags": "Your tags, with counts.",
+      "create_tag": "A new tag, only after you said yes.",
+      "list_lists": "Your lists, with purpose, count and visibility.",
+      "get_list": "One list in order, with notes and ticks.",
+      "create_list": "A new list with items in order and a note per item. Private.",
+      "update_list": "Rename, reorder, add, tick, or make private. Only you make a list public.",
+      "get_digest": "Expiring, due, oldest and quiet lists. The Monday email, as data."
+    },
+    "asksTitle": "Four things to ask.",
+    "asks": {
+      "tidy": {
+        "say": "“Tidy my Pluck inbox.”",
+        "does": "Proposes tags from the ones you already have, plus keep, later or archive per item. You say yes or edit. One batch."
+      },
+      "reading": {
+        "say": "“Make a reading list on MCP auth, best first.”",
+        "does": "Searches, reads, and builds the list in order with a line on why each one matters. Private until you say otherwise."
+      },
+      "ideas": {
+        "say": "“Three blog ideas from what I plucked this week.”",
+        "does": "Reads the best five in full and drafts three angles with sources. Pick one and it plucks the draft back in as a Note."
+      },
+      "review": {
+        "say": "“Run my weekly review.”",
+        "does": "The Monday email, in conversation. One decision at a time."
+      }
+    },
+    "neverTitle": "What your AI can never do",
+    "never": {
+      "delete": "Delete anything. The scope isn't granted.",
+      "makeTag": "Make a tag you didn't ask for.",
+      "renameTag": "Rename or remove a tag you made.",
+      "purpose": "Rewrite a list's purpose.",
+      "public": "Make a list public. Only you can, from the list in Pluck."
+    },
+    "neverNote": "Everything it adds carries a “by AI” mark. Settings removes a week of it in one tap.",
+    "closing": "Ask your AI<mark>.</mark>",
+    "button": "Get Pluck, then connect"
+  },
+  "legal": {
+    "englishOnly": "This page is in English, which is the version that applies.",
+    "privacy": {
+      "meta": {
+        "title": "Privacy · Pluck",
+        "description": "What Pluck stores, what it never does, and how to take it all with you."
+      },
+      "title": "Privacy",
+      "sections": {
+        "store": "What we store",
+        "dont": "What we don't do",
+        "extension": "The browser extension",
+        "ai": "Your AI tool",
+        "publicLists": "Public lists",
+        "sharing": "Sharing a List",
+        "emailIn": "Email-in",
+        "cookies": "Cookies and analytics",
+        "where": "Where it lives",
+        "export": "Export and delete",
+        "rights": "Your rights"
+      },
+      "box": "Questions"
+    },
+    "terms": {
+      "meta": {
+        "title": "Terms · Pluck",
+        "description": "It's your library, be decent with public lists, and you can always export and self-host."
+      },
+      "title": "Terms",
+      "sections": {
+        "service": "The service",
+        "account": "Your account",
+        "library": "Your library is yours",
+        "publicLists": "Public lists",
+        "stored": "Stored pages",
+        "fairUse": "Fair use of the service",
+        "ai": "AI tools",
+        "wayOut": "No promises, but a way out",
+        "law": "Changes and law"
+      },
+      "box": "Report a public list"
+    }
+  },
+  "publicList": {
+    "meta": {
+      "notFound": "Not found · Pluck",
+      "title": "{name} · a list by {by} · Pluck",
+      "description": "{count, plural, one {# thing} other {# things}}, picked by {by}."
+    },
+    "what": "What is Pluck?",
+    "byline": "A list by {by} · {count, plural, one {# item} other {# items}} · updated {when}",
+    "ago": {
+      "now": "just now",
+      "minutes": "{count, number} min ago",
+      "hours": "{count, number}h ago",
+      "yesterday": "yesterday",
+      "on": "on {date}"
+    },
+    "pluck": "Pluck this list",
+    "copies": "Copies it into your own Pluck. Free.",
+    "note": "Note",
+    "footTitle": "Make lists like this from what you save.",
+    "footBody": "Pluck it. Sort it later. Share it when it's good.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "og": "A list by {by} · {count, plural, one {# item} other {# items}}",
+    "notFound": {
+      "title": "<line>This List</line><line>isn't public<dot>.</dot></line>",
+      "lede": "Either it no longer exists, or its owner made it private. If someone sent you the link, ask them to share it with you, or to make it public again.",
+      "what": "What is Pluck?",
+      "lists": "Your Lists"
+    },
+    "report": {
+      "open": "Report this list",
+      "sent": "Thanks. A person reads every report.",
+      "reason": "What is wrong?",
+      "details": "Anything we should know (optional)",
+      "send": "Send the report",
+      "cancel": "Cancel",
+      "failed": "That did not go through. Try again in a minute.",
+      "reasons": {
+        "illegal": "Illegal content",
+        "minors": "Sexualises minors",
+        "harassment": "Harassment",
+        "doxxing": "Shares someone's private details",
+        "spam": "Spam or a link farm",
+        "malware": "Malware or phishing",
+        "infringement": "Copyright or trademark",
+        "other": "Something else"
+      }
+    }
   }
 }

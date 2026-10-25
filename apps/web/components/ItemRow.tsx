@@ -1,8 +1,10 @@
 import { KindGlyph } from "@pluck/ui";
 import { isTextKind, type Item } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { coverSrc, initials, rowMeta, rowSite, tileIndex, when } from "@/lib/format";
+import { coverSrc, initials, tileIndex } from "@/lib/format";
+import { useFormat } from "./useFormat";
 import styles from "./ItemRow.module.css";
 
 type Props = {
@@ -22,7 +24,10 @@ type Props = {
 
 // One 64px row from the Main board: cover or site tile, title, site and meta, excerpt, kind glyph and when.
 export function ItemRow({ item, now, active, selecting, selected, leaving, landing, onToggle, onPoint, actions, tags, pill }: Props) {
-  const site = rowSite(item);
+  const t = useTranslations("app.itemRow");
+  const kind = useTranslations("app.kind");
+  const f = useFormat();
+  const site = f.site(item);
   return (
     <div
       className={styles.row}
@@ -34,7 +39,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
       onMouseMove={onPoint} // move, not enter: a closing overlay must not steal the keyboard cursor
     >
       {selecting && (
-        <input type="checkbox" className={styles.check} checked={Boolean(selected)} onChange={onToggle} aria-label={`Select ${item.title}`} />
+        <input type="checkbox" className={styles.check} checked={Boolean(selected)} onChange={onToggle} aria-label={t("select", { title: item.title })} />
       )}
       {item.hasCover ? (
         // why: covers are signed S3 redirects from our own route, so next/image would only add a hop.
@@ -45,7 +50,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
         </div>
       ) : (
         <div className={`${styles.tile} ${styles.glyphTile}`} aria-hidden="true">
-          <KindGlyph kind={item.kind} size={18} />
+          <KindGlyph kind={item.kind} label={kind(item.kind)} size={18} />
         </div>
       )}
       <div className={styles.body}>
@@ -54,7 +59,7 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
             {item.title}
           </Link>
           <span className={item.extraction.state === "failed" ? `${styles.meta} ${styles.failed}` : styles.meta}>
-            {site}{now || !item.dueAt ? ` · ${rowMeta(item, now ?? undefined)}` : ""}
+            {site}{now || !item.dueAt ? ` · ${f.meta(item, now ?? undefined)}` : ""}
           </span>
         </div>
         <div className={styles.excerpt}>{item.excerpt ?? item.url ?? ""}</div>
@@ -62,8 +67,8 @@ export function ItemRow({ item, now, active, selecting, selected, leaving, landi
       {pill}
       {active && actions ? <div className={styles.actions}>{actions}</div> : tags ? <div className={styles.tags}>{tags}</div> : null}
       <div className={styles.side}>
-        <KindGlyph kind={item.kind} />
-        <span>{now && when(item.createdAt, now)}</span>
+        <KindGlyph kind={item.kind} label={kind(item.kind)} />
+        <span>{now && f.when(item.createdAt, now)}</span>
       </div>
     </div>
   );

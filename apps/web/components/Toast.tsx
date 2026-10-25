@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import styles from "./Toast.module.css";
 
@@ -8,6 +9,7 @@ type Toast = { message: string; undo?: () => void };
 // One toast at a time, bottom centre, forest ground (Later board). Undo is a button, never a timer race.
 export function useToast(): [ReactNode, (t: Toast) => void] {
   const [toast, setToast] = useState<Toast | null>(null);
+  const t = useTranslations("app.common");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const show = useCallback((t: Toast) => {
     clearTimeout(timer.current);
@@ -29,7 +31,7 @@ export function useToast(): [ReactNode, (t: Toast) => void] {
                 setToast(null);
               }}
             >
-              Undo
+              {t("undo")}
             </button>
           )}
         </div>

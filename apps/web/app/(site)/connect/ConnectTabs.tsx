@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import styles from "../site.module.css";
 
@@ -7,12 +8,13 @@ type Tool = { key: string; label: string; steps: string[]; codeLabel: string; co
 
 // "Install. Thirty seconds, honestly." One tab per kind of AI tool; the link is the same for all of them.
 export function ConnectTabs({ tools }: { tools: Tool[] }) {
+  const t = useTranslations("site.connect");
   const [current, setCurrent] = useState(tools[0]!.key);
   const [copied, setCopied] = useState(false);
   const tool = tools.find((t) => t.key === current)!;
   return (
     <>
-      <div role="tablist" aria-label="Your AI tool" className={styles.tabs}>
+      <div role="tablist" aria-label={t("tabsLabel")} className={styles.tabs}>
         {tools.map((t) => (
           <button
             key={t.key}
@@ -46,7 +48,7 @@ export function ConnectTabs({ tools }: { tools: Tool[] }) {
                 setCopied(true);
               }}
             >
-              {copied ? "Copied" : "Copy"}
+              {copied ? t("copied") : t("copy")}
             </button>
           </div>
           <span className={styles.codeNote}>{tool.note}</span>

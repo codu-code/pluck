@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Fragment } from "react";
 import { Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
-export const metadata: Metadata = { title: "Connected · Pluck", robots: { index: false } };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getTranslations("app.meta"))("extensionConnected"), robots: { index: false } };
+}
 
 const Keys = ({ keys }: { keys: string[] }) => (
   <span className={s.keys}>
@@ -18,20 +22,21 @@ const Keys = ({ keys }: { keys: string[] }) => (
 // Where the extension's sign-in ends. The extension reads the code from this tab's address (it holds the
 // PKCE verifier, so the code is useless to anyone else) and closes the tab.
 export default function Connected() {
+  const t = useTranslations("app.extensionConnected");
   return (
     <Standalone
-      title={<>Connected<Dot /></>}
-      lede="You can pluck from your browser now. Close this tab; from here on, any page is one press away."
+      title={<>{t("title")}<Dot /></>}
+      lede={t("lede")}
       artIsContent
       art={
         <div className={s.keyArt}>
           <div className={s.keyRow}>
             <Keys keys={["Alt", "Shift", "P"]} />
-            <p className={s.keyNote}>Plucks the page you are on. Alt is Option on a Mac.</p>
+            <p className={s.keyNote}>{t("page")}</p>
           </div>
           <div className={s.keyRow}>
             <Keys keys={["Alt", "Shift", "H"]} />
-            <p className={s.keyNote}>Plucks what you selected, kept as a highlight.</p>
+            <p className={s.keyNote}>{t("selection")}</p>
           </div>
         </div>
       }

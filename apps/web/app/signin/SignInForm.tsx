@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import { Actions, Dot, Stamp, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
@@ -7,20 +8,22 @@ type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited" | "
 
 // What lands in their inbox, drawn: so the next step is no surprise.
 function EmailPreview({ sent }: { sent: boolean }) {
+  const t = useTranslations("app.signin.preview");
   return (
     <div className={s.panel}>
-      {sent && <Stamp>Sent.</Stamp>}
-      <div className={s.panelHead}><b>Pluck</b><span>Your link to Pluck</span><time>now</time></div>
+      {sent && <Stamp>{t("sent")}</Stamp>}
+      <div className={s.panelHead}><b>Pluck</b><span>{t("subject")}</span><time>{t("now")}</time></div>
       <div className={s.panelBody}>
-        <span className={s.panelTitle}>Here is your link.</span>
-        <p>Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.</p>
-        <span className={s.panelButton}>Sign in to Pluck</span>
+        <span className={s.panelTitle}>{t("title")}</span>
+        <p>{t("body")}</p>
+        <span className={s.panelButton}>{t("button")}</span>
       </div>
     </div>
   );
 }
 
 export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: string; forAiTool?: boolean }) {
+  const t = useTranslations("app.signin");
   const [state, setState] = useState<State>("idle");
   const [email, setEmail] = useState("");
   // Set only when the server asks for one: App Review's account, which has no mailbox to open a link in.
@@ -60,31 +63,31 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
   if (state === "sent" || state === "resending") {
     return (
       <Standalone
-        title={<>Check your email<Dot /></>}
-        lede={<>We sent a link to <b>{email}</b>. It works once, for 10 minutes, in the browser you open it in.</>}
+        title={<>{t("sent.title")}<Dot /></>}
+        lede={t.rich("sent.lede", { email, b: (c) => <b>{c}</b> })}
         art={<EmailPreview sent />}
       >
-        <p className={s.srOnly} role="status">Sent a link to {email}. Check your email.</p>
+        <p className={s.srOnly} role="status">{t("sent.status", { email })}</p>
         <Actions>
           <button type="button" className={s.secondary} disabled={state === "resending"} onClick={() => void send()}>
-            {state === "resending" ? "Sending" : "Send it again"}
+            {state === "resending" ? t("sent.sending") : t("sent.again")}
           </button>
-          <button type="button" className={`${s.textLink} ${s.linkButton}`} onClick={() => setState("idle")}>Use a different email</button>
+          <button type="button" className={`${s.textLink} ${s.linkButton}`} onClick={() => setState("idle")}>{t("sent.different")}</button>
         </Actions>
-        <p className={s.small}>Nothing after a minute? Look in spam, then send it again.</p>
+        <p className={s.small}>{t("sent.spam")}</p>
       </Standalone>
     );
   }
 
   return (
     <Standalone
-      title={forAiTool ? <>Sign in to connect your AI<Dot /></> : ["One link.", <>No password<Dot /></>]}
-      lede={forAiTool ? "We email you a link. Once you are in, you choose what your AI tool can do." : "Type your email and we send a link. It signs you in, or starts your library if you are new."}
+      title={forAiTool ? <>{t("aiTitle")}<Dot /></> : [t("title1"), <>{t("title2")}<Dot /></>]}
+      lede={forAiTool ? t("aiLede") : t("lede")}
       art={<EmailPreview sent={false} />}
     >
       <form className={s.form} onSubmit={submit}>
         <label className={s.field}>
-          <span className={s.label}>Email</span>
+          <span className={s.label}>{t("email")}</span>
           <input
             className={s.input}
             type="email"
@@ -92,7 +95,7 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
             required
             autoComplete="email"
             autoFocus
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -102,7 +105,7 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
         </label>
         {password !== null && (
           <label className={s.field}>
-            <span className={s.label}>Password</span>
+            <span className={s.label}>{t("password")}</span>
             <input
               className={s.input}
               type="password"
@@ -116,15 +119,15 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
           </label>
         )}
         <button className={s.primary} type="submit" disabled={state === "sending"}>
-          {password !== null ? (state === "sending" ? "Signing in" : "Sign in") : state === "sending" ? "Sending" : "Email me a link"}
+          {password !== null ? (state === "sending" ? t("signingIn") : t("signIn")) : state === "sending" ? t("sending") : t("send")}
         </button>
         {state === "error" && (
-          <p className={s.error} role="alert">That did not go through. Check the address, then try again.</p>
+          <p className={s.error} role="alert">{t("error")}</p>
         )}
-        {state === "wrong" && <p className={s.error} role="alert">That password did not work.</p>}
+        {state === "wrong" && <p className={s.error} role="alert">{t("wrong")}</p>}
         {state === "limited" && (
           <p className={s.error} role="alert">
-            {password !== null ? "That is a lot of tries. Try again in an hour." : "That is a lot of links. Use the newest one we sent, or try again in an hour."}
+            {password !== null ? t("limitedTries") : t("limitedLinks")}
           </p>
         )}
       </form>

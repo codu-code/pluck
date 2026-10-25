@@ -1,18 +1,21 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { Actions, BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
 // A public List link that does not open: made private, deleted, or a typo. Still a 404.
-export default function ListNotFound() {
+export default async function ListNotFound() {
+  const t = await getTranslations("site.publicList.notFound");
   return (
     <Standalone
       size="md"
-      title={["This List", <>isn&apos;t public<Dot /></>]}
-      lede="Either it no longer exists, or its owner made it private. If someone sent you the link, ask them to share it with you, or to make it public again."
+      // One message for the whole sentence; <line> marks where Standalone would break it.
+      title={<>{t.rich("title", { line: (c) => <span className={s.titleLine}>{c} </span>, dot: () => <Dot /> })}</>}
+      lede={t("lede")}
       art={<BigMark />}
     >
       <Actions>
-        <Link href="/" className={s.primary}>What is Pluck?</Link>
-        <Link href="/lists" className={s.textLink}>Your Lists</Link>
+        <Link href="/" className={s.primary}>{t("what")}</Link>
+        <Link href="/lists" className={s.textLink}>{t("lists")}</Link>
       </Actions>
     </Standalone>
   );

@@ -5,5 +5,77 @@
     "button": "Sign in to Pluck",
     "copy": "Button not working? Copy this link into your browser:",
     "ignore": "If you did not ask for this, ignore it. Nothing happens unless you open it and tap Sign in."
+  },
+  "sharedList": {
+    "subject": "{sharer} shared a List with you: {name}",
+    "untitled": "A List",
+    "text": {
+      "intro": "{who} shared a List with you on Pluck: “{name}”.",
+      "open": "Open it here. You sign in with your email, no password:",
+      "footer": "You can see it; only they change it. Not expecting this? Ignore it, or leave the List once you open it."
+    },
+    "intro": "{who} shared a List with you on Pluck:",
+    "button": "Open the List",
+    "footer": "You can see it; only they change it. You sign in with your email, no password. Not expecting this? Ignore it, or leave the List once you open it."
+  },
+  "welcome": {
+    "subject": "Thanks for trying Pluck",
+    "hi": "Hi,",
+    "intro": "I'm Niall, and I make Pluck. Thanks for signing up. I wanted to say hello myself.",
+    "plucked": "I can see you've plucked your first things already, so you know the main part: one tap from wherever you are, and Pluck keeps the page for you.",
+    "fresh": "The quickest way in is to pluck one thing you meant to read this week: paste its link at the top of your Inbox, and Pluck keeps the page for you.",
+    "connect": "One thing most people find late: your AI can read everything you pluck. Connect Pluck to Claude, ChatGPT or Cursor in about thirty seconds, then ask it what you plucked this week: {url}",
+    "expiry": "And if you go quiet for a while, nothing is lost. Items you have not touched in {days, plural, =1 {# day} other {# days}} move to the Archive, and nothing is deleted.",
+    "ask": "Can I ask you one thing? Reply and tell me what made you try Pluck, or what you hoped it would do. It comes straight to me, and I read every reply.",
+    "signature": "Niall"
+  },
+  "export": {
+    "subject": "Your Pluck export is ready",
+    "intro": "Your whole library, as JSON and Markdown, in one zip:",
+    "note": "The link works for 7 days. You can make a fresh one in Settings any time."
+  },
+  "digest": {
+    "subject": "{count, plural, =1 {One thing you plucked and forgot.} =2 {Two things you plucked and forgot.} =3 {Three things you plucked and forgot.} =4 {Four things you plucked and forgot.} =5 {Five things you plucked and forgot.} =6 {Six things you plucked and forgot.} =7 {Seven things you plucked and forgot.} =8 {Eight things you plucked and forgot.} =9 {Nine things you plucked and forgot.} =10 {Ten things you plucked and forgot.} other {# things you plucked and forgot.}}",
+    "subjectQuiet": "Your week in Pluck.",
+    "greeting": "Morning {name}. Three minutes, then get on with your week.",
+    "greetingNoName": "Morning. Three minutes, then get on with your week.",
+    "expiring": {
+      "heading": "Untouched for {days, plural, =1 {# day} other {# days}}",
+      "keep": "Keep",
+      "letGo": "Let it go",
+      "keepLink": "Keep: {url}",
+      "letGoLink": "Let it go: {url}",
+      "moves": "Do nothing and they move to your Archive on {day}. Still searchable, never deleted."
+    },
+    "due": {
+      "heading": "Due this week",
+      "line": "{title}, {when}"
+    },
+    "oldest": {
+      "heading": "Oldest in your inbox"
+    },
+    "quiet": {
+      "heading": "Lists gone quiet",
+      "line": "{name}, {ticked, number} of {total, number} ticked, {days, plural, =1 {# day} other {# days}}",
+      "ticked": "{ticked, number} of {total, number} ticked",
+      "idle": "{days, plural, =1 {# day} other {# days}}"
+    },
+    "archive": {
+      "title": "Pile too big?",
+      "body": "Archive everything older than {days, plural, =1 {# day} other {# days}} in one go.",
+      "button": "Archive it all. No, really.",
+      "text": "Pile too big? Archive everything older than {days, plural, =1 {# day} other {# days}} in one go: {url}"
+    },
+    "ai": {
+      "title": "Rather do this with your AI?",
+      "body": "Say “run my weekly review”. Same list, one decision at a time.",
+      "text": "Rather do this with your AI? Say \"run my weekly review\". Same list, one decision at a time."
+    },
+    "footer": {
+      "note": "Links work for 7 days, no login. Plain rules, no model.",
+      "changeDay": "Change the day",
+      "stop": "Stop these",
+      "text": "Links work for 7 days, no login. Plain rules, no model. Change the day: {settings} . Stop these: {stop}"
+    }
   }
 }

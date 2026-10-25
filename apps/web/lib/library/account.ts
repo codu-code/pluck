@@ -7,7 +7,7 @@ import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract"
 import { normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
-import { welcomeEmail } from "../emails";
+import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 
@@ -28,7 +28,7 @@ export async function sendWelcome(userId: string): Promise<boolean> {
   if (!from || !me || !(await claimOnce(`welcome:${userId}`))) return false;
   const counts = await Promise.all((["inbox", "later", "archived", "done"] as const).map((s) => countItems(userId, s)));
   const connectUrl = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/connect`;
-  await sendEmail({ ...welcomeEmail(me.email, { plucked: counts.some(Boolean), expiryDays: me.settings.expiryDays, connectUrl }), from, replyTo: from });
+  await sendEmail({ ...welcomeEmail(me.email, { plucked: counts.some(Boolean), expiryDays: me.settings.expiryDays, connectUrl }, me.settings.locale ?? "en"), from, replyTo: from });
   return true;
 }
 
@@ -163,11 +163,7 @@ export async function runExport(userId: string, exportId: string): Promise<void>
   await putObject(key, Buffer.from(zipSync(files, { level: 6 })), "application/zip");
   await finishExport(exportId, key);
   const url = await signedUrl(key, 7 * 86_400);
-  await sendEmail({
-    to: me.email,
-    subject: "Your Pluck export is ready",
-    text: `Your whole library, as JSON and Markdown, in one zip:\n\n${url}\n\nThe link works for 7 days. You can make a fresh one in Settings any time.\n`,
-  });
+  await sendEmail(exportEmail(me.email, url, me.settings.locale ?? "en"));
 }
 
 // ---- Delete account -------------------------------------------------------------------------------

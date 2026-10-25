@@ -1,6 +1,7 @@
 "use client";
 
 import { extractUrls, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import styles from "./TopBar.module.css";
@@ -16,11 +17,7 @@ type Props = {
   onFailed?: (draft: PluckDraft) => void;
 };
 
-const KINDS: { kind: TextKind; label: string }[] = [
-  { kind: "note", label: "Note" },
-  { kind: "todo", label: "Todo" },
-  { kind: "thing", label: "Thing" },
-];
+const KINDS: TextKind[] = ["note", "todo", "thing"];
 
 const QUEUE_KEY = "pluck:queue";
 type Queued = { draft: PluckDraft; body: Record<string, unknown> };
@@ -53,6 +50,8 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const t = useTranslations("app.topBar");
+  const kindName = useTranslations("app.kind");
 
   // Send anything queued while offline, now and whenever the network comes back.
   useEffect(() => {
@@ -94,7 +93,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       res = await post(body);
     } catch {
       writeQueue([...readQueue(), { draft, body }]);
-      setNotice("Plucked. Will sync when you are back online.");
+      setNotice(t("queued"));
       return;
     }
     const json = await res.json().catch(() => null); // a gateway error page is not JSON
@@ -102,10 +101,10 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       window.dispatchEvent(new Event("pluck:counts"));
       if (!json) return;
       const result = json as PluckResponse;
-      if (result.rejected.length) setError(`${result.rejected.length} could not be plucked: ${result.rejected[0]!.message}`);
+      if (result.rejected.length) setError(t("rejected", { count: result.rejected.length, reason: result.rejected[0]!.message }));
       return onPlucked?.(draft, result);
     }
-    setError(json?.rejected?.[0]?.message ?? json?.error?.message ?? "That did not go through.");
+    setError(json?.rejected?.[0]?.message ?? json?.error?.message ?? t("failed"));
     setValue(text);
     onFailed?.(draft);
     input.current?.focus();
@@ -115,7 +114,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     <form className={styles.bar} onSubmit={submit}>
       <div className={emphasis ? `${styles.pluck} ${styles.emphasis}` : styles.pluck}>
         <label className={styles.pluckLabel} htmlFor="pluck-box">
-          Pluck
+          {t("label")}
         </label>
         <input
           ref={input}
@@ -125,47 +124,47 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
           name="pluck"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Paste one link or many, or type a note"
+          placeholder={t("placeholder")}
           aria-describedby="pluck-hint"
           autoComplete="off"
         />
         {emphasis ? (
           <button type="submit" className={styles.button}>
-            Pluck it
+            {t("submit")}
           </button>
         ) : (
           <kbd className={styles.kbd}>c</kbd>
         )}
       </div>
       <Link href="/search" className={styles.search}>
-        Search<kbd className={styles.kbd}>/</kbd>
+        {t("search")}<kbd className={styles.kbd}>/</kbd>
       </Link>
       <div id="pluck-hint" className={styles.hint} aria-live="polite">
         {notice && !text && <span>{notice}</span>}
-        {urls.length > 1 && <span>{urls.length} links. Enter plucks them all.</span>}
+        {urls.length > 1 && <span>{t("links", { count: urls.length })}</span>}
         {isText && (
           <span className={styles.textKinds}>
-            <span role="radiogroup" aria-label="Pluck as" className={styles.segments}>
+            <span role="radiogroup" aria-label={t("as")} className={styles.segments}>
               {KINDS.map((k) => (
                 <button
-                  key={k.kind}
+                  key={k}
                   type="button"
                   role="radio"
-                  aria-checked={kind === k.kind}
+                  aria-checked={kind === k}
                   className={styles.segment}
-                  onClick={() => setKind(k.kind)}
+                  onClick={() => setKind(k)}
                 >
-                  {k.label}
+                  {kindName(k)}
                 </button>
               ))}
             </span>
             {kind !== "note" && (
               <label className={styles.due}>
-                Due
+                {t("due")}
                 <input type="date" value={due} onChange={(e) => setDue(e.target.value)} className={styles.dateInput} />
               </label>
             )}
-            <span>Enter plucks it as a {kind === "note" ? "Note" : kind === "todo" ? "Todo" : "Thing"}.</span>
+            <span>{t("enterAs", { kind })}</span>
           </span>
         )}
       </div>

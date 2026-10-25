@@ -3,6 +3,7 @@ import { api, Refused, Unreachable } from "./api";
 import { capture, screenshot } from "./capture";
 import { createQueue } from "@pluck/client";
 import { get, set, settings } from "./store";
+import { t } from "./t";
 
 export type PluckOutcome =
   | { state: "plucked"; item: Item; created: boolean }
@@ -13,7 +14,7 @@ const isWeb = (url?: string) => Boolean(url && /^https?:\/\//.test(url));
 
 // The one way in from the popup, the shortcut and the right-click menu.
 export async function pluckTab(tab: { id?: number; url?: string; title?: string; windowId?: number }, { asHighlight = false } = {}): Promise<PluckOutcome> {
-  if (!isWeb(tab.url)) return { state: "refused", message: "Nothing to pluck on this page." };
+  if (!isWeb(tab.url)) return { state: "refused", message: t("errors.nothing") };
   const opts = await settings();
   const page = tab.id === undefined ? null : await capture(tab.id, { content: opts.sendContent, transcripts: opts.transcripts });
   const outcome = await send({
@@ -39,7 +40,7 @@ export async function send(body: CreateItemBody): Promise<PluckOutcome> {
   try {
     const res = await api<PluckResponse>("/api/v1/items", { json: body });
     const first = res.results[0];
-    return first ? { state: "plucked", item: first.item, created: first.created } : { state: "refused", message: res.rejected[0]?.message ?? "That did not work." };
+    return first ? { state: "plucked", item: first.item, created: first.created } : { state: "refused", message: res.rejected[0]?.message ?? t("errors.failed") };
   } catch (e) {
     if (e instanceof Unreachable) return { state: "queued", count: await enqueue(body) };
     if (e instanceof Refused) return { state: "refused", message: e.message };
@@ -80,7 +81,7 @@ async function showQueued(count: number) {
 export async function markTab(tabId: number, plucked: boolean) {
   const icon = plucked ? "/icon/" : "/icon/empty-";
   await browser.action.setIcon({ tabId, path: { 16: `${icon}16.png`, 32: `${icon}32.png` } });
-  await browser.action.setTitle({ tabId, title: plucked ? "Plucked" : "Pluck this page" });
+  await browser.action.setTitle({ tabId, title: plucked ? t("toolbar.plucked") : t("toolbar.pluckPage") });
 }
 
 export async function refreshBadge(tabId: number, url?: string) {

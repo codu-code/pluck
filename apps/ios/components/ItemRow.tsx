@@ -1,13 +1,15 @@
-import { initials, rowMeta, rowSite, tileIndex, when, type Item, type Status } from "@pluck/shared-schemas";
+import { initials, tileIndex, type Item, type Status } from "@pluck/shared-schemas";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useRef } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import ReanimatedSwipeable, { type SwipeableMethods } from "react-native-gesture-handler/ReanimatedSwipeable";
 import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
+import { useTranslations } from "use-intl";
 import { useCover } from "@/lib/data";
+import { useRowText } from "@/lib/format";
 import { font, scale, useTheme } from "@/lib/theme";
-import { Icon, ICONS, KIND_NAMES, KindGlyph } from "./Glyph";
+import { Icon, ICONS, KindGlyph } from "./Glyph";
 
 const COMMIT = 80; // how far a swipe goes before letting go moves the item
 const GAP = 8; // between the swipe's pill and the row
@@ -25,10 +27,11 @@ type Props = {
 // Swipe right for Later, left to Archive (the board draws the Later swipe). Long press to select, as in Gmail.
 export function ItemRow({ item, onMove, selecting = false, selected = false, onSelect }: Props) {
   const t = useTheme();
+  const tr = useTranslations("ios");
   const cover = useCover(item);
   const text = item.kind === "note" || item.kind === "todo" || item.kind === "thing";
   const ini = text ? "" : initials(item.siteName, item.url);
-  const site = `${rowSite(item)} · ${rowMeta(item)}`;
+  const { siteMeta: site, when } = useRowText()(item);
   const away: Status = item.status === "later" ? "inbox" : "later";
   const pick = (mode: "tags" | "lists") => router.push({ pathname: "/pick", params: { mode, id: item.id } });
   const note = () => router.push({ pathname: "/note", params: { id: item.id } });
@@ -46,13 +49,13 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       delayLongPress={350}
       accessibilityRole="button"
       accessibilityState={selecting ? { selected } : undefined}
-      accessibilityLabel={`${item.title}, ${KIND_NAMES[item.kind]}, ${site}, ${when(item.createdAt)}${item.note ? `, note: ${item.note}` : ""}`}
+      accessibilityLabel={tr(item.note ? "row.a11yWithNote" : "row.a11y", { title: item.title, kind: tr(`kinds.${item.kind}`), site, when, note: item.note ?? "" })}
       // VoiceOver has no swipe or long press: the same actions from the rotor.
       accessibilityActions={[
-        ...(onMove ? [{ name: "later", label: away === "inbox" ? "Back to the Inbox" : "Later" }, { name: "archive", label: "Archive" }] : []),
-        ...(onSelect ? [{ name: "select", label: selected ? "Deselect" : "Select" }] : []),
-        ...(text ? [] : [{ name: "note", label: "Note" }]),
-        { name: "tags", label: "Tags" }, { name: "lists", label: "Add to a List" },
+        ...(onMove ? [{ name: "later", label: tr(away === "inbox" ? "actions.backToInbox" : "actions.later") }, { name: "archive", label: tr("actions.archive") }] : []),
+        ...(onSelect ? [{ name: "select", label: tr(selected ? "actions.deselect" : "actions.select") }] : []),
+        ...(text ? [] : [{ name: "note", label: tr("actions.note") }]),
+        { name: "tags", label: tr("actions.tags") }, { name: "lists", label: tr("actions.addToList") },
       ]}
       onAccessibilityAction={(e) => {
         const a = e.nativeEvent.actionName;
@@ -89,7 +92,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
           </View>
           <View style={styles.right}>
             <KindGlyph kind={item.kind} color={t.ink} />
-            <Text style={[font.regular, styles.when, { color: t.ink2 }]}>{when(item.createdAt)}</Text>
+            <Text style={[font.regular, styles.when, { color: t.ink2 }]}>{when}</Text>
           </View>
         </View>
       )}
@@ -105,9 +108,9 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       leftThreshold={COMMIT}
       rightThreshold={COMMIT}
       renderLeftActions={(_, drag) => (
-        <SwipeAction drag={drag} side="left" label={away === "inbox" ? "Inbox" : "Later"} icon={away === "inbox" ? ICONS.inbox : ICONS.later} bg={t.highlight} ink={t.onHighlight} />
+        <SwipeAction drag={drag} side="left" label={tr(away === "inbox" ? "actions.inbox" : "actions.later")} icon={away === "inbox" ? ICONS.inbox : ICONS.later} bg={t.highlight} ink={t.onHighlight} />
       )}
-      renderRightActions={(_, drag) => <SwipeAction drag={drag} side="right" label="Archive" icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />}
+      renderRightActions={(_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.archive")} icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />}
       onSwipeableOpen={(direction) => {
         swipe.current?.reset(); // closed again, so the row cannot come back (Undo) with its action still showing
         onMove(direction === "left" ? "archived" : away);

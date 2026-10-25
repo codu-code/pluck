@@ -1,6 +1,7 @@
 "use client";
 
 import type { List } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import { Picker } from "./Picker";
 
 // a: add to a list (or take out of one). A new name makes a private list.
@@ -13,6 +14,7 @@ export function ListPicker(props: {
   title: string;
 }) {
   const hint = (l: List) => `${l.itemCount}`;
+  const t = useTranslations("app.picker.list");
   return (
     <Picker
       options={props.lists.map((l) => ({ ...l, hint: hint(l) }))}
@@ -25,7 +27,7 @@ export function ListPicker(props: {
       onClose={props.onClose}
       title={props.title}
       noun="list"
-      createLabel={(name) => `New list “${name}”`}
+      createLabel={(name) => t("create", { name })}
     />
   );
 }

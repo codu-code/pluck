@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ConnectLoop } from "@/components/ConnectLoop";
 import { ConnectLoopFit } from "@/components/ConnectLoopFit";
@@ -10,96 +11,79 @@ import { ConnectTabs } from "./ConnectTabs";
 // The connector URL is this server's own, so a self-hosted copy shows its address, not the one it was built with.
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Connect your AI · Pluck",
-  description: "Pluck speaks MCP. One link and the AI tool you already use can read, search and sort your library.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("site.connect.meta");
+  return { title: t("title"), description: t("description") };
+}
 
+// Product names stay as they are; the steps and notes are under site.connect.tools.<key>.
 const TOOLS = [
-  { key: "claude", label: "Claude", steps: ["Open Claude, then Settings, then Connectors.", "Choose Add custom connector and paste the link.", "Sign in to Pluck when it asks. Done."], codeLabel: "Connector URL", code: CONNECTOR_URL, note: "Works on web, desktop and phone once added." },
-  { key: "code", label: "Claude Code", steps: ["Open a terminal.", "Run the one line on the right.", "Say “what did I pluck this week?” to test it."], codeLabel: "One line", code: `claude mcp add --transport http pluck ${CONNECTOR_URL}`, note: "Signs you in through your browser the first time." },
-  { key: "chatgpt", label: "ChatGPT", steps: ["Open ChatGPT, then Settings, then Connectors.", "Choose Create and paste the link as the MCP server URL.", "Sign in to Pluck when it asks."], codeLabel: "MCP server URL", code: CONNECTOR_URL, note: "Needs a plan that allows custom connectors." },
-  { key: "cursor", label: "Cursor", steps: ["Open Cursor settings, then MCP.", "Add a server with the JSON on the right.", "Sign in to Pluck when it asks."], codeLabel: "mcp.json", code: `{ "mcpServers": { "pluck": { "url": "${CONNECTOR_URL}" } } }`, note: "Any editor or client that supports remote MCP works the same way." },
-  { key: "self", label: "Self-hosted", steps: ["Make an API key in Settings.", "Add the line on the right to your AI tool as a local (stdio) server.", "Ask it what you plucked this week."], codeLabel: "Without a public URL", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." },
-];
+  { key: "claude", label: "Claude", code: CONNECTOR_URL },
+  { key: "code", label: "Claude Code", code: `claude mcp add --transport http pluck ${CONNECTOR_URL}` },
+  { key: "chatgpt", label: "ChatGPT", code: CONNECTOR_URL },
+  { key: "cursor", label: "Cursor", codeLabel: "mcp.json", code: `{ "mcpServers": { "pluck": { "url": "${CONNECTOR_URL}" } } }` },
+  { key: "self", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…" },
+] as const;
 
-const TOOL_LIST = [
-  { name: "search_items", does: "Text search over title, note, tags, list names and body." },
-  { name: "list_items", does: "Browse Inbox, Later, Archive or Done, newest or untouched first." },
-  { name: "get_item", does: "One item in full, including the stored page text." },
-  { name: "save_item", does: "Pluck a link, many links, a note, a todo or a thing. Marked as plucked by AI." },
-  { name: "batch_update", does: "Status, kind, tags and due dates on one or many items." },
-  { name: "list_tags", does: "Your tags, with counts." },
-  { name: "create_tag", does: "A new tag, only after you said yes." },
-  { name: "list_lists", does: "Your lists, with purpose, count and visibility." },
-  { name: "get_list", does: "One list in order, with notes and ticks." },
-  { name: "create_list", does: "A new list with items in order and a note per item. Private." },
-  { name: "update_list", does: "Rename, reorder, add, tick, or make private. Only you make a list public." },
-  { name: "get_digest", does: "Expiring, due, oldest and quiet lists. The Monday email, as data." },
-];
+const TOOL_LIST = ["search_items", "list_items", "get_item", "save_item", "batch_update", "list_tags", "create_tag", "list_lists", "get_list", "create_list", "update_list", "get_digest"] as const;
+const ASKS = ["tidy", "reading", "ideas", "review"] as const;
+const NEVER = ["delete", "makeTag", "renameTag", "purpose", "public"] as const;
 
-const ASKS = [
-  { say: "Tidy my Pluck inbox.", does: "Proposes tags from the ones you already have, plus keep, later or archive per item. You say yes or edit. One batch." },
-  { say: "Make a reading list on MCP auth, best first.", does: "Searches, reads, and builds the list in order with a line on why each one matters. Private until you say otherwise." },
-  { say: "Three blog ideas from what I plucked this week.", does: "Reads the best five in full and drafts three angles with sources. Pick one and it plucks the draft back in as a Note." },
-  { say: "Run my weekly review.", does: "The Monday email, in conversation. One decision at a time." },
-];
-
-const NEVER = [
-  "Delete anything. The scope isn't granted.",
-  "Make a tag you didn't ask for.",
-  "Rename or remove a tag you made.",
-  "Rewrite a list's purpose.",
-  "Make a list public. Only you can, from the list in Pluck.",
-];
-
-export default function Connect() {
+export default async function Connect() {
+  const t = await getTranslations("site.connect");
+  const tc = await getTranslations("site.chrome");
+  const tools = TOOLS.map((x) => ({
+    key: x.key,
+    label: "label" in x ? x.label : t("tools.self.label"),
+    steps: [t(`tools.${x.key}.step1`), t(`tools.${x.key}.step2`), t(`tools.${x.key}.step3`)],
+    codeLabel: "codeLabel" in x ? x.codeLabel : t(`tools.${x.key}.codeLabel`),
+    code: x.code,
+    note: t(`tools.${x.key}.note`),
+  }));
   return (
-    <SitePage page="connect" dark footerNote="Pluck is free and open source.">
+    <SitePage page="connect" dark footerNote={tc("freeAndOpen")}>
       <section className={`${styles.wrap} ${styles.pageHero}`}>
-        <span className={`${styles.eyebrow} ${styles.mono}`}>PLUCK + YOUR AI · MCP</span>
-        <h1 className={`${styles.display} ${styles.connectTitle}`}>Ready for your AI. Whichever one you use.</h1>
-        <p className={`${styles.heroPara} ${styles.heroQuiet}`}>
-          Pluck speaks MCP, the open standard AI tools use to plug into apps. One link and your AI can read, search and sort your whole library. It changes things only when you say so, and never deletes.
-        </p>
+        <span className={`${styles.eyebrow} ${styles.mono}`}>{t("eyebrow")}</span>
+        <h1 className={`${styles.display} ${styles.connectTitle}`}>{t("title")}</h1>
+        <p className={`${styles.heroPara} ${styles.heroQuiet}`}>{t("lede")}</p>
       </section>
 
-      <section aria-label="How connecting works" className={`${styles.wrap} ${styles.block}`}>
+      <section aria-label={t("loopLabel")} className={`${styles.wrap} ${styles.block}`}>
         <ConnectLoopFit radius={16}><ConnectLoop /></ConnectLoopFit>
       </section>
 
       <section className={`${styles.wrap} ${styles.block}`}>
-        <h2 className={`${styles.display} ${styles.h2Section}`}>Install. Thirty seconds, honestly.</h2>
-        <p className={styles.sub}>Sign in to Pluck, then pick your tool. The link is the same for all of them.</p>
-        <ConnectTabs tools={TOOLS} />
+        <h2 className={`${styles.display} ${styles.h2Section}`}>{t("installTitle")}</h2>
+        <p className={styles.sub}>{t("installSub")}</p>
+        <ConnectTabs tools={tools} />
       </section>
 
       <section className={`${styles.wrap} ${styles.twoCols}`}>
         <div className={styles.col}>
-          <h2 className={`${styles.display} ${styles.h2Section}`}>Twelve tools. Plain names.</h2>
-          <p className={styles.colPara}>Results come back as cards with titles first, so a question like “what did I pluck this week” is one call and one screen.</p>
+          <h2 className={`${styles.display} ${styles.h2Section}`}>{t("toolsTitle")}</h2>
+          <p className={styles.colPara}>{t("toolsBody")}</p>
           <div className={styles.ruled}>
-            {TOOL_LIST.map((t) => (
-              <div key={t.name} className={styles.toolRow}><code className={`${styles.toolName} ${styles.mono}`}>{t.name}</code><span className={styles.toolDoes}>{t.does}</span></div>
+            {TOOL_LIST.map((name) => (
+              <div key={name} className={styles.toolRow}><code className={`${styles.toolName} ${styles.mono}`}>{name}</code><span className={styles.toolDoes}>{t(`toolList.${name}`)}</span></div>
             ))}
           </div>
         </div>
         <div className={styles.col}>
-          <h2 className={`${styles.display} ${styles.h2Section}`}>Four things to ask.</h2>
+          <h2 className={`${styles.display} ${styles.h2Section}`}>{t("asksTitle")}</h2>
           <div className={styles.ruled}>
-            {ASKS.map((a) => <div key={a.say} className={styles.askRow}><b>“{a.say}”</b><span>{a.does}</span></div>)}
+            {ASKS.map((a) => <div key={a} className={styles.askRow}><b>{t(`asks.${a}.say`)}</b><span>{t(`asks.${a}.does`)}</span></div>)}
           </div>
           <div className={styles.never}>
-            <b>What your AI can never do</b>
-            {NEVER.map((n) => <span key={n} className={styles.neverItem}><span aria-hidden="true" className={styles.dash} />{n}</span>)}
-            <span className={styles.neverNote}>Everything it adds carries a “by AI” mark. Settings removes a week of it in one tap.</span>
+            <b>{t("neverTitle")}</b>
+            {NEVER.map((n) => <span key={n} className={styles.neverItem}><span aria-hidden="true" className={styles.dash} />{t(`never.${n}`)}</span>)}
+            <span className={styles.neverNote}>{t("neverNote")}</span>
           </div>
         </div>
       </section>
 
       <section className={`${styles.wrap} ${styles.closingRow}`}>
-        <p className={`${styles.display} ${styles.closingMid}`}>Ask your AI<span className={styles.mint}>.</span></p>
-        <Link href="/signin" className={`${styles.big} ${styles.bigLight}`}>Get Pluck, then connect</Link>
+        <p className={`${styles.display} ${styles.closingMid}`}>{t.rich("closing", { mark: (c) => <span className={styles.mint}>{c}</span> })}</p>
+        <Link href="/signin" className={`${styles.big} ${styles.bigLight}`}>{t("button")}</Link>
       </section>
     </SitePage>
   );

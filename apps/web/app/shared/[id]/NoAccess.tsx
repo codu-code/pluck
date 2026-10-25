@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Actions, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
@@ -8,14 +9,15 @@ import { signOutHere } from "@/lib/sign-out";
 // A shared link that does not open for this person: gone, taken back, or shared with another of their addresses.
 export function NoAccess({ listId, email }: { listId: string; email: string }) {
   const router = useRouter();
+  const t = useTranslations("app.shared.noAccess");
   return (
     <Standalone
       size="md"
-      title={["Not shared", <>with you<Dot /></>]}
-      lede={<>Either this List no longer exists, or it isn&apos;t shared with <b>{email}</b>, the email you&apos;re signed in with. If someone sent you the link, ask them to share it with that address.</>}
+      title={[t("title1"), <>{t("title2")}<Dot /></>]}
+      lede={t.rich("lede", { email, b: (c) => <b>{c}</b> })}
     >
       <Actions>
-        <Link href="/lists" className={s.primary}>Your Lists</Link>
+        <Link href="/lists" className={s.primary}>{t("lists")}</Link>
         <button
           type="button"
           className={s.secondary}
@@ -24,7 +26,7 @@ export function NoAccess({ listId, email }: { listId: string; email: string }) {
             router.push(`/signin?next=${encodeURIComponent(`/shared/${listId}`)}`);
           }}
         >
-          Use another email
+          {t("another")}
         </button>
       </Actions>
     </Standalone>

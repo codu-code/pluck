@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslations } from "use-intl";
 import { font, useTheme } from "@/lib/theme";
 
 // One line after a move, with Undo, like the web app's ("Gone. Well, archived. Undo"). The newest replaces the last.
@@ -15,6 +16,7 @@ export function toast(text: string, undo?: () => void) {
 
 export function ToastHost() {
   const t = useTheme();
+  const tr = useTranslations("ios.toast");
   const bottom = useSafeAreaInsets().bottom;
   const [current, setCurrent] = useState<Toast | null>(null);
 
@@ -49,7 +51,7 @@ export function ToastHost() {
           }}
           style={styles.undo}
         >
-          <Text style={[font.semibold, { color: t.toastAction, fontSize: 15 }]}>Undo</Text>
+          <Text style={[font.semibold, { color: t.toastAction, fontSize: 15 }]}>{tr("undo")}</Text>
         </Pressable>
       )}
     </Animated.View>

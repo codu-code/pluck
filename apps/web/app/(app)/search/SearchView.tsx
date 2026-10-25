@@ -1,19 +1,19 @@
 "use client";
 
-import { LINK_KINDS, type List, type SearchResults, type Status, type Tag } from "@pluck/shared-schemas";
+import { LINK_KINDS, type List, type SearchResults, type Tag } from "@pluck/shared-schemas";
 import { KindGlyph } from "@pluck/ui";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
-import { when } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
 import { isTyping } from "@/lib/keys";
 import styles from "./search.module.css";
 import { useNow } from "@/lib/use-now";
 
 type Filters = { kind: string; tag: string; list: string; status: string; date: string };
 const NONE: Filters = { kind: "any", tag: "any", list: "any", status: "any", date: "any" };
-const STATUS_LABEL: Record<Status, string> = { inbox: "Inbox", later: "Later", archived: "Archived", done: "Done" };
 const DAYS: Record<string, number> = { week: 7, month: 31, year: 365 };
 
 function params(q: string, f: Filters, cursor?: string) {
@@ -40,6 +40,9 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
   const input = useRef<HTMLInputElement>(null);
   const first = useRef(true);
   const now = useNow();
+  const t = useTranslations("app.search");
+  const app = useTranslations("app");
+  const f = useFormat();
 
   useEffect(() => {
     if (first.current) {
@@ -90,7 +93,7 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
     setData({ ...next, results: [...data.results, ...next.results] });
   }
 
-  const prompt = `What did I pluck about ${q.trim() || "this"}?`;
+  const prompt = q.trim() ? t("prompt", { q: q.trim() }) : t("promptThis");
   const chip = (key: keyof Filters, label: string, options: [string, string][]) => (
     <label className={styles.chip} data-on={filters[key] !== "any" || undefined}>
       <span className={styles.visuallyHidden}>{label}</span>
@@ -109,69 +112,74 @@ export function SearchView({ initialQuery, initial, tags, lists }: { initialQuer
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
             <path d="M7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10zM10.6 10.6L14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <span className={styles.visuallyHidden}>Search</span>
-          <input ref={input} type="search" className={styles.input} value={q} autoFocus onChange={(e) => setQ(e.target.value)} placeholder="Search titles, notes, tags and page text" />
+          <span className={styles.visuallyHidden}>{t("label")}</span>
+          <input ref={input} type="search" className={styles.input} value={q} autoFocus onChange={(e) => setQ(e.target.value)} placeholder={t("placeholder")} />
           <kbd className={styles.kbd}>Esc</kbd>
         </label>
       </div>
       <div className={styles.page}>
         <div className={styles.filters}>
-          {chip("kind", "Kind", [["any", "Kind: any"], ["links", "Links"], ["link", "Read"], ["video", "Watch"], ["pdf", "PDF"], ["image", "Image"], ["note", "Notes"], ["todo", "Todos"], ["thing", "Things"]])}
-          {chip("tag", "Tag", [["any", "Tag"], ...tags.map((t): [string, string] => [t.id, t.name])])}
-          {chip("list", "List", [["any", "List"], ...lists.map((l): [string, string] => [l.id, l.name])])}
-          {chip("status", "Status", [["any", "Status"], ["inbox", "Inbox"], ["later", "Later"], ["archived", "Archived"], ["done", "Done"]])}
-          {chip("date", "Date", [["any", "Date"], ["week", "Past week"], ["month", "Past month"], ["year", "Past year"]])}
+          {chip("kind", t("filters.kind"), [
+            ["any", t("filters.kindAny")], ["links", app("kindChips.links")],
+            ...LINK_KINDS.map((k): [string, string] => [k, app(`kind.${k}`)]),
+            ["note", app("kindChips.note")], ["todo", app("kindChips.todo")], ["thing", app("kindChips.thing")],
+          ])}
+          {chip("tag", t("filters.tag"), [["any", t("filters.tag")], ...tags.map((x): [string, string] => [x.id, x.name])])}
+          {chip("list", t("filters.list"), [["any", t("filters.list")], ...lists.map((l): [string, string] => [l.id, l.name])])}
+          {chip("status", t("filters.status"), [["any", t("filters.status")], ...(["inbox", "later", "archived", "done"] as const).map((s): [string, string] => [s, app(`status.${s}`)])])}
+          {chip("date", t("filters.date"), [["any", t("filters.date")], ["week", t("filters.week")], ["month", t("filters.month")], ["year", t("filters.year")]])}
           {data && (
             <span className={styles.count}>
-              {data.total} result{data.total === 1 ? "" : "s"} · title, notes, tags, list names and body
+              {t("count", { count: data.total })}
             </span>
           )}
         </div>
 
-        {!q.trim() && <p className={styles.hint}>Type to search your whole library, the Archive included. Press / from anywhere to come here.</p>}
+        {!q.trim() && <p className={styles.hint}>{t("hint")}</p>}
 
         {data && data.results.length > 0 && (
-          <div className={styles.rows} role="list" aria-label="Results">
+          <div className={styles.rows} role="list" aria-label={t("results")}>
             {data.results.map((r, i) => (
               <div key={r.item.id} role="listitem" className={styles.row} data-active={i === cursor || undefined} onMouseMove={() => setCursor(i)}>
-                <KindGlyph kind={r.item.kind} />
+                <KindGlyph kind={r.item.kind} label={app(`kind.${r.item.kind}`)} />
                 <div className={styles.body}>
                   <div className={styles.titleLine}>
                     <Link href={`/items/${r.item.id}`} className={styles.title}>{r.item.title}</Link>
                     <span className={styles.meta}>
-                      {r.item.siteName ?? (r.item.url ? new URL(r.item.url).hostname : "Note")} · {STATUS_LABEL[r.item.status]}
+                      {r.item.siteName ?? (r.item.url ? new URL(r.item.url).hostname : app("kind.note"))} · {app(`status.${r.item.status}`)}
                     </span>
                   </div>
                   {r.snippet && (
                     <div className={styles.snippet}>
-                      {r.snippet.source === "note" && "Your note: “"}
-                      {r.snippet.pre}
-                      <mark className={styles.mark}>{r.snippet.hit}</mark>
-                      {r.snippet.post}
-                      {r.snippet.source === "note" && "”"}
+                      {t.rich(r.snippet.source === "note" ? "noteSnippet" : "snippet", {
+                        pre: r.snippet.pre,
+                        post: r.snippet.post,
+                        hit: r.snippet.hit,
+                        mark: (c) => <mark className={styles.mark}>{c}</mark>,
+                      })}
                     </div>
                   )}
                 </div>
-                <span className={styles.when}>{now && when(r.item.createdAt, now)}</span>
+                <span className={styles.when}>{now && f.when(r.item.createdAt, now)}</span>
               </div>
             ))}
           </div>
         )}
-        {data && data.results.length === 0 && <p className={styles.hint}>Nothing matches “{q.trim()}”. Search looks for the words themselves.</p>}
-        {data?.nextCursor && <button type="button" className={styles.more} onClick={more}>Show more</button>}
+        {data && data.results.length === 0 && <p className={styles.hint}>{t("none", { q: q.trim() })}</p>}
+        {data?.nextCursor && <button type="button" className={styles.more} onClick={more}>{app("common.showMore")}</button>}
 
         {q.trim() && (
           <div className={styles.ask}>
-            <span>Want it by meaning? Ask your AI.</span>
+            <span>{t("ask")}</span>
             <button
               type="button"
               className={styles.copy}
               onClick={async () => {
                 await navigator.clipboard?.writeText(prompt).catch(() => {});
-                showToast({ message: "Copied. Paste it into your AI." });
+                showToast({ message: app("common.copiedForAi") });
               }}
             >
-              Copy “{prompt}”
+              {t("copy", { prompt })}
             </button>
           </div>
         )}
