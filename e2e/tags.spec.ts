@@ -12,6 +12,7 @@ test("make a tag with t, see it on the row, filter by it, bulk tag", async ({ pa
   await signIn(page);
   await notes(page, ["Window functions", "Index notes", "Guitar practice"]);
   await page.goto("/inbox");
+  await expect(rows(page)).toHaveCount(3); // hydrated, keys are live
   await page.keyboard.press("t"); // cursor on the newest: Guitar practice
   await picker(page).getByRole("combobox", { name: "Tag" }).fill("Postgres");
   await expect(picker(page).getByRole("option", { name: "Create “Postgres”" })).toBeVisible();
