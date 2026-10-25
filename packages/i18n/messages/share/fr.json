@@ -1,1 +1,27 @@
-{}
+{
+  "plucked": "Cueilli.",
+  "plucking": "Cueillette…",
+  "signedOutTitle": "Connexion requise.",
+  "signedOutBody": "Connectez-vous une fois. Ensuite, le menu Partager fait le reste.",
+  "openToSignIn": "Ouvrir Pluck pour se connecter",
+  "queuedTitle": "Cueilli. Synchronisation à venir.",
+  "queuedBody": "Il est sur votre téléphone. Il part dès que vous êtes de nouveau en ligne.",
+  "done": "OK",
+  "failedTitle": "Impossible de cueillir ceci.",
+  "nothingToKeep": "Rien que Pluck puisse garder ici.",
+  "didNotWork": "Ça n’a pas marché.",
+  "badServer": "Adresse de serveur incorrecte.",
+  "noUploadAddress": "Aucune adresse d’envoi.",
+  "tagsAndList": "Tags et liste",
+  "kind": "Type",
+  "addToList": "Ajouter à {name}",
+  "addedToList": "Ajouté à {name}",
+  "notePlaceholder": "Pourquoi vous l’avez cueilli, en une ligne. Facultatif.",
+  "kindRead": "À lire",
+  "kindWatch": "À voir",
+  "kindPdf": "PDF",
+  "kindImage": "Image",
+  "kindTodo": "Tâche",
+  "kindNote": "Note",
+  "kindThing": "Objet"
+}

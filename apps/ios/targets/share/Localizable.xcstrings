@@ -21,6 +21,12 @@
             "state": "translated",
             "value": "Adicionar a %1$@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter à %1$@"
+          }
         }
       }
     },
@@ -43,6 +49,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adicionado a %1$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouté à %1$@"
           }
         }
       }
@@ -67,6 +79,12 @@
             "state": "translated",
             "value": "Endereço de servidor inválido."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adresse de serveur incorrecte."
+          }
         }
       }
     },
@@ -90,6 +108,12 @@
             "state": "translated",
             "value": "Não deu certo."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ça n’a pas marché."
+          }
         }
       }
     },
@@ -109,6 +133,12 @@
           }
         },
         "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "OK"
@@ -136,6 +166,12 @@
             "state": "translated",
             "value": "Não deu para colher isso."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de cueillir ceci."
+          }
         }
       }
     },
@@ -158,6 +194,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tipo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type"
           }
         }
       }
@@ -182,6 +224,12 @@
             "state": "translated",
             "value": "Imagem"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
         }
       }
     },
@@ -205,6 +253,12 @@
             "state": "translated",
             "value": "Nota"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
         }
       }
     },
@@ -224,6 +278,12 @@
           }
         },
         "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -251,6 +311,12 @@
             "state": "translated",
             "value": "Leitura"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À lire"
+          }
         }
       }
     },
@@ -273,6 +339,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Coisa"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Objet"
           }
         }
       }
@@ -297,6 +369,12 @@
             "state": "translated",
             "value": "Tarefa"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tâche"
+          }
         }
       }
     },
@@ -319,6 +397,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vídeo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À voir"
           }
         }
       }
@@ -343,6 +427,12 @@
             "state": "translated",
             "value": "Sem endereço de envio."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune adresse d’envoi."
+          }
         }
       }
     },
@@ -365,6 +455,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Por que você colheu, em uma linha. Opcional."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pourquoi vous l’avez cueilli, en une ligne. Facultatif."
           }
         }
       }
@@ -389,6 +485,12 @@
             "state": "translated",
             "value": "Não há nada aqui que o Pluck consiga guardar."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rien que Pluck puisse garder ici."
+          }
         }
       }
     },
@@ -411,6 +513,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abra o Pluck para entrar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir Pluck pour se connecter"
           }
         }
       }
@@ -435,6 +543,12 @@
             "state": "translated",
             "value": "Colhido."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueilli."
+          }
         }
       }
     },
@@ -457,6 +571,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Colhendo…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueillette…"
           }
         }
       }
@@ -481,6 +601,12 @@
             "state": "translated",
             "value": "Está no seu celular. Sobe quando você estiver online de novo."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il est sur votre téléphone. Il part dès que vous êtes de nouveau en ligne."
+          }
         }
       }
     },
@@ -503,6 +629,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Colhido. Vai sincronizar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cueilli. Synchronisation à venir."
           }
         }
       }
@@ -527,6 +659,12 @@
             "state": "translated",
             "value": "Entre uma vez. Depois disso, o menu Compartilhar faz o resto."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous une fois. Ensuite, le menu Partager fait le reste."
+          }
         }
       }
     },
@@ -550,6 +688,12 @@
             "state": "translated",
             "value": "Você não está conectado."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connexion requise."
+          }
         }
       }
     },
@@ -572,6 +716,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags e lista"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tags et liste"
           }
         }
       }
