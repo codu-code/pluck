@@ -1,6 +1,6 @@
 "use client";
 
-import { LINK_KINDS, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
+import { LINK_KINDS, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -225,7 +225,7 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
           </div>
           <div className={styles.foot}>
             <span>{t("source", { via: app(`format.via.${item.source}`) })}</span>
-            {item.url && <a href={item.url} target="_blank" rel="noreferrer" className={styles.original}>{app("common.openOriginal")}</a>}
+            {item.url && <a href={withReferral(item.url)} target="_blank" rel="noopener" className={styles.original}>{app("common.openOriginal")}</a>}
             <DeleteButton id={item.id} />
           </div>
         </aside>

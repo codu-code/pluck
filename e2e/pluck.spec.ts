@@ -38,7 +38,7 @@ test("a page that cannot be read says so and offers Retry, the original and the 
   await row.getByRole("link").first().click();
   await expect(page.getByRole("heading", { name: "Couldn't read this page." })).toBeVisible();
   await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Open original" })).toHaveAttribute("href", `${FIX}/gone.html`);
+  await expect(page.getByRole("link", { name: "Open original" })).toHaveAttribute("href", `${FIX}/gone.html?utm_source=getpluck.io`);
   await expect(page.getByRole("link", { name: "Try the Wayback copy" })).toHaveAttribute("href", `https://web.archive.org/web/*/${FIX}/gone.html`);
 });
 

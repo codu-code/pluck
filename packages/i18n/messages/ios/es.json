@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count, plural, one {# seleccionado} other {# seleccionados}}",
     "all": "Todo",
-    "newNote": "Nota nueva",
-    "newNoteText": "Nota nueva",
     "settings": "Ajustes",
     "toTriage": "{count} por revisar",
     "forLater": "{count} para más tarde",
@@ -503,5 +501,14 @@
       "import": "importado",
       "you": "archivado por ti"
     }
+  },
+  "add": {
+    "title": "Pluck",
+    "placeholder": "Pega uno o varios enlaces, o escribe una nota",
+    "submit": "Recógelo",
+    "as": "Recoger como",
+    "queued": "Recogido. Se sincronizará cuando vuelvas a tener conexión.",
+    "failed": "No se pudo completar.",
+    "plucked": "Recogido en la Bandeja de entrada."
   }
 }

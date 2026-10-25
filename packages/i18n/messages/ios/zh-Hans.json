@@ -114,8 +114,6 @@
   "items": {
     "selected": "已选择 {count} 条",
     "all": "全部",
-    "newNote": "新笔记",
-    "newNoteText": "新笔记",
     "settings": "设置",
     "toTriage": "{count} 条待处理",
     "forLater": "{count} 条留待稍后",
@@ -503,5 +501,14 @@
       "import": "导入的",
       "you": "由你归档"
     }
+  },
+  "add": {
+    "title": "摘下",
+    "placeholder": "粘贴一个或多个链接，或者写一条笔记",
+    "submit": "摘下来",
+    "as": "摘下为",
+    "queued": "已摘下。联网后会同步。",
+    "failed": "没有成功。",
+    "plucked": "已摘进收件箱。"
   }
 }

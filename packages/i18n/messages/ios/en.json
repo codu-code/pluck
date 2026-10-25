@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count} selected",
     "all": "All",
-    "newNote": "New note",
-    "newNoteText": "New note",
     "settings": "Settings",
     "toTriage": "{count} to triage",
     "forLater": "{count} for later",
@@ -503,5 +501,14 @@
       "import": "imported",
       "you": "archived by you"
     }
+  },
+  "add": {
+    "title": "Pluck",
+    "placeholder": "Paste one link or many, or type a note",
+    "submit": "Pluck it",
+    "as": "Pluck as",
+    "queued": "Plucked. Will sync when you are back online.",
+    "failed": "That did not go through.",
+    "plucked": "Plucked to the Inbox."
   }
 }

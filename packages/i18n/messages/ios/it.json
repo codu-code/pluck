@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count} selezionati",
     "all": "Tutti",
-    "newNote": "Nuova nota",
-    "newNoteText": "Nuova nota",
     "settings": "Impostazioni",
     "toTriage": "{count} da smistare",
     "forLater": "{count} per dopo",
@@ -503,5 +501,14 @@
       "import": "importato",
       "you": "archiviato da te"
     }
+  },
+  "add": {
+    "title": "Pluck",
+    "placeholder": "Incolla uno o più link, o scrivi una nota",
+    "submit": "Prendilo",
+    "as": "Prendi come",
+    "queued": "Preso. Si sincronizza quando torni online.",
+    "failed": "Non è andato a buon fine.",
+    "plucked": "Preso, è nell'Inbox."
   }
 }

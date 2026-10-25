@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count} ausgewählt",
     "all": "Alle",
-    "newNote": "Neue Notiz",
-    "newNoteText": "Neue Notiz",
     "settings": "Einstellungen",
     "toTriage": "{count} zu sichten",
     "forLater": "{count} für später",
@@ -503,5 +501,14 @@
       "import": "importiert",
       "you": "von dir archiviert"
     }
+  },
+  "add": {
+    "title": "Pluck",
+    "placeholder": "Einen Link oder viele einfügen oder eine Notiz tippen",
+    "submit": "Pflücken",
+    "as": "Pflücken als",
+    "queued": "Gepflückt. Wird synchronisiert, sobald du wieder online bist.",
+    "failed": "Das hat nicht geklappt.",
+    "plucked": "In den Eingang gepflückt."
   }
 }

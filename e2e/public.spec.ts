@@ -27,7 +27,7 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   await visitor.goto(`/@${handle}/best-mcp-reading`);
   await expect(visitor.getByRole("heading", { name: "Best MCP reading" })).toBeVisible();
   await expect(visitor.getByText("Read this first.")).toBeVisible();
-  await expect(visitor.getByRole("link", { name: "Small teams ship when the list is short" })).toHaveAttribute("href", `${FIX}/news-1.html`);
+  await expect(visitor.getByRole("link", { name: "Small teams ship when the list is short" })).toHaveAttribute("href", `${FIX}/news-1.html?utm_source=getpluck.io`);
   await expect(visitor.locator("main ol img")).toHaveJSProperty("complete", true);
   const html = await visitor.content();
   expect(html).not.toContain("Waiting has a shape"); // a sentence from deep in the kept page

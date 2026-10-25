@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count}개 선택됨",
     "all": "전체",
-    "newNote": "새 메모",
-    "newNoteText": "새 메모",
     "settings": "설정",
     "toTriage": "정리할 항목 {count}개",
     "forLater": "나중에 볼 항목 {count}개",
@@ -503,5 +501,14 @@
       "import": "가져옴",
       "you": "직접 보관"
     }
+  },
+  "add": {
+    "title": "담기",
+    "placeholder": "링크를 하나 또는 여러 개 붙여 넣거나, 메모를 입력하세요",
+    "submit": "담기",
+    "as": "담을 종류",
+    "queued": "담았어요. 다시 온라인이 되면 동기화돼요.",
+    "failed": "처리되지 않았어요.",
+    "plucked": "수신함에 담았어요."
   }
 }

@@ -7,7 +7,7 @@ import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleShee
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/session";
-import { keys, pluck, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
+import { keys, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
 import { Icon, ICONS } from "./Glyph";
@@ -112,11 +112,6 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     ]} />
   ) : null;
 
-  const newNote = async () => {
-    const { item } = await pluck({ text: tr("items.newNoteText"), kind: "note" });
-    if (item) router.push(`/items/${item.id}`);
-  };
-
   return (
     <TitledList
       title={picked ? tr("items.selected", { count: picked.size }) : tr(`tabs.${status}`)}
@@ -131,11 +126,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         </View>
       ) : (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          {status === "inbox" && (
-            <Pressable accessibilityRole="button" accessibilityLabel={tr("items.newNote")} onPress={() => void newNote()} style={styles.headerButton}>
-              <Icon d={ICONS.compose} color={t.ink} />
-            </Pressable>
-          )}
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("add.title")} onPress={() => router.push("/add")} style={styles.headerButton}>
+            <Icon d={ICONS.plus} color={t.ink} />
+          </Pressable>
           <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel={tr("items.settings")} style={styles.headerButton}>
             <View style={[styles.avatar, { backgroundColor: t.avatar }]}>
               <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 12 }]}>{avatarOf(me.data?.name, me.data?.email)}</Text>

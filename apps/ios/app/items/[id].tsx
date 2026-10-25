@@ -1,5 +1,5 @@
 import { Unreachable } from "@pluck/client";
-import { isTextKind, type Item } from "@pluck/shared-schemas";
+import { isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
@@ -137,7 +137,7 @@ function Reader({ data }: { data: FullItem }) {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{minutes ? tr("item.minutesLeft", { percent: format.number(progress, { style: "percent" }), minutes }) : format.number(progress, { style: "percent" })}</Text>}
             {item.url && (
-              <Pressable accessibilityRole="button" accessibilityLabel={tr("item.openOriginal")} onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={styles.iconButton}>
+              <Pressable accessibilityRole="button" accessibilityLabel={tr("item.openOriginal")} onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.url!))} style={styles.iconButton}>
                 <Icon d={ICONS.original} size={20} color={t.ink} width={1.5} />
               </Pressable>
             )}
@@ -179,7 +179,7 @@ function Reader({ data }: { data: FullItem }) {
             </Text>
             <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 4 }}>
               {item.url && (
-                <Pressable accessibilityRole="button" onPress={() => void WebBrowser.openBrowserAsync(item.url!)} style={[styles.primary, { backgroundColor: t.brand }]}>
+                <Pressable accessibilityRole="button" onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.url!))} style={[styles.primary, { backgroundColor: t.brand }]}>
                   <Text style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("item.openOriginal")}</Text>
                 </Pressable>
               )}

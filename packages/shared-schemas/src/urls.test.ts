@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
-import { normalizeUrl } from "./urls.ts";
+import { describe, expect, test } from "vitest";
+import { normalizeUrl, withReferral } from "./urls.ts";
 
 test.each([
   ["https://Example.com/a?utm_source=x&b=2&a=1#top", "https://example.com/a?a=1&b=2"],
@@ -14,4 +14,24 @@ test.each([
 
 test.each(["ftp://example.com", "javascript:alert(1)", "not a url", "https://nodot/"])("%s is rejected", (input) => {
   expect(normalizeUrl(input)).toBeNull();
+});
+
+describe("withReferral", () => {
+  test("tags a link as it opens", () => {
+    expect(withReferral("https://example.com/post")).toBe("https://example.com/post?utm_source=getpluck.io");
+    expect(withReferral("https://example.com/p?id=3#part-2")).toBe("https://example.com/p?id=3&utm_source=getpluck.io#part-2");
+    expect(withReferral("https://example.com/s?q=a%20b")).toBe("https://example.com/s?q=a%20b&utm_source=getpluck.io"); // the query stays as written
+    expect(withReferral("https://example.com/app#/route?x=1")).toBe("https://example.com/app?utm_source=getpluck.io#/route?x=1");
+  });
+  test("leaves alone what one more parameter would break, what is ours and what already says its source", () => {
+    for (const url of [
+      "https://bucket.s3.amazonaws.com/a.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=abc",
+      "https://d111.cloudfront.net/a.pdf?Expires=1&Signature=abc&Key-Pair-Id=K",
+      "https://storage.googleapis.com/b/a.pdf?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Signature=abc",
+      "https://example.com/?utm_source=newsletter",
+      "https://getpluck.io/@niall/reading",
+      "mailto:someone@example.com",
+      "not a url",
+    ]) expect(withReferral(url)).toBe(url);
+  });
 });

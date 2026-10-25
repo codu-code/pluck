@@ -1,4 +1,4 @@
-import { isTextKind, type Item } from "@pluck/shared-schemas";
+import { isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
@@ -62,7 +62,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           </div>
           <div className={styles.actions}>
             <RetryButton id={item.id} />
-            <a className={styles.secondary} href={url} target="_blank" rel="noreferrer">{app("openOriginal")}</a>
+            <a className={styles.secondary} href={withReferral(url)} target="_blank" rel="noopener">{app("openOriginal")}</a>
             <a className={styles.secondary} href={waybackUrl(url)} target="_blank" rel="noreferrer">{t("failed.wayback")}</a>
           </div>
           <div className={styles.tip}>
@@ -82,7 +82,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             <span className={styles.meta}><Plucked item={item} /></span>
             <h1 className={styles.title}>{item.title}</h1>
             <p className={styles.meta}>{t("pending")}</p>
-            <a href={url} target="_blank" rel="noreferrer" className={styles.meta}>{app("openOriginal")}</a>
+            <a href={withReferral(url)} target="_blank" rel="noopener" className={styles.meta}>{app("openOriginal")}</a>
           </div>
         </div>
       )}

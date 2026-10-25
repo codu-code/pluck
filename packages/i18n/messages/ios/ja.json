@@ -114,8 +114,6 @@
   "items": {
     "selected": "{count}件を選択中",
     "all": "すべて",
-    "newNote": "新規メモ",
-    "newNoteText": "新規メモ",
     "settings": "設定",
     "toTriage": "未整理{count}件",
     "forLater": "「あとで」{count}件",
@@ -503,5 +501,14 @@
       "import": "インポート",
       "you": "自分でアーカイブ"
     }
+  },
+  "add": {
+    "title": "Pluck",
+    "placeholder": "リンクを1つでも複数でも貼り付けるか、メモを入力",
+    "submit": "Pluckする",
+    "as": "種類",
+    "queued": "Pluckしました。オンラインに戻ると同期します。",
+    "failed": "うまくいきませんでした。",
+    "plucked": "インボックスにPluckしました。"
   }
 }
