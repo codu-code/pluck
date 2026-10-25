@@ -12,12 +12,12 @@ import { font, scale, useTheme, type Palette } from "@/lib/theme";
 export default function SignIn() {
   const t = useTheme();
   const insets = useSafeAreaInsets();
-  const linked = useLocalSearchParams<{ server?: string }>().server;
+  const { server: linked, stale } = useLocalSearchParams<{ server?: string; stale?: string }>();
   const [advanced, setAdvanced] = useState(Boolean(linked));
   const [server, setServer] = useState(linked ?? defaultServer);
   const [key, setKey] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(stale ? "That link was from an earlier try. Open the newest email, or send a new link." : null);
 
   const go = async (withKey: boolean) => {
     setBusy(true);

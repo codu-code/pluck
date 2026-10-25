@@ -1,6 +1,7 @@
 import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ExpoConfig } from "expo/config";
+import { withXcodeProjectBeta } from "@bacons/apple-targets/build/with-bacons-xcode";
 import { type ConfigPlugin, withDangerousMod, withXcodeProject } from "expo/config-plugins";
 
 // PLUCK_SERVER builds point at another server (local dev, e2e screenshots); store builds use getpluck.io.
@@ -42,6 +43,9 @@ const config: ExpoConfig = {
   userInterfaceStyle: "automatic",
   ios: {
     bundleIdentifier: "io.getpluck.app",
+    // The Apple Developer team (Membership details). The same value as APPLE_TEAM_ID on the web server, which serves
+    // apple-app-site-association; prebuild signs both targets with it, so Xcode never needs the team picked by hand.
+    ...(process.env.APPLE_TEAM_ID ? { appleTeamId: process.env.APPLE_TEAM_ID } : {}),
     buildNumber: "1", // raise for every TestFlight upload (docs/ios.md)
     supportsTablet: false,
     entitlements: {
@@ -98,4 +102,15 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: false },
 };
 
-export default withDarkIcon(config);
+// apple-targets builds a share extension's Release like its Debug. Optimise it, keep a dSYM so crash reports
+// symbolicate, and make it iPhone only like the app. Its targets are written in its own pass, so the change goes there.
+const withShareRelease: ConfigPlugin = (c) =>
+  withXcodeProjectBeta(c, (m) => {
+    for (const { props: p } of m.modResults.values() as Iterable<{ props: { isa?: string; name?: string; buildSettings?: Record<string, unknown> } }>) {
+      if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings?.PRODUCT_BUNDLE_IDENTIFIER === "io.getpluck.app.share")
+        Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1" });
+    }
+    return m;
+  });
+
+export default withShareRelease(withDarkIcon(config));

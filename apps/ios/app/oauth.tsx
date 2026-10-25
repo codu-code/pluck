@@ -11,7 +11,7 @@ export default function OAuthReturn() {
   const { code, state } = useLocalSearchParams<{ code?: string; state?: string }>();
   useEffect(() => {
     void finishSignIn(`io.getpluck.app:/oauth?${new URLSearchParams({ code: code ?? "", state: state ?? "" })}`).then((ok) =>
-      router.replace(ok ? "/welcome" : "/signin"),
+      router.replace(ok ? "/welcome" : "/signin?stale=1"),
     );
   }, [code, state]);
   return (

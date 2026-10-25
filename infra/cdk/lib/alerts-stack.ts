@@ -30,6 +30,8 @@ export class AlertsStack extends Stack {
       }).addAlarmAction(new actions.SnsAction(topic));
     }
 
+    // An account inside AWS Organizations cannot hold a budget unless the payer allows it: pass 0 and set it there.
+    if (monthlyBudgetUsd <= 0) return;
     const notify = (notificationType: "ACTUAL" | "FORECASTED", threshold: number) => ({
       notification: { notificationType, comparisonOperator: "GREATER_THAN", threshold, thresholdType: "PERCENTAGE" },
       subscribers: [{ subscriptionType: "EMAIL", address: alertEmail }],
