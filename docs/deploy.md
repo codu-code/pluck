@@ -52,6 +52,7 @@ Then:
 | `ADMIN_EMAILS` | your address |
 | `ABUSE_EMAIL` | the abuse inbox |
 | `EMAIL_IN_DOMAIN` | `in.getpluck.io` |
+| `APPLE_TEAM_ID` | the Apple Developer team ID that signs the iPhone app (Membership details). Serves `/.well-known/apple-app-site-association`, so links to `/shared/…`, `/lists/…` and `/items/…` open the app when it is installed |
 | `NEXT_PUBLIC_POSTHOG_KEY` | the PostHog project token (EU project). Read at build time. Turns on the cookie banner, usage analytics after a yes, and error tracking for the browser and the server |
 
 Leave `NEXT_PUBLIC_POSTHOG_KEY` off Preview, so previews never report into the real project. In PostHog, turn on Error tracking (Project settings, Error tracking) and keep Session replay off: Pluck never sends recordings.

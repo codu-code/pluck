@@ -114,6 +114,9 @@ test("share a List with one person, See only: the email link, their Lists, no ta
   const stranger = await (await browser.newContext()).newPage();
   await signIn(stranger);
   expect((await stranger.request.get(`/api/v1/shared/${list.id}`)).status()).toBe(404);
+  await stranger.goto(`/shared/${list.id}`);
+  await expect(stranger.getByRole("heading", { name: "Not shared with you." })).toBeVisible();
+  await expect(stranger.getByRole("button", { name: "Use another email" })).toBeVisible();
 
   // The owner takes it back; it is gone for them at once.
   await owner.getByRole("button", { name: `Stop sharing with ${friend}` }).click();

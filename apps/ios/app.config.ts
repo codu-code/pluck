@@ -48,6 +48,8 @@ const config: ExpoConfig = {
       "com.apple.security.application-groups": [GROUP],
       "keychain-access-groups": ["$(AppIdentifierPrefix)io.getpluck.shared"],
     },
+    // Links to /shared/…, /lists/… and /items/… open the app (the server's apple-app-site-association, APPLE_TEAM_ID).
+    ...(server.startsWith("https://") ? { associatedDomains: [`applinks:${new URL(server).host}`] } : {}),
     // App Store Connect checks this on upload: the required-reason APIs React Native and Expo use, and what Pluck
     // collects (matches Privacy and the App Privacy answers in docs/ios.md). The share extension has its own.
     privacyManifests: {

@@ -1,12 +1,13 @@
 import { Logo } from "@pluck/ui";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { ago, initials, tileIndex } from "@/lib/format";
 import { readShared } from "@/lib/library";
 import styles from "../../p/[handle]/[slug]/public.module.css";
 import { LeaveButton } from "./LeaveButton";
+import { NoAccess } from "./NoAccess";
 
 export const metadata: Metadata = { title: "Shared with you · Pluck" };
 export const dynamic = "force-dynamic"; // taken back by its owner means gone at once
@@ -18,7 +19,7 @@ export default async function SharedListPage({ params }: { params: Promise<{ id:
   const user = await currentUser();
   if (!user) redirect(`/signin?next=${encodeURIComponent(`/shared/${id}`)}`);
   const page = await readShared(user.id, id).catch(() => null);
-  if (!page) notFound();
+  if (!page) return <NoAccess listId={id} email={user.email} />;
   const { list, author, entries } = page;
   const by = author.name ? `${author.name} (@${author.handle})` : `@${author.handle}`;
   return (

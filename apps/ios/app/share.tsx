@@ -2,7 +2,8 @@ import type { ListShare } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import * as Clipboard from "expo-clipboard";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
@@ -17,7 +18,7 @@ type Access = "me" | "people" | "anyone";
 const SEES: Record<Access, string> = {
   me: "Only you can see this List.",
   people: "The people here see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Only you change it.",
-  anyone: "Anyone with the link sees the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept.",
+  anyone: "Public: anyone who has this link can open it, without signing in, and it can turn up in search. They see the titles, sites, covers and your notes on this List, never your tags, ticks or the pages Pluck kept. Make it private again any time; the link stops working at once.",
 };
 
 // Sharing a List (no board: after Claude's share sheet). What is shared at the top, one choice of who has access,
@@ -35,6 +36,9 @@ export default function ShareList() {
   const access: Access = list?.visibility === "public" ? "anyone" : (people.data?.length ? "people" : (picked ?? "me"));
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState<Access | "add" | null>(null);
+  const [server, setServer] = useState("https://getpluck.io");
+  useEffect(() => void getSession().then((x) => x && setServer(x.server)), []);
+  const publicUrl = list && me.data?.handle ? `${server}/@${me.data.handle}/${list.slug}` : null;
 
   const failed = (e: unknown) => Alert.alert("That did not go through", e instanceof Refused ? e.message : "Check the connection, then try again.");
   const settle = async () => {
@@ -95,12 +99,10 @@ export default function ShareList() {
     ]);
 
   const off = access === "me" || (access === "people" && !people.data?.length); // nothing to send yet
-  const shareLink = async () => {
+  const shareLink = () => {
     if (!list || off) return;
-    const server = (await getSession())?.server ?? "https://getpluck.io";
     // People get theirs by email too; this is the same link, for a message. It opens only for them.
-    const url = access === "anyone" ? `${server}/@${me.data?.handle}/${list.slug}` : `${server}/shared/${list.id}`;
-    void Share.share({ url });
+    void Share.share({ url: access === "anyone" && publicUrl ? publicUrl : `${server}/shared/${list.id}` });
   };
 
   const options: { key: Access; icon: string; label: string }[] = [
@@ -166,6 +168,23 @@ export default function ShareList() {
           </View>
         )}
 
+        {access === "anyone" && publicUrl && (
+          // The public address itself, marked as public, so what "anyone" means is plain.
+          <View style={[styles.card, styles.publicCard, { backgroundColor: t.surface }]}>
+            <View style={styles.publicHead}>
+              <Icon d={ICONS.globe} size={16} color={t.actionInk} width={1.6} />
+              <Text style={[font.semibold, { color: t.actionInk, fontSize: 13 }]}>Public link</Text>
+            </View>
+            <View style={styles.publicRow}>
+              <Text selectable numberOfLines={2} style={[styles.url, { color: t.ink }]}>{publicUrl.replace(/^https?:\/\//, "")}</Text>
+              <Pressable accessibilityRole="button" accessibilityLabel="Copy the public link" onPress={async () => { await Clipboard.setStringAsync(publicUrl); toast("Link copied."); }}
+                style={[styles.copy, { backgroundColor: t.tint }]}>
+                <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 14 }]}>Copy</Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
+
         <Text style={[font.regular, styles.footnote, { color: t.ink2 }]}>{SEES[access]}</Text>
       </ScrollView>
       <View style={[styles.bottom, { paddingBottom: Math.max(insets.bottom, 16) }]}>
@@ -196,6 +215,11 @@ const styles = StyleSheet.create({
   addButton: { minHeight: 44, minWidth: 56, alignItems: "center", justifyContent: "center" },
   person: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 48, paddingLeft: 16, paddingRight: 6 },
   removeButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+  publicCard: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
+  publicHead: { flexDirection: "row", alignItems: "center", gap: 6 },
+  publicRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  url: { flex: 1, fontFamily: "Menlo", fontSize: 13, lineHeight: 18 },
+  copy: { minHeight: 36, paddingHorizontal: 14, borderRadius: 18, justifyContent: "center" },
   footnote: { paddingHorizontal: 4, fontSize: 13, lineHeight: 18 },
   bottom: { paddingHorizontal: 16, paddingTop: 8 },
   shareButton: { minHeight: 52, borderRadius: 26, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
