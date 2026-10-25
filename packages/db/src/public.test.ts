@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   applyExtraction, createList, createTag, editItem, getListMeta, getMe, killList, killUser, moveToBin, pluckLink, PUBLIC_ITEM_FIELDS,
   publicCoverKey, publicList, publicListById, recordView, setHandle, setItemTags, setBlobKeys, setVisibility, updateEntry, updateList,
-  addToList, deleteList, leaveSharedList, listsSharedWith, sharedList, shareList, sharesOf, unshareList,
+  addToList, deleteList, leaveSharedList, listsSharedWith, sharedList, shareList, sharesOf, unshareList, updateSettings,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -120,8 +120,9 @@ describe("lists shared with people (See only)", () => {
     await updateEntry(a, list.id, it.id, { ticked: true }, "user");
 
     expect(await sharedList(list.id, bEmail)).toBeNull(); // not shared yet, even though it exists
+    await updateSettings(b, { locale: "fr" });
     const shared = await shareList(a, list.id, bEmail.toUpperCase());
-    expect(shared).toMatchObject({ ok: true, created: true, share: { email: bEmail } });
+    expect(shared).toMatchObject({ ok: true, created: true, share: { email: bEmail }, recipientLocale: "fr" }); // the email goes in b's language
     expect((await shareList(a, list.id, bEmail)).ok && (await shareList(a, list.id, bEmail))).toMatchObject({ created: false });
     expect(await shareList(a, list.id, (await getMe(a))!.email)).toEqual({ ok: false, reason: "self" });
     expect(await shareList(b, list.id, "x@example.test")).toEqual({ ok: false, reason: "not_found" }); // only the owner shares
@@ -137,6 +138,7 @@ describe("lists shared with people (See only)", () => {
     expect(await unshareList(b, list.id, shared.ok ? shared.share.id : "")).toBe(false); // not theirs to take back
     expect(await unshareList(a, list.id, shared.ok ? shared.share.id : "")).toBe(true);
     expect(await sharedList(list.id, bEmail)).toBeNull();
+    expect(await shareList(a, list.id, `nobody-${Date.now()}@example.test`)).toMatchObject({ created: true, recipientLocale: null }); // no account yet
   });
 
   test("the person can leave it; deleting the list or a closed account ends the share", async () => {

@@ -1,3 +1,4 @@
+import type { Locale } from "@pluck/i18n";
 import type { ListShare } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { lists, listShares, oid, users, type ListShareDoc } from "./collections.ts";
@@ -9,7 +10,8 @@ export const MAX_PEOPLE = 20;
 
 const toShare = (d: ListShareDoc): ListShare => ({ id: d._id.toHexString(), email: d.email, createdAt: d.createdAt.toISOString() });
 
-export type ShareResult = { ok: true; share: ListShare; created: boolean } | { ok: false; reason: "not_found" | "self" | "full" | "closed" };
+// recipientLocale: the language of the account at that email, if there is one, for the email that tells them.
+export type ShareResult = { ok: true; share: ListShare; created: boolean; recipientLocale?: Locale | null } | { ok: false; reason: "not_found" | "self" | "full" | "closed" };
 
 export async function shareList(userId: string, listId: string, email: string, now = new Date()): Promise<ShareResult> {
   const uid = oid(userId);
@@ -31,7 +33,8 @@ export async function shareList(userId: string, listId: string, email: string, n
     return { ok: true, share: toShare((await col.findOne({ listId: list._id, email: to }))!), created: false };
   }
   await getMe(userId); // the shared view shows the owner's handle; this makes sure there is one
-  return { ok: true, share: toShare(doc), created: true };
+  const recipient = await (await users()).findOne({ email: to }, { projection: { "settings.locale": 1 } });
+  return { ok: true, share: toShare(doc), created: true, recipientLocale: recipient?.settings?.locale ?? null };
 }
 
 // The people a list is shared with, for its owner. Null when it is not their list.

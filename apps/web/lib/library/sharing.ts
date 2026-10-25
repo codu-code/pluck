@@ -131,7 +131,7 @@ export async function shareWith(userId: string, listId: string, email: string): 
   if (!res.ok) throw SHARE_ERRORS[res.reason];
   if (res.created) {
     const [owner, list] = await Promise.all([me(userId), getListMeta(userId, listId)]);
-    await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? "A List", `${origin()}/shared/${listId}`));
+    await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? null, `${origin()}/shared/${listId}`, res.recipientLocale ?? owner.settings.locale ?? "en"));
   }
   return res.share;
 }

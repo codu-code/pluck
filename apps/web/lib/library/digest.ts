@@ -30,7 +30,7 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
       archiveAll: tap("archive-all"),
       settings: `${origin()}/settings#expiry`,
       stop: tap("stop"),
-    }),
+    }, new Date(), { locale: me.settings.locale ?? "en", timeZone: me.settings.timezone }),
     from: process.env.DIGEST_FROM, // its own subdomain: a spam report on it never reaches sign-in links
   });
   return true;
