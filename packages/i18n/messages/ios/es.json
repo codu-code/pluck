@@ -96,6 +96,39 @@
     "site": {
       "email": "correo entrante",
       "file": "Tu archivo"
+    },
+    "fact": {
+      "post": "publicación",
+      "code": {
+        "repo": "repositorio",
+        "issue": "issue",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "archivo",
+        "package": "paquete",
+        "snippet": "fragmento",
+        "question": "pregunta"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "página de inicio",
+      "pages": "{count, plural, one {# página} other {# páginas}}",
+      "app": {
+        "claude": "artefacto de Claude",
+        "claude-chat": "chat de Claude",
+        "chatgpt": "chat de ChatGPT",
+        "gemini": "chat de Gemini",
+        "v0": "app de v0",
+        "bolt": "app de Bolt",
+        "lovable": "app de Lovable",
+        "perplexity": "página de Perplexity",
+        "replit": "app de Replit",
+        "figma": "archivo de Figma",
+        "google-docs": "documento de Google",
+        "google-drive": "archivo de Drive",
+        "notion": "página de Notion",
+        "canva": "diseño de Canva",
+        "miro": "tablero de Miro"
+      }
     }
   },
   "art": {
@@ -510,5 +543,20 @@
     "queued": "Recogido. Se sincronizará cuando vuelvas a tener conexión.",
     "failed": "No se pudo completar.",
     "plucked": "Recogido en la Bandeja de entrada."
+  },
+  "preview": {
+    "open": "Abrir en {site}",
+    "openPdf": "Abrir el PDF",
+    "playA11y": "Reproducir {title}",
+    "playNote": "Se reproduce desde {site} cuando tocas reproducir.",
+    "asArticle": "Ver como artículo",
+    "asPreview": "Ver como vista previa",
+    "stars": "{count, plural, one {# estrella} other {# estrellas}}",
+    "pages": "{count, plural, one {# página} other {# páginas}}",
+    "offline": "Se reproduce cuando vuelvas a tener conexión.",
+    "keep": "Guardar en este iPhone",
+    "kept": "Guardado en este iPhone",
+    "letGo": "Quitar la copia sin conexión",
+    "saveFile": "Guardar en Archivos"
   }
 }

@@ -96,6 +96,39 @@
     "site": {
       "email": "via e-mail",
       "file": "Je bestand"
+    },
+    "fact": {
+      "post": "post",
+      "code": {
+        "repo": "repo",
+        "issue": "issue",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "bestand",
+        "package": "pakket",
+        "snippet": "snippet",
+        "question": "vraag"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "homepage",
+      "pages": "{count, plural, one {# pagina} other {# pagina's}}",
+      "app": {
+        "claude": "Claude-artefact",
+        "claude-chat": "Claude-chat",
+        "chatgpt": "ChatGPT-chat",
+        "gemini": "Gemini-chat",
+        "v0": "v0-app",
+        "bolt": "Bolt-app",
+        "lovable": "Lovable-app",
+        "perplexity": "Perplexity-pagina",
+        "replit": "Replit-app",
+        "figma": "Figma-bestand",
+        "google-docs": "Google-document",
+        "google-drive": "Drive-bestand",
+        "notion": "Notion-pagina",
+        "canva": "Canva-ontwerp",
+        "miro": "Miro-bord"
+      }
     }
   },
   "art": {
@@ -510,5 +543,20 @@
     "queued": "Geplukt. Wordt gesynchroniseerd als je weer online bent.",
     "failed": "Dat lukte niet.",
     "plucked": "Geplukt naar de Inbox."
+  },
+  "preview": {
+    "open": "Openen op {site}",
+    "openPdf": "Open de pdf",
+    "playA11y": "{title} afspelen",
+    "playNote": "Speelt af vanaf {site} als je op afspelen tikt.",
+    "asArticle": "Toon als artikel",
+    "asPreview": "Toon als voorbeeld",
+    "stars": "{count, plural, one {# ster} other {# sterren}}",
+    "pages": "{count, plural, one {# pagina} other {# pagina's}}",
+    "offline": "Speelt af zodra je weer online bent.",
+    "keep": "Bewaar op deze iPhone",
+    "kept": "Bewaard op deze iPhone",
+    "letGo": "Offline kopie weghalen",
+    "saveFile": "Bewaar in Bestanden"
   }
 }

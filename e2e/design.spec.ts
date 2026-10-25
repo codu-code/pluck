@@ -33,6 +33,13 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.waitForSelector("article p");
   await snap("reader");
   await page.goto("/inbox");
+  await box.fill(`${FIX}/shop-mug.html`);
+  await box.press("Enter");
+  await page.getByRole("link", { name: "Stoneware mug, sea glass" }).first().click({ timeout: 10_000 });
+  await page.waitForURL(/\/items\//);
+  await page.getByRole("link", { name: /^Open on / }).waitFor();
+  await snap("preview-product");
+  await page.goto("/inbox");
   await page.keyboard.press("x");
   await snap("inbox-bulk");
   await page.keyboard.press("Escape");

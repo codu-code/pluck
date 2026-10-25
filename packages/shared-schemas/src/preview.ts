@@ -37,6 +37,10 @@ export const Facts = z
   .strict();
 export type Facts = z.infer<typeof Facts>;
 
+// The Previews that are not for reading in Pluck (a player, a post, a product, a homepage, an app): shown as a card
+// with one way out. A Reader, a repo or a paper reads here as an article.
+export const isCardPreview = (preview: Preview | null | undefined) => preview === "player" || preview === "post" || preview === "product" || preview === "site" || preview === "app";
+
 // The Preview an Item has before anything better is known: older Items, and Kinds with only one way to show.
 export function defaultPreview(kind: Kind): Preview | null {
   return kind === "link" ? "reader" : kind === "video" ? "player" : kind === "pdf" ? "document" : null;

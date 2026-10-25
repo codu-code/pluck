@@ -53,7 +53,8 @@ const absolute = (href: string | null, base: string) => {
 };
 
 // Pure: no network. Turns page HTML into the item's fields and its markdown.
-export async function extractFromHtml(html: string, url: string): Promise<Extracted> {
+// `asArticle`: the person chose Show as article, so the body is kept whatever the link looks like.
+export async function extractFromHtml(html: string, url: string, { asArticle = false }: { asArticle?: boolean } = {}): Promise<Extracted> {
   const { document } = parseHTML(html);
   const doc = document as unknown as Document;
   const ogTitle = meta(doc, "og:title", "twitter:title");
@@ -99,7 +100,7 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
   }
   // Only an article (and a repo's README, a paper) is worth its body. For anything else the page's text is a sign-in
   // wall, an app shell or a shop's furniture, so what is kept is what the page says it is.
-  const keepsBody = preview === "reader" || preview === "code" || preview === "document";
+  const keepsBody = asArticle || preview === "reader" || preview === "code" || preview === "document";
   if (!keepsBody) markdown = description ?? "";
   const words = keepsBody ? found : countWords(markdown);
   return {
@@ -117,7 +118,7 @@ export async function extractFromHtml(html: string, url: string): Promise<Extrac
     markdown: words > 0 ? markdown : (description ?? ""),
     wordCount: words,
     extractor: keepsBody ? extractor : "meta",
-    raw: preview === "reader" ? { contentType: "text/html; charset=utf-8", body: Buffer.from(html) } : null, // the page itself only when it is the thing
+    raw: asArticle || preview === "reader" ? { contentType: "text/html; charset=utf-8", body: Buffer.from(html) } : null, // the page itself only when it is the thing
   };
 }
 
@@ -196,20 +197,20 @@ function merge(x: Extracted, f: Found | null, sent = false): Extracted {
 
 // Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch, except
 // from the sites whose own pages are no use to a server, which answer through their APIs (sources.ts) instead.
-export async function extract({ url, html }: ExtractInput, { signal }: { signal?: AbortSignal } = {}): Promise<Extracted> {
+export async function extract({ url, html }: ExtractInput, { signal, asArticle }: { signal?: AbortSignal; asArticle?: boolean } = {}): Promise<Extracted> {
   const source = sourceFor(url);
   const found = source?.resolve ? source.resolve(new URL(url), signal).catch(() => null) : Promise.resolve(null);
   let page: Extracted | null = null;
   try {
-    if (html) page = await extractFromHtml(html, url);
-    else if (!source?.only) page = await fetchAndRead(url, signal);
+    if (html) page = await extractFromHtml(html, url, { asArticle });
+    else if (!source?.only) page = await fetchAndRead(url, signal, asArticle);
   } catch (e) {
     if (!source) throw e; // a site we know still has its address and its API to go on
   }
   return merge(page ?? fromAddressOnly(url), await found, Boolean(html && page));
 }
 
-async function fetchAndRead(url: string, signal?: AbortSignal): Promise<Extracted> {
+async function fetchAndRead(url: string, signal?: AbortSignal, asArticle?: boolean): Promise<Extracted> {
   const res = await guardedFetch(url, { signal });
   const type = res.contentType.toLowerCase();
   // Some hosts (Google Drive among them) send a PDF as plain bytes; its first bytes say what it is.
@@ -221,5 +222,5 @@ async function fetchAndRead(url: string, signal?: AbortSignal): Promise<Extracte
       lang: null, coverUrl: res.url, markdown: "", wordCount: 0, extractor: "none", raw: { contentType: type, body: res.body },
     };
   }
-  return extractFromHtml(decodeHtml(res.body, res.contentType), res.url);
+  return extractFromHtml(decodeHtml(res.body, res.contentType), res.url, { asArticle });
 }

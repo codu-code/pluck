@@ -94,6 +94,39 @@
       "import": "Importado",
       "api": "com uma chave de API",
       "copied": "de uma lista pública"
+    },
+    "fact": {
+      "post": "post",
+      "code": {
+        "repo": "repositório",
+        "issue": "issue",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "arquivo",
+        "package": "pacote",
+        "snippet": "trecho",
+        "question": "pergunta"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "página inicial",
+      "pages": "{count, plural, one {# página} other {# páginas}}",
+      "app": {
+        "claude": "artefato do Claude",
+        "claude-chat": "conversa do Claude",
+        "chatgpt": "conversa do ChatGPT",
+        "gemini": "conversa do Gemini",
+        "v0": "app do v0",
+        "bolt": "app do Bolt",
+        "lovable": "app do Lovable",
+        "perplexity": "página do Perplexity",
+        "replit": "app do Replit",
+        "figma": "arquivo do Figma",
+        "google-docs": "documento Google",
+        "google-drive": "arquivo do Drive",
+        "notion": "página do Notion",
+        "canva": "design do Canva",
+        "miro": "quadro do Miro"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "Nota sobre este destaque",
     "addNote": "Adicionar uma nota",
     "removeLabel": "Remover destaque: {quote}",
-    "source": "Origem: {via} · página guardada"
+    "source": "Origem: {via} · página guardada",
+    "sourceOnly": "Origem: {via}"
   },
   "settings": {
     "title": "Configurações",
@@ -964,5 +998,15 @@
       "now": "Apagar tudo agora",
       "action": "Apagar tudo. Sério."
     }
+  },
+  "preview": {
+    "open": "Abrir no {site}",
+    "openPdf": "Abrir o PDF",
+    "playA11y": "Reproduzir {title}",
+    "playNote": "Reproduz a partir de {site}. Nada carrega de lá até você apertar o play.",
+    "asArticle": "Ver como artigo",
+    "asPreview": "Ver como prévia",
+    "stars": "{count, plural, one {# estrela} other {# estrelas}}",
+    "pages": "{count, plural, one {# página} other {# páginas}}"
   }
 }

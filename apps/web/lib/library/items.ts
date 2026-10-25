@@ -132,6 +132,9 @@ export async function updateItem(userId: string, itemId: string, patch: UpdateIt
     dueAt: rest.dueAt === undefined ? undefined : rest.dueAt === null ? null : new Date(rest.dueAt),
   });
   if (!updated) throw new ApiError("not_found", "No such item.", 404);
+  // Show as article on a link kept only for what it said: read it again, keeping the body this time.
+  if (patch.preview === "reader" && updated.previewGuess && !["reader", "code", "document"].includes(updated.previewGuess) && updated.url)
+    return retryExtraction(userId, itemId);
   return updated;
 }
 

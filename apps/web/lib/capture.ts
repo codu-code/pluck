@@ -65,7 +65,9 @@ export async function extractAttempt(
 ): Promise<Item> {
   const started = Date.now();
   try {
-    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs) }), transcript);
+    // Shown as an article by the person's choice: its body is kept, whatever the link looks like.
+    const asArticle = item.preview === "reader" && item.previewGuess !== "reader";
+    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs), asArticle }), transcript);
     const updated = (await applyExtraction(userId, item.id, toResult(x))) ?? item;
     const blobs = () =>
       storeBlobs(userId, item.id, x).catch(async (e) => {

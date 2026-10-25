@@ -94,6 +94,39 @@
       "import": "Importado",
       "api": "con una clave de API",
       "copied": "de una lista pública"
+    },
+    "fact": {
+      "post": "publicación",
+      "code": {
+        "repo": "repositorio",
+        "issue": "issue",
+        "pull": "pull request",
+        "gist": "gist",
+        "file": "archivo",
+        "package": "paquete",
+        "snippet": "fragmento",
+        "question": "pregunta"
+      },
+      "withLanguage": "{what} · {language}",
+      "homepage": "página de inicio",
+      "pages": "{count, plural, one {# página} other {# páginas}}",
+      "app": {
+        "claude": "artefacto de Claude",
+        "claude-chat": "chat de Claude",
+        "chatgpt": "chat de ChatGPT",
+        "gemini": "chat de Gemini",
+        "v0": "app de v0",
+        "bolt": "app de Bolt",
+        "lovable": "app de Lovable",
+        "perplexity": "página de Perplexity",
+        "replit": "app de Replit",
+        "figma": "archivo de Figma",
+        "google-docs": "documento de Google",
+        "google-drive": "archivo de Drive",
+        "notion": "página de Notion",
+        "canva": "diseño de Canva",
+        "miro": "tablero de Miro"
+      }
     }
   },
   "common": {
@@ -816,7 +849,8 @@
     "highlightNote": "Nota sobre este destacado",
     "addNote": "Añadir una nota",
     "removeLabel": "Quitar destacado: {quote}",
-    "source": "Origen: {via} · página conservada"
+    "source": "Origen: {via} · página conservada",
+    "sourceOnly": "Origen: {via}"
   },
   "settings": {
     "title": "Ajustes",
@@ -964,5 +998,15 @@
       "now": "Eliminar todo ahora",
       "action": "Eliminar todo. En serio."
     }
+  },
+  "preview": {
+    "open": "Abrir en {site}",
+    "openPdf": "Abrir el PDF",
+    "playA11y": "Reproducir {title}",
+    "playNote": "Se reproduce desde {site}. No se carga nada de allí hasta que pulsas reproducir.",
+    "asArticle": "Ver como artículo",
+    "asPreview": "Ver como vista previa",
+    "stars": "{count, plural, one {# estrella} other {# estrellas}}",
+    "pages": "{count, plural, one {# página} other {# páginas}}"
   }
 }
