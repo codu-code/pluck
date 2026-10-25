@@ -13,6 +13,7 @@ const SCOPES: Record<string, string> = {
   "library:read": "Read your library: items, the text Pluck kept, notes, tags and lists",
   "library:write": "Pluck and organise: save things, tag, sort, make and edit lists",
   "library:delete": "Delete items. Most AI tools never need this.",
+  account: "Manage your account: connected AI tools, exports, and deleting it all. Only Pluck's own apps ask for this.",
 };
 
 export default async function Consent({ searchParams }: { searchParams: Promise<Record<string, string | string[]>> }) {

@@ -20,6 +20,8 @@ const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 export const MCP_RESOURCE = `${ORIGIN}/mcp`;
 export const API_RESOURCE = `${ORIGIN}/api/v1`;
 export const LIBRARY_SCOPES = ["library:read", "library:write", "library:delete"] as const;
+// Account settings a browser session has (connected AI tools, export, deleting it all), for our own apps only.
+export const ACCOUNT_SCOPE = "account";
 // Where the extension and the iPhone app take their sign-in back. Codes sent here never leave our apps.
 export const FIRST_PARTY_REDIRECTS = [`${ORIGIN}/extension/connected`, "io.getpluck.app:/oauth"];
 const LIMITS_ON = process.env.AUTH_RATE_LIMIT !== "off";
@@ -27,12 +29,13 @@ const LIMITS_ON = process.env.AUTH_RATE_LIMIT !== "off";
 const firstParty = (uris: unknown) => Array.isArray(uris) && uris.length > 0 && uris.every((u) => FIRST_PARTY_REDIRECTS.includes(u));
 
 const guard = createAuthMiddleware(async (ctx) => {
-  // Anyone can register a client. Only our own apps get the REST API, and only they may go by Pluck's name,
+  // Anyone can register a client. Only our own apps get the REST API and the account scope, and only they may go by Pluck's name,
   // so a look-alike client cannot borrow the extension's consent screen.
   if (ctx.path === "/oauth2/register") {
-    const body = (ctx.body ?? {}) as { resources?: unknown; client_name?: unknown; redirect_uris?: unknown };
+    const body = (ctx.body ?? {}) as { resources?: unknown; client_name?: unknown; redirect_uris?: unknown; scope?: unknown };
     const wantsApi = Array.isArray(body.resources) && body.resources.includes(API_RESOURCE);
-    if ((wantsApi || /pluck/i.test(String(body.client_name ?? ""))) && !firstParty(body.redirect_uris))
+    const wantsAccount = String(body.scope ?? "").split(" ").includes(ACCOUNT_SCOPE);
+    if ((wantsApi || wantsAccount || /pluck/i.test(String(body.client_name ?? ""))) && !firstParty(body.redirect_uris))
       throw new APIError("BAD_REQUEST", { error: "invalid_client_metadata", error_description: "Only Pluck's own apps can register for the Pluck API or use its name." });
   }
   // Each link is an email we pay for and a mailbox someone else owns: a few an hour per address and per network.
@@ -73,7 +76,7 @@ export const auth = betterAuth({
       loginPage: "/signin",
       consentPage: "/oauth/consent",
       resource: MCP_RESOURCE,
-      scopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES],
+      scopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES, ACCOUNT_SCOPE],
       accessTokenExpiresIn: 60 * 60,
       refreshTokenExpiresIn: 90 * DAY,
       // CIMD first; dynamic registration as the fallback for clients that do not speak CIMD yet.
@@ -81,7 +84,7 @@ export const auth = betterAuth({
       allowUnauthenticatedClientRegistration: true,
       clientRegistrationDefaultApplicationType: "infer",
       clientRegistrationDefaultScopes: ["offline_access", "library:read", "library:write"],
-      clientRegistrationAllowedScopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES],
+      clientRegistrationAllowedScopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES, ACCOUNT_SCOPE],
       resources: [API_RESOURCE],
       clientRegistrationAllowedResources: [API_RESOURCE],
     }),

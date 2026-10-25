@@ -4,9 +4,9 @@ import { runJobs } from "@/lib/jobs";
 import { exportState, requestExport } from "@/lib/library";
 
 // POST starts an export (a job; the link is emailed). GET is the latest one, with a download link when ready.
-export const POST = route({ kind: "write", scope: "full" }, async ({ caller }) => {
+export const POST = route({ kind: "write", scope: "account" }, async ({ caller }) => {
   const res = await requestExport(caller.userId);
   after(() => runJobs({ budgetMs: 50_000 }).then(() => undefined)); // the link usually lands within seconds
   return json(res, 202);
 });
-export const GET = route({ kind: "read", scope: "full" }, async ({ caller }) => json({ export: await exportState(caller.userId) }));
+export const GET = route({ kind: "read", scope: "account" }, async ({ caller }) => json({ export: await exportState(caller.userId) }));
