@@ -1,7 +1,6 @@
 import Constants from "expo-constants";
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
-import * as WebBrowser from "expo-web-browser";
 import { codeFrom, createClient, pkcePair, tokenRequest } from "@pluck/client";
 import { locale } from "./i18n";
 import { kv } from "./kv";
@@ -19,6 +18,7 @@ export type Session = {
 };
 
 const STORE = { keychainService: "pluck", keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK };
+// The redirect the app registers: never dispatched by iOS (the app does not claim the scheme), only matched by the server.
 export const REDIRECT = "io.getpluck.app:/oauth";
 // "account": AI tools, export and deleting the account from Settings (the server lets only Pluck's own apps ask).
 const SCOPE = "offline_access library:read library:write account";
@@ -66,14 +66,13 @@ async function clientIdFor(server: string): Promise<string> {
   return client_id;
 }
 
-type Pending = { server: string; clientId: string; verifier: string; state: string; challenge?: string; at?: number };
+type Pending = { server: string; clientId: string; verifier: string; state: string; challenge: string; at: number };
 
-// One PKCE pair per sign-in attempt. Sending another link within the link's 10 minutes reuses it, so the
-// earlier email still works too instead of reading as "from an earlier try".
-async function pendingFor(server: string): Promise<Pending & { challenge: string }> {
+// One PKCE pair per sign-in attempt, kept while the code is valid (10 minutes), so a code sent again still matches.
+async function pendingFor(server: string): Promise<Pending> {
   const raw = await SecureStore.getItemAsync("pending", STORE);
-  const old = raw ? (JSON.parse(raw) as Pending) : null;
-  if (old?.challenge && old.server === server && Date.now() - (old.at ?? 0) < 10 * 60_000) return old as Pending & { challenge: string };
+  const old = raw ? (JSON.parse(raw) as Partial<Pending>) : null;
+  if (old?.challenge && old.server === server && Date.now() - (old.at ?? 0) < 10 * 60_000) return old as Pending;
   const clientId = await clientIdFor(server);
   const { verifier, challenge, state } = await pkcePair(
     (n) => Crypto.getRandomBytes(n),
@@ -84,24 +83,16 @@ async function pendingFor(server: string): Promise<Pending & { challenge: string
   return pending;
 }
 
-const authorizePath = (p: Pending & { challenge: string }) =>
-  `/api/auth/oauth2/authorize?${new URLSearchParams({
-    response_type: "code", client_id: p.clientId, redirect_uri: REDIRECT, scope: SCOPE, state: p.state, code_challenge: p.challenge,
-    code_challenge_method: "S256", resource: `${p.server}/api/v1`,
-  })}`;
+const post = (url: string, body: unknown) =>
+  fetch(url, { method: "POST", headers: { "content-type": "application/json", "accept-language": locale }, body: JSON.stringify(body) });
 
-// Emails a sign-in link from the app itself, no browser sheet. The link carries on with this app's OAuth request,
-// so tapping it (in Safari, from Mail) ends at io.getpluck.app:/oauth and finishSignIn takes it from there.
-// "password" is App Review's account, which has no mailbox: that one signs in through the web sheet.
-export async function sendSignInLink(email: string, server = defaultServer): Promise<"sent" | "password" | "limited" | "error"> {
+// Sign in, step one: the server emails a 6-digit code. Never a link: a link would come back through the
+// io.getpluck.app scheme, which another app could claim, so the server will not authorize that redirect from a browser
+// at all. "password" is App Review's account, which has no mailbox.
+export async function sendSignInCode(email: string, server = defaultServer): Promise<"sent" | "password" | "limited" | "error"> {
   try {
-    const p = await pendingFor(server);
-    const res = await fetch(`${server}/api/auth/sign-in/magic-link`, {
-      method: "POST",
-      // Origin: the server checks it on any request that names a callbackURL.
-      headers: { "content-type": "application/json", "accept-language": locale, origin: server },
-      body: JSON.stringify({ email: email.trim(), callbackURL: authorizePath(p) }),
-    });
+    await pendingFor(server);
+    const res = await post(`${server}/api/v1/signin/send-code`, { email: email.trim() });
     if (res.status === 429) return "limited";
     if (!res.ok) return "error";
     return ((await res.json().catch(() => null)) as { password?: boolean } | null)?.password ? "password" : "sent";
@@ -110,44 +101,33 @@ export async function sendSignInLink(email: string, server = defaultServer): Pro
   }
 }
 
-// The other way in: the 6-digit code from the same email, typed in the app (the email may be open on another device).
-// The server spends the code on this app's pending request and returns the redirect the link would have reached.
-export async function signInWithCode(email: string, code: string, server = defaultServer): Promise<"ok" | "bad" | "spent" | "limited" | "error"> {
+// Step two: the code (or App Review's password) for this app's own OAuth request. The answer is the redirect, straight
+// back over HTTPS, and the PKCE verifier that only this app holds turns it into tokens.
+export async function signInWithCode(email: string, secret: { code: string } | { password: string }, server = defaultServer): Promise<"ok" | "bad" | "spent" | "limited" | "error"> {
   try {
     const p = await pendingFor(server);
-    const res = await fetch(`${server}/api/v1/signin/code`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "accept-language": locale },
-      body: JSON.stringify({ email: email.trim(), code, authorize: authorizePath(p).split("?")[1] }),
-    });
+    const authorize = new URLSearchParams({
+      response_type: "code", client_id: p.clientId, redirect_uri: REDIRECT, scope: SCOPE, state: p.state, code_challenge: p.challenge,
+      code_challenge_method: "S256", resource: `${p.server}/api/v1`,
+    }).toString();
+    const res = await post(`${server}/api/v1/signin/code`, { email: email.trim(), ...secret, authorize });
     if (res.status === 429) return "limited";
     const body = (await res.json().catch(() => null)) as { url?: string; error?: { code?: string } } | null;
     if (!res.ok) return body?.error?.code === "bad_code" ? "bad" : body?.error?.code === "code_spent" ? "spent" : "error";
-    return body?.url && (await finishSignIn(body.url)) ? "ok" : "error";
+    return body?.url && (await finishSignIn(p, body.url)) ? "ok" : "error";
   } catch {
     return "error";
   }
 }
 
-// Signs in in a web authentication session: a self-hosted server's own page, or App Review's password.
-export async function signIn(server = defaultServer): Promise<boolean> {
-  const p = await pendingFor(server);
-  const result = await WebBrowser.openAuthSessionAsync(`${server}${authorizePath(p)}`, REDIRECT);
-  return result.type === "success" ? finishSignIn(result.url) : isSignedIn();
-}
-
-export async function finishSignIn(url: string): Promise<boolean> {
-  const raw = await SecureStore.getItemAsync("pending", STORE);
-  if (!raw) return isSignedIn();
-  const p = JSON.parse(raw) as Pending;
+async function finishSignIn(p: Pending, url: string): Promise<boolean> {
   const code = codeFrom(url, p.state);
   if (!code) return false;
-  await SecureStore.deleteItemAsync("pending", STORE);
-  WebBrowser.dismissAuthSession();
   const tokens = await tokenRequest(p.server, {
     grant_type: "authorization_code", code, redirect_uri: REDIRECT, client_id: p.clientId, code_verifier: p.verifier, resource: `${p.server}/api/v1`,
-  }).catch(() => null); // offline at this step: sign in again
+  }).catch(() => null); // offline at this step: try the code again
   if (!tokens) return false;
+  await SecureStore.deleteItemAsync("pending", STORE);
   await setSession({ server: p.server, clientId: p.clientId, ...tokens });
   await rememberEmail();
   return true;

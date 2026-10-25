@@ -184,9 +184,6 @@
     },
     "byMeaning": "¿Lo buscas por su significado? Pregúntale a tu IA."
   },
-  "oauth": {
-    "signingIn": "Iniciando sesión."
-  },
   "note": {
     "title": "Nota",
     "placeholder": "Por qué lo conservas, o qué hacer con ello.",
@@ -272,12 +269,11 @@
     "pluck": "Recoger esta lista"
   },
   "signin": {
-    "stale": "Ese enlace era de un intento anterior. Abre el correo más reciente, o pide un enlace nuevo.",
     "notServer": "Eso no es una dirección de servidor. Empieza por https://.",
     "badKey": "Esa clave no funcionó en este servidor.",
     "unreachable": "No se pudo conectar con {origin}.",
-    "title": "Un enlace.\nSin contraseña<accent>.</accent>",
-    "lede": "Tu correo, nuestro enlace y listo. ¿Primera vez? El mismo enlace estrena tu biblioteca.",
+    "title": "Un código.\nSin contraseña<accent>.</accent>",
+    "lede": "Tu correo, nuestro código y listo. ¿Primera vez? El mismo código estrena tu biblioteca.",
     "server": "Servidor",
     "key": "Clave de API, si usas una",
     "keyA11y": "Clave de API",
@@ -285,43 +281,47 @@
     "useKey": "Usar esta clave",
     "useHost": "Usar {host}",
     "ownServer": "Usar tu propio servidor",
-    "preview": {
-      "to": "para {email}",
-      "now": "ahora",
-      "title": "Aquí tienes tu enlace.",
-      "body": "Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos. Nunca tendrás que recordar una contraseña.",
-      "button": "Iniciar sesión en Pluck"
-    },
     "email": "Correo",
     "emailPlaceholder": "tu@ejemplo.com",
-    "send": "Envíame el enlace",
-    "sending": "Enviando",
+    "send": "Envíame el código",
     "invalid": "Eso no parece una dirección de correo.",
     "error": "No se pudo completar. Revisa la dirección y vuelve a intentarlo.",
-    "limited": "Son muchos enlaces. Usa el más reciente que te enviamos, o vuelve a intentarlo en una hora.",
+    "limited": "Son muchos códigos. Usa el más reciente, o vuelve a intentarlo en una hora.",
     "sent": {
       "title": "Revisa tu correo<accent>.</accent>",
-      "lede": "Un enlace y un código van camino de <b>{email}</b>. Toca el enlace en este iPhone, o escribe el código aquí abajo.",
-      "another": "Enviamos otro. Funciona cualquiera de los dos.",
+      "lede": "Enviamos un código de 6 dígitos a <b>{email}</b>. Funciona una vez, durante 10 minutos.",
+      "another": "Enviamos uno nuevo. Solo funciona el código más reciente.",
       "openMail": "Abrir Mail",
       "again": "Enviarlo de nuevo",
       "wait": "Reenviar en {seconds} s",
       "different": "Usar otro correo",
       "spam": "¿No llega nada en un minuto? Revisa la carpeta de spam y vuelve a enviarlo."
     },
-    "story": {
-      "waiting": "Próxima parada: tu correo.",
-      "landed": "Ya llegó. Ahora tócalo.",
-      "waitingA11y": "Un sobre, listo para salir.",
-      "sentA11y": "El correo para {email}: Aquí tienes tu enlace. Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos."
-    },
     "code": {
-      "label": "O escribe el código de 6 dígitos",
+      "label": "El código de 6 dígitos",
       "a11y": "Código de 6 dígitos del correo",
       "checking": "Comprobando el código",
-      "bad": "Ese código no funcionó. Revísalo e inténtalo de nuevo.",
+      "bad": "Ese código no funcionó. Revísalo o pide uno nuevo.",
       "spent": "Ese código caducó o tuvo demasiados intentos. Pide uno nuevo.",
       "limited": "Son muchos intentos. Vuelve a intentarlo en una hora."
+    },
+    "password": {
+      "title": "Una contraseña<accent>.</accent>",
+      "lede": "<b>{email}</b> no tiene buzón, así que entra con contraseña.",
+      "label": "Contraseña",
+      "signIn": "Iniciar sesión",
+      "bad": "Esa contraseña no funcionó."
+    },
+    "story": {
+      "waiting": "Próxima parada: tu correo.",
+      "landed": "Ya llegó. Seis dígitos, diez minutos.",
+      "waitingA11y": "Un sobre, listo para salir.",
+      "sentA11y": "Un correo de Pluck con tu código de 6 dígitos."
+    },
+    "card": {
+      "subject": "Tu código de Pluck",
+      "now": "ahora",
+      "body": "Escríbelo en la app de Pluck. Funciona una vez, durante 10 minutos."
     }
   },
   "handle": {

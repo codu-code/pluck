@@ -184,9 +184,6 @@
     },
     "byMeaning": "Lieber nach Bedeutung? Frag deine KI."
   },
-  "oauth": {
-    "signingIn": "Du wirst angemeldet."
-  },
   "note": {
     "title": "Notiz",
     "placeholder": "Warum du es behalten hast, oder was du damit vorhast.",
@@ -272,12 +269,11 @@
     "pluck": "Diese Liste pflücken"
   },
   "signin": {
-    "stale": "Dieser Link stammt von einem früheren Versuch. Öffne die neueste E-Mail oder schick dir einen neuen Link.",
     "notServer": "Das ist keine Serveradresse. Sie beginnt mit https://.",
     "badKey": "Dieser Schlüssel funktioniert auf diesem Server nicht.",
     "unreachable": "{origin} ist nicht erreichbar.",
-    "title": "Ein Link.\nKein Passwort<accent>.</accent>",
-    "lede": "Deine E-Mail, unser Link, du bist drin. Neu hier? Derselbe Link legt deine Bibliothek an.",
+    "title": "Ein Code.\nKein Passwort<accent>.</accent>",
+    "lede": "Deine E-Mail, unser Code, du bist drin. Neu hier? Derselbe Code legt deine Bibliothek an.",
     "server": "Server",
     "key": "API-Schlüssel, falls du einen nutzt",
     "keyA11y": "API-Schlüssel",
@@ -285,43 +281,47 @@
     "useKey": "Diesen Schlüssel nutzen",
     "useHost": "{host} nutzen",
     "ownServer": "Eigenen Server nutzen",
-    "preview": {
-      "to": "an {email}",
-      "now": "jetzt",
-      "title": "Hier ist dein Link.",
-      "body": "Tippe darauf, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang. Nie wieder ein Passwort merken.",
-      "button": "Bei Pluck anmelden"
-    },
     "email": "E-Mail",
     "emailPlaceholder": "du@beispiel.de",
-    "send": "Link schicken",
-    "sending": "Wird gesendet",
+    "send": "Code schicken",
     "invalid": "Das sieht nicht nach einer E-Mail-Adresse aus.",
     "error": "Das hat nicht geklappt. Prüf die Adresse und versuch es dann noch mal.",
-    "limited": "Das sind ganz schön viele Links. Nimm den neuesten, den wir geschickt haben, oder probier es in einer Stunde noch mal.",
+    "limited": "Das sind viele Codes. Nimm den neuesten oder versuch es in einer Stunde noch mal.",
     "sent": {
       "title": "Schau in deine E-Mails<accent>.</accent>",
-      "lede": "Ein Link und ein Code sind unterwegs an <b>{email}</b>. Tipp den Link auf diesem iPhone an oder gib den Code unten ein.",
-      "another": "Noch einer ist raus. Beide Links funktionieren.",
+      "lede": "Wir haben einen 6-stelligen Code an <b>{email}</b> geschickt. Er funktioniert einmal, 10 Minuten lang.",
+      "another": "Ein neuer ist raus. Nur der neueste Code funktioniert.",
       "openMail": "Mail öffnen",
       "again": "Noch mal senden",
       "wait": "Erneut senden in {seconds} s",
       "different": "Andere E-Mail nutzen",
       "spam": "Nach einer Minute noch nichts da? Schau im Spam nach und schick ihn dann noch mal."
     },
-    "story": {
-      "waiting": "Nächster Halt: dein Postfach.",
-      "landed": "Angekommen. Jetzt antippen.",
-      "waitingA11y": "Ein Umschlag, bereit zum Abschicken.",
-      "sentA11y": "Die E-Mail an {email}: Hier ist dein Link. Tipp ihn an, um dich anzumelden. Er funktioniert einmal, 10 Minuten lang."
-    },
     "code": {
-      "label": "Oder gib den 6-stelligen Code ein",
+      "label": "Der 6-stellige Code",
       "a11y": "6-stelliger Code aus der E-Mail",
       "checking": "Code wird geprüft",
-      "bad": "Der Code hat nicht funktioniert. Prüf ihn und versuch es noch mal.",
+      "bad": "Der Code hat nicht funktioniert. Prüf ihn oder fordere einen neuen an.",
       "spent": "Der Code ist abgelaufen oder hatte zu viele Versuche. Fordere einen neuen an.",
       "limited": "Das sind ganz schön viele Versuche. Probier es in einer Stunde noch mal."
+    },
+    "password": {
+      "title": "Ein Passwort<accent>.</accent>",
+      "lede": "<b>{email}</b> hat kein Postfach und meldet sich deshalb mit Passwort an.",
+      "label": "Passwort",
+      "signIn": "Anmelden",
+      "bad": "Dieses Passwort hat nicht funktioniert."
+    },
+    "story": {
+      "waiting": "Nächster Halt: dein Postfach.",
+      "landed": "Angekommen. Sechs Ziffern, zehn Minuten.",
+      "waitingA11y": "Ein Umschlag, bereit zum Abschicken.",
+      "sentA11y": "Eine E-Mail von Pluck mit deinem 6-stelligen Code."
+    },
+    "card": {
+      "subject": "Dein Pluck-Code",
+      "now": "jetzt",
+      "body": "Gib ihn in der Pluck-App ein. Er funktioniert einmal, 10 Minuten lang."
     }
   },
   "handle": {

@@ -36,8 +36,9 @@ const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
   version: "1.0.0",
-  // "io.getpluck.app:/oauth" is the OAuth redirect (RFC 8252 reverse-domain); "pluck://" opens screens.
-  scheme: ["pluck", "io.getpluck.app"],
+  // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect: sign-in comes back over
+  // HTTPS from the code the person types (lib/session.ts), so there is no scheme for another app to intercept.
+  scheme: "pluck",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",

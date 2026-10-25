@@ -184,9 +184,6 @@
     },
     "byMeaning": "Wil je zoeken op betekenis? Vraag het je AI."
   },
-  "oauth": {
-    "signingIn": "Je wordt ingelogd."
-  },
   "note": {
     "title": "Notitie",
     "placeholder": "Waarom je het bewaarde, of wat je ermee wilt.",
@@ -272,12 +269,11 @@
     "pluck": "Pluk deze lijst"
   },
   "signin": {
-    "stale": "Die link was van een eerdere poging. Open de nieuwste mail, of stuur een nieuwe link.",
     "notServer": "Dat is geen serveradres. Het begint met https://.",
     "badKey": "Die sleutel werkte niet op deze server.",
     "unreachable": "Kon {origin} niet bereiken.",
-    "title": "Eén link.\nGeen wachtwoord<accent>.</accent>",
-    "lede": "Jouw e-mail, onze link, en je bent binnen. Nieuw hier? Dezelfde link maakt je bibliotheek aan.",
+    "title": "Eén code.\nGeen wachtwoord<accent>.</accent>",
+    "lede": "Jouw e-mail, onze code, en je bent binnen. Nieuw hier? Dezelfde code maakt je bibliotheek aan.",
     "server": "Server",
     "key": "API-sleutel, als je die gebruikt",
     "keyA11y": "API-sleutel",
@@ -285,43 +281,47 @@
     "useKey": "Gebruik deze sleutel",
     "useHost": "Gebruik {host}",
     "ownServer": "Gebruik je eigen server",
-    "preview": {
-      "to": "aan {email}",
-      "now": "nu",
-      "title": "Hier is je link.",
-      "body": "Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang. Nooit een wachtwoord om te onthouden.",
-      "button": "Log in bij Pluck"
-    },
     "email": "E-mailadres",
     "emailPlaceholder": "jij@example.com",
-    "send": "Stuur mijn link",
-    "sending": "Versturen",
+    "send": "Stuur mijn code",
     "invalid": "Dat lijkt geen e-mailadres.",
     "error": "Dat lukte niet. Controleer het adres en probeer het opnieuw.",
-    "limited": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
+    "limited": "Dat zijn veel codes. Gebruik de nieuwste, of probeer het over een uur opnieuw.",
     "sent": {
       "title": "Kijk in je mail<accent>.</accent>",
-      "lede": "Een link en een code zijn onderweg naar <b>{email}</b>. Tik op de link op deze iPhone, of typ de code hieronder.",
-      "another": "Nog eentje verstuurd. Beide links werken.",
+      "lede": "We hebben een 6-cijferige code naar <b>{email}</b> gestuurd. Hij werkt één keer, 10 minuten lang.",
+      "another": "Een nieuwe verstuurd. Alleen de nieuwste code werkt.",
       "openMail": "Open Mail",
       "again": "Stuur hem opnieuw",
       "wait": "Opnieuw sturen over {seconds} s",
       "different": "Een ander e-mailadres gebruiken",
       "spam": "Na een minuut nog niets? Kijk in je spam en stuur hem daarna opnieuw."
     },
-    "story": {
-      "waiting": "Volgende halte: je mailbox.",
-      "landed": "Binnen. Tik er nu op.",
-      "waitingA11y": "Een envelop, klaar om te gaan.",
-      "sentA11y": "De e-mail aan {email}: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang."
-    },
     "code": {
-      "label": "Of typ de 6-cijferige code",
+      "label": "De 6-cijferige code",
       "a11y": "6-cijferige code uit de e-mail",
       "checking": "Code controleren",
-      "bad": "Die code werkte niet. Controleer hem en probeer het opnieuw.",
+      "bad": "Die code werkte niet. Controleer hem of vraag een nieuwe aan.",
       "spent": "Die code is verlopen of te vaak geprobeerd. Vraag een nieuwe aan.",
       "limited": "Dat zijn veel pogingen. Probeer het over een uur opnieuw."
+    },
+    "password": {
+      "title": "Eén wachtwoord<accent>.</accent>",
+      "lede": "<b>{email}</b> heeft geen mailbox en logt daarom in met een wachtwoord.",
+      "label": "Wachtwoord",
+      "signIn": "Inloggen",
+      "bad": "Dat wachtwoord werkte niet."
+    },
+    "story": {
+      "waiting": "Volgende halte: je mailbox.",
+      "landed": "Binnen. Zes cijfers, tien minuten.",
+      "waitingA11y": "Een envelop, klaar om te gaan.",
+      "sentA11y": "Een e-mail van Pluck met je 6-cijferige code."
+    },
+    "card": {
+      "subject": "Je Pluck-code",
+      "now": "nu",
+      "body": "Typ hem in de Pluck-app. Hij werkt één keer, 10 minuten lang."
     }
   },
   "handle": {

@@ -7,6 +7,11 @@
     "copy": "Der Button funktioniert nicht? Kopier diesen Link in deinen Browser:",
     "ignore": "Wenn du das nicht angefordert hast, ignorier diese E-Mail. Es passiert nichts, solange du sie nicht öffnest und auf Anmelden tippst."
   },
+  "appCode": {
+    "subject": "{code} ist dein Pluck-Code",
+    "intro": "Gib diesen Code in der Pluck-App ein, um dich anzumelden. Er funktioniert einmal, in den nächsten 10 Minuten.",
+    "ignore": "Wenn du ihn nicht angefordert hast, ignorier ihn einfach. Ohne den Code kommt niemand rein."
+  },
   "sharedList": {
     "subject": "{sharer} hat eine Liste mit dir geteilt: {name}",
     "untitled": "Eine Liste",

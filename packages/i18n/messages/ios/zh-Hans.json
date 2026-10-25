@@ -184,9 +184,6 @@
     },
     "byMeaning": "想按意思找？问问你的 AI。"
   },
-  "oauth": {
-    "signingIn": "正在登录。"
-  },
   "note": {
     "title": "笔记",
     "placeholder": "为什么留下它，或者打算拿它做什么。",
@@ -272,12 +269,11 @@
     "pluck": "摘进你的 Pluck"
   },
   "signin": {
-    "stale": "这个链接来自之前的一次尝试。请打开最新的邮件，或者重新发送链接。",
     "notServer": "这不是服务器地址。它应以 https:// 开头。",
     "badKey": "这个密钥在此服务器上无效。",
     "unreachable": "无法连接 {origin}。",
-    "title": "一个链接。\n不要密码<accent>。</accent>",
-    "lede": "填上邮箱，点开我们发来的链接，就进来了。第一次来？同一个链接会为你开好资料库。",
+    "title": "一个验证码。\n不要密码<accent>。</accent>",
+    "lede": "填上邮箱，输入我们发来的验证码，就进来了。第一次来？同一个验证码会为你开好资料库。",
     "server": "服务器",
     "key": "API 密钥（如果有）",
     "keyA11y": "API 密钥",
@@ -285,43 +281,47 @@
     "useKey": "使用这个密钥",
     "useHost": "使用 {host}",
     "ownServer": "使用你自己的服务器",
-    "preview": {
-      "to": "发给 {email}",
-      "now": "刚刚",
-      "title": "这是你的链接。",
-      "body": "轻点即可登录。只能用一次，10 分钟内有效。永远不用记密码。",
-      "button": "登录 Pluck"
-    },
     "email": "邮箱",
     "emailPlaceholder": "you@example.com",
-    "send": "把链接发给我",
-    "sending": "正在发送",
+    "send": "把验证码发给我",
     "invalid": "这看起来不像邮箱地址。",
     "error": "没有成功。请检查邮箱地址，然后再试一次。",
-    "limited": "链接发得太多了。请用我们发的最新那封，或者一小时后再试。",
+    "limited": "验证码请求太多了。请用最新的一个，或一小时后再试。",
     "sent": {
       "title": "查看你的邮箱<accent>。</accent>",
-      "lede": "链接和验证码已发往 <b>{email}</b>。在这台 iPhone 上点开链接，或在下面输入验证码。",
-      "another": "又发了一封。两个链接都能用。",
+      "lede": "6 位验证码已发往 <b>{email}</b>。只能用一次，10 分钟内有效。",
+      "another": "已发送新的验证码。只有最新的验证码有效。",
       "openMail": "打开邮件",
       "again": "重新发送",
       "wait": "{seconds} 秒后可重新发送",
       "different": "换个邮箱",
       "spam": "一分钟后还没收到？看看垃圾邮件，然后重新发送。"
     },
-    "story": {
-      "waiting": "下一站：你的收件箱。",
-      "landed": "到了。现在点开它。",
-      "waitingA11y": "一个信封，准备出发。",
-      "sentA11y": "发给 {email} 的邮件：这是你的链接。点开即可登录。只能用一次，10 分钟内有效。"
-    },
     "code": {
-      "label": "或输入 6 位验证码",
+      "label": "6 位验证码",
       "a11y": "邮件里的 6 位验证码",
       "checking": "正在核对验证码",
-      "bad": "验证码不对。请检查后重试。",
+      "bad": "验证码不对。请检查，或重新获取。",
       "spent": "这个验证码已过期或尝试次数过多。请重新获取。",
       "limited": "尝试次数太多了。请一小时后再试。"
+    },
+    "password": {
+      "title": "一个密码<accent>。</accent>",
+      "lede": "<b>{email}</b> 没有邮箱收件箱，所以用密码登录。",
+      "label": "密码",
+      "signIn": "登录",
+      "bad": "密码不对。"
+    },
+    "story": {
+      "waiting": "下一站：你的收件箱。",
+      "landed": "到了。六位数字，十分钟。",
+      "waitingA11y": "一个信封，准备出发。",
+      "sentA11y": "一封来自 Pluck、附有 6 位验证码的邮件。"
+    },
+    "card": {
+      "subject": "你的 Pluck 验证码",
+      "now": "刚刚",
+      "body": "在 Pluck App 里输入。只能用一次，10 分钟内有效。"
     }
   },
   "handle": {

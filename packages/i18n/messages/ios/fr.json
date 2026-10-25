@@ -184,9 +184,6 @@
     },
     "byMeaning": "Vous cherchez par le sens ? Demandez à votre IA."
   },
-  "oauth": {
-    "signingIn": "Connexion en cours."
-  },
   "note": {
     "title": "Note",
     "placeholder": "Pourquoi vous l’avez gardé, ou ce que vous comptez en faire.",
@@ -272,12 +269,11 @@
     "pluck": "Cueillir cette liste"
   },
   "signin": {
-    "stale": "Ce lien venait d’une tentative précédente. Ouvrez l’e-mail le plus récent, ou demandez un nouveau lien.",
     "notServer": "Ce n’est pas une adresse de serveur. Elle commence par https://.",
     "badKey": "Cette clé ne fonctionne pas sur ce serveur.",
     "unreachable": "Impossible de joindre {origin}.",
-    "title": "Un lien.\nPas de mot de passe<accent>.</accent>",
-    "lede": "Votre e-mail, notre lien, et c’est parti. Première fois ? Le même lien crée votre bibliothèque.",
+    "title": "Un code.\nPas de mot de passe<accent>.</accent>",
+    "lede": "Votre e-mail, notre code, et c’est parti. Première fois ? Le même code crée votre bibliothèque.",
     "server": "Serveur",
     "key": "Clé d’API, si vous en utilisez une",
     "keyA11y": "Clé d’API",
@@ -285,43 +281,47 @@
     "useKey": "Utiliser cette clé",
     "useHost": "Utiliser {host}",
     "ownServer": "Utiliser votre propre serveur",
-    "preview": {
-      "to": "à {email}",
-      "now": "maintenant",
-      "title": "Voici votre lien.",
-      "body": "Touchez-le pour vous connecter. Il ne fonctionne qu’une fois, pendant 10 minutes. Aucun mot de passe à retenir, jamais.",
-      "button": "Se connecter à Pluck"
-    },
     "email": "E-mail",
     "emailPlaceholder": "vous@exemple.fr",
-    "send": "M’envoyer le lien",
-    "sending": "Envoi en cours",
+    "send": "M’envoyer le code",
     "invalid": "Ça ne ressemble pas à une adresse e-mail.",
     "error": "Ça n’est pas passé. Vérifiez l’adresse, puis réessayez.",
-    "limited": "Ça fait beaucoup de liens. Utilisez le plus récent, ou réessayez dans une heure.",
+    "limited": "Ça fait beaucoup de codes. Utilisez le plus récent, ou réessayez dans une heure.",
     "sent": {
       "title": "Consultez vos e-mails<accent>.</accent>",
-      "lede": "Un lien et un code filent vers <b>{email}</b>. Touchez le lien sur cet iPhone, ou saisissez le code ci-dessous.",
-      "another": "Un autre est parti. Les deux liens marchent.",
+      "lede": "Nous avons envoyé un code à 6 chiffres à <b>{email}</b>. Il ne fonctionne qu’une fois, pendant 10 minutes.",
+      "another": "Un nouveau est parti. Seul le code le plus récent fonctionne.",
       "openMail": "Ouvrir Mail",
       "again": "Renvoyer le lien",
       "wait": "Renvoyer dans {seconds} s",
       "different": "Utiliser une autre adresse",
       "spam": "Rien au bout d’une minute ? Regardez dans les spams, puis renvoyez-le."
     },
-    "story": {
-      "waiting": "Prochain arrêt : votre boîte mail.",
-      "landed": "Arrivé. Touchez le lien.",
-      "waitingA11y": "Une enveloppe, prête à partir.",
-      "sentA11y": "L’e-mail pour {email} : Voici votre lien. Touchez-le pour vous connecter. Il marche une fois, pendant 10 minutes."
-    },
     "code": {
-      "label": "Ou saisissez le code à 6 chiffres",
+      "label": "Le code à 6 chiffres",
       "a11y": "Code à 6 chiffres reçu par e-mail",
       "checking": "Vérification du code",
-      "bad": "Ce code n’a pas marché. Vérifiez-le et réessayez.",
+      "bad": "Ce code n’a pas marché. Vérifiez-le, ou demandez-en un nouveau.",
       "spent": "Ce code a expiré ou a eu trop d’essais. Demandez-en un nouveau.",
       "limited": "Ça fait beaucoup d’essais. Réessayez dans une heure."
+    },
+    "password": {
+      "title": "Un mot de passe<accent>.</accent>",
+      "lede": "<b>{email}</b> n’a pas de boîte mail, donc se connecte avec un mot de passe.",
+      "label": "Mot de passe",
+      "signIn": "Se connecter",
+      "bad": "Ce mot de passe ne fonctionne pas."
+    },
+    "story": {
+      "waiting": "Prochain arrêt : votre boîte mail.",
+      "landed": "Arrivé. Six chiffres, dix minutes.",
+      "waitingA11y": "Une enveloppe, prête à partir.",
+      "sentA11y": "Un e-mail de Pluck avec votre code à 6 chiffres."
+    },
+    "card": {
+      "subject": "Votre code Pluck",
+      "now": "maintenant",
+      "body": "Saisissez-le dans l’app Pluck. Il ne fonctionne qu’une fois, pendant 10 minutes."
     }
   },
   "handle": {

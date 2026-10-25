@@ -7,6 +7,11 @@
     "copy": "Le bouton ne marche pas ? Copiez ce lien dans votre navigateur :",
     "ignore": "Si vous n’avez rien demandé, ignorez ce message. Rien ne se passe tant que vous ne l’ouvrez pas pour toucher Se connecter."
   },
+  "appCode": {
+    "subject": "{code} est votre code Pluck",
+    "intro": "Saisissez ce code dans l’app Pluck pour vous connecter. Il ne fonctionne qu’une fois, pendant 10 minutes.",
+    "ignore": "Si vous ne l’avez pas demandé, ignorez-le. Personne n’entre sans le code."
+  },
   "sharedList": {
     "subject": "{sharer} a partagé une liste avec vous : {name}",
     "untitled": "Une liste",

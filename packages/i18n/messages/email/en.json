@@ -7,6 +7,11 @@
     "copy": "Button not working? Copy this link into your browser:",
     "ignore": "If you did not ask for this, ignore it. Nothing happens unless you open it and tap Sign in."
   },
+  "appCode": {
+    "subject": "{code} is your Pluck code",
+    "intro": "Type this code in the Pluck app to sign in. It works once, for the next 10 minutes.",
+    "ignore": "If you did not ask for this, ignore it. Nobody gets in without the code."
+  },
   "sharedList": {
     "subject": "{sharer} shared a List with you: {name}",
     "untitled": "A List",

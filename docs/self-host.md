@@ -33,7 +33,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `APPLE_TEAM_ID` | Only if you build the iPhone app for your own server: your Apple team ID, so links to your server open the app (universal links). The app needs `applinks:<your host>` too | off |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST` | Your own PostHog project, if you want analytics and error tracking. The key is read when the image is built (`docker compose build` with it in the environment); unset, there is no cookie banner and nothing is sent anywhere. The host defaults to PostHog's EU cloud | off |
 | `WELCOME_FROM` | A From line for a welcome note sent 27 minutes after each sign-up, signed by the person who runs getpluck.io. Leave it unset on your own server | off |
-| `REVIEW_EMAIL`, `REVIEW_PASSWORD` | Only if you submit your own build of the iPhone app to App Review: the one address that signs in with a password instead of an email link (it gets no email). Leave both unset | off |
+| `REVIEW_EMAIL`, `REVIEW_PASSWORD` | Only if you submit your own build of the iPhone app to App Review: the one address that signs in with a password instead of an email link or code (it gets no email). Leave both unset | off |
 | `EMAIL_IN_DOMAIN` | For email-in: the domain whose mail lands in the bucket under `inbound/` (needs an inbound mail service that writes raw messages there, like SES receipt rules) | off |
 
 Never set `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` on a server: they exist for local development and tests only. Without them Pluck refuses to fetch private addresses and rate-limits sign-in.

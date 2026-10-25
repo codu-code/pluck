@@ -2,6 +2,7 @@ import { authAdapter, hitRateLimit, updateSettings } from "@pluck/db";
 import { cimd } from "@better-auth/cimd";
 import { fetchClientMetadataResource } from "@better-auth/cimd/node";
 import { mcp } from "@better-auth/mcp";
+import { randomBytes } from "node:crypto";
 import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware } from "better-auth/api";
 import { emailOTP, jwt, magicLink } from "better-auth/plugins";
@@ -25,7 +26,12 @@ export const LIBRARY_SCOPES = ["library:read", "library:write", "library:delete"
 // Account settings a browser session has (connected AI tools, export, deleting it all), for our own apps only.
 export const ACCOUNT_SCOPE = "account";
 // Where the extension and the iPhone app take their sign-in back. Codes sent here never leave our apps.
-export const FIRST_PARTY_REDIRECTS = [`${ORIGIN}/extension/connected`, "io.getpluck.app:/oauth"];
+export const APP_REDIRECT = "io.getpluck.app:/oauth";
+export const FIRST_PARTY_REDIRECTS = [`${ORIGIN}/extension/connected`, APP_REDIRECT];
+// The iPhone app signs in with the 6-digit code from its email, typed in the app (lib/signin-code.ts). Authorization
+// for its redirect is only ever granted from there, in this process, carrying this header: no browser request can ask
+// for it, so an app that claims the io.getpluck.app scheme on someone's phone is never handed anything.
+export const APP_GRANT = { header: "x-pluck-app-grant", value: randomBytes(32).toString("hex") };
 const LIMITS_ON = process.env.AUTH_RATE_LIMIT !== "off";
 // App Review cannot read a mailbox, so this one address, and no other, signs in with a password. Either unset, it is off.
 export const REVIEW = process.env.REVIEW_EMAIL && process.env.REVIEW_PASSWORD
@@ -34,7 +40,24 @@ export const REVIEW = process.env.REVIEW_EMAIL && process.env.REVIEW_PASSWORD
 
 const firstParty = (uris: unknown) => Array.isArray(uris) && uris.length > 0 && uris.every((u) => FIRST_PARTY_REDIRECTS.includes(u));
 
+// Sending a sign-in email, by link (the web) or by code (the iPhone app): one a minute per address (the apps count the
+// minute down on Send again), a few an hour per address and per network. Each is an email we pay for and a mailbox
+// someone else owns.
+export async function limitSignInEmails(email: string, ip: string): Promise<void> {
+  if (!LIMITS_ON) return;
+  if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another." });
+  for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${ip}`, 30]] as const)
+    if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in emails. Try again in an hour." });
+}
+
+const redirectOf = (ctx: { path: string; query?: Record<string, unknown>; body?: unknown }) =>
+  ctx.path === "/oauth2/authorize" ? String(ctx.query?.redirect_uri ?? "")
+  : ctx.path === "/oauth2/consent" ? new URLSearchParams(String((ctx.body as { oauth_query?: unknown } | undefined)?.oauth_query ?? "")).get("redirect_uri") ?? ""
+  : "";
+
 const guard = createAuthMiddleware(async (ctx) => {
+  if (redirectOf(ctx) === APP_REDIRECT && ctx.headers?.get(APP_GRANT.header) !== APP_GRANT.value)
+    throw new APIError("FORBIDDEN", { error: "access_denied", error_description: "Pluck for iPhone signs in with the code from its email, in the app." });
   // Anyone can register a client. Only our own apps get the REST API and the account scope, and only they may go by Pluck's name,
   // so a look-alike client cannot borrow the extension's consent screen.
   if (ctx.path === "/oauth2/register") {
@@ -61,13 +84,7 @@ const guard = createAuthMiddleware(async (ctx) => {
     if (credential) await c.updateAccount(credential.id, { password: hash });
     else await c.linkAccount({ userId: user.id, providerId: "credential", accountId: user.id, password: hash });
   }
-  // Each link is an email we pay for and a mailbox someone else owns: a few an hour per address and per network.
-  if (ctx.path === "/sign-in/magic-link" && LIMITS_ON) {
-    // One a minute per address (the apps count the minute down on Send again), then a few an hour.
-    if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another link." });
-    for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 30]] as const)
-      if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in links. Try again in an hour." });
-  }
+  if (ctx.path === "/sign-in/magic-link") await limitSignInEmails(email, clientIp({ headers: ctx.headers ?? new Headers() }));
   // Each code allows 5 tries; these cap guessing across codes.
   if (ctx.path === "/sign-in/email-otp" && LIMITS_ON) {
     for (const [key, max] of [[`code:email:${email}`, 15], [`code:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 60]] as const)
@@ -141,8 +158,9 @@ export const auth = betterAuth({
   ],
 });
 
-// The sign-in email carries a 6-digit code beside the link, for reading it on another device than the one signing in.
-function signInCode(email: string): Promise<string> {
+// The sign-in email carries a 6-digit code beside the link, for reading it on another device than the one signing in;
+// the iPhone app's email carries only the code (lib/signin-code.ts).
+export function signInCode(email: string): Promise<string> {
   return auth.api.createVerificationOTP({ body: { email, type: "sign-in" } });
 }
 
