@@ -139,7 +139,7 @@ struct ShareView: View {
   @ViewBuilder private var content: some View {
     switch model.phase {
     case .working:
-      HStack(spacing: 12) { ProgressView(); Text("Plucking…").foregroundStyle(Palette.ink2(dark)) }.frame(minHeight: 44)
+      HStack(spacing: 12) { ProgressView(); Text("plucking").foregroundStyle(Palette.ink2(dark)) }.frame(minHeight: 44)
     case .signedOut:
       Text("Not signed in.").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
       Text("Sign in once. After that the share sheet does the rest.").foregroundStyle(Palette.ink2(dark))
@@ -152,7 +152,7 @@ struct ShareView: View {
       Text(message).foregroundStyle(Palette.ink2(dark))
       primary("Done") { model.close() }
     case .plucked:
-      header(title: "Plucked.", subtitle: model.title, size: 24)
+      header(title: String(localized: "plucked"), subtitle: model.title, size: 24)
       if !model.tags.isEmpty || model.lastList != nil {
         VStack(alignment: .leading, spacing: 8) {
           label("Tags and list")

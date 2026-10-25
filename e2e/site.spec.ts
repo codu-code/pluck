@@ -103,3 +103,13 @@ test("support: answers by topic, and bugs go to GitHub issues", async ({ page })
   await page.getByRole("link", { name: "Connect your AI" }).last().click();
   await expect(page).toHaveURL(/\/connect$/);
 });
+
+test("languages: the browser's language is used, and the footer picker sticks", async ({ browser }) => {
+  const page = await (await browser.newContext({ locale: "de-DE" })).newPage();
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await page.getByLabel("Language").selectOption("ja");
+  await expect(page.locator("html")).toHaveAttribute("lang", "ja");
+  await page.goto("/connect");
+  await expect(page.locator("html")).toHaveAttribute("lang", "ja"); // the pick outlives the page
+});

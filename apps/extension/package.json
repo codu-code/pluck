@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "@pluck/client": "workspace:*",
+    "@pluck/i18n": "workspace:*",
     "@pluck/shared-schemas": "workspace:*",
+    "@pluck/ui": "workspace:*",
+    "geist": "1.8.2",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "@pluck/ui": "workspace:*",
-    "geist": "1.8.2"
+    "use-intl": "4.14.9"
   },
   "devDependencies": {
     "@types/react": "19.3.0",

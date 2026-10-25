@@ -1,3 +1,4 @@
+import { LOCALES } from "@pluck/i18n";
 import { z } from "zod";
 import { Visibility } from "./enums.ts";
 import { Item, ObjectIdString } from "./items.ts";
@@ -64,6 +65,7 @@ export const Settings = z.object({
   expiryScope: z.enum(["inbox_later", "inbox"]),
   digestDay: z.number().int().min(0).max(6).nullable(), // null: no weekly email
   timezone: z.string().min(1).max(64),
+  locale: z.enum(LOCALES).nullable(), // null: follow the browser or phone
 });
 export type Settings = z.infer<typeof Settings>;
 

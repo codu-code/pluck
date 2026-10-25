@@ -1,0 +1,7 @@
+{
+  "manifest": {
+    "description": "Pluck the page you are on into your Pluck library, with one click.",
+    "pluckPage": "Pluck this page",
+    "pluckSelection": "Pluck the selection as a highlight"
+  }
+}

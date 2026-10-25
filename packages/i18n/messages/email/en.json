@@ -1,0 +1,9 @@
+{
+  "magicLink": {
+    "subject": "Your Pluck sign-in link",
+    "intro": "Here is your link to sign in to Pluck. It works once, for the next 10 minutes.",
+    "button": "Sign in to Pluck",
+    "copy": "Button not working? Copy this link into your browser:",
+    "ignore": "If you did not ask for this, ignore it. Nothing happens unless you open it and tap Sign in."
+  }
+}
