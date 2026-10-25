@@ -14,7 +14,7 @@ The hosted service: the Next.js app and its cron worker on **Vercel** (Pro, for 
 cd infra/cdk
 pnpm exec cdk bootstrap aws://<ACCOUNT>/eu-west-1      # once per account and region
 pnpm exec cdk diff -c alertEmail=<you>
-pnpm exec cdk deploy --all -c alertEmail=<you> --outputs-file cdk-outputs.json   # add -c monthlyBudgetUsd=<n> to change the $50 budget
+pnpm exec cdk deploy --all -c alertEmail=<you> --outputs-file cdk-outputs.json   # add -c monthlyBudgetUsd=<n> to change the $50 budget, or 0 in an account inside AWS Organizations whose payer has not enabled budgets
 ```
 
 The address for alarms is passed at deploy time so it never lands in the repo. The four stacks:

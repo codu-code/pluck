@@ -3,8 +3,8 @@ import { Match, Template } from "aws-cdk-lib/assertions";
 import { test } from "vitest";
 import { AlertsStack } from "./alerts-stack.ts";
 
-const template = () =>
-  Template.fromStack(new AlertsStack(new App(), "Alerts", { env: { region: "eu-west-1" }, alertEmail: "ops@example.test", monthlyBudgetUsd: 50 }));
+const template = (monthlyBudgetUsd = 50) =>
+  Template.fromStack(new AlertsStack(new App(), "Alerts", { env: { region: "eu-west-1" }, alertEmail: "ops@example.test", monthlyBudgetUsd }));
 
 test("SES bounce and complaint rates alarm to the alert email before AWS reviews the account", () => {
   const t = template();
@@ -21,4 +21,10 @@ test("a monthly cost budget warns at 80% spent and at a forecast over 100%", () 
       { Notification: { NotificationType: "FORECASTED", Threshold: 100 }, Subscribers: [{ SubscriptionType: "EMAIL", Address: "ops@example.test" }] },
     ],
   });
+});
+
+test("a budget of 0 leaves the budget out, for an account whose payer holds budgets", () => {
+  const t = template(0);
+  t.resourceCountIs("AWS::Budgets::Budget", 0);
+  t.resourceCountIs("AWS::CloudWatch::Alarm", 2);
 });
