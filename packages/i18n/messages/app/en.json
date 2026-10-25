@@ -2,5 +2,931 @@
   "language": {
     "label": "Language",
     "hint": "Pluck follows your browser's language until you pick one."
+  },
+  "kind": {
+    "link": "Read",
+    "video": "Watch",
+    "pdf": "PDF",
+    "image": "Image",
+    "note": "Note",
+    "todo": "Todo",
+    "thing": "Thing"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archived": "Archived",
+    "done": "Done"
+  },
+  "moved": {
+    "archived": "Gone. Well, archived.",
+    "later": "Kept for later.",
+    "done": "Done.",
+    "inbox": "Back in the Inbox."
+  },
+  "movedMany": {
+    "archived": "{count, plural, one {# item} other {# items}}. Gone. Well, archived.",
+    "later": "{count, plural, one {# item} other {# items}}. Kept for later.",
+    "done": "{count, plural, one {# item} other {# items}}. Done.",
+    "inbox": "{count, plural, one {# item} other {# items}}. Back in the Inbox."
+  },
+  "format": {
+    "when": {
+      "now": "now",
+      "minutes": "{n}m",
+      "hours": "{n}h",
+      "yesterday": "Yesterday"
+    },
+    "ago": {
+      "now": "just now",
+      "minutes": "{n} min ago",
+      "hours": "{n}h ago",
+      "yesterday": "yesterday",
+      "on": "on {date}"
+    },
+    "due": {
+      "overdue": "overdue",
+      "today": "due today",
+      "tomorrow": "due tomorrow",
+      "on": "due {date}"
+    },
+    "site": {
+      "email": "email-in",
+      "file": "Your file"
+    },
+    "meta": {
+      "byAi": "by AI",
+      "byYou": "by you",
+      "failed": "Couldn't read",
+      "pending": "Plucking",
+      "photo": "photo",
+      "video": "video",
+      "minutes": "{n} min",
+      "pdf": "PDF",
+      "link": "link"
+    },
+    "source": {
+      "web": "Plucked on the web",
+      "extension": "Plucked from the extension",
+      "ios": "Plucked from iOS",
+      "email": "Plucked by email",
+      "mcp": "Plucked by your AI",
+      "import": "Imported",
+      "api": "Plucked with an API key",
+      "copied": "Plucked from a public list"
+    },
+    "sourceAgo": {
+      "web": "plucked on the web {ago}",
+      "extension": "plucked from the extension {ago}",
+      "ios": "plucked from iOS {ago}",
+      "email": "plucked by email {ago}",
+      "mcp": "plucked by your AI {ago}",
+      "import": "imported {ago}",
+      "api": "plucked with an API key {ago}",
+      "copied": "plucked from a public list {ago}"
+    },
+    "via": {
+      "web": "on the web",
+      "extension": "from the extension",
+      "ios": "from iOS",
+      "email": "by email",
+      "mcp": "by your AI",
+      "import": "Imported",
+      "api": "with an API key",
+      "copied": "from a public list"
+    }
+  },
+  "common": {
+    "didNotGoThrough": "That did not go through.",
+    "pluckedToInbox": "Plucked to the Inbox.",
+    "copiedForAi": "Copied. Paste it into your AI.",
+    "cancel": "Cancel",
+    "copy": "Copy",
+    "save": "Save",
+    "rename": "Rename",
+    "merge": "Merge",
+    "delete": "Delete",
+    "remove": "Remove",
+    "showMore": "Show more",
+    "openOriginal": "Open original",
+    "undo": "Undo"
+  },
+  "standalone": {
+    "home": "Pluck home"
+  },
+  "error": {
+    "title": "That broke",
+    "lede": "Our side, not yours. Nothing you plucked is lost. Try again, and if it keeps happening, tell us.",
+    "tryAgain": "Try again",
+    "report": "Report it"
+  },
+  "globalError": {
+    "title": "That broke",
+    "lede": "Our side, not yours. Nothing you plucked is lost. Try again in a moment.",
+    "tryAgain": "Try again"
+  },
+  "notFound": {
+    "title": "Nothing here",
+    "lede": "It may be private now, or it never was.",
+    "home": "Go to Pluck",
+    "support": "Support"
+  },
+  "offline": {
+    "title1": "Offline.",
+    "title2": "Not lost",
+    "lede": "Pages you opened lately are still here, and anything you pluck now waits on this device until you are back.",
+    "tryAgain": "Try again",
+    "openInbox": "Open the Inbox",
+    "art": {
+      "inbox": "Inbox",
+      "waiting": "{count} waiting",
+      "one": "The article from the train",
+      "oneNote": "Waits here, goes up when you are back",
+      "two": "Buy an induction hob",
+      "twoNote": "Todo, waits here too",
+      "three": "Postgres indexes in 40 minutes",
+      "threeNote": "Opened yesterday, still readable"
+    }
+  },
+  "meta": {
+    "signin": "Sign in · Pluck",
+    "oauthError": "That did not work · Pluck",
+    "consent": "Connect your AI · Pluck",
+    "shared": "Shared with you · Pluck",
+    "copy": "Pluck this list · Pluck",
+    "extensionConnected": "Connected · Pluck",
+    "inbox": "Inbox · Pluck",
+    "later": "Later · Pluck",
+    "archive": "Archive · Pluck",
+    "search": "Search · Pluck",
+    "lists": "Lists · Pluck",
+    "list": "List · Pluck",
+    "settings": "Settings · Pluck",
+    "admin": "Admin · Pluck",
+    "item": "{title} · Pluck"
+  },
+  "signin": {
+    "preview": {
+      "sent": "Sent.",
+      "subject": "Your link to Pluck",
+      "now": "now",
+      "title": "Here is your link.",
+      "body": "Tap it to sign in. It works once, for 10 minutes. No password to remember, ever.",
+      "button": "Sign in to Pluck"
+    },
+    "sent": {
+      "title": "Check your email",
+      "lede": "We sent a link to <b>{email}</b>. It works once, for 10 minutes, in the browser you open it in.",
+      "status": "Sent a link to {email}. Check your email.",
+      "sending": "Sending",
+      "again": "Send it again",
+      "different": "Use a different email",
+      "spam": "Nothing after a minute? Look in spam, then send it again."
+    },
+    "aiTitle": "Sign in to connect your AI",
+    "aiLede": "We email you a link. Once you are in, you choose what your AI tool can do.",
+    "title1": "One link.",
+    "title2": "No password",
+    "lede": "Type your email and we send a link. It signs you in, or starts your library if you are new.",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "signingIn": "Signing in",
+    "signIn": "Sign in",
+    "sending": "Sending",
+    "send": "Email me a link",
+    "error": "That did not go through. Check the address, then try again.",
+    "wrong": "That password did not work.",
+    "limitedTries": "That is a lot of tries. Try again in an hour.",
+    "limitedLinks": "That is a lot of links. Use the newest one we sent, or try again in an hour."
+  },
+  "signinLink": {
+    "broken": {
+      "title": "This link is not complete",
+      "lede": "Part of it may have been cut off on the way. Send yourself a new one.",
+      "action": "Send a new link"
+    },
+    "title1": "One tap",
+    "title2": "and you are in",
+    "lede": "This link works once, for 10 minutes from when we sent it.",
+    "action": "Sign in to Pluck"
+  },
+  "oauthError": {
+    "title": "That did not connect",
+    "lede": "Nothing changed in your Pluck. Most of the time, starting again fixes it.",
+    "step1": "Start the connection again from your AI tool.",
+    "step2": "Still failing? Remove Pluck there, then add it again with the link from <connect>Connect your AI</connect>.",
+    "step3": "Stuck after that? <support>Support</support> has the rest.",
+    "serverSaid": "What the server said, if your AI tool asks"
+  },
+  "consent": {
+    "allow": "Allow",
+    "deny": "Deny",
+    "anAiTool": "An AI tool",
+    "expired": {
+      "title": "This request has expired",
+      "lede": "Start the connection again from your AI tool. Nothing was shared."
+    },
+    "title": "{name} wants to use your Pluck",
+    "appLede": "It plucks and organises as you, from this device.",
+    "lede": "It acts for you, only while you use it, and every change it makes is marked by AI.",
+    "art": {
+      "inbox": "Inbox",
+      "after": "after you ask it to tidy",
+      "one": "How MCP auth actually works",
+      "oneNote": "Tagged mcp, auth",
+      "two": "Postgres indexes in 40 minutes",
+      "twoNote": "Moved to Later",
+      "three": "A kitchen plan in three drafts",
+      "threeNote": "Left as it was",
+      "byAi": "by AI"
+    },
+    "returnsTo": "Allowing sends you on to <b>{host}</b>. If you do not know that address, do not allow it.",
+    "scopes": {
+      "read": "Read your library: items, the text Pluck kept, notes, tags and lists",
+      "write": "Pluck and organise: save things, tag, sort, make and edit lists",
+      "delete": "Delete items. Most AI tools never need this.",
+      "account": "Manage your account: connected AI tools, exports, and deleting it all. Only Pluck's own apps ask for this."
+    },
+    "signedInAs": "Signed in as {email}. It can never delete anything unless that is listed above, and you can disconnect it in Settings."
+  },
+  "digest": {
+    "open": "Open Pluck",
+    "undo": "Undo",
+    "confirm": "Confirm",
+    "expired": {
+      "title": "This link has expired",
+      "lede": "Links in the email work for 7 days. Everything is still in Pluck, right where you left it."
+    },
+    "archiveAll": {
+      "title1": "Archive it all.",
+      "title2": "No, really",
+      "count": "<b>{count, number}</b><span>{count, plural, one {item} other {items}} untouched for longer than your expiry length</span>",
+      "lede": "They move to the Archive in one go. Nothing is deleted, and lists are left alone.",
+      "confirm": "Yes, move {count, number} to the Archive",
+      "notNow": "Not now"
+    },
+    "doing": {
+      "keep": "Keeping it",
+      "letGo": "Moving it to the Archive",
+      "undoLetGo": "Putting it back",
+      "stop": "Stopping the weekly email"
+    },
+    "done": {
+      "keep": {
+        "title": "Kept",
+        "line": "It stays where it is, and the days start again."
+      },
+      "letGo": {
+        "title": "Gone. Well, archived",
+        "line": "Nothing is deleted."
+      },
+      "undoLetGo": {
+        "title": "Back where it was"
+      },
+      "stop": {
+        "title": "No more weekly emails",
+        "line": "Turn them back on in Settings whenever you like."
+      },
+      "archiveAll": {
+        "title": "{count, plural, one {# item} other {# items}} moved to the Archive",
+        "line": "Nothing is deleted."
+      },
+      "done": {
+        "title": "Done"
+      }
+    }
+  },
+  "shared": {
+    "leave": "Leave this List",
+    "home": "Pluck, your Inbox",
+    "byNamed": "{name} (@{handle})",
+    "byHandle": "@{handle}",
+    "meta": "Shared with you by {by} · {count, plural, one {# item} other {# items}} · updated {ago}",
+    "pluck": "Pluck this list",
+    "seeOnly": "You can see it; only they change it. Pluck it for a copy of your own.",
+    "note": "Note",
+    "noAccess": {
+      "title1": "Not shared",
+      "title2": "with you",
+      "lede": "Either this List no longer exists, or it isn't shared with <b>{email}</b>, the email you're signed in with. If someone sent you the link, ask them to share it with that address.",
+      "lists": "Your Lists",
+      "another": "Use another email"
+    }
+  },
+  "copy": {
+    "failed": "That did not go through.",
+    "busy": "Plucking",
+    "action": "Pluck this list",
+    "title": "Pluck this list",
+    "lede": "{count, plural, one {# item} other {# items}} land in your Inbox, and a private copy of <b>{name}</b> keeps their order and notes.",
+    "items": "{count, plural, one {# item} other {# items}}",
+    "note": "Note",
+    "more": "and {count} more"
+  },
+  "extensionConnected": {
+    "title": "Connected",
+    "lede": "You can pluck from your browser now. Close this tab; from here on, any page is one press away.",
+    "page": "Plucks the page you are on. Alt is Option on a Mac.",
+    "selection": "Plucks what you selected, kept as a highlight."
+  },
+  "shell": {
+    "main": "Main",
+    "nav": {
+      "inbox": "Inbox",
+      "later": "Later",
+      "lists": "Lists",
+      "archive": "Archive",
+      "settings": "Settings"
+    },
+    "settingsNav": {
+      "ai": "AI tools",
+      "email": "Email-in",
+      "keys": "API keys",
+      "language": "Language",
+      "expiry": "Expiry and archive",
+      "tags": "Tags",
+      "import": "Import and export",
+      "delete": "Delete account"
+    }
+  },
+  "offlineBar": {
+    "text": "Offline. Plucks will sync when you are back."
+  },
+  "emptyInbox": {
+    "title": "Nothing plucked yet.",
+    "lede": "Three ways to start. The first one takes a second.",
+    "one": {
+      "title": "Press Pluck it above",
+      "body": "The sample link is already there. Watch it land."
+    },
+    "two": {
+      "title": "Add the extension",
+      "body": "One click, or Alt+Shift+P, on any page.",
+      "chrome": "Chrome"
+    },
+    "three": {
+      "title": "Pluck from your phone",
+      "body": "The iOS app, or the Pluck Shortcut until it ships.",
+      "ios": "iOS app",
+      "shortcut": "Add the Shortcut"
+    }
+  },
+  "shortcuts": {
+    "title": "Shortcuts",
+    "close": "Close",
+    "keys": {
+      "search": "Search",
+      "pluckBox": "Pluck box",
+      "move": "Move down and up",
+      "open": "Open",
+      "later": "Later (or back to the Inbox)",
+      "archive": "Archive",
+      "done": "Done (todos and things)",
+      "tag": "Tag",
+      "list": "Add to a list",
+      "select": "Select",
+      "escape": "Clear the selection, or go back",
+      "help": "This list"
+    }
+  },
+  "tagChip": {
+    "byAi": "Tagged by AI"
+  },
+  "kindChips": {
+    "label": "Kind",
+    "all": "All",
+    "links": "Links",
+    "note": "Notes",
+    "todo": "Todos",
+    "thing": "Things"
+  },
+  "picker": {
+    "hint": "Enter toggles · Esc closes",
+    "tag": {
+      "label": "Tag",
+      "placeholder": "Type to find or make a tag",
+      "options": "tags",
+      "empty": "No tags yet. Type a name to make one.",
+      "create": "Create “{name}”"
+    },
+    "list": {
+      "label": "List",
+      "placeholder": "Type to find or make a list",
+      "options": "lists",
+      "empty": "No lists yet. Type a name to make one.",
+      "create": "New list “{name}”"
+    }
+  },
+  "cookies": {
+    "title": "Fancy a cookie",
+    "body": "Two already keep you signed in and hold what you pasted. This one shows us how Pluck gets used, so we fix what gets in the way. No ads. No selling. It doesn't follow you home.",
+    "no": {
+      "button": "Pluck off",
+      "title": "Fair.",
+      "note": "No crumbs taken."
+    },
+    "yes": {
+      "button": "Pluck it, I'm in",
+      "title": "Plucked.",
+      "note": "Cheers."
+    },
+    "more": "What's in each one",
+    "link": "Cookies"
+  },
+  "connectLoop": {
+    "label": "Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.",
+    "cap1": {
+      "title": "Paste one link",
+      "body": "Into any AI tool that speaks MCP."
+    },
+    "cap2": {
+      "title": "Say yes",
+      "body": "Pluck asks once. Your AI can never delete."
+    },
+    "cap3": {
+      "title": "Ask away",
+      "body": "Your whole library, in the chat you already use."
+    },
+    "newChat": "New chat",
+    "chat": "Chat",
+    "question": "What did I pluck about MCP auth?",
+    "answer": "Three things, newest first:",
+    "cards": {
+      "one": "How MCP auth actually works",
+      "two": "OAuth scopes for people in a hurry",
+      "twoMeta": "a blog post · 6 min",
+      "three": "Tokens, scopes and the bit everyone gets wrong"
+    },
+    "followUp": "Want them in a list, best first?",
+    "connected": "Pluck connected",
+    "message": "Message",
+    "modal": {
+      "title": "Add a connector",
+      "body": "Paste the server's link. You'll sign in to it next.",
+      "cancel": "Cancel",
+      "add": "Add"
+    },
+    "consent": {
+      "title": "Let your AI in",
+      "body": "Your AI tool asks to use your Pluck library. It changes things only when you ask, and marks what it touched.",
+      "read": "Read and search your library",
+      "write": "Pluck, tag and sort, marked by AI",
+      "delete": "Delete anything",
+      "cancel": "Cancel",
+      "allow": "Allow"
+    }
+  },
+  "itemRow": {
+    "select": "Select {title}"
+  },
+  "itemBar": {
+    "later": "Later",
+    "archive": "Archive",
+    "done": "Done"
+  },
+  "itemLists": {
+    "inLists": "In {count, plural, one {# list} other {# lists}}",
+    "lists": "Lists",
+    "public": "Public · #{place}",
+    "private": "Private · #{place}",
+    "add": "Add to a list"
+  },
+  "itemTags": {
+    "title": "Tags",
+    "remove": "Remove tag {name}",
+    "add": "Add tag",
+    "quoted": "“{name}”",
+    "byAi": "{names} {count, plural, one {was} other {were}} added by your AI. Touch it and it becomes yours.",
+    "keep": "Keep",
+    "pickerTitle": "Tag"
+  },
+  "topBar": {
+    "queued": "Plucked. Will sync when you are back online.",
+    "rejected": "{count} could not be plucked: {reason}",
+    "failed": "That did not go through.",
+    "label": "Pluck",
+    "placeholder": "Paste one link or many, or type a note",
+    "submit": "Pluck it",
+    "search": "Search",
+    "links": "{count} links. Enter plucks them all.",
+    "as": "Pluck as",
+    "due": "Due",
+    "enterAs": "Enter plucks it as a {kind, select, note {Note} todo {Todo} other {Thing}}."
+  },
+  "itemList": {
+    "inbox": {
+      "subtitle": "{count} to triage · {sort, select, newest {newest first} other {untouched first}}"
+    },
+    "later": {
+      "subtitle": "Kept on purpose",
+      "expiring": "Kept on purpose · {count, plural, one {# expires} other {# expire}} this week, into the Archive",
+      "empty": {
+        "title": "Nothing kept for later.",
+        "body": "Press l on any Inbox item to keep it here."
+      }
+    },
+    "deleted": "Deleted. It stays in the bin for 30 days.",
+    "moveFailed": "That did not go through. Nothing moved.",
+    "showOnly": "Show only {name}",
+    "addedTo": "Added to “{name}”.",
+    "takenOut": "Taken out of “{name}”.",
+    "kept": "Kept. The {days} days start again.",
+    "pluckedMany": "{count} plucked to the Inbox.",
+    "sort": {
+      "label": "Sort",
+      "newest": "Newest",
+      "untouched": "Untouched first"
+    },
+    "stopFilter": "Stop filtering by {name}",
+    "bulk": {
+      "label": "Bulk actions",
+      "selected": "{count} selected",
+      "addToList": "Add to list",
+      "clear": "Clear"
+    },
+    "actions": {
+      "inbox": "Inbox",
+      "later": "Later",
+      "archive": "Archive",
+      "done": "Done",
+      "tag": "Tag",
+      "list": "List",
+      "open": "Open"
+    },
+    "rowsLabel": "{view, select, inbox {Inbox} other {Later}} items",
+    "pill": {
+      "title": "Untouched for {days} days. Keep it, or it moves to the Archive. Nothing is deleted.",
+      "label": "Keep {title}: it moves to the Archive soon",
+      "days": "{days} days"
+    },
+    "none": {
+      "all": "Nothing in {view, select, inbox {Inbox} other {Later}} right now.",
+      "kind": "Nothing of this kind in {view, select, inbox {Inbox} other {Later}}."
+    },
+    "keys": {
+      "move": "move",
+      "inbox": "inbox",
+      "later": "later",
+      "archive": "archive",
+      "tag": "tag",
+      "list": "add to list",
+      "select": "select",
+      "help": "all shortcuts"
+    },
+    "listPicker": "Add {count} items to a list",
+    "tagPicker": "Tag {count} items"
+  },
+  "archive": {
+    "filter": {
+      "label": "Filter",
+      "all": "All",
+      "you": "By you",
+      "expired": "Expired",
+      "import": "Imported"
+    },
+    "why": {
+      "bin": "deleted, gone for good in {days, plural, one {# day} other {# days}}",
+      "done": "done",
+      "expiredAfter": "expired after {days} days, kept here",
+      "expired": "expired, kept here",
+      "bulk": "archived with Archive it all",
+      "import": "imported",
+      "you": "archived by you"
+    },
+    "outOfBin": "Out of the bin.",
+    "title": "Archive",
+    "bin": "Bin",
+    "binSubtitle": "Things you deleted. Each one is gone for good 30 days after you deleted it.",
+    "subtitle": "Everything you archived, finished, or let expire. Nothing is ever deleted, and search still finds it.",
+    "rowsLabel": "Archived items",
+    "restore": "Restore",
+    "binEmpty": "The bin is empty.",
+    "empty": "Nothing here yet.",
+    "back": "Back to the Archive",
+    "binLink": "Deleted something by mistake? <bin>The bin</bin> keeps it for 30 days."
+  },
+  "search": {
+    "prompt": "What did I pluck about {q}?",
+    "promptThis": "What did I pluck about this?",
+    "label": "Search",
+    "placeholder": "Search titles, notes, tags and page text",
+    "filters": {
+      "kind": "Kind",
+      "kindAny": "Kind: any",
+      "tag": "Tag",
+      "list": "List",
+      "status": "Status",
+      "date": "Date",
+      "week": "Past week",
+      "month": "Past month",
+      "year": "Past year"
+    },
+    "count": "{count, plural, one {# result} other {# results}} · title, notes, tags, list names and body",
+    "hint": "Type to search your whole library, the Archive included. Press / from anywhere to come here.",
+    "results": "Results",
+    "snippet": "{pre}<mark>{hit}</mark>{post}",
+    "noteSnippet": "Your note: “{pre}<mark>{hit}</mark>{post}”",
+    "none": "Nothing matches “{q}”. Search looks for the words themselves.",
+    "ask": "Want it by meaning? Ask your AI.",
+    "copy": "Copy “{prompt}”"
+  },
+  "lists": {
+    "title": "Lists",
+    "subtitle": "What you are making. A book, an issue, a talk, a trip, things to buy.",
+    "new": "New list",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Talk on MCP auth",
+      "purpose": "Purpose, one line",
+      "purposePlaceholder": "Twenty minutes for the November meetup.",
+      "make": "Make the list"
+    },
+    "empty": "No lists yet. Press a on any item to start one, or make one here.",
+    "table": {
+      "name": "Name and purpose",
+      "visibility": "Visibility",
+      "ticked": "Ticked",
+      "lastAdded": "Last added"
+    },
+    "byAi": "by AI",
+    "public": "Public · {views} views",
+    "private": "Private",
+    "tickedOf": "{ticked} of {count}",
+    "notYet": "Not yet",
+    "shared": {
+      "title": "Shared with you",
+      "meta": "From {from} · {count, plural, one {# item} other {# items}} · see only"
+    },
+    "foot": "Items in a list never expire. A list is a plan."
+  },
+  "list": {
+    "takenOut": "Taken out of “{name}”. It is still in your library.",
+    "nowPublic": "Public. Anyone with the link can see it.",
+    "nowPrivate": "Private again. The link stops working now.",
+    "askPrompt": "Read my Pluck list \"{name}\" and tell me what it covers, what is missing, and the best order to read it in.",
+    "crumb": "Lists",
+    "nameLabel": "List name",
+    "purpose": "Purpose",
+    "purposePlaceholder": "One line on what this list is for",
+    "visibility": "Visibility",
+    "private": "Private",
+    "public": "Public",
+    "linkCopied": "Link copied.",
+    "views": "{count, plural, one {# view} other {# views}} · only you see this · <a>View the public page</a>",
+    "privateShared": "Private: only you and the people below.",
+    "privateOnly": "Only you can see this list.",
+    "copyAsk": "Copy for your AI: “Ask about this list”",
+    "export": "Export this list",
+    "ticked": "{ticked} of {count} ticked",
+    "empty": "Nothing here yet. Press a on any item in the Inbox to add it.",
+    "rowsLabel": "{name}, in order",
+    "drag": "Drag to reorder {title}. Or Shift+J and Shift+K.",
+    "tick": "Tick {title}",
+    "noteLabel": "Note on {title} in this list",
+    "byAi": "by AI",
+    "note": "Note",
+    "takeOut": "Take out",
+    "keys": {
+      "tick": "tick",
+      "note": "note",
+      "reorder": "reorder",
+      "add": "Add from the inbox with <kbd>a</kbd>, or pluck straight in from the extension"
+    },
+    "delete": {
+      "confirm": "Delete “{name}”? Its items stay in your library.",
+      "yes": "Yes, delete the list",
+      "action": "Delete this list"
+    }
+  },
+  "people": {
+    "added": "Shared with {email}. They get an email with a link.",
+    "removed": "{email} can no longer see it.",
+    "placeholder": "Share with someone: their email",
+    "sharing": "Sharing",
+    "share": "Share",
+    "label": "People who can see it",
+    "stop": "Stop sharing with {email}",
+    "some": "They can see it; only you change it.",
+    "none": "They see it, never your tags or ticks; only you change it."
+  },
+  "admin": {
+    "title": "Reports",
+    "open": "{count} open",
+    "empty": "Nothing to review.",
+    "table": {
+      "list": "List",
+      "reason": "Reason",
+      "owner": "Owner",
+      "actions": "Actions"
+    },
+    "gone": "gone",
+    "takenDown": "taken down",
+    "closed": "closed",
+    "takeDown": "Take down list",
+    "close": "Close their public pages",
+    "resolve": "Resolve"
+  },
+  "item": {
+    "pending": "Plucking this page. It takes a few seconds.",
+    "failed": {
+      "title": "Couldn't read this page.",
+      "retry": "Retry",
+      "retrying": "Trying again",
+      "wayback": "Try the Wayback copy",
+      "loginTitle": "Behind a login?",
+      "loginBody": "Pluck it from the extension to keep the page. It sends what your browser already sees.",
+      "extension": "Get the extension",
+      "keptTitle": "Still yours",
+      "keptBody": "The link, your note and your tags are kept. Search finds it by title and note."
+    }
+  },
+  "note": {
+    "untitled": "Untitled note",
+    "state": {
+      "saved": "Saved",
+      "saving": "Saving",
+      "error": "Not saved. Retrying when you type."
+    },
+    "meta": "{kind} · {plucked} · edited {edited}",
+    "title": "Title",
+    "body": "Body",
+    "help": "The first line is the title. Plain text. Saves as you type.",
+    "about": "About this {kind, select, note {note} todo {todo} other {thing}}",
+    "kind": "Kind",
+    "kindHint": {
+      "note": "Make it a Todo to add a due date and a tick.",
+      "todo": "A Todo can have a due date. Done moves it out of the Inbox.",
+      "thing": "A Thing is something to get. Lists are where they gather."
+    },
+    "due": "Due",
+    "source": "Source: {via}",
+    "pasteBox": "web paste box",
+    "noHighlights": "Notes have no highlights. Select text to copy it."
+  },
+  "reader": {
+    "progress": "Reading progress",
+    "minutes": "{n} min read",
+    "by": "By {author}",
+    "selection": "Selection",
+    "highlight": "Highlight",
+    "noteTool": "Note",
+    "removeHighlight": "Remove highlight",
+    "about": "About this item",
+    "note": "Note",
+    "kind": "Kind",
+    "highlights": "Highlights · {count}",
+    "noHighlights": "Select text to highlight it.",
+    "highlightNote": "Note on this highlight",
+    "addNote": "Add a note",
+    "removeLabel": "Remove highlight: {quote}",
+    "source": "Source: {via} · page kept"
+  },
+  "settings": {
+    "title": "Settings",
+    "signedIn": "signed in with an email link",
+    "signOut": "Sign out",
+    "emailIn": {
+      "title": "Email-in",
+      "lede": "Forward a newsletter here. It lands as a Read item.",
+      "copied": "Address copied.",
+      "confirm": "The old address stops working at once.",
+      "ready": "New address ready. Update anything that forwards to the old one.",
+      "makeNew": "Make a new one",
+      "regenerate": "Regenerate address"
+    },
+    "profile": {
+      "label": "Profile",
+      "name": "Name",
+      "nameSaved": "Name saved.",
+      "handle": "Handle, for public lists",
+      "handleSaved": "Handle saved.",
+      "makeUp": "Make one up",
+      "move": "{count, plural, =0 {No public Lists yet, so no links change.} one {Your public List moves to {host}/@{handle}/… and links to the old address stop working. Lists shared with people by email are not affected.} other {Your # public Lists move to {host}/@{handle}/… and links to the old address stop working. Lists shared with people by email are not affected.}} Once saved, it can change again in a month.",
+      "invalid": "3 to 24 lowercase letters, numbers or hyphens.",
+      "save": "Save @{handle}",
+      "keep": "Keep @{handle}",
+      "hintLocked": "Only shown on lists you make public. It can change once a month.",
+      "hint": "Only shown on lists you make public."
+    },
+    "ai": {
+      "testPrompt": "What did I pluck this week?",
+      "title": "AI tools",
+      "lede": "Your library, in the AI tool you already use, in thirty seconds. It reads everything, changes things only when you ask, and can never delete.",
+      "connector": "Connector URL, for Claude, ChatGPT, Cursor and any MCP client",
+      "connectorCopied": "Connector URL copied.",
+      "commandCopied": "Command copied.",
+      "selfHost": "Self-hosting without a public URL",
+      "needKey": "Make an API key below, then use it here.",
+      "test": "Test it",
+      "testHint": "Copies “{prompt}” for your AI",
+      "connected": "Connected",
+      "connectedLast": "Connected · last call {ago}",
+      "notConnected": "Not connected yet",
+      "readsWrites": "reads and organises",
+      "reads": "reads",
+      "disconnected": "{name} disconnected. It cannot reach your library now.",
+      "disconnect": "Disconnect"
+    },
+    "expiry": {
+      "digestOff": "No weekly email.",
+      "digestSaved": "Weekly email day saved.",
+      "saved": "Untouched for {days} days goes to the Archive. Nothing is deleted.",
+      "never": "Nothing expires now.",
+      "sent": "Sent. Check your email.",
+      "archived": "{count, plural, one {# item} other {# items}} moved to the Archive. Nothing is deleted.",
+      "title": "Expiry and archive",
+      "lede": "Things you don't touch move to the Archive on their own. They are never deleted. Search still finds them, and Restore puts them back. Items in a list never expire.",
+      "after": "Move to Archive after",
+      "days": "{days} days untouched",
+      "neverOption": "Never",
+      "scope": "Applies to",
+      "scopeInboxLater": "Inbox and Later",
+      "scopeInbox": "Inbox only",
+      "digest": "Weekly email",
+      "digestDay": "{day} at 06:00",
+      "digestOffOption": "Off",
+      "warns": "The weekly email warns you a week before.",
+      "sendNow": "Send me one now",
+      "clean": {
+        "title": "Start clean",
+        "body": "Move everything in {scope, select, inbox {the Inbox} other {Inbox and Later}} older than {days} days to the Archive, right now. {count, plural, one {# item} other {# items}}. Lists are left alone.",
+        "confirm": "Move {count} to the Archive? Nothing is deleted.",
+        "yes": "Yes, archive them",
+        "action": "Archive it all. No, really."
+      }
+    },
+    "tags": {
+      "merged": "Merged “{name}” into “{into}”.",
+      "deleted": "“{name}” is gone. Its items are still here.",
+      "purged": "Removed {count, plural, one {# tag} other {# tags}} your AI added this week.",
+      "title": "Tags",
+      "purge": {
+        "confirm": "Remove {count, plural, one {# tag} other {# tags}} your AI added this week?",
+        "yes": "Yes, remove them",
+        "action": "Remove everything AI tagged this week · {count}"
+      },
+      "empty": "No tags yet. Press t on any item to make one.",
+      "table": {
+        "tag": "Tag",
+        "yours": "Yours",
+        "byAi": "By AI",
+        "actions": "Actions"
+      },
+      "newName": "New name for {name}",
+      "madeByAi": "made by AI",
+      "mergeLabel": "Merge {name} into",
+      "mergeInto": "Merge into…",
+      "delete": {
+        "confirm": "Take it off {count, plural, one {# item} other {# items}}?",
+        "yes": "Yes, delete the tag"
+      }
+    },
+    "keys": {
+      "title": "API keys",
+      "fresh": "Copy this key now. It is shown once.",
+      "copied": "Key copied.",
+      "used": "used {when}",
+      "unused": "not used yet",
+      "revoked": "“{name}” revoked. It stops working now.",
+      "revoke": "Revoke",
+      "nameLabel": "Name for the key",
+      "namePlaceholder": "Claude Code on my laptop",
+      "make": "Make the key",
+      "new": "New key"
+    },
+    "import": {
+      "uploadFailed": "The upload did not go through. Try again.",
+      "title": "Import",
+      "from": "From",
+      "sources": {
+        "pocket": "Pocket (CSV)",
+        "omnivore": "Omnivore (zip)",
+        "raindrop": "Raindrop (CSV)",
+        "html": "Browser bookmarks (HTML)"
+      },
+      "drop": "Drop a file, or choose one",
+      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · bookmarks HTML",
+      "file": "Import file",
+      "job": "{source} import",
+      "progress": "{done, number} done",
+      "progressFailed": "{done, number} done · {failed, number} failed",
+      "done": "Done. Imported items are in your Archive under Imported, still searchable.",
+      "running": "Runs in the background. Close the page if you like.",
+      "export": {
+        "title": "Export",
+        "lede": "pluck.json, plus one Markdown file per item with its text and notes, and one per list. A zip, by email. Any single list exports from its own page.",
+        "started": "Exporting. The link arrives by email in a minute or two.",
+        "busy": "Exporting",
+        "action": "Export everything"
+      }
+    },
+    "deleteAccount": {
+      "title": "Delete account",
+      "lede": "Every item, tag, note and key. Export first.",
+      "type": "Type {email} to confirm",
+      "now": "Delete everything now",
+      "action": "Delete everything. No, really."
+    }
   }
 }

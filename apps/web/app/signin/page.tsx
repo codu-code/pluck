@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { TRY_COOKIE } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
 import { SignInForm } from "./SignInForm";
 
-export const metadata: Metadata = { title: "Sign in · Pluck" };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getTranslations("app.meta"))("signin") };
+}
 
 // Only same-site paths, so a crafted link cannot bounce people elsewhere after sign-in.
 const safeNext = (n?: string) => (n && n.startsWith("/") && !n.startsWith("//") ? n : "/inbox");

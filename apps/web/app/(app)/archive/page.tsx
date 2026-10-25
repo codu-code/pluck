@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { requireUser } from "@/lib/auth";
 import { browse, me } from "@/lib/library";
 import { ArchiveView } from "./ArchiveView";
 
-export const metadata: Metadata = { title: "Archive · Pluck" };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getTranslations("app.meta"))("archive") };
+}
 
 export default async function Archive({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
   const user = await requireUser();

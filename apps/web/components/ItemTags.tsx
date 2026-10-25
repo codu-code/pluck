@@ -1,6 +1,7 @@
 "use client";
 
 import type { Item, Tag } from "@pluck/shared-schemas";
+import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
@@ -13,8 +14,10 @@ export function ItemTags({ item: initial, vocabulary }: { item: Item; vocabulary
   const [item, setItem] = useState(initial);
   const [vocab, setVocab] = useState(vocabulary);
   const [picking, setPicking] = useState(false);
+  const t = useTranslations("app.itemTags");
+  const format = useFormatter();
   const byId = new Map(vocab.map((t) => [t.id, t]));
-  const aiNames = item.aiTagIds.map((id) => byId.get(id)?.name).filter(Boolean);
+  const aiNames = item.aiTagIds.map((id) => byId.get(id)?.name).filter((n): n is string => Boolean(n));
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -44,33 +47,33 @@ export function ItemTags({ item: initial, vocabulary }: { item: Item; vocabulary
 
   return (
     <div className={styles.group}>
-      <span className={styles.title}>Tags</span>
+      <span className={styles.title}>{t("title")}</span>
       <div className={styles.chips}>
         {item.tagIds.map((id) => {
-          const t = byId.get(id);
-          if (!t) return null;
+          const tag = byId.get(id);
+          if (!tag) return null;
           return (
             <span key={id} className={styles.chipWrap}>
-              <TagChip tag={t} ai={item.aiTagIds.includes(id)} size="aside" />
-              <button type="button" className={styles.remove} aria-label={`Remove tag ${t.name}`} onClick={() => toggle(t, false)}>
+              <TagChip tag={tag} ai={item.aiTagIds.includes(id)} size="aside" />
+              <button type="button" className={styles.remove} aria-label={t("remove", { name: tag.name })} onClick={() => toggle(tag, false)}>
                 ×
               </button>
             </span>
           );
         })}
         <button type="button" className={styles.add} onClick={() => setPicking(true)}>
-          Add tag <kbd className={styles.kbd}>t</kbd>
+          {t("add")} <kbd className={styles.kbd}>t</kbd>
         </button>
       </div>
       {aiNames.length > 0 && (
         <span className={styles.aiNote}>
-          {aiNames.map((n) => `“${n}”`).join(", ")} {aiNames.length > 1 ? "were" : "was"} added by your AI. Touch it and it becomes yours.{" "}
-          <button type="button" className={styles.keep} onClick={keepAll}>Keep</button>
+          {t("byAi", { count: aiNames.length, names: format.list(aiNames.map((n) => t("quoted", { name: n })), { type: "unit" }) })}{" "}
+          <button type="button" className={styles.keep} onClick={keepAll}>{t("keep")}</button>
         </span>
       )}
       {picking && (
         <TagPicker
-          title="Tag"
+          title={t("pickerTitle")}
           vocabulary={vocab}
           state={(id) => (item.tagIds.includes(id) ? "on" : "off")}
           onToggle={toggle}

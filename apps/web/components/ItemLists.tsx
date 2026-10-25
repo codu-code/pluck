@@ -1,6 +1,7 @@
 "use client";
 
 import type { List, ListMembership } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ListPicker } from "@/components/ListPicker";
@@ -12,6 +13,7 @@ import styles from "./ItemLists.module.css";
 export function ItemLists({ itemId, initial }: { itemId: string; initial: ListMembership[] }) {
   const [memberships, setMemberships] = useState(initial);
   const [picker, setPicker] = useState<List[] | null>(null);
+  const t = useTranslations("app.itemLists");
 
   async function open() {
     setPicker(await fetchLists());
@@ -30,22 +32,22 @@ export function ItemLists({ itemId, initial }: { itemId: string; initial: ListMe
   const n = memberships.length;
   return (
     <div className={styles.group}>
-      <span className={styles.title}>{n ? `In ${n} list${n === 1 ? "" : "s"}` : "Lists"}</span>
+      <span className={styles.title}>{n ? t("inLists", { count: n }) : t("lists")}</span>
       {memberships.map((m) => (
         <Link key={m.list.id} href={`/lists/${m.list.id}`} className={styles.card}>
           <span className={styles.cardHead}>
             <b className={styles.name}>{m.list.name}</b>
-            <span className={styles.meta}>{m.list.visibility === "public" ? "Public" : "Private"} · #{m.place}</span>
+            <span className={styles.meta}>{t(m.list.visibility === "public" ? "public" : "private", { place: m.place })}</span>
           </span>
           {m.note && <span className={m.noteBy === "mcp" ? `${styles.note} ${styles.ai}` : styles.note}>{m.note}</span>}
         </Link>
       ))}
       <button type="button" className={styles.add} onClick={open}>
-        Add to a list <kbd className={styles.kbd}>a</kbd>
+        {t("add")} <kbd className={styles.kbd}>a</kbd>
       </button>
       {picker && (
         <ListPicker
-          title="Add to a list"
+          title={t("add")}
           lists={picker}
           state={(id) => (memberships.some((m) => m.list.id === id) ? "on" : "off")}
           onToggle={async (list, on) => {

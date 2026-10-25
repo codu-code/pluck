@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import styles from "./item.module.css";
@@ -7,6 +8,7 @@ import styles from "./item.module.css";
 export function RetryButton({ id }: { id: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const t = useTranslations("app.item.failed");
   return (
     <button
       type="button"
@@ -19,7 +21,7 @@ export function RetryButton({ id }: { id: string }) {
         setBusy(false);
       }}
     >
-      {busy ? "Trying again" : "Retry"}
+      {busy ? t("retrying") : t("retry")}
     </button>
   );
 }

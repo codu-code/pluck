@@ -1,12 +1,13 @@
 "use client";
 
 import { LINK_KINDS, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
-import { KIND_NAMES } from "@pluck/ui";
+import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
-import { ago, coverSrc, sourceLabel } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
+import { coverSrc } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
 import styles from "./reader.module.css";
 
@@ -24,6 +25,9 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
   const [kind, setKind] = useState<Kind>(item.kind);
   const [focusNote, setFocusNote] = useState<string | null>(null);
   const saved = useRef(item.readingProgress);
+  const t = useTranslations("app.reader");
+  const app = useTranslations("app");
+  const f = useFormat();
 
   useLayoutEffect(() => {
     if (article.current) paint(article.current, html, highlights);
@@ -120,7 +124,7 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
       <ItemBar
         item={item}
         top={
-          <div className={styles.progress} role="progressbar" aria-label="Reading progress" aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
+          <div className={styles.progress} role="progressbar" aria-label={t("progress")} aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
             <div className={styles.progressFill} style={{ width: `${progress * 100}%` }} />
           </div>
         }
@@ -129,10 +133,10 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
         <article className={styles.article}>
           <div className={styles.head}>
             <span className={styles.meta}>
-              {[item.siteName, minutes && `${minutes} min read`, `${sourceLabel(item.source).replace(/^Plucked/, "plucked")} ${ago(item.createdAt)}`].filter(Boolean).join(" · ")}
+              {[item.siteName, minutes && t("minutes", { n: minutes }), app(`format.sourceAgo.${item.source}`, { ago: f.ago(item.createdAt) })].filter(Boolean).join(" · ")}
             </span>
             <h1 className={styles.title}>{item.title}</h1>
-            {item.author && <span className={styles.byline}>By {item.author}</span>}
+            {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
           </div>
           {showCover && item.kind !== "image" && <img className={styles.cover} src={coverSrc(item.id)} alt="" />}
           {item.kind === "image" && <img className={styles.image} src={coverSrc(item.id)} alt={item.title} />}
@@ -149,27 +153,27 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
             }}
           />
           {toolbar && (
-            <div role="toolbar" aria-label="Selection" className={styles.toolbar} style={{ left: toolbar.x, top: toolbar.y }}>
+            <div role="toolbar" aria-label={t("selection")} className={styles.toolbar} style={{ left: toolbar.x, top: toolbar.y }}>
               {toolbar.kind === "new" ? (
                 <>
                   <button type="button" className={styles.tool} onMouseDown={(e) => e.preventDefault()} onClick={() => highlight(false)}>
-                    Highlight <kbd className={styles.toolKey}>h</kbd>
+                    {t("highlight")} <kbd className={styles.toolKey}>h</kbd>
                   </button>
                   <button type="button" className={styles.tool} onMouseDown={(e) => e.preventDefault()} onClick={() => highlight(true)}>
-                    Note <kbd className={styles.toolKey}>n</kbd>
+                    {t("noteTool")} <kbd className={styles.toolKey}>n</kbd>
                   </button>
                 </>
               ) : (
                 <button type="button" className={styles.tool} onClick={() => remove(toolbar.id)}>
-                  Remove highlight
+                  {t("removeHighlight")}
                 </button>
               )}
             </div>
           )}
         </article>
-        <aside aria-label="About this item" className={styles.aside}>
+        <aside aria-label={t("about")} className={styles.aside}>
           <label className={styles.group}>
-            <span className={styles.groupTitle}>Note</span>
+            <span className={styles.groupTitle}>{t("note")}</span>
             <textarea
               className={styles.note}
               rows={4}
@@ -180,7 +184,7 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
           </label>
           <ItemTags item={item} vocabulary={tags} />
           <label className={styles.group}>
-            <span className={styles.groupTitle}>Kind</span>
+            <span className={styles.groupTitle}>{t("kind")}</span>
             <select
               className={styles.select}
               value={kind}
@@ -191,37 +195,37 @@ export function Reader({ item, html, initialHighlights, showCover, tags, lists }
               }}
             >
               {LINK_KINDS.map((k) => (
-                <option key={k} value={k}>{KIND_NAMES[k]}</option>
+                <option key={k} value={k}>{app(`kind.${k}`)}</option>
               ))}
             </select>
           </label>
           <ItemLists itemId={item.id} initial={lists} />
           <div className={styles.group}>
-            <span className={styles.groupTitle}>Highlights · {highlights.length}</span>
-            {highlights.length === 0 && <span className={styles.meta}>Select text to highlight it.</span>}
+            <span className={styles.groupTitle}>{t("highlights", { count: highlights.length })}</span>
+            {highlights.length === 0 && <span className={styles.meta}>{t("noHighlights")}</span>}
             {highlights.map((h) => (
               <div key={h.id} className={styles.highlight}>
                 <blockquote className={styles.quote}>{h.quote}</blockquote>
                 <label className={styles.highlightNote}>
-                  <span className={styles.visuallyHidden}>Note on this highlight</span>
+                  <span className={styles.visuallyHidden}>{t("highlightNote")}</span>
                   <input
                     type="text"
                     defaultValue={h.note ?? ""}
-                    placeholder="Add a note"
+                    placeholder={t("addNote")}
                     autoFocus={focusNote === h.id}
                     onBlur={(e) => e.target.value !== (h.note ?? "") && void saveHighlightNote(h.id, e.target.value)}
                     className={styles.highlightInput}
                   />
                 </label>
-                <button type="button" className={styles.remove} onClick={() => remove(h.id)} aria-label={`Remove highlight: ${h.quote.slice(0, 40)}`}>
-                  Remove
+                <button type="button" className={styles.remove} onClick={() => remove(h.id)} aria-label={t("removeLabel", { quote: h.quote.slice(0, 40) })}>
+                  {app("common.remove")}
                 </button>
               </div>
             ))}
           </div>
           <div className={styles.foot}>
-            <span>Source: {sourceLabel(item.source).replace(/^Plucked /, "")} · page kept</span>
-            {item.url && <a href={item.url} target="_blank" rel="noreferrer" className={styles.original}>Open original</a>}
+            <span>{t("source", { via: app(`format.via.${item.source}`) })}</span>
+            {item.url && <a href={item.url} target="_blank" rel="noreferrer" className={styles.original}>{app("common.openOriginal")}</a>}
             <DeleteButton id={item.id} />
           </div>
         </aside>

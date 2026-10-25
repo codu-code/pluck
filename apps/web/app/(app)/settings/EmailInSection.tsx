@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
 import styles from "./settings.module.css";
@@ -9,10 +10,12 @@ export function EmailInSection({ initial }: { initial: string }) {
   const [address, setAddress] = useState(initial);
   const [confirm, setConfirm] = useState(false);
   const [toast, showToast] = useToast();
+  const t = useTranslations("app.settings.emailIn");
+  const app = useTranslations("app.common");
   return (
     <section id="email" className={styles.sectionPlain}>
-      <h2 className={styles.h2}>Email-in</h2>
-      <p className={styles.meta}>Forward a newsletter here. It lands as a Read item.</p>
+      <h2 className={styles.h2}>{t("title")}</h2>
+      <p className={styles.meta}>{t("lede")}</p>
       <span className={styles.copyRow}>
         <code className={styles.code}>{address}</code>
         <button
@@ -20,15 +23,15 @@ export function EmailInSection({ initial }: { initial: string }) {
           className={styles.inkButton}
           onClick={async () => {
             await navigator.clipboard?.writeText(address).catch(() => {});
-            showToast({ message: "Address copied." });
+            showToast({ message: t("copied") });
           }}
         >
-          Copy
+          {app("copy")}
         </button>
       </span>
       {confirm ? (
         <span className={styles.confirm} style={{ color: "var(--ink)" }}>
-          The old address stops working at once.
+          {t("confirm")}
           <button
             type="button"
             className={styles.textButton}
@@ -37,17 +40,17 @@ export function EmailInSection({ initial }: { initial: string }) {
               setConfirm(false);
               if (res.ok) {
                 setAddress(((await res.json()) as { address: string }).address);
-                showToast({ message: "New address ready. Update anything that forwards to the old one." });
+                showToast({ message: t("ready") });
               }
             }}
           >
-            Make a new one
+            {t("makeNew")}
           </button>
-          <button type="button" className={styles.textButton} onClick={() => setConfirm(false)}>Cancel</button>
+          <button type="button" className={styles.textButton} onClick={() => setConfirm(false)}>{app("cancel")}</button>
         </span>
       ) : (
         <button type="button" className={styles.linkButton} style={{ alignSelf: "flex-start", fontSize: 13 }} onClick={() => setConfirm(true)}>
-          Regenerate address
+          {t("regenerate")}
         </button>
       )}
       {toast}
