@@ -10,8 +10,11 @@ const post = (path: string, body: unknown) =>
     headers: { "content-type": "application/json", "x-forwarded-for": `198.51.100.${++ip}` }, // a fresh address per call, so only our own limits bite
     body: JSON.stringify(body),
   }));
-const register = (client_name: string, redirect: string, resources?: string[]) =>
-  post("/oauth2/register", { client_name, redirect_uris: [redirect], token_endpoint_auth_method: "none", grant_types: ["authorization_code"], response_types: ["code"], ...(resources ? { resources } : {}) });
+const register = (client_name: string, redirect: string, resources?: string[], scope?: string) =>
+  post("/oauth2/register", {
+    client_name, redirect_uris: [redirect], token_endpoint_auth_method: "none", grant_types: ["authorization_code"], response_types: ["code"],
+    ...(resources ? { resources } : {}), ...(scope ? { scope } : {}),
+  });
 
 test("only our own apps can register for the REST API or go by Pluck's name", async () => {
   const api = `${BASE}/api/v1`;
@@ -21,6 +24,11 @@ test("only our own apps can register for the REST API or go by Pluck's name", as
   expect((await register("Pluck for your browser", FIRST_PARTY_REDIRECTS[0]!, [api])).status).toBe(201);
   expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [api])).status).toBe(201);
   expect((await register("Example AI", "https://ai.example.test/cb")).status).toBe(201); // AI tools still register for the connector
+});
+
+test("only our own apps can ask for the account scope", async () => {
+  expect((await register("Example AI", "https://ai.example.test/cb", undefined, "library:read account")).status).toBe(400);
+  expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [`${BASE}/api/v1`], "offline_access library:read library:write account")).status).toBe(201);
 });
 
 test("sign-in links are limited per address, whatever network asks", async () => {
