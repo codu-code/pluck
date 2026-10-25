@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "Pluk de pagina waar je op bent met één klik in je Pluck-bibliotheek."
+  },
+  "pluckPage": {
+    "message": "Pluk deze pagina"
+  },
+  "pluckSelection": {
+    "message": "Pluk de selectie als markering"
+  }
+}

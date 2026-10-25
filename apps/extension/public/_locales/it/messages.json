@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "Prendi la pagina in cui sei e mettila nella tua libreria Pluck, con un clic."
+  },
+  "pluckPage": {
+    "message": "Prendi questa pagina"
+  },
+  "pluckSelection": {
+    "message": "Prendi la selezione come evidenziazione"
+  }
+}

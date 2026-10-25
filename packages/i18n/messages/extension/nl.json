@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "Pluk de pagina waar je op bent met één klik in je Pluck-bibliotheek.",
+    "pluckPage": "Pluk deze pagina",
+    "pluckSelection": "Pluk de selectie als markering"
+  },
+  "menu": {
+    "link": "Link plukken",
+    "selection": "Selectie plukken als markering",
+    "image": "Afbeelding plukken",
+    "page": "Pagina plukken"
+  },
+  "toolbar": {
+    "plucked": "Geplukt",
+    "pluckPage": "Pluk deze pagina"
+  },
+  "errors": {
+    "nothing": "Niets te plukken op deze pagina.",
+    "failed": "Dat werkte niet.",
+    "tryAgain": "Dat werkte niet. Probeer het opnieuw."
+  },
+  "kinds": {
+    "link": "Lezen",
+    "video": "Kijken",
+    "pdf": "PDF",
+    "image": "Afbeelding",
+    "note": "Notitie",
+    "todo": "Taak",
+    "thing": "Ding"
+  },
+  "status": {
+    "inbox": "Inbox",
+    "later": "Later",
+    "archived": "Gearchiveerd",
+    "done": "Klaar"
+  },
+  "popup": {
+    "plucking": "Plukken…",
+    "signedOut": {
+      "lede": "De pagina waar je op bent, bewaard met één klik. Log één keer in, met je e-mailadres.",
+      "signIn": "Inloggen",
+      "ownServer": "Gebruik je eigen server"
+    },
+    "nothingHint": "Pluck werkt op webpagina’s. Open er een en klik nog eens.",
+    "queued": {
+      "title": "Pluck niet bereikbaar. We proberen het opnieuw.",
+      "count": "{count, plural, one {# item wacht} other {# items wachten}} in deze browser."
+    },
+    "already": {
+      "meta": "Geplukt {date} · {status}",
+      "open": "Openen in Pluck",
+      "again": "Opnieuw plukken"
+    },
+    "plucked": {
+      "title": "Geplukt",
+      "undo": "Ongedaan maken",
+      "tips": {
+        "opening": "Door dit te openen, is de pagina al bewaard. Meer is het niet.",
+        "shortcut": "Alt+Shift+P doet het zonder klik.",
+        "rightClick": "Klik met rechts op een link of afbeelding om alleen die te plukken."
+      },
+      "tags": "Tags",
+      "tagsPlaceholder": "Zoek in je tags",
+      "kind": "Soort",
+      "toList": "Naar lijst",
+      "noList": "Geen",
+      "lastUsed": "{name} (laatst gebruikt)",
+      "note": "Notitie",
+      "notePlaceholder": "Een notitie, als je wilt",
+      "later": "Later",
+      "archive": "Archiveren",
+      "open": "Openen in Pluck"
+    },
+    "tabs": {
+      "listName": "Tabbladen van {date}",
+      "all": "{count, plural, one {Pluk # tabblad in een nieuwe lijst, “{name}”} other {Pluk alle # tabbladen in een nieuwe lijst, “{name}”}}",
+      "plucking": "Plukken…",
+      "done": "{count, plural, one {# tabblad geplukt in “{name}”.} other {# tabbladen geplukt in “{name}”.}}",
+      "failed": "Pluck niet bereikbaar. Probeer het zo opnieuw."
+    }
+  },
+  "options": {
+    "title": "Pluck-opties",
+    "shortcut": "Sneltoets: Alt+Shift+P · wijzig hem op de sneltoetsenpagina van je browser",
+    "server": "Server",
+    "defaultKind": "Standaardsoort",
+    "guess": "Afleiden uit de pagina",
+    "account": "Account",
+    "apiKey": "API-sleutel",
+    "useKey": "Sleutel gebruiken",
+    "notSignedIn": "Niet ingelogd",
+    "signOut": "Uitloggen",
+    "signIn": "Inloggen",
+    "useApiKey": "Liever een API-sleutel gebruiken",
+    "sendContent": "Pagina-inhoud meesturen bij plukken",
+    "sendContentHint": "Zodat pagina’s achter je logins later leesbaar zijn.",
+    "transcripts": "YouTube-transcripties ophalen",
+    "transcriptsHint": "Zodat zoeken en je AI kunnen lezen wat er gezegd werd.",
+    "messages": {
+      "notAddress": "Dat is geen webadres.",
+      "ownServerOnly": "Deze versie van Pluck bereikt alleen zijn eigen server. Wil je die van jou gebruiken, bouw de extensie dan uit de repo: zie docs/self-host.md.",
+      "using": "Je gebruikt {origin}. Log daar in om te plukken.",
+      "keySignedIn": "Ingelogd met je API-sleutel.",
+      "keyFailed": "Die sleutel werkte niet op deze server.",
+      "signedOut": "Uitgelogd."
+    }
+  }
+}

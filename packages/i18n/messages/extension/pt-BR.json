@@ -1,1 +1,108 @@
-{}
+{
+  "manifest": {
+    "description": "Colha a página em que você está para a sua biblioteca do Pluck, com um clique.",
+    "pluckPage": "Colher esta página",
+    "pluckSelection": "Colher a seleção como destaque"
+  },
+  "menu": {
+    "link": "Colher link",
+    "selection": "Colher seleção como destaque",
+    "image": "Colher imagem",
+    "page": "Colher página"
+  },
+  "toolbar": {
+    "plucked": "Colhido",
+    "pluckPage": "Colher esta página"
+  },
+  "errors": {
+    "nothing": "Nada para colher nesta página.",
+    "failed": "Não deu certo.",
+    "tryAgain": "Não deu certo. Tente de novo."
+  },
+  "kinds": {
+    "link": "Leitura",
+    "video": "Vídeo",
+    "pdf": "PDF",
+    "image": "Imagem",
+    "note": "Nota",
+    "todo": "Tarefa",
+    "thing": "Coisa"
+  },
+  "status": {
+    "inbox": "Entrada",
+    "later": "Depois",
+    "archived": "Arquivado",
+    "done": "Concluído"
+  },
+  "popup": {
+    "plucking": "Colhendo…",
+    "signedOut": {
+      "lede": "A página em que você está, guardada com um clique. Entre uma vez, com seu e-mail.",
+      "signIn": "Entrar",
+      "ownServer": "Usar seu próprio servidor"
+    },
+    "nothingHint": "O Pluck funciona em páginas da web. Abra uma e clique de novo.",
+    "queued": {
+      "title": "Não deu para falar com o Pluck. Vamos tentar de novo.",
+      "count": "{count, plural, one {# item} other {# itens}} na fila neste navegador."
+    },
+    "already": {
+      "meta": "Colhido em {date} · {status}",
+      "open": "Abrir no Pluck",
+      "again": "Colher de novo"
+    },
+    "plucked": {
+      "title": "Colhido",
+      "undo": "Desfazer",
+      "tips": {
+        "opening": "Abrir esta janela já guarda a página. O truque é só esse.",
+        "shortcut": "Alt+Shift+P faz isso sem o clique.",
+        "rightClick": "Clique com o botão direito num link ou numa imagem para colher só aquilo."
+      },
+      "tags": "Tags",
+      "tagsPlaceholder": "Buscar nas suas tags",
+      "kind": "Tipo",
+      "toList": "Para a lista",
+      "noList": "Nenhuma",
+      "lastUsed": "{name} (última usada)",
+      "note": "Nota",
+      "notePlaceholder": "Uma nota, se quiser",
+      "later": "Depois",
+      "archive": "Arquivar",
+      "open": "Abrir no Pluck"
+    },
+    "tabs": {
+      "listName": "Abas de {date}",
+      "all": "{count, plural, one {Colher # aba numa nova lista, “{name}”} other {Colher todas as # abas numa nova lista, “{name}”}}",
+      "plucking": "Colhendo…",
+      "done": "{count, plural, one {# aba colhida em “{name}”.} other {# abas colhidas em “{name}”.}}",
+      "failed": "Não deu para falar com o Pluck. Tente de novo daqui a pouco."
+    }
+  },
+  "options": {
+    "title": "Opções do Pluck",
+    "shortcut": "Atalho: Alt+Shift+P · mude na página de atalhos do seu navegador",
+    "server": "Servidor",
+    "defaultKind": "Tipo padrão",
+    "guess": "Deduzir pela página",
+    "account": "Conta",
+    "apiKey": "Chave de API",
+    "useKey": "Usar chave",
+    "notSignedIn": "Não conectado",
+    "signOut": "Sair",
+    "signIn": "Entrar",
+    "useApiKey": "Usar uma chave de API",
+    "sendContent": "Enviar o conteúdo da página ao colher",
+    "sendContentHint": "Assim as páginas que pedem seu login ficam legíveis depois.",
+    "transcripts": "Capturar transcrições do YouTube",
+    "transcriptsHint": "Assim a busca e a sua IA conseguem ler o que foi dito.",
+    "messages": {
+      "notAddress": "Isso não é um endereço da web.",
+      "ownServerOnly": "Esta cópia do Pluck só fala com o próprio servidor. Para usar o seu, compile a extensão a partir do repositório: veja docs/self-host.md.",
+      "using": "Usando {origin}. Entre lá para colher.",
+      "keySignedIn": "Você entrou com sua chave de API.",
+      "keyFailed": "Essa chave não funcionou neste servidor.",
+      "signedOut": "Você saiu."
+    }
+  }
+}

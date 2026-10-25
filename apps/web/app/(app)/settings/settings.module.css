@@ -28,7 +28,7 @@
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 600px) { .page { padding: 20px 16px; } }
 .profile { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
-.profileField { flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; }
+.profileField { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .stack { display: flex; flex-direction: column; gap: 6px; }
 .label { font-weight: 500; }
 .profileInput { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }

@@ -1,0 +1,35 @@
+{
+  "appStore": {
+    "name": "Pluck: Later lezen",
+    "subtitle": "Pluk het. Sorteer het later.",
+    "promotionalText": "Eén tik in het deelmenu en het is van jou: de pagina, niet alleen de link. Sorteer het later met de hand, of vraag het je AI. Gratis en open source.",
+    "description": "Pluk het vanuit elke app. Tik op Deel en dan op Pluck: de pagina wordt bewaard zoals je hem zag, en de app gaat niet eens open.\n\nSorteer het later. In je Inbox staat alles wat je plukte. Veeg naar rechts voor Later, naar links voor het Archief. Tag het, zet het op een Lijst of vink een Taak af.\n\nDe pagina, niet alleen de link. Pluck bewaart de tekst van elke pagina, zodat je hem kunt lezen in een rustige lezer, offline, lang nadat de site is veranderd.\n\nLijsten voor wat je maakt. Een reis, een presentatie, een leeslijst voor een vriend. Zet ze met de hand op volgorde, geef elk item een notitie, vink ze af, en deel een Lijst met de mensen die hem nodig hebben.\n\nVind het in een seconde. Zoeken kijkt in titels, notities, tags en de volledige tekst van elke pagina.\n\nNeem je eigen AI mee. Er zit geen AI in Pluck. Verbind de AI-tools die je al gebruikt, zoals Claude, ChatGPT of Cursor, en vraag wat je deze week plukte, of laat je AI je Inbox opruimen terwijl je meekijkt.\n\nEr verdwijnt niets achter je rug om. Items die je een tijd niet hebt aangeraakt, gaan naar het Archief, en er wordt niets verwijderd.\n\nPluck is gratis en open source. Gebruik getpluck.io, of draai je eigen server.",
+    "keywords": "leeslijst,artikelen,bewaren,links,offline,lijsten,notities,taken,webclipper,read it later,ai,mcp"
+  },
+  "screenshots": [
+    {
+      "title": "Pluk het vanuit elke app.",
+      "subtitle": "Eén tik in het deelmenu. De app gaat niet eens open."
+    },
+    {
+      "title": "Sorteer het later.",
+      "subtitle": "Veeg naar rechts voor Later, naar links voor het Archief."
+    },
+    {
+      "title": "De pagina, niet alleen de link.",
+      "subtitle": "Lees het overal, ook als de site weg is."
+    },
+    {
+      "title": "Lijsten voor wat je maakt.",
+      "subtitle": "Een reis, een presentatie, een nieuwe keuken. Privé tot jij iets anders zegt."
+    },
+    {
+      "title": "Vind het in een seconde.",
+      "subtitle": "Elk woord op de pagina, je notities en je tags."
+    }
+  ],
+  "chrome": {
+    "summary": "Pluk de pagina waar je op bent met één klik in je Pluck-bibliotheek.",
+    "description": "Pluk de pagina waar je op bent. Eén klik bewaart hem in je Pluck-bibliotheek, met de tekst zoals jij hem ziet, zodat je hem later kunt lezen, terug kunt vinden of je AI ernaar kunt vragen.\n\nKlik op Pluck, of druk op Alt+Shift+P. “Geplukt” verschijnt met de titel, en in de pop-up kun je een tag toevoegen, de Soort wijzigen, het op een Lijst zetten, een notitie schrijven, of het meteen naar Later of het Archief sturen.\n\nKlik met rechts op een link, een afbeelding of de pagina om die te plukken zonder hem te openen. Selecteer een zin en druk op Alt+Shift+H om hem als markering te bewaren. Pluk al je tabbladen in één keer in een nieuwe Lijst.\n\nPagina’s achter je logins worden bewaard zoals je browser ze toonde. YouTube-video’s komen met hun transcriptie, zodat zoeken en je AI-tools kunnen lezen wat er gezegd werd.\n\nHet Pluck-pictogram kleurt in op pagina’s die al in je bibliotheek staan, zodat je in één oogopslag ziet wat je al hebt geplukt.\n\nGeen verbinding? Wat je plukt, wacht op je computer en wordt verstuurd zodra je weer online bent.\n\nPluck is open source. Gebruik getpluck.io, of bouw de extensie voor een server die je zelf draait. Er zit geen AI in Pluck: je verbindt de AI-tools die je al gebruikt, als je dat wilt.\n\nJe hebt een gratis Pluck-account nodig op https://getpluck.io."
+  }
+}
