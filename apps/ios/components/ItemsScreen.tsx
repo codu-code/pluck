@@ -4,7 +4,7 @@ import * as Haptics from "expo-haptics";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/session";
 import { keys, pluck, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
@@ -161,7 +161,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
       extraData={picked} // rows redraw when the selection changes, not only when the data does
       keyExtractor={(i) => i.id}
       renderItem={({ item }) => (
-        <Animated.View entering={fresh.has(item.id) ? FadeInUp.duration(260) : undefined} exiting={FadeOut.duration(180)}>
+        // No exit animation: inside a FlatList on the new architecture, a row leaving with one can stay drawn after it
+        // has gone from the list (an archived row that would not move). Arriving rows still slide in.
+        <Animated.View entering={fresh.has(item.id) ? FadeInUp.duration(260) : undefined}>
           <ItemRow item={item} onMove={(to) => move(item, to)} selecting={Boolean(picked)} selected={Boolean(picked?.has(item.id))} onSelect={() => select(item.id)} />
         </Animated.View>
       )}

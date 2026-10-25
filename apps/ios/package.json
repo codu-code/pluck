@@ -1,7 +1,11 @@
 {
   "name": "@pluck/ios",
   "description": "The Pluck iPhone app and its share extension.",
-  "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "apps/ios" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codu-code/pluck.git",
+    "directory": "apps/ios"
+  },
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -16,6 +20,8 @@
     "@bacons/apple-targets": "5.0.0",
     "@expo-google-fonts/fredoka": "0.4.1",
     "@expo-google-fonts/source-serif-4": "0.4.2",
+    "@formatjs/intl-getcanonicallocales": "3.2.12",
+    "@formatjs/intl-locale": "5.3.12",
     "@formatjs/intl-pluralrules": "6.3.15",
     "@pluck/client": "workspace:*",
     "@pluck/i18n": "workspace:*",

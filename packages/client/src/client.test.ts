@@ -86,6 +86,12 @@ describe("the offline queue under load", () => {
   });
 });
 
+test("a token request that hangs gives up as Unreachable, so screens waiting on it are not held", async () => {
+  const hangs = ((_: unknown, init?: RequestInit) =>
+    new Promise((_resolve, reject) => init?.signal?.addEventListener("abort", () => reject(new DOMException("timeout", "TimeoutError"))))) as typeof fetch;
+  await expect(tokenRequest("https://pluck.test", {}, hangs, 50)).rejects.toBeInstanceOf(Unreachable);
+});
+
 test("token requests: offline or a 5xx is Unreachable, so nobody is signed out for being on a train", async () => {
   const offline = (async () => { throw new TypeError("offline"); }) as typeof fetch;
   await expect(tokenRequest("https://pluck.test", {}, offline)).rejects.toBeInstanceOf(Unreachable);
