@@ -1,4 +1,4 @@
-import type { Item } from "@pluck/shared-schemas";
+import type { Item, ItemPage, List, Tag } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
@@ -13,7 +13,10 @@ import { font, scale, useTheme } from "@/lib/theme";
 // and items to add to a list.
 export default function Pick() {
   const { mode, id } = useLocalSearchParams<{ mode: "tags" | "lists" | "add"; id: string }>();
-  return mode === "tags" ? <TagsFor itemId={id} /> : mode === "lists" ? <ListsFor itemId={id} /> : <AddTo listId={id} />;
+  const many = id.includes(","); // rows selected in the Inbox: their ids, comma-separated
+  if (mode === "tags") return many ? <TagsForMany ids={id.split(",")} /> : <TagsFor itemId={id} />;
+  if (mode === "lists") return many ? <ListsForMany ids={id.split(",")} /> : <ListsFor itemId={id} />;
+  return <AddTo listId={id} />;
 }
 
 // The list is the sheet's only scroll view, with the title in its header: a form sheet lays out (and drags)
@@ -59,54 +62,161 @@ function Row({ label, on, onPress, left }: { label: string; on: boolean; onPress
   );
 }
 
+// Search your tags, or make one from what you typed: one tap either way.
 function TagsFor({ itemId }: { itemId: string }) {
-  const t = useTheme();
+  const qc = useQueryClient();
   const item = useItem(itemId);
   const tags = useTags();
   const patch = usePatchItem();
   const [filter, setFilter] = useState("");
   const on = new Set(item.data?.item.tagIds ?? []);
-  const shown = (tags.data ?? []).filter((x) => x.name.toLowerCase().includes(filter.trim().toLowerCase()));
+  const name = filter.trim();
+  const shown = (tags.data ?? []).filter((x) => x.name.toLowerCase().includes(name.toLowerCase()));
+  const fresh = name && !(tags.data ?? []).some((x) => x.name.toLowerCase() === name.toLowerCase());
+  const make = async () => {
+    const { tag } = await api<{ tag: Tag }>("/api/v1/tags", { json: { name } });
+    patch.mutate({ id: itemId, patch: { tagIds: [...on, tag.id] } });
+    setFilter("");
+    void qc.invalidateQueries({ queryKey: keys.tags });
+  };
   return (
     <Sheet
       title="Tags"
-      top={
-        <TextInput value={filter} onChangeText={setFilter} placeholder="Search your tags" placeholderTextColor={t.ink2} autoCorrect={false} autoCapitalize="none"
-          clearButtonMode="while-editing" accessibilityLabel="Search your tags"
-          style={[font.regular, styles.filter, { backgroundColor: t.surface, borderColor: t.lineStrong, color: t.ink }]} />
-      }
+      top={<Finder value={filter} onChange={setFilter} label="Find or make a tag" make={fresh ? { label: `Make the tag “${name}”`, onPress: () => void make() } : undefined} />}
       data={shown}
       keyOf={(x) => x.id}
       row={({ item: tag }) => (
         <Row label={tag.name} on={on.has(tag.id)} onPress={() => patch.mutate({ id: itemId, patch: { tagIds: on.has(tag.id) ? [...on].filter((x) => x !== tag.id) : [...on, tag.id] } })} />
       )}
-      empty={tags.isLoading ? null : filter.trim()
-        ? <Empty title="No tag by that name." body="New tags start on the web, in Settings." />
-        : <Empty title="No tags yet." body="Make them on the web, in Settings. Your AI can tag things too." />}
+      empty={tags.isLoading || fresh ? null : <Empty title="No tags yet." body="Type one above. Your AI can tag things too." />}
     />
   );
 }
 
+// The lists an item is in, a tap to add or take it out, and a new list from what you typed.
 function ListsFor({ itemId }: { itemId: string }) {
   const qc = useQueryClient();
   const item = useItem(itemId);
   const lists = useLists();
+  const [filter, setFilter] = useState("");
   const inLists = new Set((item.data?.lists ?? []).map((m) => m.list.id));
+  const name = filter.trim();
+  const shown = (lists.data ?? []).filter((l) => l.name.toLowerCase().includes(name.toLowerCase()));
+  const fresh = name && !(lists.data ?? []).some((l) => l.name.toLowerCase() === name.toLowerCase());
+  const settle = async (listId?: string) => {
+    await item.refetch();
+    void qc.invalidateQueries({ queryKey: keys.lists });
+    if (listId) void qc.invalidateQueries({ queryKey: keys.list(listId) });
+  };
   const toggle = async (listId: string) => {
     if (inLists.has(listId)) await api(`/api/v1/lists/${listId}/items/${itemId}`, { method: "DELETE" }).catch(() => {});
     else await api(`/api/v1/lists/${listId}/items`, { json: { itemId } }).catch(() => {});
-    await item.refetch();
-    void qc.invalidateQueries({ queryKey: keys.lists });
-    void qc.invalidateQueries({ queryKey: keys.list(listId) });
+    await settle(listId);
+  };
+  const start = async () => {
+    await api<{ list: List }>("/api/v1/lists", { json: { name, items: [{ itemId }] } });
+    setFilter("");
+    await settle();
   };
   return (
     <Sheet
       title="Lists"
-      data={lists.data ?? []}
+      top={<Finder value={filter} onChange={setFilter} label="Find or start a List" make={fresh ? { label: `Start a List called “${name}”`, onPress: () => void start() } : undefined} />}
+      data={shown}
       keyOf={(l) => l.id}
       row={({ item: l }) => <Row label={l.name} on={inLists.has(l.id)} onPress={() => void toggle(l.id)} />}
-      empty={lists.isLoading ? null : <Empty title="No lists yet." body="Make one on the web, or ask your AI to build one." />}
+      empty={lists.isLoading || fresh ? null : <Empty title="No lists yet." body="Type a name above to start one, or ask your AI to build one." />}
     />
+  );
+}
+
+// Tags for many selected rows: a tag all of them have is ticked, and a tap takes it off all of them; otherwise a
+// tap puts it on all of them. Their tags come from the rows already loaded.
+function TagsForMany({ ids }: { ids: string[] }) {
+  const qc = useQueryClient();
+  const tags = useTags();
+  const [filter, setFilter] = useState("");
+  const loaded = qc.getQueriesData<ItemPage>({ queryKey: ["items"] }).flatMap(([, page]) => page?.items ?? []);
+  const [all, setAll] = useState(() => {
+    const picked = ids.map((id) => loaded.find((i) => i.id === id)?.tagIds ?? []);
+    return new Set((tags.data ?? []).filter((x) => picked.every((tagIds) => tagIds.includes(x.id))).map((x) => x.id));
+  });
+  const name = filter.trim();
+  const shown = (tags.data ?? []).filter((x) => x.name.toLowerCase().includes(name.toLowerCase()));
+  const fresh = name && !(tags.data ?? []).some((x) => x.name.toLowerCase() === name.toLowerCase());
+  const apply = async (tagId: string, on: boolean) => {
+    setAll((cur) => { const next = new Set(cur); if (on) next.add(tagId); else next.delete(tagId); return next; });
+    await api("/api/v1/items/batch", { json: { itemIds: ids, patch: on ? { addTagIds: [tagId] } : { removeTagIds: [tagId] } } }).catch(() => {});
+    void qc.invalidateQueries({ queryKey: ["items"] });
+    void qc.invalidateQueries({ queryKey: keys.tags });
+  };
+  const make = async () => {
+    const { tag } = await api<{ tag: Tag }>("/api/v1/tags", { json: { name } });
+    setFilter("");
+    await apply(tag.id, true);
+  };
+  return (
+    <Sheet
+      title={`Tags for ${ids.length}`}
+      top={<Finder value={filter} onChange={setFilter} label="Find or make a tag" make={fresh ? { label: `Make the tag “${name}”`, onPress: () => void make() } : undefined} />}
+      data={shown}
+      keyOf={(x) => x.id}
+      row={({ item: tag }) => <Row label={tag.name} on={all.has(tag.id)} onPress={() => void apply(tag.id, !all.has(tag.id))} />}
+      empty={tags.isLoading || fresh ? null : <Empty title="No tags yet." body="Type one above." />}
+    />
+  );
+}
+
+// Lists for many selected rows: a tap adds them all; a new list can start with them.
+function ListsForMany({ ids }: { ids: string[] }) {
+  const qc = useQueryClient();
+  const lists = useLists();
+  const [filter, setFilter] = useState("");
+  const [added, setAdded] = useState<Set<string>>(new Set());
+  const name = filter.trim();
+  const shown = (lists.data ?? []).filter((l) => l.name.toLowerCase().includes(name.toLowerCase()));
+  const fresh = name && !(lists.data ?? []).some((l) => l.name.toLowerCase() === name.toLowerCase());
+  const add = async (listId: string) => {
+    if (added.has(listId)) return;
+    setAdded((cur) => new Set(cur).add(listId));
+    await api(`/api/v1/lists/${listId}/items`, { json: { itemIds: ids } }).catch(() => {});
+    void qc.invalidateQueries({ queryKey: keys.lists });
+    void qc.invalidateQueries({ queryKey: keys.list(listId) });
+  };
+  const start = async () => {
+    const { list } = await api<{ list: List }>("/api/v1/lists", { json: { name, items: ids.map((itemId) => ({ itemId })) } });
+    setFilter("");
+    setAdded((cur) => new Set(cur).add(list.id));
+    void qc.invalidateQueries({ queryKey: keys.lists });
+  };
+  return (
+    <Sheet
+      title={`Add ${ids.length} to a List`}
+      top={<Finder value={filter} onChange={setFilter} label="Find or start a List" make={fresh ? { label: `Start a List called “${name}”`, onPress: () => void start() } : undefined} />}
+      data={shown}
+      keyOf={(l) => l.id}
+      row={({ item: l }) => <Row label={l.name} on={added.has(l.id)} onPress={() => void add(l.id)} />}
+      empty={lists.isLoading || fresh ? null : <Empty title="No lists yet." body="Type a name above to start one." />}
+    />
+  );
+}
+
+// The field at the top of a pick, and the row that makes a new one from what is typed in it.
+function Finder({ value, onChange, label, make }: { value: string; onChange: (v: string) => void; label: string; make?: { label: string; onPress: () => void } }) {
+  const t = useTheme();
+  return (
+    <>
+      <TextInput value={value} onChangeText={onChange} placeholder={label} placeholderTextColor={t.ink2} autoCorrect={false} autoCapitalize="none"
+        clearButtonMode="while-editing" accessibilityLabel={label} returnKeyType="done" onSubmitEditing={make?.onPress} selectionColor={t.accent}
+        style={[font.regular, styles.filter, { backgroundColor: t.surface, borderColor: t.lineStrong, color: t.ink }]} />
+      {make && (
+        <Pressable accessibilityRole="button" onPress={make.onPress}
+          style={({ pressed }) => [styles.row, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
+          <Icon d={ICONS.plus} size={18} color={t.actionInk} width={1.8} />
+          <Text numberOfLines={2} style={[font.medium, { flex: 1, color: t.actionInk, fontSize: 16 }]}>{make.label}</Text>
+        </Pressable>
+      )}
+    </>
   );
 }
 

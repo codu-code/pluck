@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS } from "./Glyph";
+import { useTabBarStandIn } from "./ToolBar";
 
 const TABS: Record<string, { label: string; icon: string }> = {
   index: { label: "Inbox", icon: ICONS.inbox },
@@ -15,6 +16,8 @@ const TABS: Record<string, { label: string; icon: string }> = {
 export function TabBar({ state, navigateToTab }: BottomTabBarProps) {
   const t = useTheme();
   const bottom = useSafeAreaInsets().bottom;
+  const standIn = useTabBarStandIn();
+  if (standIn) return standIn;
   return (
     <View style={[styles.bar, { backgroundColor: t.rail, borderTopColor: t.line, paddingBottom: Math.max(bottom, 8) }]}>
       {state.routes.map((route, i) => {

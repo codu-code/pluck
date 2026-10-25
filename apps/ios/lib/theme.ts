@@ -13,6 +13,7 @@ export const palettes = {
     actionInk: "#1E5C45", // text buttons and ticks: forest on light; forest is too dark to read on the dark ground
     logoInk: "#1E5C45", logoSpark: "#34A07C", // --logo-ink and --logo-spark
     toastAction: "#7FD3AE", // Undo on the toast, which is drawn inverted (ink ground)
+    archiveBg: "#F2D9CF", archiveInk: "#8E2E1B", // behind the Archive swipe: away, not deleted; a warm wash of danger
   },
   dark: {
     ground: "#10130F", rail: "#161A14", railActive: "#252A22", tint: "#191D17", selected: "#1E221C", surface: "#191D17", field: "#191D17",
@@ -24,6 +25,7 @@ export const palettes = {
     actionInk: "#7FD3AE",
     logoInk: "#ECEFE8", logoSpark: "#7FD3AE",
     toastAction: "#1E5C45",
+    archiveBg: "#4A2219", archiveInk: "#F2B3A2",
   },
 };
 export type Palette = typeof palettes.light;
