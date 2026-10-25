@@ -35,7 +35,7 @@ const withDarkIcon: ConfigPlugin = (c) => {
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
-  version: "0.1.0",
+  version: "1.0.0",
   // "io.getpluck.app:/oauth" is the OAuth redirect (RFC 8252 reverse-domain); "pluck://" opens screens.
   scheme: ["pluck", "io.getpluck.app"],
   orientation: "portrait",
