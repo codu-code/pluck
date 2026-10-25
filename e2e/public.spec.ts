@@ -61,7 +61,7 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   await expect(row).toContainText("taken down");
   const gone = await anon.goto(`/@${handle}/best-mcp-reading`);
   expect(gone?.status()).toBe(404);
-  await expect(anon.getByRole("heading", { name: "Nothing here." })).toBeVisible();
+  await expect(anon.getByRole("heading", { name: "This List isn't public." })).toBeVisible();
 
   // Not an admin: /admin is a 404.
   expect((await visitor.goto("/admin"))?.status()).toBe(404);

@@ -76,6 +76,8 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await page.goto(`/api/auth/oauth2/authorize?${consent}`);
   await page.waitForURL(/\/oauth\/consent/);
   await snap("consent");
+  await page.goto("/shared/000000000000000000000000"); // a shared link that does not open for this person
+  await snap("shared-no-access");
   await page.goto("/later");
   await snap("later");
   await page.goto("/inbox");

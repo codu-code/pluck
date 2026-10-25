@@ -29,6 +29,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `S3_ENDPOINT`, `S3_BUCKET`, `AWS_REGION` | To use real S3 (or R2, B2, …) instead of the bundled MinIO | MinIO |
 | `ADMIN_EMAILS` | Who can open `/admin` (reports, take-downs), comma separated | none |
 | `ABUSE_EMAIL` | Where reports of public lists are emailed | none |
+| `APPLE_TEAM_ID` | Only if you build the iPhone app for your own server: your Apple team ID, so links to your server open the app (universal links). The app needs `applinks:<your host>` too | off |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST` | Your own PostHog project, if you want analytics and error tracking. The key is read when the image is built (`docker compose build` with it in the environment); unset, there is no cookie banner and nothing is sent anywhere. The host defaults to PostHog's EU cloud | off |
 | `EMAIL_IN_DOMAIN` | For email-in: the domain whose mail lands in the bucket under `inbound/` (needs an inbound mail service that writes raw messages there, like SES receipt rules) | off |
 

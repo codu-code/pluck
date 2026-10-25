@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
 import { toast } from "@/components/Toast";
-import { keys } from "@/lib/data";
+import { keys, useMe } from "@/lib/data";
 import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 
@@ -18,7 +18,8 @@ export default function SharedList() {
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const page = useQuery({ queryKey: ["shared", id], queryFn: () => api<PublicList>(`/api/v1/shared/${id}`) });
+  const me = useMe();
+  const page = useQuery({ queryKey: ["shared", id], queryFn: () => api<PublicList>(`/api/v1/shared/${id}`), retry: false });
   const list = page.data?.list;
   const author = page.data?.author;
   const failed = (e: unknown) => Alert.alert("That did not go through", e instanceof Refused ? e.message : "Check the connection, then try again.");
@@ -71,7 +72,7 @@ export default function SharedList() {
           </View>
         ) : undefined}
         ListEmptyComponent={page.isLoading ? undefined : page.isError
-          ? <Empty title="This List is not shared with you now." body="Its owner may have taken it back, or deleted it." />
+          ? <Empty title="Not shared with you." body={`Either this List no longer exists, or it isn't shared with ${me.data?.email ?? "the email you signed in with"}. If someone sent you the link, ask them to share it with that address.`} />
           : <Empty title="Nothing on this List yet." />}
         renderItem={({ item: e, index }) => (
           <Pressable disabled={!e.url} onPress={() => e.url && void WebBrowser.openBrowserAsync(e.url)} accessibilityRole={e.url ? "link" : "text"}
