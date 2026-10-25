@@ -79,5 +79,22 @@ for (const f of PNGS) {
   await page.setContent(`<style>html,body{margin:0;background:transparent}svg{display:block}</style>${iconSvg(f)}`);
   await page.screenshot({ path: join(root, f.path), omitBackground: true });
 }
+// The iPhone launch screen: the wordmark (packages/ui's Logo) on each ground, 3x of the 150 pt it shows at.
+const fredoka = readFileSync(join(root, "apps/ios/node_modules/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.ttf")).toString("base64");
+const SPLASH = [
+  { path: "apps/ios/assets/splash.png", ink: "#1E5C45", spark: "#34A07C" },
+  { path: "apps/ios/assets/splash-dark.png", ink: "#ECEFE8", spark: "#7FD3AE" },
+];
+for (const f of SPLASH) {
+  await page.setViewportSize({ width: 600, height: 300 });
+  await page.setContent(
+    `<style>@font-face{font-family:F;src:url(data:font/ttf;base64,${fredoka})}html,body{margin:0;background:transparent}` +
+      `#w{display:inline-flex;align-items:flex-start;font:700 132px/0.92 F;letter-spacing:-0.01em;color:${f.ink};padding:8px 4px 16px}` +
+      `svg{width:.457em;height:.457em;overflow:visible;margin-left:-.098em;margin-top:.022em}</style>` +
+      `<span id="w">pluck<svg viewBox="0 0 12 12"><path d="M2.2 5.6L2.8 2.3M5 7.4L8 4.7M5.8 10.6L9.4 9.85" fill="none" stroke="${f.spark}" stroke-width="1.8" stroke-linecap="round"/></svg></span>`,
+  );
+  await page.evaluate(() => document.fonts.ready);
+  await page.locator("#w").screenshot({ path: join(root, f.path), omitBackground: true });
+}
 await browser.close();
-console.log(`${SVGS.length} SVGs and ${PNGS.length} PNGs written.`);
+console.log(`${SVGS.length} SVGs and ${PNGS.length + SPLASH.length} PNGs written.`);

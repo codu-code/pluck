@@ -1,16 +1,23 @@
 import { Image, StyleSheet, Text, View } from "react-native";
+import Animated, { Easing, Keyframe } from "react-native-reanimated";
 import { font, useTheme } from "@/lib/theme";
 import { Icon, ICONS } from "./Glyph";
 
 // Small drawn pieces of the product, from the IOSFirstRun and IOSInbox boards, for first run and empty states.
 
-export function PluckedChip() {
+// Lands like the web's "Sent." stamp: a little big and askew, then settles. Reduce Motion skips it (Reanimated's default).
+const stampIn = new Keyframe({
+  0: { opacity: 0, transform: [{ rotate: "-6deg" }, { scale: 1.12 }] },
+  100: { opacity: 1, transform: [{ rotate: "0deg" }, { scale: 1 }], easing: Easing.bezier(0.16, 1, 0.3, 1) },
+}).delay(450).duration(420);
+
+export function PluckedChip({ stamp = false }: { stamp?: boolean }) {
   const t = useTheme();
   return (
-    <View style={[styles.chip, { backgroundColor: t.ground }]}>
+    <Animated.View entering={stamp ? stampIn : undefined} style={[styles.chip, { backgroundColor: t.ground }]}>
       <View style={[styles.tick, { backgroundColor: t.highlight }]}><Icon d={ICONS.tick} size={14} color={t.onHighlight} width={2.2} /></View>
       <Text style={[font.bold, { color: t.ink, letterSpacing: -0.3 }]}>Plucked.</Text>
-    </View>
+    </Animated.View>
   );
 }
 

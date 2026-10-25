@@ -1,6 +1,6 @@
 import { isTextKind } from "./notes.ts";
 import type { Item } from "./items.ts";
-import type { Source } from "./enums.ts";
+import type { Source, Status } from "./enums.ts";
 
 // How an item reads in a row, shared by the web app and the iOS app.
 
@@ -91,3 +91,11 @@ const SOURCE: Record<Source, string> = {
 };
 export const sourceLabel = (s: Source) => SOURCE[s];
 
+
+// What a move says once it is done, with Undo beside it.
+export const MOVED: Record<Status, string> = {
+  archived: "Gone. Well, archived.",
+  later: "Kept for later.",
+  done: "Done.",
+  inbox: "Back in the Inbox.",
+};

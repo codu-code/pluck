@@ -17,9 +17,4 @@ export async function restoreStatuses(items: Pick<Item, "id" | "status">[]): Pro
   await Promise.all([...by].map(([status, ids]) => moveItems(ids, status)));
 }
 
-export const MOVED: Record<Status, string> = {
-  archived: "Gone. Well, archived.",
-  later: "Kept for later.",
-  done: "Done.",
-  inbox: "Back in the Inbox.",
-};
+export { MOVED } from "@pluck/shared-schemas";
