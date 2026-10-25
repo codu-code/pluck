@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { expect, test } from "@playwright/test";
-import { linkFromEmail, signIn, uniqueEmail } from "./helpers";
+import { linkFromEmail, openSignInLink, signIn, uniqueEmail } from "./helpers";
 
 const BASE = "http://127.0.0.1:3300";
 const REDIRECT = "http://127.0.0.1:4180/callback";
@@ -38,7 +38,7 @@ test("an AI tool connects over OAuth and calls the connector", async ({ page, re
   await page.getByLabel("Email").fill(email);
   await page.getByRole("button", { name: "Email me a link" }).click();
   await expect(page.getByRole("status").filter({ hasText: email })).toBeVisible();
-  await page.goto(await linkFromEmail(email, sent));
+  await openSignInLink(page, await linkFromEmail(email, sent));
   await expect(page.getByRole("heading", { name: "Test AI wants to use your Pluck" })).toBeVisible();
   await expect(page.getByText("Pluck and organise")).toBeVisible();
   await expect(page.getByText("Delete items")).toHaveCount(0);

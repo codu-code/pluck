@@ -21,6 +21,14 @@ export async function linkFromEmail(to: string, after = 0): Promise<string> {
   throw new Error(`no email to ${to}`);
 }
 
+// Opens a sign-in email's link the way a person does, after a mail scanner has fetched it first: the fetch must
+// not spend it (lib/signin-link.ts), and the tap must.
+export async function openSignInLink(page: Page, link: string): Promise<void> {
+  expect((await page.request.get(link, { maxRedirects: 0 })).status()).toBe(200);
+  await page.goto(link);
+  await page.getByRole("button", { name: "Sign in to Pluck" }).click();
+}
+
 export const uniqueEmail = (tag: string) => `${tag}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@example.test`;
 
 // Signs in through the real magic link. `lands` is where the link should take you (default: the Inbox).
@@ -30,7 +38,7 @@ export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/i
   await page.getByLabel("Email").fill(email);
   await page.getByRole("button", { name: "Email me a link" }).click();
   await expect(page.getByRole("status").filter({ hasText: email })).toBeVisible();
-  await page.goto(await linkFromEmail(email, sent));
+  await openSignInLink(page, await linkFromEmail(email, sent));
   await expect(page).toHaveURL(new RegExp(`${lands.replace(/[/]/g, "\\/")}$`));
   return email;
 }
