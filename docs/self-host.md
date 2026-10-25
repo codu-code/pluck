@@ -24,6 +24,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `BETTER_AUTH_SECRET` | 32+ random bytes. Leave unset to have one generated and kept in the `secrets` volume | generated |
 | `SMTP_URL` | Your mail relay, e.g. `smtps://user:pass@smtp.example.com:465` | the bundled Mailpit |
 | `EMAIL_FROM` | The From line for sign-in links and the Monday email | `Pluck <pluck@localhost>` |
+| `DIGEST_FROM`, `EMAIL_REPLY_TO` | Optional: a separate From line for the Monday email (a subdomain keeps spam reports on it away from sign-in links), and where replies go if your From address takes no mail | `EMAIL_FROM`, none |
 | `S3_PUBLIC_ENDPOINT` | Where browsers and phones reach the blob store (uploads, covers, exports). Publish MinIO behind your proxy and put its public address here | `http://localhost:9000` |
 | `S3_ACCESS_KEY`, `S3_SECRET_KEY` | MinIO's credentials, used by the app too. Set the secret to a long random value (`openssl rand -hex 32`): the default is public, so Pluck will not start with it unless `PLUCK_URL` and `S3_PUBLIC_ENDPOINT` are both localhost | `pluck`, `pluck-change-me` |
 | `S3_ENDPOINT`, `S3_BUCKET`, `AWS_REGION` | To use real S3 (or R2, B2, …) instead of the bundled MinIO | MinIO |
@@ -31,6 +32,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `ABUSE_EMAIL` | Where reports of public lists are emailed | none |
 | `APPLE_TEAM_ID` | Only if you build the iPhone app for your own server: your Apple team ID, so links to your server open the app (universal links). The app needs `applinks:<your host>` too | off |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST` | Your own PostHog project, if you want analytics and error tracking. The key is read when the image is built (`docker compose build` with it in the environment); unset, there is no cookie banner and nothing is sent anywhere. The host defaults to PostHog's EU cloud | off |
+| `WELCOME_FROM` | A From line for a welcome note sent 27 minutes after each sign-up, signed by the person who runs getpluck.io. Leave it unset on your own server | off |
 | `EMAIL_IN_DOMAIN` | For email-in: the domain whose mail lands in the bucket under `inbound/` (needs an inbound mail service that writes raw messages there, like SES receipt rules) | off |
 
 Never set `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` on a server: they exist for local development and tests only. Without them Pluck refuses to fetch private addresses and rate-limits sign-in.
@@ -48,7 +50,7 @@ Update with `git pull && docker compose up -d --build`. Back up the `mongo` and 
 ## What runs where
 
 - `web`: `next start` on port 3000. Health at `/api/health`.
-- `worker`: the job queue (reading pages, imports, exports, shared files, email-in, the Monday email at 8 a second) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
+- `worker`: the job queue (reading pages, imports, exports, shared files, email-in, welcome notes and the Monday email, together at 8 a second) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
 - `mongo`: MongoDB 8.2, a single-node replica set.
 - `minio` and `minio-init`: the blob store and a one-off that makes the bucket.
 - `mailpit`: catches mail until `SMTP_URL` points elsewhere. Remove it once you do.

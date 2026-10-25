@@ -9,7 +9,7 @@ function stacks() {
   const app = new App();
   const env = { account: "123456789012", region: "eu-west-1" };
   const email = new EmailStack(app, "Email", { env, domain: "getpluck.io" });
-  const data = new DataStack(app, "Data", { env, emailIdentity: email.identity, appOrigin: "https://getpluck.io" });
+  const data = new DataStack(app, "Data", { env, emailIdentities: email.identities, appOrigin: "https://getpluck.io" });
   const inbound = new InboundStack(app, "Inbound", { env, domain: "getpluck.io", bucket: data.bucket });
   return { inbound: Template.fromStack(inbound), data: Template.fromStack(data) };
 }

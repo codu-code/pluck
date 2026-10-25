@@ -9,7 +9,7 @@ const domain: string = app.node.tryGetContext("domain");
 const env = { account: process.env.CDK_DEFAULT_ACCOUNT, region: "eu-west-1" };
 
 const email = new EmailStack(app, "PluckEmail", { env, domain });
-const data = new DataStack(app, "PluckData", { env, emailIdentity: email.identity, appOrigin: app.node.tryGetContext("appOrigin") });
+const data = new DataStack(app, "PluckData", { env, emailIdentities: email.identities, appOrigin: app.node.tryGetContext("appOrigin") });
 new InboundStack(app, "PluckInbound", { env, domain, bucket: data.bucket });
 
 // Where alerts go is a deploy-time choice, not something to keep in a public repo: `-c alertEmail=you@example.com`.

@@ -21,3 +21,14 @@ test("every DNS record Vercel needs is an output, and nothing touches Route53", 
   expect(outputs).toEqual(expect.arrayContaining(["DnsMailFromMx", "DnsMailFromSpf", "DnsDmarc"]));
   expect(Object.keys(t.findResources("AWS::Route53::RecordSet"))).toHaveLength(0);
 });
+
+test("automated mail has its own subdomains, so a spam report on one never burns the root or the other", () => {
+  const t = template();
+  for (const host of ["notify.getpluck.io", "updates.getpluck.io"])
+    t.hasResourceProperties("AWS::SES::EmailIdentity", { EmailIdentity: host, MailFromAttributes: { MailFromDomain: `mail.${host}` } });
+  const outputs = Object.keys(t.findOutputs("*"));
+  for (const id of ["Notify", "Updates"]) {
+    expect(outputs.filter((o) => o.startsWith(`Dns${id}Dkim`))).toHaveLength(3);
+    expect(outputs).toEqual(expect.arrayContaining([`Dns${id}MailFromMx`, `Dns${id}MailFromSpf`]));
+  }
+});

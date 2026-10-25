@@ -1,12 +1,15 @@
 import { claimJob, completeJob, failJob, getItem, hitRateLimit, retryJob, type Job } from "@pluck/db";
 import { extractAttempt } from "./capture";
-import { finishFile, ingestInbound, runExport, runImport, sendDigest } from "./library";
+import { finishFile, ingestInbound, runExport, runImport, sendDigest, sendWelcome } from "./library";
 import { log } from "./log";
 
 const MAX_ATTEMPTS = 5;
-// Bulk mail shares one send rate across every instance, under SES's default of 14 a second, so sign-in links
-// (which skip the queue) always have room.
-const DIGESTS_PER_SECOND = 8;
+// Queued mail (Monday emails, welcomes) shares one send rate across every instance, under SES's 14 a second,
+// so sign-in links (which skip the queue) always have room.
+const QUEUED_MAIL_PER_SECOND = 8;
+const mailSlot = async () => {
+  while (!(await hitRateLimit("send:queued", QUEUED_MAIL_PER_SECOND, 1)).ok) await new Promise((r) => setTimeout(r, 250));
+};
 
 // Worker job handlers. A handler that throws is retried with backoff up to five times.
 const handlers: Record<string, (payload: Record<string, unknown>) => Promise<void>> = {
@@ -17,8 +20,12 @@ const handlers: Record<string, (payload: Record<string, unknown>) => Promise<voi
     await extractAttempt(userId, item, { timeoutMs: 20_000 }); // records the attempt and queues the next one itself
   },
   async digest(p) {
-    while (!(await hitRateLimit("send:digest", DIGESTS_PER_SECOND, 1)).ok) await new Promise((r) => setTimeout(r, 250));
+    await mailSlot();
     await sendDigest(String(p.userId));
+  },
+  async welcome(p) {
+    await mailSlot();
+    await sendWelcome(String(p.userId));
   },
   async "email-in"(p) {
     await ingestInbound(String(p.key));

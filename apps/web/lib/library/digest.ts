@@ -21,8 +21,8 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
   const d = await digestFor(userId, me.settings);
   if (isEmptyDigest(d) && !force) return false;
   const tap = (a: Tap["a"], i?: string) => `${origin()}/d/${signTap({ u: userId, a, i })}`;
-  await sendEmail(
-    digestEmail(me.email, me.name, d, {
+  await sendEmail({
+    ...digestEmail(me.email, me.name, d, {
       keep: (id) => tap("keep", id),
       letGo: (id) => tap("letgo", id),
       open: (id) => `${origin()}/items/${id}`,
@@ -31,7 +31,8 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
       settings: `${origin()}/settings#expiry`,
       stop: tap("stop"),
     }),
-  );
+    from: process.env.DIGEST_FROM, // its own subdomain: a spam report on it never reaches sign-in links
+  });
   return true;
 }
 
