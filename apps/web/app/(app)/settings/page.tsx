@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { requireUser, MCP_RESOURCE } from "@/lib/auth";
-import { aiTaggedCount, aiToolsOf, archiveItAll, emailInAddress, keysOf, me, tagsOf } from "@/lib/library";
+import { aiTaggedCount, aiToolsOf, archiveItAll, emailInAddress, keysOf, listsOf, me, tagsOf } from "@/lib/library";
 import { CookiesLink } from "@/components/CookieBanner";
 import { DeleteAccount, ImportExport, KeysSection, SignOut } from "./AccountSections";
 import { AiToolsSection } from "./AiToolsSection";
@@ -15,9 +15,9 @@ export const metadata: Metadata = { title: "Settings · Pluck" };
 // Settings from the board, top to bottom.
 export default async function Settings() {
   const user = await requireUser();
-  const [tags, aiWeek, profile, stale, address, keys, aiTools] = await Promise.all([
+  const [tags, aiWeek, profile, stale, address, keys, aiTools, lists] = await Promise.all([
     tagsOf(user.id), aiTaggedCount(user.id, 7), me(user.id), archiveItAll(user.id, { dryRun: true }), emailInAddress(user.id), keysOf(user.id),
-    aiToolsOf(user.id),
+    aiToolsOf(user.id), listsOf(user.id),
   ]);
   return (
     <div className={styles.page}>
@@ -27,7 +27,7 @@ export default async function Settings() {
           {user.email} · signed in with an email link · <SignOut /> · <CookiesLink className={styles.linkButton} />
         </span>
       </div>
-      <ProfileSection initial={profile} />
+      <ProfileSection initial={profile} publicLists={lists.filter((l) => l.visibility === "public").length} />
       <AiToolsSection connectorUrl={MCP_RESOURCE} keyPrefix={keys[0]?.prefix ?? null} initial={aiTools} lastCallAt={profile.lastMcpCallAt} />
       <div className={styles.pair}>
         <EmailInSection initial={address} />

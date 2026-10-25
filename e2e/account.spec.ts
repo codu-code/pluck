@@ -66,13 +66,18 @@ test("import a Pocket file, export everything, sign out, delete the account", as
   await expect(page.getByRole("heading", { name: "Nothing plucked yet." })).toBeVisible();
 });
 
-test("a new account has a made-up handle, and Make one up rolls another", async ({ page }) => {
+test("a new account has a made-up handle; a new one says what moves and waits for Save", async ({ page }) => {
   await signIn(page);
   await page.goto("/settings");
   const field = page.getByRole("textbox", { name: "Handle, for public lists" });
   const first = await field.inputValue();
   expect(first).toMatch(/^[a-z]+-[a-z]+-\d\d$/);
   await page.getByRole("button", { name: "Make one up" }).click();
-  await expect(page.getByText("Made one up.")).toBeVisible();
   await expect(field).not.toHaveValue(first);
+  await expect(page.getByText("No public Lists yet, so no links change.")).toBeVisible();
+  expect((await (await page.request.get("/api/v1/me")).json()).me.handle).toBe(first); // nothing saved yet
+  const next = await field.inputValue();
+  await page.getByRole("button", { name: `Save @${next}` }).click();
+  await expect(page.getByText("Handle saved.")).toBeVisible();
+  expect((await (await page.request.get("/api/v1/me")).json()).me.handle).toBe(next);
 });

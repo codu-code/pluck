@@ -27,8 +27,9 @@
 .error { display: block; color: var(--danger); font-size: 13px; margin-top: 4px; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 600px) { .page { padding: 20px 16px; } }
-.profile { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
+.profile { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
 .profileField { flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; }
+.stack { display: flex; flex-direction: column; gap: 6px; }
 .label { font-weight: 500; }
 .profileInput { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
 .handleBox { display: flex; align-items: center; height: 40px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); overflow: hidden; }
@@ -36,8 +37,13 @@
 .handleBox .textButton { flex: none; margin-right: 4px; }
 .prefix { padding: 0 4px 0 12px; color: var(--ink2); }
 .handleInput { flex: 1; min-width: 0; height: 38px; border: 0; outline: none; background: transparent; color: var(--ink); font: inherit; }
-.profileHint { flex: 1 1 200px; color: var(--ink2); font-size: 13px; padding-bottom: 10px; }
+.profileHint { color: var(--ink2); font-size: 13px; }
 .profileHint[role="alert"] { color: var(--danger); }
+.handleChange { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+.handleWarning { margin: 0; max-width: 62ch; color: var(--ink); font-size: 14px; line-height: 1.45; }
+.handleWarning[role="alert"] { color: var(--danger); }
+.handleActions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.handleActions .primaryButton { align-self: auto; }
 .fields { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .selectField { height: 40px; min-width: 200px; max-width: 320px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }
