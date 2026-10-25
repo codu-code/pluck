@@ -162,14 +162,6 @@
       },
       "para1": "Pluck for Chrome is in the Chrome Web Store's review queue, somewhere behind a few thousand coupon finders. Out any day now.",
       "para2": "Until then, Pluck works on the web: paste a link and it is plucked. Your AI can pluck for you too."
-    },
-    "iphone": {
-      "meta": {
-        "title": "Pluck for iPhone · Pluck",
-        "description": "Pluck for iPhone is on TestFlight first, then the App Store."
-      },
-      "para1": "Pluck for iPhone is on TestFlight first, then the App Store. Pluck from the share sheet, read anywhere, swipe to Later.",
-      "para2": "Until then, Pluck works in Safari on your phone: paste a link and it is plucked. Your AI can pluck for you too."
     }
   },
   "openSource": {
@@ -563,5 +555,36 @@
         "other": "Something else"
       }
     }
+  },
+  "iphone": {
+    "meta": {
+      "title": "Pluck for iPhone, in beta · Pluck",
+      "description": "Pluck for iPhone is in public beta on TestFlight. Install it in a minute."
+    },
+    "title": "Try it on your iPhone<dot>.</dot>",
+    "lede": "Pluck for iPhone is in public beta on TestFlight, Apple's app for trying apps before they reach the App Store. Pluck from the share sheet, read anywhere, even offline, and swipe to Later.",
+    "join": "Join the beta on TestFlight",
+    "steps": {
+      "get": {
+        "title": "Get TestFlight",
+        "body": "Install <app>TestFlight from the App Store</app>. It's free, and made by Apple."
+      },
+      "join": {
+        "title": "Join the beta",
+        "body": "Open <invite>the Pluck invite</invite> on your iPhone, tap Accept, then Install."
+      },
+      "signIn": {
+        "title": "Sign in",
+        "body": "Open Pluck, type your email, then the 6-digit code we send you. New here? The same code starts your library."
+      },
+      "share": {
+        "title": "Put Pluck up front",
+        "body": "In any app, tap Share, scroll the app row to More, and drag Pluck to the front."
+      }
+    },
+    "needs": "Needs iOS 17 or later. TestFlight keeps Pluck up to date for you.",
+    "desktop": "On a computer? Point your iPhone's camera at this.",
+    "qrAlt": "QR code for the Pluck beta on TestFlight",
+    "feedback": "Something off? Take a screenshot in Pluck and TestFlight offers to send it to us. Or write to support@getpluck.io."
   }
 }

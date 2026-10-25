@@ -83,11 +83,17 @@ test("home: drawn pieces below the fold play once in view; reduced motion leaves
   await still.close();
 });
 
-test("iPhone: a coming-soon page while the app is on TestFlight", async ({ page }) => {
+test("iPhone: the public TestFlight beta, with the link, four steps and a code to scan", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "iPhone", exact: true }).click();
   await expect(page).toHaveURL(/\/iphone$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Soon.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Try it on your iPhone.");
+  await expect(page.getByRole("link", { name: "Join the beta on TestFlight" })).toHaveAttribute("href", /^https:\/\/testflight\.apple\.com\/join\//);
+  await expect(page.getByRole("listitem")).toHaveCount(4);
+  await expect(page.getByRole("img", { name: "QR code for the Pluck beta on TestFlight" })).toBeVisible();
+  // On a phone the link is the way in; the code to scan is for a computer.
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole("img", { name: "QR code for the Pluck beta on TestFlight" })).toBeHidden();
 });
 
 test("support: answers by topic, and bugs go to GitHub issues", async ({ page }) => {

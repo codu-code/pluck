@@ -162,14 +162,6 @@
       },
       "para1": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store, irgendwo hinter ein paar Tausend Gutschein-Findern. Es kann jeden Tag so weit sein.",
       "para2": "Bis dahin funktioniert Pluck im Web: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
-    },
-    "iphone": {
-      "meta": {
-        "title": "Pluck für iPhone · Pluck",
-        "description": "Pluck für iPhone kommt zuerst auf TestFlight, dann in den App Store."
-      },
-      "para1": "Pluck für iPhone kommt zuerst auf TestFlight, dann in den App Store. Pflück aus dem Teilen-Menü, lies überall, wisch nach Später.",
-      "para2": "Bis dahin funktioniert Pluck in Safari auf deinem iPhone: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
     }
   },
   "openSource": {
@@ -563,5 +555,36 @@
         "other": "Etwas anderes"
       }
     }
+  },
+  "iphone": {
+    "meta": {
+      "title": "Pluck für iPhone, in der Beta · Pluck",
+      "description": "Pluck für iPhone ist in der öffentlichen Beta auf TestFlight. In einer Minute installiert."
+    },
+    "title": "Probier es auf deinem iPhone<dot>.</dot>",
+    "lede": "Pluck für iPhone ist in der öffentlichen Beta auf TestFlight, Apples App zum Ausprobieren von Apps, bevor sie im App Store sind. Pflück über das Teilen-Menü, lies überall, auch offline, und wisch zu Später.",
+    "join": "Bei der Beta auf TestFlight mitmachen",
+    "steps": {
+      "get": {
+        "title": "Hol dir TestFlight",
+        "body": "Installier <app>TestFlight aus dem App Store</app>. Es ist kostenlos und von Apple."
+      },
+      "join": {
+        "title": "Mach bei der Beta mit",
+        "body": "Öffne <invite>die Pluck-Einladung</invite> auf deinem iPhone, tippe auf Annehmen und dann auf Installieren."
+      },
+      "signIn": {
+        "title": "Melde dich an",
+        "body": "Öffne Pluck, gib deine E-Mail ein und dann den 6-stelligen Code, den wir dir schicken. Neu hier? Derselbe Code legt deine Bibliothek an."
+      },
+      "share": {
+        "title": "Hol Pluck nach vorn",
+        "body": "Tippe in einer beliebigen App auf Teilen, wisch in der App-Reihe bis Mehr und zieh Pluck nach vorn."
+      }
+    },
+    "needs": "Braucht iOS 17 oder neuer. TestFlight hält Pluck für dich aktuell.",
+    "desktop": "Am Computer? Halt die Kamera deines iPhones hierauf.",
+    "qrAlt": "QR-Code für die Pluck-Beta auf TestFlight",
+    "feedback": "Stimmt was nicht? Mach in Pluck einen Screenshot, und TestFlight bietet an, ihn uns zu schicken. Oder schreib an support@getpluck.io."
   }
 }

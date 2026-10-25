@@ -6,6 +6,6 @@ export const contentType = "image/png";
 export const alt = "Pluck";
 
 export default async function Image() {
-  const t = await getTranslations("site");
-  return og({ title: t("soon.iphone.meta.title").replace(/ · Pluck$/, ""), sub: t("soon.iphone.meta.description") });
+  const t = await getTranslations("site.iphone");
+  return og({ title: t.raw("title") as string, sub: t("meta.description") });
 }

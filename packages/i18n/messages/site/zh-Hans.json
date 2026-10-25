@@ -162,14 +162,6 @@
       },
       "para1": "Pluck for Chrome 正在 Chrome 网上应用店排队审核，前面大概还有几千个优惠券插件。随时可能上线。",
       "para2": "在那之前，Pluck 可以在网页上用：粘贴一个链接，它就摘下了。你的 AI 也能替你摘。"
-    },
-    "iphone": {
-      "meta": {
-        "title": "Pluck for iPhone · Pluck",
-        "description": "Pluck for iPhone 先在 TestFlight 上推出，然后登陆 App Store。"
-      },
-      "para1": "Pluck for iPhone 先在 TestFlight 上推出，然后登陆 App Store。在分享菜单里摘下，随处阅读，轻扫移到稍后。",
-      "para2": "在那之前，Pluck 可以在手机上的 Safari 里用：粘贴一个链接，它就摘下了。你的 AI 也能替你摘。"
     }
   },
   "openSource": {
@@ -563,5 +555,36 @@
         "other": "其他"
       }
     }
+  },
+  "iphone": {
+    "meta": {
+      "title": "Pluck iPhone 版公测 · Pluck",
+      "description": "Pluck iPhone 版正在 TestFlight 上公测，一分钟就能装好。"
+    },
+    "title": "在你的 iPhone 上试试<dot>。</dot>",
+    "lede": "Pluck iPhone 版正在 TestFlight 上公测。TestFlight 是 Apple 用来在上架 App Store 前试用 App 的应用。从分享菜单摘下，随处阅读，离线也行，滑一下就放到稍后。",
+    "join": "在 TestFlight 上加入公测",
+    "steps": {
+      "get": {
+        "title": "安装 TestFlight",
+        "body": "从 <app>App Store 安装 TestFlight</app>。免费，由 Apple 出品。"
+      },
+      "join": {
+        "title": "加入公测",
+        "body": "在 iPhone 上打开 <invite>Pluck 的邀请</invite>，轻点“接受”，再点“安装”。"
+      },
+      "signIn": {
+        "title": "登录",
+        "body": "打开 Pluck，输入邮箱，再输入我们发给你的 6 位验证码。第一次来？同一个验证码会为你开好资料库。"
+      },
+      "share": {
+        "title": "把 Pluck 放到最前",
+        "body": "在任意 App 里轻点“分享”，把 App 那一行滑到“更多”，再把 Pluck 拖到最前面。"
+      }
+    },
+    "needs": "需要 iOS 17 或更高版本。TestFlight 会帮你保持 Pluck 为最新版本。",
+    "desktop": "在电脑上？用 iPhone 相机对准这里。",
+    "qrAlt": "TestFlight 上 Pluck 公测的二维码",
+    "feedback": "哪里不对？在 Pluck 里截个屏，TestFlight 会问你要不要发给我们。也可以写信到 support@getpluck.io。"
   }
 }
