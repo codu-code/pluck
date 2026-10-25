@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, usePathname } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, Share, StyleSheet, Text, View } from "react-native";
+import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
 import { api } from "@/lib/session";
 import { keys, pluck, shareExtensionCache, syncPending, toSync, useCounts, useItems, useLists, useMe, usePatchItem, useTags } from "@/lib/data";
@@ -85,14 +85,12 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const more = () => {
     const options = [
       ...(one && one.url ? ["Add a note"] : []),
-      ...(one ? ["Share"] : []),
       ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["Done"] : []),
       "Select all",
     ];
     ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, (i) => {
       const o = options[i];
       if (o === "Add a note") router.push({ pathname: "/note", params: { id: one!.id } });
-      else if (o === "Share") void Share.share(one!.url ? { url: one!.url } : { message: one!.title });
       else if (o === "Done") void moveMany(chosen, "done");
       else if (o === "Select all") setPicked(new Set(rows.map((r) => r.id)));
     });

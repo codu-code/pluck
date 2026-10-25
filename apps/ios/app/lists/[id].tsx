@@ -1,12 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import { ActionSheetIOS, Alert, FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty } from "@/components/Screen";
-import { Refused } from "@pluck/client";
-import { keys, useList, useMe } from "@/lib/data";
-import { api, getSession } from "@/lib/session";
+import { keys, useList } from "@/lib/data";
+import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // One list (IOSLists board): purpose, ticks, notes, and Add.
@@ -16,7 +15,6 @@ export default function ListScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const qc = useQueryClient();
   const data = useList(id);
-  const me = useMe();
   const list = data.data?.list;
   const entries = data.data?.entries ?? [];
 
@@ -27,33 +25,7 @@ export default function ListScreen() {
     void qc.invalidateQueries({ queryKey: keys.lists });
   };
 
-  const makePublic = () =>
-    Alert.alert("Make this list public?", "Anyone with the link sees the titles, covers and your notes. Never the kept pages. You can make it private again.", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Make public",
-        onPress: async () => {
-          try {
-            await api(`/api/v1/lists/${id}`, { method: "PATCH", json: { visibility: "public" } });
-            await data.refetch();
-          } catch (e) {
-            Alert.alert("Not yet", e instanceof Refused ? e.message : "That did not work. Try again.");
-          }
-        },
-      },
-    ]);
-  // Two ways to share: with people, See only, or a public link for anyone.
-  const share = () => {
-    if (!list) return;
-    const options = ["Share with people", list.visibility === "public" ? "Send the public link" : "Make public…"];
-    ActionSheetIOS.showActionSheetWithOptions({ options: [...options, "Cancel"], cancelButtonIndex: options.length }, async (i) => {
-      if (i === 0) router.push({ pathname: "/people", params: { id } });
-      else if (i === 1 && list.visibility === "public") {
-        const server = (await getSession())?.server ?? "https://getpluck.io";
-        void Share.share({ url: `${server}/@${me.data?.handle}/${list.slug}` });
-      } else if (i === 1) makePublic();
-    });
-  };
+  const share = () => router.push({ pathname: "/share", params: { id } });
 
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>

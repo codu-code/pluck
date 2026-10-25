@@ -78,7 +78,7 @@ export default function Root() {
               <Stack.Screen name="settings" options={{ presentation: "modal" }} />
               <Stack.Screen name="note" options={{ presentation: "modal" }} />
               <Stack.Screen name="tags" options={{ presentation: "modal" }} />
-              <Stack.Screen name="people" options={{ presentation: "modal" }} />
+              <Stack.Screen name="share" options={{ presentation: "modal" }} />
               <Stack.Screen name="shared/[id]" />
               <Stack.Screen name="pick" options={{ presentation: "formSheet", sheetAllowedDetents: [0.6, 1] }} />
             </Stack.Protected>
