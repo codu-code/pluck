@@ -1,13 +1,14 @@
 "use client";
 
 import type { List, ListEntry, ListShare } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
 import { People } from "./People";
 import { TopBar } from "@/components/TopBar";
-import { rowSite } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
 import { isTyping } from "@/lib/keys";
 import styles from "./list.module.css";
 
@@ -39,6 +40,9 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
   const [host, setHost] = useState("getpluck.io");
   useEffect(() => setHost(window.location.host), []);
   const [toast, showToast] = useToast();
+  const t = useTranslations("app.list");
+  const app = useTranslations("app");
+  const f = useFormat();
   const listRef = useRef<HTMLOListElement>(null);
   const base = `/api/v1/lists/${list.id}`;
   const ticked = entries.filter((e) => e.ticked).length;
@@ -47,7 +51,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     setEntries((cur) => cur.map((x) => (x.item.id === e.item.id ? { ...x, ticked: !x.ticked } : x)));
     if (!(await send(`${base}/items/${e.item.id}`, "PATCH", { ticked: !e.ticked })).ok) {
       setEntries((cur) => cur.map((x) => (x.item.id === e.item.id ? e : x)));
-      showToast({ message: "That did not go through." });
+      showToast({ message: app("common.didNotGoThrough") });
     }
   }
 
@@ -58,7 +62,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     const res = await send(`${base}/items/${e.item.id}`, "PATCH", { note: draft.trim() || null });
     if (res.ok) return;
     setEntries((cur) => cur.map((x) => (x.item.id === e.item.id ? e : x))); // back to what is saved
-    showToast({ message: "That did not go through." });
+    showToast({ message: app("common.didNotGoThrough") });
   }
 
   // Moves entry `id` to index `to` and writes its new position.
@@ -73,7 +77,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     setCursor(to);
     if (!(await send(`${base}/items/${id}`, "PATCH", { position })).ok) {
       setEntries(entries);
-      showToast({ message: "That did not go through." });
+      showToast({ message: app("common.didNotGoThrough") });
     }
   }
 
@@ -81,7 +85,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     setEntries((cur) => cur.filter((x) => x.item.id !== e.item.id));
     await send(`${base}/items/${e.item.id}`, "DELETE");
     showToast({
-      message: `Taken out of “${list.name}”. It is still in your library.`,
+      message: t("takenOut", { name: list.name }),
       undo: () => void send(`${base}/items`, "POST", { itemId: e.item.id, position: e.position, note: e.note }).then(() => router.refresh()),
     });
   }
@@ -121,9 +125,9 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     const body = await res.json();
     if (res.ok) {
       setList((body as { list: List }).list);
-      return showToast({ message: visibility === "public" ? "Public. Anyone with the link can see it." : "Private again. The link stops working now." });
+      return showToast({ message: visibility === "public" ? t("nowPublic") : t("nowPrivate") });
     }
-    showToast({ message: body?.error?.message ?? "That did not go through." });
+    showToast({ message: body?.error?.message ?? app("common.didNotGoThrough") });
   }
 
   async function saveMeta(patch: { name?: string; purpose?: string }) {
@@ -133,7 +137,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
 
   async function exportMarkdown() {
     const res = await fetch(`${base}/export?format=md`);
-    if (!res.ok) return showToast({ message: "That did not go through." });
+    if (!res.ok) return showToast({ message: app("common.didNotGoThrough") });
     const url = URL.createObjectURL(await res.blob());
     const a = document.createElement("a");
     a.href = url;
@@ -142,13 +146,13 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
     URL.revokeObjectURL(url);
   }
 
-  const askPrompt = `Read my Pluck list "${list.name}" and tell me what it covers, what is missing, and the best order to read it in.`;
+  const askPrompt = t("askPrompt", { name: list.name });
 
   return (
     <>
-      <TopBar onPluck={() => showToast({ message: "Plucked to the Inbox." })} />
+      <TopBar onPluck={() => showToast({ message: app("common.pluckedToInbox") })} />
       <div className={styles.page}>
-        <Link href="/lists" className={styles.crumb}>Lists</Link>
+        <Link href="/lists" className={styles.crumb}>{t("crumb")}</Link>
         <div className={styles.head}>
           <div className={styles.titleCol}>
             {renaming ? (
@@ -161,31 +165,31 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                 }}
                 onKeyDown={(e) => e.key === "Escape" && (setRenaming(false), setName(list.name))}
               >
-                <input className={styles.nameInput} aria-label="List name" maxLength={120} value={name} autoFocus onChange={(e) => setName(e.target.value)} />
-                <button type="submit" className={styles.secondary}>Save</button>
+                <input className={styles.nameInput} aria-label={t("nameLabel")} maxLength={120} value={name} autoFocus onChange={(e) => setName(e.target.value)} />
+                <button type="submit" className={styles.secondary}>{app("common.save")}</button>
               </form>
             ) : (
               <h1 className={styles.title}>
                 {list.name}{" "}
-                <button type="button" className={styles.renameButton} onClick={() => setRenaming(true)}>Rename</button>
+                <button type="button" className={styles.renameButton} onClick={() => setRenaming(true)}>{app("common.rename")}</button>
               </h1>
             )}
             <label className={styles.purpose}>
-              <span className={styles.meta}>Purpose</span>
+              <span className={styles.meta}>{t("purpose")}</span>
               <input
                 className={styles.input}
                 value={purpose}
-                placeholder="One line on what this list is for"
+                placeholder={t("purposePlaceholder")}
                 onChange={(e) => setPurpose(e.target.value)}
                 onBlur={() => purpose !== list.purpose && void saveMeta({ purpose })}
               />
             </label>
           </div>
           <div className={styles.visibility}>
-            <div role="radiogroup" aria-label="Visibility" className={styles.switch}>
+            <div role="radiogroup" aria-label={t("visibility")} className={styles.switch}>
               {(["private", "public"] as const).map((v) => (
                 <button key={v} type="button" role="radio" aria-checked={list.visibility === v} className={styles.switchOption} onClick={() => list.visibility !== v && setVisibility(v)}>
-                  {v === "private" ? "Private" : "Public"}
+                  {t(v)}
                 </button>
               ))}
             </div>
@@ -198,18 +202,18 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                     className={styles.primarySmall}
                     onClick={async () => {
                       await navigator.clipboard?.writeText(`${window.location.origin}/@${handle}/${list.slug}`).catch(() => {});
-                      showToast({ message: "Link copied." });
+                      showToast({ message: t("linkCopied") });
                     }}
                   >
-                    Copy
+                    {app("common.copy")}
                   </button>
                 </span>
                 <span className={styles.meta}>
-                  {list.views} view{list.views === 1 ? "" : "s"} · only you see this · <a href={`/@${handle}/${list.slug}`} target="_blank" rel="noreferrer">View the public page</a>
+                  {t.rich("views", { count: list.views, a: (c) => <a href={`/@${handle}/${list.slug}`} target="_blank" rel="noreferrer">{c}</a> })}
                 </span>
               </>
             ) : (
-              <span className={styles.meta}>{people.length ? "Private: only you and the people below." : "Only you can see this list."}</span>
+              <span className={styles.meta}>{people.length ? t("privateShared") : t("privateOnly")}</span>
             )}
             <People listId={list.id} initial={people} say={(message) => showToast({ message })} />
           </div>
@@ -221,19 +225,19 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
             className={styles.secondary}
             onClick={async () => {
               await navigator.clipboard?.writeText(askPrompt).catch(() => {});
-              showToast({ message: "Copied. Paste it into your AI." });
+              showToast({ message: app("common.copiedForAi") });
             }}
           >
-            Copy for your AI: “Ask about this list”
+            {t("copyAsk")}
           </button>
-          <button type="button" className={styles.secondary} onClick={exportMarkdown}>Export this list</button>
-          <span className={styles.count}>{ticked} of {entries.length} ticked</span>
+          <button type="button" className={styles.secondary} onClick={exportMarkdown}>{t("export")}</button>
+          <span className={styles.count}>{t("ticked", { ticked, count: entries.length })}</span>
         </div>
 
         {entries.length === 0 ? (
-          <p className={styles.meta}>Nothing here yet. Press a on any item in the Inbox to add it.</p>
+          <p className={styles.meta}>{t("empty")}</p>
         ) : (
-          <ol ref={listRef} className={styles.rows} aria-label={`${list.name}, in order`}>
+          <ol ref={listRef} className={styles.rows} aria-label={t("rowsLabel", { name: list.name })}>
             {entries.map((e, i) => (
               <li
                 key={e.item.id}
@@ -252,7 +256,7 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                 <button
                   type="button"
                   className={styles.handle}
-                  aria-label={`Drag to reorder ${e.item.title}. Or Shift+J and Shift+K.`}
+                  aria-label={t("drag", { title: e.item.title })}
                   draggable
                   onDragStart={(ev) => {
                     dragRef.current = e.item.id;
@@ -270,11 +274,11 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                   </svg>
                 </button>
                 <span className={styles.n}>{i + 1}</span>
-                <input type="checkbox" className={styles.tick} checked={e.ticked} onChange={() => tick(e)} aria-label={`Tick ${e.item.title}`} />
+                <input type="checkbox" className={styles.tick} checked={e.ticked} onChange={() => tick(e)} aria-label={t("tick", { title: e.item.title })} />
                 <div className={styles.body}>
                   <div className={styles.titleLine}>
                     <Link href={`/items/${e.item.id}`} className={styles.itemTitle} data-ticked={e.ticked || undefined}>{e.item.title}</Link>
-                    <span className={styles.meta}>{rowSite(e.item)}</span>
+                    <span className={styles.meta}>{f.site(e.item)}</span>
                   </div>
                   {noting === e.item.id ? (
                     <form
@@ -285,14 +289,14 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                       }}
                       onKeyDown={(ev) => ev.key === "Escape" && (ev.stopPropagation(), setNoting(null))}
                     >
-                      <input className={styles.input} aria-label={`Note on ${e.item.title} in this list`} value={draft} maxLength={2000} autoFocus onChange={(ev) => setDraft(ev.target.value)} onBlur={() => saveNote(e)} />
+                      <input className={styles.input} aria-label={t("noteLabel", { title: e.item.title })} value={draft} maxLength={2000} autoFocus onChange={(ev) => setDraft(ev.target.value)} onBlur={() => saveNote(e)} />
                     </form>
                   ) : e.note ? (
                     <span className={e.noteBy === "mcp" ? `${styles.note} ${styles.ai}` : styles.note}>
                       {e.noteBy === "mcp" && <span aria-hidden="true" className={styles.dot} />}
                       <span>
                         {e.note}
-                        {e.noteBy === "mcp" && <span className={styles.byAi}> · by AI</span>}
+                        {e.noteBy === "mcp" && <span className={styles.byAi}> · {t("byAi")}</span>}
                       </span>
                     </span>
                   ) : null}
@@ -300,9 +304,9 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                 {i === cursor && noting !== e.item.id && (
                   <span className={styles.rowActions}>
                     <button type="button" className={styles.small} onClick={() => (setNoting(e.item.id), setDraft(e.note ?? ""))}>
-                      Note <kbd className={styles.kbd}>n</kbd>
+                      {t("note")} <kbd className={styles.kbd}>n</kbd>
                     </button>
-                    <button type="button" className={styles.small} onClick={() => remove(e)}>Take out</button>
+                    <button type="button" className={styles.small} onClick={() => remove(e)}>{t("takeOut")}</button>
                   </span>
                 )}
               </li>
@@ -310,15 +314,15 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
           </ol>
         )}
         <div className={styles.keys} aria-hidden="true">
-          <span><kbd>Space</kbd> tick</span>
-          <span><kbd>n</kbd> note</span>
-          <span><kbd>Shift+J</kbd> <kbd>Shift+K</kbd> reorder</span>
-          <span>Add from the inbox with <kbd>a</kbd>, or pluck straight in from the extension</span>
+          <span><kbd>Space</kbd> {t("keys.tick")}</span>
+          <span><kbd>n</kbd> {t("keys.note")}</span>
+          <span><kbd>Shift+J</kbd> <kbd>Shift+K</kbd> {t("keys.reorder")}</span>
+          <span>{t.rich("keys.add", { kbd: (c) => <kbd>{c}</kbd> })}</span>
         </div>
         <div className={styles.danger}>
           {confirmDelete ? (
             <span className={styles.inline}>
-              Delete “{list.name}”? Its items stay in your library.
+              {t("delete.confirm", { name: list.name })}
               <button
                 type="button"
                 className={styles.small}
@@ -326,12 +330,12 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
                   if ((await send(base, "DELETE")).ok) router.push("/lists");
                 }}
               >
-                Yes, delete the list
+                {t("delete.yes")}
               </button>
-              <button type="button" className={styles.small} onClick={() => setConfirmDelete(false)}>Cancel</button>
+              <button type="button" className={styles.small} onClick={() => setConfirmDelete(false)}>{app("common.cancel")}</button>
             </span>
           ) : (
-            <button type="button" className={styles.deleteLink} onClick={() => setConfirmDelete(true)}>Delete this list</button>
+            <button type="button" className={styles.deleteLink} onClick={() => setConfirmDelete(true)}>{t("delete.action")}</button>
           )}
         </div>
       </div>

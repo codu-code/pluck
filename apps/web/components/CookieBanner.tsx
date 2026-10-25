@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { analyticsOn, CONSENT_EVENT, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
@@ -10,6 +11,7 @@ import styles from "./cookie-banner.module.css";
 export function CookieBanner() {
   const [asking, setAsking] = useState(false);
   const [said, setSaid] = useState<Consent | null>(null);
+  const t = useTranslations("app.cookies");
 
   useEffect(() => {
     if (!analyticsOn) return;
@@ -38,8 +40,8 @@ export function CookieBanner() {
         <span className={styles.tick} aria-hidden="true">
           <svg width="14" height="14" viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="#151A13" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </span>
-        <b>{said === "no" ? "Fair." : "Plucked."}</b>
-        <span className={styles.toastNote}>{said === "no" ? "No crumbs taken." : "Cheers."}</span>
+        <b>{said === "no" ? t("no.title") : t("yes.title")}</b>
+        <span className={styles.toastNote}>{said === "no" ? t("no.note") : t("yes.note")}</span>
       </div>
     );
   }
@@ -49,25 +51,26 @@ export function CookieBanner() {
       <div className={styles.top}>
         <Cookie />
         <div className={styles.copy}>
-          <h2 id="cookie-title" className={styles.title}>Fancy a cookie<span className={styles.mark}>?</span></h2>
+          <h2 id="cookie-title" className={styles.title}>{t("title")}<span className={styles.mark}>?</span></h2>
           <p className={styles.body}>
-            Two already keep you signed in and hold what you pasted. This one shows us how Pluck gets used, so we fix what gets in the way. No ads. No selling. It doesn't follow you home.
+            {t("body")}
           </p>
         </div>
       </div>
       <div className={styles.buttons}>
-        <button type="button" className={styles.no} onClick={() => answer("no")}>Pluck off</button>
-        <button type="button" className={styles.yes} onClick={() => answer("yes")}>Pluck it, I'm in</button>
+        <button type="button" className={styles.no} onClick={() => answer("no")}>{t("no.button")}</button>
+        <button type="button" className={styles.yes} onClick={() => answer("yes")}>{t("yes.button")}</button>
       </div>
-      <Link href="/privacy#cookies" className={styles.more}>What's in each one</Link>
+      <Link href="/privacy#cookies" className={styles.more}>{t("more")}</Link>
     </section>
   );
 }
 
 // "Cookies" in a footer or Settings: asks again.
-export function CookiesLink({ className, children = "Cookies" }: { className?: string; children?: string }) {
+export function CookiesLink({ className, children }: { className?: string; children?: string }) {
+  const t = useTranslations("app.cookies");
   if (!analyticsOn) return null;
-  return <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}>{children}</button>;
+  return <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}>{children ?? t("link")}</button>;
 }
 
 // Reads the answer for screens that show it (Settings), kept current as it changes.

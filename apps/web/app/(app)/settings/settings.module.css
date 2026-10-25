@@ -85,3 +85,7 @@
 .status + .keyRow { border-top: 1px solid var(--line); }
 .status { display: flex; align-items: center; gap: 8px; font-size: 13px; }
 .statusDot { width: 8px; height: 8px; border-radius: 4px; flex: none; }
+/* The language picker (components/LanguageSelect.tsx): the heading names it, so its own label is for screen readers. */
+.language { display: flex; }
+.language label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.language select { height: 40px; min-width: 200px; max-width: 320px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font: inherit; }

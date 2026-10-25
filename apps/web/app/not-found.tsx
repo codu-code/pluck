@@ -1,13 +1,15 @@
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Actions, BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
 // Public pages that are private now, gone, or never were; and any address that is not a page.
 export default function NotFound() {
+  const t = useTranslations("app.notFound");
   return (
-    <Standalone title={<>Nothing here<Dot /></>} lede="It may be private now, or it never was." art={<BigMark />}>
+    <Standalone title={<>{t("title")}<Dot /></>} lede={t("lede")} art={<BigMark />}>
       <Actions>
-        <Link href="/" className={s.primary}>Go to Pluck</Link>
-        <Link href="/support" className={s.textLink}>Support</Link>
+        <Link href="/" className={s.primary}>{t("home")}</Link>
+        <Link href="/support" className={s.textLink}>{t("support")}</Link>
       </Actions>
     </Standalone>
   );

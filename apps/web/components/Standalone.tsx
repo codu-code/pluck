@@ -1,4 +1,5 @@
 import { Icon, Logo } from "@pluck/ui";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import styles from "./standalone.module.css";
@@ -12,10 +13,11 @@ import styles from "./standalone.module.css";
 export function Standalone({
   title, lede, art, artIsContent = false, wide = false, size = "lg", children,
 }: { title: ReactNode | ReactNode[]; lede?: ReactNode; art?: ReactNode; artIsContent?: boolean; wide?: boolean; size?: "lg" | "md"; children?: ReactNode }) {
+  const t = useTranslations("app.standalone");
   return (
     <div className={styles.page}>
       <header className={styles.bar}>
-        <Link href="/" aria-label="Pluck home" className={styles.home}><Logo size={26} /></Link>
+        <Link href="/" aria-label={t("home")} className={styles.home}><Logo size={26} /></Link>
       </header>
       <main className={`${styles.main} ${art ? styles.withArt : ""}`}>
         <div className={`${styles.copy} ${wide ? styles.copyWide : ""}`}>

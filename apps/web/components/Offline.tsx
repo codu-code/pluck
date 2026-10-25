@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import styles from "./Offline.module.css";
 
 // Registers the service worker (production builds only) and shows the "offline, will sync" bar.
 export function OfflineBar() {
   const [online, setOnline] = useState(true);
+  const t = useTranslations("app.offlineBar");
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") void navigator.serviceWorker.register("/sw.js");
     const update = () => setOnline(navigator.onLine);
@@ -20,7 +22,7 @@ export function OfflineBar() {
   if (online) return null;
   return (
     <div className={styles.bar} role="status">
-      Offline. Plucks will sync when you are back.
+      {t("text")}
     </div>
   );
 }

@@ -1,20 +1,15 @@
 "use client";
 
 import type { Item, ListMembership, Tag, TextKind } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
-import { ago, sourceLabel } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
 import styles from "./note.module.css";
 
 type Patch = { title?: string; text?: string; kind?: TextKind; dueAt?: string | null };
-
-const KIND_HINT: Record<TextKind, string> = {
-  note: "Make it a Todo to add a due date and a tick.",
-  todo: "A Todo can have a due date. Done moves it out of the Inbox.",
-  thing: "A Thing is something to get. Lists are where they gather.",
-};
 
 // The Note, Todo and Thing editor (ItemNote board). Plain text, saved as you type. Esc goes back.
 export function NoteEditor({ item, text, tags, lists }: { item: Item; text: string; tags: Tag[]; lists: ListMembership[] }) {
@@ -26,6 +21,9 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
   const [edited, setEdited] = useState(item.updatedAt);
   const pending = useRef<Patch>({});
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const t = useTranslations("app.note");
+  const app = useTranslations("app");
+  const f = useFormat();
 
   async function flush() {
     const patch = pending.current;
@@ -64,23 +62,22 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
     };
   }, [item.id]);
 
-  const derived = body.split("\n").map((l) => l.trim()).find(Boolean) ?? "Untitled note";
-  const kindName = kind === "note" ? "Note" : kind === "todo" ? "Todo" : "Thing";
+  const derived = body.split("\n").map((l) => l.trim()).find(Boolean) ?? t("untitled");
 
   return (
     <>
       <ItemBar
         item={item}
         before={flush}
-        state={<span role="status">{state === "saved" ? "Saved" : state === "saving" ? "Saving" : "Not saved. Retrying when you type."}</span>}
+        state={<span role="status">{t(`state.${state}`)}</span>}
       />
       <div className={styles.layout}>
         <article className={styles.editor}>
           <span className={styles.meta}>
-            {kindName} · {sourceLabel(item.source).toLowerCase()} {ago(item.createdAt)} · edited {ago(edited)}
+            {t("meta", { kind: app(`kind.${kind}`), plucked: app(`format.sourceAgo.${item.source}`, { ago: f.ago(item.createdAt) }), edited: f.ago(edited) })}
           </span>
           <label className={styles.field}>
-            <span className={styles.visuallyHidden}>Title</span>
+            <span className={styles.visuallyHidden}>{t("title")}</span>
             <input
               className={styles.title}
               type="text"
@@ -93,7 +90,7 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
             />
           </label>
           <label className={styles.field}>
-            <span className={styles.visuallyHidden}>Body</span>
+            <span className={styles.visuallyHidden}>{t("body")}</span>
             <textarea
               className={styles.body}
               rows={16}
@@ -105,12 +102,12 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
               }}
             />
           </label>
-          <span className={styles.meta}>The first line is the title. Plain text. Saves as you type.</span>
+          <span className={styles.meta}>{t("help")}</span>
         </article>
-        <aside aria-label={`About this ${kindName.toLowerCase()}`} className={styles.aside}>
+        <aside aria-label={t("about", { kind })} className={styles.aside}>
           <ItemTags item={item} vocabulary={tags} />
           <label className={styles.group}>
-            <span className={styles.groupTitle}>Kind</span>
+            <span className={styles.groupTitle}>{t("kind")}</span>
             <select
               className={styles.select}
               value={kind}
@@ -121,15 +118,15 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
                 if (k === "note") setDue("");
               }}
             >
-              <option value="note">Note</option>
-              <option value="todo">Todo</option>
-              <option value="thing">Thing</option>
+              <option value="note">{app("kind.note")}</option>
+              <option value="todo">{app("kind.todo")}</option>
+              <option value="thing">{app("kind.thing")}</option>
             </select>
-            <span className={styles.meta}>{KIND_HINT[kind]}</span>
+            <span className={styles.meta}>{t(`kindHint.${kind}`)}</span>
           </label>
           {kind !== "note" && (
             <label className={styles.group}>
-              <span className={styles.groupTitle}>Due</span>
+              <span className={styles.groupTitle}>{t("due")}</span>
               <input
                 className={styles.select}
                 type="date"
@@ -143,8 +140,8 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
           )}
           <ItemLists itemId={item.id} initial={lists} />
           <div className={styles.foot}>
-            <span>Source: {item.source === "web" ? "web paste box" : sourceLabel(item.source).replace(/^Plucked /, "")}</span>
-            <span>Notes have no highlights. Select text to copy it.</span>
+            <span>{t("source", { via: item.source === "web" ? t("pasteBox") : app(`format.via.${item.source}`) })}</span>
+            <span>{t("noHighlights")}</span>
             <DeleteButton id={item.id} />
           </div>
         </aside>

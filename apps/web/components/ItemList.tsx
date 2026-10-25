@@ -1,8 +1,9 @@
 "use client";
 
 import type { Item, ItemPage, List, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EmptyInbox, EmptyState } from "@/components/EmptyInbox";
 import { ItemRow, RowAction } from "@/components/ItemRow";
 import { KindChips, kindsFor, matches, type KindFilter } from "@/components/KindChips";
@@ -12,7 +13,7 @@ import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
 import { useToast } from "@/components/Toast";
 import { TopBar, type PluckDraft } from "@/components/TopBar";
-import { MOVED, moveItems, restoreStatuses } from "@/lib/moves";
+import { moveItems, restoreStatuses } from "@/lib/moves";
 import { createListNamed, fetchLists, membershipsOf, setInList } from "@/lib/listing";
 import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
 import { isTyping } from "@/lib/keys";
@@ -59,22 +60,13 @@ type Props = {
 };
 
 const SAMPLE_URL = "https://getpluck.io/sample";
-const VIEWS: Record<View, { title: string; subtitle: (total: number, sort: Sort, expiring: number) => string; empty: () => ReactNode }> = {
-  inbox: {
-    title: "Inbox",
-    subtitle: (total, sort) => `${total} to triage · ${sort === "newest" ? "newest first" : "untouched first"}`,
-    empty: () => <EmptyInbox />,
-  },
-  later: {
-    title: "Later",
-    subtitle: (_t, _s, expiring) => (expiring ? `Kept on purpose · ${expiring} expire${expiring === 1 ? "s" : ""} this week, into the Archive` : "Kept on purpose"),
-    empty: () => <EmptyState title="Nothing kept for later." body="Press l on any Inbox item to keep it here." />,
-  },
-};
 
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
 export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId }: Props) {
-  const { title, subtitle, empty } = VIEWS[view];
+  const t = useTranslations("app.itemList");
+  const app = useTranslations("app");
+  const title = app(`status.${view}`);
+  const empty = () => (view === "inbox" ? <EmptyInbox /> : <EmptyState title={t("later.empty.title")} body={t("later.empty.body")} />);
   const sample = view === "inbox" ? SAMPLE_URL : undefined;
   const router = useRouter();
   const [rows, setRows] = useState<Row[]>(initial.items);
@@ -101,7 +93,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     if (!deletedId) return;
     router.replace(`/${view}`, { scroll: false });
     showToast({
-      message: "Deleted. It stays in the bin for 30 days.",
+      message: t("deleted"),
       undo: () => void fetch(`/api/v1/items/${deletedId}/restore`, { method: "POST" }).then(() => router.refresh()),
     });
   }, [deletedId, showToast, router, view]);
@@ -161,10 +153,10 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
       if (!(await moveItems(movedIds, status))) {
         setRows((cur) => [...moved, ...cur]);
         setTotal((t) => t + moved.length);
-        return showToast({ message: "That did not go through. Nothing moved." });
+        return showToast({ message: t("moveFailed") });
       }
       showToast({
-        message: moved.length > 1 ? `${moved.length} items. ${MOVED[status]}` : MOVED[status],
+        message: moved.length > 1 ? app(`movedMany.${status}`, { count: moved.length }) : app(`moved.${status}`),
         undo: () => {
           void restoreStatuses(moved).then(() => reload());
           setTotal((t) => t + moved.length);
@@ -172,7 +164,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
       });
     },
     // reload is read at undo time, so it sees the filter and sort then.
-    [real, rows.length, showToast],
+    [real, rows.length, showToast, app],
   );
 
   const toggle = (id: string) =>
@@ -221,8 +213,8 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   function chips(r: Row) {
     if (!r.tagIds.length) return null;
     return r.tagIds.map((id) => {
-      const t = byId.get(id);
-      return t ? <TagChip key={id} tag={t} ai={r.aiTagIds.includes(id)} onClick={() => filterByTag(t)} label={`Show only ${t.name}`} /> : null;
+      const tag = byId.get(id);
+      return tag ? <TagChip key={id} tag={tag} ai={r.aiTagIds.includes(id)} onClick={() => filterByTag(tag)} label={t("showOnly", { name: tag.name })} /> : null;
     });
   }
   async function filterByTag(t: Tag | null) {
@@ -242,7 +234,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   }
   async function toggleList(list: List, on: boolean) {
     const ids = listing?.ids;
-    if (!ids || !(await setInList(ids, list, on))) return showToast({ message: "That did not go through." });
+    if (!ids || !(await setInList(ids, list, on))) return showToast({ message: app("common.didNotGoThrough") });
     const lists = await fetchLists();
     // Only refresh the picker this toggle came from: one closed (Esc) or reopened for other items stays as it is.
     setListing((cur) => {
@@ -252,7 +244,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
       else next.delete(list.id);
       return { ...cur, on: next, lists };
     });
-    showToast({ message: on ? `Added to “${list.name}”.` : `Taken out of “${list.name}”.` });
+    showToast({ message: on ? t("addedTo", { name: list.name }) : t("takenOut", { name: list.name }) });
   }
   // The quiet "30 days" pill: in scope, not in a list, and within a week of moving to the Archive.
   const expiring = (r: Row) => {
@@ -263,7 +255,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   async function keep(r: Row) {
     if (!(await fetch(`/api/v1/items/${r.id}/open`, { method: "POST" })).ok) return;
     setRows((cur) => cur.map((x) => (x.id === r.id ? { ...x, lastTouchedAt: new Date().toISOString() } : x)));
-    showToast({ message: `Kept. The ${expiry.days} days start again.` });
+    showToast({ message: t("kept", { days: expiry.days ?? 0 }) });
   }
   const pickState = (tagId: string) => {
     const targets = real.filter((r) => picking?.includes(r.id));
@@ -295,7 +287,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const onPluck = (d: PluckDraft) => {
     setEverPlucked(true);
     const drafts = placeholders(d);
-    if (view !== "inbox") return showToast({ message: d.urls.length > 1 ? `${d.urls.length} plucked to the Inbox.` : "Plucked to the Inbox." });
+    if (view !== "inbox") return showToast({ message: d.urls.length > 1 ? t("pluckedMany", { count: d.urls.length }) : app("common.pluckedToInbox") });
     if (drafts.some((r) => !matches(filter, r.kind))) void changeFilter("all");
     setRows((cur) => [...drafts, ...cur]);
   };
@@ -321,11 +313,13 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
           <div className={styles.head}>
             <h1 className={styles.title}>{title}</h1>
             <div className={styles.headRight}>
-              <span className={styles.subtitle}>{subtitle(total, sort, expiringThisWeek)}</span>
-              <div role="radiogroup" aria-label="Sort" className={styles.sort}>
+              <span className={styles.subtitle}>
+                {view === "inbox" ? t("inbox.subtitle", { count: total, sort }) : expiringThisWeek ? t("later.expiring", { count: expiringThisWeek }) : t("later.subtitle")}
+              </span>
+              <div role="radiogroup" aria-label={t("sort.label")} className={styles.sort}>
                 {(["newest", "untouched"] as const).map((s) => (
                   <button key={s} type="button" role="radio" aria-checked={sort === s} className={styles.sortOption} onClick={() => changeSort(s)}>
-                    {s === "newest" ? "Newest" : "Untouched first"}
+                    {t(`sort.${s}`)}
                   </button>
                 ))}
               </div>
@@ -334,25 +328,25 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
           <div className={styles.filters}>
             <KindChips value={filter} onChange={changeFilter} />
             {tagFilter && (
-              <button type="button" className={styles.tagFilter} onClick={() => filterByTag(null)} aria-label={`Stop filtering by ${tagFilter.name}`}>
+              <button type="button" className={styles.tagFilter} onClick={() => filterByTag(null)} aria-label={t("stopFilter", { name: tagFilter.name })}>
                 {tagFilter.name} <span aria-hidden="true">×</span>
               </button>
             )}
           </div>
           {selecting && (
-            <div role="toolbar" aria-label="Bulk actions" className={styles.bulk}>
-              <b className={styles.bulkCount}>{selected.size} selected</b>
+            <div role="toolbar" aria-label={t("bulk.label")} className={styles.bulk}>
+              <b className={styles.bulkCount}>{t("bulk.selected", { count: selected.size })}</b>
               <button type="button" className={styles.bulkButton} onClick={() => move([...selected], laterTarget)}>
-                {view === "later" ? "Inbox" : "Later"}
+                {view === "later" ? t("actions.inbox") : t("actions.later")}
               </button>
-              <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "archived")}>Archive</button>
-              {allTodo && <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "done")}>Done</button>}
-              <button type="button" className={styles.bulkButton} onClick={() => setPicking([...selected])}>Tag</button>
-              <button type="button" className={styles.bulkButton} onClick={() => openLists([...selected])}>Add to list</button>
-              <button type="button" className={styles.bulkClear} onClick={() => setSelected(new Set())}>Clear</button>
+              <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "archived")}>{t("actions.archive")}</button>
+              {allTodo && <button type="button" className={styles.bulkButton} onClick={() => move([...selected], "done")}>{t("actions.done")}</button>}
+              <button type="button" className={styles.bulkButton} onClick={() => setPicking([...selected])}>{t("actions.tag")}</button>
+              <button type="button" className={styles.bulkButton} onClick={() => openLists([...selected])}>{t("bulk.addToList")}</button>
+              <button type="button" className={styles.bulkClear} onClick={() => setSelected(new Set())}>{t("bulk.clear")}</button>
             </div>
           )}
-          <div ref={listRef} className={styles.rows} aria-label={`${title} items`} role="list">
+          <div ref={listRef} className={styles.rows} aria-label={t("rowsLabel", { view })} role="list">
             {rows.map((r) => {
               const index = real.indexOf(r);
               const active = !r.draft && index === cursor;
@@ -374,23 +368,23 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
                         <button
                           type="button"
                           className={styles.pill}
-                          title={`Untouched for ${expiry.days} days. Keep it, or it moves to the Archive. Nothing is deleted.`}
-                          aria-label={`Keep ${r.title}: it moves to the Archive soon`}
+                          title={t("pill.title", { days: expiry.days ?? 0 })}
+                          aria-label={t("pill.label", { title: r.title })}
                           onClick={() => keep(r)}
                         >
-                          {expiry.days} days
+                          {t("pill.days", { days: expiry.days ?? 0 })}
                         </button>
                       ) : null
                     }
                     actions={
                       r.draft || selecting ? null : (
                         <>
-                          <RowAction label={view === "later" ? "Inbox" : "Later"} keyHint="l" onClick={() => move([r.id], laterTarget)} />
-                          <RowAction label="Archive" keyHint="e" onClick={() => move([r.id], "archived")} />
-                          <RowAction label="Tag" keyHint="t" onClick={() => setPicking([r.id])} />
-                          <RowAction label="List" keyHint="a" onClick={() => openLists([r.id])} />
-                          {(r.kind === "todo" || r.kind === "thing") && <RowAction label="Done" keyHint="d" onClick={() => move([r.id], "done")} />}
-                          <RowAction label="Open" keyHint="o" href={`/items/${r.id}`} />
+                          <RowAction label={view === "later" ? t("actions.inbox") : t("actions.later")} keyHint="l" onClick={() => move([r.id], laterTarget)} />
+                          <RowAction label={t("actions.archive")} keyHint="e" onClick={() => move([r.id], "archived")} />
+                          <RowAction label={t("actions.tag")} keyHint="t" onClick={() => setPicking([r.id])} />
+                          <RowAction label={t("actions.list")} keyHint="a" onClick={() => openLists([r.id])} />
+                          {(r.kind === "todo" || r.kind === "thing") && <RowAction label={t("actions.done")} keyHint="d" onClick={() => move([r.id], "done")} />}
+                          <RowAction label={t("actions.open")} keyHint="o" href={`/items/${r.id}`} />
                         </>
                       )
                     }
@@ -399,27 +393,27 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
               );
             })}
           </div>
-          {rows.length === 0 && <p className={styles.none}>{filter === "all" ? `Nothing in ${title} right now.` : `Nothing of this kind in ${title}.`}</p>}
+          {rows.length === 0 && <p className={styles.none}>{filter === "all" ? t("none.all", { view }) : t("none.kind", { view })}</p>}
           {nextCursor && (
             <button type="button" className={styles.more} onClick={more}>
-              Show more
+              {app("common.showMore")}
             </button>
           )}
           <div className={styles.keys} aria-hidden="true">
-            <span><kbd>j</kbd> <kbd>k</kbd> move</span>
-            <span><kbd>l</kbd> {view === "later" ? "inbox" : "later"}</span>
-            <span><kbd>e</kbd> archive</span>
-            <span><kbd>t</kbd> tag</span>
-            <span><kbd>a</kbd> add to list</span>
-            <span><kbd>x</kbd> select</span>
-            <span><kbd>?</kbd> all shortcuts</span>
+            <span><kbd>j</kbd> <kbd>k</kbd> {t("keys.move")}</span>
+            <span><kbd>l</kbd> {view === "later" ? t("keys.inbox") : t("keys.later")}</span>
+            <span><kbd>e</kbd> {t("keys.archive")}</span>
+            <span><kbd>t</kbd> {t("keys.tag")}</span>
+            <span><kbd>a</kbd> {t("keys.list")}</span>
+            <span><kbd>x</kbd> {t("keys.select")}</span>
+            <span><kbd>?</kbd> {t("keys.help")}</span>
           </div>
         </div>
       )}
       <Shortcuts open={help} onClose={() => setHelp(false)} />
       {listing && (
         <ListPicker
-          title={listing.ids.length > 1 ? `Add ${listing.ids.length} items to a list` : "Add to a list"}
+          title={listing.ids.length > 1 ? t("listPicker", { count: listing.ids.length }) : app("itemLists.add")}
           lists={listing.lists}
           state={(id) => (listing.on.has(id) ? "on" : "off")}
           onToggle={toggleList}
@@ -429,7 +423,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
       )}
       {picking && (
         <TagPicker
-          title={picking.length > 1 ? `Tag ${picking.length} items` : "Tag"}
+          title={picking.length > 1 ? t("tagPicker", { count: picking.length }) : app("itemTags.pickerTitle")}
           vocabulary={vocab}
           state={pickState}
           onToggle={toggleTag}

@@ -1,11 +1,13 @@
-import { isTextKind } from "@pluck/shared-schemas";
+import { isTextKind, type Item } from "@pluck/shared-schemas";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { currentUser, requireUser } from "@/lib/auth";
-import { ago, sourceLabel, waybackUrl } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
+import { waybackUrl } from "@/lib/format";
 import { highlightsOf, membershipsOf, readItem, readText, tagsOf } from "@/lib/library";
 import { renderReader } from "@/lib/markdown";
 import { NoteEditor } from "./NoteEditor";
@@ -19,7 +21,13 @@ const itemFor = cache((userId: string, id: string) => readItem(userId, id).catch
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const user = await currentUser();
   const item = user ? await itemFor(user.id, (await params).id) : null;
-  return { title: item ? `${item.title} · Pluck` : "Pluck" };
+  return { title: item ? (await getTranslations("app.meta"))("item", { title: item.title }) : "Pluck" };
+}
+
+// "Plucked from iOS · 10 min ago": a component, so the async page can use the formatter hook.
+function Plucked({ item }: { item: Item }) {
+  const f = useFormat();
+  return `${f.source(item.source)} · ${f.ago(item.createdAt)}`;
 }
 
 // The item page: the reader for links, the editor for notes, todos and things, and the pending and failed states.
@@ -40,40 +48,41 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
 
   const url = item.url;
   if (!url) notFound(); // pending and failed only happen to items fetched from a URL
-  const plucked = `${sourceLabel(item.source)} · ${ago(item.createdAt)}`;
+  const t = await getTranslations("app.item");
+  const app = await getTranslations("app.common");
   return (
     <>
       <ItemBar item={item} />
       {item.extraction.state === "failed" ? (
         <div className={styles.page}>
           <div className={styles.head}>
-            <span className={styles.meta}>{plucked}</span>
-            <h1 className={styles.title}>Couldn&apos;t read this page.</h1>
+            <span className={styles.meta}><Plucked item={item} /></span>
+            <h1 className={styles.title}>{t("failed.title")}</h1>
             <code className={styles.url}>{url}</code>
           </div>
           <div className={styles.actions}>
             <RetryButton id={item.id} />
-            <a className={styles.secondary} href={url} target="_blank" rel="noreferrer">Open original</a>
-            <a className={styles.secondary} href={waybackUrl(url)} target="_blank" rel="noreferrer">Try the Wayback copy</a>
+            <a className={styles.secondary} href={url} target="_blank" rel="noreferrer">{app("openOriginal")}</a>
+            <a className={styles.secondary} href={waybackUrl(url)} target="_blank" rel="noreferrer">{t("failed.wayback")}</a>
           </div>
           <div className={styles.tip}>
-            <b>Behind a login?</b>
-            <span>Pluck it from the extension to keep the page. It sends what your browser already sees.</span>
-            <Link href="/connect#extension" className={styles.tipLink}>Get the extension</Link>
+            <b>{t("failed.loginTitle")}</b>
+            <span>{t("failed.loginBody")}</span>
+            <Link href="/connect#extension" className={styles.tipLink}>{t("failed.extension")}</Link>
           </div>
           <div className={styles.kept}>
-            <span className={styles.keptTitle}>Still yours</span>
-            <span className={styles.meta}>The link, your note and your tags are kept. Search finds it by title and note.</span>
+            <span className={styles.keptTitle}>{t("failed.keptTitle")}</span>
+            <span className={styles.meta}>{t("failed.keptBody")}</span>
             <DeleteButton id={item.id} />
           </div>
         </div>
       ) : (
         <div className={styles.page}>
           <div className={styles.head}>
-            <span className={styles.meta}>{plucked}</span>
+            <span className={styles.meta}><Plucked item={item} /></span>
             <h1 className={styles.title}>{item.title}</h1>
-            <p className={styles.meta}>Plucking this page. It takes a few seconds.</p>
-            <a href={url} target="_blank" rel="noreferrer" className={styles.meta}>Open original</a>
+            <p className={styles.meta}>{t("pending")}</p>
+            <a href={url} target="_blank" rel="noreferrer" className={styles.meta}>{app("openOriginal")}</a>
           </div>
         </div>
       )}

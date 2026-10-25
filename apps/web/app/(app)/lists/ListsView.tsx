@@ -1,12 +1,13 @@
 "use client";
 
 import type { List, SharedListSummary } from "@pluck/shared-schemas";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
-import { when } from "@/lib/format";
+import { useFormat } from "@/components/useFormat";
 import styles from "./lists.module.css";
 import { useNow } from "@/lib/use-now";
 
@@ -21,51 +22,54 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
   const [purpose, setPurpose] = useState("");
   const [toast, showToast] = useToast();
   const now = useNow();
+  const t = useTranslations("app.lists");
+  const app = useTranslations("app");
+  const f = useFormat();
 
   async function create(e: FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
     const res = await fetch("/api/v1/lists", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name, purpose }) });
     if (res.ok) router.push(`/lists/${((await res.json()) as { list: List }).list.id}`);
-    else showToast({ message: "That did not go through." });
+    else showToast({ message: app("common.didNotGoThrough") });
   }
 
   return (
     <>
-      <TopBar onPluck={() => showToast({ message: "Plucked to the Inbox." })} />
+      <TopBar onPluck={() => showToast({ message: app("common.pluckedToInbox") })} />
       <div className={styles.page}>
         <div className={styles.head}>
           <div className={styles.titles}>
-            <h1 className={styles.title}>Lists</h1>
-            <span className={styles.meta}>What you are making. A book, an issue, a talk, a trip, things to buy.</span>
+            <h1 className={styles.title}>{t("title")}</h1>
+            <span className={styles.meta}>{t("subtitle")}</span>
           </div>
-          {!making && <button type="button" className={styles.primary} onClick={() => setMaking(true)}>New list</button>}
+          {!making && <button type="button" className={styles.primary} onClick={() => setMaking(true)}>{t("new")}</button>}
         </div>
         {making && (
           <form className={styles.newList} onSubmit={create} onKeyDown={(e) => e.key === "Escape" && setMaking(false)}>
             <label className={styles.field}>
-              <span>Name</span>
-              <input className={styles.input} value={name} autoFocus onChange={(e) => setName(e.target.value)} placeholder="Talk on MCP auth" />
+              <span>{t("form.name")}</span>
+              <input className={styles.input} value={name} autoFocus onChange={(e) => setName(e.target.value)} placeholder={t("form.namePlaceholder")} />
             </label>
             <label className={`${styles.field} ${styles.grow}`}>
-              <span>Purpose, one line</span>
-              <input className={styles.input} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="Twenty minutes for the November meetup." />
+              <span>{t("form.purpose")}</span>
+              <input className={styles.input} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder={t("form.purposePlaceholder")} />
             </label>
-            <button type="submit" className={styles.primary} disabled={!name.trim()}>Make the list</button>
-            <button type="button" className={styles.textButton} onClick={() => setMaking(false)}>Cancel</button>
+            <button type="submit" className={styles.primary} disabled={!name.trim()}>{t("form.make")}</button>
+            <button type="button" className={styles.textButton} onClick={() => setMaking(false)}>{app("common.cancel")}</button>
           </form>
         )}
         {initial.length === 0 ? (
-          <p className={styles.meta}>No lists yet. Press a on any item to start one, or make one here.</p>
+          <p className={styles.meta}>{t("empty")}</p>
         ) : (
           <div className={styles.tableWrap}>
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th scope="col">Name and purpose</th>
-                  <th scope="col" className={styles.visCol}>Visibility</th>
-                  <th scope="col" className={styles.num}>Ticked</th>
-                  <th scope="col" className={styles.num}>Last added</th>
+                  <th scope="col">{t("table.name")}</th>
+                  <th scope="col" className={styles.visCol}>{t("table.visibility")}</th>
+                  <th scope="col" className={styles.num}>{t("table.ticked")}</th>
+                  <th scope="col" className={styles.num}>{t("table.lastAdded")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,7 +78,7 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
                     <td>
                       <span className={styles.nameLine}>
                         <Link href={`/lists/${l.id}`} className={styles.name}>{l.name}</Link>
-                        {l.createdBy === "mcp" && <span className={styles.byAi}><span aria-hidden="true" className={styles.dot} />by AI</span>}
+                        {l.createdBy === "mcp" && <span className={styles.byAi}><span aria-hidden="true" className={styles.dot} />{t("byAi")}</span>}
                       </span>
                       {l.purpose && <div className={styles.purpose}>{l.purpose}</div>}
                     </td>
@@ -83,11 +87,11 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
                         <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
                           <path d={l.visibility === "public" ? GLOBE : LOCK} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        {l.visibility === "public" ? `Public · ${l.views} views` : "Private"}
+                        {l.visibility === "public" ? t("public", { views: l.views }) : t("private")}
                       </span>
                     </td>
-                    <td className={styles.num}>{l.tickedCount} of {l.itemCount}</td>
-                    <td className={`${styles.num} ${styles.meta}`}>{l.lastAddedAt ? (now ? when(l.lastAddedAt, now) : "") : "Not yet"}</td>
+                    <td className={styles.num}>{t("tickedOf", { ticked: l.tickedCount, count: l.itemCount })}</td>
+                    <td className={`${styles.num} ${styles.meta}`}>{l.lastAddedAt ? (now ? f.when(l.lastAddedAt, now) : "") : t("notYet")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -96,19 +100,19 @@ export function ListsView({ initial, shared }: { initial: List[]; shared: Shared
         )}
         {shared.length > 0 && (
           <section className={styles.shared} aria-labelledby="shared-with-you">
-            <h2 id="shared-with-you" className={styles.h2}>Shared with you</h2>
+            <h2 id="shared-with-you" className={styles.h2}>{t("shared.title")}</h2>
             <ul className={styles.sharedList}>
               {shared.map((l) => (
                 <li key={l.id} className={styles.sharedRow}>
                   <Link href={`/shared/${l.id}`} className={styles.name}>{l.name}</Link>
                   {l.purpose && <div className={styles.purpose}>{l.purpose}</div>}
-                  <div className={styles.purpose}>From {l.owner.name ? `${l.owner.name} (@${l.owner.handle})` : `@${l.owner.handle}`} · {l.itemCount} {l.itemCount === 1 ? "item" : "items"} · see only</div>
+                  <div className={styles.purpose}>{t("shared.meta", { from: l.owner.name ? app("shared.byNamed", { name: l.owner.name, handle: l.owner.handle }) : app("shared.byHandle", { handle: l.owner.handle }), count: l.itemCount })}</div>
                 </li>
               ))}
             </ul>
           </section>
         )}
-        <p className={styles.foot}>Items in a list never expire. A list is a plan.</p>
+        <p className={styles.foot}>{t("foot")}</p>
       </div>
       {toast}
     </>

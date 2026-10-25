@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { ItemList } from "@/components/ItemList";
 import { requireUser } from "@/lib/auth";
 import { browse, count, me, tagsOf } from "@/lib/library";
 
-export const metadata: Metadata = { title: "Inbox · Pluck" };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: (await getTranslations("app.meta"))("inbox") };
+}
 
 export default async function Inbox({ searchParams }: { searchParams: Promise<{ deleted?: string }> }) {
   const user = await requireUser();
