@@ -53,9 +53,11 @@ export type Tokens = { access: string; refresh: string | null; expiresAt: number
 
 // The OAuth token endpoint. Null means the server said no (the code or refresh token is spent: sign in again).
 // No connection, a 5xx or a 429 is Unreachable, so a device that is offline keeps its sign-in and its queue.
-export async function tokenRequest(server: string, form: Record<string, string>, f: typeof fetch = fetch): Promise<Tokens | null> {
+// It has the API's time limit too: every request waits on a refresh, so one that hung would hold every screen.
+export async function tokenRequest(server: string, form: Record<string, string>, f: typeof fetch = fetch, timeoutMs = 15_000): Promise<Tokens | null> {
   const res = await f(`${server}/api/auth/oauth2/token`, {
     method: "POST", credentials: "omit", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(form).toString(),
+    signal: AbortSignal.timeout(timeoutMs),
   }).catch(() => null);
   if (!res || res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
   if (!res.ok) return null;
