@@ -332,6 +332,7 @@
   },
   "shell": {
     "main": "主导航",
+    "offline": "离线",
     "nav": {
       "inbox": "收件箱",
       "later": "稍后",

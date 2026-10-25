@@ -22,7 +22,8 @@ for (let i = 0; i < 40 && !link; i++) {
   else await new Promise((r) => setTimeout(r, 250));
 }
 if (!link) throw new Error("no email arrived");
-const verify = await fetch(link, { redirect: "manual" });
+// The email's link is the scanner-safe page (apps/web/lib/signin-link.ts); its button posts the same fields to verify.
+const verify = await fetch(link.replace("/signin/link?", "/api/auth/magic-link/verify?"), { redirect: "manual" });
 const cookie = verify.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
 
 const call = async (path, body, method = "POST", auth = { cookie }) => {

@@ -332,6 +332,7 @@
   },
   "shell": {
     "main": "메인",
+    "offline": "오프라인",
     "nav": {
       "inbox": "수신함",
       "later": "나중에",

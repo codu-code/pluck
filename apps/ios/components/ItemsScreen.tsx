@@ -7,7 +7,7 @@ import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleShee
 import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
 import { api } from "@/lib/session";
-import { keys, pluck, shareExtensionCache, syncPending, toSync, useCounts, useItems, useLists, useMe, usePatchItem, useTags } from "@/lib/data";
+import { keys, pluck, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
 import { Icon, ICONS } from "./Glyph";
@@ -30,7 +30,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const lists = useLists();
   const patch = usePatchItem();
   const counts = useCounts();
-  const [pending, setPending] = useState(0);
+  const waiting = usePending();
+  const online = useOnline();
+  const pending = waiting.data ?? 0;
   const rows = items.data?.items ?? [];
 
   // Rows that were not here last time slide in (a pluck arriving); the first paint and rows scrolled into view do not.
@@ -40,7 +42,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     if (items.data) seen.current = new Set(items.data.items.map((r) => r.id));
   }, [items.data]);
 
-  useEffect(() => void toSync().then(setPending), [items.dataUpdatedAt]);
+  useEffect(() => void waiting.refetch(), [items.dataUpdatedAt]);
   useEffect(() => {
     if (tags.data && lists.data) shareExtensionCache(tags.data, lists.data);
   }, [tags.data, lists.data]);
@@ -146,7 +148,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
           <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
             {counts.data ? tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] }) : " "}
           </Text>
-          {pending > 0 && (
+          {online && pending > 0 && ( // offline, the count joins the Offline pill in the tab bar
             <View style={[styles.sync, { backgroundColor: t.syncBg }]}>
               <View style={[styles.syncDot, { backgroundColor: t.syncDot }]} />
               <Text style={[font.regular, { color: t.syncInk, fontSize: 12 }]}>{tr("items.toSync", { count: pending })}</Text>
@@ -164,7 +166,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         </Animated.View>
       )}
       refreshControl={
-        <RefreshControl refreshing={items.isRefetching} onRefresh={async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); setPending(await toSync()); }} />
+        <RefreshControl refreshing={items.isRefetching} onRefresh={async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); }} />
       }
       ListEmptyComponent={
         items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"

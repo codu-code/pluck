@@ -36,6 +36,7 @@ export const ICONS = {
   close: "M4 4l8 8M12 4l-8 8",
   globe: "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12zM2 8h12M8 2c1.8 1.7 2.6 3.8 2.6 6S9.8 12.3 8 14C6.2 12.3 5.4 10.2 5.4 8S6.2 3.7 8 2z",
   compose: "M3 13l.8-3L10.5 3.3l2.2 2.2L6 12.2zM9.3 4.5l2.2 2.2",
+  offline: "M4.5 12.5h7a2.75 2.75 0 0 0 .55-5.45A4 4 0 0 0 4.3 6.3a3.1 3.1 0 0 0 .2 6.2zM2.5 2.5l11 11", // a cloud, struck through (the web nav draws the same)
 };
 
 export function Icon({ d, size = 22, color, width = 1.4 }: { d: string; size?: number; color: string; width?: number }) {

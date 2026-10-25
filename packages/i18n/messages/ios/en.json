@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "Offline",
+    "waiting": "{count, plural, one {Offline · # waiting} other {Offline · # waiting}}"
+  },
   "lists": {
     "sharedWithYou": "Shared with you",
     "sharedA11y": "{name}, shared by {owner}, {count, plural, one {# item} other {# items}}",
@@ -330,6 +334,8 @@
     "backArchive": "Archive",
     "didntLoad": "This one didn't load.",
     "didntLoadBody": "It may be gone, or the connection is. Try again in a bit.",
+    "notKept": "Not on this iPhone yet.",
+    "notKeptBody": "It opens when you are back online. On Wi-Fi, Pluck keeps your newest items here for reading offline.",
     "minutesLeft": "{percent} · {minutes} min left",
     "openOriginal": "Open the original",
     "by": "By {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "Exporting",
     "exportingBody": "A zip of everything is on its way to {email}. The link arrives in a minute or two.",
     "exportingBodyNoEmail": "A zip of everything is on its way to your email. The link arrives in a minute or two.",
+    "keep": "Keep for offline reading",
     "offline": "Offline copy",
     "offlineValue": "{count, plural, one {# item} other {# items}} · {mb} MB",
     "clearTitle": "Clear the offline copy?",
     "clearBody": "Your library stays on the server. The app downloads it again as you use it.",
     "clear": "Clear",
+    "keepFootnote": "On Wi-Fi, Pluck keeps the text of your newest {count} items in Inbox, Later and Lists on this iPhone, so you can read them with no connection. Text only, no pictures.",
     "server": "Server",
     "serverBody": "This phone uses {host}. To use another server, sign out, then choose \"Use your own server\".",
     "iconLight": "Light",

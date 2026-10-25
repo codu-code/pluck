@@ -332,6 +332,7 @@
   },
   "shell": {
     "main": "Principal",
+    "offline": "Hors ligne",
     "nav": {
       "inbox": "Réception",
       "later": "Plus tard",

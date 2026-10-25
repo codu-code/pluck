@@ -26,6 +26,8 @@ xcrun simctl launch booted io.getpluck.app -demoRoute /lists/<id>
 xcrun simctl io booted screenshot list.png
 ```
 
+`-demoOffline 1` starts the app as if there were no connection (the Simulator shares the Mac's network), for the Offline pill.
+
 Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 
 ## TestFlight
@@ -47,9 +49,10 @@ Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 - **Sign in:** OAuth 2.1 with PKCE in a web authentication session, for the API resource (`<server>/api/v1`). The app registers itself once per server (dynamic registration, redirect `io.getpluck.app:/oauth`). The email link may open in Mail or Safari instead of the session; the redirect then reaches the app as a link (`app/oauth.tsx`) and finishes there. "Use your own server" takes a server address and, optionally, a personal API key; it is hidden unless the build sets `PLUCK_SHOW_SERVER=1`, points at another server, or the app is opened with `pluck://signin?server=…`.
 - **Session:** one Keychain item (`expo-secure-store`, service `pluck`) in the app's default access group, which is the shared group `$(AppIdentifierPrefix)io.getpluck.shared`, so the share extension reads the same session and refreshes it the same way.
 - **App Group** `group.io.getpluck.app`: the app writes the tags and the last list the share sheet shows; the share extension writes what it could not send (`pending/*.json` and copied files) and the app sends them when it next comes to the foreground.
-- **Offline:** the TanStack Query cache is persisted (SQLite key-value), so the app opens on what it last saw; plucks made with no connection queue on the phone.
+- **Offline:** the TanStack Query cache is persisted (SQLite key-value), so the app opens on what it last saw; plucks made with no connection queue on the phone. `expo-network` tells TanStack Query when the connection goes, so queries wait instead of failing and pick up when it is back (plucks go up then too). With no connection the tab bar shows a clay "Offline" pill, which takes the waiting count when there is one ("Offline · 2 waiting"). An Item whose text is not on the phone opens to "Not on this iPhone yet.", not an error.
+- **Keep for offline reading** (Settings, Library; on by default): on Wi-Fi only, when the app opens or comes back, at most every 15 minutes, the app keeps the text of the newest 300 Items across Inbox, Later and Lists (`lib/keep.ts` picks them; images, pages still being plucked and pages that could not be read are left out), and the Lists themselves. Text and highlights only, never pictures. Each Item is one key in SQLite (`kept:<id>`), beside the query cache rather than in it, since the cache is written whole on every change. Only new or changed Items are fetched, one at a time with a pause, well under the API's read limit. Turning it off, "Clear the offline copy" and signing out delete the kept copies. Languages need nothing: every catalog is bundled into the app.
 - **Files** (images, PDFs) from the share sheet: `POST /api/v1/items/files` makes the item and returns a signed upload URL; a background `URLSession` uploads the bytes after the sheet closes, and the worker reads them once they arrive.
-- **Pure modules** (`lib/api.ts`, `lib/queue.ts`, `lib/pkce.ts`, `lib/markdown.ts`) have no Expo imports and are tested by the root `pnpm test` (`apps/ios/lib/core.test.ts`).
+- **Pure modules** (`lib/api.ts`, `lib/queue.ts`, `lib/pkce.ts`, `lib/markdown.ts`, `lib/keep.ts`) have no Expo imports and are tested by the root `pnpm test` (`apps/ios/lib/core.test.ts`, `apps/ios/lib/keep.test.ts`).
 
 ## Checked automatically
 
@@ -72,6 +75,8 @@ The share extension and the shared Keychain need real signing, so these are chec
 9. Inbox: swipe right to Later, left to Archive; pull to refresh. Reader: Later, Archive, Tags, List, Share, Original, and the reading position comes back on the web.
 10. Settings: Copy the connector URL; "Delete everything. No, really." opens account deletion on the web; Sign out.
 11. Put Pluck first in the share row (Settings tip) and check the icon in the share sheet.
+12. On Wi-Fi with a library of more than 300 Items, open the app and wait a few minutes: Settings, Offline copy counts about 300 items. Airplane mode: the "Offline" pill eases into the tab bar; Inbox, Later, Lists and a List open; recent Items read in full; an old one shows "Not on this iPhone yet."; pluck something and the pill reads "Offline · 1 waiting". Wi-Fi back: the pill goes and the pluck arrives. On mobile data only, nothing more is kept (Offline copy stays the same). Turn "Keep for offline reading" off: the count drops to what you opened.
+13. With Reduce Motion on (Settings, Accessibility, Motion), the pill appears without the fade.
 
 ## Known gaps
 

@@ -1,2 +1,13 @@
 .bar { padding: 8px 32px; background: var(--ink); color: var(--ground); font-size: 13px; }
 @media (max-width: 600px) { .bar { padding: 8px 16px; } }
+
+/* The nav's offline mark: clay on a clay hairline, faded in (not at all with reduced motion). */
+.mark {
+  display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; height: 24px; margin: 0 8px; padding: 0 10px;
+  border: 1px solid var(--clay-line); border-radius: 12px; color: var(--clay); font-size: 12px; font-weight: 500; white-space: nowrap;
+  animation: mark-in 220ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.mark svg { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@keyframes mark-in { from { opacity: 0; } }
+@media (max-width: 799px) { .mark { align-self: center; margin: 0; } }
+@media (prefers-reduced-motion: reduce) { .mark { animation: none; } }

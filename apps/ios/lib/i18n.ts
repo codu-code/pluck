@@ -1,3 +1,4 @@
+import "./plurals";
 import { matchLocale, messagesFor } from "@pluck/i18n";
 import { getCalendars, getLocales } from "expo-localization";
 

@@ -134,6 +134,10 @@
       }
     }
   },
+  "offline": {
+    "label": "Offline",
+    "waiting": "{count, plural, one {Offline · # in attesa} other {Offline · # in attesa}}"
+  },
   "lists": {
     "sharedWithYou": "Condivise con te",
     "sharedA11y": "{name}, condivisa da {owner}, {count, plural, one {# elemento} other {# elementi}}",
@@ -330,6 +334,8 @@
     "backArchive": "Archivio",
     "didntLoad": "Questo non si è caricato.",
     "didntLoadBody": "Forse non c'è più, o non c'è la connessione. Riprova tra poco.",
+    "notKept": "Non è ancora su questo iPhone.",
+    "notKeptBody": "Si apre quando torni online. Con il Wi-Fi, Pluck tiene qui i tuoi elementi più recenti da leggere offline.",
     "minutesLeft": "{percent} · mancano {minutes} min",
     "openOriginal": "Apri l'originale",
     "by": "Di {author}",
@@ -404,11 +410,13 @@
     "exportingTitle": "Esportazione in corso",
     "exportingBody": "Uno zip con tutto sta arrivando a {email}. Il link arriva in un minuto o due.",
     "exportingBodyNoEmail": "Uno zip con tutto sta arrivando alla tua email. Il link arriva in un minuto o due.",
+    "keep": "Tieni per leggere offline",
     "offline": "Copia offline",
     "offlineValue": "{count, plural, one {# elemento} other {# elementi}} · {mb} MB",
     "clearTitle": "Cancellare la copia offline?",
     "clearBody": "La tua libreria resta sul server. L'app la scarica di nuovo man mano che la usi.",
     "clear": "Cancella",
+    "keepFootnote": "Con il Wi-Fi, Pluck tiene su questo iPhone il testo dei tuoi {count} elementi più recenti di Inbox, Più tardi e Liste, per leggerli senza connessione. Solo testo, niente immagini.",
     "server": "Server",
     "serverBody": "Questo telefono usa {host}. Per usare un altro server, esci, poi scegli \"Usa il tuo server\".",
     "iconLight": "Chiara",
