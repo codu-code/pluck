@@ -114,9 +114,21 @@ export default function SignIn() {
           </Text>
         </View>
 
-        {/* The picture and the one thing to type sit together. */}
-        <View style={{ gap: 14 }}>
-          {!advanced && step !== "password" && <Story t={t} sent={step === "code"} sending={busy && step === "email"} />}
+        {!advanced && step !== "password" && <Story t={t} sent={step === "code"} sending={busy && step === "email"} />}
+        {advanced && step === "email" && (
+          <View style={{ gap: 8 }}>
+            <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("server")}</Text>
+            <TextInput value={server} onChangeText={setServer} autoCapitalize="none" autoCorrect={false} keyboardType="url" textContentType="URL"
+              returnKeyType="next" style={field} accessibilityLabel={tr("server")} accessibilityLabelledBy="server-label" />
+            <Text nativeID="key-label" style={[font.medium, { color: t.ink, fontSize: 14, marginTop: 8 }]}>{tr("key")}</Text>
+            <TextInput value={key} onChangeText={setKey} autoCapitalize="none" autoCorrect={false} secureTextEntry placeholder="pk_live_…" placeholderTextColor={t.ink2}
+              returnKeyType="go" onSubmitEditing={() => void withKey()} style={field} accessibilityLabel={tr("keyA11y")} accessibilityLabelledBy="key-label" />
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>{tr("noKey")}</Text>
+          </View>
+        )}
+
+        {/* Everything to type and tap sits together at the bottom, in reach of a thumb and riding up with the keyboard. */}
+        <View style={{ marginTop: "auto", gap: 12 }}>
           {step === "email" && (
             <View style={{ gap: 8 }}>
               <Text nativeID="email-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("email")}</Text>
@@ -144,64 +156,52 @@ export default function SignIn() {
                 accessibilityLabel={tr("password.label")} accessibilityLabelledBy="password-label" />
             </View>
           )}
-        </View>
-        {advanced && step === "email" && (
+          {busy && step === "code" && <Text accessibilityLiveRegion="polite" style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("code.checking")}</Text>}
+          {message && <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{message}</Text>}
+          {status === "resent" && <Text accessibilityLiveRegion="polite" style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 21 }]}>{tr("sent.another")}</Text>}
           <View style={{ gap: 8 }}>
-            <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("server")}</Text>
-            <TextInput value={server} onChangeText={setServer} autoCapitalize="none" autoCorrect={false} keyboardType="url" textContentType="URL"
-              returnKeyType="next" style={field} accessibilityLabel={tr("server")} accessibilityLabelledBy="server-label" />
-            <Text nativeID="key-label" style={[font.medium, { color: t.ink, fontSize: 14, marginTop: 8 }]}>{tr("key")}</Text>
-            <TextInput value={key} onChangeText={setKey} autoCapitalize="none" autoCorrect={false} secureTextEntry placeholder="pk_live_…" placeholderTextColor={t.ink2}
-              returnKeyType="go" onSubmitEditing={() => void withKey()} style={field} accessibilityLabel={tr("keyA11y")} accessibilityLabelledBy="key-label" />
-            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>{tr("noKey")}</Text>
-          </View>
-        )}
-        {busy && step === "code" && <Text accessibilityLiveRegion="polite" style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("code.checking")}</Text>}
-        {message && <Text accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{message}</Text>}
-        {status === "resent" && <Text accessibilityLiveRegion="polite" style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 21 }]}>{tr("sent.another")}</Text>}
-
-        <View style={{ marginTop: "auto", gap: 8 }}>
-          {step === "code" ? (
-            <>
-              <Pressable accessibilityRole="button" onPress={() => void Linking.openURL("message://").catch(() => {})}
-                style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: pressed ? 0.85 : 1 }]}>
-                <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("sent.openMail")}</Text>
-              </Pressable>
-              <View style={styles.row}>
-                <Pressable accessibilityRole="button" accessibilityState={{ disabled: busy || wait > 0 }} disabled={busy || wait > 0} onPress={() => void send()} style={styles.quiet}>
-                  <Text style={[font.medium, { color: wait > 0 ? t.ink2 : t.actionInk, fontSize: 15, fontVariant: ["tabular-nums"] }]}>
-                    {wait > 0 ? tr("sent.wait", { seconds: wait }) : tr("sent.again")}
-                  </Text>
+            {step === "code" ? (
+              <>
+                <Pressable accessibilityRole="button" onPress={() => void Linking.openURL("message://").catch(() => {})}
+                  style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: pressed ? 0.85 : 1 }]}>
+                  <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("sent.openMail")}</Text>
+                </Pressable>
+                <View style={styles.row}>
+                  <Pressable accessibilityRole="button" accessibilityState={{ disabled: busy || wait > 0 }} disabled={busy || wait > 0} onPress={() => void send()} style={styles.quiet}>
+                    <Text style={[font.medium, { color: wait > 0 ? t.ink2 : t.actionInk, fontSize: 15, fontVariant: ["tabular-nums"] }]}>
+                      {wait > 0 ? tr("sent.wait", { seconds: wait }) : tr("sent.again")}
+                    </Text>
+                  </Pressable>
+                  <Pressable accessibilityRole="button" onPress={restart} style={styles.quiet}>
+                    <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr("sent.different")}</Text>
+                  </Pressable>
+                </View>
+                <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18, textAlign: "center" }]}>{tr("sent.spam")}</Text>
+              </>
+            ) : step === "password" ? (
+              <>
+                <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy || !secret }} disabled={busy || !secret} onPress={() => void check(secret)}
+                  style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy || !secret ? 0.6 : pressed ? 0.85 : 1 }]}>
+                  {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("password.signIn")}</Text>}
                 </Pressable>
                 <Pressable accessibilityRole="button" onPress={restart} style={styles.quiet}>
                   <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr("sent.different")}</Text>
                 </Pressable>
-              </View>
-              <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18, textAlign: "center" }]}>{tr("sent.spam")}</Text>
-            </>
-          ) : step === "password" ? (
-            <>
-              <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy || !secret }} disabled={busy || !secret} onPress={() => void check(secret)}
-                style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy || !secret ? 0.6 : pressed ? 0.85 : 1 }]}>
-                {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("password.signIn")}</Text>}
-              </Pressable>
-              <Pressable accessibilityRole="button" onPress={restart} style={styles.quiet}>
-                <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr("sent.different")}</Text>
-              </Pressable>
-            </>
-          ) : (
-            <>
-              <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy }} disabled={busy} onPress={() => void (useKey ? withKey() : send())}
-                style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy ? 0.6 : pressed ? 0.85 : 1 }]}>
-                {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr(useKey ? "useKey" : "send")}</Text>}
-              </Pressable>
-              {(showServerChoice || linked) && (
-                <Pressable accessibilityRole="button" onPress={() => { setAdvanced((a) => !a); setProblem(null); if (advanced) setServer(defaultServer); }} style={styles.quiet}>
-                  <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? tr("useHost", { host: new URL(defaultServer).host }) : tr("ownServer")}</Text>
+              </>
+            ) : (
+              <>
+                <Pressable accessibilityRole="button" accessibilityState={{ busy, disabled: busy }} disabled={busy} onPress={() => void (useKey ? withKey() : send())}
+                  style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: busy ? 0.6 : pressed ? 0.85 : 1 }]}>
+                  {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr(useKey ? "useKey" : "send")}</Text>}
                 </Pressable>
-              )}
-            </>
-          )}
+                {(showServerChoice || linked) && (
+                  <Pressable accessibilityRole="button" onPress={() => { setAdvanced((a) => !a); setProblem(null); if (advanced) setServer(defaultServer); }} style={styles.quiet}>
+                    <Text style={[font.regular, { color: t.ink2, fontSize: 14, textDecorationLine: "underline" }]}>{advanced ? tr("useHost", { host: new URL(defaultServer).host }) : tr("ownServer")}</Text>
+                  </Pressable>
+                )}
+              </>
+            )}
+          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
