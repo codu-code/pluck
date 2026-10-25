@@ -36,7 +36,8 @@ How Pluck says its product words in Japanese, and why. Translators and reviewers
 | Kept page | 残したページ | Follows "keep" = 残す. Not 保存したページ or キャッシュ. | — |
 | Keep (an Item, so it does not expire) | 残す | Short, natural, and not 保存. | — |
 | Touch / untouched | 触れる / 手つかず | 「30日間手つかず」 is the natural way to say "untouched for 30 days". | — |
-| Expiry | 期限 / 期限切れ | Settings say 「期限とアーカイブ」, the filter 「期限切れ」. Copy always says the Item moves to the Archive and nothing is deleted: 「アーカイブに移ります。削除はされません。」 | — |
+| Expiry | 自動アーカイブ | Settings and the Archive filter say 「自動アーカイブ」. Not 期限: in Japanese 期限 is a deadline, and it already means a Todo's due date (「期限」「期限切れ」 = Due, overdue). Copy always says the Item moves to the Archive and nothing is deleted: 「アーカイブに移ります。削除はされません。」 | Slack JP (チャンネルの自動アーカイブ). |
+| Due / overdue | 期限 / 期限切れ | Only for Todo due dates. | Todoist JP (期限), Apple Reminders. |
 | Archive it all | すべてアーカイブ | Plain. The joke button reads 「本当に、すべてアーカイブする」. | — |
 | Bin | ゴミ箱 | What Gmail and Windows call it. | Gmail JP, Windows. |
 | Digest | 週1回のメール | The English UI says "the weekly email", so Japanese does too. Not ニュースレター. | — |
@@ -62,7 +63,7 @@ How Pluck says its product words in Japanese, and why. Translators and reviewers
 - Buttons and labels are noun forms or short plain verbs: 「アーカイブ」「キャンセル」「Pluckする」「元に戻す」「リストを作成」. Confirming buttons that need a verb use the plain dictionary form: 「削除する」「許可する」.
 - Avoid あなた in the product. Use お使いの… or leave the subject out, as Japanese does. The exceptions: the heading 「あなたと共有」 (as iOS says it), Privacy and Terms, where the legal text needs a clear "you", and the few marketing lines whose point is "yours" (「データはあなたのもの」「AIは、あなたが決める」).
 - Headlines can be short phrases and end with 。 when they are a sentence: 「Pluckして、整理はあとで。」 Labels and tab names have no full stop.
-- The jokes in English ("Gone. Well, archived.", "Pluck off", "No, really") are rewritten to work in Japanese, not translated word for word. Where a pun cannot survive, the line is plain and kind.
+- The jokes in English ("Gone. Well, archived." is 「片付けました。アーカイブにあります。」, "Pluck off", "No, really") are rewritten to work in Japanese, not translated word for word. Where a pun cannot survive, the line is plain and kind.
 - The welcome email is Niall's own voice: polite, warm, first person (私), signed Niall.
 
 ## Typography
@@ -70,7 +71,7 @@ How Pluck says its product words in Japanese, and why. Translators and reviewers
 - Full-width 。、：？ and （）. No exclamation marks of any kind (! or ！), no emoji.
 - Quotes are 「」; a quote inside a quote is 『』. They replace English “ ” and " ".
 - No spaces between Japanese and Latin letters or numbers: 「Pluckしました」「30日」「AIツール」. Keep Latin product and vendor names as they are spelled.
-- Numbers are half-width Arabic numerals (3件, 10分). Counters: 件 for Items, Plucks and results; 日 for days; 分 for minutes; 個 is not used.
+- Numbers are half-width Arabic numerals (3件, 10分). Counters: 件 for Items, Plucks and results; 日 for days; 分 for minutes; 個 only for browser tabs (「5個のタブ」), as Chrome says it.
 - Japanese has one plural form, so ICU plurals use only `other`. `#` is the number.
 - Japanese has no capital letters, so product words are not marked by case. Status names that could read as ordinary words go in 「」 inside sentences (「あとで」); インボックス, アーカイブ and ゴミ箱 are clear without them.
 - The middle dot separator ` · ` in meta lines is kept as it is in English.

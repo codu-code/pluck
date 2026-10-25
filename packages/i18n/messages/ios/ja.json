@@ -55,13 +55,13 @@
     "deselect": "選択を解除"
   },
   "moved": {
-    "archived": "アーカイブしました。消えてはいません。",
+    "archived": "片付けました。アーカイブにあります。",
     "later": "「あとで」に移しました。",
     "done": "完了しました。",
     "inbox": "インボックスに戻しました。"
   },
   "movedMany": {
-    "archived": "{count, plural, other {#件をアーカイブしました。消えてはいません。}}",
+    "archived": "{count, plural, other {#件を片付けました。アーカイブにあります。}}",
     "later": "{count, plural, other {#件を「あとで」に移しました。}}",
     "done": "{count, plural, other {#件を完了にしました。}}",
     "inbox": "{count, plural, other {#件をインボックスに戻しました。}}"
@@ -72,8 +72,8 @@
     "a11yWithNote": "{title}、{kind}、{site}、{when}、メモ：{note}",
     "when": {
       "now": "今",
-      "minutes": "{count}分",
-      "hours": "{count}時間",
+      "minutes": "{count}分前",
+      "hours": "{count}時間前",
       "yesterday": "昨日"
     },
     "due": {
@@ -117,9 +117,9 @@
     "newNote": "新規メモ",
     "newNoteText": "新規メモ",
     "settings": "設定",
-    "toTriage": "未整理 {count}件",
-    "forLater": "「あとで」 {count}件",
-    "toSync": "同期待ち {count}件",
+    "toTriage": "未整理{count}件",
+    "forLater": "「あとで」{count}件",
+    "toSync": "同期待ち{count}件",
     "moveFailed": "うまくいきませんでした。何も移動していません。",
     "addNote": "メモを追加",
     "selectAll": "すべて選択",
@@ -191,7 +191,7 @@
   "welcome": {
     "title": "準備ができました。\nさっそくPluckしましょう。",
     "lede": "Pluckするのに、このアプリを開く必要はありません。どのアプリの共有メニューにもPluckがいます。",
-    "step1": "<b>1.</b> 共有をタップして、Pluckを選ぶ。",
+    "step1": "<b>1.</b> 共有をタップして、Pluckを選びます。",
     "step2": "<b>2.</b> それだけです。そのまま読み続けてください。",
     "tryIt": "試してみる",
     "tryHint": "Safariでサンプルページを開きます。それをPluckに共有してください。",
@@ -349,7 +349,7 @@
       "account": "アカウント",
       "aiTools": "AIツール",
       "emailIn": "メールでPluck",
-      "expiry": "期限と週1回のメール",
+      "expiry": "自動アーカイブと週1回のメール",
       "library": "ライブラリ",
       "appIcon": "アプリアイコン",
       "privacy": "プライバシー"
@@ -389,9 +389,9 @@
     "moveAfter": "アーカイブに移すまで",
     "moveAfterTitle": "手つかずのアイテムをアーカイブに移すまで",
     "expirySaved": "{count}日間手つかずのものはアーカイブに移ります。削除はされません。",
-    "noExpiry": "期限切れにはなりません。",
+    "noExpiry": "自動でアーカイブされることはありません。",
     "appliesTo": "対象",
-    "appliesToTitle": "期限の対象",
+    "appliesToTitle": "自動アーカイブの対象",
     "weekly": "週1回のメール",
     "off": "オフ",
     "weeklyTitle": "週1回のメールを送る曜日",
@@ -415,7 +415,7 @@
     "iconDark": "ダーク",
     "iconA11y": "{name}アイコン",
     "iconFootnote": "変わるのはアイコンだけです。アプリ本体はiPhoneの設定に従います。",
-    "usage": "Pluckの使い方を共有",
+    "usage": "利用状況を共有",
     "usageFootnote": "どの画面を使っているかを、アカウントと結びつけて送ります。Pluckしたものは送りません。クラッシュレポートはどちらを選んでも、名前を外して送られます。",
     "tipTitle": "共有メニューでPluckを先頭に",
     "tipBody": "どのアプリでも共有をタップし、アプリの列を「その他」までスクロールして、Pluckを先頭にドラッグしてください。",
