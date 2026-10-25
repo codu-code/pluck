@@ -2,11 +2,11 @@
   "manifest": {
     "description": "点一下，就把当前网页摘进你的 Pluck 资料库。",
     "pluckPage": "摘下此页",
-    "pluckSelection": "把选中的文字摘下为高亮"
+    "pluckSelection": "把选中的文字摘为高亮"
   },
   "menu": {
     "link": "摘下链接",
-    "selection": "摘下选中内容为高亮",
+    "selection": "把选中内容摘为高亮",
     "image": "摘下图片",
     "page": "摘下网页"
   },

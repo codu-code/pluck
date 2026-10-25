@@ -21,20 +21,20 @@
   "moved": {
     "archived": "没了。好吧，是归档了。",
     "later": "留着稍后看。",
-    "done": "完成。",
+    "done": "已完成。",
     "inbox": "回到收件箱了。"
   },
   "movedMany": {
     "archived": "{count, plural, other {# 条}}。没了。好吧，是归档了。",
     "later": "{count, plural, other {# 条}}。留着稍后看。",
-    "done": "{count, plural, other {# 条}}。完成。",
+    "done": "{count, plural, other {# 条}}。已完成。",
     "inbox": "{count, plural, other {# 条}}。回到收件箱了。"
   },
   "format": {
     "when": {
       "now": "刚刚",
-      "minutes": "{n} 分钟",
-      "hours": "{n} 小时",
+      "minutes": "{n} 分钟前",
+      "hours": "{n} 小时前",
       "yesterday": "昨天"
     },
     "ago": {
@@ -46,9 +46,9 @@
     },
     "due": {
       "overdue": "已逾期",
-      "today": "今天到期",
-      "tomorrow": "明天到期",
-      "on": "{date}到期"
+      "today": "今天截止",
+      "tomorrow": "明天截止",
+      "on": "{date}截止"
     },
     "site": {
       "email": "邮件摘入",
@@ -153,7 +153,7 @@
     "oauthError": "没有成功 · Pluck",
     "consent": "连接你的 AI · Pluck",
     "shared": "与你共享 · Pluck",
-    "copy": "摘下这个清单 · Pluck",
+    "copy": "把清单摘进你的 Pluck · Pluck",
     "extensionConnected": "已连接 · Pluck",
     "inbox": "收件箱 · Pluck",
     "later": "稍后 · Pluck",
@@ -267,14 +267,14 @@
       "notNow": "先不了"
     },
     "doing": {
-      "keep": "正在留下",
+      "keep": "正在保留",
       "letGo": "正在移到归档",
       "undoLetGo": "正在放回去",
       "stop": "正在停发每周邮件"
     },
     "done": {
       "keep": {
-        "title": "已留下",
+        "title": "已保留",
         "line": "它留在原处，天数重新计算。"
       },
       "letGo": {
@@ -293,7 +293,7 @@
         "line": "不会删除任何东西。"
       },
       "done": {
-        "title": "完成"
+        "title": "已完成"
       }
     }
   },
@@ -303,8 +303,8 @@
     "byNamed": "{name}（@{handle}）",
     "byHandle": "@{handle}",
     "meta": "{by} 与你共享 · {count, plural, other {# 条}} · {ago}更新",
-    "pluck": "摘下这个清单",
-    "seeOnly": "你可以查看，只有对方能修改。摘下它，就能得到一份你自己的副本。",
+    "pluck": "摘进你的 Pluck",
+    "seeOnly": "你可以查看，只有对方能修改。把它摘进你的 Pluck，就能得到一份自己的副本。",
     "note": "笔记",
     "noAccess": {
       "title1": "没有",
@@ -317,8 +317,8 @@
   "copy": {
     "failed": "没有成功。",
     "busy": "正在摘下",
-    "action": "摘下这个清单",
-    "title": "摘下这个清单",
+    "action": "摘进你的 Pluck",
+    "title": "把这个清单摘进你的 Pluck",
     "lede": "{count, plural, other {# 条}}会进入你的收件箱，同时生成一份 <b>{name}</b> 的私密副本，保留原有的顺序和笔记。",
     "items": "{count, plural, other {# 条}}",
     "note": "笔记",
@@ -331,7 +331,7 @@
     "selection": "摘下你选中的内容，留作高亮。"
   },
   "shell": {
-    "main": "主菜单",
+    "main": "主导航",
     "nav": {
       "inbox": "收件箱",
       "later": "稍后",
@@ -383,7 +383,7 @@
       "later": "稍后（或放回收件箱）",
       "archive": "归档",
       "done": "完成（待办和物品）",
-      "tag": "标签",
+      "tag": "打标签",
       "list": "添加到清单",
       "select": "选择",
       "escape": "清除选择，或返回",
@@ -497,7 +497,7 @@
     "remove": "移除标签 {name}",
     "add": "添加标签",
     "quoted": "“{name}”",
-    "byAi": "你的 AI 添加了{count, plural, other { # 个标签}}：{names}。你动一下，它就归你了。",
+    "byAi": "你的 AI 添加了{count, plural, other { # 个标签}}：{names}。动一下，就归你了。",
     "keep": "保留",
     "pickerTitle": "标签"
   },
@@ -511,7 +511,7 @@
     "search": "搜索",
     "links": "{count} 个链接。按 Enter 全部摘下。",
     "as": "摘下为",
-    "due": "到期",
+    "due": "截止",
     "enterAs": "按 Enter 摘下为{kind, select, note {笔记} todo {待办} other {物品}}。"
   },
   "itemList": {
@@ -531,7 +531,7 @@
     "showOnly": "只显示 {name}",
     "addedTo": "已添加到“{name}”。",
     "takenOut": "已从“{name}”中移出。",
-    "kept": "已留下。{days} 天重新计算。",
+    "kept": "已保留。{days} 天重新计算。",
     "pluckedMany": "已把 {count} 条摘进收件箱。",
     "sort": {
       "label": "排序",
@@ -550,14 +550,14 @@
       "later": "稍后",
       "archive": "归档",
       "done": "完成",
-      "tag": "标签",
-      "list": "清单",
+      "tag": "打标签",
+      "list": "加入清单",
       "open": "打开"
     },
     "rowsLabel": "{view, select, inbox {收件箱} other {稍后}}里的条目",
     "pill": {
-      "title": "已经 {days} 天没动过。留下它，否则它会移到归档。不会删除任何东西。",
-      "label": "留下“{title}”：它很快会移到归档",
+      "title": "已经 {days} 天没动过。保留它，否则它会移到归档。不会删除任何东西。",
+      "label": "保留“{title}”：它很快会移到归档",
       "days": "{days} 天"
     },
     "none": {
@@ -569,7 +569,7 @@
       "inbox": "收件箱",
       "later": "稍后",
       "archive": "归档",
-      "tag": "标签",
+      "tag": "打标签",
       "list": "添加到清单",
       "select": "选择",
       "help": "全部快捷键"
@@ -752,14 +752,14 @@
     "title": "标题",
     "body": "正文",
     "help": "第一行就是标题。纯文本。边写边保存。",
-    "about": "关于这条{kind, select, note {笔记} todo {待办} other {物品}}",
+    "about": "关于{kind, select, note {这条笔记} todo {这条待办} other {这件物品}}",
     "kind": "类别",
     "kindHint": {
-      "note": "改成待办，就能加上到期日和勾选框。",
-      "todo": "待办可以设置到期日。点“完成”会把它移出收件箱。",
+      "note": "改成待办，就能加上截止日期和勾选框。",
+      "todo": "待办可以设置截止日期。点“完成”会把它移出收件箱。",
       "thing": "物品是要入手的东西。清单是它们汇集的地方。"
     },
-    "due": "到期",
+    "due": "截止日期",
     "source": "来源：{via}",
     "pasteBox": "网页粘贴框",
     "noHighlights": "笔记没有高亮。选中文字即可复制。"
@@ -911,7 +911,7 @@
       "job": "{source} 导入",
       "progress": "已完成 {done, number} 条",
       "progressFailed": "已完成 {done, number} 条 · 失败 {failed, number} 条",
-      "done": "完成。导入的条目在你的归档里的“导入的”下面，照样能搜到。",
+      "done": "完成。导入的条目在归档的“导入的”筛选里，照样能搜到。",
       "running": "在后台运行。你可以关掉这个页面。",
       "export": {
         "title": "导出",

@@ -90,7 +90,7 @@
     "stats": {
       "tapNumber": "点 1 下",
       "tap": "在 iPhone 的分享菜单里，不用打开任何 App。也可以从 Chrome、你的邮件，或者和你的 AI 的聊天里。不到 300 毫秒就显示“已摘下”。每次都是。",
-      "nagsNumber": "0 催促",
+      "nagsNumber": "0 次催促",
       "nags": "没有连续打卡，没有徽章，没有负罪感。不会背着你打标签。你从没动过的东西会在 30 天后移到归档（天数由你定），放在清单里的除外。不会删除任何东西。",
       "secondsNumber": "30 秒",
       "seconds": "接入你本来就用的 AI。Claude、ChatGPT、Cursor，任何支持 MCP 的都行。让它整理、归类，或者把你摘下的内容变成点子。它在你眼前干活，而且从不删除。"
@@ -158,9 +158,9 @@
     "chrome": {
       "meta": {
         "title": "Pluck for Chrome · Pluck",
-        "description": "Pluck for Chrome 正在 Chrome 应用商店排队审核，随时可能上线。"
+        "description": "Pluck for Chrome 正在 Chrome 网上应用店排队审核，随时可能上线。"
       },
-      "para1": "Pluck for Chrome 正在 Chrome 应用商店排队审核，前面大概还有几千个优惠券插件。随时可能上线。",
+      "para1": "Pluck for Chrome 正在 Chrome 网上应用店排队审核，前面大概还有几千个优惠券插件。随时可能上线。",
       "para2": "在那之前，Pluck 可以在网页上用：粘贴一个链接，它就摘下了。你的 AI 也能替你摘。"
     },
     "iphone": {
@@ -325,7 +325,7 @@
       "claude": {
         "step1": "打开 Claude，进入“设置”，再进入“连接器”。",
         "step2": "选择“添加自定义连接器”，粘贴链接。",
-        "step3": "它要求时登录 Pluck。完成。",
+        "step3": "按提示登录 Pluck。搞定。",
         "codeLabel": "连接器 URL",
         "note": "添加一次，网页版、桌面版和手机上都能用。"
       },
@@ -339,14 +339,14 @@
       "chatgpt": {
         "step1": "打开 ChatGPT，进入“设置”，再进入“连接器”。",
         "step2": "选择“创建”，把链接粘贴为 MCP 服务器 URL。",
-        "step3": "它要求时登录 Pluck。",
+        "step3": "按提示登录 Pluck。",
         "codeLabel": "MCP 服务器 URL",
         "note": "需要支持自定义连接器的套餐。"
       },
       "cursor": {
         "step1": "打开 Cursor 设置，进入 MCP。",
         "step2": "用右边的 JSON 添加一个服务器。",
-        "step3": "它要求时登录 Pluck。",
+        "step3": "按提示登录 Pluck。",
         "note": "任何支持远程 MCP 的编辑器或客户端，用法都一样。"
       },
       "self": {
@@ -365,14 +365,14 @@
       "list_items": "浏览收件箱、稍后、归档或已完成，按最新或最久没动排序。",
       "get_item": "完整的单个条目，包括留存的网页正文。",
       "save_item": "摘下一个链接、多个链接、一条笔记、一条待办或一件物品。标记为由 AI 摘下。",
-      "batch_update": "为一个或多个条目设置状态、类别、标签和到期日。",
+      "batch_update": "为一个或多个条目设置状态、类别、标签和截止日期。",
       "list_tags": "你的标签，附带数量。",
       "create_tag": "新建标签，只在你同意之后。",
       "list_lists": "你的清单，附带用途、数量和可见性。",
       "get_list": "按顺序列出一个清单，附带笔记和勾选。",
       "create_list": "新建一个清单，条目按顺序排列，每个条目可附一条笔记。私密。",
       "update_list": "重命名、重新排序、添加、勾选，或设为私密。只有你能把清单设为公开。",
-      "get_digest": "快到期的、到期的、最旧的，以及沉寂的清单。也就是周一那封邮件的数据版。"
+      "get_digest": "快到期的、快截止的、最旧的条目，以及沉寂的清单。也就是周一那封邮件的数据版。"
     },
     "asksTitle": "可以问的四件事。",
     "asks": {
@@ -531,7 +531,7 @@
       "yesterday": "昨天",
       "on": "{date}"
     },
-    "pluck": "摘下这个清单",
+    "pluck": "摘进你的 Pluck",
     "copies": "复制一份到你自己的 Pluck。免费。",
     "note": "笔记",
     "footTitle": "用你摘下的内容，做出这样的清单。",

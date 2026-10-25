@@ -57,13 +57,13 @@
   "moved": {
     "archived": "没了。好吧，是归档了。",
     "later": "留着稍后看。",
-    "done": "完成。",
+    "done": "已完成。",
     "inbox": "回到收件箱了。"
   },
   "movedMany": {
     "archived": "{count, plural, =1 {没了。好吧，是归档了。} other {# 条。没了。好吧，是归档了。}}",
     "later": "{count, plural, =1 {留着稍后看。} other {# 条。留着稍后看。}}",
-    "done": "{count, plural, =1 {完成。} other {# 条。完成。}}",
+    "done": "{count, plural, =1 {已完成。} other {# 条。已完成。}}",
     "inbox": "{count, plural, =1 {回到收件箱了。} other {# 条。回到收件箱了。}}"
   },
   "row": {
@@ -72,15 +72,15 @@
     "a11yWithNote": "{title}，{kind}，{site}，{when}，笔记：{note}",
     "when": {
       "now": "刚刚",
-      "minutes": "{count} 分钟",
-      "hours": "{count} 小时",
+      "minutes": "{count} 分钟前",
+      "hours": "{count} 小时前",
       "yesterday": "昨天"
     },
     "due": {
       "overdue": "已逾期",
-      "today": "今天到期",
-      "tomorrow": "明天到期",
-      "on": "{date}到期"
+      "today": "今天截止",
+      "tomorrow": "明天截止",
+      "on": "{date}截止"
     },
     "meta": {
       "byAi": "由 AI 添加",
@@ -166,7 +166,7 @@
     "yourNote": "你的笔记：<snippet></snippet>",
     "empty": {
       "start": {
-        "title": "再找到它。",
+        "title": "重新找到它。",
         "body": "标题、笔记、标签、清单，还有网页上的文字。"
       },
       "error": {
@@ -226,7 +226,7 @@
   "shared": {
     "copied": "已摘下。你自己的副本在“清单”里。",
     "leaveTitle": "退出这个清单？",
-    "leaveBody": "它会从你的清单中移除。对方可以再次和你分享。",
+    "leaveBody": "它会从你的清单中移除。对方可以再次与你共享。",
     "leave": "退出",
     "byNamed": "{name}（@{handle}）与你共享 · 仅可查看",
     "by": "@{handle} 与你共享 · 仅可查看",
@@ -237,7 +237,7 @@
     },
     "empty": "这个清单上还没有东西。",
     "pluckHint": "复制一份到你自己的 Pluck",
-    "pluck": "摘下这个清单"
+    "pluck": "摘进你的 Pluck"
   },
   "signin": {
     "stale": "这个链接来自之前的一次尝试。请打开最新的邮件，或者重新发送链接。",
@@ -363,7 +363,7 @@
     "handle": "用户名",
     "signOut": "退出登录",
     "signOutTitle": "退出登录？",
-    "signOutBody": "排队等在这台手机上的内容会一直留着，直到你再次登录。",
+    "signOutBody": "在这台手机上排队等待上传的内容会一直留着，直到你再次登录。",
     "accountFootnote": "你的名字和用户名只会显示在你公开的清单上，其他地方都不会出现。",
     "connectorCopied": "已拷贝。把它粘贴到你的 AI 里。",
     "copied": "已拷贝",
@@ -397,7 +397,7 @@
     "weeklyTitle": "每周邮件的发送日",
     "noWeekly": "不发每周邮件。",
     "weeklyOn": "每周邮件会在{day, select, 0 {每周日} 1 {每周一} 2 {每周二} 3 {每周三} 4 {每周四} 5 {每周五} other {每周六}}送达。",
-    "expiryFootnote": "没动过的条目会移到归档，不会删除任何东西。每周邮件里有：快要移走的、快到期的，还有你摘下后忘了的东西。",
+    "expiryFootnote": "没动过的条目会移到归档，不会删除任何东西。每周邮件里有：快要移走的、快截止的，还有你摘下后忘了的东西。",
     "tags": "标签",
     "export": "全部导出",
     "byEmail": "通过邮件",

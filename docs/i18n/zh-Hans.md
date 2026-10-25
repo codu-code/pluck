@@ -9,7 +9,7 @@ Sources checked: Safari 阅读列表 (Reading List) and Apple Reminders/Notes in
 | English | 简体中文 | Why | Seen in |
 |---|---|---|---|
 | Pluck (the brand) | Pluck | Stays in Latin letters everywhere, with a space either side when it sits in Chinese text. | — |
-| pluck (verb) | 摘下 / 摘（短句里用“摘”） | 摘 is the literal "pluck" (摘苹果, 摘花): one hand, quick, light, which is the feel of the English. It keeps clear of 保存/收藏/书签 (saved, bookmarked) that the English avoids on purpose. "pluck into a List" is 摘进清单. | No comparable app has its own verb; Pocket and Safari say 保存/添加到阅读列表, which is what we avoid. |
+| pluck (verb) | 摘下 / 摘（短句里用“摘”） | 摘 is the literal "pluck" (摘苹果, 摘花): one hand, quick, light, which is the feel of the English. It keeps clear of 保存/收藏/书签 (saved, bookmarked) that the English avoids on purpose. "pluck into a List" is 摘进清单. 摘下 also means "take off" (摘下眼镜, 摘下标签), so it never takes a List or a Tag as its object: "Pluck this list" is 摘进你的 Pluck, and a selection is 摘为高亮. | No comparable app has its own verb; Pocket and Safari say 保存/添加到阅读列表, which is what we avoid. |
 | Plucked (confirmation) | 已摘下。 | The standard zh-CN past-state pattern (已发送, 已拷贝, 已归档). | Apple and Gmail confirmations |
 | Pluck it (button) | 摘下来 | Spoken and a little warm, like the English. Used for the paste box, the hero line and the web top bar. | — |
 | Plucking… | 正在摘下… | The zh-CN progress pattern (正在载入…). | Apple |
@@ -35,6 +35,8 @@ Sources checked: Safari 阅读列表 (Reading List) and Apple Reminders/Notes in
 | Bin | 回收站 | What Chinese users call it on every desktop OS. | Windows, many apps |
 | Highlight | 高亮 | Universal for read-later apps. | Readwise, Raindrop |
 | kept page | 留存的网页 / Pluck 留下的网页 | 留 (keep) instead of 保存 (save). "The page is kept" is 网页已留下. | — |
+| Due / due date | 截止 / 截止日期 | What Todoist and Microsoft To Do say. 到期 belongs to Expiry only, so "due today" is 今天截止, never 今天到期. | Todoist, Microsoft To Do |
+| Keep (a button or result) | 保留 / 已保留 | Plain and exact; 留下 is for the kept page. The digest email's Keep / Let it go pair stays 留着 / 放下吧. | Apple (保留) |
 | Touch / untouched | 动过 / 没动过 | Spoken, short and exact: "30 天没动过". | — |
 | Expiry | 到期 | Neutral; never 清理 or 自动删除. | — |
 | Archive it all. No, really. | 全部归档。说真的。 | Keeps the dry joke; 说真的 is "seriously". Same pattern for 全部删除。说真的。 | — |
@@ -42,7 +44,7 @@ Sources checked: Safari 阅读列表 (Reading List) and Apple Reminders/Notes in
 | Handle | 用户名 | No natural Chinese word separates "handle" from "username"; 用户名 with the @ is what Chinese social apps show. | Weibo, GitHub zh |
 | Email-in | 邮件摘入 | Short label in the same family as 摘下. | — |
 | library | 资料库 | Neutral, holds everything. Not 收藏库. | Apple (资料库 in Photos, Music) |
-| Shared with you / see only | 与你共享 / 仅可查看 | Apple's and Google's zh-CN wording. | iCloud, Google Docs |
+| Shared with you / see only | 与你共享 / 仅可查看 | Apple's and Google's zh-CN wording. Sharing a List with people is always 共享 (与你共享了一个清单); 分享 is for the iOS share sheet, links and posting. | iCloud, Google Docs |
 | Public / Private | 公开 / 私密 | Standard. | — |
 | Sign in / Sign out | 登录 / 退出登录 | Standard. | Apple, WeChat |
 | Copy (web) / Copy (iPhone) | 复制 / 拷贝 | The web uses 复制, the iPhone uses Apple's 拷贝 so the app matches iOS. | Apple zh-CN, Chrome zh-CN |
@@ -68,6 +70,7 @@ Sources checked: Safari 阅读列表 (Reading List) and Apple Reminders/Notes in
 - Ellipsis: a single … in UI progress labels (正在摘下…), matching Apple's zh-CN UI; …… is not used in short labels.
 - Product words have no capitals in Chinese. Where English capitalises a status or button in running text, Chinese quotes it instead when it is a button or a screen name (轻点“分享”, 设置的“到期与归档”).
 - Plurals: Chinese has only `other`. Exact matches (`=0`, `=1`) are kept where the one-item sentence reads differently.
+- Short relative times keep 前 (5 分钟前, 3 小时前), because a bare 5 分钟 sits next to the reading time (12 分钟) in the same row.
 - Dates: 2026 年 10 月 24 日; weekdays come from the formatter (星期一).
 - Settings paths use > (设置 > AI 工具 > 断开连接), as Apple's zh-CN help does.
 
