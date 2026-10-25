@@ -8,7 +8,7 @@ describe("fromAddress", () => {
   test.each([
     ["https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=42", "player", "video", { player: { provider: "youtube", id: "dQw4w9WgXcQ" } }],
     ["https://youtu.be/dQw4w9WgXcQ?si=abc", "player", "video", { player: { provider: "youtube", id: "dQw4w9WgXcQ" } }],
-    ["https://youtube.com/shorts/aBcDeFgHiJk", "player", "video", { player: { provider: "youtube", id: "aBcDeFgHiJk" } }],
+    ["https://youtube.com/shorts/aBcDeFgHiJk", "player", "video", { player: { provider: "youtube", id: "aBcDeFgHiJk" }, vertical: true }],
     ["https://m.youtube.com/live/aBcDeFgHiJk", "player", "video", { player: { provider: "youtube", id: "aBcDeFgHiJk" } }],
     ["https://vimeo.com/76979871", "player", "video", { player: { provider: "vimeo", id: "76979871" } }],
     ["https://vimeo.com/channels/staffpicks/76979871", "player", "video", { player: { provider: "vimeo", id: "76979871" } }],
@@ -19,7 +19,8 @@ describe("fromAddress", () => {
     ["https://www.reddit.com/r/typescript/comments/abc123/strict_mode/", "post", "link", { handle: "r/typescript" }],
     ["https://www.instagram.com/reel/C9xYz/", "post", "video", {}],
     ["https://www.instagram.com/p/C9xYz/", "post", "link", {}],
-    ["https://www.tiktok.com/@someone/video/7400000000000000000", "post", "video", { handle: "@someone" }],
+    ["https://www.tiktok.com/@someone/video/7400000000000000000", "player", "video", { player: { provider: "tiktok", id: "7400000000000000000" }, handle: "@someone", vertical: true }],
+    ["https://claude.ai/share/0b4c7f3e-1", "app", undefined, { app: "claude-chat" }],
     ["https://bsky.app/profile/someone.bsky.social/post/3kabc", "post", "link", { handle: "@someone.bsky.social" }],
     ["https://mastodon.social/@someone/112233445566", "post", "link", { handle: "@someone" }],
     ["https://news.ycombinator.com/item?id=41000000", "post", "link", {}],

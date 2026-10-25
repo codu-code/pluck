@@ -21,6 +21,7 @@ function player(u: URL): Facts["player"] | null {
     return id ? { provider: "vimeo", id } : null;
   }
   if (h === "loom.com") return ["share", "embed"].includes(p[0] ?? "") && /^[a-f0-9]{32}$/.test(p[1] ?? "") ? { provider: "loom", id: p[1]! } : null;
+  if (h === "tiktok.com" && p[0]?.startsWith("@") && p[1] === "video" && /^\d{8,24}$/.test(p[2] ?? "")) return { provider: "tiktok", id: p[2]! };
   if (h === "open.spotify.com") {
     const at = p.findIndex((s) => /^(episode|track|show|album|playlist)$/.test(s)); // /intl-de/track/…
     const id = at >= 0 ? p[at + 1] : null;
@@ -30,7 +31,8 @@ function player(u: URL): Facts["player"] | null {
 }
 
 const APPS: [RegExp, string, RegExp?][] = [
-  [/^claude\.ai$/, "claude", /^\/(public\/artifacts|share)\//],
+  [/^claude\.ai$/, "claude", /^\/public\/artifacts\//],
+  [/^claude\.ai$/, "claude-chat", /^\/share\//],
   [/^claude\.site$/, "claude"],
   [/^(chatgpt\.com|chat\.openai\.com)$/, "chatgpt", /^\/(share|g|canvas)\//],
   [/^(gemini\.google\.com|g\.co)$/, "gemini", /^\/(share|gemini\/share)\//],
@@ -75,7 +77,6 @@ function post(u: URL): Facts | null {
   if (h === "bsky.app" && p[0] === "profile" && p[2] === "post") return { handle: `@${p[1]}` };
   if (h === "reddit.com" || h === "old.reddit.com" || h === "redd.it") return p[0] === "r" && p[2] === "comments" ? { handle: `r/${p[1]}` } : h === "redd.it" ? {} : null;
   if (h === "instagram.com" && ["p", "reel", "reels", "tv"].includes(p[0] ?? "")) return {};
-  if (h === "tiktok.com" && p[0]?.startsWith("@") && p[1] === "video") return { handle: p[0] };
   if (h === "linkedin.com" && (p[0] === "posts" || (p[0] === "feed" && p[1] === "update"))) return {};
   if (h === "facebook.com" && (p.includes("posts") || p[0] === "share" || p[0] === "permalink.php")) return {};
   if (h === "news.ycombinator.com" && p[0] === "item") return {};
@@ -93,11 +94,16 @@ export function fromAddress(url: string): Guess | null {
   }
   const h = host(u);
   const pl = player(u);
-  if (pl) return { preview: "player", kind: pl.provider === "spotify" ? "link" : "video", facts: { player: pl } };
+  if (pl) {
+    const facts: Facts = { player: pl };
+    if (pl.provider === "tiktok") Object.assign(facts, { handle: parts(u)[0], vertical: true });
+    if (pl.provider === "youtube" && parts(u)[0] === "shorts") facts.vertical = true;
+    return { preview: "player", kind: pl.provider === "spotify" ? "link" : "video", facts };
+  }
   const c = code(u);
   if (c) return { preview: "code", facts: c };
   const s = post(u);
-  if (s) return { preview: "post", kind: h === "tiktok.com" || (h === "instagram.com" && parts(u)[0] !== "p") ? "video" : "link", facts: s };
+  if (s) return { preview: "post", kind: h === "instagram.com" && parts(u)[0] !== "p" ? "video" : "link", facts: s };
   for (const [re, app, path] of APPS) if (re.test(h) && (!path || path.test(u.pathname))) return { preview: "app", facts: { app } };
   return null;
 }

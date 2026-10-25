@@ -5,6 +5,7 @@ import { extractText, getDocumentProxy } from "unpdf";
 import type { Facts, Preview } from "@pluck/shared-schemas";
 import { fromAddress, fromPage, isoSeconds } from "./classify.ts";
 import { guardedFetch } from "./fetch.ts";
+import { isGenericImage, isGenericTitle, sourceFor, withoutPrefix, type Found } from "./sources.ts";
 
 export type ExtractedKind = "link" | "video" | "pdf" | "image";
 
@@ -167,12 +168,52 @@ export async function extractFile({ body, contentType, fileName }: { body: Buffe
 
 export type ExtractInput = { url: string; html?: string | null };
 
-// Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch.
+// What a link says with nothing fetched: the Preview its address gives, and nothing else.
+function fromAddressOnly(url: string): Extracted {
+  const guess = fromAddress(url);
+  return {
+    kind: guess?.kind ?? "link", preview: guess?.preview ?? "site", facts: guess?.facts ?? {}, url, canonicalUrl: null, title: null,
+    siteName: new URL(url).hostname.replace(/^www\./, ""), author: null, excerpt: null, lang: null, coverUrl: null, markdown: "", wordCount: 0, extractor: "meta", raw: null,
+  };
+}
+
+// A source's own answer laid over what the page said: its fields win where it has them, its facts join the page's.
+// Except over a page the person's browser sent: what they saw beats a guess from the address.
+function merge(x: Extracted, f: Found | null, sent = false): Extracted {
+  const out = { ...x, title: isGenericTitle(x.title) ? null : withoutPrefix(x.title), coverUrl: isGenericImage(x.coverUrl) ? null : x.coverUrl };
+  if (!f) return out;
+  for (const k of ["title", "author", "siteName", "excerpt", "coverUrl"] as const) if (f[k] && !(sent && out[k])) out[k] = f[k];
+  if (f.preview) out.preview = f.preview;
+  if (f.kind) out.kind = f.kind;
+  out.facts = { ...x.facts, ...f.facts };
+  if (f.markdown && !(sent && x.wordCount)) {
+    out.markdown = f.markdown;
+    out.wordCount = countWords(f.markdown);
+    out.extractor = "meta";
+  }
+  return out;
+}
+
+// Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch, except
+// from the sites whose own pages are no use to a server, which answer through their APIs (sources.ts) instead.
 export async function extract({ url, html }: ExtractInput, { signal }: { signal?: AbortSignal } = {}): Promise<Extracted> {
-  if (html) return extractFromHtml(html, url);
+  const source = sourceFor(url);
+  const found = source?.resolve ? source.resolve(new URL(url), signal).catch(() => null) : Promise.resolve(null);
+  let page: Extracted | null = null;
+  try {
+    if (html) page = await extractFromHtml(html, url);
+    else if (!source?.only) page = await fetchAndRead(url, signal);
+  } catch (e) {
+    if (!source) throw e; // a site we know still has its address and its API to go on
+  }
+  return merge(page ?? fromAddressOnly(url), await found, Boolean(html && page));
+}
+
+async function fetchAndRead(url: string, signal?: AbortSignal): Promise<Extracted> {
   const res = await guardedFetch(url, { signal });
   const type = res.contentType.toLowerCase();
-  if (type.includes("application/pdf")) return extractPdf(res.url, res.body);
+  // Some hosts (Google Drive among them) send a PDF as plain bytes; its first bytes say what it is.
+  if (type.includes("application/pdf") || res.body.subarray(0, 5).toString("latin1") === "%PDF-") return extractPdf(res.url, res.body);
   if (type.startsWith("image/")) {
     const name = fileNameOf(res.url);
     return {

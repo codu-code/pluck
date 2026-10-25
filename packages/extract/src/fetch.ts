@@ -2,6 +2,8 @@ import { lookup as dnsLookup, type LookupAddress } from "node:dns";
 import { BlockList, isIP } from "node:net";
 import { Agent, fetch, type Response } from "undici";
 
+// APIs (oEmbed, registries) are asked as ourselves, with a way to reach us; pages are read as the browser would.
+export const PLUCK_UA = "Pluck/1.0 (+https://getpluck.io; support@getpluck.io)";
 export const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
 
@@ -53,14 +55,14 @@ function assertPublicUrl(url: URL) {
 // GET with a browser user agent, manual redirects (each hop re-checked), a timeout and a size cap.
 export async function guardedFetch(
   input: string,
-  { signal, maxBytes = 10_000_000, accept = "text/html,application/xhtml+xml,*/*;q=0.8" }: { signal?: AbortSignal; maxBytes?: number; accept?: string } = {},
+  { signal, maxBytes = 10_000_000, accept = "text/html,application/xhtml+xml,*/*;q=0.8", userAgent = BROWSER_UA }: { signal?: AbortSignal; maxBytes?: number; accept?: string; userAgent?: string } = {},
 ): Promise<{ url: string; contentType: string; body: Buffer }> {
   let url = new URL(input);
   for (let hop = 0; hop < 6; hop++) {
     assertPublicUrl(url);
     let res: Response;
     try {
-      res = await fetch(url, { dispatcher: guardedAgent, redirect: "manual", signal, headers: { "user-agent": BROWSER_UA, accept } });
+      res = await fetch(url, { dispatcher: guardedAgent, redirect: "manual", signal, headers: { "user-agent": userAgent, accept } });
     } catch (e) {
       throw new FetchError(e instanceof Error ? (e.cause instanceof Error ? e.cause.message : e.message) : String(e));
     }
