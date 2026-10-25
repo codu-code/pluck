@@ -33,6 +33,12 @@
             "state": "translated",
             "value": "Zu %1$@ hinzufügen"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@に追加"
+          }
         }
       }
     },
@@ -67,6 +73,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zu %1$@ hinzugefügt"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@に追加しました"
           }
         }
       }
@@ -103,6 +115,12 @@
             "state": "translated",
             "value": "Ungültige Serveradresse."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サーバーのアドレスが正しくありません。"
+          }
         }
       }
     },
@@ -137,6 +155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Das hat nicht geklappt."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "うまくいきませんでした。"
           }
         }
       }
@@ -173,6 +197,12 @@
             "state": "translated",
             "value": "Fertig"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
         }
       }
     },
@@ -207,6 +237,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Das ließ sich nicht pflücken."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluckできませんでした。"
           }
         }
       }
@@ -243,6 +279,12 @@
             "state": "translated",
             "value": "Art"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "種類"
+          }
         }
       }
     },
@@ -277,6 +319,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bild"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像"
           }
         }
       }
@@ -313,6 +361,12 @@
             "state": "translated",
             "value": "Notiz"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メモ"
+          }
         }
       }
     },
@@ -344,6 +398,12 @@
           }
         },
         "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF"
+          }
+        },
+        "ja": {
           "stringUnit": {
             "state": "translated",
             "value": "PDF"
@@ -383,6 +443,12 @@
             "state": "translated",
             "value": "Lesen"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "記事"
+          }
         }
       }
     },
@@ -417,6 +483,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ding"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モノ"
           }
         }
       }
@@ -453,6 +525,12 @@
             "state": "translated",
             "value": "Aufgabe"
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ToDo"
+          }
         }
       }
     },
@@ -487,6 +565,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ansehen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "動画"
           }
         }
       }
@@ -523,6 +607,12 @@
             "state": "translated",
             "value": "Keine Upload-Adresse."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップロード先がありません。"
+          }
         }
       }
     },
@@ -557,6 +647,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Warum du es gepflückt hast, in einer Zeile. Optional."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluckした理由を一行で。任意です。"
           }
         }
       }
@@ -593,6 +689,12 @@
             "state": "translated",
             "value": "Hier gibt es nichts, was Pluck behalten kann."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ここにはPluckが残せるものがありません。"
+          }
         }
       }
     },
@@ -627,6 +729,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pluck öffnen und anmelden"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluckを開いてサインイン"
           }
         }
       }
@@ -663,6 +771,12 @@
             "state": "translated",
             "value": "Gepflückt."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluckしました。"
+          }
         }
       }
     },
@@ -697,6 +811,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Wird gepflückt …"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluck中…"
           }
         }
       }
@@ -733,6 +853,12 @@
             "state": "translated",
             "value": "Es ist auf deinem iPhone und wird hochgeladen, sobald du wieder online bist."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このiPhoneに残してあります。オンラインに戻ると送られます。"
+          }
         }
       }
     },
@@ -767,6 +893,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gepflückt. Wird synchronisiert."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pluckしました。あとで同期します。"
           }
         }
       }
@@ -803,6 +935,12 @@
             "state": "translated",
             "value": "Melde dich einmal an. Danach erledigt das Teilen-Menü den Rest."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サインインは一度だけ。あとは共有シートから使えます。"
+          }
         }
       }
     },
@@ -838,6 +976,12 @@
             "state": "translated",
             "value": "Nicht angemeldet."
           }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サインインしていません。"
+          }
         }
       }
     },
@@ -872,6 +1016,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tags und Liste"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タグとリスト"
           }
         }
       }
