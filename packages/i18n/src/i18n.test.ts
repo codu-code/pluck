@@ -4,7 +4,7 @@ import { CATALOGS, LOCALES, matchLocale, messagesFor, parseAcceptLanguage, type 
 
 // Locales whose every catalog is fully translated. A locale joins this list when its translation lands, and from
 // then on a missing key fails here instead of quietly showing English.
-const COMPLETE: readonly string[] = ["es"];
+const COMPLETE: readonly string[] = ["zh-Hans"];
 
 const flat = (m: Messages, prefix = ""): Record<string, string> =>
   Object.fromEntries(Object.entries(m).flatMap(([k, v]) => (typeof v === "string" ? [[prefix + k, v]] : Object.entries(flat(v, `${prefix}${k}.`)))));
@@ -41,15 +41,15 @@ describe.each(Object.keys(CATALOGS) as Surface[])("%s catalog", (surface) => {
 });
 
 test("untranslated keys fall back to English", () => {
-  // Spanish is complete, so take a key out for the length of the test.
-  const catalog = CATALOGS.email.es as Messages;
-  const saved = catalog.magicLink!;
-  delete catalog.magicLink;
+  const all = CATALOGS.email as Record<string, Messages>;
+  const real = all.es!;
+  all.es = { magicLink: { subject: "Tu enlace" } }; // a catalog with one key translated, the rest missing
   try {
-    const es = messagesFor("email", "es") as { magicLink: { subject: string } };
-    expect(es.magicLink.subject).toBe((CATALOGS.email.en as { magicLink: { subject: string } }).magicLink.subject);
+    const es = messagesFor("email", "es");
+    expect(es.magicLink.subject).toBe("Tu enlace");
+    expect(es.magicLink.intro).toBe(CATALOGS.email.en.magicLink.intro);
   } finally {
-    catalog.magicLink = saved;
+    all.es = real;
   }
 });
 
