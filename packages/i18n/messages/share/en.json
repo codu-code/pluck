@@ -1,4 +1,27 @@
 {
   "plucked": "Plucked.",
-  "plucking": "Plucking…"
+  "plucking": "Plucking…",
+  "signedOutTitle": "Not signed in.",
+  "signedOutBody": "Sign in once. After that the share sheet does the rest.",
+  "openToSignIn": "Open Pluck to sign in",
+  "queuedTitle": "Plucked. Will sync.",
+  "queuedBody": "It's on your phone. It goes up when you're back online.",
+  "done": "Done",
+  "failedTitle": "Couldn't pluck that.",
+  "nothingToKeep": "Nothing Pluck can keep here.",
+  "didNotWork": "That did not work.",
+  "badServer": "Bad server address.",
+  "noUploadAddress": "No upload address.",
+  "tagsAndList": "Tags and list",
+  "kind": "Kind",
+  "addToList": "Add to {name}",
+  "addedToList": "Added to {name}",
+  "notePlaceholder": "Why you plucked it, in a line. Optional.",
+  "kindRead": "Read",
+  "kindWatch": "Watch",
+  "kindPdf": "PDF",
+  "kindImage": "Image",
+  "kindTodo": "Todo",
+  "kindNote": "Note",
+  "kindThing": "Thing"
 }

@@ -22,13 +22,13 @@ private enum Palette {
 }
 
 private let kinds: [(key: String, name: String, d: String)] = [
-  ("link", "Read", "M3 4.5h10M3 8h10M3 11.5h6"),
-  ("video", "Watch", "M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z"),
-  ("pdf", "PDF", "M4 2h5l3 3v9H4zM9 2v3h3M6 9h4M6 11.5h4"),
-  ("image", "Image", "M3 3h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 11l3.5-3.5 3 3 2-2L14 12"),
-  ("todo", "Todo", "M3.5 2.5h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM5.5 8.2l1.8 1.8 3.2-4"),
-  ("note", "Note", "M3 13l.8-3L10.5 3.3l2.2 2.2L6 12.2zM9.3 4.5l2.2 2.2"),
-  ("thing", "Thing", "M3 5.5h10l-.8 8.5H3.8zM6 5.5V4.5a2 2 0 0 1 4 0v1"),
+  ("link", String(localized: "kindRead"), "M3 4.5h10M3 8h10M3 11.5h6"),
+  ("video", String(localized: "kindWatch"), "M3.5 3h9a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-7A1.5 1.5 0 0 1 3.5 3zM6.75 6v4l3.25-2z"),
+  ("pdf", String(localized: "kindPdf"), "M4 2h5l3 3v9H4zM9 2v3h3M6 9h4M6 11.5h4"),
+  ("image", String(localized: "kindImage"), "M3 3h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 11l3.5-3.5 3 3 2-2L14 12"),
+  ("todo", String(localized: "kindTodo"), "M3.5 2.5h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM5.5 8.2l1.8 1.8 3.2-4"),
+  ("note", String(localized: "kindNote"), "M3 13l.8-3L10.5 3.3l2.2 2.2L6 12.2zM9.3 4.5l2.2 2.2"),
+  ("thing", String(localized: "kindThing"), "M3 5.5h10l-.8 8.5H3.8zM6 5.5V4.5a2 2 0 0 1 4 0v1"),
 ]
 
 @MainActor
@@ -49,7 +49,7 @@ final class ShareModel: ObservableObject {
 
   func run(with inputs: [ShareInput]) async {
     guard client.session() != nil else { phase = .signedOut; return }
-    guard !inputs.isEmpty else { phase = .failed("Nothing Pluck can keep here."); return }
+    guard !inputs.isEmpty else { phase = .failed(String(localized: "nothingToKeep")); return }
     var queued = false
     for input in inputs {
       do {
@@ -77,7 +77,7 @@ final class ShareModel: ObservableObject {
       } catch PluckError.refused(let message) {
         phase = .failed(message); return
       } catch {
-        phase = .failed("That did not work."); return
+        phase = .failed(String(localized: "didNotWork")); return
       }
     }
     phase = queued && item == nil ? .queued : .plucked
@@ -141,21 +141,21 @@ struct ShareView: View {
     case .working:
       HStack(spacing: 12) { ProgressView(); Text("plucking").foregroundStyle(Palette.ink2(dark)) }.frame(minHeight: 44)
     case .signedOut:
-      Text("Not signed in.").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
-      Text("Sign in once. After that the share sheet does the rest.").foregroundStyle(Palette.ink2(dark))
-      primary("Open Pluck to sign in") { model.openApp() }
+      Text("signedOutTitle").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
+      Text("signedOutBody").foregroundStyle(Palette.ink2(dark))
+      primary("openToSignIn") { model.openApp() }
     case .queued:
-      header(title: "Plucked. Will sync.", subtitle: "It's on your phone. It goes up when you're back online.", size: 22)
-      primary("Done") { model.close() }
+      header(title: String(localized: "queuedTitle"), subtitle: String(localized: "queuedBody"), size: 22)
+      primary("done") { model.close() }
     case let .failed(message):
-      Text("Couldn't pluck that.").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
+      Text("failedTitle").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
       Text(message).foregroundStyle(Palette.ink2(dark))
-      primary("Done") { model.close() }
+      primary("done") { model.close() }
     case .plucked:
       header(title: String(localized: "plucked"), subtitle: model.title, size: 24)
       if !model.tags.isEmpty || model.lastList != nil {
         VStack(alignment: .leading, spacing: 8) {
-          label("Tags and list")
+          label("tagsAndList")
           HStack(spacing: 8) {
             ForEach(model.tags) { tag in chip(tag.name, on: model.tagIds.contains(tag.id)) { model.toggle(tag) } }
             if let list = model.lastList {
@@ -166,13 +166,13 @@ struct ShareView: View {
                   .overlay(Capsule().strokeBorder(Palette.dashed, style: StrokeStyle(lineWidth: 1.5, dash: model.addedToList ? [] : [4, 3])))
               }
               .foregroundStyle(Palette.ink(dark))
-              .accessibilityLabel(model.addedToList ? "Added to \(list.name)" : "Add to \(list.name)")
+              .accessibilityLabel(String(format: model.addedToList ? String(localized: "addedToList") : String(localized: "addToList"), list.name))
             }
           }
         }
       }
       VStack(alignment: .leading, spacing: 8) {
-        label("Kind")
+        label("kind")
         HStack {
           ForEach(kinds, id: \.key) { k in
             let on = model.item?.kind == k.key
@@ -189,14 +189,14 @@ struct ShareView: View {
           }
         }
       }
-      TextField("Why you plucked it, in a line. Optional.", text: $model.note)
+      TextField("notePlaceholder", text: $model.note)
         .focused($noteFocused)
         .padding(.horizontal, 14).frame(height: 44)
         .background(Palette.surface(dark), in: RoundedRectangle(cornerRadius: 10))
         .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Palette.line(dark)))
         .submitLabel(.done)
         .onSubmit { model.finish() }
-      primary("Done") { model.finish() }
+      primary("done") { model.finish() }
     }
   }
 
@@ -210,7 +210,7 @@ struct ShareView: View {
     }
   }
 
-  private func label(_ text: String) -> some View { Text(text).font(.system(size: 13)).foregroundStyle(Palette.ink2(dark)) }
+  private func label(_ text: LocalizedStringKey) -> some View { Text(text).font(.system(size: 13)).foregroundStyle(Palette.ink2(dark)) }
 
   private func chip(_ text: String, on: Bool, action: @escaping () -> Void) -> some View {
     Button(action: action) {
@@ -221,7 +221,7 @@ struct ShareView: View {
     .accessibilityAddTraits(on ? .isSelected : [])
   }
 
-  private func primary(_ text: String, action: @escaping () -> Void) -> some View {
+  private func primary(_ text: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
       Text(text).fontWeight(.semibold).frame(maxWidth: .infinity, minHeight: 50).background(Palette.brand, in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(Palette.onBrand)
     }
