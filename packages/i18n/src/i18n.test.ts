@@ -41,8 +41,16 @@ describe.each(Object.keys(CATALOGS) as Surface[])("%s catalog", (surface) => {
 });
 
 test("untranslated keys fall back to English", () => {
-  const es = messagesFor("email", "es") as { magicLink: { subject: string } };
-  expect(es.magicLink.subject).toBe((CATALOGS.email.en as { magicLink: { subject: string } }).magicLink.subject);
+  const all = CATALOGS.email as Record<string, Messages>;
+  const real = all.es!;
+  all.es = { magicLink: { subject: "Tu enlace" } }; // a catalog with one key translated, the rest missing
+  try {
+    const es = messagesFor("email", "es");
+    expect(es.magicLink.subject).toBe("Tu enlace");
+    expect(es.magicLink.intro).toBe(CATALOGS.email.en.magicLink.intro);
+  } finally {
+    all.es = real;
+  }
 });
 
 test("a browser's or a phone's languages pick the first one Pluck speaks", () => {

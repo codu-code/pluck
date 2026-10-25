@@ -108,7 +108,7 @@ test("languages: the browser's language is used, and the footer picker sticks", 
   const page = await (await browser.newContext({ locale: "de-DE" })).newPage();
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
-  await page.getByLabel("Language").selectOption("ja");
+  await page.locator("footer select").selectOption("ja"); // its label is in German here
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
   await page.goto("/connect");
   await expect(page.locator("html")).toHaveAttribute("lang", "ja"); // the pick outlives the page
