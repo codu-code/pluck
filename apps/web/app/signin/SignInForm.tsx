@@ -1,10 +1,12 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Actions, Dot, Stamp, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
 type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited" | "wrong";
+type CodeState = "idle" | "checking" | "bad" | "spent" | "limited" | "error";
+const RESEND_AFTER = 60_000; // the server allows one link a minute per address too
 
 // What lands in their inbox, drawn: so the next step is no surprise.
 function EmailPreview({ sent }: { sent: boolean }) {
@@ -28,6 +30,17 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
   const [email, setEmail] = useState("");
   // Set only when the server asks for one: App Review's account, which has no mailbox to open a link in.
   const [password, setPassword] = useState<string | null>(null);
+  // The email also carries a 6-digit code, for when it is open on another device.
+  const [code, setCode] = useState("");
+  const [codeState, setCodeState] = useState<CodeState>("idle");
+  const [resendAt, setResendAt] = useState(0);
+  const [now, setNow] = useState(0);
+  const wait = Math.max(0, Math.ceil((resendAt - now) / 1000));
+  useEffect(() => {
+    if (resendAt <= Date.now()) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [resendAt]);
 
   async function send() {
     setState(state === "sent" ? "resending" : "sending");
@@ -40,7 +53,26 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
       setPassword("");
       return setState("idle");
     }
+    if (res?.ok) {
+      setResendAt(Date.now() + RESEND_AFTER);
+      setNow(Date.now());
+      setCode("");
+      setCodeState("idle");
+    }
     setState(res?.ok ? "sent" : res?.status === 429 ? "limited" : "error");
+  }
+
+  async function tryCode(otp: string) {
+    setCodeState("checking");
+    const res = await fetch("/api/auth/sign-in/email-otp", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    }).catch(() => null);
+    // A full load: `next` may be the OAuth request to carry on with, which the server answers.
+    if (res?.ok) return window.location.assign(next);
+    const why = ((await res?.json().catch(() => null)) as { code?: string } | null)?.code;
+    setCodeState(res?.status === 429 ? "limited" : why === "TOO_MANY_ATTEMPTS" || why === "OTP_EXPIRED" ? "spent" : res ? "bad" : "error");
   }
 
   async function signInWithPassword() {
@@ -68,9 +100,33 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
         art={<EmailPreview sent />}
       >
         <p className={s.srOnly} role="status">{t("sent.status", { email })}</p>
+        <label className={s.field}>
+          <span className={s.label}>{t("code.label")}</span>
+          <input
+            className={`${s.input} ${s.codeInput}`}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            placeholder="000000"
+            value={code}
+            disabled={codeState === "checking"}
+            aria-invalid={codeState === "bad" || codeState === "spent"}
+            onChange={(e) => {
+              const digits = e.target.value.replace(/\D/g, "").slice(0, 6);
+              setCode(digits);
+              setCodeState("idle");
+              if (digits.length === 6) void tryCode(digits);
+            }}
+          />
+        </label>
+        {codeState === "checking" && <p className={s.small} role="status">{t("code.checking")}</p>}
+        {codeState === "bad" && <p className={s.error} role="alert">{t("code.bad")}</p>}
+        {codeState === "spent" && <p className={s.error} role="alert">{t("code.spent")}</p>}
+        {codeState === "limited" && <p className={s.error} role="alert">{t("limitedTries")}</p>}
+        {codeState === "error" && <p className={s.error} role="alert">{t("error")}</p>}
         <Actions>
-          <button type="button" className={s.secondary} disabled={state === "resending"} onClick={() => void send()}>
-            {state === "resending" ? t("sent.sending") : t("sent.again")}
+          <button type="button" className={s.secondary} disabled={state === "resending" || wait > 0} onClick={() => void send()}>
+            {state === "resending" ? t("sent.sending") : wait > 0 ? t("sent.wait", { seconds: wait }) : t("sent.again")}
           </button>
           <button type="button" className={`${s.textLink} ${s.linkButton}`} onClick={() => setState("idle")}>{t("sent.different")}</button>
         </Actions>

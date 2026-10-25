@@ -1,8 +1,9 @@
 {
   "magicLink": {
-    "subject": "Votre lien de connexion à Pluck",
-    "intro": "Voici votre lien pour vous connecter à Pluck. Il ne fonctionne qu’une fois, pendant 10 minutes.",
+    "subject": "Votre connexion à Pluck : {code}",
+    "intro": "Touchez le bouton pour vous connecter à Pluck, ou saisissez le code là où vous l’avez demandé. L’un ou l’autre ne fonctionne qu’une fois, pendant 10 minutes.",
     "button": "Se connecter à Pluck",
+    "codeLabel": "Ou saisissez ce code :",
     "copy": "Le bouton ne marche pas ? Copiez ce lien dans votre navigateur :",
     "ignore": "Si vous n’avez rien demandé, ignorez ce message. Rien ne se passe tant que vous ne l’ouvrez pas pour toucher Se connecter."
   },

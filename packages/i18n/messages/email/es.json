@@ -1,8 +1,9 @@
 {
   "magicLink": {
-    "subject": "Tu enlace para iniciar sesión en Pluck",
-    "intro": "Aquí tienes tu enlace para iniciar sesión en Pluck. Funciona una vez, durante los próximos 10 minutos.",
+    "subject": "Tu acceso a Pluck: {code}",
+    "intro": "Toca el botón para iniciar sesión en Pluck, o escribe el código donde lo pediste. Cualquiera de los dos funciona una vez, durante los próximos 10 minutos.",
     "button": "Iniciar sesión en Pluck",
+    "codeLabel": "O escribe este código:",
     "copy": "¿El botón no funciona? Copia este enlace en tu navegador:",
     "ignore": "Si no lo pediste, ignora este correo. No pasa nada a menos que lo abras y toques Iniciar sesión."
   },

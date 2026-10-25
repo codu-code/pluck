@@ -15,9 +15,12 @@ test("the email points at our own page, which only a tap turns back into verify"
   expect(verifyUrl("https://getpluck.io", new FormData())).toBeNull();
 });
 
-test("the sign-in email shows the link to copy and invites no reply", () => {
-  const e = magicLinkEmail("a@example.test", "https://getpluck.io/signin/link?token=abc");
+test("the sign-in email shows the link to copy and the code, and invites no reply", () => {
+  const e = magicLinkEmail("a@example.test", "https://getpluck.io/signin/link?token=abc", "482913");
   expect(e.replyTo).toBeNull();
+  expect(e.subject).toContain("482913");
+  expect(e.text).toContain("482913");
+  expect(e.html).toContain(">482913</p>");
   expect(e.text).toContain("https://getpluck.io/signin/link?token=abc");
   expect(e.html).toContain("Copy this link into your browser:<br><a href=\"https://getpluck.io/signin/link?token=abc\"");
 });

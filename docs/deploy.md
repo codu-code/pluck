@@ -79,7 +79,7 @@ Preview deployments build every PR, and the build reads the database, so set `MO
 
 ## The App Review account
 
-App Review needs a username and password and cannot open an email link. With `REVIEW_EMAIL` and `REVIEW_PASSWORD` set, that one address signs in with a password and no other can: typing it on the sign-in page (on the web or in the iPhone app's sign-in sheet) and tapping "Email me a link" shows a Password field instead of sending a link. The account is made at the first password sign-in, and changing `REVIEW_PASSWORD` changes the password at the next one. Pluck sends no email to the address, and nobody can sign up, reset or change a password.
+App Review needs a username and password and cannot open an email link. With `REVIEW_EMAIL` and `REVIEW_PASSWORD` set, that one address signs in with a password and no other can: typing it on the sign-in page on the web and tapping "Email me a link" shows a Password field instead of sending a link; in the iPhone app, "Send my link" opens the web sign-in sheet, which asks for it. The account is made at the first password sign-in, and changing `REVIEW_PASSWORD` changes the password at the next one. Pluck sends no email to the address, and nobody can sign up, reset or change a password.
 
 - Give App Store Connect (App Review Information, Sign-in required) the two values, with the note: "Type the email, tap Email me a link, then type the password."
 - Sign in as the account once before submitting and pluck a few real links, a Note and a Todo, tag two and make a List, so the reviewer sees a library and not an empty Inbox. `scripts/demo-seed.mjs` cannot do this: it needs Mailpit and the local fixture pages, so it only fills a local server.

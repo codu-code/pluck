@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { auth, FIRST_PARTY_REDIRECTS } from "./auth";
 import { clientIp } from "./ip";
 
@@ -31,11 +31,23 @@ test("only our own apps can ask for the account scope", async () => {
   expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [`${BASE}/api/v1`], "offline_access library:read library:write account")).status).toBe(201);
 });
 
-test("sign-in links are limited per address, whatever network asks", async () => {
+test("sign-in links are limited per address, whatever network asks: one a minute, six an hour", async () => {
   const email = `limit-${Date.now()}@example.test`;
-  for (let i = 0; i < 6; i++) expect((await post("/sign-in/magic-link", { email })).status).toBe(200);
-  expect((await post("/sign-in/magic-link", { email: email.toUpperCase() })).status).toBe(429);
-  expect((await post("/sign-in/magic-link", { email: `other-${email}` })).status).toBe(200);
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    vi.setSystemTime(new Date("2030-01-01T10:00:01Z"));
+    expect((await post("/sign-in/magic-link", { email })).status).toBe(200);
+    expect((await post("/sign-in/magic-link", { email: email.toUpperCase() })).status).toBe(429); // within the minute
+    expect((await post("/sign-in/magic-link", { email: `other-${email}` })).status).toBe(200);
+    for (let i = 1; i < 6; i++) {
+      vi.setSystemTime(new Date(Date.parse("2030-01-01T10:00:01Z") + i * 61_000));
+      expect((await post("/sign-in/magic-link", { email })).status).toBe(200);
+    }
+    vi.setSystemTime(new Date(Date.parse("2030-01-01T10:00:01Z") + 6 * 61_000));
+    expect((await post("/sign-in/magic-link", { email })).status).toBe(429); // the seventh in the hour
+  } finally {
+    vi.useRealTimers();
+  }
 });
 
 test("with no review account set, nobody signs in with a password", async () => {

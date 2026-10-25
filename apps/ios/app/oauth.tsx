@@ -12,6 +12,8 @@ export default function OAuthReturn() {
   const tr = useTranslations("ios.oauth");
   const { code, state } = useLocalSearchParams<{ code?: string; state?: string }>();
   useEffect(() => {
+    // No code means the router landed here on its own (signed out, at launch), not from an email link: no error.
+    if (!code) return void router.replace("/signin");
     void finishSignIn(`io.getpluck.app:/oauth?${new URLSearchParams({ code: code ?? "", state: state ?? "" })}`).then((ok) =>
       router.replace(ok ? "/welcome" : "/signin?stale=1"),
     );
