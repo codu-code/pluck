@@ -1,12 +1,12 @@
 import { ApiError, json, route } from "@/lib/api";
 import { coverLocation, setCoverFromApp } from "@/lib/library";
 
-// Covers live in a private bucket; the owner gets a short-lived signed URL.
-export const GET = route<{ id: string }>({ kind: "read" }, async ({ caller, params }) => {
-  return new Response(null, {
-    status: 302,
-    headers: { location: await coverLocation(caller.userId, params.id), "cache-control": "private, max-age=300" },
-  });
+// Covers live in a private bucket; the owner gets a short-lived signed URL. `?as=json` hands it over instead of
+// redirecting, for a download that must not carry the Authorization header on to the bucket (the iPhone's).
+export const GET = route<{ id: string }>({ kind: "read" }, async ({ req, caller, params }) => {
+  const location = await coverLocation(caller.userId, params.id);
+  if (new URL(req.url).searchParams.get("as") === "json") return json({ url: location });
+  return new Response(null, { status: 302, headers: { location, "cache-control": "private, max-age=300" } });
 });
 
 const COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);

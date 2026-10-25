@@ -39,6 +39,7 @@ export const ICONS = {
   offline: "M4.5 12.5h7a2.75 2.75 0 0 0 .55-5.45A4 4 0 0 0 4.3 6.3a3.1 3.1 0 0 0 .2 6.2zM2.5 2.5l11 11", // a cloud, struck through (the web nav draws the same)
   ring: "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z", // an unmarked List mark
   toTop: "M3 2.5h10M8 14V6M4.5 9.5L8 6l3.5 3.5",
+  keep: "M8 2v8M4.5 6.5L8 10l3.5-3.5M2.5 11v2.5h11V11", // into the phone: Kept on this iPhone
 };
 
 export function Icon({ d, size = 22, color, width = 1.4 }: { d: string; size?: number; color: string; width?: number }) {

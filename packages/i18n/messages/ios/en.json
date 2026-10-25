@@ -504,7 +504,7 @@
     "clearTitle": "Clear the offline copy?",
     "clearBody": "Your library stays on the server. The app downloads it again as you use it.",
     "clear": "Clear",
-    "keepFootnote": "On Wi-Fi, Pluck keeps the text of your newest {count} items in Inbox, Later and Lists on this iPhone, so you can read them with no connection. Text only, no pictures.",
+    "keepFootnote": "On Wi-Fi, Pluck keeps your newest {count} items in Inbox, Later and Lists on this iPhone, with their pictures, so you can read them with no connection. Tap the download mark on any other item to keep it here until you let it go.",
     "server": "Server",
     "serverBody": "This phone uses {host}. To use another server, sign out, then choose \"Use your own server\".",
     "iconLight": "Light",
@@ -556,7 +556,7 @@
     "offline": "Plays when you are back online.",
     "keep": "Keep on this iPhone",
     "kept": "Kept on this iPhone",
-    "letGo": "Let go of the offline copy",
+    "letGo": "No longer kept on this iPhone.",
     "saveFile": "Save to Files"
   }
 }

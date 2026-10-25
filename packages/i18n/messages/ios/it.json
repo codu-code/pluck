@@ -504,7 +504,7 @@
     "clearTitle": "Cancellare la copia offline?",
     "clearBody": "La tua libreria resta sul server. L'app la scarica di nuovo man mano che la usi.",
     "clear": "Cancella",
-    "keepFootnote": "Con il Wi-Fi, Pluck tiene su questo iPhone il testo dei tuoi {count} elementi più recenti di Inbox, Più tardi e Liste, per leggerli senza connessione. Solo testo, niente immagini.",
+    "keepFootnote": "Con il Wi-Fi, Pluck tiene su questo iPhone i tuoi {count} elementi più recenti di Inbox, Più tardi e Liste, con le immagini, per leggerli senza connessione. Tocca il segno di download su qualsiasi altro elemento per tenerlo qui finché non lo togli.",
     "server": "Server",
     "serverBody": "Questo telefono usa {host}. Per usare un altro server, esci, poi scegli \"Usa il tuo server\".",
     "iconLight": "Chiara",
@@ -556,7 +556,7 @@
     "offline": "Si riproduce quando torni online.",
     "keep": "Tieni su questo iPhone",
     "kept": "Tenuto su questo iPhone",
-    "letGo": "Togli la copia offline",
+    "letGo": "Non più tenuto su questo iPhone.",
     "saveFile": "Salva su File"
   }
 }

@@ -504,7 +504,7 @@
     "clearTitle": "Limpar a cópia offline?",
     "clearBody": "Sua biblioteca continua no servidor. O app baixa de novo conforme você usa.",
     "clear": "Limpar",
-    "keepFootnote": "No Wi-Fi, o Pluck mantém neste iPhone o texto dos seus {count} itens mais recentes da Entrada, Depois e Listas, para você ler sem conexão. Só o texto, sem imagens.",
+    "keepFootnote": "No Wi-Fi, o Pluck mantém neste iPhone seus {count} itens mais recentes da Entrada, Depois e Listas, com as imagens, para você ler sem conexão. Toque na marca de download em qualquer outro item para guardá-lo aqui até você tirá-lo.",
     "server": "Servidor",
     "serverBody": "Este celular usa {host}. Para usar outro servidor, saia e escolha \"Usar seu próprio servidor\".",
     "iconLight": "Claro",
@@ -556,7 +556,7 @@
     "offline": "Reproduz quando você voltar a ficar online.",
     "keep": "Guardar neste iPhone",
     "kept": "Guardado neste iPhone",
-    "letGo": "Tirar a cópia offline",
+    "letGo": "Não fica mais guardado neste iPhone.",
     "saveFile": "Salvar em Arquivos"
   }
 }

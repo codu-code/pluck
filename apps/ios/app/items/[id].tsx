@@ -12,7 +12,7 @@ import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { keys, useCover, useItem, useOnline, usePatchItem, type FullItem } from "@/lib/data";
+import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
@@ -88,7 +88,8 @@ function Toolbar({ item }: { item: Item }) {
       : [{ label: tr("actions.later"), icon: ICONS.later, onPress: () => move("later") }, { label: tr("actions.archive"), icon: ICONS.archive, onPress: () => move("archived") }]),
     { label: tr("actions.tags"), icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } }) },
     { label: tr("actions.list"), icon: ICONS.lists, a11y: tr("actions.addToList"), onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } }) },
-    { label: tr("actions.share"), icon: ICONS.share, onPress: () => void Share.share(item.url ? { url: item.url } : { message: item.title }) },
+    // A PDF or an Image shares its file, so Save to Files saves the thing itself; a link shares its address.
+    { label: tr("actions.share"), icon: ICONS.share, onPress: () => void share(item) },
   ];
   // A link gets a Note between the moves and the sorting; notes, todos and things are their own text.
   if (!isTextKind(item.kind)) tools.splice(tools.findIndex((x) => x.icon === ICONS.tag), 0, { label: tr("actions.note"), icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
@@ -147,7 +148,8 @@ function Reader({ data }: { data: FullItem }) {
         right={
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{minutes ? tr("item.minutesLeft", { percent: format.number(progress, { style: "percent" }), minutes }) : format.number(progress, { style: "percent" })}</Text>}
-            {item.url && (
+            <KeepButton item={item} />
+            {item.url && !card && (
               <Pressable accessibilityRole="button" accessibilityLabel={tr("item.openOriginal")} onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.url!))} style={styles.iconButton}>
                 <Icon d={ICONS.original} size={20} color={t.ink} width={1.5} />
               </Pressable>
@@ -229,6 +231,31 @@ function Reader({ data }: { data: FullItem }) {
       </ScrollView>
       <Toolbar item={item} />
     </View>
+  );
+}
+
+async function share(item: Item) {
+  if (item.kind === "pdf" || item.kind === "image") {
+    const file = await fileOf(item).catch(() => null);
+    if (file) return void Share.share({ url: file.uri });
+  }
+  await Share.share(item.url ? { url: item.url } : { message: item.title });
+}
+
+// Kept on this iPhone by hand: for a flight, a long read, a PDF you will need. It stays until let go.
+function KeepButton({ item }: { item: Item }) {
+  const t = useTheme();
+  const tr = useTranslations("ios");
+  const kept = useKeptByHand(item.id);
+  return (
+    <Pressable accessibilityRole="switch" accessibilityState={{ checked: kept }} accessibilityLabel={tr("preview.keep")} style={styles.iconButton}
+      onPress={() => {
+        void Haptics.selectionAsync();
+        toast(tr(kept ? "preview.letGo" : "preview.kept"));
+        void keepByHand(item, !kept).catch(() => toast(tr("common.failed.title")));
+      }}>
+      <View style={kept ? [styles.kept, { backgroundColor: t.highlightWash }] : styles.kept}><Icon d={ICONS.keep} size={18} color={kept ? t.ink : t.ink2} width={1.6} /></View>
+    </Pressable>
   );
 }
 
@@ -329,6 +356,7 @@ const styles = StyleSheet.create({
   quietButton: { minHeight: 44, minWidth: 96, paddingHorizontal: 16, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
   iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   ways: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  kept: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   switch: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center" },
   doneButton: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 12 },
   ring: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },

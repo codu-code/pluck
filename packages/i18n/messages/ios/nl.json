@@ -504,7 +504,7 @@
     "clearTitle": "Offline kopie wissen?",
     "clearBody": "Je bibliotheek blijft op de server. De app downloadt hem opnieuw terwijl je hem gebruikt.",
     "clear": "Wis",
-    "keepFootnote": "Op wifi bewaart Pluck de tekst van je {count} nieuwste items uit Inbox, Later en Lijsten op deze iPhone, zodat je ze zonder verbinding kunt lezen. Alleen tekst, geen afbeeldingen.",
+    "keepFootnote": "Op wifi bewaart Pluck je {count} nieuwste items uit Inbox, Later en Lijsten met hun afbeeldingen op deze iPhone, zodat je ze zonder verbinding kunt lezen. Tik op het downloadteken bij elk ander item om het hier te bewaren tot je het weghaalt.",
     "server": "Server",
     "serverBody": "Deze telefoon gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".",
     "iconLight": "Licht",
@@ -556,7 +556,7 @@
     "offline": "Speelt af zodra je weer online bent.",
     "keep": "Bewaar op deze iPhone",
     "kept": "Bewaard op deze iPhone",
-    "letGo": "Offline kopie weghalen",
+    "letGo": "Niet meer bewaard op deze iPhone.",
     "saveFile": "Bewaar in Bestanden"
   }
 }

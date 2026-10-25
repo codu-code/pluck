@@ -197,6 +197,13 @@ export async function coverLocation(userId: string, itemId: string): Promise<str
   return signedUrl(keys.coverKey, 600);
 }
 
+// A PDF's own file, kept when it was plucked: for Save to Files on the iPhone once the original has gone.
+export async function fileLocation(userId: string, itemId: string): Promise<string> {
+  const item = await readItem(userId, itemId);
+  if (item.kind !== "pdf") throw new ApiError("not_found", "Only a PDF has a file.", 404);
+  return signedUrl(blobKeys.file(userId, itemId, "pdf"), 600);
+}
+
 export const membershipsOf = (userId: string, itemId: string): Promise<ListMembership[]> => listsForItem(userId, itemId);
 
 export const browse = (userId: string, q: ListItemsQuery): Promise<ItemPage> => listItems(userId, q);

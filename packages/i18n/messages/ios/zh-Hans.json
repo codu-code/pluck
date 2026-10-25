@@ -504,7 +504,7 @@
     "clearTitle": "清除离线副本？",
     "clearBody": "你的资料库仍在服务器上。App 会在你使用时重新下载。",
     "clear": "清除",
-    "keepFootnote": "连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目的文字留在这台 iPhone 上，没有网络也能读。只存文字，不含图片。",
+    "keepFootnote": "连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目连同图片留在这台 iPhone 上，没有网络也能读。在其他条目上轻点下载标记，就能一直留在这里，直到你移除。",
     "server": "服务器",
     "serverBody": "这台手机使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。",
     "iconLight": "浅色",
@@ -556,7 +556,7 @@
     "offline": "恢复联网后即可播放。",
     "keep": "保留在此 iPhone 上",
     "kept": "已保留在此 iPhone 上",
-    "letGo": "移除离线副本",
+    "letGo": "不再保留在此 iPhone 上。",
     "saveFile": "存储到“文件”"
   }
 }
