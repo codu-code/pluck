@@ -62,7 +62,9 @@ describe("re-pluck", () => {
     const { a } = await twoUsers();
     const { item } = await pluckLink(a, { url: "https://example.com/f", source: "web" });
     await recordExtractionFailure(a, item.id, "HTTP 500", true);
-    expect((await pluckLink(a, { url: "https://example.com/f", source: "web" })).needsExtraction).toBe(true);
+    const again = await pluckLink(a, { url: "https://example.com/f", source: "web" });
+    expect(again.needsExtraction).toBe(true);
+    expect(again.item.extraction).toEqual({ state: "pending", attempts: 0, lastError: null }); // the job reads it, not skips it
     await applyExtraction(a, item.id, extraction);
     expect((await pluckLink(a, { url: "https://example.com/f", source: "web" })).needsExtraction).toBe(false);
   });
