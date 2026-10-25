@@ -490,5 +490,18 @@
     "continue": "Continuar",
     "confirmTitle": "Escribe tu correo para confirmar",
     "deleteButton": "Eliminar todo"
+  },
+  "archive": {
+    "title": "Archivo",
+    "subtitle": "Todo lo que archivaste, terminaste o dejaste caducar. Nunca se borra nada, y la búsqueda lo sigue encontrando.",
+    "empty": "Aquí aún no hay nada.",
+    "why": {
+      "done": "hecho",
+      "expiredAfter": "caducó tras {days} días, se conserva aquí",
+      "expired": "caducó, se conserva aquí",
+      "bulk": "archivado con Archivarlo todo",
+      "import": "importado",
+      "you": "archivado por ti"
+    }
   }
 }

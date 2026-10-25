@@ -490,5 +490,18 @@
     "continue": "Ga door",
     "confirmTitle": "Typ je e-mailadres om te bevestigen",
     "deleteButton": "Verwijder alles"
+  },
+  "archive": {
+    "title": "Archief",
+    "subtitle": "Alles wat je archiveerde, afrondde of liet verlopen. Er wordt nooit iets verwijderd, en zoeken vindt het nog steeds.",
+    "empty": "Hier is nog niets.",
+    "why": {
+      "done": "klaar",
+      "expiredAfter": "verlopen na {days} dagen, hier bewaard",
+      "expired": "verlopen, hier bewaard",
+      "bulk": "gearchiveerd met Alles archiveren",
+      "import": "geïmporteerd",
+      "you": "door jou gearchiveerd"
+    }
   }
 }

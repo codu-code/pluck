@@ -81,6 +81,7 @@ export default function Search() {
       keyExtractor={(r) => r.item.id}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets // the last results scroll up above the keyboard
       renderItem={({ item: { item, snippet } }) => (
         // The Inbox row, saying where the item is now, with the words that matched under it.
         <ItemRow

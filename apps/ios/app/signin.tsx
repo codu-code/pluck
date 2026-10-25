@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState, type ComponentRef } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Linking, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import Animated, { Easing, FadeIn, FadeOut, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming, type SharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
@@ -13,6 +13,17 @@ type Step = "email" | "code" | "password";
 type Status = "idle" | "busy" | "invalid" | "bad" | "spent" | "limited" | "error" | "resent";
 const looksLikeEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
 const RESEND_AFTER = 60_000; // the server allows one code a minute per address too
+
+// Whether the keyboard is up (or on its way up), from the moment it starts to move.
+function useKeyboardUp() {
+  const [up, setUp] = useState(false);
+  useEffect(() => {
+    const show = Keyboard.addListener("keyboardWillShow", () => setUp(true));
+    const hide = Keyboard.addListener("keyboardWillHide", () => setUp(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
+  return up;
+}
 
 // Sign in (no board of its own: the web's sign-in page, First run and Brand). Two things to type, one at a time: the
 // email, then the 6-digit code we send to it. Never a link: a link would come back through a URL scheme another app
@@ -36,6 +47,15 @@ export default function SignIn() {
   const [resendAt, setResendAt] = useState(0);
   const [now, setNow] = useState(Date.now());
   const busy = status === "busy";
+  // While typing, the picture steps aside so the field and its button sit just above the keyboard; a phone too short
+  // even for that scrolls to them.
+  const typing = useKeyboardUp();
+  const page = useRef<ComponentRef<typeof ScrollView>>(null);
+  useEffect(() => {
+    if (!typing) return;
+    const sub = Keyboard.addListener("keyboardDidShow", () => page.current?.scrollToEnd());
+    return () => sub.remove();
+  }, [typing]);
   const wait = Math.max(0, Math.ceil((resendAt - now) / 1000));
   const target = () => (advanced ? server.trim().replace(/\/+$/, "") : defaultServer);
 
@@ -50,6 +70,7 @@ export default function SignIn() {
     if (!looksLikeEmail(email)) return setStatus("invalid");
     if (!/^https?:\/\/[^/\s]+/.test(target())) return setProblem(tr("notServer"));
     const again = step === "code";
+    Keyboard.dismiss(); // down, so the envelope can be seen leaving and the email landing
     setStatus("busy");
     const result = await sendSignInCode(email, target());
     if (result === "password") {
@@ -100,6 +121,8 @@ export default function SignIn() {
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
       <ScrollView
+        ref={page}
+        alwaysBounceVertical={false} // still when it fits, as a sign-in screen should be
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
         contentContainerStyle={[styles.page, { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 24 }]}
@@ -114,7 +137,11 @@ export default function SignIn() {
           </Text>
         </View>
 
-        {!advanced && step !== "password" && <Story t={t} sent={step === "code"} sending={busy && step === "email"} />}
+        {!advanced && step !== "password" && !typing && (
+          <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)}>
+            <Story t={t} sent={step === "code"} sending={busy && step === "email"} />
+          </Animated.View>
+        )}
         {advanced && step === "email" && (
           <View style={{ gap: 8 }}>
             <Text nativeID="server-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("server")}</Text>
@@ -211,7 +238,11 @@ export default function SignIn() {
 // Six boxes over one field. The field does the typing, pasting and iOS's "From Mail" suggestion; the boxes only show it.
 function CodeField({ t, value, label, a11y, invalid, busy, onChange }: { t: Palette; value: string; label: string; a11y: string; invalid: boolean; busy: boolean; onChange: (v: string) => void }) {
   const input = useRef<ComponentRef<typeof TextInput>>(null);
-  const [focused, setFocused] = useState(true);
+  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => input.current?.focus(), 1400); // after the email has landed and its tiles have lit once
+    return () => clearTimeout(id);
+  }, []);
   return (
     <View style={{ gap: 8 }}>
       <Text nativeID="code-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{label}</Text>
@@ -226,7 +257,7 @@ function CodeField({ t, value, label, a11y, invalid, busy, onChange }: { t: Pale
             );
           })}
         </View>
-        <TextInput ref={input} value={value} autoFocus maxLength={6} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code"
+        <TextInput ref={input} value={value} maxLength={6} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code"
           editable={!busy} caretHidden onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           onChangeText={(v) => onChange(v.replace(/\D/g, "").slice(0, 6))}
           style={styles.hiddenInput} accessibilityLabel={a11y} accessibilityLabelledBy="code-label" />

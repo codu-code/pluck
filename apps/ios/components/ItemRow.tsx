@@ -47,7 +47,8 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
   const site = meta ?? words.siteMeta;
   const when = hideWhen ? "" : words.when;
   const noteText = typeof below === "string" ? below : below === undefined && !text ? item.note : null;
-  const away: Status = item.status === "later" ? "inbox" : "later";
+  const archived = item.status === "archived" || item.status === "done"; // in the Archive: the only move is back to the Inbox
+  const away: Status = item.status === "inbox" ? "later" : "inbox";
   const pick = (mode: "tags" | "lists") => router.push({ pathname: "/pick", params: { mode, id: item.id } });
   const note = () => router.push({ pathname: "/note", params: { id: item.id } });
   const swipe = useRef<SwipeableMethods>(null);
@@ -69,7 +70,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       accessibilityLabel={tr(noteText ? "row.a11yWithNote" : "row.a11y", { title: item.title, kind: tr(`kinds.${item.kind}`), site, when, note: noteText ?? "" })}
       // VoiceOver has no swipe or long press: the same actions from the rotor.
       accessibilityActions={[
-        ...(onMove ? [{ name: "later", label: tr(away === "inbox" ? "actions.backToInbox" : "actions.later") }, { name: "archive", label: tr("actions.archive") }] : []),
+        ...(onMove ? [{ name: "later", label: tr(away === "inbox" ? "actions.backToInbox" : "actions.later") }, ...(archived ? [] : [{ name: "archive", label: tr("actions.archive") }])] : []),
         ...(onSelect ? [{ name: "select", label: tr(selected ? "actions.deselect" : "actions.select") }] : []),
         ...(mark && !selecting ? [{ name: "mark", label: mark.a11y }] : []),
         // A row that does something else on tap (a shared List, the picker) is not the person's to tag.
@@ -144,7 +145,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       renderLeftActions={(_, drag) => (
         <SwipeAction drag={drag} side="left" label={tr(away === "inbox" ? "actions.inbox" : "actions.later")} icon={away === "inbox" ? ICONS.inbox : ICONS.later} bg={t.highlight} ink={t.onHighlight} />
       )}
-      renderRightActions={(_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.archive")} icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />}
+      renderRightActions={archived ? undefined : (_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.archive")} icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />}
       onSwipeableOpen={(direction) => {
         swipe.current?.reset(); // closed again, so the row cannot come back (Undo) with its action still showing
         onMove(direction === "left" ? "archived" : away);

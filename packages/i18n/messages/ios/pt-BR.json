@@ -490,5 +490,18 @@
     "continue": "Continuar",
     "confirmTitle": "Digite seu e-mail para confirmar",
     "deleteButton": "Apagar tudo"
+  },
+  "archive": {
+    "title": "Arquivo",
+    "subtitle": "Tudo o que você arquivou, concluiu ou deixou expirar. Nada nunca é apagado, e a busca continua encontrando.",
+    "empty": "Nada aqui ainda.",
+    "why": {
+      "done": "concluído",
+      "expiredAfter": "expirou depois de {days} dias, guardado aqui",
+      "expired": "expirou, guardado aqui",
+      "bulk": "arquivado com Arquivar tudo",
+      "import": "importado",
+      "you": "arquivado por você"
+    }
   }
 }

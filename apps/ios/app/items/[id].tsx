@@ -74,21 +74,23 @@ function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
 function Toolbar({ item }: { item: Item }) {
   const tr = useTranslations("ios");
   const patch = usePatchItem();
-  const move = (status: "later" | "archived") => {
+  const move = (status: "inbox" | "later" | "archived") => {
     patch.mutate({ id: item.id, patch: { status } });
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toast(tr(`moved.${status}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
     router.back();
   };
   const tools: Tool[] = [
-    { label: tr("actions.later"), icon: ICONS.later, onPress: () => move("later") },
-    { label: tr("actions.archive"), icon: ICONS.archive, onPress: () => move("archived") },
+    // From the Archive the one move is back to the Inbox.
+    ...(item.status === "archived" || item.status === "done"
+      ? [{ label: tr("actions.inbox"), icon: ICONS.inbox, onPress: () => move("inbox") }]
+      : [{ label: tr("actions.later"), icon: ICONS.later, onPress: () => move("later") }, { label: tr("actions.archive"), icon: ICONS.archive, onPress: () => move("archived") }]),
     { label: tr("actions.tags"), icon: ICONS.tag, onPress: () => router.push({ pathname: "/pick", params: { mode: "tags", id: item.id } }) },
     { label: tr("actions.list"), icon: ICONS.lists, a11y: tr("actions.addToList"), onPress: () => router.push({ pathname: "/pick", params: { mode: "lists", id: item.id } }) },
     { label: tr("actions.share"), icon: ICONS.share, onPress: () => void Share.share(item.url ? { url: item.url } : { message: item.title }) },
   ];
   // A link gets a Note between the moves and the sorting; notes, todos and things are their own text.
-  if (!isTextKind(item.kind)) tools.splice(2, 0, { label: tr("actions.note"), icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
+  if (!isTextKind(item.kind)) tools.splice(tools.findIndex((x) => x.icon === ICONS.tag), 0, { label: tr("actions.note"), icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
   return <ToolBar tools={tools} />;
 }
 
@@ -246,7 +248,7 @@ function NoteEditor({ data }: { data: FullItem }) {
           </Pressable>
         ) : null}
       />
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 12 }} keyboardDismissMode="interactive">
+      <ScrollView contentContainerStyle={{ padding: 20, gap: 12 }} keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets>
         <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>

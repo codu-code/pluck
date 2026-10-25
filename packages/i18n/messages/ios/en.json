@@ -490,5 +490,18 @@
     "continue": "Continue",
     "confirmTitle": "Type your email to confirm",
     "deleteButton": "Delete everything"
+  },
+  "archive": {
+    "title": "Archive",
+    "subtitle": "Everything you archived, finished, or let expire. Nothing is ever deleted, and search still finds it.",
+    "empty": "Nothing here yet.",
+    "why": {
+      "done": "done",
+      "expiredAfter": "expired after {days} days, kept here",
+      "expired": "expired, kept here",
+      "bulk": "archived with Archive it all",
+      "import": "imported",
+      "you": "archived by you"
+    }
   }
 }

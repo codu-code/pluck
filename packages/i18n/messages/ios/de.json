@@ -490,5 +490,18 @@
     "continue": "Weiter",
     "confirmTitle": "Gib zur Bestätigung deine E-Mail ein",
     "deleteButton": "Alles löschen"
+  },
+  "archive": {
+    "title": "Archiv",
+    "subtitle": "Alles, was du archiviert, erledigt oder ablaufen lassen hast. Nichts wird je gelöscht, und die Suche findet es weiterhin.",
+    "empty": "Hier ist noch nichts.",
+    "why": {
+      "done": "erledigt",
+      "expiredAfter": "nach {days} Tagen abgelaufen, hier behalten",
+      "expired": "abgelaufen, hier behalten",
+      "bulk": "mit „Alles archivieren“ archiviert",
+      "import": "importiert",
+      "you": "von dir archiviert"
+    }
   }
 }

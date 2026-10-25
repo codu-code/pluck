@@ -490,5 +490,18 @@
     "continue": "Continuer",
     "confirmTitle": "Saisissez votre e-mail pour confirmer",
     "deleteButton": "Tout supprimer"
+  },
+  "archive": {
+    "title": "Archives",
+    "subtitle": "Tout ce que vous avez archivé, terminé ou laissé expirer. Rien n’est jamais supprimé, et la recherche le retrouve toujours.",
+    "empty": "Rien ici pour l’instant.",
+    "why": {
+      "done": "terminé",
+      "expiredAfter": "expiré après {days} jours, gardé ici",
+      "expired": "expiré, gardé ici",
+      "bulk": "archivé avec Tout archiver",
+      "import": "importé",
+      "you": "archivé par vous"
+    }
   }
 }

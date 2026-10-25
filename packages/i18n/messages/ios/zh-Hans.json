@@ -490,5 +490,18 @@
     "continue": "继续",
     "confirmTitle": "输入你的邮箱以确认",
     "deleteButton": "全部删除"
+  },
+  "archive": {
+    "title": "归档",
+    "subtitle": "你归档的、完成的，或者任它到期的，都在这里。什么都不会被删除，搜索也照样找得到。",
+    "empty": "这里还没有东西。",
+    "why": {
+      "done": "已完成",
+      "expiredAfter": "{days} 天后到期，留在这里",
+      "expired": "已到期，留在这里",
+      "bulk": "通过“全部归档”归档",
+      "import": "导入的",
+      "you": "由你归档"
+    }
   }
 }

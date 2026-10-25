@@ -89,6 +89,7 @@ export default function Root() {
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen name="items/[id]" />
                 <Stack.Screen name="lists/[id]" />
+                <Stack.Screen name="archive" />
                 <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
                 <Stack.Screen name="settings" options={{ presentation: "modal" }} />
                 <Stack.Screen name="note" options={{ presentation: "modal" }} />

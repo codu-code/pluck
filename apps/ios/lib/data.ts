@@ -1,6 +1,6 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
 import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag } from "@pluck/shared-schemas";
-import { onlineManager, QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
@@ -29,6 +29,7 @@ export const useOnline = () => useSyncExternalStore(subscribe, () => onlineManag
 
 export const keys = {
   items: (status: Status) => ["items", status] as const,
+  archive: ["items", "archive"] as const, // under "items", so every move refreshes it
   item: (id: string) => ["item", id] as const,
   lists: ["lists"] as const,
   list: (id: string) => ["list", id] as const,
@@ -42,6 +43,14 @@ export type FullItem = { item: Item; text: string; highlights: Highlight[]; list
 
 export const useItems = (status: Status) =>
   useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`) });
+// The Archive: archived and done together, newest move first, 50 at a time.
+export const useArchive = () =>
+  useInfiniteQuery({
+    queryKey: keys.archive,
+    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=archive&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
+    initialPageParam: null as string | null,
+    getNextPageParam: (last) => last.nextCursor,
+  });
 // While the page is still being plucked, ask again every few seconds so it shows up without leaving the screen.
 // An Item kept for offline reading opens on its kept copy, and the server's copy replaces it once it can be fetched.
 export const useItem = (id: string) =>
