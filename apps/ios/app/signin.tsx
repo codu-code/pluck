@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming } from "react-native-reanimated";
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { Wordmark } from "@/components/Wordmark";
@@ -87,39 +87,64 @@ export default function SignIn() {
 }
 
 // What lands in their inbox, played rather than drawn, so it reads as "this is what happens next" and not as a
-// button on this screen: the email drops in like a notification, then a tap lands on its link, now and again.
-// One description for VoiceOver; with Reduce Motion it simply sits there.
+// button on this screen. It is captioned as the email, its link is a quiet tint (the only solid button here is the
+// real one), and it loops: the email drops in like a notification, a fingertip taps its link, it goes, it comes
+// again. One description for VoiceOver; with Reduce Motion it simply sits there.
+const LOOP = { arrive: 450, tap: 1300, leave: 3900, gone: 4300, total: 5000 };
+
 function EmailPreview({ t }: { t: Palette }) {
   const tr = useTranslations("ios.signin.preview");
   const reduced = useReducedMotion();
-  const arrive = useSharedValue(reduced ? 1 : 0);
-  const tap = useSharedValue(0);
+  const clock = useSharedValue(reduced ? LOOP.arrive : 0); // ms into the loop
   useEffect(() => {
     if (reduced) return;
-    arrive.value = withDelay(350, withTiming(1, { duration: 420, easing: Easing.out(Easing.cubic) }));
-    // A tap ripple on the link: 1.2 s after it arrives, then every 3.6 s.
-    tap.value = withDelay(1500, withRepeat(withSequence(withTiming(1, { duration: 700, easing: Easing.out(Easing.quad) }), withTiming(0, { duration: 0 }), withDelay(2900, withTiming(0, { duration: 0 }))), -1));
-  }, [reduced, arrive, tap]);
-  const card = useAnimatedStyle(() => ({ opacity: arrive.value, transform: [{ translateY: (1 - arrive.value) * -28 }, { scale: 0.97 + arrive.value * 0.03 }] }));
-  const ripple = useAnimatedStyle(() => ({ opacity: tap.value === 0 ? 0 : 0.45 * (1 - tap.value), transform: [{ scale: 0.4 + tap.value * 1.4 }] }));
-  const pressed = useAnimatedStyle(() => ({ transform: [{ scale: tap.value > 0 && tap.value < 0.25 ? 0.96 : 1 }] }));
+    clock.value = withRepeat(withTiming(LOOP.total, { duration: LOOP.total, easing: Easing.linear }), -1);
+  }, [reduced, clock]);
+  const card = useAnimatedStyle(() => {
+    const ms = clock.value;
+    const inP = Math.min(1, ms / LOOP.arrive);
+    const eased = 1 - Math.pow(1 - inP, 3);
+    const outP = ms < LOOP.leave ? 0 : Math.min(1, (ms - LOOP.leave) / (LOOP.gone - LOOP.leave));
+    return { opacity: eased * (1 - outP), transform: [{ translateY: (1 - eased) * -24 - outP * 12 }, { scale: 0.97 + eased * 0.03 }] };
+  });
+  // The fingertip: drifts in, presses (0 to 1 over 260 ms), lifts and fades.
+  const press = (ms: number) => {
+    "worklet";
+    return ms < LOOP.tap ? 0 : ms < LOOP.tap + 130 ? (ms - LOOP.tap) / 130 : ms < LOOP.tap + 260 ? 1 - (ms - LOOP.tap - 130) / 130 : 0;
+  };
+  const finger = useAnimatedStyle(() => {
+    const ms = clock.value;
+    const show = ms < LOOP.tap - 500 || ms > LOOP.tap + 900 ? 0 : ms < LOOP.tap - 200 ? (ms - (LOOP.tap - 500)) / 300 : ms > LOOP.tap + 600 ? 1 - (ms - LOOP.tap - 600) / 300 : 1;
+    const drift = ms < LOOP.tap ? Math.max(0, (LOOP.tap - ms) / 500) : 0;
+    return { opacity: show * 0.55, transform: [{ translateX: drift * 18 }, { translateY: drift * 14 }, { scale: 1 - press(ms) * 0.18 }] };
+  });
+  const ripple = useAnimatedStyle(() => {
+    const p = clock.value < LOOP.tap + 130 ? 0 : Math.min(1, (clock.value - LOOP.tap - 130) / 700);
+    return { opacity: p === 0 || p === 1 ? 0 : 0.5 * (1 - p), transform: [{ scale: 0.5 + p * 1.6 }] };
+  });
+  const link = useAnimatedStyle(() => ({ transform: [{ scale: 1 - press(clock.value) * 0.04 }] }));
   return (
-    <Animated.View accessible accessibilityLabel={tr("a11y")}
-      style={[styles.panel, { backgroundColor: t.surface, borderColor: t.line }, card]}>
-      <View style={[styles.panelHead, { borderBottomColor: t.line }]}>
-        <Text style={[font.semibold, { color: t.ink, fontSize: 13 }]}>Pluck</Text>
-        <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 13 }]}>{tr("subject")}</Text>
-        <Text style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{tr("now")}</Text>
-      </View>
-      <View style={styles.panelBody}>
-        <Text style={[font.bold, styles.panelTitle, { color: t.ink }]}>{tr("title")}</Text>
-        <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>{tr("body")}</Text>
-        <Animated.View style={[styles.panelButton, { backgroundColor: t.brand }, pressed]}>
-          <Text style={[font.semibold, { color: t.onBrand, fontSize: 14 }]}>{tr("button")}</Text>
-          <Animated.View pointerEvents="none" style={[styles.ripple, { backgroundColor: t.highlight }, ripple]} />
-        </Animated.View>
-      </View>
-    </Animated.View>
+    <View style={{ gap: 10 }} accessible accessibilityLabel={tr("a11y")}>
+      <Text style={[font.medium, { color: t.ink2, fontSize: 13 }]}>{tr("caption")}</Text>
+      <Animated.View style={[styles.panel, { backgroundColor: t.surface, borderColor: t.line }, card]}>
+        <View style={[styles.panelHead, { borderBottomColor: t.line }]}>
+          <Text style={[font.semibold, { color: t.ink, fontSize: 13 }]}>Pluck</Text>
+          <Text numberOfLines={1} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 13 }]}>{tr("subject")}</Text>
+          <Text style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{tr("now")}</Text>
+        </View>
+        <View style={styles.panelBody}>
+          <Text style={[font.bold, styles.panelTitle, { color: t.ink }]}>{tr("title")}</Text>
+          <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>{tr("body")}</Text>
+          <View style={{ alignSelf: "flex-start" }}>
+            <Animated.View style={[styles.panelLink, { backgroundColor: t.highlightWash }, link]}>
+              <Text style={[font.semibold, { color: t.actionInk, fontSize: 14 }]}>{tr("button")}</Text>
+              <Animated.View pointerEvents="none" style={[styles.ripple, { backgroundColor: t.highlight }, ripple]} />
+            </Animated.View>
+            {!reduced && <Animated.View pointerEvents="none" style={[styles.finger, { backgroundColor: t.ink2, borderColor: t.surface }, finger]} />}
+          </View>
+        </View>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -129,8 +154,9 @@ const styles = StyleSheet.create({
   panelHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
   panelBody: { gap: 12, paddingTop: 18, paddingHorizontal: 16, paddingBottom: 20 },
   panelTitle: { fontSize: 24, lineHeight: 26, letterSpacing: -0.48 },
-  panelButton: { alignSelf: "flex-start", minHeight: 40, paddingHorizontal: 16, borderRadius: 10, justifyContent: "center", overflow: "hidden" },
-  ripple: { position: "absolute", width: 44, height: 44, borderRadius: 22, top: -2, right: 18 },
+  panelLink: { minHeight: 36, paddingHorizontal: 14, borderRadius: 999, justifyContent: "center", overflow: "hidden" },
+  ripple: { position: "absolute", width: 44, height: 44, borderRadius: 22, top: -4, right: 14 },
+  finger: { position: "absolute", width: 30, height: 30, borderRadius: 15, borderWidth: 2, top: 10, right: 20 },
   h1: { fontSize: 40, lineHeight: 42, letterSpacing: -1.6 },
   lede: { fontSize: 16, lineHeight: 23 },
   field: { minHeight: 48, borderWidth: 1, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12, fontSize: 16 },

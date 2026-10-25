@@ -287,6 +287,7 @@
     "useHost": "Use {host}",
     "ownServer": "Use your own server",
     "preview": {
+      "caption": "The email you get",
       "a11y": "The email: Here is your link. Tap it to sign in. It works once, for 10 minutes.",
       "subject": "Your link to Pluck",
       "now": "now",

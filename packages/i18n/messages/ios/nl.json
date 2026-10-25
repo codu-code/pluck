@@ -287,6 +287,7 @@
     "useHost": "Gebruik {host}",
     "ownServer": "Gebruik je eigen server",
     "preview": {
+      "caption": "De e-mail die je krijgt",
       "a11y": "De mail: Hier is je link. Tik erop om in te loggen. Hij werkt één keer, 10 minuten lang.",
       "subject": "Je link naar Pluck",
       "now": "nu",

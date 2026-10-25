@@ -287,6 +287,7 @@
     "useHost": "Usar {host}",
     "ownServer": "Usar tu propio servidor",
     "preview": {
+      "caption": "El correo que recibes",
       "a11y": "El correo: Aquí tienes tu enlace. Tócalo para iniciar sesión. Funciona una vez, durante 10 minutos.",
       "subject": "Tu enlace a Pluck",
       "now": "ahora",
