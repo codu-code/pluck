@@ -19,7 +19,8 @@ export type Session = {
 
 const STORE = { keychainService: "pluck", keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK };
 export const REDIRECT = "io.getpluck.app:/oauth";
-const SCOPE = "offline_access library:read library:write";
+// "account": AI tools, export and deleting the account from Settings (the server lets only Pluck's own apps ask).
+const SCOPE = "offline_access library:read library:write account";
 export const defaultServer: string = (Constants.expoConfig?.extra as { server?: string } | undefined)?.server ?? "https://getpluck.io";
 
 let current: Session | null | undefined;
@@ -46,7 +47,8 @@ export const isSignedIn = async () => signedIn(await getSession());
 // ---- OAuth with PKCE ---------------------------------------------------------------------------------
 
 async function clientIdFor(server: string): Promise<string> {
-  const ids = await kv.get<Record<string, string>>("clientIds", {});
+  // v2: registered with the account scope; a client from before cannot ask for it, so it registers again.
+  const ids = await kv.get<Record<string, string>>("clientIds.v2", {});
   if (ids[server]) return ids[server];
   const res = await fetch(`${server}/api/auth/oauth2/register`, {
     method: "POST",
@@ -58,7 +60,7 @@ async function clientIdFor(server: string): Promise<string> {
   });
   if (!res.ok) throw new Error(`Could not reach ${server}.`);
   const { client_id } = (await res.json()) as { client_id: string };
-  await kv.set("clientIds", { ...ids, [server]: client_id });
+  await kv.set("clientIds.v2", { ...ids, [server]: client_id });
   return client_id;
 }
 

@@ -77,6 +77,7 @@ export default function Root() {
               <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
               <Stack.Screen name="settings" options={{ presentation: "modal" }} />
               <Stack.Screen name="note" options={{ presentation: "modal" }} />
+              <Stack.Screen name="tags" options={{ presentation: "modal" }} />
               <Stack.Screen name="pick" options={{ presentation: "formSheet", sheetAllowedDetents: [0.6, 1] }} />
             </Stack.Protected>
             <Stack.Protected guard={!signedIn}>
