@@ -26,7 +26,7 @@
     "image": "Immagine",
     "note": "Nota",
     "todo": "Da fare",
-    "thing": "Cosa"
+    "thing": "Oggetto"
   },
   "status": {
     "inbox": "Inbox",
@@ -158,7 +158,7 @@
     "date": "Data",
     "plucked": "Preso",
     "dates": {
-      "any": "Sempre",
+      "any": "Qualsiasi data",
       "week": "Questa settimana",
       "month": "Questo mese",
       "year": "Quest'anno"
@@ -208,7 +208,7 @@
     "hint": "Rinomina o elimina",
     "empty": {
       "title": "Ancora nessun tag.",
-      "body": "Aggiungi un tag con una pressione prolungata, o da Tag nel lettore."
+      "body": "Tieni premuto un elemento per aggiungere un tag, o usa Tag nel lettore."
     }
   },
   "list": {

@@ -17,7 +17,7 @@ How Pluck says its product words in Italian, and why. Use these in every catalog
 | Image | **Immagine** | Standard. | Apple, Google |
 | Note | **Nota** (pl. *Note*) | Standard. | Apple's Notes app is *Note* in Italian |
 | Todo | **Da fare** (invariable: *un Da fare*, *i Da fare*) | The everyday Italian for a to-do (*cose da fare*), and it matches the other *Da…* Kinds. | everyday Italian (*lista delle cose da fare*); Todoist says *attività*, which is a task, not this Kind |
-| Thing | **Cosa** (pl. *Cose*) | Literal and warm, like "Thing". Capitalised when it means the Kind, so it is not read as *cosa?* ("what"). | — |
+| Thing | **Oggetto** (pl. *Oggetti*) | A Thing is something to get (a hob, a tap, a book). *Cosa* was tried first, but as a label it reads as the question word: *Cosa ·* on a row, *Tipo: Cosa*, next to a dozen *Cosa ho preso…?* strings. *Oggetto* is unambiguous and short. Plain lowercase *cosa/cose* stays for the generic English "thing(s)" (*Cinque cose non toccate*). | — |
 | Status | **Stato** | Standard. | Todoist, Jira |
 | Inbox | **Inbox** (feminine: *l'Inbox*, *nell'Inbox*) | Kept as the loanword (it is in Treccani as *inbox, s.f.*). Gmail and Notion say *Posta in arrivo*, which means incoming mail and is wrong for links; Todoist and Things say *In arrivo*, which makes clumsy copy (*Di nuovo in In arrivo*). *Inbox* is short in the tab bar and reads cleanly in sentences. | Todoist/Things *In arrivo*, Gmail/Notion *Posta in arrivo* (considered, not used) |
 | Later | **Più tardi** | Clearer than the shorter *Dopo* as a place name; *per dopo* is used in running text (*Tenuto per dopo*). | "leggi più tardi" is how Italians name read-later apps |
@@ -53,7 +53,7 @@ How Pluck says its product words in Italian, and why. Use these in every catalog
 ## Capitalisation
 
 - Sentence case for titles and buttons, as Italian always does.
-- Capitalise the names of places and Kinds when they are used as names: *Inbox*, *Più tardi*, *Archivio*, *Cestino*, *Da leggere*, *Da fare*, *Nota*, *Cosa*, and screen names (*Impostazioni*, *Strumenti di IA*).
+- Capitalise the names of places and Kinds when they are used as names: *Inbox*, *Più tardi*, *Archivio*, *Cestino*, *Da leggere*, *Da fare*, *Nota*, *Oggetto*, and screen names (*Impostazioni*, *Strumenti di IA*).
 - Do not capitalise *elemento*, *tag*, *lista* in running text, even where English writes "Item" or "List": Italian never capitalises common nouns.
 - Days and months are lowercase (*lunedì*, *24 ottobre 2026*).
 

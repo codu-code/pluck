@@ -10,7 +10,7 @@
     "image": "Immagine",
     "note": "Nota",
     "todo": "Da fare",
-    "thing": "Cosa"
+    "thing": "Oggetto"
   },
   "status": {
     "inbox": "Inbox",
@@ -133,14 +133,14 @@
   },
   "offline": {
     "title1": "Offline.",
-    "title2": "Non perso",
+    "title2": "Niente è perso",
     "lede": "Le pagine che hai aperto di recente sono ancora qui, e tutto quello che prendi ora aspetta su questo dispositivo finché non torni online.",
     "tryAgain": "Riprova",
     "openInbox": "Apri l'Inbox",
     "art": {
       "inbox": "Inbox",
       "waiting": "{count} in attesa",
-      "one": "L'articolo del treno",
+      "one": "L'articolo preso in treno",
       "oneNote": "Aspetta qui, parte quando torni online",
       "two": "Comprare un piano a induzione",
       "twoNote": "Da fare, aspetta anche questo",
@@ -261,7 +261,7 @@
     "archiveAll": {
       "title1": "Archivia tutto.",
       "title2": "Sì, davvero",
-      "count": "<b>{count, number}</b><span>{count, plural, one {elemento non toccato} other {elementi non toccati}} da più tempo della tua scadenza</span>",
+      "count": "<b>{count, number}</b><span>{count, plural, one {elemento non toccato} other {elementi non toccati}} da più tempo della scadenza che hai scelto</span>",
       "lede": "Passano nell'Archivio in un colpo solo. Non viene eliminato nulla, e le liste restano come sono.",
       "confirm": "Sì, sposta {count, number} nell'Archivio",
       "notNow": "Non ora"
@@ -275,7 +275,7 @@
     "done": {
       "keep": {
         "title": "Tenuto",
-        "line": "Resta dov'è, e i giorni ripartono da capo."
+        "line": "Resta dov'è, e il conto dei giorni riparte."
       },
       "letGo": {
         "title": "Sparito. Anzi, archiviato",
@@ -382,7 +382,7 @@
       "open": "Apri",
       "later": "Più tardi (o di nuovo nell'Inbox)",
       "archive": "Archivia",
-      "done": "Fatto (Da fare e Cose)",
+      "done": "Fatto (Da fare e Oggetti)",
       "tag": "Tag",
       "list": "Aggiungi a una lista",
       "select": "Seleziona",
@@ -399,7 +399,7 @@
     "links": "Link",
     "note": "Note",
     "todo": "Da fare",
-    "thing": "Cose"
+    "thing": "Oggetti"
   },
   "picker": {
     "hint": "Enter attiva o disattiva · Esc chiude",
@@ -458,7 +458,7 @@
       "twoMeta": "un post di blog · 6 min",
       "three": "Token, scope e la parte che tutti sbagliano"
     },
-    "followUp": "Le metto in una lista, dalla migliore?",
+    "followUp": "Le metto in una lista, partendo dalla migliore?",
     "connected": "Pluck collegato",
     "message": "Messaggio",
     "modal": {
@@ -471,7 +471,7 @@
       "title": "Fai entrare la tua IA",
       "body": "Il tuo strumento di IA chiede di usare la tua libreria Pluck. Cambia le cose solo quando lo chiedi, e segna quello che ha toccato.",
       "read": "Leggere e cercare nella tua libreria",
-      "write": "Prendere, mettere tag e smistare, segnato come IA",
+      "write": "Prendere, mettere tag e smistare, con il segno dell'IA",
       "delete": "Eliminare qualsiasi cosa",
       "cancel": "Annulla",
       "allow": "Consenti"
@@ -512,7 +512,7 @@
     "links": "{count} link. Enter li prende tutti.",
     "as": "Prendi come",
     "due": "Scadenza",
-    "enterAs": "Enter lo prende come {kind, select, note {Nota} todo {Da fare} other {Cosa}}."
+    "enterAs": "Enter lo prende come {kind, select, note {Nota} todo {Da fare} other {Oggetto}}."
   },
   "itemList": {
     "inbox": {
@@ -520,7 +520,7 @@
     },
     "later": {
       "subtitle": "Tenuti apposta",
-      "expiring": "Tenuti apposta · {count, plural, one {# scade} other {# scadono}} questa settimana, nell'Archivio",
+      "expiring": "Tenuti apposta · {count, plural, one {# passa} other {# passano}} nell'Archivio questa settimana",
       "empty": {
         "title": "Niente tenuto per dopo.",
         "body": "Premi l su qualsiasi elemento dell'Inbox per tenerlo qui."
@@ -531,7 +531,7 @@
     "showOnly": "Mostra solo {name}",
     "addedTo": "Aggiunto a “{name}”.",
     "takenOut": "Tolto da “{name}”.",
-    "kept": "Tenuto. I {days} giorni ripartono da capo.",
+    "kept": "Tenuto. Il conto dei {days} giorni riparte.",
     "pluckedMany": "{count} presi, sono nell'Inbox.",
     "sort": {
       "label": "Ordina",
@@ -575,7 +575,7 @@
       "help": "tutte le scorciatoie"
     },
     "listPicker": "Aggiungi {count} elementi a una lista",
-    "tagPicker": "Tag per {count} elementi"
+    "tagPicker": "Metti tag a {count} elementi"
   },
   "archive": {
     "filter": {
@@ -623,11 +623,11 @@
       "year": "Ultimo anno"
     },
     "count": "{count, plural, one {# risultato} other {# risultati}} · titolo, note, tag, nomi delle liste e testo",
-    "hint": "Scrivi per cercare in tutta la libreria, Archivio compreso. Premi / da qualsiasi punto per tornare qui.",
+    "hint": "Scrivi per cercare in tutta la libreria, Archivio compreso. Premi / da qualsiasi punto per arrivare qui.",
     "results": "Risultati",
     "snippet": "{pre}<mark>{hit}</mark>{post}",
     "noteSnippet": "La tua nota: “{pre}<mark>{hit}</mark>{post}”",
-    "none": "Niente corrisponde a “{q}”. La ricerca cerca proprio quelle parole.",
+    "none": "Niente corrisponde a “{q}”. La ricerca trova solo le parole esatte.",
     "ask": "Lo cerchi per significato? Chiedi alla tua IA.",
     "copy": "Copia “{prompt}”"
   },
@@ -663,7 +663,7 @@
   "list": {
     "takenOut": "Tolto da “{name}”. È ancora nella tua libreria.",
     "nowPublic": "Pubblica. Chiunque abbia il link può vederla.",
-    "nowPrivate": "Di nuovo privata. Il link smette di funzionare ora.",
+    "nowPrivate": "Di nuovo privata. Da ora il link non funziona più.",
     "askPrompt": "Leggi la mia lista Pluck \"{name}\" e dimmi cosa copre, cosa manca e qual è l'ordine migliore per leggerla.",
     "crumb": "Liste",
     "nameLabel": "Nome della lista",
@@ -708,7 +708,7 @@
     "label": "Persone che possono vederla",
     "stop": "Smetti di condividere con {email}",
     "some": "Possono vederla; solo tu puoi modificarla.",
-    "none": "La vedono, mai i tuoi tag o le spunte; solo tu puoi modificarla."
+    "none": "Vedono la lista, ma mai i tuoi tag o le spunte; solo tu puoi modificarla."
   },
   "admin": {
     "title": "Segnalazioni",
@@ -752,12 +752,12 @@
     "title": "Titolo",
     "body": "Testo",
     "help": "La prima riga è il titolo. Testo semplice. Si salva mentre scrivi.",
-    "about": "{kind, select, note {Su questa Nota} todo {Su questo Da fare} other {Su questa Cosa}}",
+    "about": "{kind, select, note {Su questa Nota} todo {Su questo Da fare} other {Su questo Oggetto}}",
     "kind": "Tipo",
     "kindHint": {
       "note": "Trasformala in Da fare per aggiungere una scadenza e una spunta.",
       "todo": "Un Da fare può avere una scadenza. Fatto lo toglie dall'Inbox.",
-      "thing": "Una Cosa è qualcosa da procurarsi. Si radunano nelle liste."
+      "thing": "Un Oggetto è qualcosa da procurarsi. Si radunano nelle liste."
     },
     "due": "Scadenza",
     "source": "Fonte: {via}",
@@ -923,7 +923,7 @@
     },
     "deleteAccount": {
       "title": "Elimina account",
-      "lede": "Ogni elemento, tag, nota e chiave. Esporta prima.",
+      "lede": "Ogni elemento, tag, nota e chiave. Prima esporta.",
       "type": "Scrivi {email} per confermare",
       "now": "Elimina tutto ora",
       "action": "Elimina tutto. Sì, davvero."

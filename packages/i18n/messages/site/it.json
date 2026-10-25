@@ -29,7 +29,7 @@
     "checkEmail": "Controlla la tua email.",
     "took": "Ci sono voluti {ms, number} ms.",
     "sent": "Abbiamo mandato un link a <b>{email}</b>. Aprilo in questo browser e quello che hai preso arriva nella tua Inbox.",
-    "keepNote": "Aggiungi la tua email per tenerlo. Prima volta o ritorno, il link ti fa accedere.",
+    "keepNote": "Aggiungi la tua email per tenerlo. Che sia la prima volta o no, il link ti fa accedere.",
     "emailLabel": "La tua email, per tenere quello che hai preso",
     "emailPlaceholder": "you@example.com",
     "sending": "Invio in corso",
@@ -72,7 +72,7 @@
         },
         "hob": {
           "title": "Piano a induzione, 60 cm, quattro zone",
-          "meta": "Cosa · lista Ristrutturazione cucina",
+          "meta": "Oggetto · lista Ristrutturazione cucina",
           "tag": "cucina"
         }
       }
@@ -93,7 +93,7 @@
       "nagsNumber": "0 assilli",
       "nags": "Niente serie da mantenere, niente badge, niente sensi di colpa. Nessun tag messo alle tue spalle. Le cose che non tocchi mai passano nell'Archivio dopo 30 giorni (il numero lo scegli tu), a meno che non siano in una lista. Non viene eliminato nulla.",
       "secondsNumber": "30 s",
-      "seconds": "Per collegare l'IA che usi già. Claude, ChatGPT, Cursor, qualsiasi cosa parli MCP. Chiedile di fare ordine, raggruppare o trasformare quello che hai preso in idee. Lavora sotto i tuoi occhi, e non elimina mai."
+      "seconds": "Per collegare l'IA che usi già. Claude, ChatGPT, Cursor, qualsiasi strumento che parli MCP. Chiedile di fare ordine, raggruppare o trasformare quello che hai preso in idee. Lavora sotto i tuoi occhi, e non elimina mai."
     },
     "lists": {
       "title": "Le liste sono quello che stai costruendo.",
@@ -116,7 +116,7 @@
         },
         "extractor": {
           "title": "Cappa, a evacuazione esterna",
-          "note": "Prima chiedi ai montatori del muro."
+          "note": "Prima chiedi ai montatori se il muro va bene."
         }
       },
       "public": "Pubblica. Chiunque può prenderla nel suo Pluck."
@@ -126,12 +126,12 @@
       "title": "Collega l'IA che usi già.",
       "ask1": "“Cosa ho preso sull'autenticazione MCP?”",
       "ask2": "“Metti in ordine la mia Inbox.”",
-      "ask3": "“Fammi una lista di lettura con le cose di questo mese, dalla migliore.”",
+      "ask3": "“Fammi una lista di lettura con le cose di questo mese, partendo dalle migliori.”",
       "body": "Un link e tutta la tua libreria è lì. Cambia le cose solo quando lo dici tu, e segna tutto quello che ha toccato.",
       "button": "Come funziona con l'IA",
       "chatMe1": "Prendi questa come idea: un server MCP per i preventivi di Assemble",
       "chatAi1": "Preso. È nella tua Inbox come Nota, segnata come presa da me.",
-      "chatMe2": "Cosa sta marcendo nella mia libreria?",
+      "chatMe2": "Cosa sta ammuffendo nella mia libreria?",
       "chatAi2": "Cinque cose non toccate da un mese. Le vediamo una alla volta?"
     },
     "imports": {
@@ -161,7 +161,7 @@
         "description": "Pluck per Chrome è in coda per la revisione del Chrome Web Store. Esce a giorni."
       },
       "para1": "Pluck per Chrome è in coda per la revisione del Chrome Web Store, da qualche parte dietro qualche migliaio di estensioni per i coupon. Esce a giorni.",
-      "para2": "Nel frattempo, Pluck funziona sul web: incolla un link ed è preso. Anche la tua IA può prendere per te."
+      "para2": "Nel frattempo, Pluck funziona sul web: incolla un link ed è preso. Anche la tua IA può prenderli per te."
     },
     "iphone": {
       "meta": {
@@ -169,7 +169,7 @@
         "description": "Pluck per iPhone arriva prima su TestFlight, poi sull'App Store."
       },
       "para1": "Pluck per iPhone arriva prima su TestFlight, poi sull'App Store. Prendi dal menu Condividi, leggi ovunque, scorri per Più tardi.",
-      "para2": "Nel frattempo, Pluck funziona in Safari sul telefono: incolla un link ed è preso. Anche la tua IA può prendere per te."
+      "para2": "Nel frattempo, Pluck funziona in Safari sul telefono: incolla un link ed è preso. Anche la tua IA può prenderli per te."
     }
   },
   "openSource": {
@@ -186,15 +186,15 @@
     "reasons": {
       "export": {
         "title": "Esporta con un clic.",
-        "body": "Ogni elemento in JSON, più un file Markdown per ogni elemento e per ogni lista, con le tue evidenziazioni e le note. Funziona dal primo giorno, non quando ci arriveremo."
+        "body": "Ogni elemento in JSON, più un file Markdown per ogni elemento e per ogni lista, con le tue evidenziazioni e le note. Funziona dal primo giorno, non quando troveremo il tempo."
       },
       "page": {
         "title": "La pagina, non solo il link.",
-        "body": "Pluck conserva quello che hai preso. Quando il sito va giù o cambia, la tua copia è ancora lì, leggibile."
+        "body": "Pluck conserva quello che hai preso. Quando il sito va offline o cambia, la tua copia è ancora lì, leggibile."
       },
       "public": {
         "title": "Pubblico vuol dire pubblico. Privato vuol dire privato.",
-        "body": "Una lista pubblica mostra titoli, copertine, le tue note e i link agli originali. Non serve mai il testo delle pagine conservate. Rendila di nuovo privata e la pagina sparisce entro un minuto."
+        "body": "Una lista pubblica mostra titoli, copertine, le tue note e i link agli originali. Non mostra mai il testo delle pagine conservate. Rendila di nuovo privata e la pagina sparisce entro un minuto."
       },
       "ai": {
         "title": "La tua IA, la tua scelta.",
@@ -364,7 +364,7 @@
       "search_items": "Ricerca testuale su titolo, nota, tag, nomi delle liste e testo.",
       "list_items": "Sfoglia Inbox, Più tardi, Archivio o Fatto, prima i più recenti o prima i non toccati.",
       "get_item": "Un elemento completo, compreso il testo della pagina conservata.",
-      "save_item": "Prende un link, più link, una nota, un Da fare o una Cosa. Segnato come preso dall'IA.",
+      "save_item": "Prende un link, più link, una nota, un Da fare o un Oggetto. Segnato come preso dall'IA.",
       "batch_update": "Stato, tipo, tag e scadenze su uno o più elementi.",
       "list_tags": "I tuoi tag, con i conteggi.",
       "create_tag": "Un nuovo tag, solo dopo che hai detto sì.",
@@ -381,7 +381,7 @@
         "does": "Propone tag tra quelli che hai già, più tieni, più tardi o archivia per ogni elemento. Tu dici sì o modifichi. Un solo passaggio."
       },
       "reading": {
-        "say": "“Fammi una lista di lettura sull'autenticazione MCP, dalla migliore.”",
+        "say": "“Fammi una lista di lettura sull'autenticazione MCP, partendo dalle migliori.”",
         "does": "Cerca, legge e costruisce la lista in ordine, con una riga sul perché conta ciascuna voce. Privata finché non dici altrimenti."
       },
       "ideas": {
@@ -438,7 +438,7 @@
       },
       "sharing": {
         "title": "Condividere una lista",
-        "body": "Quando condividi una lista con qualcuno, conserviamo l'indirizzo email che hai scritto perché quella persona possa accedere e vederla, e le mandiamo un'email per avvisarla. Vede la lista come la mostra una pagina pubblica: titoli, siti, copertine e le tue note sulla lista, mai i tuoi tag, le spunte o le pagine che abbiamo conservato. Se la rimuovi, elimini la lista o elimini il tuo account, anche l'indirizzo viene eliminato."
+        "body": "Quando condividi una lista con qualcuno, conserviamo l'indirizzo email che hai scritto perché quella persona possa accedere e vederla, e le mandiamo un'email per avvisarla. Vede la lista come la mostra una pagina pubblica: titoli, siti, copertine e le tue note sulla lista, mai i tuoi tag, le spunte o le pagine che abbiamo conservato. Se rimuovi quella persona, elimini la lista o elimini il tuo account, anche l'indirizzo viene eliminato."
       },
       "emailIn": {
         "title": "Email in entrata",
@@ -476,7 +476,7 @@
     "sections": {
       "service": {
         "title": "Il servizio",
-        "body": "Pluck ti permette di prendere link, note, Da fare e Cose, leggerli più tardi, metterli in liste e collegare uno strumento di IA alla tua libreria tramite MCP. Il servizio ospitato su {host} è gratuito. Il codice è open source con licenza {licence}, e puoi far girare una tua copia."
+        "body": "Pluck ti permette di prendere link, note, Da fare e Oggetti, leggerli più tardi, metterli in liste e collegare uno strumento di IA alla tua libreria tramite MCP. Il servizio ospitato su {host} è gratuito. Il codice è open source con licenza {licence}, e puoi far girare una tua copia."
       },
       "account": {
         "title": "Il tuo account",
@@ -535,7 +535,7 @@
     "copies": "La copia nel tuo Pluck. Gratis.",
     "note": "Nota",
     "footTitle": "Crea liste come questa con quello che prendi.",
-    "footBody": "Prendilo. Sistemalo dopo. Condividilo quando è pronto.",
+    "footBody": "Prendilo. Sistemalo dopo. Condividilo quando ne vale la pena.",
     "privacy": "Privacy",
     "terms": "Termini",
     "og": "Una lista di {by} · {count, plural, one {# elemento} other {# elementi}}",
