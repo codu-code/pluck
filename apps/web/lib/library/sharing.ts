@@ -1,7 +1,7 @@
 import { signedUrl } from "@pluck/blob";
 import {
   createList, createReport, createTextItem, getMe, hitRateLimit, listOwnedBy, pluckLink, publicCoverKey, publicList, publicListById, recordView,
-  setHandle, setName, setVisibility, updateSettings,
+  rollHandle, setHandle, setName, setVisibility, updateSettings,
 } from "@pluck/db";
 import { normalizeUrl, type Item, type List, type Me, type PublicList, type Settings } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
@@ -32,6 +32,13 @@ export async function updateMe(userId: string, patch: { name?: string; handle?: 
     if (!res.ok) throw HANDLE_ERRORS[res.reason];
   }
   return me(userId);
+}
+
+// "Make one up": a fresh made-up handle (plucky-puffin-42).
+export async function makeUpHandle(userId: string): Promise<Me> {
+  const res = await rollHandle(userId);
+  if (!res.ok) throw HANDLE_ERRORS[res.reason];
+  return res.me;
 }
 
 export async function setListVisibility(userId: string, listId: string, visibility: "private" | "public"): Promise<List> {

@@ -5,3 +5,4 @@ export * from "./urls.ts";
 export * from "./notes.ts";
 export * from "./lists.ts";
 export * from "./format.ts";
+export * from "./handles.ts";

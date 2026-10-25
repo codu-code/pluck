@@ -23,6 +23,17 @@ export function ProfileSection({ initial }: { initial: Me }) {
     setSaved(label);
   }
 
+  async function makeOneUp() {
+    setError(null);
+    const res = await fetch("/api/v1/me/handle", { method: "POST" });
+    const json = await res.json();
+    if (!res.ok) return setError(json.error.message);
+    setMe(json.me);
+    setHandle(json.me.handle ?? "");
+    setSaved("Made one up. Not keen? Again, or type your own.");
+  }
+
+  const locked = Boolean(me.handleChangeableAt && new Date(me.handleChangeableAt) > new Date());
   return (
     <section className={styles.profile} aria-label="Profile">
       <label className={styles.profileField}>
@@ -39,10 +50,11 @@ export function ProfileSection({ initial }: { initial: Me }) {
             onChange={(e) => setHandle(e.target.value.toLowerCase())}
             onBlur={() => handle && handle !== (me.handle ?? "") && save({ handle }, "Handle saved.")}
           />
+          {!locked && <button type="button" className={styles.textButton} onClick={() => void makeOneUp()}>Make one up</button>}
         </span>
       </label>
       <span className={styles.profileHint} role={error ? "alert" : "status"}>
-        {error ?? saved ?? (me.handleChangeableAt && new Date(me.handleChangeableAt) > new Date() ? "Only shown on lists you make public. It can change once a month." : "Only shown on lists you make public.")}
+        {error ?? saved ?? (locked ? "Only shown on lists you make public. It can change once a month." : "Only shown on lists you make public.")}
       </span>
     </section>
   );

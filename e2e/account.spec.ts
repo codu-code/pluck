@@ -65,3 +65,14 @@ test("import a Pocket file, export everything, sign out, delete the account", as
   await signIn(page, email);
   await expect(page.getByRole("heading", { name: "Nothing plucked yet." })).toBeVisible();
 });
+
+test("a new account has a made-up handle, and Make one up rolls another", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/settings");
+  const field = page.getByRole("textbox", { name: "Handle, for public lists" });
+  const first = await field.inputValue();
+  expect(first).toMatch(/^[a-z]+-[a-z]+-\d\d$/);
+  await page.getByRole("button", { name: "Make one up" }).click();
+  await expect(page.getByText("Made one up.")).toBeVisible();
+  await expect(field).not.toHaveValue(first);
+});

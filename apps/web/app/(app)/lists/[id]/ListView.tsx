@@ -22,7 +22,7 @@ function between(prev: number | undefined, next: number | undefined): number {
 }
 
 // The Collection board: one list in order, each item with a tick and a note that belong to the list.
-export function ListView({ initial, handle: initialHandle }: { initial: { list: List; entries: ListEntry[] }; handle: string | null }) {
+export function ListView({ initial, handle }: { initial: { list: List; entries: ListEntry[] }; handle: string | null }) {
   const router = useRouter();
   const [list, setList] = useState(initial.list);
   const [entries, setEntries] = useState(initial.entries);
@@ -35,10 +35,6 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [dragging, setDragging] = useState<string | null>(null); // for the look
   const dragRef = useRef<string | null>(null); // for the logic: set synchronously, before the first dragover
-  const [handle, setHandle] = useState(initialHandle);
-  const [askHandle, setAskHandle] = useState(false);
-  const [handleDraft, setHandleDraft] = useState("");
-  const [handleError, setHandleError] = useState<string | null>(null);
   const [host, setHost] = useState("getpluck.io");
   useEffect(() => setHost(window.location.host), []);
   const [toast, showToast] = useToast();
@@ -118,26 +114,15 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
     listRef.current?.querySelector("[data-active]")?.scrollIntoView({ block: "nearest" });
   }, [cursor]);
 
-  // Flow 15: one switch. Public asks for a handle once, then shows the link.
+  // Flow 15: one switch, then the link. Everyone has a handle (a made-up one until they choose).
   async function setVisibility(visibility: "private" | "public") {
     const res = await send(base, "PATCH", { visibility });
     const body = await res.json();
     if (res.ok) {
       setList((body as { list: List }).list);
-      setAskHandle(false);
       return showToast({ message: visibility === "public" ? "Public. Anyone with the link can see it." : "Private again. The link stops working now." });
     }
-    if (body?.error?.code === "handle_required") return setAskHandle(true);
     showToast({ message: body?.error?.message ?? "That did not go through." });
-  }
-
-  async function chooseHandle() {
-    setHandleError(null);
-    const res = await send("/api/v1/me", "PATCH", { handle: handleDraft });
-    const body = await res.json();
-    if (!res.ok) return setHandleError(body.error.message);
-    setHandle(body.me.handle);
-    await setVisibility("public");
   }
 
   async function saveMeta(patch: { name?: string; purpose?: string }) {
@@ -203,19 +188,7 @@ export function ListView({ initial, handle: initialHandle }: { initial: { list: 
                 </button>
               ))}
             </div>
-            {askHandle && list.visibility === "private" ? (
-              <form className={styles.handleForm} onSubmit={(e) => { e.preventDefault(); void chooseHandle(); }}>
-                <label className={styles.meta} htmlFor="handle">Pick a handle for the link. It shows on public lists only.</label>
-                <span className={styles.handleRow}>
-                  <span className={styles.handleBox}>
-                    <span className={styles.prefix}>getpluck.io/@</span>
-                    <input id="handle" className={styles.handleInput} value={handleDraft} autoFocus onChange={(e) => setHandleDraft(e.target.value.toLowerCase())} />
-                  </span>
-                  <button type="submit" className={styles.primarySmall}>Use it</button>
-                </span>
-                {handleError && <span role="alert" className={styles.error}>{handleError}</span>}
-              </form>
-            ) : list.visibility === "public" && handle ? (
+            {list.visibility === "public" && handle ? (
               <>
                 <span className={styles.linkRow}>
                   <code className={styles.link}>{`${host}/@${handle}/${list.slug}`}</code>

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  applyExtraction, createList, createTag, editItem, getListMeta, killList, killUser, moveToBin, pluckLink, PUBLIC_ITEM_FIELDS,
+  applyExtraction, createList, createTag, editItem, getListMeta, getMe, rollHandle, killList, killUser, moveToBin, pluckLink, PUBLIC_ITEM_FIELDS,
   publicCoverKey, publicList, publicListById, recordView, setHandle, setItemTags, setBlobKeys, setVisibility, updateEntry, updateList,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -88,12 +88,22 @@ describe("handles and publishing", () => {
     expect((await setHandle(a, "unique-two", new Date(Date.now() + 31 * 86_400_000))).ok).toBe(true);
   });
 
-  test("public needs a handle, and a published slug survives a rename", async () => {
+  test("everyone gets a made-up handle; rerolling it is free, a chosen one waits a month", async () => {
+    const { a } = await twoUsers();
+    const first = (await getMe(a))!;
+    expect(first.handle).toMatch(/^[a-z]+-[a-z]+-\d\d$/);
+    expect(first.handleChangeableAt).toBeNull();
+    const rolled = await rollHandle(a);
+    expect(rolled.ok && rolled.me.handle).not.toBe(first.handle);
+    expect((await setHandle(a, `chosen${Date.now() % 100000}`)).ok).toBe(true); // a made-up one does not start the month
+    expect(await rollHandle(a)).toEqual({ ok: false, reason: "too_soon" });
+  });
+
+  test("public gives a made-up handle when there is none, and a published slug survives a rename", async () => {
     const { a } = await twoUsers();
     const list = await createList(a, { name: "Kitchen", createdBy: "user" });
-    expect(await setVisibility(a, list.id, "public")).toEqual({ ok: false, reason: "handle_required" });
-    await setHandle(a, `maker${Date.now() % 100000}`);
-    await setVisibility(a, list.id, "public");
+    expect((await setVisibility(a, list.id, "public")).ok).toBe(true);
+    expect((await getMe(a))?.handle).toMatch(/^[a-z]+-[a-z]+-\d\d$/);
     expect((await updateList(a, list.id, { name: "Kitchen reno" }))?.slug).toBe("kitchen");
 
   });
