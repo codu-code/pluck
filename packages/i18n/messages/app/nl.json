@@ -244,7 +244,7 @@
     "returnsTo": "Als je toestaat, ga je door naar <b>{host}</b>. Ken je dat adres niet, sta het dan niet toe.",
     "scopes": {
       "read": "Je bibliotheek lezen: items, de tekst die Pluck bewaarde, notities, tags en lijsten",
-      "write": "Plukken en ordenen: dingen bewaren, taggen, sorteren, lijsten maken en bewerken",
+      "write": "Plukken en ordenen: dingen toevoegen, taggen, sorteren, lijsten maken en bewerken",
       "delete": "Items verwijderen. De meeste AI-tools hebben dit nooit nodig.",
       "account": "Je account beheren: verbonden AI-tools, exports en alles verwijderen. Alleen de eigen apps van Pluck vragen hierom."
     },

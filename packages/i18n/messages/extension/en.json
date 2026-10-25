@@ -55,7 +55,7 @@
       "title": "Plucked",
       "undo": "Undo",
       "tips": {
-        "opening": "Opening this saves the page. That's the whole trick.",
+        "opening": "Opening this plucks the page. That's the whole trick.",
         "shortcut": "Alt+Shift+P does it without the click.",
         "rightClick": "Right-click a link or an image to pluck just that."
       },

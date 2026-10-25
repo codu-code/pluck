@@ -244,7 +244,7 @@
     "returnsTo": "Ao permitir, você segue para <b>{host}</b>. Se você não conhece esse endereço, não permita.",
     "scopes": {
       "read": "Ler sua biblioteca: itens, o texto que o Pluck guardou, notas, tags e listas",
-      "write": "Colher e organizar: guardar coisas, colocar tags, ordenar, criar e editar listas",
+      "write": "Colher e organizar: adicionar coisas, colocar tags, ordenar, criar e editar listas",
       "delete": "Apagar itens. A maioria das ferramentas de IA nunca precisa disso.",
       "account": "Gerenciar sua conta: ferramentas de IA conectadas, exportações e apagar tudo. Só os apps do próprio Pluck pedem isso."
     },
