@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "点一下，就把当前网页摘进你的 Pluck 资料库。"
+  },
+  "pluckPage": {
+    "message": "摘下此页"
+  },
+  "pluckSelection": {
+    "message": "把选中的文字摘为高亮"
+  }
+}
