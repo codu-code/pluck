@@ -52,3 +52,7 @@ The copy and behaviour departures for the site, the extension, the share sheet, 
 ## Placeholders to fill
 
 None left. `scripts/placeholders.test.ts` lists any that come back.
+
+## Motion and the place you are on (25 October 2026, owner's call)
+
+The boards show the active tab and nav link in ink with no motion, and the spec allows only the share-sheet tick and the archive slide. Now: the place you are on is Pluck green (`--action-ink` on the web, `actionInk` on iPhone: forest on light, mint on dark), the web nav eases its tint in over 160 ms, and the iPhone tab glyph draws itself in over 220 ms ease-out when its tab becomes active, with a selection haptic (the Draw On idea from SF Symbols, in Pluck's own glyphs). No bounce; Reduce Motion and prefers-reduced-motion turn the motion off.

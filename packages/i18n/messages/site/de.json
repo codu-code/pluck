@@ -1,1 +1,568 @@
-{}
+{
+  "language": {
+    "label": "Sprache"
+  },
+  "meta": {
+    "description": "Pflück es. Eine schnelle Open-Source-App für Links, die deine KI lesen kann."
+  },
+  "chrome": {
+    "home": "Pluck-Startseite",
+    "nav": "Website",
+    "lists": "Listen",
+    "connect": "Deine KI verbinden",
+    "openSource": "Open Source",
+    "getPluck": "Pluck holen",
+    "footerHome": "Start",
+    "support": "Hilfe",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "cookies": "Cookies",
+    "freeAndOpen": "Pluck ist kostenlos und Open Source."
+  },
+  "paste": {
+    "label": "Füg einen Link ein, um es auszuprobieren",
+    "placeholder": "Füg einen Link ein. Oder fünf. Nur zu.",
+    "button": "Pflücken",
+    "failed": "Das hat nicht geklappt. Versuch es noch mal.",
+    "plucked": "Gepflückt.",
+    "inInbox": "Es liegt in deinem <inbox>Eingang</inbox>.",
+    "checkEmail": "Schau in deine E-Mails.",
+    "took": "Das waren {ms, number} ms.",
+    "sent": "Wir haben einen Link an <b>{email}</b> geschickt. Öffne ihn in diesem Browser, dann landet dein Gepflücktes in deinem Eingang.",
+    "keepNote": "Gib deine E-Mail an, um es zu behalten. Ob neu oder schon dabei: Der Link meldet dich an.",
+    "emailLabel": "Deine E-Mail, um dein Gepflücktes zu behalten",
+    "emailPlaceholder": "du@beispiel.de",
+    "sending": "Wird gesendet",
+    "keep": "Behalten",
+    "emailFailed": "Das hat nicht geklappt. Prüf die Adresse und versuch es dann noch mal.",
+    "limited": "Das sind ganz schön viele Links. Nimm den neuesten, den wir geschickt haben, oder probier es in einer Stunde noch mal.",
+    "hint": "Kostenlos. Open Source. iPhone, Chrome, Web und E-Mail. Bereit für deine KI."
+  },
+  "home": {
+    "meta": {
+      "title": "Pluck · Pflück es. Sortier es später.",
+      "description": "Pflück alles mit einem Fingertipp. Sortier es später, von Hand oder mit deiner KI. Kostenlos und Open Source."
+    },
+    "hero": {
+      "title": "Pflück es<dot>.</dot>",
+      "line1": "Pflück alles mit einem Fingertipp.",
+      "line2": "Sortier es später, von Hand oder mit deiner KI.",
+      "line3": "Oder lass es. Wir nerven nicht."
+    },
+    "mock": {
+      "label": "Die App",
+      "inbox": "Eingang",
+      "toTriage": "{count, number} zu sichten",
+      "plucked": "Gepflückt.",
+      "rows": {
+        "mcp": {
+          "title": "How MCP auth actually works",
+          "meta": "modelcontextprotocol.io · 12 Min.",
+          "tag": "mcp"
+        },
+        "postgres": {
+          "title": "Postgres-Indizes in 40 Minuten",
+          "meta": "youtube.com · 41 Min.",
+          "tag": "postgres"
+        },
+        "idea": {
+          "title": "Ein MCP-Server für die Angebote von Assemble",
+          "meta": "Notiz · von dir",
+          "tag": "assemble"
+        },
+        "hob": {
+          "title": "Induktionskochfeld, 60 cm, vier Zonen",
+          "meta": "Ding · Liste Küchenumbau",
+          "tag": "küche"
+        }
+      }
+    },
+    "band": {
+      "article": "Ein Artikel.",
+      "recipe": "Ein Rezept.",
+      "thread": "Ein Thread.",
+      "idea": "Eine halbe Idee.",
+      "hob": "Ein Kochfeld für die Küche.",
+      "talk": "Ein Vortrag, den du im November hältst.",
+      "pdf": "Ein PDF, das du nie lesen wirst.",
+      "small": "Ein Eingang für alles. Pluck behält die Seite, nicht nur den Link, also ist sie noch da, wenn die Website es nicht mehr ist."
+    },
+    "stats": {
+      "tapNumber": "1 Tipp",
+      "tap": "Aus dem Teilen-Menü des iPhones, ohne eine App zu öffnen. Aus Chrome, per E-Mail oder im Chat mit deiner KI. „Gepflückt“ in unter 300 ms. Jedes Mal.",
+      "nagsNumber": "0 Druck",
+      "nags": "Keine Streaks, keine Abzeichen, kein schlechtes Gewissen. Nichts wird hinter deinem Rücken getaggt. Was du nie anfasst, wandert nach 30 Tagen ins Archiv (die Zahl bestimmst du), außer es steht auf einer Liste. Nichts wird gelöscht.",
+      "secondsNumber": "30 s",
+      "seconds": "Um die KI anzuschließen, die du schon nutzt. Claude, ChatGPT, Cursor, alles, was MCP spricht. Lass sie aufräumen, gruppieren oder aus deinem Gepflückten Ideen machen. Sie arbeitet, während du zusiehst, und löscht nie."
+    },
+    "lists": {
+      "title": "Listen sind, was du vorhast.",
+      "para1": "Ein Buch. Eine Newsletter-Ausgabe. Ein Vortrag. Eine Reise. <phrase>Dinge zum Kaufen.</phrase> Setz alles, was du gepflückt hast, auf so viele Listen, wie du willst, jeweils mit eigener Notiz und eigenem Häkchen.",
+      "para2": "Standardmäßig privat. Mit einem Schalter öffentlich. Mit demselben Schalter wieder zurück.",
+      "cardTitle": "Küchenumbau, zu kaufen",
+      "progress": "{done, number} von {total, number}",
+      "kitchen": {
+        "hob": {
+          "title": "Induktionskochfeld, 60 cm",
+          "note": "Breite mit dem Ausschnitt abgleichen."
+        },
+        "tap": {
+          "title": "Armatur mit ausziehbarer Brause",
+          "note": "Gebürsteter Stahl, kein Chrom."
+        },
+        "led": {
+          "title": "LED-Leiste unter den Hängeschränken",
+          "note": "Zum Einstecken, kein Elektriker nötig."
+        },
+        "extractor": {
+          "title": "Dunstabzug, mit Abluft",
+          "note": "Erst die Monteure wegen der Wand fragen."
+        }
+      },
+      "public": "Öffentlich. Jeder kann sie in die eigene Bibliothek pflücken."
+    },
+    "ai": {
+      "eyebrow": "BEREIT FÜR DEINE KI",
+      "title": "Schließ die KI an, die du schon nutzt.",
+      "ask1": "„Was habe ich zu MCP auth gepflückt?“",
+      "ask2": "„Räum meinen Eingang auf.“",
+      "ask3": "„Mach eine Leseliste aus diesem Monat, das Beste zuerst.“",
+      "body": "Ein Link, und deine ganze Bibliothek ist da. Sie ändert nur etwas, wenn du es sagst, und markiert alles, was sie angefasst hat.",
+      "button": "So funktioniert es mit KI",
+      "chatMe1": "Pflück das als Idee: ein MCP-Server für die Angebote von Assemble",
+      "chatAi1": "Gepflückt. Es liegt als Notiz in deinem Eingang, markiert als von mir gepflückt.",
+      "chatMe2": "Was verstaubt in meiner Bibliothek?",
+      "chatAi2": "Fünf Sachen, seit einem Monat unberührt. Wollen wir sie eine nach der anderen durchgehen?"
+    },
+    "imports": {
+      "title": "Pocket ist eingestellt. Omnivore auch.",
+      "body": "Pluck ist Open Source und läuft auf einer Datenbank, die dir gehören kann. Es kann nicht mit zwei Wochen Vorlauf zumachen. Bring deine alte Bibliothek in einem Rutsch mit.",
+      "anyBrowser": "Jeder Browser",
+      "pocket": "CSV-Export",
+      "omnivore": "Export-ZIP",
+      "raindrop": "CSV",
+      "browser": "Lesezeichen-HTML",
+      "selfHost": "Selbst hosten, mit einem Befehl"
+    },
+    "closing": {
+      "title": "Sortier es<br></br>später<dot>.</dot>",
+      "chrome": "Zu Chrome hinzufügen",
+      "iphone": "iPhone",
+      "web": "Im Web nutzen"
+    }
+  },
+  "soon": {
+    "title": "Bald<dot>.</dot>",
+    "web": "Im Web nutzen",
+    "connect": "Deine KI verbinden",
+    "chrome": {
+      "meta": {
+        "title": "Pluck für Chrome · Pluck",
+        "description": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store. Es kann jeden Tag so weit sein."
+      },
+      "para1": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store, irgendwo hinter ein paar Tausend Gutschein-Findern. Es kann jeden Tag so weit sein.",
+      "para2": "Bis dahin funktioniert Pluck im Web: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
+    },
+    "iphone": {
+      "meta": {
+        "title": "Pluck für iPhone · Pluck",
+        "description": "Pluck für iPhone kommt zuerst auf TestFlight, dann in den App Store."
+      },
+      "para1": "Pluck für iPhone kommt zuerst auf TestFlight, dann in den App Store. Pflück aus dem Teilen-Menü, lies überall, wisch nach Später.",
+      "para2": "Bis dahin funktioniert Pluck in Safari auf deinem iPhone: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
+    }
+  },
+  "openSource": {
+    "meta": {
+      "title": "Open Source · Pluck",
+      "description": "Pluck ist kostenlos und Open Source. Nutze getpluck.io, oder betreib deine eigene Instanz mit einem Befehl."
+    },
+    "licence": "Lizenz: AGPL-3.0 (Server) und MIT (Apps).",
+    "title": "Kostenlos.<br></br>Offen.<br></br><marker>Deins.</marker>",
+    "lede": "Später-lesen-Apps machen eine nach der anderen zu. Pluck kann das nicht, denn der Code ist öffentlich und die Daten gehören dir. Nutze unsere Instanz, oder betreib deine eigene mit einem Befehl.",
+    "selfHostTitle": "Selbst hosten, mit einem Befehl.",
+    "selfHostBody": "Dieselbe App, Erweiterung, iPhone-App und derselbe KI-Konnektor. Richte sie in den Einstellungen auf deinen Server aus.",
+    "terminalComment": "# danach, für KI-Tools ohne öffentliche URL",
+    "reasons": {
+      "export": {
+        "title": "Export mit einem Klick.",
+        "body": "Jeder Eintrag als JSON, dazu eine Markdown-Datei pro Eintrag und pro Liste, mit deinen Markierungen und Notizen. Das funktioniert ab dem ersten Tag, nicht erst, wenn wir irgendwann dazu kommen."
+      },
+      "page": {
+        "title": "Die Seite, nicht nur der Link.",
+        "body": "Pluck behält, was du gepflückt hast. Wenn die Website ausfällt oder sich ändert, ist deine Kopie noch da, lesbar."
+      },
+      "public": {
+        "title": "Öffentlich heißt öffentlich. Privat heißt privat.",
+        "body": "Eine öffentliche Liste zeigt Titel, Cover, deine Notizen und Links zu den Originalen. Den gespeicherten Seitentext liefert sie nie aus. Stell sie wieder auf privat, und die Seite ist innerhalb einer Minute weg."
+      },
+      "ai": {
+        "title": "Deine KI, deine Entscheidung.",
+        "body": "Pluck schickt nie von sich aus etwas, das du gepflückt hast, an ein Modell. Dein KI-Tool liest deine Bibliothek nur, wenn du es verbindest, und tut nur, worum du bittest."
+      }
+    },
+    "closing": "Pflück es<dot>.</dot>",
+    "use": "getpluck.io nutzen",
+    "code": "Code lesen"
+  },
+  "support": {
+    "meta": {
+      "title": "Hilfe · Pluck",
+      "description": "Antworten zur Pluck-Erweiterung, zur iPhone-App, zu deiner KI und deinem Konto, und wo du einen Fehler meldest."
+    },
+    "title": "Hilfe<dot>.</dot>",
+    "lede": "Kurze Antworten zur Erweiterung, zur iPhone-App, zu deiner KI und deinem Konto. Etwas kaputt? <bugs>Sag es uns auf GitHub</bugs>.",
+    "topicsLabel": "Themen",
+    "extension": {
+      "title": "Die Erweiterung",
+      "pluckPage": {
+        "q": "Wie pflücke ich die Seite, auf der ich gerade bin?",
+        "a": "Klick in der Symbolleiste auf den Pluck-Button, oder drück <pluckKeys></pluckKeys>. Mit einem Rechtsklick auf einen Link oder ein Bild pflückst du stattdessen das."
+      },
+      "quote": {
+        "q": "Kann ich ein Zitat behalten statt der ganzen Seite?",
+        "a": "Wähl die Wörter aus und drück <highlightKeys></highlightKeys>. Pluck behält die Seite, mit deiner Auswahl als Markierung darauf."
+      },
+      "dot": {
+        "q": "Warum ist ein Punkt auf dem Pluck-Button?",
+        "a": "Du hast etwas ohne Verbindung gepflückt. Es wartet auf deinem Computer und wird von selbst hochgeladen, sobald du wieder online bist. Dann verschwindet auch der Punkt."
+      },
+      "login": {
+        "q": "Eine Seite hinter meinem Login kam leer an.",
+        "a": "Schalte in den Optionen der Erweiterung „Seiteninhalt beim Pflücken mitsenden“ ein. Dann behält Pluck die Seite so, wie dein Browser sie zeigt, nicht so, wie sie für Fremde aussieht."
+      },
+      "server": {
+        "q": "Wie nutze ich sie mit meinem eigenen Server?",
+        "a": "Bau die Erweiterung mit der Anleitung zum Selbsthosten im Repository für deinen Server und lade sie dann in deinen Browser. Melde dich an, oder füg einen API-Schlüssel aus den Einstellungen ein."
+      }
+    },
+    "iphone": {
+      "title": "iPhone",
+      "share": {
+        "q": "Wie pflücke ich aus Safari oder einer anderen App?",
+        "a": "Tippe auf Teilen, dann auf Pluck. Wenn du es nicht siehst, wisch die App-Reihe bis zum Ende, tippe auf Mehr und füg Pluck zu deinen Favoriten hinzu."
+      },
+      "offline": {
+        "q": "Ich habe offline etwas gepflückt. Wo ist es hin?",
+        "a": "Es wartet auf deinem iPhone und wird hochgeladen, wenn du Pluck das nächste Mal mit Verbindung öffnest."
+      },
+      "server": {
+        "q": "Kann die App meinen eigenen Server nutzen?",
+        "a": "Ja. Wähl auf dem Anmeldebildschirm „Eigenen Server nutzen“ und gib seine Adresse ein."
+      }
+    },
+    "ai": {
+      "title": "Deine KI",
+      "connect": {
+        "q": "Wie verbinde ich mein KI-Tool?",
+        "a": "Jedes Tool nimmt denselben Link. Unter <connect>Deine KI verbinden</connect> stehen die Schritte für Claude, ChatGPT, Cursor und die anderen."
+      },
+      "change": {
+        "q": "Was darf meine KI ändern?",
+        "a": "Sie kann pflücken, taggen, sortieren und private Listen anlegen, wenn du darum bittest. Löschen kann sie nur, wenn du das beim Verbinden erlaubt hast, und eine Liste öffentlich machen kann sie nie: Das kannst nur du, in der Liste in Pluck. Alles, was sie hinzufügt, ist als „von KI“ markiert."
+      },
+      "disconnect": {
+        "q": "Wie trenne ich sie?",
+        "a": "Einstellungen, KI-Tools, Trennen. Sie hört sofort auf zu funktionieren, nicht erst am Ende ihrer Sitzung."
+      }
+    },
+    "account": {
+      "title": "Deine Bibliothek und dein Konto",
+      "signIn": {
+        "q": "Der Anmeldelink hat nicht funktioniert.",
+        "a": "Ein Link funktioniert einmal, 10 Minuten lang. Fordere im selben Browser einen neuen an. Wenn Pluck sagt, dass du zu viele angefordert hast, nimm den neuesten oder warte eine Stunde."
+      },
+      "oldItems": {
+        "q": "Wo sind meine alten Einträge hin?",
+        "a": "Einträge, die du eine Weile nicht angefasst hast, wandern ins Archiv, nichts wird gelöscht. Wie lange das dauert, oder ob es ganz aus ist, legst du in den Einstellungen unter Ablauf und Archiv fest."
+      },
+      "deleted": {
+        "q": "Ich habe aus Versehen etwas gelöscht.",
+        "a": "Gelöschte Einträge warten 30 Tage im Papierkorb. Der Link dorthin steht unten im Archiv. Öffne den Eintrag und stell ihn wieder her."
+      },
+      "monday": {
+        "q": "Wie bestelle ich die Montagsmail ab?",
+        "a": "Nimm den Abmeldelink unten in jeder dieser E-Mails, oder wähl in den Einstellungen unter Ablauf und Archiv einen anderen Tag oder keinen."
+      },
+      "export": {
+        "q": "Kann ich alles mitnehmen?",
+        "a": "Einstellungen, Alles exportieren. Du bekommst eine E-Mail mit einer ZIP-Datei: jeder Eintrag als JSON, dazu eine Markdown-Datei pro Eintrag und pro Liste, mit deinen Notizen und Markierungen."
+      },
+      "delete": {
+        "q": "Wie lösche ich mein Konto?",
+        "a": "Einstellungen, Konto löschen. Gib zur Bestätigung deine E-Mail ein. Deine Einträge, Listen, Dateien und Schlüssel sind sofort weg."
+      }
+    },
+    "selfHost": {
+      "title": "Selbst betreiben",
+      "run": {
+        "q": "Wie betreibe ich Pluck selbst?",
+        "a": "Mit einem Befehl über Docker. Unter <openSource>Open Source</openSource> steht er, und die Anleitung zum Selbsthosten im Repository erklärt E-Mail, Speicher und den Weg auf einen Server."
+      }
+    },
+    "bugs": {
+      "title": "Einen Fehler gefunden<mark>?</mark>",
+      "body": "Eröffne ein Issue auf GitHub. Schreib, was du getan hast, was du erwartet hast und was stattdessen passiert ist. Ideen sind dort auch willkommen.",
+      "note": "Issues sind öffentlich. Lass Links, Notizen und alles andere weg, was du lieber für dich behältst.",
+      "button": "Issue eröffnen"
+    }
+  },
+  "connect": {
+    "meta": {
+      "title": "Deine KI verbinden · Pluck",
+      "description": "Pluck spricht MCP. Ein Link, und das KI-Tool, das du schon nutzt, kann deine Bibliothek lesen, durchsuchen und sortieren."
+    },
+    "eyebrow": "PLUCK + DEINE KI · MCP",
+    "title": "Bereit für deine KI. Egal, welche du nutzt.",
+    "lede": "Pluck spricht MCP, den offenen Standard, über den sich KI-Tools mit Apps verbinden. Ein Link, und deine KI kann deine ganze Bibliothek lesen, durchsuchen und sortieren. Sie ändert nur etwas, wenn du es sagst, und löscht nie.",
+    "loopLabel": "So funktioniert das Verbinden",
+    "installTitle": "Einrichten. Dreißig Sekunden, ehrlich.",
+    "installSub": "Melde dich bei Pluck an, dann wähl dein Tool. Der Link ist für alle derselbe.",
+    "tabsLabel": "Dein KI-Tool",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
+    "tools": {
+      "claude": {
+        "step1": "Öffne Claude, dann Einstellungen, dann Konnektoren.",
+        "step2": "Wähl „Benutzerdefinierten Konnektor hinzufügen“ und füg den Link ein.",
+        "step3": "Melde dich bei Pluck an, wenn es fragt. Fertig.",
+        "codeLabel": "Konnektor-URL",
+        "note": "Einmal hinzugefügt, funktioniert es im Web, auf dem Desktop und auf dem Handy."
+      },
+      "code": {
+        "step1": "Öffne ein Terminal.",
+        "step2": "Führ die eine Zeile rechts aus.",
+        "step3": "Sag zum Testen „Was habe ich diese Woche gepflückt?“.",
+        "codeLabel": "Eine Zeile",
+        "note": "Beim ersten Mal meldest du dich über deinen Browser an."
+      },
+      "chatgpt": {
+        "step1": "Öffne ChatGPT, dann Einstellungen, dann Konnektoren.",
+        "step2": "Wähl „Erstellen“ und füg den Link als URL des MCP-Servers ein.",
+        "step3": "Melde dich bei Pluck an, wenn es fragt.",
+        "codeLabel": "URL des MCP-Servers",
+        "note": "Braucht einen Tarif, der eigene Konnektoren erlaubt."
+      },
+      "cursor": {
+        "step1": "Öffne die Cursor-Einstellungen, dann MCP.",
+        "step2": "Füg einen Server mit dem JSON rechts hinzu.",
+        "step3": "Melde dich bei Pluck an, wenn es fragt.",
+        "note": "Jeder Editor oder Client, der Remote-MCP unterstützt, funktioniert genauso."
+      },
+      "self": {
+        "label": "Selbst gehostet",
+        "step1": "Leg in den Einstellungen einen API-Schlüssel an.",
+        "step2": "Füg die Zeile rechts als lokalen Server (stdio) zu deinem KI-Tool hinzu.",
+        "step3": "Frag es, was du diese Woche gepflückt hast.",
+        "codeLabel": "Ohne öffentliche URL",
+        "note": "Dieselben Tools und Prompts, verbunden mit deinem eigenen Server."
+      }
+    },
+    "toolsTitle": "Zwölf Tools. Klare Namen.",
+    "toolsBody": "Ergebnisse kommen als Karten zurück, Titel zuerst, also ist eine Frage wie „Was habe ich diese Woche gepflückt?“ ein Aufruf und ein Bildschirm.",
+    "toolList": {
+      "search_items": "Textsuche über Titel, Notiz, Tags, Listennamen und Text.",
+      "list_items": "Eingang, Später, Archiv oder Erledigt durchsehen, neueste oder unberührte zuerst.",
+      "get_item": "Ein Eintrag vollständig, samt gespeichertem Seitentext.",
+      "save_item": "Einen Link, viele Links, eine Notiz, eine Aufgabe oder ein Ding pflücken. Markiert als von KI gepflückt.",
+      "batch_update": "Status, Art, Tags und Fälligkeitsdaten für einen oder viele Einträge.",
+      "list_tags": "Deine Tags, mit Anzahl.",
+      "create_tag": "Ein neuer Tag, erst nachdem du Ja gesagt hast.",
+      "list_lists": "Deine Listen, mit Zweck, Anzahl und Sichtbarkeit.",
+      "get_list": "Eine Liste in Reihenfolge, mit Notizen und Häkchen.",
+      "create_list": "Eine neue Liste mit Einträgen in Reihenfolge und einer Notiz pro Eintrag. Privat.",
+      "update_list": "Umbenennen, umsortieren, hinzufügen, abhaken oder privat machen. Öffentlich macht eine Liste nur du.",
+      "get_digest": "Was abläuft, was fällig ist, das Älteste und eingeschlafene Listen. Die Montagsmail, als Daten."
+    },
+    "asksTitle": "Vier Fragen zum Ausprobieren.",
+    "asks": {
+      "tidy": {
+        "say": "„Räum meinen Pluck-Eingang auf.“",
+        "does": "Schlägt Tags aus denen vor, die du schon hast, dazu pro Eintrag Behalten, Später oder Archiv. Du sagst Ja oder änderst. Ein Durchgang."
+      },
+      "reading": {
+        "say": "„Mach eine Leseliste zu MCP auth, das Beste zuerst.“",
+        "does": "Sucht, liest und baut die Liste in Reihenfolge, mit einer Zeile, warum jeder Eintrag zählt. Privat, bis du etwas anderes sagst."
+      },
+      "ideas": {
+        "say": "„Drei Blog-Ideen aus dem, was ich diese Woche gepflückt habe.“",
+        "does": "Liest die besten fünf vollständig und entwirft drei Ansätze mit Quellen. Wähl einen, und sie pflückt den Entwurf als Notiz zurück."
+      },
+      "review": {
+        "say": "„Mach meinen Wochenrückblick.“",
+        "does": "Die Montagsmail, als Gespräch. Eine Entscheidung nach der anderen."
+      }
+    },
+    "neverTitle": "Was deine KI nie kann",
+    "never": {
+      "delete": "Irgendetwas löschen. Die Berechtigung wird nicht erteilt.",
+      "makeTag": "Einen Tag anlegen, um den du nicht gebeten hast.",
+      "renameTag": "Einen Tag umbenennen oder entfernen, den du angelegt hast.",
+      "purpose": "Den Zweck einer Liste umschreiben.",
+      "public": "Eine Liste öffentlich machen. Das kannst nur du, in der Liste in Pluck."
+    },
+    "neverNote": "Alles, was sie hinzufügt, trägt die Markierung „von KI“. In den Einstellungen entfernst du eine Woche davon mit einem Fingertipp.",
+    "closing": "Frag deine KI<mark>.</mark>",
+    "button": "Pluck holen, dann verbinden"
+  },
+  "legal": {
+    "translationNotice": "Dies ist eine Übersetzung. Weicht sie von der englischen Fassung ab, gilt die englische Fassung."
+  },
+  "privacy": {
+    "meta": {
+      "title": "Datenschutz · Pluck",
+      "description": "Was Pluck speichert, was es nie tut und wie du alles mitnimmst."
+    },
+    "title": "Datenschutz",
+    "lede": "Kurz gesagt: Wir speichern, was du pflückst, damit du es später lesen kannst. Wir lesen es nicht, verkaufen es nicht und füttern kein Modell damit. Stand: 24. Oktober 2026.",
+    "sections": {
+      "store": {
+        "title": "Was wir speichern",
+        "body": "Deine E-Mail-Adresse und deinen Namen. Jeden Eintrag, den du pflückst: den Link, den Seitentext und die Bilder, die wir abgerufen haben, deinen Titel, deine Notiz, Tags, Art, Status, Listen, Markierungen und deine Leseposition. Den Zeitpunkt, zu dem du ihn gepflückt hast, und den Zeitpunkt, zu dem du ihn zuletzt geöffnet hast; beides nutzen die Ablaufregel und die Montagsmail. Einträge, die du aus Pocket, Omnivore, Raindrop oder einer Lesezeichendatei importierst."
+      },
+      "dont": {
+        "title": "Was wir nicht tun",
+        "body": "Wir lesen deine Bibliothek nicht. Kein Mensch sieht sie sich an, außer du bittest uns im Rahmen des Supports darum. Wir verkaufen sie nicht und geben sie nicht an Werbetreibende weiter. Es gibt keine Werbung. Die App enthält kein KI-Modell, also schicken wir nichts, was du pflückst, an ein Modell."
+      },
+      "extension": {
+        "title": "Die Browser-Erweiterung",
+        "body": "Solange du angemeldet bist, fragt die Erweiterung deinen Pluck-Server, ob die Seite, auf der du bist, schon in deiner Bibliothek ist, damit sich ihr Symbol füllen kann. Diese Adresse wird nur zur Beantwortung dieser Frage verwendet: Sie wird weder deiner Bibliothek hinzugefügt noch mit deinem Konto gespeichert. Du schaltest das ab, indem du dich in der Erweiterung abmeldest oder sie entfernst."
+      },
+      "ai": {
+        "title": "Dein KI-Tool",
+        "body": "Wenn du ein KI-Tool über MCP verbindest, liest dieses Tool deine Bibliothek in deinem Auftrag und schickt, was es liest, an seinen eigenen Anbieter. Das ist eine Sache zwischen dir und diesem Anbieter. Du kannst das Tool jederzeit in den Einstellungen trennen. Alles, was das Tool ändert, ist als von KI geändert markiert und lässt sich gesammelt rückgängig machen."
+      },
+      "publicLists": {
+        "title": "Öffentliche Listen",
+        "body": "Eine Liste ist privat, bis du sie öffentlich machst. Eine öffentliche Liste zeigt ihren Namen, ihren Zweck, deinen Namen und dein Handle, zu jedem Eintrag Titel, Cover, Website und deine Notiz, mit Links zu den Originalen. Sie zeigt nie den gespeicherten Seitentext, deine Tags, Häkchen oder sonst etwas aus deiner Bibliothek. Stell sie wieder auf privat, und die Seite liefert innerhalb einer Minute einen 404-Fehler."
+      },
+      "sharing": {
+        "title": "Eine Liste teilen",
+        "body": "Wenn du eine Liste mit jemandem teilst, speichern wir die E-Mail-Adresse, die du eingegeben hast, damit sich diese Person anmelden und die Liste sehen kann, und wir schicken ihr eine E-Mail, um ihr das mitzuteilen. Sie sieht die Liste so, wie eine öffentliche Seite sie zeigt: Titel, Websites, Cover und deine Notizen auf der Liste, nie deine Tags, Häkchen oder die Seiten, die wir behalten haben. Entfernst du die Person, löschst du die Liste oder löschst du dein Konto, wird auch die Adresse gelöscht."
+      },
+      "emailIn": {
+        "title": "Per E-Mail pflücken",
+        "body": "E-Mails an deine pluck+-Adresse werden zu einem Eintrag. Wir speichern den Text der Nachricht als Seitentext des Eintrags und den Absender als seine Website. Wir verwenden diese Adresse für nichts anderes."
+      },
+      "cookies": {
+        "title": "Cookies und Analyse",
+        "body": "Zwei Cookies sind immer aktiv, weil Pluck sie braucht: Eines hält dich angemeldet, und eines bewahrt einen Tag lang auf, was du auf der Startseite einfügst, bis du dich registrierst. Ein drittes ist deine Entscheidung, und wir fragen, bevor es gesetzt wird. Sagst du „Klar, ich bin dabei“, nutzen wir PostHog in der EU, um zu sehen, wie Pluck genutzt wird: welche Seiten du öffnest, was du anklickst und, sobald du angemeldet bist, welches Konto es war. PostHog sieht nie, was du pflückst: Button- und Linktexte, Seitentitel und Suchbegriffe werden entfernt, bevor irgendetwas deinen Browser verlässt. Sagst du „Finger weg“, passiert nichts davon. So oder so senden wir, wenn etwas kaputtgeht, den Fehler und wo er aufgetreten ist, ohne etwas, das verrät, wer du bist, damit wir ihn beheben können. Du kannst deine Meinung jederzeit ändern, über Cookies unten auf der Website oder in den Einstellungen. Die iPhone-App stellt dieselbe Frage einmal und hat denselben Schalter in ihren Einstellungen."
+      },
+      "where": {
+        "title": "Wo die Daten liegen",
+        "body": "Unser gehosteter Dienst läuft auf Vercel, MongoDB Atlas und AWS, alles in Irland, und für die oben genannte Analyse und die Fehlerberichte auf PostHog in der EU. Wenn du selbst hostest, berührt überhaupt nichts unsere Server."
+      },
+      "export": {
+        "title": "Export und Löschen",
+        "body": "Exportiere jederzeit alles als JSON und Markdown aus den Einstellungen. Lösch dein Konto in den Einstellungen, und jeder Eintrag, jeder Tag, jede Liste, jede Notiz und jeder Schlüssel ist sofort weg. Backups werden innerhalb von 30 Tagen bereinigt."
+      },
+      "rights": {
+        "title": "Deine Rechte",
+        "body": "Du kannst eine Kopie deiner Daten verlangen, sie berichtigen oder löschen lassen. Export und Löschen in den Einstellungen erledigen das, ohne dass du uns fragen musst. Wenn du etwas anderes brauchst, schreib uns eine E-Mail. Du kannst dich auch bei der irischen Datenschutzbehörde, der Data Protection Commission, beschweren."
+      }
+    },
+    "box": {
+      "title": "Fragen",
+      "body": "Schreib an <mail>{email}</mail>, und wir antworten innerhalb von 30 Tagen. Das Unternehmen hinter Pluck ist Codú Limited, Irland."
+    }
+  },
+  "terms": {
+    "meta": {
+      "title": "Nutzungsbedingungen · Pluck",
+      "description": "Es ist deine Bibliothek, geh anständig mit öffentlichen Listen um, und du kannst immer exportieren und selbst hosten."
+    },
+    "title": "Nutzungsbedingungen",
+    "lede": "Kurz gesagt: Es ist deine Bibliothek, geh anständig mit öffentlichen Listen um, und wir können nicht versprechen, dass es den kostenlosen Dienst für immer gibt; deshalb kannst du exportieren und selbst hosten. Stand: 24. Oktober 2026.",
+    "sections": {
+      "service": {
+        "title": "Der Dienst",
+        "body": "Mit Pluck kannst du Links, Notizen, Aufgaben und Dinge pflücken, sie später lesen, in Listen ordnen und ein KI-Tool über MCP mit deiner Bibliothek verbinden. Der gehostete Dienst unter {host} ist kostenlos. Der Code ist Open Source unter {licence}, und du darfst deine eigene Kopie betreiben."
+      },
+      "account": {
+        "title": "Dein Konto",
+        "body": "Du musst mindestens 16 Jahre alt sein. Behalte deine Anmeldung und deine API-Schlüssel für dich. Du bist verantwortlich für das, was damit geschieht. Eine Person, ein Konto."
+      },
+      "library": {
+        "title": "Deine Bibliothek gehört dir",
+        "body": "Dir gehört, was du pflückst und was du schreibst. Wir beanspruchen keine Rechte daran. Wir speichern es und zeigen es dir, und anderen nur dort, wo du eine Liste öffentlich machst. Du kannst jederzeit alles exportieren."
+      },
+      "publicLists": {
+        "title": "Öffentliche Listen",
+        "body": "Wenn du eine Liste öffentlich machst, veröffentlichst du sie. Du bestätigst, dass du das Recht hast, Titel, Cover und Website jedes Eintrags sowie deine eigene Notiz zu teilen. Veröffentliche keine Listen, die Folgendes enthalten oder darauf verweisen: illegale Inhalte, Material, das Minderjährige sexualisiert, Drohungen, Belästigung, Doxing, Spam, Schadsoftware oder Inhalte, die Urheber- oder Markenrechte anderer verletzen. Wir können eine öffentliche Liste, die gegen diese Regeln verstößt, entfernen und Konten schließen, die das wiederholt tun. Das Entfernen einer Liste löscht sie nicht aus deiner Bibliothek."
+      },
+      "stored": {
+        "title": "Gespeicherte Seiten",
+        "body": "Pluck bewahrt eine private Kopie der Seiten auf, die du pflückst, damit du sie später lesen kannst, so wie es ein Browser-Cache tut. Diese Kopie ist allein für dich und wird nie öffentlich ausgeliefert. Wenn uns ein Rechteinhaber bittet, eine gespeicherte Kopie seiner Seite zu entfernen, tun wir das."
+      },
+      "fairUse": {
+        "title": "Faire Nutzung des Dienstes",
+        "body": "Nutze Pluck nicht, um Websites massenhaft auszulesen, eine Bot-Farm zu betreiben oder Dinge zu speichern, die zu speichern dir nicht zusteht. Wir begrenzen die Zahl der Erfassungen sowie der API- und MCP-Aufrufe, damit der Dienst für alle schnell bleibt. Die Limits sind in der Dokumentation veröffentlicht, und wir sagen dir Bescheid, wenn du sie erreichst."
+      },
+      "ai": {
+        "title": "KI-Tools",
+        "body": "Ob du ein KI-Tool verbindest, entscheidest du. Was dieses Tool mit deiner Bibliothek tut, richtet sich nach dessen eigenen Bedingungen. Wir stellen Lese- und Schreibwerkzeuge bereit, die ihre Änderungen markieren. Ein Löschwerkzeug gibt es nur, wenn du es gesondert erlaubst, und wir fragen nie standardmäßig danach. Wir sind nicht verantwortlich für das, was ein Tool eines Drittanbieters tut."
+      },
+      "wayOut": {
+        "title": "Keine Versprechen, aber ein Ausweg",
+        "body": "Der gehostete Dienst ist kostenlos und wird so bereitgestellt, wie er ist. Wir geben unser Bestes, ihn schnell und erreichbar zu halten, können das aber nicht garantieren, und wir können nicht garantieren, dass er für immer läuft. Sollten wir ihn je einstellen müssen, kündigen wir das mindestens 90 Tage vorher an, halten den Export bis zum letzten Tag funktionsfähig, und die Möglichkeit zum Selbsthosten wird es immer geben. Unsere Haftung dir gegenüber ist auf den Betrag begrenzt, den du uns gezahlt hast, und das ist nichts."
+      },
+      "law": {
+        "title": "Änderungen und anwendbares Recht",
+        "body": "Wir können diese Bedingungen aktualisieren. Wir schreiben das Datum oben hin und schicken dir bei allem, was wichtig ist, eine E-Mail. Für diese Bedingungen gilt irisches Recht."
+      }
+    },
+    "box": {
+      "title": "Eine öffentliche Liste melden",
+      "body": "Jede öffentliche Seite hat unten einen Link zum Melden. Oder schreib an <mail>{email}</mail>, mit dem Link. Wir reagieren innerhalb von 3 Werktagen."
+    }
+  },
+  "publicList": {
+    "meta": {
+      "notFound": "Nicht gefunden · Pluck",
+      "title": "{name} · eine Liste von {by} · Pluck",
+      "description": "{count, plural, one {# Sache} other {# Sachen}}, gepflückt von {by}."
+    },
+    "what": "Was ist Pluck?",
+    "byline": "Eine Liste von {by} · {count, plural, one {# Eintrag} other {# Einträge}} · aktualisiert {when}",
+    "ago": {
+      "now": "gerade eben",
+      "minutes": "vor {count, number} Min.",
+      "hours": "vor {count, number} Std.",
+      "yesterday": "gestern",
+      "on": "am {date}"
+    },
+    "pluck": "Diese Liste pflücken",
+    "copies": "Kopiert sie in dein eigenes Pluck. Kostenlos.",
+    "note": "Notiz",
+    "footTitle": "Mach solche Listen aus dem, was du pflückst.",
+    "footBody": "Pflück es. Sortier es später. Teil es, wenn es gut ist.",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "og": "Eine Liste von {by} · {count, plural, one {# Eintrag} other {# Einträge}}",
+    "notFound": {
+      "title": "<line>Diese Liste</line><line>ist nicht öffentlich<dot>.</dot></line>",
+      "lede": "Entweder gibt es sie nicht mehr, oder ihr Inhaber hat sie privat gemacht. Wenn dir jemand den Link geschickt hat, bitte die Person, sie mit dir zu teilen oder wieder öffentlich zu machen.",
+      "what": "Was ist Pluck?",
+      "lists": "Deine Listen"
+    },
+    "report": {
+      "open": "Diese Liste melden",
+      "sent": "Danke. Ein Mensch liest jede Meldung.",
+      "reason": "Was stimmt nicht?",
+      "details": "Was wir wissen sollten (optional)",
+      "send": "Meldung senden",
+      "cancel": "Abbrechen",
+      "failed": "Das hat nicht geklappt. Versuch es in einer Minute noch mal.",
+      "reasons": {
+        "illegal": "Illegale Inhalte",
+        "minors": "Sexualisiert Minderjährige",
+        "harassment": "Belästigung",
+        "doxxing": "Veröffentlicht private Daten anderer",
+        "spam": "Spam oder eine Linkfarm",
+        "malware": "Schadsoftware oder Phishing",
+        "infringement": "Urheber- oder Markenrecht",
+        "other": "Etwas anderes"
+      }
+    }
+  }
+}

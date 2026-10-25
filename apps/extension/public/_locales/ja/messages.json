@@ -1,0 +1,11 @@
+{
+  "description": {
+    "message": "開いているページを、ワンクリックでPluckのライブラリに。"
+  },
+  "pluckPage": {
+    "message": "このページをPluck"
+  },
+  "pluckSelection": {
+    "message": "選択した部分をハイライトとしてPluck"
+  }
+}

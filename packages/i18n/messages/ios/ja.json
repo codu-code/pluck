@@ -1,1 +1,429 @@
-{}
+{
+  "language": {
+    "label": "言語",
+    "hint": "PluckはiPhoneの言語を使います。iOSの設定の「Pluck」→「言語」で変更できます。"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "done": "完了",
+    "save": "保存",
+    "copy": "コピー",
+    "add": "追加",
+    "tryAgain": "もう一度試す",
+    "loading": "読み込み中",
+    "backTo": "{label}に戻る",
+    "backToLists": "リストに戻る",
+    "items": "{count, plural, other {#件}}",
+    "failed": {
+      "title": "うまくいきませんでした",
+      "body": "接続を確認して、もう一度お試しください。"
+    }
+  },
+  "kinds": {
+    "link": "記事",
+    "video": "動画",
+    "pdf": "PDF",
+    "image": "画像",
+    "note": "メモ",
+    "todo": "ToDo",
+    "thing": "モノ"
+  },
+  "status": {
+    "inbox": "インボックス",
+    "later": "あとで",
+    "archived": "アーカイブ済み",
+    "done": "完了"
+  },
+  "tabs": {
+    "inbox": "インボックス",
+    "later": "あとで",
+    "search": "検索",
+    "lists": "リスト"
+  },
+  "actions": {
+    "inbox": "インボックス",
+    "later": "あとで",
+    "archive": "アーカイブ",
+    "backToInbox": "インボックスに戻す",
+    "tags": "タグ",
+    "list": "リスト",
+    "addToList": "リストに追加",
+    "note": "メモ",
+    "share": "共有",
+    "more": "その他",
+    "select": "選択",
+    "deselect": "選択を解除"
+  },
+  "moved": {
+    "archived": "片付けました。アーカイブにあります。",
+    "later": "「あとで」に移しました。",
+    "done": "完了しました。",
+    "inbox": "インボックスに戻しました。"
+  },
+  "movedMany": {
+    "archived": "{count, plural, other {#件を片付けました。アーカイブにあります。}}",
+    "later": "{count, plural, other {#件を「あとで」に移しました。}}",
+    "done": "{count, plural, other {#件を完了にしました。}}",
+    "inbox": "{count, plural, other {#件をインボックスに戻しました。}}"
+  },
+  "row": {
+    "siteMeta": "{site} · {meta}",
+    "a11y": "{title}、{kind}、{site}、{when}",
+    "a11yWithNote": "{title}、{kind}、{site}、{when}、メモ：{note}",
+    "when": {
+      "now": "今",
+      "minutes": "{count}分前",
+      "hours": "{count}時間前",
+      "yesterday": "昨日"
+    },
+    "due": {
+      "overdue": "期限切れ",
+      "today": "今日まで",
+      "tomorrow": "明日まで",
+      "on": "{date}まで"
+    },
+    "meta": {
+      "byAi": "AIによる",
+      "byYou": "自分で追加",
+      "failed": "読み込めませんでした",
+      "pending": "Pluck中",
+      "photo": "写真",
+      "video": "動画",
+      "minutes": "{count}分",
+      "pdf": "PDF",
+      "link": "リンク"
+    },
+    "site": {
+      "email": "メール経由",
+      "file": "アップロードしたファイル"
+    }
+  },
+  "art": {
+    "plucked": "Pluckしました。",
+    "later": "あとで"
+  },
+  "toast": {
+    "undo": "元に戻す"
+  },
+  "usage": {
+    "title": "Pluckの改善に協力していただけますか<accent>？</accent>",
+    "body": "どの画面を使っているかを、アカウントと結びつけて共有していただくと、使いにくいところを直せます。広告はありません。データを売ることもありません。クラッシュレポートはどちらを選んでも、名前を外して送られます。",
+    "yes": "協力する",
+    "no": "協力しない"
+  },
+  "items": {
+    "selected": "{count}件を選択中",
+    "all": "すべて",
+    "newNote": "新規メモ",
+    "newNoteText": "新規メモ",
+    "settings": "設定",
+    "toTriage": "未整理{count}件",
+    "forLater": "「あとで」{count}件",
+    "toSync": "同期待ち{count}件",
+    "moveFailed": "うまくいきませんでした。何も移動していません。",
+    "addNote": "メモを追加",
+    "selectAll": "すべて選択",
+    "empty": {
+      "inbox": {
+        "title": "整理するものはありません。",
+        "body": "どのアプリでも、共有をタップしてPluckを選ぶと、ここに届きます。"
+      },
+      "later": {
+        "title": "「あとで」は空です。",
+        "body": "インボックスでアイテムを右にスワイプすると、ここで待っています。"
+      }
+    }
+  },
+  "lists": {
+    "sharedWithYou": "あなたと共有",
+    "sharedA11y": "{name}、{owner}さんが共有、{count, plural, other {#件}}",
+    "from": "{owner}さんから · 閲覧のみ",
+    "a11y": "{name}、{visibility, select, public {公開} other {非公開}}、{count}件中{ticked}件チェック済み",
+    "tickedOf": "{ticked}/{count}",
+    "empty": {
+      "title": "リストはまだありません。",
+      "body": "Webで作るか、お使いのAIに、Pluckしたものからリストを作ってもらいましょう。"
+    }
+  },
+  "search": {
+    "placeholder": "検索",
+    "kind": "種類",
+    "anyKind": "すべての種類",
+    "tag": "タグ",
+    "anyTag": "すべてのタグ",
+    "list": "リスト",
+    "anyList": "すべてのリスト",
+    "status": "ステータス",
+    "anyStatus": "すべてのステータス",
+    "date": "日付",
+    "plucked": "Pluckした日",
+    "dates": {
+      "any": "すべての期間",
+      "week": "今週",
+      "month": "今月",
+      "year": "今年"
+    },
+    "yourNote": "メモ：<snippet></snippet>",
+    "empty": {
+      "start": {
+        "title": "もう一度見つけましょう。",
+        "body": "タイトル、メモ、タグ、リスト、そしてページの本文から探せます。"
+      },
+      "error": {
+        "title": "検索から応答がありませんでした。",
+        "body": "接続を確認して、もう一度お試しください。"
+      },
+      "none": {
+        "title": "一致するものはありません。",
+        "body": "言葉を減らすか、別の絞り込みをお試しください。"
+      }
+    },
+    "byMeaning": "意味で探したいときは、お使いのAIに聞いてください。"
+  },
+  "oauth": {
+    "signingIn": "サインインしています。"
+  },
+  "note": {
+    "title": "メモ",
+    "placeholder": "残した理由や、どうするつもりかを。",
+    "hint": "見えるのは自分だけです。検索で見つかります。"
+  },
+  "welcome": {
+    "title": "準備ができました。\nさっそくPluckしましょう。",
+    "lede": "Pluckするのに、このアプリを開く必要はありません。どのアプリの共有メニューにもPluckがいます。",
+    "step1": "<b>1.</b> 共有をタップして、Pluckを選びます。",
+    "step2": "<b>2.</b> それだけです。そのまま読み続けてください。",
+    "tryIt": "試してみる",
+    "tryHint": "Safariでサンプルページを開きます。それをPluckに共有してください。",
+    "goToInbox": "インボックスへ"
+  },
+  "tags": {
+    "title": "タグ",
+    "rename": "名前を変更",
+    "renameTitle": "タグの名前を変更",
+    "deleteTitle": "「{name}」を削除しますか？",
+    "deleteBody": "{count, plural, other {#件のアイテム}}から外れます。アイテムは残ります。",
+    "deleteTag": "タグを削除",
+    "deleted": "「{name}」を削除しました。アイテムは残っています。",
+    "hint": "名前の変更または削除",
+    "empty": {
+      "title": "タグはまだありません。",
+      "body": "アイテムを長押しするか、リーダーの「タグ」からタグを付けられます。"
+    }
+  },
+  "list": {
+    "publicShare": "公開 · 共有",
+    "privateShare": "非公開 · 共有",
+    "ticked": "{count}件中{ticked}件チェック済み",
+    "noteByAi": "{note} · AIによる",
+    "tick": "{title}をチェック",
+    "addA11y": "このリストに追加",
+    "empty": {
+      "title": "このリストにはまだ何もありません。",
+      "body": "「追加」をタップしてPluckしたものを入れるか、お使いのAIに入れてもらいましょう。"
+    }
+  },
+  "shared": {
+    "copied": "Pluckしました。自分用のコピーが「リスト」にあります。",
+    "leaveTitle": "このリストから退出しますか？",
+    "leaveBody": "リスト一覧から外れます。共有した人は、またいつでも共有できます。",
+    "leave": "退出",
+    "byNamed": "{name}さん（@{handle}）が共有 · 閲覧のみ",
+    "by": "@{handle}が共有 · 閲覧のみ",
+    "notShared": {
+      "title": "このリストは共有されていません。",
+      "body": "このリストはもう存在しないか、{email}とは共有されていません。リンクを送ってくれた人がいれば、そのアドレスと共有してもらってください。",
+      "bodyNoEmail": "このリストはもう存在しないか、サインインに使ったメールアドレスとは共有されていません。リンクを送ってくれた人がいれば、そのアドレスと共有してもらってください。"
+    },
+    "empty": "このリストにはまだ何もありません。",
+    "pluckHint": "自分のPluckにコピーします",
+    "pluck": "このリストをPluck"
+  },
+  "signin": {
+    "stale": "以前に送ったリンクです。最新のメールを開くか、新しいリンクを送ってください。",
+    "notServer": "サーバーのアドレスではありません。https://で始まるアドレスです。",
+    "badKey": "このキーはこのサーバーで使えませんでした。",
+    "unreachable": "{origin}につながりませんでした。",
+    "title": "リンクひとつ。\nパスワードなし<accent>。</accent>",
+    "lede": "メールアドレスを入力すると、リンクをお送りします。それでサインインできます。初めての方は、そのままライブラリが始まります。",
+    "server": "サーバー",
+    "key": "APIキー（使う場合）",
+    "keyA11y": "APIキー",
+    "noKey": "キーがなければ空欄のままで。そのサーバーからリンクをメールでお送りします。",
+    "useKey": "このキーを使う",
+    "withEmail": "メールでサインイン",
+    "useHost": "{host}を使う",
+    "ownServer": "自分のサーバーを使う",
+    "preview": {
+      "a11y": "メール：リンクをお送りします。タップするとサインインできます。使えるのは一度だけ、10分間です。",
+      "subject": "Pluckへのリンク",
+      "now": "今",
+      "title": "リンクをお送りします。",
+      "body": "タップするとサインインできます。使えるのは一度だけ、10分間です。覚えておくパスワードはありません。",
+      "button": "Pluckにサインイン"
+    }
+  },
+  "handle": {
+    "title": "ハンドル",
+    "locked": "次に変更できるのは{date}です。",
+    "invalid": "小文字の英字、数字、ハイフンで3〜24文字。",
+    "hint": "公開するすべてのリストのリンクに入ります。",
+    "makeOne": "自動で作る",
+    "saved": "@{handle}になりました。",
+    "save": "@{handle}を保存",
+    "keep": "@{handle}のままにする",
+    "moveNone": "公開リストはまだないので、変わるリンクはありません。保存すると、次に変更できるのは1か月後です。",
+    "move": "{count, plural, other {#件の公開リスト}}は{host}/@{handle}/…に移り、古いアドレスへのリンクは使えなくなります。メールで共有したリストには影響しません。保存すると、次に変更できるのは1か月後です。"
+  },
+  "share": {
+    "title": "共有",
+    "close": "閉じる",
+    "sees": {
+      "me": "このリストは自分だけが見られます。",
+      "people": "ここにいる人は、このリストのタイトル、サイト、カバー画像、リストに付けたメモを見られます。タグ、チェック、Pluckが残したページは見えません。変更できるのは自分だけです。",
+      "anyone": "公開：このリンクを知っている人は誰でも、サインインせずに開けます。検索結果に出ることもあります。見えるのはこのリストのタイトル、サイト、カバー画像、リストに付けたメモだけで、タグ、チェック、Pluckが残したページは見えません。いつでも非公開に戻せます。戻すとすぐにリンクは使えなくなります。"
+    },
+    "options": {
+      "me": "自分だけ",
+      "people": "選んだ人",
+      "anyone": "リンクを知っている全員"
+    },
+    "stopManyTitle": "{count, plural, other {#人}}との共有を停止しますか？",
+    "stopManyBody": "その人たちは見られなくなります。いつでもまた共有できます。",
+    "stopSharing": "共有を停止",
+    "anyoneTitle": "リンクを知っている全員に公開しますか？",
+    "anyoneBody": "ハンドルのアドレスに公開ページができます。タグ、チェック、Pluckが残したページは公開されません。いつでも非公開に戻せます。",
+    "makePublic": "公開する",
+    "sharedWith": "{email}と共有しました。リンク付きのメールが届きます。",
+    "stopOneTitle": "{email}との共有を停止しますか？",
+    "stopOneBody": "この人は見られなくなります。",
+    "whoHasAccess": "アクセスできる人",
+    "addByEmail": "メールアドレスで追加",
+    "stopA11y": "{email}との共有を停止",
+    "publicLink": "公開リンク",
+    "copyPublic": "公開リンクをコピー",
+    "linkCopied": "リンクをコピーしました。",
+    "shareLink": "リンクを共有"
+  },
+  "pick": {
+    "tags": "タグ",
+    "lists": "リスト",
+    "findTag": "タグを検索または作成",
+    "makeTag": "タグ「{name}」を作成",
+    "findList": "リストを検索または作成",
+    "startList": "リスト「{name}」を作成",
+    "tagsForMany": "{count}件のタグ",
+    "addMany": "{count}件をリストに追加",
+    "addTo": "{name}に追加",
+    "addToTheList": "リストに追加",
+    "noTags": "タグはまだありません。",
+    "noTagsBody": "上に入力してください。お使いのAIもタグを付けられます。",
+    "noTagsManyBody": "上に入力してください。",
+    "noLists": "リストはまだありません。",
+    "noListsBody": "上に名前を入力して作るか、お使いのAIに作ってもらいましょう。",
+    "noListsManyBody": "上に名前を入力して作成できます。",
+    "nothing": "インボックスにも「あとで」にも何もありません。",
+    "nothingBody": "まずは何かPluckしてください。ここに表示されます。"
+  },
+  "item": {
+    "back": "戻る",
+    "backArchive": "アーカイブ",
+    "didntLoad": "読み込めませんでした。",
+    "didntLoadBody": "なくなったか、接続が切れているようです。少ししてからもう一度お試しください。",
+    "minutesLeft": "{percent} · 残り{minutes}分",
+    "openOriginal": "元のページを開く",
+    "by": "{author}",
+    "noteA11y": "メモ：{note}。編集",
+    "pending": "ページをPluckしています。まもなくここに表示されます。",
+    "failed": "このページを読み込めませんでした。",
+    "failedFile": "ファイルは残してありますが、文字は取り出せませんでした。",
+    "failedPage": "文字を取り出せないページもあります。リンクは残してあり、元のページはそのまま開けます。",
+    "titleA11y": "タイトル",
+    "titleHint": "タイトルを空欄にすると、最初の行がタイトルになります。入力すると自動で保存されます。",
+    "textA11y": "本文",
+    "textPlaceholder": "書き留めましょう。"
+  },
+  "settings": {
+    "title": "設定",
+    "sections": {
+      "account": "アカウント",
+      "aiTools": "AIツール",
+      "emailIn": "メールでPluck",
+      "expiry": "自動アーカイブと週1回のメール",
+      "library": "ライブラリ",
+      "appIcon": "アプリアイコン",
+      "privacy": "プライバシー"
+    },
+    "yourAccount": "アカウント",
+    "name": "名前",
+    "addName": "名前を追加",
+    "nameTitle": "名前",
+    "nameBody": "公開したリストに表示されます。",
+    "nameSaved": "名前を保存しました。",
+    "handle": "ハンドル",
+    "signOut": "サインアウト",
+    "signOutTitle": "サインアウトしますか？",
+    "signOutBody": "このiPhoneで送信待ちのPluckは、もう一度サインインするまでここに残ります。",
+    "accountFootnote": "名前とハンドルは公開したリストにだけ表示され、ほかの場所には出ません。",
+    "connectorCopied": "コピーしました。お使いのAIに貼り付けてください。",
+    "copied": "コピーしました",
+    "copyConnector": "コネクタのアドレスをコピー",
+    "connected": "{date}に接続",
+    "disconnect": "接続を解除",
+    "disconnectA11y": "{name}。接続を解除",
+    "disconnectTitle": "{name}の接続を解除しますか？",
+    "disconnectBody": "すぐに読み取りもPluckもできなくなります。いつでもまた接続できます。",
+    "toolsNeedAccount": "メールのリンクでもう一度サインインすると、接続中のAIツールがここに表示されます。",
+    "toolsNone": "接続中のAIツールはまだありません。AIツールにアドレスを一度追加すれば、そのツールを使うすべてのデバイスで使えます。",
+    "toolsHint": "AIツールにアドレスを一度追加すれば、そのツールを使うすべてのデバイスで使えます。",
+    "addressCopied": "アドレスをコピーしました。",
+    "copyEmailIn": "Pluck用のメールアドレスをコピー",
+    "newAddress": "新しいアドレス",
+    "newAddressTitle": "新しいアドレスにしますか？",
+    "newAddressBody": "古いアドレスはすぐに使えなくなります。転送の設定を更新してください。",
+    "emailInFootnote": "ニュースレターをここに転送すると、記事としてインボックスに届きます。",
+    "days": "{count, plural, other {#日}}",
+    "never": "しない",
+    "scopeInboxLater": "インボックスと「あとで」",
+    "scopeInbox": "インボックスのみ",
+    "moveAfter": "アーカイブに移すまで",
+    "moveAfterTitle": "手つかずのアイテムをアーカイブに移すまで",
+    "expirySaved": "{count}日間手つかずのものはアーカイブに移ります。削除はされません。",
+    "noExpiry": "自動でアーカイブされることはありません。",
+    "appliesTo": "対象",
+    "appliesToTitle": "自動アーカイブの対象",
+    "weekly": "週1回のメール",
+    "off": "オフ",
+    "weeklyTitle": "週1回のメールを送る曜日",
+    "noWeekly": "週1回のメールは送りません。",
+    "weeklyOn": "週1回のメールは毎週{day, select, 0 {日曜日} 1 {月曜日} 2 {火曜日} 3 {水曜日} 4 {木曜日} 5 {金曜日} other {土曜日}}に届きます。",
+    "expiryFootnote": "手つかずのアイテムはアーカイブに移るだけで、削除はされません。週1回のメールでは、まもなく移るもの、期限が近いもの、Pluckしたまま忘れているものをお知らせします。",
+    "tags": "タグ",
+    "export": "すべてをエクスポート",
+    "byEmail": "メールで",
+    "exportingTitle": "エクスポート中",
+    "exportingBody": "すべてをまとめたzipを{email}に送っています。リンクは1、2分で届きます。",
+    "exportingBodyNoEmail": "すべてをまとめたzipをメールで送っています。リンクは1、2分で届きます。",
+    "offline": "オフライン用のコピー",
+    "offlineValue": "{count, plural, other {#件}} · {mb} MB",
+    "clearTitle": "オフライン用のコピーを消去しますか？",
+    "clearBody": "ライブラリはサーバーに残ります。使っているうちに、アプリがまたダウンロードします。",
+    "clear": "消去",
+    "server": "サーバー",
+    "serverBody": "このiPhoneは{host}を使っています。別のサーバーを使うには、サインアウトしてから「自分のサーバーを使う」を選んでください。",
+    "iconLight": "ライト",
+    "iconDark": "ダーク",
+    "iconA11y": "{name}アイコン",
+    "iconFootnote": "変わるのはアイコンだけです。アプリ本体はiPhoneの設定に従います。",
+    "usage": "利用状況を共有",
+    "usageFootnote": "どの画面を使っているかを、アカウントと結びつけて送ります。Pluckしたものは送りません。クラッシュレポートはどちらを選んでも、名前を外して送られます。",
+    "tipTitle": "共有メニューでPluckを先頭に",
+    "tipBody": "どのアプリでも共有をタップし、アプリの列を「その他」までスクロールして、Pluckを先頭にドラッグしてください。",
+    "deleteAll": "本当にすべて削除する",
+    "deleteTitle": "すべて削除しますか？",
+    "deleteBody": "すべてのアイテム、タグ、メモ、リストが完全に削除されます。コピーが欲しい場合は、先にエクスポートしてください。",
+    "continue": "続ける",
+    "confirmTitle": "確認のため、メールアドレスを入力してください",
+    "deleteButton": "すべて削除"
+  }
+}
