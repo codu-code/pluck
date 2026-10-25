@@ -2,7 +2,7 @@ import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { ExpoConfig } from "expo/config";
 import { withXcodeProjectBeta } from "@bacons/apple-targets/build/with-bacons-xcode";
-import { type ConfigPlugin, withDangerousMod, withXcodeProject } from "expo/config-plugins";
+import { type ConfigPlugin, withDangerousMod, withInfoPlist, withXcodeProject } from "expo/config-plugins";
 
 // PLUCK_SERVER builds point at another server (local dev, e2e screenshots); store builds use getpluck.io.
 const server = process.env.PLUCK_SERVER ?? "https://getpluck.io";
@@ -36,8 +36,8 @@ const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
   version: "1.0.0",
-  // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect: sign-in comes back over
-  // HTTPS from the code the person types (lib/session.ts), so there is no scheme for another app to intercept.
+  // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect (withOnlyPluckScheme below):
+  // sign-in comes back over HTTPS from the code the person types (lib/session.ts), so no scheme carries it.
   scheme: "pluck",
   orientation: "portrait",
   icon: "./assets/icon.png",
@@ -122,4 +122,15 @@ const withShareRelease: ConfigPlugin = (c) =>
     return m;
   });
 
-export default withShareRelease(withDarkIcon(config));
+// Expo also registers the bundle ID as a URL scheme. The app takes no sign-in back through a scheme (lib/session.ts),
+// so it claims only pluck://.
+const withOnlyPluckScheme: ConfigPlugin = (c) =>
+  withInfoPlist(c, (m) => {
+    const types = (m.modResults.CFBundleURLTypes ?? []) as { CFBundleURLSchemes?: string[] }[];
+    m.modResults.CFBundleURLTypes = types
+      .map((t) => ({ ...t, CFBundleURLSchemes: (t.CFBundleURLSchemes ?? []).filter((s) => s !== c.ios?.bundleIdentifier) }))
+      .filter((t) => t.CFBundleURLSchemes.length > 0);
+    return m;
+  });
+
+export default withOnlyPluckScheme(withShareRelease(withDarkIcon(config)));
