@@ -24,6 +24,15 @@ export default function Lists() {
   return (
     <TitledList
       title={tr("tabs.lists")}
+      head={
+        // The Archive sits above the Lists, like a mail app's Archive above its folders.
+        <Pressable onPress={() => router.push("/archive")} accessibilityRole="button" accessibilityLabel={tr("archive.title")}
+          style={({ pressed }) => [styles.archive, { backgroundColor: pressed ? t.selected : t.ground }]}>
+          <Icon d={ICONS.archive} size={18} color={t.ink} width={1.5} />
+          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { flex: 1, color: t.ink, fontSize: 16 }]}>{tr("archive.title")}</Text>
+          <Icon d={ICONS.chevron} size={14} color={t.ink2} width={1.6} />
+        </Pressable>
+      }
       data={lists.data ?? []}
       keyExtractor={(l) => l.id}
       refreshControl={<RefreshControl refreshing={lists.isRefetching} onRefresh={() => { void lists.refetch(); void shared.refetch(); }} />}
@@ -73,6 +82,7 @@ export default function Lists() {
 }
 
 const styles = StyleSheet.create({
+  archive: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 52, paddingHorizontal: 16 },
   section: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44, marginTop: 16, paddingHorizontal: 16 },
   row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 68, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
 });

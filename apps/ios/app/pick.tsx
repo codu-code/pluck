@@ -36,6 +36,7 @@ function Sheet<T>({ title, top, data, keyOf, row, empty }: {
       renderItem={row}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      automaticallyAdjustKeyboardInsets // the last rows scroll up above the keyboard
       stickyHeaderIndices={[0]}
       ListHeaderComponent={
         <View style={{ backgroundColor: t.ground, paddingTop: 16 }}>

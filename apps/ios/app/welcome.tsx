@@ -16,7 +16,7 @@ export default function Welcome() {
   const tr = useTranslations("ios.welcome");
   const insets = useSafeAreaInsets();
   return (
-    <ScrollView style={{ backgroundColor: t.ground }} contentContainerStyle={[styles.page, { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 10 }]}>
+    <ScrollView alwaysBounceVertical={false} style={{ backgroundColor: t.ground }} contentContainerStyle={[styles.page, { paddingTop: insets.top + 32, paddingBottom: insets.bottom + 10 }]}>
       <Image source={require("../assets/icon.png")} style={styles.icon} accessibilityIgnoresInvertColors accessibilityLabel="Pluck" />
       <View style={{ gap: 10 }}>
         <Text accessibilityRole="header" maxFontSizeMultiplier={scale.display} style={[font.bold, styles.h1, { color: t.ink }]}>{tr("title")}</Text>

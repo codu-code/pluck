@@ -115,7 +115,7 @@ export default function ShareList() {
         <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("share.title")}</Text>
         <View style={{ width: 44 }} />
       </View>
-      <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive" contentContainerStyle={[styles.page, { paddingBottom: 24 }]}>
+      <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets contentContainerStyle={[styles.page, { paddingBottom: 24 }]}>
         {/* What is being shared. */}
         <View style={[styles.what, { backgroundColor: t.surface }]}>
           <Icon d={ICONS.lists} size={20} color={t.ink} width={1.5} />
