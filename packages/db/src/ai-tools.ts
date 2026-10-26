@@ -32,3 +32,19 @@ export async function disconnectAi(userId: string, clientId: string): Promise<bo
   await d.collection("oauthRefreshToken").deleteMany({ ...byUser(userId), clientId });
   return deletedCount > 0;
 }
+
+// Until October 2026 an AI tool that named no scope was given every scope, delete and the account included. This takes
+// those two back from every client that is not one of our apps; a tool that wants delete connects again and asks for it.
+export async function narrowAiGrants(firstPartyRedirects: string[]): Promise<number> {
+  const d = await db();
+  const ours = await d.collection("oauthClient").distinct("clientId", {
+    "redirectUris.0": { $exists: true },
+    redirectUris: { $not: { $elemMatch: { $nin: firstPartyRedirects } } },
+  });
+  const wide = ["library:delete", "account"];
+  const filter = { clientId: { $nin: ours }, scopes: { $in: wide } };
+  const narrow = { $pull: { scopes: { $in: wide } } };
+  const grants = (c: string) => d.collection<{ clientId: string; scopes: string[] }>(c).updateMany(filter, narrow);
+  const [consents] = await Promise.all([grants("oauthConsent"), grants("oauthRefreshToken")]);
+  return consents.modifiedCount;
+}

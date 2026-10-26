@@ -10,6 +10,14 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 - [x] The connector clip: `ConnectLoop` plays in Settings, AI tools and on Connect your AI (`scripts/record-loop.mjs` records it for socials).
 - [ ] Design pass on `docs/design-gaps.md`: screens with no board, departures from the boards.
 
+## Making the repo public
+
+- [ ] Settings → General: make `codu-code/pluck` public.
+- [ ] Settings → Code security: secret scanning and push protection on; Dependabot alerts on.
+- [ ] Settings → Branches: protect `main` (pull request required, the DCO check required, no force pushes).
+- [ ] Description, topics (`read-it-later`, `mcp`, `self-hosted`, `nextjs`, `bookmarks`) and the social preview image.
+- [ ] Tag `v0.1.0` and write its release notes.
+
 ## Hosted service
 
 - [ ] Atlas user, CDK deploy, DNS, SES production access, Vercel project and env: `docs/deploy.md`, sections 1 to 3.
@@ -35,6 +43,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 ## AI tools
 
+- [ ] Check the `@pluck` scope on npm is yours (`npm org ls pluck` signed in). It exists already; if it is not yours, rename the package (and `npx @pluck/mcp` in Settings, Connect, docs and the blog) before anyone copies the command.
 - [ ] Publish the stdio bridge: `pnpm --filter @pluck/mcp build`, then `npm publish --access public` from `packages/mcp-stdio` (package `@pluck/mcp`).
 - [ ] Add `https://getpluck.io/mcp` in Claude (web and desktop), ChatGPT, Claude Code and Cursor, and run each of the four prompts once.
 

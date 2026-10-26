@@ -170,7 +170,7 @@
       "title": "开源 · Pluck",
       "description": "Pluck 免费且开源。使用 getpluck.io，或者用一条命令运行你自己的。"
     },
-    "licence": "许可证：AGPL-3.0（服务器）和 MIT（各个 App）。",
+    "licence": "许可证：Apache-2.0。",
     "title": "免费。<br></br>开放。<br></br><marker>属于你。</marker>",
     "lede": "稍后读 App 一个接一个地关门。Pluck 不会，因为代码是公开的，数据是你的。用我们的，或者一条命令运行你自己的。",
     "selfHostTitle": "一条命令自托管。",

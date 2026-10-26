@@ -1,6 +1,6 @@
 import { verifyUrl } from "@/lib/signin-link";
+import { ORIGIN } from "@/lib/origin";
 
-const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
 // The tap on /signin/link. 303 turns the POST into the GET that Better Auth's verify expects.
 export async function POST(req: Request) {

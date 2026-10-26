@@ -8,7 +8,7 @@ export const PATCH = route<{ id: string }>({ kind: "write" }, async ({ req, call
 );
 
 // DELETE needs ?reassignTo=<tagId> (merge) or ?removeFromItems=true.
-export const DELETE = route<{ id: string }>({ kind: "write" }, async ({ req, caller, params }) => {
+export const DELETE = route<{ id: string }>({ kind: "write", scope: "library:delete" }, async ({ req, caller, params }) => {
   const q = DeleteTagQuery.safeParse(searchParamsObject(req));
   if (!q.success) throw new ApiError("bad_request", "Say where its items go: reassignTo=<tag id>, or removeFromItems=true.", 400);
   await removeTag(caller.userId, params.id, "reassignTo" in q.data ? { reassignTo: q.data.reassignTo } : { removeFromItems: true });

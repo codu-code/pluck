@@ -9,11 +9,12 @@ import { LOCALE_HEADER } from "@/i18n/request";
 import { localePath } from "@/lib/siteUrls";
 import { fredoka, geist, geistMono, sourceSerif } from "./fonts";
 import "./globals.css";
+import { ORIGIN } from "@/lib/origin";
 
 export const generateMetadata = async (): Promise<Metadata> => ({
   // Absolute URLs for OG images and canonical links: the app's public origin. A site page in another language goes
   // under its prefix, so its preview card (/de/connect/opengraph-image-…) is fetched in that language (proxy.ts).
-  metadataBase: new URL((process.env.BETTER_AUTH_URL ?? "http://localhost:3000") + localePath(urlLocale(await headers()), "/")),
+  metadataBase: new URL(ORIGIN + localePath(urlLocale(await headers()), "/")),
   title: "Pluck",
   description: (await getTranslations("site.meta"))("description"),
   icons: {

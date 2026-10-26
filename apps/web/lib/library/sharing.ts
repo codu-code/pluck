@@ -10,6 +10,7 @@ import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 import { queueExtraction } from "./items";
+import { ORIGIN } from "../origin";
 
 type Defer = (task: () => Promise<void>) => void;
 
@@ -113,7 +114,6 @@ export async function report(listId: string, ip: string, reason: string, details
 
 // ---- Sharing a List with people, See only ----------------------------------------------------------------
 
-const origin = () => process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 // Each new person is an email we send to an address someone typed: a few a day per account.
 const PEOPLE_PER_DAY = 10;
 
@@ -131,7 +131,7 @@ export async function shareWith(userId: string, listId: string, email: string): 
   if (!res.ok) throw SHARE_ERRORS[res.reason];
   if (res.created) {
     const [owner, list] = await Promise.all([me(userId), getListMeta(userId, listId)]);
-    await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? null, `${origin()}/shared/${listId}`, res.recipientLocale ?? owner.settings.locale ?? "en"));
+    await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? null, `${ORIGIN}/shared/${listId}`, res.recipientLocale ?? owner.settings.locale ?? "en"));
   }
   return res.share;
 }

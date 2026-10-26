@@ -58,6 +58,6 @@ Back-ups maak je zelf. Maak back-ups van de volumes `mongo` en `minio`. Dat is j
 git pull && docker compose up -d --build
 ```
 
-De server is AGPL-3.0 en de apps zijn MIT.
+De server en de apps zijn Apache-2.0.
 
 Stoppen wij ooit, dan stop jij niet.

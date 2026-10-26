@@ -170,7 +170,7 @@
       "title": "Open source · Pluck",
       "description": "Pluck è gratuito e open source. Usa getpluck.io, o fai girare il tuo con un solo comando."
     },
-    "licence": "Licenza: AGPL-3.0 (server) e MIT (app).",
+    "licence": "Licenza: Apache-2.0.",
     "title": "Gratis.<br></br>Aperto.<br></br><marker>Tuo.</marker>",
     "lede": "Le app per leggere più tardi continuano a chiudere. Pluck non può, perché il codice è pubblico e i dati sono tuoi. Usa il nostro, o fai girare il tuo con un solo comando.",
     "selfHostTitle": "Self-hosting con un solo comando.",

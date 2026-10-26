@@ -285,7 +285,7 @@
     "scopes": {
       "read": "Read your library: items, the text Pluck kept, notes, tags and lists",
       "write": "Pluck and organise: add things, tag, sort, make and edit lists",
-      "delete": "Delete items. Most AI tools never need this.",
+      "delete": "Delete items, lists, tags and highlights. Most AI tools never need this.",
       "account": "Manage your account: connected AI tools, exports, and deleting it all. Only Pluck's own apps ask for this."
     },
     "signedInAs": "Signed in as {email}. It can never delete anything unless that is listed above, and you can disconnect it in Settings."

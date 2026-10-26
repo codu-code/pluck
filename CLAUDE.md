@@ -6,7 +6,7 @@ Pluck is a fast, open-source URL saver with an MCP connector. There is no AI ins
 
 - **No model calls on the server.** No LLM SDKs, no embeddings, no vector stores, no "smart" anything. AI features are MCP prompts in `packages/mcp` that a connected client runs. A PR that adds a model call is declined.
 - **Only `packages/db` touches MongoDB.** Every query is scoped by `userId`. Every new query gets a two-user test.
-- **Public reads use one projection.** `packages/db/public.ts` is the only function that serves public list data. It never joins `contents`, `tags`, `ticked` or `status`. Its field list is pinned by a test.
+- **Public reads use one projection.** `packages/db/src/public.ts` is the only function that serves public list data. It never joins `contents`, `tags`, `ticked` or `status`. Its field list is pinned by a test.
 - **Nothing is deleted by expiry or by MCP.** Expiry and "Archive it all" set `status: archived`. MCP has no delete tool outside the `library:delete` scope, which the consent screen does not request.
 - **Every type starts as a Zod schema** in `packages/shared-schemas`; the API parses requests with it.
 - **MCP is the only public API.** The REST API serves our clients and the MCP layer. Do not add other integrations.

@@ -2,8 +2,11 @@ import { LOCALE_NAMES, LOCALES } from "@pluck/i18n";
 import { postsIn } from "@/lib/blog";
 import { localePath } from "@/lib/siteUrls";
 import { CONNECTOR_URL, LICENCE, REPO_URL } from "@/lib/site";
+import { ORIGIN } from "@/lib/origin";
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
+// Built per request: a Docker image is built with a placeholder address, and this names the one it runs at.
+export const dynamic = "force-dynamic";
 
 // llms.txt (llmstxt.org): what Pluck is, in plain Markdown, for AI tools that answer questions about it.
 export async function GET() {
@@ -15,7 +18,7 @@ Key facts:
 
 - Free to use at ${base}. Open source (${LICENCE}). Self-host with Docker in one command.
 - No AI runs inside Pluck. Your own AI tool (Claude, ChatGPT, Cursor or any MCP client) connects through Pluck's MCP connector at ${CONNECTOR_URL} and reads, searches and sorts your library when you ask.
-- Your AI cannot delete anything or make a list public. Everything it adds is marked "by AI".
+- Your AI cannot delete anything unless you allow it, and cannot make a list public. Everything it adds is marked "by AI".
 - Kinds of item: Read, Watch, PDF, Image, Note, Todo, Thing. Status: Inbox, Later, Archived, Done.
 - Items you never touch move to the Archive after 30 days (you pick the number, or turn it off). Nothing is deleted.
 - Lists: ordered, with a note and a tick per item. Private by default, public at /@handle/slug with one switch.

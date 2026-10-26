@@ -285,7 +285,7 @@
     "scopes": {
       "read": "Deine Bibliothek lesen: Einträge, den Text, den Pluck behalten hat, Notizen, Tags und Listen",
       "write": "Pflücken und ordnen: Dinge hinzufügen, taggen, sortieren, Listen anlegen und bearbeiten",
-      "delete": "Einträge löschen. Die meisten KI-Tools brauchen das nie.",
+      "delete": "Einträge, Listen, Tags und Markierungen löschen. Die meisten KI-Tools brauchen das nie.",
       "account": "Dein Konto verwalten: verbundene KI-Tools, Exporte und das Löschen von allem. Nur Plucks eigene Apps fragen danach."
     },
     "signedInAs": "Angemeldet als {email}. Löschen kann es nur, wenn das oben steht, und du kannst es jederzeit in den Einstellungen trennen."

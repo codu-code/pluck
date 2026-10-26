@@ -58,6 +58,6 @@ HTTPS対応のリバースプロキシを前に置き、composeファイルの�
 git pull && docker compose up -d --build
 ```
 
-サーバーはAGPL-3.0、アプリはMITです。
+サーバーもアプリもApache-2.0です。
 
 もし私たちがやめても、あなたのPluckは止まりません。

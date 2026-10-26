@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth, currentUser, FIRST_PARTY_REDIRECTS } from "@/lib/auth";
+import { auth, currentUser, FIRST_PARTY_REDIRECTS, ORIGIN } from "@/lib/auth";
 import { ConsentButtons } from "./ConsentButtons";
 import { BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
@@ -25,7 +25,7 @@ export default async function Consent({ searchParams }: { searchParams: Promise<
   const valid = await verifyOAuthQueryParams(query.toString(), secret);
 
   const clientId = query.get("client_id") ?? "";
-  const res = await auth.handler(new Request(`${process.env.BETTER_AUTH_URL}/api/auth/oauth2/public-client?client_id=${encodeURIComponent(clientId)}`, { headers: await headers() }));
+  const res = await auth.handler(new Request(`${ORIGIN}/api/auth/oauth2/public-client?client_id=${encodeURIComponent(clientId)}`, { headers: await headers() }));
   const client = res.ok ? ((await res.json()) as { client_name?: string; client_uri?: string }) : null;
   // The authorize step already matched redirect_uri to the client's own list, and the query is signed.
   const redirectUri = query.get("redirect_uri") ?? "";

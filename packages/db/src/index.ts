@@ -30,6 +30,6 @@ export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOP
 export {
   createImport, getImport, claimImportStart, updateImport, importLink, startExport, finishExport, latestExport, exportData, deleteAccountData,
 } from "./account.ts";
-export { aiConnections, disconnectAi, isAiConnected } from "./ai-tools.ts";
+export { aiConnections, disconnectAi, isAiConnected, narrowAiGrants } from "./ai-tools.ts";
 export { holdTry, takeTry } from "./tries.ts";
 export { nextUnsorted, type Unsorted } from "./backfill.ts";

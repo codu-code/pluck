@@ -58,6 +58,6 @@ Les sauvegardes, c’est vous. Sauvegardez les volumes `mongo` et `minio`. C’e
 git pull && docker compose up -d --build
 ```
 
-Le serveur est sous AGPL-3.0 et les apps sous MIT.
+Le serveur et les apps sont sous Apache-2.0.
 
 Si un jour nous arrêtons, vous, vous continuez.

@@ -170,7 +170,7 @@
       "title": "Open Source · Pluck",
       "description": "Pluck ist kostenlos und Open Source. Nutze getpluck.io, oder betreib deine eigene Instanz mit einem Befehl."
     },
-    "licence": "Lizenz: AGPL-3.0 (Server) und MIT (Apps).",
+    "licence": "Lizenz: Apache-2.0.",
     "title": "Kostenlos.<br></br>Offen.<br></br><marker>Deins.</marker>",
     "lede": "Später-lesen-Apps machen eine nach der anderen zu. Pluck kann das nicht, denn der Code ist öffentlich und die Daten gehören dir. Nutze unsere Instanz, oder betreib deine eigene mit einem Befehl.",
     "selfHostTitle": "Selbst hosten, mit einem Befehl.",

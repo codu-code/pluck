@@ -99,10 +99,11 @@ export function route<P = Record<string, never>>(opts: Options, handler: Handler
 }
 
 // Routes anyone may call (public pages, reports): per-IP limit, same error shape, no caller.
-export function publicRoute<P = Record<string, never>>(perMinute: number, handler: PublicHandler<P>) {
+// `name` keys the per-IP limit: one bucket per route, however many tokens or handles its paths carry.
+export function publicRoute<P = Record<string, never>>(name: string, perMinute: number, handler: PublicHandler<P>) {
   return async (req: Request, ctx: { params: Promise<P> }): Promise<Response> => {
     try {
-      const hit = await limited(`ip:${clientIp(req)}:${new URL(req.url).pathname.split("/").slice(0, 5).join("/")}`, perMinute);
+      const hit = await limited(`ip:${clientIp(req)}:${name}`, perMinute);
       if (hit) return errorResponse(hit, { "retry-after": String((hit.details as { retryAfter: number }).retryAfter) });
       return await handler({ req, params: await ctx.params });
     } catch (e) {

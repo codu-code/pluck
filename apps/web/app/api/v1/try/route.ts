@@ -6,7 +6,7 @@ import { holdPaste, pluckAny } from "@/lib/library";
 const Body = z.object({ text: z.string().trim().min(1).max(5000) });
 
 // The home page paste box. Signed in: a real pluck. A visitor: held for a day against a cookie until they sign up.
-export const POST = publicRoute(10, async ({ req }) => {
+export const POST = publicRoute("try", 10, async ({ req }) => {
   const { text } = await parseBody(req, Body);
   const caller = await authenticate(req);
   if (caller) {

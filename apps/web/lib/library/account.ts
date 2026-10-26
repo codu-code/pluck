@@ -10,6 +10,7 @@ import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
+import { ORIGIN } from "../origin";
 
 // ---- Welcome -------------------------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ export async function sendWelcome(userId: string): Promise<boolean> {
   // Claimed before sending: a second copy of a personal note reads worse than a lost one.
   if (!from || !me || !(await claimOnce(`welcome:${userId}`))) return false;
   const counts = await Promise.all((["inbox", "later", "archived", "done"] as const).map((s) => countItems(userId, s)));
-  const connectUrl = `${process.env.BETTER_AUTH_URL ?? "http://localhost:3000"}/connect`;
+  const connectUrl = `${ORIGIN}/connect`;
   await sendEmail({ ...welcomeEmail(me.email, { plucked: counts.some(Boolean), expiryDays: me.settings.expiryDays, connectUrl }, me.settings.locale ?? "en"), from, replyTo: from });
   return true;
 }

@@ -170,7 +170,7 @@
       "title": "Open source · Pluck",
       "description": "Pluck is gratis en open source. Gebruik getpluck.io, of draai je eigen versie met één commando."
     },
-    "licence": "Licentie: AGPL-3.0 (server) en MIT (apps).",
+    "licence": "Licentie: Apache-2.0.",
     "title": "Gratis.<br></br>Open.<br></br><marker>Van jou.</marker>",
     "lede": "Read-later-apps verdwijnen keer op keer. Pluck kan dat niet, want de code is openbaar en de data is van jou. Gebruik de onze, of draai je eigen versie met één commando.",
     "selfHostTitle": "Host het zelf met één commando.",

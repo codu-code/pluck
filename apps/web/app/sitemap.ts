@@ -2,8 +2,11 @@ import { LOCALES } from "@pluck/i18n";
 import type { MetadataRoute } from "next";
 import { POSTS } from "@/lib/blog";
 import { localePath, SITE_PAGES } from "@/lib/siteUrls";
+import { ORIGIN } from "@/lib/origin";
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
+// Built per request: a Docker image is built with a placeholder address, and this names the one it runs at.
+export const dynamic = "force-dynamic";
 
 // The marketing pages and the blog, each in every language, with each URL naming its other languages (hreflang).
 // Public Lists are left to links: they are people's pages, not ours to list.
