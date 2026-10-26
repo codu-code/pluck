@@ -49,6 +49,20 @@ describe("sources", () => {
     expect(x.markdown).not.toContain("t.co");
   });
 
+  test("an X Article plucked from a signed-in browser keeps the whole Article, to read here", async () => {
+    const body = Array.from({ length: 12 }, (_, i) => `<p>Paragraph ${i + 1} of the Article, about how review works when Claude writes most of the code and people read what matters.</p>`).join("");
+    const html = `<html><head><title>(2) Addy Osmani on X: "https://t.co/4Hfk0dYIBI" / X</title></head><body><main><article><h1>How the Claude Code team does code review</h1><img src="https://pbs.twimg.com/media/inline.jpg" alt="A diagram">${body}</article></main></body></html>`;
+    const x = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136", html });
+    expect(x).toMatchObject({ preview: "reader", kind: "link", siteName: "X", title: "How the Claude Code team does code review", author: "Addy Osmani" });
+    expect(x.wordCount).toBeGreaterThan(150);
+    expect(x.markdown).toContain("Paragraph 12 of the Article");
+    expect(x.raw).not.toBeNull(); // the page is kept, as for any article
+
+    // A page with no more than the summary (signed out, or the post page without the Article) stays the card.
+    const thin = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136", html: "<html><head><title>X</title></head><body><main>Sign in to X</main></body></html>" });
+    expect(thin).toMatchObject({ preview: "post", title: "How the Claude Code team does code review" });
+  });
+
   test("a post on X: its first line is the title, its links go where they go, the link it shares is kept", async () => {
     answers.set("https://x.com/niall/status/186", "<html></html>");
     answers.set("https://cdn.syndication.twimg.com/tweet-result?id=186&", {

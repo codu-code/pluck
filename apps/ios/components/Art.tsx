@@ -35,7 +35,7 @@ export function ShareRow() {
 }
 
 // A row part-way through the swipe that sends it to Later, drawn as the swipe draws it: the Later pill in the gap the
-// row leaves, and the row itself, a card, sliding off to the right.
+// row leaves, and the row itself, a whole card, pushed along by it.
 export function SwipeToLater() {
   const t = useTheme();
   const tr = useTranslations("ios.art");
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   appTile: { width: 34, height: 34, borderRadius: 9 },
   swipe: { width: 272, borderRadius: 12, padding: 8, overflow: "hidden", flexDirection: "row", gap: 8 },
   swipePill: { width: 64, height: 56, borderRadius: 10, alignItems: "center", justifyContent: "center", gap: 3 },
-  swipeRow: { width: 230, height: 56, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth * 2, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 },
+  swipeRow: { flex: 1, height: 56, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth * 2, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 },
   swipeTile: { width: 34, height: 34, borderRadius: 7 },
   bar: { height: 6, borderRadius: 3 },
 });
