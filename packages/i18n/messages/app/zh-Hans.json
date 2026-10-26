@@ -843,6 +843,7 @@
     "removeHighlight": "移除高亮",
     "about": "关于这条内容",
     "note": "笔记",
+    "titleLabel": "标题",
     "kind": "类别",
     "highlights": "高亮 · {count}",
     "noHighlights": "选中文字即可高亮。",

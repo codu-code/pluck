@@ -843,6 +843,7 @@
     "removeHighlight": "Markierung entfernen",
     "about": "Zu diesem Eintrag",
     "note": "Notiz",
+    "titleLabel": "Titel",
     "kind": "Art",
     "highlights": "Markierungen · {count}",
     "noHighlights": "Wähle Text aus, um ihn zu markieren.",

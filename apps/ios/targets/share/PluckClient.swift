@@ -26,7 +26,7 @@ struct Session: Codable {
 
 struct TagRef: Codable, Identifiable, Hashable { let id: String; let name: String }
 struct ListRef: Codable { let id: String; let name: String }
-struct PluckedItem: Codable { let id: String; let title: String; let kind: String; let tagIds: [String]; let hasCover: Bool? }
+struct PluckedItem: Codable { let id: String; let title: String; let kind: String; let tagIds: [String]; let hasCover: Bool?; let siteName: String?; let preview: String?; let url: String?; let titleIsDerived: Bool? }
 
 enum PluckError: Error { case signedOut, offline, refused(String) }
 

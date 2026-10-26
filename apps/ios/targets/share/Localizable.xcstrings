@@ -976,67 +976,132 @@
         }
       }
     },
+    "note": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notiz"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メモ"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nota"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notitie"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메모"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "笔记"
+          }
+        }
+      }
+    },
     "notePlaceholder": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Why you plucked it, in a line. Optional."
+            "value": "What it is, or why you plucked it. Optional."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Por qué lo recoges, en una línea. Opcional."
+            "value": "Qué es, o por qué lo recoges. Opcional."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Por que você colheu, em uma linha. Opcional."
+            "value": "O que é, ou por que você colheu. Opcional."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pourquoi vous l’avez cueilli, en une ligne. Facultatif."
+            "value": "Ce que c’est, ou pourquoi vous l’avez cueilli. Facultatif."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Warum du es gepflückt hast, in einer Zeile. Optional."
+            "value": "Was es ist, oder warum du es gepflückt hast. Optional."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pluckした理由を一行で。任意です。"
+            "value": "何なのか、なぜPluckしたのか。任意です。"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Perché l'hai preso, in una riga. Facoltativo."
+            "value": "Cos'è, o perché l'hai preso. Facoltativo."
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Waarom je het plukte, in één regel. Optioneel."
+            "value": "Wat het is, of waarom je het plukte. Optioneel."
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "왜 담았는지 한 줄로. 선택 사항이에요."
+            "value": "무엇인지, 왜 담았는지. 선택 사항이에요."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "为什么摘下它，一句话就好。可不填。"
+            "value": "它是什么，或为什么摘下它。可不填。"
           }
         }
       }
@@ -1622,6 +1687,71 @@
           "stringUnit": {
             "state": "translated",
             "value": "标签和清单"
+          }
+        }
+      }
+    },
+    "title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Title"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Título"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Título"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titre"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "タイトル"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titolo"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Titel"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "제목"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标题"
           }
         }
       }

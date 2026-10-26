@@ -843,6 +843,7 @@
     "removeHighlight": "Retirer le surlignage",
     "about": "À propos de cet élément",
     "note": "Note",
+    "titleLabel": "Titre",
     "kind": "Type",
     "highlights": "Surlignages · {count}",
     "noHighlights": "Sélectionnez du texte pour le surligner.",

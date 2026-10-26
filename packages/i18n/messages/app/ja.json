@@ -843,6 +843,7 @@
     "removeHighlight": "ハイライトを外す",
     "about": "このアイテムについて",
     "note": "メモ",
+    "titleLabel": "タイトル",
     "kind": "種類",
     "highlights": "ハイライト · {count}",
     "noHighlights": "テキストを選択するとハイライトできます。",

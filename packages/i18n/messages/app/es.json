@@ -843,6 +843,7 @@
     "removeHighlight": "Quitar destacado",
     "about": "Sobre este elemento",
     "note": "Nota",
+    "titleLabel": "Título",
     "kind": "Tipo",
     "highlights": "Destacados · {count}",
     "noHighlights": "Selecciona texto para destacarlo.",

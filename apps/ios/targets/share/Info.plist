@@ -4,6 +4,13 @@
 <dict>
   <key>CFBundleDisplayName</key>
   <string>Pluck</string>
+  <!-- Geist, as in the app (copied from the geist package; Geist-OFL.txt is its licence). -->
+  <key>UIAppFonts</key>
+  <array>
+    <string>Geist-Regular.ttf</string>
+    <string>Geist-SemiBold.ttf</string>
+    <string>Geist-Bold.ttf</string>
+  </array>
   <key>NSExtension</key>
   <dict>
     <key>NSExtensionAttributes</key>

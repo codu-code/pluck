@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Notitie",
+    "titleLabel": "Titel",
     "placeholder": "Waarom je het bewaarde, of wat je ermee wilt.",
     "hint": "Alleen jij ziet hem. Zoeken vindt hem."
   },

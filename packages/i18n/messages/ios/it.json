@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Nota",
+    "titleLabel": "Titolo",
     "placeholder": "Perché l'hai tenuto, o cosa farne.",
     "hint": "La vedi solo tu. La ricerca la trova."
   },

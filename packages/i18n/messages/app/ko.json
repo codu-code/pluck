@@ -843,6 +843,7 @@
     "removeHighlight": "하이라이트 지우기",
     "about": "이 항목 정보",
     "note": "메모",
+    "titleLabel": "제목",
     "kind": "종류",
     "highlights": "하이라이트 · {count}",
     "noHighlights": "글자를 선택하면 하이라이트할 수 있어요.",

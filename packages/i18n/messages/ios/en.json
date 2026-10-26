@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Note",
+    "titleLabel": "Title",
     "placeholder": "Why you kept it, or what to do with it.",
     "hint": "Only you see it. Search finds it."
   },

@@ -343,8 +343,6 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
         kind: x.kind,
         previewGuess: x.preview,
         facts: x.facts,
-        // A title the user typed is never replaced by extraction.
-        ...(current.titleIsDerived && x.title ? { title: x.title } : {}),
         siteName: x.siteName ?? current.siteName,
         author: x.author,
         excerpt: x.excerpt,
@@ -359,7 +357,10 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
     },
     { returnDocument: "after" },
   );
-  return doc && toItem(doc);
+  // A title the user typed is never replaced, even one typed while this read was running: checked as it is written.
+  const named = x.title ? await col.findOneAndUpdate({ _id, userId: uid, titleIsDerived: true }, { $set: { title: x.title } }, { returnDocument: "after" }) : null;
+  const out = named ?? doc;
+  return out && toItem(out);
 }
 
 // Records a failed attempt. `final` turns pending into failed; otherwise it stays pending for the retry queue.

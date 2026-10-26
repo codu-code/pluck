@@ -77,10 +77,12 @@ describe("re-pluck", () => {
   });
 });
 
-test("a title the user typed survives extraction", async () => {
-  const { a } = await twoUsers();
+test("a title the user typed survives extraction, and only its owner's extraction names it", async () => {
+  const { a, b } = await twoUsers();
   const { item } = await pluckLink(a, { url: "https://example.com/t", source: "web" });
-  await (await items()).updateOne({ url: "https://example.com/t" }, { $set: { title: "Mine", titleIsDerived: false } });
+  expect(await applyExtraction(b, item.id, { ...extraction, title: "Not yours" })).toBeNull();
+  expect((await applyExtraction(a, item.id, { ...extraction, title: "Read" }))?.title).toBe("Read");
+  await (await items()).updateOne({ _id: oid(item.id) }, { $set: { title: "Mine", titleIsDerived: false } });
   expect((await applyExtraction(a, item.id, extraction))?.title).toBe("Mine");
 });
 
