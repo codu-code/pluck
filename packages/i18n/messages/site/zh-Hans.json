@@ -12,12 +12,13 @@
     "connect": "连接你的 AI",
     "openSource": "开源",
     "getPluck": "获取 Pluck",
-    "footerHome": "首页",
     "support": "帮助",
     "privacy": "隐私",
     "terms": "条款",
     "cookies": "Cookie",
-    "freeAndOpen": "Pluck 免费且开源。"
+    "freeAndOpen": "Pluck 免费且开源。",
+    "blog": "博客",
+    "tagline": "先摘下，稍后再整理。"
   },
   "paste": {
     "label": "粘贴一个链接试试",
@@ -586,5 +587,20 @@
     "desktop": "在电脑上？用 iPhone 相机对准这里。",
     "qrAlt": "TestFlight 上 Pluck 公测的二维码",
     "feedback": "哪里不对？在 Pluck 里截个屏，TestFlight 会问你要不要发给我们。也可以写信到 support@getpluck.io。"
+  },
+  "blog": {
+    "meta": {
+      "title": "博客 · Pluck",
+      "description": "从 Pocket 或 Omnivore 搬来你的资料库、留住页面、让你的 AI 干活。来自 Pluck 制作者的短文。"
+    },
+    "title": "博客<dot>。</dot>",
+    "lede": "搬来你的资料库、留住页面、让你的 AI 干活。和这里的一切一样，简短。",
+    "all": "全部文章",
+    "minutes": "阅读约 {minutes, number} 分钟",
+    "englishOnly": "本文为英文。",
+    "box": {
+      "title": "先摘下。",
+      "body": "免费且开源。用邮件里的链接<link>开始使用 Pluck</link>，或自己托管。"
+    }
   }
 }

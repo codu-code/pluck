@@ -12,12 +12,13 @@
     "connect": "내 AI 연결",
     "openSource": "오픈소스",
     "getPluck": "Pluck 시작하기",
-    "footerHome": "홈",
     "support": "도움말",
     "privacy": "개인정보",
     "terms": "이용약관",
     "cookies": "쿠키",
-    "freeAndOpen": "Pluck은 무료 오픈소스예요."
+    "freeAndOpen": "Pluck은 무료 오픈소스예요.",
+    "blog": "블로그",
+    "tagline": "일단 담고, 정리는 나중에."
   },
   "paste": {
     "label": "링크를 붙여 넣고 써 보세요",
@@ -586,5 +587,20 @@
     "desktop": "컴퓨터로 보고 있나요? iPhone 카메라를 여기에 비춰 보세요.",
     "qrAlt": "TestFlight Pluck 베타 QR 코드",
     "feedback": "이상한 점이 있나요? Pluck에서 스크린샷을 찍으면 TestFlight가 저희에게 보낼지 물어봐요. support@getpluck.io로 메일을 보내도 돼요."
+  },
+  "blog": {
+    "meta": {
+      "title": "블로그 · Pluck",
+      "description": "Pocket이나 Omnivore에서 라이브러리 옮기기, 페이지 남기기, 내 AI 활용하기. Pluck을 만드는 사람들의 짧은 글."
+    },
+    "title": "블로그<dot>.</dot>",
+    "lede": "라이브러리 옮기기, 페이지 남기기, 내 AI 활용하기. 여기 있는 모든 것처럼 짧게.",
+    "all": "모든 글",
+    "minutes": "{minutes, number}분 읽기",
+    "englishOnly": "이 글은 영어로 되어 있어요.",
+    "box": {
+      "title": "일단 담아요.",
+      "body": "무료 오픈소스. 이메일 링크로 <link>Pluck 시작하기</link>, 또는 직접 호스팅하세요."
+    }
   }
 }

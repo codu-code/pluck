@@ -12,12 +12,13 @@
     "connect": "Conecte sua IA",
     "openSource": "Código aberto",
     "getPluck": "Comece grátis",
-    "footerHome": "Início",
     "support": "Ajuda",
     "privacy": "Privacidade",
     "terms": "Termos",
     "cookies": "Cookies",
-    "freeAndOpen": "O Pluck é grátis e de código aberto."
+    "freeAndOpen": "O Pluck é grátis e de código aberto.",
+    "blog": "Blog",
+    "tagline": "Colha agora. Organize depois."
   },
   "paste": {
     "label": "Cole um link para experimentar",
@@ -586,5 +587,20 @@
     "desktop": "No computador? Aponte a câmera do iPhone para cá.",
     "qrAlt": "Código QR da beta do Pluck no TestFlight",
     "feedback": "Algo estranho? Tire um print no Pluck e o TestFlight oferece mandá-lo para nós. Ou escreva para support@getpluck.io."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog · Pluck",
+      "description": "Trazer sua biblioteca do Pocket ou do Omnivore, guardar a página e pôr a sua IA para trabalhar. Textos curtos de quem faz o Pluck."
+    },
+    "title": "Blog<dot>.</dot>",
+    "lede": "Trazer sua biblioteca, guardar a página e pôr a sua IA para trabalhar. Curto, como tudo aqui.",
+    "all": "Todos os posts",
+    "minutes": "{minutes, number} min de leitura",
+    "englishOnly": "Este post está em inglês.",
+    "box": {
+      "title": "Colha agora.",
+      "body": "Grátis e de código aberto. <link>Use o Pluck</link> com um link por e-mail, ou hospede o seu."
+    }
   }
 }

@@ -49,18 +49,31 @@
 .dark .cta { background: var(--highlight); }
 .site.dark .cta, .site.dark .cta:hover { color: #151A13; }
 .footer { margin-top: auto; border-top: 1px solid var(--line); }
-.footerInner { max-width: 1240px; margin: 0 auto; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; font-size: 14px; color: var(--ink2); }
-.footerInner a, .site .footerInner a { color: var(--ink2); }
-.footerButton { padding: 0; border: 0; background: none; font: inherit; color: var(--ink2); text-decoration: underline; cursor: pointer; }
-.footerButton:hover { color: var(--ink); }
-.footerLanguage { display: inline-flex; align-items: center; gap: 6px; }
-.footerLanguage select { appearance: none; height: 32px; padding: 0 28px 0 10px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; color: var(--ink); cursor: pointer;
-  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23525A4E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center; }
+/* The brand on the left, three quiet groups of links, then a base row: language and who runs it. */
+.footerInner { max-width: 1240px; margin: 0 auto; padding: 56px 24px 32px; display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, auto); gap: 48px 72px; font-size: 15px; line-height: 24px; color: var(--ink2); }
+.footerBrand p { margin: 12px 0 0; max-width: 28ch; }
+.footerLinks { margin: -6px 0; padding: 0; list-style: none; display: flex; flex-direction: column; }
+.footerLinks li:empty { display: none; } /* Cookies only shows when analytics is on */
+.footerLinks a, .footerButton { display: inline-block; padding: 6px 0; text-decoration: none; transition: color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.site .footerLinks a, .footerButton { color: var(--ink2); }
+.site .footerLinks a:hover, .footerButton:hover { color: var(--ink); }
+.site .footerLinks a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.dark .footerLinks a[aria-current="page"] { text-decoration: none; color: var(--highlight); }
+.footerButton { border: 0; background: none; font: inherit; cursor: pointer; }
+.footerBase { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 14px; }
+.footerLanguage { display: inline-flex; align-items: center; gap: 8px; }
+.footerLanguage select { appearance: none; height: 36px; padding: 0 30px 0 12px; border: 1px solid var(--line-strong); border-radius: 8px; font: inherit; color: var(--ink); cursor: pointer;
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23525A4E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center; }
 .dark .footerLanguage select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23A0A898' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 .footerLanguage select:hover { border-color: var(--ink2); }
-.footerBrand { margin-right: auto; display: inline-flex; align-items: center; }
-.footerNote { margin-right: auto; }
-@media (max-width: 600px) { .footerBrand, .footerNote { flex-basis: 100%; margin-bottom: 4px; } }
+/* On a phone the brand takes the top, the groups pair up, and each link is a full-size tap target. */
+@media (max-width: 720px) {
+  .footerInner { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; padding: 40px 20px 28px; }
+  .footerBrand, .footerLinks:last-of-type { grid-column: 1 / -1; }
+  .footerLinks { margin: -10px 0; }
+  .footerLinks:last-of-type { flex-direction: row; flex-wrap: wrap; column-gap: 24px; } /* the legal links read as one line of small print */
+  .footerLinks a, .footerButton { padding: 10px 0; }
+}
 
 /* Buttons */
 .big { display: inline-flex; align-items: center; height: 56px; padding: 0 24px; border-radius: 12px; text-decoration: none; font-weight: 600; }
@@ -311,6 +324,29 @@
 .legalSection p, .legalBox span { margin: 0; max-width: 52ch; } /* Geist's "0" is wide: 52ch holds about 75 letters */
 .legalBox { display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: var(--rail); }
 .legalBox b { font-weight: 600; }
+
+/* The blog: the legal pages' frame, with the item reader's type (reader.module.css) for the body. */
+.postTitle { margin: 0; font-size: clamp(36px, 5vw, 56px); line-height: 1.05; }
+.postDate { font-size: 14px; line-height: 20px; color: var(--ink2); }
+.postBack { align-self: flex-start; font-size: 14px; font-weight: 600; }
+.legalSection h2 a { text-decoration: none; }
+.legalSection h2 a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.postBody { font-family: var(--font-reader); font-size: 18px; line-height: 29px; overflow-wrap: anywhere; }
+.postBody > :first-child { margin-top: 0; }
+.postBody p, .postBody ul, .postBody ol, .postBody blockquote, .postBody pre { margin: 0 0 20px; max-width: 62ch; }
+.postBody li { text-wrap: pretty; }
+.postBody li + li { margin-top: 6px; }
+.postBody h2 { font-family: var(--font-ui); font-size: 24px; line-height: 30px; font-weight: 600; letter-spacing: -0.02em; margin: 40px 0 12px; }
+.postBody pre { font: 14px/1.5 var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; background: var(--rail); padding: 12px 16px; border-radius: 8px; overflow-x: auto; }
+.postBody code { font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; }
+.postBody a { text-underline-offset: 2px; }
+.postBody img { display: block; width: 100%; height: auto; aspect-ratio: auto 16 / 9; border-radius: 12px; } /* the blog's images are 1600 × 900; the ratio holds their room while they load */
+.postBody p:has(> img:only-child) { max-width: none; margin: 32px 0; }
+/* Dev only: where an image will go, with its brief for Claude Design (lib/blog.ts). */
+.postBody :global(.imageTodo) { margin: 32px 0; padding: 20px; border: 1px dashed var(--line-strong); border-radius: 12px; background: var(--rail); font: 14px/22px var(--font-ui); }
+.postBody :global(.imageTodo) figcaption { margin-bottom: 12px; font-weight: 600; }
+.postBody :global(.imageTodo) pre { margin: 0; padding: 0; max-width: none; background: none; font: inherit; white-space: pre-wrap; user-select: all; }
+.postDraft { color: var(--clay); font-weight: 600; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* Motion. One sequence on arrival (the title lands, the row is plucked and stamped), then each drawn piece plays

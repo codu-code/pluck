@@ -57,7 +57,7 @@ test("the site: connect your AI with tabs, open source, privacy and terms", asyn
   await expect(page.getByRole("heading", { name: "Cookies and analytics" })).toBeVisible();
   await page.getByRole("link", { name: "Terms" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Terms");
-  await page.getByRole("link", { name: "Home", exact: true }).click();
+  await page.getByRole("contentinfo").getByRole("link", { name: "Pluck home" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pluck it.");
 });
 
@@ -89,7 +89,7 @@ test("iPhone: the public TestFlight beta, with the link, four steps and a code t
   await expect(page).toHaveURL(/\/iphone$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Try it on your iPhone.");
   await expect(page.getByRole("link", { name: "Join the beta on TestFlight" })).toHaveAttribute("href", /^https:\/\/testflight\.apple\.com\/join\//);
-  await expect(page.getByRole("listitem")).toHaveCount(4);
+  await expect(page.getByRole("main").getByRole("listitem")).toHaveCount(4);
   await expect(page.getByRole("img", { name: "QR code for the Pluck beta on TestFlight" })).toBeVisible();
   // On a phone the link is the way in; the code to scan is for a computer.
   await page.setViewportSize({ width: 390, height: 844 });
@@ -108,6 +108,39 @@ test("support: answers by topic, and bugs go to GitHub issues", async ({ page })
   await expect(page.getByRole("link", { name: "Open an issue" })).toHaveAttribute("href", /\/issues$/);
   await page.getByRole("link", { name: "Connect your AI" }).last().click();
   await expect(page).toHaveURL(/\/connect$/);
+});
+
+test("for search and AI engines: structured data that matches the page, and llms.txt", async ({ page, request }) => {
+  const ld = async () => JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+  await page.goto("/");
+  expect((await ld())["@graph"].map((g: { "@type": string }) => g["@type"])).toEqual(["Organization", "WebSite", "SoftwareApplication"]);
+  await page.goto("/support");
+  const faq = (await ld()).mainEntity as { name: string }[];
+  expect(faq.map((q) => q.name)).toEqual(await page.locator("h3").allTextContents()); // every answer on the page, no more
+  const llms = await request.get("/llms.txt");
+  expect(llms.headers()["content-type"]).toContain("text/markdown");
+  expect(await llms.text()).toContain("http://127.0.0.1:3300/mcp");
+});
+
+test("blog: the footer leads to the posts, and each one says what it is to search and AI engines", async ({ page, request }) => {
+  await page.goto("/");
+  await page.getByRole("contentinfo").getByRole("link", { name: "Blog" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Blog.");
+  await page.getByRole("link", { name: "Pocket is gone. Your export isn’t." }).click();
+  await expect(page).toHaveURL(/\/blog\/pocket-is-gone$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pocket is gone. Your export isn’t.");
+  await expect(page.getByRole("heading", { level: 2, name: "Bring it across" })).toBeVisible();
+  const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+  expect(ld).toMatchObject({ "@type": "BlogPosting", headline: "Pocket is gone. Your export isn’t.", inLanguage: "en", image: expect.stringMatching(/\/blog\/pocket-is-gone\/hero\.png$/) });
+  await expect(page.getByText("Pocket alternative")).toHaveCount(0); // search words live in the structured data, not on the page
+  await expect(page.getByRole("img", { name: "Rows from a Pocket CSV becoming items in Pluck." })).toHaveJSProperty("naturalWidth", 1600);
+  await expect(page.getByText("Image for Claude Design")).toHaveCount(0); // briefs for images still to be made show in dev only
+  expect((await request.get("/blog/no-such-post")).status()).toBe(404);
+  expect(await (await request.get("/sitemap.xml")).text()).toContain("/blog/pocket-is-gone");
+  // drafts show in dev only: no page, no sitemap entry, no llms.txt line
+  expect((await request.get("/blog/nothing-is-deleted")).status()).toBe(404);
+  expect(await (await request.get("/sitemap.xml")).text()).not.toContain("nothing-is-deleted");
+  expect(await (await request.get("/llms.txt")).text()).not.toContain("nothing-is-deleted");
 });
 
 test("languages: the browser's language is used, and the footer picker sticks", async ({ browser }) => {

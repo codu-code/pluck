@@ -7,7 +7,7 @@ import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.openSource.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/open-source" } };
 }
 
 const REASONS = ["export", "page", "public", "ai"] as const;

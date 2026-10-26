@@ -4,7 +4,7 @@ import { LegalPage } from "../LegalPage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.privacy.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/privacy" } };
 }
 
 // Each section's heading and paragraph, by key under site.privacy.sections.
