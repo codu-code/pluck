@@ -35,7 +35,7 @@ const withDarkIcon: ConfigPlugin = (c) => {
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
-  version: "1.2.0",
+  version: "1.2.0", // raised once per release, in its own change; never per feature (docs/ios.md)
   // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect (withOnlyPluckScheme below):
   // sign-in comes back over HTTPS from the code the person types (lib/session.ts), so no scheme carries it.
   scheme: "pluck",
@@ -47,7 +47,8 @@ const config: ExpoConfig = {
     // The Apple Developer team (Membership details). The same value as APPLE_TEAM_ID on the web server, which serves
     // apple-app-site-association; prebuild signs both targets with it, so Xcode never needs the team picked by hand.
     ...(process.env.APPLE_TEAM_ID ? { appleTeamId: process.env.APPLE_TEAM_ID } : {}),
-    buildNumber: "4", // raise for every TestFlight upload (docs/ios.md)
+    // Set by scripts/testflight.sh to one more than App Store Connect's highest; never committed. Local builds say 1.
+    buildNumber: process.env.PLUCK_BUILD_NUMBER ?? "1",
     supportsTablet: false,
     entitlements: {
       "com.apple.security.application-groups": [GROUP],

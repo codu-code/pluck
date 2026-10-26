@@ -36,18 +36,18 @@ Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 1. Put the PostHog project token in `apps/ios/.env.local` (git-ignored) as `EXPO_PUBLIC_POSTHOG_KEY=phc_…`. Metro reads it when it bundles the Release build; without it the app sends nothing and never asks.
 2. `cd apps/ios && APPLE_TEAM_ID=<team id> pnpm exec expo prebuild -p ios --clean` (no `PLUCK_SERVER`: store builds point at getpluck.io). `APPLE_TEAM_ID` signs both targets, so nothing needs picking in Xcode; use the same value as in Vercel.
 3. Open `ios/Pluck.xcworkspace`. For both targets (Pluck and the share extension) check the team under Signing & Capabilities, and check the App Group `group.io.getpluck.app`, the Keychain group and Associated Domains (`applinks:getpluck.io`) are there. Set `APPLE_TEAM_ID` in Vercel (docs/deploy.md) so shared links open the app.
-4. Each upload needs a new build number: raise `ios.buildNumber` in `apps/ios/app.config.ts` (a clean prebuild resets anything set in Xcode) and prebuild again. The marketing version is `version` beside it. Then Product, Archive, and Distribute App, App Store Connect, Upload.
+4. Each upload needs a new build number. It is not kept in the repo: set `PLUCK_BUILD_NUMBER` to one more than App Store Connect's highest when you prebuild (`scripts/testflight.sh` asks App Store Connect for it with `scripts/next-build.mjs`). Without it, local builds say 1. The marketing version is `version` in `apps/ios/app.config.ts`, raised once per release (minor for features, patch for fixes), never per change. Then Product, Archive, and Distribute App, App Store Connect, Upload.
 5. In App Store Connect, the build appears under TestFlight after processing (about 15 minutes). Answer the export compliance question (no non-exempt encryption; `ITSAppUsesNonExemptEncryption` is false already), add testers.
 6. App Privacy (App Store Connect, before external testing or review). The privacy manifests already say the same (`ios.privacyManifests` in `app.config.ts` for the app, `targets/share/PrivacyInfo.xcprivacy` for the share extension), so keep the three in step: Contact info, email (account, linked); User content, photos or videos (images shared to Pluck, linked, app functionality); User content, other (what you pluck, linked, app functionality); Identifiers, user ID (the account, linked, app functionality and analytics, the analytics part only after the in-app yes); Usage data, product interaction (analytics, linked, only after the in-app yes); Diagnostics, crash data (app functionality, not linked). These six are what App Store Connect declares. No tracking in Apple's sense: nothing is shared with data brokers or used across other companies' apps.
 
-From the command line instead of steps 2 to 4: create an App Store Connect API key (Users and Access, Integrations, App Store Connect API, a Team key with the App Manager role), keep the `.p8` somewhere outside the repo, raise `ios.buildNumber`, then:
+From the command line instead of steps 2 to 4: create an App Store Connect API key (Users and Access, Integrations, App Store Connect API, a Team key with the App Manager role), keep the `.p8` somewhere outside the repo, then:
 
 ```sh
-APPLE_TEAM_ID=<team id> ASC_KEY_ID=<key id> ASC_ISSUER_ID=<issuer id> ASC_KEY_PATH=/path/to/AuthKey_<key id>.p8 \
+APPLE_TEAM_ID=<team id> ASC_KEY_ID=<key id> ASC_ISSUER_ID=<issuer id> ASC_KEY_PATH=/path/to/AuthKey_<key id>.p8 ASC_APP_ID=<app id> \
   apps/ios/scripts/testflight.sh
 ```
 
-It prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Steps 5 and 6 still apply.
+It asks App Store Connect for the next build number, prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Steps 5 and 6 still apply.
 
 ## Usage and crash reports
 
