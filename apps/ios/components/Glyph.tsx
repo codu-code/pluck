@@ -25,6 +25,7 @@ export const ICONS = {
   chevron: "M6 3l5 5-5 5",
   back: "M10 3L5 8l5 5",
   archive: "M2 3h12v3H2zM3 6v7h10V6M6.5 9h3",
+  bin: "M2.5 4.5h11M6 4.5V2.5h4v2M3.75 4.5l.75 9h7l.75-9M6.5 7v4M9.5 7v4",
   tag: "M2 2.5h5.5L14 9l-5 5-6.5-6.5zM5 5.5h.01",
   share: "M8 10V2M5 4.5L8 1.5l3 3M4 7H3v7h10V7h-1",
   original: "M9 2h5v5M14 2L7.5 8.5M12 9.5V14H2V4h4.5",

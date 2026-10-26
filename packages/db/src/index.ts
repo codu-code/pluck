@@ -3,7 +3,7 @@ export { ping } from "./client.ts";
 export { authAdapter } from "./auth.ts";
 export {
   pluckLink, createFileItem, createTextItem, editItem, applyExtraction, recordExtractionFailure, resetExtraction, setBlobKeys,
-  findByUrl, getItem, getItemBlobKeys, getContent, listItems, urlHash, batchUpdate, markOpened, moveToBin, restoreFromBin, purgeBin,
+  findByUrl, getItem, getItemBlobKeys, getContent, listItems, urlHash, batchUpdate, markOpened, moveToBin, restoreFromBin, purgeBin, purgeFromBin,
   countItems, BIN_DAYS,
   type PluckLinkInput, type TextItemInput, type ItemEdit, type BatchEdit, type ExtractionResult,
 } from "./items.ts";

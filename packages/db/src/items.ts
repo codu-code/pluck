@@ -275,22 +275,35 @@ export async function purgeBin(
   now = new Date(),
   removeFiles: (prefixes: string[]) => Promise<void> = async () => {},
 ): Promise<{ purged: number; userIds: string[]; blobPrefixes: string[] }> {
-  const col = await items();
   const cutoff = new Date(now.getTime() - BIN_DAYS * 86_400_000);
-  const docs = await col.find({ deletedAt: { $lt: cutoff } }, { projection: { _id: 1, userId: 1 } }).toArray();
-  if (!docs.length) return { purged: 0, userIds: [], blobPrefixes: [] };
-  const blobPrefixes = docs.map((d) => `u/${d.userId.toHexString()}/items/${d._id.toHexString()}/`);
-  // Files first: if that fails, the rows stay and tomorrow's run tries again. Rows gone first would leave the
-  // files with nothing pointing at them.
-  await removeFiles(blobPrefixes);
+  const docs = await (await items()).find({ deletedAt: { $lt: cutoff } }, { projection: { _id: 1, userId: 1 } }).toArray();
+  await purgeDocs(docs, { deletedAt: { $lt: cutoff } }, removeFiles);
+  return { purged: docs.length, userIds: [...new Set(docs.map((d) => d.userId.toHexString()))], blobPrefixes: docs.map(prefixOf) };
+}
+
+// One Item in the person's bin, gone for good now ("Delete forever"). Only from the bin: an Item still in a Status
+// has to be deleted first. False when there is no such Item in their bin.
+export async function purgeFromBin(userId: string, itemId: string, removeFiles: (prefixes: string[]) => Promise<void> = async () => {}): Promise<boolean> {
+  const doc = await (await items()).findOne({ _id: oid(itemId), userId: oid(userId), deletedAt: { $ne: null } }, { projection: { _id: 1, userId: 1 } });
+  if (!doc) return false;
+  await purgeDocs([doc], { userId: oid(userId), deletedAt: { $ne: null } }, removeFiles);
+  return true;
+}
+
+const prefixOf = (d: { _id: ObjectId; userId: ObjectId }) => `u/${d.userId.toHexString()}/items/${d._id.toHexString()}/`;
+
+// Files first: if that fails, the rows stay and the next try goes again. Rows gone first would leave the files with
+// nothing pointing at them. `still` is checked again on the delete, so an Item restored meanwhile stays.
+async function purgeDocs(docs: { _id: ObjectId; userId: ObjectId }[], still: Filter<ItemDoc>, removeFiles: (prefixes: string[]) => Promise<void>) {
+  if (!docs.length) return;
+  await removeFiles(docs.map(prefixOf));
   const ids = docs.map((d) => d._id);
   await (await contents()).deleteMany({ itemId: { $in: ids } });
   await (await highlights()).deleteMany({ itemId: { $in: ids } });
   const listIds = await (await listRows()).distinct("listId", { itemId: { $in: ids } });
   await (await listRows()).deleteMany({ itemId: { $in: ids } });
-  await col.deleteMany({ _id: { $in: ids }, deletedAt: { $lt: cutoff } });
+  await (await items()).deleteMany({ _id: { $in: ids }, ...still });
   for (const id of listIds) await recountList(id);
-  return { purged: docs.length, userIds: [...new Set(docs.map((d) => d.userId.toHexString()))], blobPrefixes };
 }
 
 export async function countItems(userId: string, status: Status): Promise<number> {

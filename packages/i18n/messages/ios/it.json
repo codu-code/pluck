@@ -52,13 +52,15 @@
     "share": "Condividi",
     "more": "Altro",
     "select": "Seleziona",
-    "deselect": "Deseleziona"
+    "deselect": "Deseleziona",
+    "delete": "Elimina"
   },
   "moved": {
     "archived": "Sparito. Anzi, archiviato.",
     "later": "Tenuto per dopo.",
     "done": "Fatto.",
-    "inbox": "Di nuovo nell'Inbox."
+    "inbox": "Di nuovo nell'Inbox.",
+    "deleted": "Eliminato. Resta nel cestino per 30 giorni."
   },
   "movedMany": {
     "archived": "{count, plural, one {Sparito. Anzi, archiviato.} other {# elementi. Spariti. Anzi, archiviati.}}",
@@ -532,8 +534,19 @@
       "expired": "scaduto, conservato qui",
       "bulk": "archiviato con Archivia tutto",
       "import": "importato",
-      "you": "archiviato da te"
-    }
+      "you": "archiviato da te",
+      "bin": "eliminato, sparisce per sempre tra {days, plural, one {# giorno} other {# giorni}}"
+    },
+    "bin": "Cestino",
+    "binLink": "Hai eliminato qualcosa per sbaglio? Il cestino lo conserva per 30 giorni.",
+    "binSubtitle": "Le cose che hai eliminato. Ognuna sparisce per sempre 30 giorni dopo che l'hai eliminata.",
+    "binEmpty": "Il cestino è vuoto.",
+    "outOfBin": "Tolto dal cestino.",
+    "restore": "Ripristina",
+    "forever": "Elimina per sempre",
+    "foreverNote": "Non si può annullare.",
+    "gone": "Eliminato per sempre.",
+    "needsSignIn": "Per eliminare da qui, esci e accedi di nuovo. Esci si trova nelle Impostazioni."
   },
   "add": {
     "title": "Pluck",

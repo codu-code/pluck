@@ -52,13 +52,15 @@
     "share": "Share",
     "more": "More",
     "select": "Select",
-    "deselect": "Deselect"
+    "deselect": "Deselect",
+    "delete": "Delete"
   },
   "moved": {
     "archived": "Gone. Well, archived.",
     "later": "Kept for later.",
     "done": "Done.",
-    "inbox": "Back in the Inbox."
+    "inbox": "Back in the Inbox.",
+    "deleted": "Deleted. It stays in the bin for 30 days."
   },
   "movedMany": {
     "archived": "{count, plural, one {Gone. Well, archived.} other {# items. Gone. Well, archived.}}",
@@ -532,8 +534,19 @@
       "expired": "expired, kept here",
       "bulk": "archived with Archive it all",
       "import": "imported",
-      "you": "archived by you"
-    }
+      "you": "archived by you",
+      "bin": "deleted, gone for good in {days, plural, one {# day} other {# days}}"
+    },
+    "bin": "Bin",
+    "binLink": "Deleted something by mistake? The bin keeps it for 30 days.",
+    "binSubtitle": "Things you deleted. Each one is gone for good 30 days after you deleted it.",
+    "binEmpty": "The bin is empty.",
+    "outOfBin": "Out of the bin.",
+    "restore": "Restore",
+    "forever": "Delete forever",
+    "foreverNote": "This can't be undone.",
+    "gone": "Deleted for good.",
+    "needsSignIn": "To delete from here, sign out and sign in again. Sign out is in Settings."
   },
   "add": {
     "title": "Pluck",

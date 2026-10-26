@@ -34,14 +34,18 @@ export function ShareRow() {
   );
 }
 
-// A row part-way through the swipe that sends it to Later.
+// A row part-way through the swipe that sends it to Later, drawn as the swipe draws it: the Later pill in the gap the
+// row leaves, and the row itself, a card, sliding off to the right.
 export function SwipeToLater() {
   const t = useTheme();
   const tr = useTranslations("ios.art");
   return (
-    <View style={[styles.swipe, { backgroundColor: t.highlight }]}>
-      <Text style={[font.semibold, styles.swipeLabel, { color: t.onHighlight }]}>{tr("later")}</Text>
-      <View style={[styles.swipeRow, { backgroundColor: t.ground }]}>
+    <View style={[styles.swipe, { backgroundColor: t.artPanel }]}>
+      <View style={[styles.swipePill, { backgroundColor: t.highlight }]}>
+        <Icon d={ICONS.later} size={18} color={t.onHighlight} width={1.6} />
+        <Text style={[font.semibold, { color: t.onHighlight, fontSize: 11 }]}>{tr("later")}</Text>
+      </View>
+      <View style={[styles.swipeRow, { backgroundColor: t.surface, borderColor: t.line }]}>
         <View style={[styles.swipeTile, { backgroundColor: t.tiles[0] }]} />
         <View style={{ gap: 6, flex: 1 }}>
           <View style={[styles.bar, { width: "80%", backgroundColor: t.lineStrong }]} />
@@ -57,9 +61,9 @@ const styles = StyleSheet.create({
   tick: { width: 24, height: 24, borderRadius: 12, alignItems: "center", justifyContent: "center" },
   share: { borderRadius: 10, padding: 10, flexDirection: "row", gap: 8 },
   appTile: { width: 34, height: 34, borderRadius: 9 },
-  swipe: { width: 260, height: 56, borderRadius: 10, overflow: "hidden", justifyContent: "center" },
-  swipeLabel: { position: "absolute", left: 14, fontSize: 14 },
-  swipeRow: { position: "absolute", left: 76, right: -40, top: 0, bottom: 0, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 },
+  swipe: { width: 272, borderRadius: 12, padding: 8, overflow: "hidden", flexDirection: "row", gap: 8 },
+  swipePill: { width: 64, height: 56, borderRadius: 10, alignItems: "center", justifyContent: "center", gap: 3 },
+  swipeRow: { width: 230, height: 56, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth * 2, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 10 },
   swipeTile: { width: 34, height: 34, borderRadius: 7 },
   bar: { height: 6, borderRadius: 3 },
 });

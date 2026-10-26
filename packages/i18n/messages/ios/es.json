@@ -52,13 +52,15 @@
     "share": "Compartir",
     "more": "Más",
     "select": "Seleccionar",
-    "deselect": "Anular selección"
+    "deselect": "Anular selección",
+    "delete": "Eliminar"
   },
   "moved": {
     "archived": "Adiós. Bueno, al Archivo.",
     "later": "Para más tarde.",
     "done": "Hecho.",
-    "inbox": "De vuelta en la Bandeja de entrada."
+    "inbox": "De vuelta en la Bandeja de entrada.",
+    "deleted": "Eliminado. Se queda en la papelera durante 30 días."
   },
   "movedMany": {
     "archived": "{count, plural, one {Adiós. Bueno, al Archivo.} other {# elementos. Adiós. Bueno, al Archivo.}}",
@@ -532,8 +534,19 @@
       "expired": "caducó, se conserva aquí",
       "bulk": "archivado con Archivarlo todo",
       "import": "importado",
-      "you": "archivado por ti"
-    }
+      "you": "archivado por ti",
+      "bin": "eliminado, desaparece para siempre en {days, plural, one {# día} other {# días}}"
+    },
+    "bin": "Papelera",
+    "binLink": "¿Eliminaste algo por error? La papelera lo conserva durante 30 días.",
+    "binSubtitle": "Lo que eliminaste. Cada elemento desaparece para siempre 30 días después de eliminarlo.",
+    "binEmpty": "La papelera está vacía.",
+    "outOfBin": "Fuera de la papelera.",
+    "restore": "Restaurar",
+    "forever": "Eliminar para siempre",
+    "foreverNote": "No se puede deshacer.",
+    "gone": "Eliminado para siempre.",
+    "needsSignIn": "Para eliminar desde aquí, cierra sesión y vuelve a entrar. Cerrar sesión está en Ajustes."
   },
   "add": {
     "title": "Pluck",

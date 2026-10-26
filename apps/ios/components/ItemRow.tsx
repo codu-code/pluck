@@ -17,6 +17,7 @@ const GAP = 8; // between the swipe's pill and the row
 type Props = {
   item: Item;
   onMove?: (status: Status) => void;
+  onDelete?: () => void; // the Archive: swipe left to Delete, to the bin
   // Selecting (Inbox and Later): a long press starts it, then a tap adds or takes a row out.
   selecting?: boolean;
   selected?: boolean;
@@ -35,8 +36,8 @@ type Props = {
 };
 
 // A row from the Inbox board: 72 tall (taller at large text sizes), tile, title, site and meta, kind glyph and when.
-// Swipe right for Later, left to Archive (the board draws the Later swipe). Long press to select, as in Gmail.
-export function ItemRow({ item, onMove, selecting = false, selected = false, onSelect, n, below, meta, mark, marked = false, onPress, hideWhen = false, coverPath, trail, checked }: Props) {
+// Swipe right for Later, left to Archive (the board draws the Later swipe); in the Archive, left to Delete. Long press to select, as in Gmail.
+export function ItemRow({ item, onMove, onDelete, selecting = false, selected = false, onSelect, n, below, meta, mark, marked = false, onPress, hideWhen = false, coverPath, trail, checked }: Props) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const cover = useCover(item, coverPath);
@@ -72,6 +73,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       // VoiceOver has no swipe or long press: the same actions from the rotor.
       accessibilityActions={[
         ...(onMove ? [{ name: "later", label: tr(away === "inbox" ? "actions.backToInbox" : "actions.later") }, ...(archived ? [] : [{ name: "archive", label: tr("actions.archive") }])] : []),
+        ...(onDelete ? [{ name: "delete", label: tr("actions.delete") }] : []),
         ...(onSelect ? [{ name: "select", label: tr(selected ? "actions.deselect" : "actions.select") }] : []),
         ...(mark && !selecting ? [{ name: "mark", label: mark.a11y }] : []),
         // A row that does something else on tap (a shared List, the picker) is not the person's to tag.
@@ -83,6 +85,7 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       onAccessibilityAction={(e) => {
         const a = e.nativeEvent.actionName;
         if (a === "archive") onMove?.("archived");
+        else if (a === "delete") onDelete?.();
         else if (a === "later") onMove?.(away);
         else if (a === "select") onSelect?.();
         else if (a === "mark") mark?.onPress();
@@ -151,10 +154,16 @@ export function ItemRow({ item, onMove, selecting = false, selected = false, onS
       renderLeftActions={(_, drag) => (
         <SwipeAction drag={drag} side="left" label={tr(away === "inbox" ? "actions.inbox" : "actions.later")} icon={away === "inbox" ? ICONS.inbox : ICONS.later} bg={t.highlight} ink={t.onHighlight} />
       )}
-      renderRightActions={archived ? undefined : (_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.archive")} icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />}
+      renderRightActions={
+        archived
+          ? onDelete && ((_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.delete")} icon={ICONS.bin} bg={t.archiveBg} ink={t.archiveInk} />)
+          : (_, drag) => <SwipeAction drag={drag} side="right" label={tr("actions.archive")} icon={ICONS.archive} bg={t.archiveBg} ink={t.archiveInk} />
+      }
       onSwipeableOpen={(direction) => {
         swipe.current?.reset(); // closed again, so the row cannot come back (Undo) with its action still showing
-        onMove(direction === "left" ? "archived" : away);
+        if (direction === "right") onMove(away);
+        else if (archived) onDelete?.();
+        else onMove("archived");
       }}
     >
       {row}

@@ -52,13 +52,15 @@
     "share": "Deel",
     "more": "Meer",
     "select": "Selecteer",
-    "deselect": "Deselecteer"
+    "deselect": "Deselecteer",
+    "delete": "Verwijderen"
   },
   "moved": {
     "archived": "Weg. Nou ja, gearchiveerd.",
     "later": "Bewaard voor later.",
     "done": "Klaar.",
-    "inbox": "Terug in de Inbox."
+    "inbox": "Terug in de Inbox.",
+    "deleted": "Verwijderd. Het blijft 30 dagen in de prullenbak."
   },
   "movedMany": {
     "archived": "{count, plural, one {Weg. Nou ja, gearchiveerd.} other {# items. Weg. Nou ja, gearchiveerd.}}",
@@ -532,8 +534,19 @@
       "expired": "verlopen, hier bewaard",
       "bulk": "gearchiveerd met Alles archiveren",
       "import": "geïmporteerd",
-      "you": "door jou gearchiveerd"
-    }
+      "you": "door jou gearchiveerd",
+      "bin": "verwijderd, voorgoed weg over {days, plural, one {# dag} other {# dagen}}"
+    },
+    "bin": "Prullenbak",
+    "binLink": "Per ongeluk iets verwijderd? De prullenbak bewaart het 30 dagen.",
+    "binSubtitle": "Dingen die je verwijderde. Elk ervan is 30 dagen na het verwijderen voorgoed weg.",
+    "binEmpty": "De prullenbak is leeg.",
+    "outOfBin": "Uit de prullenbak gehaald.",
+    "restore": "Terugzetten",
+    "forever": "Definitief verwijderen",
+    "foreverNote": "Dit kun je niet ongedaan maken.",
+    "gone": "Definitief verwijderd.",
+    "needsSignIn": "Om hier te verwijderen, log je uit en weer in. Uitloggen vind je in Instellingen."
   },
   "add": {
     "title": "Pluk",

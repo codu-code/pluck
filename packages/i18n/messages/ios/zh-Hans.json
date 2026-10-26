@@ -52,13 +52,15 @@
     "share": "分享",
     "more": "更多",
     "select": "选择",
-    "deselect": "取消选择"
+    "deselect": "取消选择",
+    "delete": "删除"
   },
   "moved": {
     "archived": "没了。好吧，是归档了。",
     "later": "留着稍后看。",
     "done": "已完成。",
-    "inbox": "回到收件箱了。"
+    "inbox": "回到收件箱了。",
+    "deleted": "已删除。它会在回收站里保留 30 天。"
   },
   "movedMany": {
     "archived": "{count, plural, =1 {没了。好吧，是归档了。} other {# 条。没了。好吧，是归档了。}}",
@@ -532,8 +534,19 @@
       "expired": "已到期，留在这里",
       "bulk": "通过“全部归档”归档",
       "import": "导入的",
-      "you": "由你归档"
-    }
+      "you": "由你归档",
+      "bin": "已删除，{days, plural, other {# 天}}后永久删除"
+    },
+    "bin": "回收站",
+    "binLink": "不小心删错了？回收站会保留 30 天。",
+    "binSubtitle": "你删除的东西。每一条都会在删除 30 天后永久删除。",
+    "binEmpty": "回收站是空的。",
+    "outOfBin": "已从回收站恢复。",
+    "restore": "恢复",
+    "forever": "永久删除",
+    "foreverNote": "此操作无法撤销。",
+    "gone": "已永久删除。",
+    "needsSignIn": "要在这里删除，请先退出登录再重新登录。退出登录在设置里。"
   },
   "add": {
     "title": "摘下",
