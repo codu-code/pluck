@@ -57,17 +57,15 @@ type Props = {
   expiry: Expiry;
   expiringThisWeek?: number;
   deletedId?: string; // set after a delete on the item page: offers Undo from the bin
+  sample?: string; // the paste box's example link while the list is empty (Inbox only)
 };
 
-const SAMPLE_URL = "https://getpluck.io/sample";
-
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
-export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId }: Props) {
+export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId, sample }: Props) {
   const t = useTranslations("app.itemList");
   const app = useTranslations("app");
   const title = app(`status.${view}`);
   const empty = () => (view === "inbox" ? <EmptyInbox /> : <EmptyState title={t("later.empty.title")} body={t("later.empty.body")} />);
-  const sample = view === "inbox" ? SAMPLE_URL : undefined;
   const router = useRouter();
   const [rows, setRows] = useState<Row[]>(initial.items);
   const [nextCursor, setNextCursor] = useState(initial.nextCursor);

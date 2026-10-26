@@ -53,8 +53,8 @@ function textOf(html: string | null | undefined): string {
 // [words](address) as the words, for a title or an excerpt.
 const plain = (md: string) => md.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
-// A post's title is what it says, its first line that is more than an address, not who said it ("Addy Osmani
-// (@addyosmani) on X"). Long lines stop at a word, about 90 characters in.
+// A post's title is what it says, its first line that is more than an address, not who said it ("Fern Example
+// (@fern_example) on X"). Long lines stop at a word, about 90 characters in.
 export function titleFromText(text: string | null | undefined, max = 90): string | null {
   // An address in the words is no title: bare ones go, and so does a link's label at the end when it is a path.
   const line = plain(text ?? "").split("\n")

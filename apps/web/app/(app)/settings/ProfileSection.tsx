@@ -9,7 +9,7 @@ const send = (body: unknown) => fetch("/api/v1/me", { method: "PATCH", headers: 
 
 // Name and handle (Settings board, top). The name saves on blur. The handle is in public List links, so a change
 // says what moves and waits for Save; Make one up only fills the field.
-export function ProfileSection({ initial, publicLists }: { initial: Me; publicLists: number }) {
+export function ProfileSection({ initial, publicLists, host }: { initial: Me; publicLists: number; host: string }) {
   const [me, setMe] = useState(initial);
   const [name, setName] = useState(initial.name);
   const [handle, setHandle] = useState(initial.handle ?? "");
@@ -45,7 +45,7 @@ export function ProfileSection({ initial, publicLists }: { initial: Me; publicLi
         <label className={styles.stack}>
           <span className={styles.label}>{t("handle")}</span>
           <span className={styles.handleBox}>
-            <span className={styles.prefix}>getpluck.io/@</span>
+            <span className={styles.prefix}>{host}/@</span>
             <input
               className={styles.handleInput}
               value={handle}
@@ -59,7 +59,7 @@ export function ProfileSection({ initial, publicLists }: { initial: Me; publicLi
         {changed ? (
           <div className={styles.handleChange}>
             <p className={styles.handleWarning} role={error ? "alert" : "status"}>
-              {error ?? (valid ? t("move", { count: publicLists, host: "getpluck.io", handle: next }) : t("invalid"))}
+              {error ?? (valid ? t("move", { count: publicLists, host, handle: next }) : t("invalid"))}
             </p>
             <div className={styles.handleActions}>
               <button type="button" className={styles.primaryButton} disabled={!valid} onClick={() => void save({ handle: next }, t("handleSaved"))}>

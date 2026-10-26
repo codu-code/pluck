@@ -17,9 +17,12 @@ import { clientIp } from "./ip";
 
 const DAY = 60 * 60 * 24;
 
+// This copy's own address: getpluck.io hosted, a self-hoster's domain otherwise. HOST is how the UI shows it.
+export const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+export const HOST = new URL(ORIGIN).host;
+
 // Every OAuth token is bound (aud) to one protected resource: the connector for AI tools,
 // or the REST API for our own apps (the extension, iOS).
-const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 export const MCP_RESOURCE = `${ORIGIN}/mcp`;
 export const API_RESOURCE = `${ORIGIN}/api/v1`;
 export const LIBRARY_SCOPES = ["library:read", "library:write", "library:delete"] as const;

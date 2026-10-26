@@ -5,7 +5,8 @@ import nodemailer from "nodemailer";
 // so replies go to EMAIL_REPLY_TO unless the email names its own, or says null (sign-in links: no reply).
 export type Email = { to: string; subject: string; text: string; html?: string; headers?: Record<string, string>; from?: string; replyTo?: string | null };
 
-// The email seam: SMTP (Mailpit locally, or a self-hoster's relay) when SMTP_URL is set, SES otherwise.
+// The email seam: SMTP (Mailpit locally, or a self-hoster's relay) when SMTP_URL is set, SES in production otherwise.
+// Anywhere else a missing SMTP_URL is a mistake, and SES would send real mail with whatever AWS keys are on the machine.
 export async function sendEmail(email: Email): Promise<void> {
   // The App Review account has no mailbox anyone reads: its welcome and Monday email would only bounce.
   if (process.env.REVIEW_EMAIL && email.to.toLowerCase() === process.env.REVIEW_EMAIL.trim().toLowerCase()) return;
@@ -15,6 +16,7 @@ export async function sendEmail(email: Email): Promise<void> {
     await nodemailer.createTransport(process.env.SMTP_URL).sendMail({ ...email, from, replyTo });
     return;
   }
+  if (process.env.NODE_ENV !== "production") throw new Error("SMTP_URL is not set: point it at Mailpit (see .env.example). Only production sends through SES.");
   await new SESv2Client({}).send(
     new SendEmailCommand({
       FromEmailAddress: from,

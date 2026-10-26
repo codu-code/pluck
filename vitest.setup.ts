@@ -1,9 +1,12 @@
 import { afterAll } from "vitest";
 
-// Tests read the same .env as the app (blob credentials, fixture access), then override the database.
+// Tests read the same .env as the app (blob credentials, fixture access, SMTP_URL so no email leaves the machine),
+// then override the database. Without it, tests would run against whatever the shell happens to have.
 try {
   process.loadEnvFile(".env");
-} catch {}
+} catch {
+  throw new Error("No .env at the repo root: run `cp .env.example .env` before `pnpm test`.");
+}
 
 // Every test file gets a throwaway database on the dev Mongo, dropped when the file finishes.
 const name = `pluck_test_${process.pid}_${Math.random().toString(36).slice(2, 8)}`;

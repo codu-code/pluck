@@ -34,7 +34,8 @@ async function cjk(text: string) {
   }
 }
 
-export async function og({ title, sub, foot = "getpluck.io", tone = "forest" }: { title: string; sub?: string; foot?: string; tone?: "forest" | "light" }) {
+// The foot defaults to this copy's own address, so a self-hosted copy's previews name it and not getpluck.io.
+export async function og({ title, sub, foot = new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000").host, tone = "forest" }: { title: string; sub?: string; foot?: string; tone?: "forest" | "light" }) {
   const c = C[tone];
   const h = headline(title);
   const lines = h.text.split("\n");

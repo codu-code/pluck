@@ -259,7 +259,7 @@ export async function moveToBin(userId: string, itemId: string): Promise<boolean
 
 export async function restoreFromBin(userId: string, itemId: string): Promise<Item | null> {
   const doc = await (await items()).findOneAndUpdate(
-    { _id: oid(itemId), userId: oid(userId), deletedAt: { $ne: null } },
+    { _id: oid(itemId), userId: oid(userId), deletedAt: { $ne: null }, purging: { $ne: true } },
     { $set: { deletedAt: null, lastTouchedAt: new Date() } },
     { returnDocument: "after" },
   );
@@ -276,8 +276,8 @@ export async function purgeBin(
   removeFiles: (prefixes: string[]) => Promise<void> = async () => {},
 ): Promise<{ purged: number; userIds: string[]; blobPrefixes: string[] }> {
   const cutoff = new Date(now.getTime() - BIN_DAYS * 86_400_000);
-  const docs = await (await items()).find({ deletedAt: { $lt: cutoff } }, { projection: { _id: 1, userId: 1 } }).toArray();
-  await purgeDocs(docs, { deletedAt: { $lt: cutoff } }, removeFiles);
+  const found = await (await items()).find({ deletedAt: { $lt: cutoff } }, { projection: { _id: 1, userId: 1 } }).toArray();
+  const docs = await purgeDocs(found, { deletedAt: { $lt: cutoff } }, removeFiles);
   return { purged: docs.length, userIds: [...new Set(docs.map((d) => d.userId.toHexString()))], blobPrefixes: docs.map(prefixOf) };
 }
 
@@ -286,24 +286,31 @@ export async function purgeBin(
 export async function purgeFromBin(userId: string, itemId: string, removeFiles: (prefixes: string[]) => Promise<void> = async () => {}): Promise<boolean> {
   const doc = await (await items()).findOne({ _id: oid(itemId), userId: oid(userId), deletedAt: { $ne: null } }, { projection: { _id: 1, userId: 1 } });
   if (!doc) return false;
-  await purgeDocs([doc], { userId: oid(userId), deletedAt: { $ne: null } }, removeFiles);
-  return true;
+  return (await purgeDocs([doc], { userId: oid(userId), deletedAt: { $ne: null } }, removeFiles)).length > 0;
 }
 
 const prefixOf = (d: { _id: ObjectId; userId: ObjectId }) => `u/${d.userId.toHexString()}/items/${d._id.toHexString()}/`;
 
-// Files first: if that fails, the rows stay and the next try goes again. Rows gone first would leave the files with
-// nothing pointing at them. `still` is checked again on the delete, so an Item restored meanwhile stays.
+// Claims the Items that still match `still` first, and touches only those: an Item restored or re-plucked before the
+// claim stays whole, and once claimed it cannot be restored and gives up its URL, so a re-pluck makes a new Item
+// instead of reviving one whose text is half gone. Then files, then rows: rows gone first would leave the files with
+// nothing pointing at them. If the files fail, the claimed rows stay and the next run goes again.
 async function purgeDocs(docs: { _id: ObjectId; userId: ObjectId }[], still: Filter<ItemDoc>, removeFiles: (prefixes: string[]) => Promise<void>) {
-  if (!docs.length) return;
-  await removeFiles(docs.map(prefixOf));
-  const ids = docs.map((d) => d._id);
+  if (!docs.length) return [];
+  const col = await items();
+  const found = docs.map((d) => d._id);
+  await col.updateMany({ _id: { $in: found }, ...still }, { $set: { purging: true }, $unset: { urlHash: "" } });
+  const claimed = await col.find({ _id: { $in: found }, purging: true }, { projection: { _id: 1, userId: 1 } }).toArray();
+  if (!claimed.length) return [];
+  await removeFiles(claimed.map(prefixOf));
+  const ids = claimed.map((d) => d._id);
   await (await contents()).deleteMany({ itemId: { $in: ids } });
   await (await highlights()).deleteMany({ itemId: { $in: ids } });
   const listIds = await (await listRows()).distinct("listId", { itemId: { $in: ids } });
   await (await listRows()).deleteMany({ itemId: { $in: ids } });
-  await (await items()).deleteMany({ _id: { $in: ids }, ...still });
+  await col.deleteMany({ _id: { $in: ids }, purging: true });
   for (const id of listIds) await recountList(id);
+  return claimed;
 }
 
 export async function countItems(userId: string, status: Status): Promise<number> {
@@ -332,7 +339,7 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
   const current = await col.findOne({ _id, userId: uid });
   if (!current) return null;
   await (await contents()).updateOne(
-    { itemId: _id },
+    { itemId: _id, userId: uid },
     { $set: { userId: uid, textMarkdown: x.markdown, extractor: x.extractor, bytes: Buffer.byteLength(x.markdown) } },
     { upsert: true },
   );

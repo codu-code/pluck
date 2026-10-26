@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { requireUser, MCP_RESOURCE } from "@/lib/auth";
+import { requireUser, HOST, MCP_RESOURCE } from "@/lib/auth";
 import { aiTaggedCount, aiToolsOf, archiveItAll, emailInAddress, keysOf, listsOf, me, tagsOf } from "@/lib/library";
 import { CookiesLink } from "@/components/CookieBanner";
 import { LanguageSelect } from "@/components/LanguageSelect";
@@ -32,7 +32,7 @@ export default async function Settings() {
           {user.email} · {t("settings.signedIn")} · <SignOut /> · <CookiesLink className={styles.linkButton} />
         </span>
       </div>
-      <ProfileSection initial={profile} publicLists={lists.filter((l) => l.visibility === "public").length} />
+      <ProfileSection initial={profile} publicLists={lists.filter((l) => l.visibility === "public").length} host={HOST} />
       <AiToolsSection connectorUrl={MCP_RESOURCE} keyPrefix={keys[0]?.prefix ?? null} initial={aiTools} lastCallAt={profile.lastMcpCallAt} />
       <div className={styles.pair}>
         <EmailInSection initial={address} />

@@ -29,7 +29,7 @@ const byPosition = (a: ListEntry, b: ListEntry) => a.position - b.position;
 
 // The Collection board, with Inbox rows: one list in order, each item with a note and a mark that belong to the list.
 // Marked rows gather under a header that folds; each keeps its number.
-export function ListView({ initial, handle, people }: { initial: { list: List; entries: ListEntry[] }; handle: string | null; people: ListShare[] }) {
+export function ListView({ initial, handle, host, people }: { initial: { list: List; entries: ListEntry[] }; handle: string | null; host: string; people: ListShare[] }) {
   const router = useRouter();
   const now = useNow();
   const [list, setList] = useState(initial.list);
@@ -45,8 +45,6 @@ export function ListView({ initial, handle, people }: { initial: { list: List; e
   const dragRef = useRef<ListEntry | null>(null); // for the logic: set synchronously, before the first dragover
   const [picking, setPicking] = useState(false); // Select pressed, nothing chosen yet
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [host, setHost] = useState("getpluck.io");
-  useEffect(() => setHost(window.location.host), []);
   const [toast, showToast] = useToast();
   const t = useTranslations("app.list");
   const app = useTranslations("app");
