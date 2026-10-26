@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
-import { Empty } from "@/components/Screen";
+import { Empty, usePull } from "@/components/Screen";
 import { toast } from "@/components/Toast";
 import { keys, useArchive, useMe, usePatchItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
@@ -38,6 +38,7 @@ export default function Archive() {
   const insets = useSafeAreaInsets();
   const qc = useQueryClient();
   const data = useArchive();
+  const pull = usePull(() => data.refetch());
   const me = useMe();
   const patch = usePatchItem();
   const rowText = useRowText();
@@ -85,7 +86,7 @@ export default function Archive() {
         keyExtractor={(r) => ("month" in r ? r.month : r.id)}
         style={{ borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: t.line }}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
-        refreshControl={<RefreshControl refreshing={data.isRefetching && !data.isFetchingNextPage} onRefresh={() => void data.refetch()} />}
+        refreshControl={<RefreshControl {...pull} />}
         onEndReached={() => { if (data.hasNextPage && !data.isFetchingNextPage) void data.fetchNextPage(); }}
         onEndReachedThreshold={0.5}
         ListEmptyComponent={data.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : <Empty title={tr("archive.empty")} />}

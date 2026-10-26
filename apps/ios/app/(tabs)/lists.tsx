@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
-import { Empty, TitledList } from "@/components/Screen";
+import { Empty, TitledList, usePull } from "@/components/Screen";
 import { useLists } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { api } from "@/lib/session";
@@ -19,6 +19,7 @@ export default function Lists() {
   const tr = useTranslations("ios");
   const lists = useLists();
   const shared = useQuery({ queryKey: ["sharedLists"], queryFn: async () => (await api<{ lists: SharedListSummary[] }>("/api/v1/shared")).lists });
+  const pull = usePull(() => Promise.all([lists.refetch(), shared.refetch()]));
   const [folded, setFolded] = useState(false);
   useEffect(() => void kv.get(FOLD, false).then(setFolded), []);
   return (
@@ -35,7 +36,7 @@ export default function Lists() {
       }
       data={lists.data ?? []}
       keyExtractor={(l) => l.id}
-      refreshControl={<RefreshControl refreshing={lists.isRefetching} onRefresh={() => { void lists.refetch(); void shared.refetch(); }} />}
+      refreshControl={<RefreshControl {...pull} />}
       ListFooterComponent={shared.data?.length ? (
         // Lists other people shared with you, See only.
         <View>

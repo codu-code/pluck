@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { type FlatListProps, StyleSheet, Text, View } from "react-native";
 import Animated, { interpolate, LinearTransition, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -73,3 +73,9 @@ const styles = StyleSheet.create({
   empty: { padding: 32, gap: 8, alignItems: "center" },
   bar: { position: "absolute", left: 0, right: 0, height: 44, alignItems: "center", justifyContent: "center", borderBottomWidth: StyleSheet.hairlineWidth * 2 },
 });
+
+// Pull to refresh spins for a pull only: a refetch in the background (coming back to the app, a tab) stays quiet.
+export function usePull(refresh: () => Promise<unknown>) {
+  const [refreshing, setRefreshing] = useState(false);
+  return { refreshing, onRefresh: () => { setRefreshing(true); void refresh().finally(() => setRefreshing(false)); } };
+}

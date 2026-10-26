@@ -1,10 +1,11 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
 import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag } from "@pluck/shared-schemas";
-import { onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { AppState } from "react-native";
 import { createQueue, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
@@ -22,6 +23,12 @@ export const queryClient = new QueryClient({
 onlineManager.setEventListener((setOnline) => {
   const sub = Network.addNetworkStateListener((s) => setOnline(s.isConnected !== false));
   void Network.getNetworkStateAsync().then((s) => setOnline(s.isConnected !== false)).catch(() => {});
+  return () => sub.remove();
+});
+// Coming back to the app counts as focus, so what is on screen refetches in the background, quietly: a pluck from the
+// browser is there when you look. React Native has no window focus to tell TanStack Query.
+focusManager.setEventListener((setFocused) => {
+  const sub = AppState.addEventListener("change", (state) => setFocused(state === "active"));
   return () => sub.remove();
 });
 const subscribe = (fn: () => void) => onlineManager.subscribe(fn);
@@ -42,7 +49,7 @@ export const keys = {
 export type FullItem = { item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
 
 export const useItems = (status: Status) =>
-  useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`) });
+  useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`), refetchOnWindowFocus: "always" });
 // The Archive: archived and done together, newest move first, 50 at a time.
 export const useArchive = () =>
   useInfiniteQuery({
@@ -87,7 +94,7 @@ export const useList = (id: string) =>
   useQuery({ queryKey: keys.list(id), queryFn: () => api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${id}`) });
 export const useTags = () => useQuery({ queryKey: keys.tags, queryFn: async () => (await api<{ tags: Tag[] }>("/api/v1/tags")).tags });
 export const useCounts = () =>
-  useQuery({ queryKey: ["counts"], queryFn: () => api<{ inbox: number; later: number; lists: number }>("/api/v1/counts") });
+  useQuery({ queryKey: ["counts"], queryFn: () => api<{ inbox: number; later: number; lists: number }>("/api/v1/counts"), refetchOnWindowFocus: "always" });
 export const useMe = () => useQuery({ queryKey: keys.me, queryFn: async () => (await api<{ me: Me }>("/api/v1/me")).me });
 
 export type SearchFilters = { kinds?: string[]; status?: Status; tagIds?: string[]; listId?: string; since?: string };
