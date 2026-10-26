@@ -35,6 +35,9 @@
     "done": "Concluído"
   },
   "popup": {
+    "settings": "Opções e sair",
+    "home": "Abrir o Pluck",
+    "deleteNeedsSignIn": "Para apagar por aqui, saia e entre de novo. As duas opções ficam na engrenagem.",
     "plucking": "Colhendo…",
     "signedOut": {
       "lede": "A página em que você está, guardada com um clique. Entre uma vez, com seu e-mail.",
@@ -47,13 +50,12 @@
       "count": "{count, plural, one {# item} other {# itens}} na fila neste navegador."
     },
     "already": {
-      "meta": "Colhido em {date} · {status}",
-      "open": "Abrir no Pluck",
-      "again": "Colher de novo"
+      "meta": "Colhido em {date} · {status}"
     },
     "plucked": {
       "title": "Colhido",
       "undo": "Desfazer",
+      "delete": "Apagar",
       "tips": {
         "opening": "Abrir esta janela já guarda a página. O truque é só esse.",
         "shortcut": "Alt+Shift+P faz isso sem o clique.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Buscar nas suas tags",
+      "newTag": "Adicionar “{name}”",
       "kind": "Tipo",
       "toList": "Para a lista",
       "noList": "Nenhuma",
       "lastUsed": "{name} (última usada)",
       "note": "Nota",
       "notePlaceholder": "Uma nota, se quiser",
+      "inbox": "Entrada",
       "later": "Depois",
       "archive": "Arquivar",
       "open": "Abrir no Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Colhendo…",
       "done": "{count, plural, one {# aba colhida em “{name}”.} other {# abas colhidas em “{name}”.}}",
       "failed": "Não deu para falar com o Pluck. Tente de novo daqui a pouco."
+    },
+    "removed": {
+      "title": "Apagado.",
+      "body": "Ele fica na Lixeira por 30 dias.",
+      "back": "Restaurar"
     }
   },
   "options": {

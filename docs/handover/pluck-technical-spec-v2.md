@@ -140,7 +140,7 @@ Better Auth inside the Next.js app, storing in the `pluck` database, handles log
 | Client | Flow | Token storage | Scopes |
 |---|---|---|---|
 | Web app | Session cookie, httpOnly, SameSite=Lax | Cookie | full |
-| Extension | Authorisation code plus PKCE via `chrome.identity.launchWebAuthFlow` | `chrome.storage.local` | `library:read library:write` |
+| Extension | Authorisation code plus PKCE via `chrome.identity.launchWebAuthFlow` | `chrome.storage.local` | `library:read library:write library:delete` (Undo and Delete, to the bin) |
 | iOS app and share extension | Authorisation code plus PKCE via `ASWebAuthenticationSession`. The share extension reads the token from a shared Keychain group and never shows login | Keychain access group | same |
 | MCP clients (Claude, ChatGPT, Cursor, others) | OAuth 2.1 with CIMD, fallback DCR, PKCE S256, resource indicator | Held by the client's provider | `library:read library:write`, optional `library:delete` |
 | Claude Code, scripts, local MCP | Personal API key as a bearer token | User's machine | per key |

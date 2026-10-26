@@ -35,6 +35,9 @@
     "done": "Terminé"
   },
   "popup": {
+    "settings": "Options et déconnexion",
+    "home": "Ouvrir Pluck",
+    "deleteNeedsSignIn": "Pour supprimer d’ici, déconnectez-vous puis reconnectez-vous. Les deux se trouvent sous la roue dentée.",
     "plucking": "Cueillette…",
     "signedOut": {
       "lede": "La page que vous lisez, gardée en un clic. Connectez-vous une fois, avec votre e-mail.",
@@ -47,13 +50,12 @@
       "count": "{count, plural, one {# cueillette en attente} other {# cueillettes en attente}} dans ce navigateur."
     },
     "already": {
-      "meta": "Cueilli {date} · {status}",
-      "open": "Ouvrir dans Pluck",
-      "again": "Cueillir à nouveau"
+      "meta": "Cueilli {date} · {status}"
     },
     "plucked": {
       "title": "Cueilli",
       "undo": "Annuler",
+      "delete": "Supprimer",
       "tips": {
         "opening": "Ouvrir cette fenêtre garde la page. Tout le secret est là.",
         "shortcut": "Alt+Shift+P fait la même chose, sans clic.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Chercher dans vos tags",
+      "newTag": "Ajouter « {name} »",
       "kind": "Type",
       "toList": "Dans la liste",
       "noList": "Aucune",
       "lastUsed": "{name} (dernière utilisée)",
       "note": "Note",
       "notePlaceholder": "Une note, si vous voulez",
+      "inbox": "Boîte de réception",
       "later": "Plus tard",
       "archive": "Archiver",
       "open": "Ouvrir dans Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Cueillette…",
       "done": "{count, plural, one {# onglet cueilli dans « {name} ».} other {# onglets cueillis dans « {name} ».}}",
       "failed": "Pluck injoignable. Réessayez dans un instant."
+    },
+    "removed": {
+      "title": "Supprimé.",
+      "body": "Il reste 30 jours dans la corbeille.",
+      "back": "Restaurer"
     }
   },
   "options": {

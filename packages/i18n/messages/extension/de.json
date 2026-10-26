@@ -35,6 +35,9 @@
     "done": "Erledigt"
   },
   "popup": {
+    "settings": "Optionen und Abmelden",
+    "home": "Pluck öffnen",
+    "deleteNeedsSignIn": "Um hier zu löschen, melde dich ab und wieder an. Beides findest du unter dem Zahnrad.",
     "plucking": "Wird gepflückt …",
     "signedOut": {
       "lede": "Die Seite, auf der du bist, mit einem Klick behalten. Melde dich einmal an, mit deiner E-Mail.",
@@ -47,13 +50,12 @@
       "count": "{count, plural, one {# Eintrag wartet} other {# Einträge warten}} in diesem Browser."
     },
     "already": {
-      "meta": "Gepflückt {date} · {status}",
-      "open": "In Pluck öffnen",
-      "again": "Erneut pflücken"
+      "meta": "Gepflückt {date} · {status}"
     },
     "plucked": {
       "title": "Gepflückt",
       "undo": "Rückgängig",
+      "delete": "Löschen",
       "tips": {
         "opening": "Schon das Öffnen pflückt die Seite. Das ist der ganze Trick.",
         "shortcut": "Alt+Shift+P geht auch ohne Klick.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Deine Tags durchsuchen",
+      "newTag": "„{name}“ hinzufügen",
       "kind": "Art",
       "toList": "In Liste",
       "noList": "Keine",
       "lastUsed": "{name} (zuletzt genutzt)",
       "note": "Notiz",
       "notePlaceholder": "Eine Notiz, wenn du magst",
+      "inbox": "Eingang",
       "later": "Später",
       "archive": "Archiv",
       "open": "In Pluck öffnen"
@@ -77,6 +81,11 @@
       "plucking": "Wird gepflückt …",
       "done": "{count, plural, one {# Tab in „{name}“ gepflückt.} other {# Tabs in „{name}“ gepflückt.}}",
       "failed": "Pluck nicht erreichbar. Versuch es gleich noch mal."
+    },
+    "removed": {
+      "title": "Gelöscht.",
+      "body": "Bleibt 30 Tage im Papierkorb.",
+      "back": "Wiederherstellen"
     }
   },
   "options": {

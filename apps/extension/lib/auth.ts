@@ -4,17 +4,20 @@ import { get, set, settings } from "./store";
 // Sign-in is OAuth 2.1 with PKCE against the person's Pluck server. The authorisation runs in an ordinary tab,
 // not a web-auth window, because the email link that signs you in opens in its own tab; wherever it ends,
 // it lands on <server>/extension/connected?code=…, and the background reads the code from that tab.
-const SCOPE = "offline_access library:read library:write";
+const SCOPE = "offline_access library:read library:write library:delete"; // delete: Undo and Delete send an Item to the bin
 const redirectFor = (server: string) => `${server}/extension/connected`;
+const clientKey = (server: string) => `${server} ${SCOPE}`;
 
 type Pending = { server: string; clientId: string; verifier: string; state: string };
 
 const random = (n = 32) => b64url(crypto.getRandomValues(new Uint8Array(n)));
 
-// Each server gets its own client registration (dynamic registration), made once and remembered.
+// Each server gets its own client registration (dynamic registration), made once and remembered for these scopes:
+// a registration made before a scope was added cannot ask for it, so a new SCOPE registers again.
 async function clientIdFor(server: string): Promise<string> {
   const ids = await get("clientIds");
-  if (ids[server]) return ids[server];
+  const key = clientKey(server);
+  if (ids[key]) return ids[key];
   const res = await fetch(`${server}/api/auth/oauth2/register`, {
     method: "POST",
     credentials: "omit",
@@ -31,7 +34,7 @@ async function clientIdFor(server: string): Promise<string> {
   });
   if (!res.ok) throw new Error(`Could not register with ${server} (${res.status})`);
   const { client_id } = (await res.json()) as { client_id: string };
-  await set({ clientIds: { ...ids, [server]: client_id } });
+  await set({ clientIds: { ...ids, [key]: client_id } });
   return client_id;
 }
 
@@ -80,7 +83,7 @@ export async function authHeader(): Promise<string | null> {
   refreshing ??= (async () => {
     const { server } = await settings();
     const fresh = await tokenRequest(server, {
-      grant_type: "refresh_token", refresh_token: tokens.refresh!, client_id: (await get("clientIds"))[server] ?? "", resource: `${server}/api/v1`,
+      grant_type: "refresh_token", refresh_token: tokens.refresh!, client_id: (await get("clientIds"))[clientKey(server)] ?? "", resource: `${server}/api/v1`,
     });
     await set({ tokens: fresh });
     return fresh ? `Bearer ${fresh.access}` : null;
@@ -108,7 +111,7 @@ async function rememberEmail(): Promise<boolean> {
 export async function signOut(): Promise<void> {
   const tokens = await get("tokens");
   const { server } = await settings();
-  const clientId = (await get("clientIds"))[server];
+  const clientId = (await get("clientIds"))[clientKey(server)];
   if (tokens?.refresh && clientId) {
     await fetch(`${server}/api/auth/oauth2/revoke`, {
       method: "POST", credentials: "omit", body: new URLSearchParams({ token: tokens.refresh, token_type_hint: "refresh_token", client_id: clientId }),

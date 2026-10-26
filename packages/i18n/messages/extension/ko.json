@@ -35,6 +35,9 @@
     "done": "완료"
   },
   "popup": {
+    "settings": "옵션 및 로그아웃",
+    "home": "Pluck 열기",
+    "deleteNeedsSignIn": "여기서 삭제하려면 로그아웃한 뒤 다시 로그인하세요. 둘 다 톱니바퀴 아래에 있어요.",
     "plucking": "담는 중…",
     "signedOut": {
       "lede": "보고 있는 페이지를 클릭 한 번으로 담아 둬요. 이메일로 한 번만 로그인하세요.",
@@ -47,13 +50,12 @@
       "count": "{count, plural, other {담은 항목 #개}}가 이 브라우저에서 기다리고 있어요."
     },
     "already": {
-      "meta": "{date}에 담음 · {status}",
-      "open": "Pluck에서 열기",
-      "again": "다시 담기"
+      "meta": "{date}에 담음 · {status}"
     },
     "plucked": {
       "title": "담았어요",
       "undo": "실행 취소",
+      "delete": "삭제",
       "tips": {
         "opening": "이 창을 여는 것만으로 페이지가 담겨요. 그게 전부예요.",
         "shortcut": "Alt+Shift+P를 누르면 클릭 없이 담겨요.",
@@ -61,12 +63,14 @@
       },
       "tags": "태그",
       "tagsPlaceholder": "내 태그 검색",
+      "newTag": "“{name}” 추가",
       "kind": "종류",
       "toList": "리스트에 넣기",
       "noList": "없음",
       "lastUsed": "{name} (최근 사용)",
       "note": "메모",
       "notePlaceholder": "원한다면 메모를 남겨 보세요",
+      "inbox": "수신함",
       "later": "나중에",
       "archive": "보관",
       "open": "Pluck에서 열기"
@@ -77,6 +81,11 @@
       "plucking": "담는 중…",
       "done": "{count, plural, other {탭 #개를 “{name}”에 담았어요.}}",
       "failed": "Pluck에 연결하지 못했어요. 잠시 후 다시 해 보세요."
+    },
+    "removed": {
+      "title": "삭제했어요.",
+      "body": "30일 동안 휴지통에 있어요.",
+      "back": "복원"
     }
   },
   "options": {

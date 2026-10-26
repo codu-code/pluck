@@ -35,6 +35,9 @@
     "done": "Klaar"
   },
   "popup": {
+    "settings": "Opties en uitloggen",
+    "home": "Open Pluck",
+    "deleteNeedsSignIn": "Om hier te verwijderen, log je uit en weer in. Allebei onder het tandwiel.",
     "plucking": "Plukken…",
     "signedOut": {
       "lede": "De pagina waar je op bent, bewaard met één klik. Log één keer in, met je e-mailadres.",
@@ -47,13 +50,12 @@
       "count": "{count, plural, one {# item wacht} other {# items wachten}} in deze browser."
     },
     "already": {
-      "meta": "Geplukt {date} · {status}",
-      "open": "Openen in Pluck",
-      "again": "Opnieuw plukken"
+      "meta": "Geplukt {date} · {status}"
     },
     "plucked": {
       "title": "Geplukt",
       "undo": "Ongedaan maken",
+      "delete": "Verwijderen",
       "tips": {
         "opening": "Door dit te openen, is de pagina al bewaard. Meer is het niet.",
         "shortcut": "Alt+Shift+P doet het zonder klik.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Zoek in je tags",
+      "newTag": "“{name}” toevoegen",
       "kind": "Soort",
       "toList": "Naar lijst",
       "noList": "Geen",
       "lastUsed": "{name} (laatst gebruikt)",
       "note": "Notitie",
       "notePlaceholder": "Een notitie, als je wilt",
+      "inbox": "Inbox",
       "later": "Later",
       "archive": "Archiveren",
       "open": "Openen in Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Plukken…",
       "done": "{count, plural, one {# tabblad geplukt in “{name}”.} other {# tabbladen geplukt in “{name}”.}}",
       "failed": "Pluck niet bereikbaar. Probeer het zo opnieuw."
+    },
+    "removed": {
+      "title": "Verwijderd.",
+      "body": "Het blijft 30 dagen in de prullenbak.",
+      "back": "Terugzetten"
     }
   },
   "options": {

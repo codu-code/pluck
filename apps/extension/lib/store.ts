@@ -11,7 +11,7 @@ export type Settings = {
 
 type Local = {
   settings: Settings;
-  clientIds: Record<string, string>; // server origin → client_id this extension registered there
+  clientIds: Record<string, string>; // "<server origin> <scopes>" → client_id this extension registered there
   tokens: Tokens | null;
   apiKey: string | null; // self-hosters can paste a pk_live_ key instead of signing in
   email: string | null;
