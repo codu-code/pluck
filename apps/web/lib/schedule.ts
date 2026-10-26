@@ -1,6 +1,7 @@
 import { claimOnce, narrowAiGrants, runDueExpiry } from "@pluck/db";
 import { FIRST_PARTY_REDIRECTS } from "./auth";
 import { sortBackfill } from "./capture";
+import { announceNewPosts } from "./indexnow";
 import { pollInbound, purgeBinNow, queueDueDigests } from "./library";
 import { log } from "./log";
 
@@ -19,5 +20,7 @@ export async function runScheduled(now = new Date()): Promise<{ purged: number; 
   if (digests) log("info", "digests queued", { digests });
   const inbound = await pollInbound();
   const sorted = await sortBackfill(); // until every Item read before Previews has one; then a single lookup
+  const announced = await announceNewPosts(now);
+  if (announced) log("info", "new posts announced to IndexNow", { urls: announced });
   return { purged, expired: expiry.archived, digests, inbound, sorted };
 }
