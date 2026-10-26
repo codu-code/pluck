@@ -124,10 +124,11 @@ export async function createFileItem(userId: string, input: { kind: "image" | "p
   return toItem((await col.findOne({ _id }))!);
 }
 
-export type TextItemInput = { kind: TextKind; text: string; title?: string | null; dueAt?: Date | null; source: Source };
+export type TextItemInput = { kind: TextKind; text: string; title?: string | null; dueAt?: Date | null; source: Source; clientKey?: string };
 
 // A Note, Todo or Thing: no URL, no extraction, the body in contents with extractor "user".
-export async function createTextItem(userId: string, input: TextItemInput): Promise<Item> {
+// With a clientKey it is made once: a resend of the same key (its response was lost) gets the first one back.
+export async function createTextItem(userId: string, input: TextItemInput): Promise<{ item: Item; created: boolean }> {
   const now = new Date();
   const uid = oid(userId);
   const typed = input.title?.trim();
@@ -138,12 +139,23 @@ export async function createTextItem(userId: string, input: TextItemInput): Prom
     dueAt: input.dueAt ?? null, tagIds: [], note: null, source: input.source, readingProgress: 0, wordCount: null, lang: null,
     extraction: { state: "none", attempts: 0, lastError: null }, createdAt: now, updatedAt: now, lastOpenedAt: null,
     lastTouchedAt: now, statusChangedAt: now, deletedAt: null, searchBody: bodyForSearch(input.text),
+    ...(input.clientKey ? { clientKey: input.clientKey } : {}),
   };
-  await (await items()).insertOne(doc);
+  const col = await items();
+  const sent = async () => (input.clientKey ? await col.findOne({ userId: uid, clientKey: input.clientKey }) : null);
+  const first = await sent();
+  if (first) return { item: toItem(first), created: false };
+  try {
+    await col.insertOne(doc);
+  } catch (e) {
+    const raced = (e as { code?: number }).code === 11000 ? await sent() : null; // the same key, sent twice at once
+    if (raced) return { item: toItem(raced), created: false };
+    throw e;
+  }
   await (await contents()).insertOne({
     _id: new ObjectId(), itemId: doc._id, userId: uid, textMarkdown: input.text, extractor: "user", bytes: Buffer.byteLength(input.text),
   });
-  return toItem(doc);
+  return { item: toItem(doc), created: true };
 }
 
 export type ItemEdit = {

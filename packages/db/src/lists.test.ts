@@ -5,7 +5,7 @@ import {
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
-const note = async (u: string, text: string) => createTextItem(u, { kind: "note", text, source: "web" });
+const note = async (u: string, text: string) => (await createTextItem(u, { kind: "note", text, source: "web" })).item;
 
 describe("lists", () => {
   test("are per person, ordered, with a note and a tick that belong to the list", async () => {
@@ -74,7 +74,7 @@ describe("lists", () => {
 
   test("a Todo's mark and its Done stay in step, in every List, for its owner only", async () => {
     const { a, b } = await twoUsers();
-    const todo = await createTextItem(a, { kind: "todo", text: "Book the venue", source: "web" });
+    const { item: todo } = await createTextItem(a, { kind: "todo", text: "Book the venue", source: "web" });
     const read = await note(a, "Just a note");
     const talk = await createList(a, { name: "Talk", createdBy: "user", items: [{ itemId: todo.id }, { itemId: read.id }] });
     const trip = await createList(a, { name: "Trip", createdBy: "user", items: [{ itemId: todo.id }] });
@@ -111,7 +111,7 @@ describe("lists", () => {
     expect(await ticks(later.id)).toEqual([["Book the venue", true]]);
 
     // Someone else can neither mark it nor move it, and their own same-named Todo is untouched.
-    const theirs = await createTextItem(b, { kind: "todo", text: "Book the venue", source: "web" });
+    const { item: theirs } = await createTextItem(b, { kind: "todo", text: "Book the venue", source: "web" });
     const theirList = await createList(b, { name: "Talk", createdBy: "user", items: [{ itemId: theirs.id }] });
     expect(await markEntries(b, talk.id, [todo.id], false)).toBeNull();
     expect(await updateEntry(b, talk.id, todo.id, { ticked: false }, "user")).toBe(false);

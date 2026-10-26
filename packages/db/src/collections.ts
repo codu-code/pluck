@@ -10,6 +10,7 @@ export type ItemDoc = {
   kind: Kind;
   url: string | null;
   urlHash?: string; // absent for notes, todos and things
+  clientKey?: string; // a note, todo or thing sent from a queue: its id there, so a resend finds this one
   canonicalUrl: string | null;
   title: string;
   titleIsDerived: boolean;
@@ -204,6 +205,7 @@ export function db(): Promise<Db> {
           { key: { userId: 1, status: 1, createdAt: -1, _id: -1 } },
           { key: { userId: 1, status: 1, lastTouchedAt: 1, _id: 1 } },
           { key: { userId: 1, urlHash: 1 }, unique: true, partialFilterExpression: { urlHash: { $type: "string" } } },
+          { key: { userId: 1, clientKey: 1 }, unique: true, partialFilterExpression: { clientKey: { $type: "string" } } },
           { key: { userId: 1, tagIds: 1, createdAt: -1, _id: -1 } },
           { key: { userId: 1, kind: 1, dueAt: 1 } },
           { key: { "extraction.state": 1, updatedAt: 1 } },

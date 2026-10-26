@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "@/components/SiteLink";
-import { CLONE_URL, REPO_URL, pageMeta } from "@/lib/site";
+import { REPO_URL, pageMeta } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
@@ -28,7 +28,7 @@ export default async function OpenSource() {
         </div>
         <div className={`${styles.terminal} ${styles.mono}`}>
           <span className={styles.comment}># {REPO_URL}</span>
-          <span>git clone {CLONE_URL}</span>
+          <span>git clone {REPO_URL}</span>
           <span>cd pluck</span>
           <span className={styles.mint}>docker compose up -d</span>
           <span className={`${styles.comment} ${styles.gap}`}>{t("terminalComment")}</span>

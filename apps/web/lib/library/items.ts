@@ -21,11 +21,11 @@ const LINKS_PER_HOUR = 2000;
 export async function pluckAny(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<PluckResponse> {
   const source = body.source ?? "web";
   if (body.text !== undefined && (isTextKind(body.kind) || extractUrls(body.text).length === 0)) {
-    const item = await createTextItem(userId, {
+    const result = await createTextItem(userId, {
       kind: isTextKind(body.kind) ? body.kind : "note", text: body.text, title: body.title, source,
-      dueAt: body.dueAt ? new Date(body.dueAt) : null,
+      dueAt: body.dueAt ? new Date(body.dueAt) : null, clientKey: body.clientKey,
     });
-    return { results: [{ item, created: true }], rejected: [] };
+    return { results: [result], rejected: [] };
   }
   const inputs = body.url !== undefined ? [body.url] : (body.urls ?? extractUrls(body.text!));
   const budget = await hitRateLimit(`links:${userId}`, LINKS_PER_HOUR, 3600, inputs.length);

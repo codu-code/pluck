@@ -191,6 +191,7 @@ test("signing in with OAuth: consent once, then the popup plucks with the app's 
 
   // Signing out revokes the refresh token and the popup asks to sign in again.
   await options.getByRole("button", { name: "Sign out" }).click();
+  await expect(options.getByText("Signed out.")).toBeVisible(); // the revoke and the cleared tokens are done
   const after = await popupFor(context, sw, extId, `${FIX}/news-2.html`);
   await expect(after.getByRole("button", { name: "Sign in" })).toBeVisible();
 });

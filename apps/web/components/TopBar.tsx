@@ -39,9 +39,9 @@ function writeQueue(q: Queued[]) {
   }
 }
 
-// One flush at a time, across every open tab: mount, the online event and a re-render can all start one, and two
-// walking the same queue would send a queued Note twice (a link is safe either way: plucking it again never makes a
-// second Item). A Web Lock where the browser has one, else one per page.
+// One flush at a time, across every open tab: mount, the online event and a re-render can all start one. A page that
+// closes mid-send leaves its pluck queued though it may have landed, so each carries a clientKey and a resend of a
+// Note never makes a second one (a link is safe either way). A Web Lock where the browser has one, else one per page.
 let flushing: Promise<void> | null = null;
 
 const post = (body: Record<string, unknown>) =>
@@ -93,7 +93,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     if (!text) return;
     setError(null);
     setNotice(null);
-    const draft: PluckDraft = { key: `${Date.now()}`, urls, text: isText ? text : null, kind: isText ? kind : null };
+    const draft: PluckDraft = { key: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, urls, text: isText ? text : null, kind: isText ? kind : null };
     const body = isText
       ? { text, kind, source: "web", ...(due && kind !== "note" ? { dueAt: new Date(`${due}T09:00:00`).toISOString() } : {}) }
       : { text, source: "web" };
@@ -105,7 +105,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       if (!navigator.onLine) throw new TypeError("offline");
       res = await post(body);
     } catch {
-      writeQueue([...readQueue(), { draft, body }]);
+      writeQueue([...readQueue(), { draft, body: { ...body, clientKey: draft.key } }]); // the key makes a resend safe
       setNotice(t("queued"));
       return;
     }

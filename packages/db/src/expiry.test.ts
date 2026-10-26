@@ -14,9 +14,9 @@ describe("expiry", () => {
   test("moves untouched items to the Archive, never items in a list, and respects scope", async () => {
     const { a } = await twoUsers();
     const old = (await pluckLink(a, { url: "https://example.com/old", source: "web" })).item;
-    const later = await createTextItem(a, { kind: "note", text: "kept for later", source: "web" });
-    const listed = await createTextItem(a, { kind: "note", text: "in a list", source: "web" });
-    const fresh = await createTextItem(a, { kind: "note", text: "fresh", source: "web" });
+    const { item: later } = await createTextItem(a, { kind: "note", text: "kept for later", source: "web" });
+    const { item: listed } = await createTextItem(a, { kind: "note", text: "in a list", source: "web" });
+    const { item: fresh } = await createTextItem(a, { kind: "note", text: "fresh", source: "web" });
     const list = await createList(a, { name: "Plan", createdBy: "user" });
     await addToList(a, list.id, [listed.id], { by: "user" });
     await (await items()).updateOne({ _id: oid(later.id) }, { $set: { status: "later" } });
@@ -58,7 +58,7 @@ describe("expiry", () => {
 
   test("expiring-soon counts the week before, and local dates follow the timezone", async () => {
     const { a } = await twoUsers();
-    const it = await createTextItem(a, { kind: "note", text: "soon", source: "web" });
+    const { item: it } = await createTextItem(a, { kind: "note", text: "soon", source: "web" });
     await age(it.id, 25);
     expect(await countExpiringSoon(a, { ...DEFAULT_SETTINGS }, ["inbox"])).toBe(1);
     expect(await countExpiringSoon(a, { ...DEFAULT_SETTINGS, expiryDays: null }, ["inbox"])).toBe(0);

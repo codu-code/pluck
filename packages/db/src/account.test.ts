@@ -54,7 +54,7 @@ test("export gathers everything; delete removes one person entirely and leaves t
   await createHighlight(a, { itemId: link.id, quote: "q", selector: { textQuote: { exact: "q", prefix: "", suffix: "" }, textPosition: { start: 0, end: 1 } } });
   await createApiKey(a, "k");
   await aliasOf(a);
-  const theirs = await createTextItem(b, { kind: "note", text: "Theirs", source: "web" });
+  const { item: theirs } = await createTextItem(b, { kind: "note", text: "Theirs", source: "web" });
 
   const data = await exportData(a);
   expect(data.items).toHaveLength(2);
