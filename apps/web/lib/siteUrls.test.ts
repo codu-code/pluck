@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { LOCALES } from "@pluck/i18n";
 import { expect, test } from "vitest";
-import { localePath, siteAlternates, splitLocale } from "./siteUrls";
+import { cardPage, localePath, siteAlternates, splitLocale } from "./siteUrls";
 
 test("a site page gets its language's prefix; English and everything else keep their URL", () => {
   expect(localePath("de", "/")).toBe("/de");
@@ -26,6 +26,13 @@ test("hreflang names every language and English as the default", () => {
   expect(a.canonical).toBe("/fr/terms");
   expect(Object.keys(a.languages)).toEqual([...LOCALES, "x-default"]);
   expect(a.languages["x-default"]).toBe("/terms");
+});
+
+test("a preview card's URL names the page it's for", () => {
+  expect(cardPage("/connect/opengraph-image-upv8k3")).toBe("/connect");
+  expect(cardPage("/blog/pocket-is-gone/opengraph-image-fx5gi7")).toBe("/blog/pocket-is-gone");
+  expect(cardPage("/opengraph-image")).toBe(""); // the home page's
+  expect(cardPage("/connect")).toBeUndefined();
 });
 
 test("every post is in every language, with a title, a description and keywords", () => {

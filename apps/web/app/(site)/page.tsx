@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "@/components/SiteLink";
 import type { ReactNode } from "react";
 import { JsonLd } from "@/components/JsonLd";
-import { APP_STORE_URL, CHROME_STORE_URL, REPO_URL, pageAlternates } from "@/lib/site";
+import { APP_STORE_URL, CHROME_STORE_URL, REPO_URL, pageMeta } from "@/lib/site";
 import { PasteBox } from "./PasteBox";
 import { Reveal } from "./Reveal";
 import { SitePage } from "./SiteChrome";
@@ -11,7 +11,7 @@ import styles from "./site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.home.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/")) };
 }
 
 const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";

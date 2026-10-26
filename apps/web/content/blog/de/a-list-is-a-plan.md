@@ -26,7 +26,7 @@ Was in einer Liste ist, bleibt, wo es ist. Es wandert nie ins Archiv.
 
 ## Teilen
 
-Listen sind privat. Wenn du eine teilen willst, stell die Sichtbarkeit auf Öffentlich und schick den Link. Er sieht so aus: `getpluck.io/@you/lisbon-in-four-days`.
+Listen sind privat. Wenn du eine teilen willst, stell die Sichtbarkeit auf Öffentlich und schick den Link. Er sieht so aus: `getpluck.io/@dein-name/lissabon-in-vier-tagen`.
 
 Besucher sehen die Liste, ihren Zweck, Titel und Website jedes Eintrags, einen kurzen Auszug und deine Notizen. Deine Tags, deine Häkchen, den behaltenen Seitentext und deine Markierungen sehen sie nie.
 

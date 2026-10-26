@@ -14,7 +14,7 @@ Pocket 和 Omnivore 各有一篇搬家指南。这篇讲剩下的一切：Raindr
 
 - **Chrome。** 打开书签管理器，点三点菜单，再选“导出书签”。
 - **Safari。** 文件 > 导出 > 书签。
-- **Firefox。** 书签 > 管理书签 > 导入和备份 > 导出书签到 HTML。
+- **Firefox。** 书签 > 管理书签 > 导入和备份 > 导出书签为 HTML 文件。
 - **Raindrop。** 在 Raindrop 的设置里导出一个 CSV。
 
 ## 搬过来

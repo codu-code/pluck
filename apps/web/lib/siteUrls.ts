@@ -23,7 +23,10 @@ export function localePath(locale: Locale, href: string): string {
 }
 
 // Canonical and hreflang links for a site page: itself in this language, and every language's version of it.
-export const siteAlternates = (locale: Locale, path: string) => ({
-  canonical: localePath(locale, path),
-  languages: { ...Object.fromEntries(LOCALES.map((l) => [l, localePath(l, path)])), "x-default": path },
+export const siteAlternates = (locale: Locale, path: string, origin = "") => ({
+  canonical: origin + localePath(locale, path),
+  languages: { ...Object.fromEntries(LOCALES.map((l) => [l, origin + localePath(l, path)])), "x-default": origin + path },
 });
+
+// A site page's link-preview card (its opengraph-image route, /connect/opengraph-image-<hash>), as the page it's for.
+export const cardPage = (path: string) => path.match(/^(.*)\/opengraph-image[^/]*$/)?.[1];

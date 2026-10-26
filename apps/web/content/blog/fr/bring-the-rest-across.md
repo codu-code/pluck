@@ -14,7 +14,7 @@ Les deux arrivent de la même façon. Voici ce qui vient avec, et ce qui ne vien
 
 - **Chrome.** Ouvrez le gestionnaire de favoris, puis le menu à trois points, puis Exporter les favoris.
 - **Safari.** Fichier, puis Exporter, puis Signets.
-- **Firefox.** Marque-pages, puis Gérer les marque-pages, puis Importation et sauvegarde, puis Exporter des marque-pages au format HTML.
+- **Firefox.** Marque-pages, puis Organiser les marque-pages, puis Importation et sauvegarde, puis Exporter des marque-pages au format HTML.
 - **Raindrop.** Exportez un CSV depuis les réglages de Raindrop.
 
 ## Le faire venir

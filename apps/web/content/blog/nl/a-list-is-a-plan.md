@@ -26,7 +26,7 @@ Wat in een lijst staat, blijft staan. Het schuift nooit af naar het Archief.
 
 ## Deel hem
 
-Lijsten zijn privé. Wil je er een delen, zet Zichtbaarheid dan op Openbaar en stuur de link. Die ziet eruit als `getpluck.io/@you/lisbon-in-four-days`.
+Lijsten zijn privé. Wil je er een delen, zet Zichtbaarheid dan op Openbaar en stuur de link. Die ziet eruit als `getpluck.io/@jouw-naam/lissabon-in-vier-dagen`.
 
 Bezoekers zien de lijst, het doel, de titel en site van elk item, een kort fragment en je notities. Ze zien nooit je tags, je vinkjes, de bewaarde paginatekst of je markeringen.
 

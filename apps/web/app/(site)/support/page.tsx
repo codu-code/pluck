@@ -3,13 +3,13 @@ import { getTranslations } from "next-intl/server";
 import Link from "@/components/SiteLink";
 import type { ReactNode } from "react";
 import { JsonLd } from "@/components/JsonLd";
-import { REPO_URL, pageAlternates } from "@/lib/site";
+import { REPO_URL, pageMeta } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.support.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/support") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/support")) };
 }
 
 // Each topic's answers, by key under site.support.<topic>.

@@ -43,7 +43,7 @@ docker compose up -d
 ## 让你的 App 指向它
 
 - **iPhone。** 在手机上打开 `pluck://signin?server=https://your.address`。App 就会改为登录到你的服务器。
-- **Chrome。** 商店里的扩展只连 getpluck.io。用 `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` 构建你自己的版本，再用“加载已解压的扩展程序”加载它。
+- **Chrome。** 商店里的扩展只连 getpluck.io。用 `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` 构建你自己的版本，再用“加载未打包的扩展程序”加载它。
 - **你的 AI。** 把它连接到 `https://your.address/mcp`。如果服务器没有公网地址，在设置里生成一个 API 密钥，然后用 `npx @pluck/mcp --server https://your.address --key pk_live_…`。
 
 ## 麻烦的部分

@@ -14,7 +14,7 @@ Los dos entran igual. Esto es lo que se viene con ellos, y lo que no.
 
 - **Chrome.** Abre el administrador de marcadores, luego el menú de tres puntos y luego Exportar marcadores.
 - **Safari.** Archivo, luego Exportar y luego Marcadores.
-- **Firefox.** Marcadores, luego Gestionar marcadores, luego Importar y respaldar y luego Exportar marcadores a HTML.
+- **Firefox.** Marcadores, luego Administrar marcadores, luego Importar y respaldar y luego Exportar marcadores.
 - **Raindrop.** Exporta un CSV desde los ajustes de Raindrop.
 
 ## Tráelo

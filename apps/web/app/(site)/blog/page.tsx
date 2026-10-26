@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { fromIntlLocale } from "@pluck/i18n";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
-import { pageAlternates } from "@/lib/site";
+import { pageMeta } from "@/lib/site";
 import Link from "@/components/SiteLink";
 import { postsIn } from "@/lib/blog";
 import { SitePage } from "../SiteChrome";
@@ -9,7 +9,7 @@ import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.blog.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/blog") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/blog")) };
 }
 
 // The posts, newest first, in the legal pages' shape: a title, a lede, then one ruled section each.

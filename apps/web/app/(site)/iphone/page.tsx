@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { TESTFLIGHT_APP_URL, TESTFLIGHT_URL, pageAlternates } from "@/lib/site";
+import { TESTFLIGHT_APP_URL, TESTFLIGHT_URL, pageMeta } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.iphone.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/iphone") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/iphone")) };
 }
 
 const STEPS = ["get", "join", "signIn", "share"] as const;

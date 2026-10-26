@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { pageAlternates } from "@/lib/site";
+import { pageMeta } from "@/lib/site";
 import Link from "@/components/SiteLink";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.soon.chrome.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/chrome") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/chrome")) };
 }
 
 // Where "Add to Chrome" lands until the store listing is live (CHROME_STORE_URL in lib/site.ts).

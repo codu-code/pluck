@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "@/components/SiteLink";
 import { ConnectLoop } from "@/components/ConnectLoop";
 import { ConnectLoopFit } from "@/components/ConnectLoopFit";
-import { CONNECTOR_URL, pageAlternates } from "@/lib/site";
+import { CONNECTOR_URL, pageMeta } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 import { ConnectTabs } from "./ConnectTabs";
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.connect.meta");
-  return { title: t("title"), description: t("description"), alternates: await pageAlternates("/connect") };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/connect")) };
 }
 
 // Product names stay as they are; the steps and notes are under site.connect.tools.<key>.

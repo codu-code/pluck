@@ -26,7 +26,7 @@ Lo que está en una lista se queda quieto. Nunca acaba en el Archivo.
 
 ## Compártela
 
-Las listas son privadas. Cuando quieras compartir una, cambia Visibilidad a Pública y envía el enlace. Se ve así: `getpluck.io/@tu-alias/lisboa-en-cuatro-dias`.
+Las listas son privadas. Cuando quieras compartir una, cambia Visibilidad a Pública y envía el enlace. Se ve así: `getpluck.io/@tu-alias/lisboa-en-cuatro-días`.
 
 Quien la visita ve la lista, su propósito, el título y el sitio de cada elemento, un extracto corto y tus notas. Nunca ve tus etiquetas, tus marcas, el texto conservado de las páginas ni tus destacados.
 

@@ -166,8 +166,20 @@ test("languages: a page in another language says so to search engines, and its l
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
   expect(ld).toMatchObject({ inLanguage: "de", url: expect.stringMatching(/\/de\/blog\/pocket-is-gone$/) });
   await expect(page.getByRole("main").locator('a[href="/de/open-source"]').first()).toBeVisible(); // a link inside the post
+  // Its preview card is fetched in German too: crawlers send no language, so the card's URL carries it.
+  const card = (await page.locator('meta[property="og:image"]').getAttribute("content"))!;
+  expect(card).toMatch(/\/de\/blog\/pocket-is-gone\/opengraph-image/);
+  const [de, en] = await Promise.all([request.get(card), request.get(card.replace("/de/", "/"), { headers: { cookie: "pluck_locale=de" } })]);
+  expect(de.headers()["content-type"]).toBe("image/png");
+  expect((await de.body()).equals(await en.body())).toBe(false); // the English URL stays English, whatever the cookie
   await page.getByRole("contentinfo").getByRole("link", { name: "Blog" }).click();
   await expect(page).toHaveURL(/\/de\/blog$/);
+  for (const path of ["/de", "/de/connect"]) {
+    await page.goto(path);
+    expect(await page.locator('meta[property="og:image"]').getAttribute("content")).toMatch(new RegExp(`${path}/opengraph-image`));
+    for (const icon of await page.locator('link[rel="icon"], link[rel="manifest"], link[rel="apple-touch-icon"]').all())
+      expect((await request.get((await icon.getAttribute("href"))!)).status()).toBe(200); // the language's base leaves the icons where they are
+  }
 
   const sitemap = await (await request.get("/sitemap.xml")).text();
   expect(sitemap).toContain("/zh-hans/blog/pocket-is-gone");

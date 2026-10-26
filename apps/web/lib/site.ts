@@ -16,5 +16,10 @@ export const TESTFLIGHT_APP_URL = "https://apps.apple.com/app/testflight/id89924
 export const LICENCE = "AGPL-3.0 (server) and MIT (apps)";
 export const CONNECTOR_URL = MCP_RESOURCE;
 
-// A site page's canonical and hreflang links, for the language it's being shown in.
-export const pageAlternates = async (path: string) => siteAlternates(fromIntlLocale(await getLocale()), path);
+const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+
+// A site page's canonical and hreflang links, absolute (the root layout's metadataBase carries the language's prefix,
+// for the preview card), for the language it's shown in.
+export async function pageMeta(path: string) {
+  return { alternates: siteAlternates(fromIntlLocale(await getLocale()), path, ORIGIN) };
+}

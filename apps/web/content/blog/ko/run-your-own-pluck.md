@@ -43,7 +43,7 @@ Docker 이미지 하나를 두 번 띄워요. 하나는 앱을 제공해요. 다
 ## 앱 연결하기
 
 - **iPhone.** 휴대폰에서 `pluck://signin?server=https://your.address` 를 여세요. 앱이 대신 내 서버에 로그인해요.
-- **Chrome.** 스토어의 확장 프로그램은 getpluck.io하고만 통신해요. `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` 로 직접 빌드하고, 압축 해제된 확장 프로그램으로 불러오세요.
+- **Chrome.** 스토어의 확장 프로그램은 getpluck.io하고만 통신해요. `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` 로 직접 빌드하고, “압축해제된 확장 프로그램 로드”로 불러오세요.
 - **내 AI.** `https://your.address/mcp` 에 연결하세요. 서버에 공개 주소가 없다면 설정에서 API 키를 만들고 `npx @pluck/mcp --server https://your.address --key pk_live_…` 를 쓰세요.
 
 ## 귀찮은 부분

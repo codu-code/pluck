@@ -13,8 +13,8 @@ Entrano tutti e due allo stesso modo. Ecco cosa arriva con loro, e cosa no.
 ## Prendi il file
 
 - **Chrome.** Apri Gestione preferiti, poi il menu con i tre puntini, poi Esporta preferiti.
-- **Safari.** Il menu Archivio, poi Esporta, poi Segnalibri.
-- **Firefox.** Segnalibri, poi Gestisci segnalibri, poi Importa e backup, poi Esporta segnalibri in HTML.
+- **Safari.** Il menu File, poi Esporta, poi Segnalibri.
+- **Firefox.** Segnalibri, poi Gestisci segnalibri, poi Importa e salva, poi Esporta segnalibri in HTML.
 - **Raindrop.** Esporta un CSV dalle impostazioni di Raindrop.
 
 ## Portalo in Pluck

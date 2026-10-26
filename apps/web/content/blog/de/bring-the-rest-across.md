@@ -12,7 +12,7 @@ Beides kommt auf dieselbe Weise rein. Hier steht, was mitkommt und was nicht.
 
 ## Die Datei holen
 
-- **Chrome.** Öffne den Lesezeichen-Manager, dann das Dreipunkt-Menü, dann Lesezeichen exportieren.
+- **Chrome.** Öffne den Lesezeichenmanager, dann das Dreipunkt-Menü, dann Lesezeichen exportieren.
 - **Safari.** Ablage, dann Exportieren, dann Lesezeichen.
 - **Firefox.** Lesezeichen, dann Lesezeichen verwalten, dann Importieren und Sichern, dann Lesezeichen nach HTML exportieren.
 - **Raindrop.** Exportier in den Raindrop-Einstellungen eine CSV.

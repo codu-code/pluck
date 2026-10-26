@@ -5,7 +5,8 @@ import Link from "@/components/SiteLink";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
 import { findPost, POSTS, postBody } from "@/lib/blog";
-import { localePath, siteAlternates } from "@/lib/siteUrls";
+import { pageMeta } from "@/lib/site";
+import { localePath } from "@/lib/siteUrls";
 import { SitePage } from "../../SiteChrome";
 import styles from "../../site.module.css";
 
@@ -22,7 +23,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   return {
     title: `${post.title} · Pluck`,
     description: post.description,
-    alternates: siteAlternates(post.locale, `/blog/${post.slug}`),
+    ...(await pageMeta(`/blog/${post.slug}`)),
     openGraph: { type: "article", title: post.title, description: post.description, publishedTime: post.date },
   };
 }

@@ -12,9 +12,9 @@ Allebei gaan ze op dezelfde manier naar binnen. Dit komt er mee, en dit niet.
 
 ## Pak het bestand
 
-- **Chrome.** Open Bladwijzerbeheer, dan het menu met de drie puntjes, dan Bladwijzers exporteren.
+- **Chrome.** Open Bookmarkmanager, dan het menu met de drie puntjes, dan Bookmarks exporteren.
 - **Safari.** Archief, dan Exporteer, dan Bladwijzers.
-- **Firefox.** Bladwijzers, dan Bladwijzers beheren, dan Importeren en back-up, dan Bladwijzers naar HTML exporteren.
+- **Firefox.** Bladwijzers, dan Bladwijzers beheren, dan Importeren en reservekopie maken, dan Bladwijzers exporteren naar HTML.
 - **Raindrop.** Exporteer een CSV vanuit de instellingen van Raindrop.
 
 ## Haal het over
