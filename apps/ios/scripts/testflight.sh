@@ -3,7 +3,7 @@
 # once processed. Signing and the upload use an App Store Connect API key, so Xcode needs no account sign-in.
 #
 # Needs: APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH (the .p8 file) and ASC_APP_ID. docs/ios.md, TestFlight.
-# The version is `version` in app.config.ts, raised only for a release. The build number is not in the repo: it is
+# The version is `version` in app.config.ts, chosen at the start (scripts/release.mjs). The build number is not in the repo: it is
 # one more than App Store Connect's highest, asked for here, so every upload has a new one.
 # Usage: apps/ios/scripts/testflight.sh
 set -euo pipefail
@@ -16,6 +16,9 @@ out="${TMPDIR:-/tmp}/pluck-testflight"
 rm -rf "$out" && mkdir -p "$out"
 auth=(-allowProvisioningUpdates -authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 
+# Which version this is: Keep, Patch (fixes), Minor (features) or Major, written into app.config.ts. Asked only at a
+# terminal; anywhere else the version in app.config.ts goes as it is.
+if [ -t 0 ]; then node scripts/release.mjs; fi
 PLUCK_BUILD_NUMBER=$(node scripts/next-build.mjs)
 export PLUCK_BUILD_NUMBER
 echo "Building build $PLUCK_BUILD_NUMBER"

@@ -47,7 +47,7 @@ APPLE_TEAM_ID=<team id> ASC_KEY_ID=<key id> ASC_ISSUER_ID=<issuer id> ASC_KEY_PA
   apps/ios/scripts/testflight.sh
 ```
 
-It asks App Store Connect for the next build number, prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Steps 5 and 6 still apply.
+It first asks which version this is (`scripts/release.mjs`): it shows the last version uploaded and offers Keep, Patch (fixes), Minor (features) or Major, and writes the answer into `app.config.ts`; commit that as "Release x.y.z". Then it asks App Store Connect for the next build number, prebuilds, archives, signs and uploads with the key, so Xcode needs no account sign-in. Steps 5 and 6 still apply.
 
 ## Usage and crash reports
 
