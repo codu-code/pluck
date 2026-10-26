@@ -28,7 +28,7 @@ Pluck conserva il testo della pagina quando la prendi, così la tua copia c'è a
 
 Se il codice è pubblico, l'app può sopravvivere all'azienda. Qualcuno può farne un fork, e tu puoi leggere cosa fa con i tuoi dati.
 
-Pluck è open source: AGPL-3.0 per il server, MIT per le app.
+Pluck è open source con licenza Apache-2.0, sia il server sia le app.
 
 Il codice pubblico, intendiamoci, non è tutta la risposta. Anche Omnivore era open source.
 

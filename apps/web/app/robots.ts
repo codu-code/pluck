@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { ORIGIN } from "@/lib/origin";
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
 
 // The marketing pages and public Lists are for search engines; a signed-in library, sign-in and the API are not.
 export default function robots(): MetadataRoute.Robots {

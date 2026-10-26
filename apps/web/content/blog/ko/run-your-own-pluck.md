@@ -58,6 +58,6 @@ Docker 이미지 하나를 두 번 띄워요. 하나는 앱을 제공해요. 다
 git pull && docker compose up -d --build
 ```
 
-서버는 AGPL-3.0, 앱은 MIT예요.
+서버와 앱 모두 Apache-2.0이에요.
 
 저희가 멈춰도 내 Pluck은 멈추지 않아요.

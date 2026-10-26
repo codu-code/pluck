@@ -58,6 +58,6 @@ Os backups são com você. Faça backup dos volumes `mongo` e `minio`. Ali está
 git pull && docker compose up -d --build
 ```
 
-O servidor é AGPL-3.0 e os apps são MIT.
+O servidor e os apps são Apache-2.0.
 
 Se um dia a gente parar, você não para.

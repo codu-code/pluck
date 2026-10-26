@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
+import { HOST } from "./origin";
 
 // Link previews (Open Graph and X cards) for every page, in the brand: Fredoka for the wordmark and headline,
 // Geist for the rest, the forest ground of the App Store boards (or the light ground for a public List).
@@ -35,7 +36,7 @@ async function cjk(text: string) {
 }
 
 // The foot defaults to this copy's own address, so a self-hosted copy's previews name it and not getpluck.io.
-export async function og({ title, sub, foot = new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000").host, tone = "forest" }: { title: string; sub?: string; foot?: string; tone?: "forest" | "light" }) {
+export async function og({ title, sub, foot = HOST, tone = "forest" }: { title: string; sub?: string; foot?: string; tone?: "forest" | "light" }) {
   const c = C[tone];
   const h = headline(title);
   const lines = h.text.split("\n");

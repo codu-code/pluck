@@ -34,7 +34,7 @@ One Next.js image serves the web app, the marketing pages, the REST API and the 
 
 ## Repo layout and licences
 
-One monorepo (pnpm workspaces, Turborepo). Server side AGPL-3.0, clients and shared schemas MIT so the iOS app ships without a CLA.
+One monorepo (pnpm workspaces, Turborepo). Everything is Apache-2.0, with a DCO sign-off instead of a CLA.
 
 ```
 apps/web          Next.js: app, marketing, /api/v1, /mcp

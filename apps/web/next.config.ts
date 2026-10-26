@@ -22,6 +22,14 @@ const config: NextConfig = {
   skipTrailingSlashRedirect: true, // PostHog's ingest paths end in a slash
   // Dev: .env sets BETTER_AUTH_URL to 127.0.0.1, so the dev server must serve its scripts there too.
   allowedDevOrigins: ["127.0.0.1"],
+  // Sign-in cookies live on BETTER_AUTH_URL's host, so the other name for this machine (localhost for 127.0.0.1, or the
+  // reverse) is sent there instead of signing in and landing signed out.
+  async redirects() {
+    const origin = process.env.BETTER_AUTH_URL;
+    const host = origin ? new URL(origin).hostname : "";
+    const other = { "127.0.0.1": "localhost", localhost: "127.0.0.1" }[host];
+    return other ? [{ source: "/:path*", has: [{ type: "host" as const, value: other }], destination: `${origin}/:path*`, permanent: false }] : [];
+  },
   // Public lists live at /@handle/slug. A folder cannot start with "@" (that is a parallel-route slot), so the page is /p/.
   async rewrites() {
     return [

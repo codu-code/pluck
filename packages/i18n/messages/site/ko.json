@@ -170,7 +170,7 @@
       "title": "오픈소스 · Pluck",
       "description": "Pluck은 무료 오픈소스예요. getpluck.io를 쓰거나, 명령어 하나로 직접 운영하세요."
     },
-    "licence": "라이선스: AGPL-3.0(서버), MIT(앱).",
+    "licence": "라이선스: Apache-2.0.",
     "title": "무료.<br></br>공개.<br></br><marker>내 것.</marker>",
     "lede": "나중에 읽기 앱들은 계속 문을 닫아요. Pluck은 그럴 수 없어요. 코드는 공개돼 있고, 데이터는 내 것이니까요. 저희 서비스를 쓰거나, 명령어 하나로 직접 운영하세요.",
     "selfHostTitle": "명령어 하나로 직접 호스팅.",

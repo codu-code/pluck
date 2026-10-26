@@ -14,12 +14,11 @@ import { magicLinkEmail } from "./emails";
 import { linkPageUrl } from "./signin-link";
 import { localeFrom } from "../i18n/request";
 import { clientIp } from "./ip";
+import { HOST, ORIGIN } from "./origin";
 
 const DAY = 60 * 60 * 24;
 
-// This copy's own address: getpluck.io hosted, a self-hoster's domain otherwise. HOST is how the UI shows it.
-export const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
-export const HOST = new URL(ORIGIN).host;
+export { HOST, ORIGIN };
 
 // Every OAuth token is bound (aud) to one protected resource: the connector for AI tools,
 // or the REST API for our own apps (the extension, iOS).

@@ -9,6 +9,7 @@ import { pageMeta } from "@/lib/site";
 import { localePath } from "@/lib/siteUrls";
 import { SitePage } from "../../SiteChrome";
 import styles from "../../site.module.css";
+import { ORIGIN } from "@/lib/origin";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -28,7 +29,7 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
   };
 }
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
 
 // One post, in the language of its URL: the reader's type (Source Serif at the reader's sizes) under the site's chrome.
 export default async function BlogPost(props: Params) {

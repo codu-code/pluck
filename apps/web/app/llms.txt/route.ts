@@ -2,8 +2,9 @@ import { LOCALE_NAMES, LOCALES } from "@pluck/i18n";
 import { postsIn } from "@/lib/blog";
 import { localePath } from "@/lib/siteUrls";
 import { CONNECTOR_URL, LICENCE, REPO_URL } from "@/lib/site";
+import { ORIGIN } from "@/lib/origin";
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
 
 // llms.txt (llmstxt.org): what Pluck is, in plain Markdown, for AI tools that answer questions about it.
 export async function GET() {

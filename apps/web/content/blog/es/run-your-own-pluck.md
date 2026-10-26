@@ -58,6 +58,6 @@ Las copias de seguridad las haces tú. Haz copia de los volúmenes `mongo` y `mi
 git pull && docker compose up -d --build
 ```
 
-El servidor es AGPL-3.0 y las apps son MIT.
+El servidor y las apps son Apache-2.0.
 
 Si algún día paramos, tú no.

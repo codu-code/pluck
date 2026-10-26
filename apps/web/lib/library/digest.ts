@@ -5,8 +5,8 @@ import { sendEmail } from "../email";
 import { ApiError } from "../errors";
 import { signTap, verifyTap, type Tap } from "../signed";
 import { archiveItAll } from "./expiry";
+import { ORIGIN } from "../origin";
 
-const origin = () => process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
 export async function digest(userId: string, { limit = 5 }: { limit?: number } = {}): Promise<Digest> {
   const me = await getMe(userId);
@@ -20,15 +20,15 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
   if (!me) return false;
   const d = await digestFor(userId, me.settings);
   if (isEmptyDigest(d) && !force) return false;
-  const tap = (a: Tap["a"], i?: string) => `${origin()}/d/${signTap({ u: userId, a, i })}`;
+  const tap = (a: Tap["a"], i?: string) => `${ORIGIN}/d/${signTap({ u: userId, a, i })}`;
   await sendEmail({
     ...digestEmail(me.email, me.name, d, {
       keep: (id) => tap("keep", id),
       letGo: (id) => tap("letgo", id),
-      open: (id) => `${origin()}/items/${id}`,
-      list: (id) => `${origin()}/lists/${id}`,
+      open: (id) => `${ORIGIN}/items/${id}`,
+      list: (id) => `${ORIGIN}/lists/${id}`,
       archiveAll: tap("archive-all"),
-      settings: `${origin()}/settings#expiry`,
+      settings: `${ORIGIN}/settings#expiry`,
       stop: tap("stop"),
     }, new Date(), { locale: me.settings.locale ?? "en", timeZone: me.settings.timezone }),
     from: process.env.DIGEST_FROM, // its own subdomain: a spam report on it never reaches sign-in links

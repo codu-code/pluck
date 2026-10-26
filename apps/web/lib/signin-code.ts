@@ -3,8 +3,8 @@ import { ApiError } from "./api";
 import { APP_GRANT, APP_REDIRECT, auth, limitSignInEmails, REVIEW, signInCode } from "./auth";
 import { sendEmail } from "./email";
 import { appCodeEmail } from "./emails";
+import { ORIGIN } from "./origin";
 
-const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
 // The iPhone app signs in with a 6-digit code, never a link. A link would end at io.getpluck.app:/oauth through the
 // operating system, and any app can claim that scheme; a code is typed in the app and the answer comes straight back

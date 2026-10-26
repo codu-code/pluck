@@ -58,6 +58,6 @@ docker compose up -d
 git pull && docker compose up -d --build
 ```
 
-服务端是 AGPL-3.0，App 是 MIT。
+服务端和 App 都是 Apache-2.0。
 
 就算我们哪天停了，你也不用停。

@@ -2,8 +2,9 @@ import { LOCALES } from "@pluck/i18n";
 import type { MetadataRoute } from "next";
 import { POSTS } from "@/lib/blog";
 import { localePath, SITE_PAGES } from "@/lib/siteUrls";
+import { ORIGIN } from "@/lib/origin";
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
 
 // The marketing pages and the blog, each in every language, with each URL naming its other languages (hreflang).
 // Public Lists are left to links: they are people's pages, not ours to list.

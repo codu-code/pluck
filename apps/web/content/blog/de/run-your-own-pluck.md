@@ -58,6 +58,6 @@ Die Backups machst du. Sichere die Volumes `mongo` und `minio`. Das ist deine ga
 git pull && docker compose up -d --build
 ```
 
-Der Server steht unter AGPL-3.0, die Apps unter MIT.
+Server und Apps stehen unter Apache-2.0.
 
 Hören wir je auf, machst du einfach weiter.

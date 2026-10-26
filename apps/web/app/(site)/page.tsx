@@ -8,13 +8,14 @@ import { PasteBox } from "./PasteBox";
 import { Reveal } from "./Reveal";
 import { SitePage } from "./SiteChrome";
 import styles from "./site.module.css";
+import { ORIGIN } from "@/lib/origin";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.home.meta");
   return { title: t("title"), description: t("description"), ...(await pageMeta("/")) };
 }
 
-const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const base = ORIGIN;
 
 // Who and what Pluck is, for search engines and AI answer engines. Facts only: each one is on the page or in the repo.
 const structured = (description: string) => ({
@@ -31,7 +32,7 @@ const structured = (description: string) => ({
       operatingSystem: "Web, iOS, Chrome",
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
-      license: "https://www.gnu.org/licenses/agpl-3.0.html",
+      license: "https://www.apache.org/licenses/LICENSE-2.0",
       sameAs: [REPO_URL],
       publisher: { "@id": `${base}/#org` },
       featureList: [

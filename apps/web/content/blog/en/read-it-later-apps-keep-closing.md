@@ -28,7 +28,7 @@ Pluck keeps the page text when you pluck it, so your copy is still there when th
 
 If the code is public, the app can outlive the company. Someone can fork it, and you can read what it does with your data.
 
-Pluck is open source: AGPL-3.0 for the server, MIT for the apps.
+Pluck is open source under Apache-2.0, the server and the apps alike.
 
 Public code isn't the whole answer, mind. Omnivore was open source too.
 
