@@ -2,6 +2,7 @@ import { LOCALE_NAMES } from "@pluck/i18n";
 import type { AiConnection, Me, Settings as UserSettings } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import * as Application from "expo-application";
 import * as Clipboard from "expo-clipboard";
 import { router } from "expo-router";
 import { useEffect, useState, type ReactNode } from "react";
@@ -342,6 +343,11 @@ export default function Settings() {
       <Pressable accessibilityRole="button" onPress={deleteAll} style={[styles.delete, { backgroundColor: t.surface }]}>
         <Text style={[font.medium, { color: t.danger, fontSize: 15, textAlign: "center" }]}>{tr("deleteAll")}</Text>
       </Pressable>
+
+      {/* Which build this is, from the app itself, to match against TestFlight. */}
+      <Text selectable style={[font.regular, styles.footnote, { color: t.ink2, textAlign: "center" }]}>
+        Pluck {Application.nativeApplicationVersion} ({Application.nativeBuildVersion})
+      </Text>
     </ScrollView>
   );
 }
