@@ -1,5 +1,4 @@
 import { expect, test } from "vitest";
-// @ts-expect-error: a plain .mjs script, no types
 import { bump, compare, newest } from "./version.mjs";
 
 test("release numbers: patch, minor, major, and which is newest", () => {
