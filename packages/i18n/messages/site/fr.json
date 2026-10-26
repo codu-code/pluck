@@ -12,12 +12,13 @@
     "connect": "Connecter votre IA",
     "openSource": "Open source",
     "getPluck": "Essayer Pluck",
-    "footerHome": "Accueil",
     "support": "Aide",
     "privacy": "Confidentialité",
     "terms": "Conditions",
     "cookies": "Cookies",
-    "freeAndOpen": "Pluck est gratuit et open source."
+    "freeAndOpen": "Pluck est gratuit et open source.",
+    "blog": "Blog",
+    "tagline": "Cueillez. Triez plus tard."
   },
   "paste": {
     "label": "Collez un lien pour essayer",
@@ -586,5 +587,20 @@
     "desktop": "Sur un ordinateur ? Visez ce code avec l’appareil photo de votre iPhone.",
     "qrAlt": "Code QR de la bêta Pluck sur TestFlight",
     "feedback": "Quelque chose cloche ? Faites une capture dans Pluck et TestFlight propose de nous l’envoyer. Ou écrivez à support@getpluck.io."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog · Pluck",
+      "description": "Faire venir votre bibliothèque depuis Pocket ou Omnivore, garder la page et mettre votre IA au travail. Des textes courts par l’équipe de Pluck."
+    },
+    "title": "Blog<dot>.</dot>",
+    "lede": "Faire venir votre bibliothèque, garder la page et mettre votre IA au travail. Court, comme tout ici.",
+    "all": "Tous les articles",
+    "minutes": "{minutes, number} min de lecture",
+    "englishOnly": "Cet article est en anglais.",
+    "box": {
+      "title": "Cueillez.",
+      "body": "Gratuit et open source. <link>Prenez Pluck</link> avec un lien par e-mail, ou hébergez le vôtre."
+    }
   }
 }

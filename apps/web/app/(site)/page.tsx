@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { APP_STORE_URL, CHROME_STORE_URL } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { APP_STORE_URL, CHROME_STORE_URL, REPO_URL } from "@/lib/site";
 import { PasteBox } from "./PasteBox";
 import { Reveal } from "./Reveal";
 import { SitePage } from "./SiteChrome";
@@ -10,8 +11,41 @@ import styles from "./site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.home.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/" } };
 }
+
+const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+
+// Who and what Pluck is, for search engines and AI answer engines. Facts only: each one is on the page or in the repo.
+const structured = (description: string) => ({
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", "@id": `${base}/#org`, name: "Pluck", legalName: "Codú Limited", url: base, logo: `${base}/icon-512.png`, sameAs: [REPO_URL] },
+    { "@type": "WebSite", "@id": `${base}/#site`, name: "Pluck", url: base, publisher: { "@id": `${base}/#org` } },
+    {
+      "@type": "SoftwareApplication",
+      name: "Pluck",
+      url: base,
+      description,
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Web, iOS, Chrome",
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      license: "https://www.gnu.org/licenses/agpl-3.0.html",
+      sameAs: [REPO_URL],
+      publisher: { "@id": `${base}/#org` },
+      featureList: [
+        "Pluck links, notes, todos, PDFs and images from the iPhone share sheet, Chrome, email or an AI tool",
+        "Keeps the page text, not just the link",
+        "Lists with a note and a tick per item, private or public",
+        "MCP connector for Claude, ChatGPT, Cursor and any AI tool that speaks MCP",
+        "Imports from Pocket, Omnivore, Raindrop and browser bookmark files",
+        "Export everything as JSON and Markdown",
+        "Self-host with Docker",
+      ],
+    },
+  ],
+});
 
 // The app, drawn for the hero (the Landing board's rows).
 const ROWS = [
@@ -44,6 +78,7 @@ export default async function Home() {
   const dot = (c: ReactNode) => <span className={styles.dot}>{c}</span>;
   return (
     <SitePage page="home">
+      <JsonLd data={structured(t("meta.description"))} />
       <Reveal />
       <section className={`${styles.wrap} ${styles.hero}`}>
         <h1 className={`${styles.display} ${styles.heroTitle}`}>{t.rich("hero.title", { dot })}</h1>

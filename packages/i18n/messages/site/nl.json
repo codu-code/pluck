@@ -12,12 +12,13 @@
     "connect": "Verbind je AI",
     "openSource": "Open source",
     "getPluck": "Begin met Pluck",
-    "footerHome": "Home",
     "support": "Hulp",
     "privacy": "Privacy",
     "terms": "Voorwaarden",
     "cookies": "Cookies",
-    "freeAndOpen": "Pluck is gratis en open source."
+    "freeAndOpen": "Pluck is gratis en open source.",
+    "blog": "Blog",
+    "tagline": "Pluk het. Sorteer het later."
   },
   "paste": {
     "label": "Plak een link om het te proberen",
@@ -586,5 +587,20 @@
     "desktop": "Op een computer? Richt de camera van je iPhone hierop.",
     "qrAlt": "QR-code voor de Pluck-bèta op TestFlight",
     "feedback": "Klopt er iets niet? Maak een screenshot in Pluck en TestFlight biedt aan hem naar ons te sturen. Of mail support@getpluck.io."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog · Pluck",
+      "description": "Je bibliotheek overzetten uit Pocket of Omnivore, de pagina bewaren en je AI aan het werk zetten. Korte stukken van de mensen achter Pluck."
+    },
+    "title": "Blog<dot>.</dot>",
+    "lede": "Je bibliotheek overzetten, de pagina bewaren en je AI aan het werk zetten. Kort, zoals alles hier.",
+    "all": "Alle berichten",
+    "minutes": "{minutes, number} min lezen",
+    "englishOnly": "Dit bericht is in het Engels.",
+    "box": {
+      "title": "Pluk het.",
+      "body": "Gratis en open source. <link>Neem Pluck</link> met een link per e-mail, of draai je eigen."
+    }
   }
 }

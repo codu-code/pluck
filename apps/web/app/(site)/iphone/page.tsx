@@ -6,7 +6,7 @@ import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.iphone.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/iphone" } };
 }
 
 const STEPS = ["get", "join", "signIn", "share"] as const;

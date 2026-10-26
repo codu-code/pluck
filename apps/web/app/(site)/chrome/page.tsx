@@ -6,7 +6,7 @@ import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.soon.chrome.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/chrome" } };
 }
 
 // Where "Add to Chrome" lands until the store listing is live (CHROME_STORE_URL in lib/site.ts).

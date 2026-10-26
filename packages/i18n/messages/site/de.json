@@ -12,12 +12,13 @@
     "connect": "Deine KI verbinden",
     "openSource": "Open Source",
     "getPluck": "Pluck holen",
-    "footerHome": "Start",
     "support": "Hilfe",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
     "cookies": "Cookies",
-    "freeAndOpen": "Pluck ist kostenlos und Open Source."
+    "freeAndOpen": "Pluck ist kostenlos und Open Source.",
+    "blog": "Blog",
+    "tagline": "Pflück es. Sortier es später."
   },
   "paste": {
     "label": "Füg einen Link ein, um es auszuprobieren",
@@ -586,5 +587,20 @@
     "desktop": "Am Computer? Halt die Kamera deines iPhones hierauf.",
     "qrAlt": "QR-Code für die Pluck-Beta auf TestFlight",
     "feedback": "Stimmt was nicht? Mach in Pluck einen Screenshot, und TestFlight bietet an, ihn uns zu schicken. Oder schreib an support@getpluck.io."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog · Pluck",
+      "description": "Deine Bibliothek aus Pocket oder Omnivore umziehen, die Seite behalten und deine KI arbeiten lassen. Kurze Texte von den Leuten, die Pluck machen."
+    },
+    "title": "Blog<dot>.</dot>",
+    "lede": "Deine Bibliothek umziehen, die Seite behalten und deine KI arbeiten lassen. Kurz, wie alles hier.",
+    "all": "Alle Beiträge",
+    "minutes": "{minutes, number} Min. Lesezeit",
+    "englishOnly": "Dieser Beitrag ist auf Englisch.",
+    "box": {
+      "title": "Pflück es.",
+      "body": "Kostenlos und Open Source. <link>Hol dir Pluck</link> mit einem Link per E-Mail, oder betreib dein eigenes."
+    }
   }
 }

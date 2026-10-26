@@ -8,9 +8,9 @@ test("snapshot app pages for the design detector", async ({ page }) => {
   await signIn(page);
   const snap = (name: string) => snapshot(page, name);
 
-  for (const route of ["/", "/chrome", "/iphone", "/connect", "/open-source", "/support", "/privacy", "/terms"]) {
+  for (const route of ["/", "/chrome", "/iphone", "/connect", "/open-source", "/support", "/privacy", "/terms", "/blog", "/blog/ask-your-ai-what-you-plucked"]) {
     await page.goto(route);
-    await snap(`site-${route.slice(1) || "home"}`);
+    await snap(`site-${route.slice(1).replaceAll("/", "-") || "home"}`);
   }
   await page.goto("/inbox");
   await snap("inbox-empty");

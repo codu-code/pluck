@@ -12,12 +12,13 @@
     "connect": "AIと接続",
     "openSource": "オープンソース",
     "getPluck": "Pluckを始める",
-    "footerHome": "ホーム",
     "support": "サポート",
     "privacy": "プライバシー",
     "terms": "利用規約",
     "cookies": "クッキー",
-    "freeAndOpen": "Pluckは無料のオープンソースです。"
+    "freeAndOpen": "Pluckは無料のオープンソースです。",
+    "blog": "ブログ",
+    "tagline": "Pluckして、整理はあとで。"
   },
   "paste": {
     "label": "リンクを貼り付けて試す",
@@ -586,5 +587,20 @@
     "desktop": "パソコンでご覧の方は、iPhoneのカメラをこちらに向けてください。",
     "qrAlt": "TestFlightのPluckベータ用QRコード",
     "feedback": "おかしな点があれば、Pluckでスクリーンショットを撮るとTestFlightから送信できます。support@getpluck.io へのメールでもどうぞ。"
+  },
+  "blog": {
+    "meta": {
+      "title": "ブログ · Pluck",
+      "description": "PocketやOmnivoreからのライブラリの移し方、ページを残すこと、お使いのAIの活かし方。Pluckをつくる人たちの短い記事です。"
+    },
+    "title": "ブログ<dot>。</dot>",
+    "lede": "ライブラリの移し方、ページを残すこと、お使いのAIの活かし方。ここにあるものはすべて短めです。",
+    "all": "すべての記事",
+    "minutes": "{minutes, number}分で読めます",
+    "englishOnly": "この記事は英語です。",
+    "box": {
+      "title": "Pluckしよう。",
+      "body": "無料のオープンソース。メールのリンクで<link>Pluckを始める</link>か、自分でホストできます。"
+    }
   }
 }

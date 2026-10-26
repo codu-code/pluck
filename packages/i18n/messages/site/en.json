@@ -12,12 +12,13 @@
     "connect": "Connect your AI",
     "openSource": "Open source",
     "getPluck": "Get Pluck",
-    "footerHome": "Home",
     "support": "Support",
     "privacy": "Privacy",
     "terms": "Terms",
     "cookies": "Cookies",
-    "freeAndOpen": "Pluck is free and open source."
+    "freeAndOpen": "Pluck is free and open source.",
+    "blog": "Blog",
+    "tagline": "Pluck it. Sort it later."
   },
   "paste": {
     "label": "Paste a link to try it",
@@ -586,5 +587,20 @@
     "desktop": "On a computer? Point your iPhone's camera at this.",
     "qrAlt": "QR code for the Pluck beta on TestFlight",
     "feedback": "Something off? Take a screenshot in Pluck and TestFlight offers to send it to us. Or write to support@getpluck.io."
+  },
+  "blog": {
+    "meta": {
+      "title": "Blog · Pluck",
+      "description": "Moving your library in from Pocket or Omnivore, keeping the page, and putting your AI to work. Short reads from the people making Pluck."
+    },
+    "title": "Blog<dot>.</dot>",
+    "lede": "Moving your library in, keeping the page, and putting your AI to work. Short, like everything else here.",
+    "all": "All posts",
+    "minutes": "{minutes, number} min read",
+    "englishOnly": "This post is in English.",
+    "box": {
+      "title": "Pluck it.",
+      "body": "Free and open source. <link>Get Pluck</link> with a link by email, or run your own."
+    }
   }
 }

@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { JsonLd } from "@/components/JsonLd";
 import { REPO_URL } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.support.meta");
-  return { title: t("title"), description: t("description") };
+  return { title: t("title"), description: t("description"), alternates: { canonical: "/support" } };
 }
 
 // Each topic's answers, by key under site.support.<topic>.
@@ -28,10 +29,19 @@ const RICH = {
   openSource: (c: ReactNode) => <Link href="/open-source">{c}</Link>,
 };
 
+// The same markup as plain text, for the FAQ structured data.
+const PLAIN = { pluckKeys: () => "Alt Shift P", highlightKeys: () => "Alt Shift H", connect: (c: string) => c, openSource: (c: string) => c };
+
 export default async function Support() {
   const t = await getTranslations("site.support");
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: TOPICS.flatMap((x) => x.answers.map((a) => ({ "@type": "Question", name: t(`${a}.q`), acceptedAnswer: { "@type": "Answer", text: t.markup(`${a}.a`, PLAIN) } }))),
+  };
   return (
     <SitePage page="support">
+      <JsonLd data={faq} />
       <section className={`${styles.wrap} ${styles.pageHero}`}>
         <h1 className={`${styles.display} ${styles.supportTitle}`}>{t.rich("title", { dot: (c) => <span className={styles.dot}>{c}</span> })}</h1>
         <p className={styles.heroPara}>{t.rich("lede", { bugs: (c) => <a href="#bugs">{c}</a> })}</p>
