@@ -78,10 +78,10 @@
       "text": "Vous préférez faire ça avec votre IA ? Dites « fais ma revue de la semaine ». La même liste, une décision à la fois."
     },
     "footer": {
-      "note": "Les liens fonctionnent 7 jours, sans connexion. Des règles simples, aucun modèle.",
+      "note": "Les boutons de cet e-mail fonctionnent pendant une semaine, sans connexion. Le contenu est choisi par des règles simples, pas par une IA.",
       "changeDay": "Changer de jour",
       "stop": "Ne plus les recevoir",
-      "text": "Les liens fonctionnent 7 jours, sans connexion. Des règles simples, aucun modèle. Changer de jour : {settings} . Ne plus les recevoir : {stop}"
+      "text": "Les boutons de cet e-mail fonctionnent pendant une semaine, sans connexion. Le contenu est choisi par des règles simples, pas par une IA. Changer de jour : {settings} . Ne plus les recevoir : {stop}"
     }
   }
 }

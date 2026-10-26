@@ -78,10 +78,10 @@
       "text": "Preferisci farlo con la tua IA? Di' \"fai la mia revisione settimanale\". Stessa lista, una decisione alla volta."
     },
     "footer": {
-      "note": "I link funzionano per 7 giorni, senza accesso. Regole semplici, nessun modello.",
+      "note": "I pulsanti di questa email funzionano per una settimana senza accesso. Quello che vedi è scelto con regole semplici, non dall'IA.",
       "changeDay": "Cambia giorno",
       "stop": "Non mandarmele più",
-      "text": "I link funzionano per 7 giorni, senza accesso. Regole semplici, nessun modello. Cambia giorno: {settings} . Non mandarmele più: {stop}"
+      "text": "I pulsanti di questa email funzionano per una settimana senza accesso. Quello che vedi è scelto con regole semplici, non dall'IA. Cambia giorno: {settings} . Non mandarmele più: {stop}"
     }
   }
 }

@@ -78,10 +78,10 @@
       "text": "Lieber mit deiner KI? Sag „Mach meinen Wochenrückblick“. Dieselbe Liste, eine Entscheidung nach der anderen."
     },
     "footer": {
-      "note": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein KI-Modell.",
+      "note": "Die Buttons in dieser E-Mail funktionieren eine Woche lang ohne Anmeldung. Ausgewählt nach einfachen Regeln, nicht von einer KI.",
       "changeDay": "Tag ändern",
       "stop": "Abbestellen",
-      "text": "Die Links funktionieren 7 Tage lang, ohne Anmeldung. Einfache Regeln, kein KI-Modell. Tag ändern: {settings} . Abbestellen: {stop}"
+      "text": "Die Buttons in dieser E-Mail funktionieren eine Woche lang ohne Anmeldung. Ausgewählt nach einfachen Regeln, nicht von einer KI. Tag ändern: {settings} . Abbestellen: {stop}"
     }
   }
 }

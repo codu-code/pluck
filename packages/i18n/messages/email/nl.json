@@ -78,10 +78,10 @@
       "text": "Doe je dit liever met je AI? Zeg \"start mijn weekreview\". Dezelfde lijst, één beslissing tegelijk."
     },
     "footer": {
-      "note": "Links werken 7 dagen, zonder inloggen. Simpele regels, geen AI-model.",
+      "note": "De knoppen in deze mail werken een week lang zonder inloggen. Wat hier staat, kiezen we met simpele regels, niet met AI.",
       "changeDay": "Andere dag kiezen",
       "stop": "Afmelden",
-      "text": "Links werken 7 dagen, zonder inloggen. Simpele regels, geen AI-model. Andere dag kiezen: {settings} . Afmelden: {stop}"
+      "text": "De knoppen in deze mail werken een week lang zonder inloggen. Wat hier staat, kiezen we met simpele regels, niet met AI. Andere dag kiezen: {settings} . Afmelden: {stop}"
     }
   }
 }

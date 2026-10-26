@@ -78,10 +78,10 @@
       "text": "Rather do this with your AI? Say \"run my weekly review\". Same list, one decision at a time."
     },
     "footer": {
-      "note": "Links work for 7 days, no login. Plain rules, no model.",
+      "note": "The buttons in this email work for a week without signing in. What's here is picked by simple rules, not AI.",
       "changeDay": "Change the day",
       "stop": "Stop these",
-      "text": "Links work for 7 days, no login. Plain rules, no model. Change the day: {settings} . Stop these: {stop}"
+      "text": "The buttons in this email work for a week without signing in. What's here is picked by simple rules, not AI. Change the day: {settings} . Stop these: {stop}"
     }
   }
 }
