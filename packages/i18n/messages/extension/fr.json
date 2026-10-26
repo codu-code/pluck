@@ -58,7 +58,7 @@
       "delete": "Supprimer",
       "tips": {
         "opening": "Ouvrir cette fenêtre garde la page. Tout le secret est là.",
-        "shortcut": "Alt+Shift+P fait la même chose, sans clic.",
+        "shortcut": "{keys} fait la même chose, sans clic.",
         "rightClick": "Clic droit sur un lien ou une image pour ne cueillir que ça."
       },
       "tags": "Tags",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Options de Pluck",
-    "shortcut": "Raccourci : Alt+Shift+P · modifiable dans la page des raccourcis de votre navigateur",
+    "shortcut": "Raccourci : {keys} · modifiable dans la page des raccourcis de votre navigateur",
     "server": "Serveur",
     "defaultKind": "Type par défaut",
     "guess": "Deviner d’après la page",

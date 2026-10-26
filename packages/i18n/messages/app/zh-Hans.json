@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "已连接",
     "lede": "现在你可以在浏览器里摘下内容了。关掉这个标签页吧；从现在起，任何网页都只差一个按键。",
-    "page": "摘下当前网页。在 Mac 上 Alt 就是 Option 键。",
+    "page": "摘下当前网页。",
     "selection": "摘下你选中的内容，留作高亮。"
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "添加浏览器扩展",
-      "body": "在任意网页上点一下，或按 Alt+Shift+P。",
+      "body": "在任意网页上点一下，或按 {keys}。",
       "chrome": "Chrome"
     },
     "three": {

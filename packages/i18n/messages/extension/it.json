@@ -58,7 +58,7 @@
       "delete": "Elimina",
       "tips": {
         "opening": "Basta aprire questa finestra e la pagina è conservata. Il trucco è tutto qui.",
-        "shortcut": "Alt+Shift+P lo fa senza clic.",
+        "shortcut": "{keys} lo fa senza clic.",
         "rightClick": "Fai clic destro su un link o un'immagine per prendere solo quello."
       },
       "tags": "Tag",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Opzioni di Pluck",
-    "shortcut": "Scorciatoia: Alt+Shift+P · puoi cambiarla nella pagina delle scorciatoie del browser",
+    "shortcut": "Scorciatoia: {keys} · puoi cambiarla nella pagina delle scorciatoie del browser",
     "server": "Server",
     "defaultKind": "Tipo predefinito",
     "guess": "Deducilo dalla pagina",

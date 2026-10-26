@@ -58,7 +58,7 @@
       "delete": "Löschen",
       "tips": {
         "opening": "Schon das Öffnen pflückt die Seite. Das ist der ganze Trick.",
-        "shortcut": "Alt+Shift+P geht auch ohne Klick.",
+        "shortcut": "{keys} geht auch ohne Klick.",
         "rightClick": "Rechtsklick auf einen Link oder ein Bild pflückt nur das."
       },
       "tags": "Tags",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluck-Optionen",
-    "shortcut": "Tastenkürzel: Alt+Shift+P · ändern kannst du es auf der Seite für Tastenkürzel deines Browsers",
+    "shortcut": "Tastenkürzel: {keys} · ändern kannst du es auf der Seite für Tastenkürzel deines Browsers",
     "server": "Server",
     "defaultKind": "Standard-Art",
     "guess": "Aus der Seite erraten",

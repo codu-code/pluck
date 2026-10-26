@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Verbonden",
     "lede": "Je kunt nu plukken vanuit je browser. Sluit dit tabblad; vanaf nu is elke pagina één toetsdruk verwijderd.",
-    "page": "Plukt de pagina waar je op bent. Alt is Option op een Mac.",
+    "page": "Plukt de pagina waar je op bent.",
     "selection": "Plukt wat je selecteerde, bewaard als markering."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Voeg de extensie toe",
-      "body": "Eén klik, of Alt+Shift+P, op elke pagina.",
+      "body": "Eén klik, of {keys}, op elke pagina.",
       "chrome": "Chrome"
     },
     "three": {

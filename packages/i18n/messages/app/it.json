@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Collegata",
     "lede": "Ora puoi prendere dal browser. Chiudi questa scheda; da qui in poi, ogni pagina è a un tasto di distanza.",
-    "page": "Prende la pagina in cui sei. Su Mac, Alt è Opzione.",
+    "page": "Prende la pagina in cui sei.",
     "selection": "Prende quello che hai selezionato, conservato come evidenziazione."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Aggiungi l'estensione",
-      "body": "Un clic, o Alt+Shift+P, su qualsiasi pagina.",
+      "body": "Un clic, o {keys}, su qualsiasi pagina.",
       "chrome": "Chrome"
     },
     "three": {

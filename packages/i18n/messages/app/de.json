@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Verbunden",
     "lede": "Du kannst jetzt aus deinem Browser pflücken. Schließ diesen Tab. Ab hier ist jede Seite nur einen Tastendruck entfernt.",
-    "page": "Pflückt die Seite, auf der du bist. Alt ist auf dem Mac die Wahltaste.",
+    "page": "Pflückt die Seite, auf der du bist.",
     "selection": "Pflückt deine Auswahl, behalten als Markierung."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Erweiterung hinzufügen",
-      "body": "Ein Klick, oder Alt+Shift+P, auf jeder Seite.",
+      "body": "Ein Klick, oder {keys}, auf jeder Seite.",
       "chrome": "Chrome"
     },
     "three": {

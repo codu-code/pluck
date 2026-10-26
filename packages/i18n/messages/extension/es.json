@@ -58,7 +58,7 @@
       "delete": "Eliminar",
       "tips": {
         "opening": "Al abrir esto, la página queda conservada. Ese es todo el truco.",
-        "shortcut": "Alt+Shift+P hace lo mismo sin clic.",
+        "shortcut": "{keys} hace lo mismo sin clic.",
         "rightClick": "Haz clic derecho en un enlace o una imagen para recoger solo eso."
       },
       "tags": "Etiquetas",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Opciones de Pluck",
-    "shortcut": "Atajo: Alt+Shift+P · cámbialo en la página de atajos de tu navegador",
+    "shortcut": "Atajo: {keys} · cámbialo en la página de atajos de tu navegador",
     "server": "Servidor",
     "defaultKind": "Tipo predeterminado",
     "guess": "Deducirlo de la página",

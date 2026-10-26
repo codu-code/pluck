@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "use-intl";
 import { signOut, startSignIn, useApiKey } from "@/lib/auth";
+import { pageShortcut } from "@/lib/shortcut";
 import { get, set, settings as readSettings, type Settings } from "@/lib/store";
 
 // Options (Extension board): the server, the default kind, the account, and what a pluck sends.
@@ -12,8 +13,10 @@ export function Options() {
   const [keyMode, setKeyMode] = useState(false);
   const [key, setKey] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [keys, setKeys] = useState("");
 
   useEffect(() => {
+    pageShortcut().then(setKeys);
     readSettings().then((x) => { setS(x); setServer(x.server); });
     get("email").then(setEmail);
     const onChange = (changes: Record<string, { newValue?: unknown }>) => changes.email && setEmail((changes.email.newValue as string | null) ?? null);
@@ -49,7 +52,7 @@ export function Options() {
     <main className="options">
       <div className="options-head">
         <h1>{t("options.title")}</h1>
-        <span className="meta">{t("options.shortcut")}</span>
+        {keys && <span className="meta">{t("options.shortcut", { keys })}</span>}
       </div>
       <div className="grid">
         <label className="field">

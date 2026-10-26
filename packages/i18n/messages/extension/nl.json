@@ -58,7 +58,7 @@
       "delete": "Verwijderen",
       "tips": {
         "opening": "Door dit te openen, is de pagina al bewaard. Meer is het niet.",
-        "shortcut": "Alt+Shift+P doet het zonder klik.",
+        "shortcut": "{keys} doet het zonder klik.",
         "rightClick": "Klik met rechts op een link of afbeelding om alleen die te plukken."
       },
       "tags": "Tags",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluck-opties",
-    "shortcut": "Sneltoets: Alt+Shift+P · wijzig hem op de sneltoetsenpagina van je browser",
+    "shortcut": "Sneltoets: {keys} · wijzig hem op de sneltoetsenpagina van je browser",
     "server": "Server",
     "defaultKind": "Standaardsoort",
     "guess": "Afleiden uit de pagina",

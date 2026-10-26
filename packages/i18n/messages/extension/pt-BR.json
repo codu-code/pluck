@@ -58,7 +58,7 @@
       "delete": "Apagar",
       "tips": {
         "opening": "Abrir esta janela já guarda a página. O truque é só esse.",
-        "shortcut": "Alt+Shift+P faz isso sem o clique.",
+        "shortcut": "{keys} faz isso sem o clique.",
         "rightClick": "Clique com o botão direito num link ou numa imagem para colher só aquilo."
       },
       "tags": "Tags",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Opções do Pluck",
-    "shortcut": "Atalho: Alt+Shift+P · mude na página de atalhos do seu navegador",
+    "shortcut": "Atalho: {keys} · mude na página de atalhos do seu navegador",
     "server": "Servidor",
     "defaultKind": "Tipo padrão",
     "guess": "Deduzir pela página",

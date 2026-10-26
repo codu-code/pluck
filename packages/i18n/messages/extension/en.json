@@ -58,7 +58,7 @@
       "delete": "Delete",
       "tips": {
         "opening": "Opening this plucks the page. That's the whole trick.",
-        "shortcut": "Alt+Shift+P does it without the click.",
+        "shortcut": "{keys} does it without the click.",
         "rightClick": "Right-click a link or an image to pluck just that."
       },
       "tags": "Tags",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluck options",
-    "shortcut": "Shortcut: Alt+Shift+P · change it in your browser's shortcuts page",
+    "shortcut": "Shortcut: {keys} · change it in your browser's shortcuts page",
     "server": "Server",
     "defaultKind": "Default kind",
     "guess": "Guess from the page",

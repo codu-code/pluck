@@ -58,7 +58,7 @@
       "delete": "删除",
       "tips": {
         "opening": "打开这个窗口就会留下网页，诀窍就这么简单。",
-        "shortcut": "按 Alt+Shift+P，连点都不用点。",
+        "shortcut": "按 {keys}，连点都不用点。",
         "rightClick": "右键点击链接或图片，就只摘下它。"
       },
       "tags": "标签",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluck 选项",
-    "shortcut": "快捷键：Alt+Shift+P · 可在浏览器的快捷键页面修改",
+    "shortcut": "快捷键：{keys} · 可在浏览器的快捷键页面修改",
     "server": "服务器",
     "defaultKind": "默认类别",
     "guess": "根据网页判断",

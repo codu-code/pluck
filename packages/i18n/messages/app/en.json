@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Connected",
     "lede": "You can pluck from your browser now. Close this tab; from here on, any page is one press away.",
-    "page": "Plucks the page you are on. Alt is Option on a Mac.",
+    "page": "Plucks the page you are on.",
     "selection": "Plucks what you selected, kept as a highlight."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Add the extension",
-      "body": "One click, or Alt+Shift+P, on any page.",
+      "body": "One click, or {keys}, on any page.",
       "chrome": "Chrome"
     },
     "three": {

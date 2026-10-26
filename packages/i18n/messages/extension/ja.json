@@ -58,7 +58,7 @@
       "delete": "削除",
       "tips": {
         "opening": "このポップアップを開くだけでページが残ります。仕掛けはそれだけです。",
-        "shortcut": "Alt+Shift+Pなら、クリックなしでPluckできます。",
+        "shortcut": "{keys}なら、クリックなしでPluckできます。",
         "rightClick": "リンクや画像を右クリックすると、それだけをPluckできます。"
       },
       "tags": "タグ",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluckの設定",
-    "shortcut": "ショートカット：Alt+Shift+P · ブラウザのショートカット設定で変更できます",
+    "shortcut": "ショートカット：{keys} · ブラウザのショートカット設定で変更できます",
     "server": "サーバー",
     "defaultKind": "標準の種類",
     "guess": "ページから判断",
