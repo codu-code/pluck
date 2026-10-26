@@ -9,6 +9,10 @@ export function register() {
   if (secret === "dev-only-secret-change-me-in-production-0123456789" || secret.length < 32)
     throw new Error("BETTER_AUTH_SECRET is the example one or shorter than 32 characters: set 32+ random bytes (openssl rand -base64 32).");
   if (process.env.CRON_SECRET === "dev-cron-secret") throw new Error("CRON_SECRET is the example one: set a random value (openssl rand -hex 32).");
+  // The two switches for tests (docs/self-host.md): on a public server one opens the private network to page fetches,
+  // the other lets anyone guess sign-in codes without limit.
+  if (process.env.ALLOW_PRIVATE_FETCH === "1") throw new Error("ALLOW_PRIVATE_FETCH is for local development and tests only: unset it.");
+  if (process.env.AUTH_RATE_LIMIT === "off") throw new Error("AUTH_RATE_LIMIT=off is for local development and tests only: unset it.");
 }
 
 // Errors thrown while rendering a page or running a route that did not catch them (route handlers in lib/api.ts

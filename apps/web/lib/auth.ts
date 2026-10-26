@@ -28,6 +28,8 @@ export const API_RESOURCE = `${ORIGIN}/api/v1`;
 export const LIBRARY_SCOPES = ["library:read", "library:write", "library:delete"] as const;
 // Account settings a browser session has (connected AI tools, export, deleting it all), for our own apps only.
 export const ACCOUNT_SCOPE = "account";
+// What an AI tool gets when it names no scope, and all the connector advertises: never delete (CLAUDE.md) or the account.
+export const AI_TOOL_SCOPES = ["offline_access", "library:read", "library:write"];
 // Where the extension and the iPhone app take their sign-in back. Codes sent here never leave our apps.
 export const APP_REDIRECT = "io.getpluck.app:/oauth";
 export const FIRST_PARTY_REDIRECTS = [`${ORIGIN}/extension/connected`, APP_REDIRECT];
@@ -69,6 +71,15 @@ const guard = createAuthMiddleware(async (ctx) => {
     const wantsAccount = String(body.scope ?? "").split(" ").includes(ACCOUNT_SCOPE);
     if ((wantsApi || wantsAccount || /pluck/i.test(String(body.client_name ?? ""))) && !firstParty(body.redirect_uris))
       throw new APIError("BAD_REQUEST", { error: "invalid_client_metadata", error_description: "Only Pluck's own apps can register for the Pluck API or use its name." });
+  }
+  // Better Auth stores every registered client with every scope Pluck has, whatever it asked for, and gives an authorize
+  // with no scope all of them. So the line is drawn here: an AI tool, or any client not ours, gets read and write unless
+  // it names delete itself, and never the account.
+  if (ctx.path === "/oauth2/authorize" && !firstParty([redirectOf(ctx)])) {
+    const asked = String(ctx.query?.scope ?? "").split(" ").filter(Boolean);
+    if (asked.includes(ACCOUNT_SCOPE))
+      throw new APIError("BAD_REQUEST", { error: "invalid_scope", error_description: "The account scope is for Pluck's own apps." });
+    if (!asked.length) return { context: { query: { ...ctx.query, scope: AI_TOOL_SCOPES.join(" ") } } };
   }
   const email = String((ctx.body as { email?: unknown } | undefined)?.email ?? "").trim().toLowerCase();
   // The review address gets no link: the form asks for its password instead.
@@ -142,6 +153,8 @@ export const auth = betterAuth({
       consentPage: "/oauth/consent",
       resource: MCP_RESOURCE,
       scopes: ["openid", "profile", "email", "offline_access", ...LIBRARY_SCOPES, ACCOUNT_SCOPE],
+      // Clients ask for what is advertised (the MCP spec says scopes_supported), so delete and the account stay unlisted.
+      advertisedMetadata: { scopes_supported: ["openid", "profile", "email", ...AI_TOOL_SCOPES] },
       accessTokenExpiresIn: 60 * 60,
       refreshTokenExpiresIn: 90 * DAY,
       // CIMD first; dynamic registration as the fallback for clients that do not speak CIMD yet.

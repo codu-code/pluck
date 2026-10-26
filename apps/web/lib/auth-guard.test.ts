@@ -31,6 +31,19 @@ test("only our own apps can ask for the account scope", async () => {
   expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [`${BASE}/api/v1`], "offline_access library:read library:write account")).status).toBe(201);
 });
 
+test("an AI tool that names no scope gets read and write, never delete or the account", async () => {
+  const { client_id } = (await (await register("Example AI", "https://ai.example.test/cb")).json()) as { client_id: string };
+  const authorize = (scope?: string) =>
+    auth.handler(new Request(`${BASE}/api/auth/oauth2/authorize?${new URLSearchParams({
+      response_type: "code", client_id, redirect_uri: "https://ai.example.test/cb", state: "s", code_challenge_method: "S256",
+      code_challenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM", resource: `${BASE}/mcp`, ...(scope ? { scope } : {}),
+    })}`, { headers: { "x-forwarded-for": `198.51.100.${++ip}` } }));
+  const scopeOf = (res: Response) => new URL(res.headers.get("location") ?? "", BASE).searchParams.get("scope");
+  expect(scopeOf(await authorize())).toBe("offline_access library:read library:write"); // on to sign-in, narrowed
+  expect(scopeOf(await authorize("library:read library:delete"))).toBe("library:read library:delete"); // named, so the consent screen shows it
+  expect((await authorize("library:read account")).status).toBe(400);
+});
+
 test("sign-in links are limited per address, whatever network asks: one a minute, six an hour", async () => {
   const email = `limit-${Date.now()}@example.test`;
   vi.useFakeTimers({ toFake: ["Date"] });

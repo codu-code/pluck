@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { TRY_COOKIE } from "@/lib/api";
 import { currentUser } from "@/lib/auth";
+import { samePath } from "@/lib/same-site";
 import { SignInForm } from "./SignInForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -11,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 // Only same-site paths, so a crafted link cannot bounce people elsewhere after sign-in.
-const safeNext = (n?: string) => (n && n.startsWith("/") && !n.startsWith("//") ? n : "/inbox");
+const safeNext = (n?: string) => samePath(n, "/inbox");
 
 // Sent here by the OAuth provider (an AI tool connecting): after the email link signs you in, carry on
 // with the same authorization request. The signing fields only matter to this page, so they are dropped.
