@@ -1,7 +1,7 @@
 import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
   batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, enqueue, findByUrl, getContent, getItem, getItemBlobKeys,
-  hitRateLimit, listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
+  hitRateLimit, listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
 import {
@@ -162,6 +162,14 @@ export async function restoreItem(userId: string, itemId: string): Promise<Item>
   const item = await restoreFromBin(userId, itemId);
   if (!item) throw new ApiError("not_found", "Nothing in the bin with that id.", 404);
   return item;
+}
+
+// Delete forever: one Item in the person's bin, files included. It cannot be put back.
+export async function deleteForever(userId: string, itemId: string): Promise<void> {
+  const gone = await purgeFromBin(userId, itemId, async (prefixes) => {
+    for (const prefix of prefixes) await deletePrefix(prefix);
+  });
+  if (!gone) throw new ApiError("not_found", "Nothing in the bin with that id.", 404);
 }
 
 // Nightly: items in the bin for 30 days go for good, files included.

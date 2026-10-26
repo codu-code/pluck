@@ -52,13 +52,15 @@
     "share": "Partager",
     "more": "Plus",
     "select": "Sélectionner",
-    "deselect": "Désélectionner"
+    "deselect": "Désélectionner",
+    "delete": "Supprimer"
   },
   "moved": {
     "archived": "Parti. Enfin, archivé.",
     "later": "Gardé pour plus tard.",
     "done": "Terminé.",
-    "inbox": "De retour dans la boîte de réception."
+    "inbox": "De retour dans la boîte de réception.",
+    "deleted": "Supprimé. Il reste 30 jours dans la corbeille."
   },
   "movedMany": {
     "archived": "{count, plural, one {Parti. Enfin, archivé.} other {# éléments. Partis. Enfin, archivés.}}",
@@ -532,8 +534,19 @@
       "expired": "expiré, gardé ici",
       "bulk": "archivé avec Tout archiver",
       "import": "importé",
-      "you": "archivé par vous"
-    }
+      "you": "archivé par vous",
+      "bin": "supprimé, effacé définitivement dans {days, plural, one {# jour} other {# jours}}"
+    },
+    "bin": "Corbeille",
+    "binLink": "Vous avez supprimé quelque chose par erreur ? La corbeille le garde 30 jours.",
+    "binSubtitle": "Ce que vous avez supprimé. Chaque élément est effacé définitivement 30 jours après sa suppression.",
+    "binEmpty": "La corbeille est vide.",
+    "outOfBin": "Sorti de la corbeille.",
+    "restore": "Restaurer",
+    "forever": "Supprimer définitivement",
+    "foreverNote": "Impossible d’annuler.",
+    "gone": "Supprimé définitivement.",
+    "needsSignIn": "Pour supprimer d’ici, déconnectez-vous puis reconnectez-vous. La déconnexion se trouve dans les Réglages."
   },
   "add": {
     "title": "Pluck",

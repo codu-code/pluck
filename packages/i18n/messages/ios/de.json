@@ -52,13 +52,15 @@
     "share": "Teilen",
     "more": "Mehr",
     "select": "Auswählen",
-    "deselect": "Abwählen"
+    "deselect": "Abwählen",
+    "delete": "Löschen"
   },
   "moved": {
     "archived": "Weg. Na ja, archiviert.",
     "later": "Für später behalten.",
     "done": "Erledigt.",
-    "inbox": "Zurück im Eingang."
+    "inbox": "Zurück im Eingang.",
+    "deleted": "Gelöscht. Bleibt 30 Tage im Papierkorb."
   },
   "movedMany": {
     "archived": "{count, plural, one {Weg. Na ja, archiviert.} other {# Einträge. Weg. Na ja, archiviert.}}",
@@ -532,8 +534,19 @@
       "expired": "abgelaufen, hier behalten",
       "bulk": "mit „Alles archivieren“ archiviert",
       "import": "importiert",
-      "you": "von dir archiviert"
-    }
+      "you": "von dir archiviert",
+      "bin": "gelöscht, endgültig weg in {days, plural, one {# Tag} other {# Tagen}}"
+    },
+    "bin": "Papierkorb",
+    "binLink": "Aus Versehen etwas gelöscht? Der Papierkorb hebt es 30 Tage lang auf.",
+    "binSubtitle": "Was du gelöscht hast. Jeder Eintrag ist 30 Tage nach dem Löschen endgültig weg.",
+    "binEmpty": "Der Papierkorb ist leer.",
+    "outOfBin": "Aus dem Papierkorb geholt.",
+    "restore": "Wiederherstellen",
+    "forever": "Endgültig löschen",
+    "foreverNote": "Das lässt sich nicht rückgängig machen.",
+    "gone": "Endgültig gelöscht.",
+    "needsSignIn": "Um hier zu löschen, melde dich ab und wieder an. Abmelden findest du in den Einstellungen."
   },
   "add": {
     "title": "Pluck",

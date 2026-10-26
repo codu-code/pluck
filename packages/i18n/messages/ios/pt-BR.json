@@ -52,13 +52,15 @@
     "share": "Compartilhar",
     "more": "Mais",
     "select": "Selecionar",
-    "deselect": "Desmarcar"
+    "deselect": "Desmarcar",
+    "delete": "Apagar"
   },
   "moved": {
     "archived": "Sumiu. Quer dizer, arquivado.",
     "later": "Guardado para depois.",
     "done": "Concluído.",
-    "inbox": "De volta à Entrada."
+    "inbox": "De volta à Entrada.",
+    "deleted": "Apagado. Ele fica na Lixeira por 30 dias."
   },
   "movedMany": {
     "archived": "{count, plural, one {Sumiu. Quer dizer, arquivado.} other {# itens. Sumiram. Quer dizer, arquivados.}}",
@@ -532,8 +534,19 @@
       "expired": "expirou, guardado aqui",
       "bulk": "arquivado com Arquivar tudo",
       "import": "importado",
-      "you": "arquivado por você"
-    }
+      "you": "arquivado por você",
+      "bin": "apagado, some para sempre em {days, plural, one {# dia} other {# dias}}"
+    },
+    "bin": "Lixeira",
+    "binLink": "Apagou algo sem querer? A Lixeira guarda por 30 dias.",
+    "binSubtitle": "O que você apagou. Cada item some de vez 30 dias depois de ser apagado.",
+    "binEmpty": "A Lixeira está vazia.",
+    "outOfBin": "Saiu da Lixeira.",
+    "restore": "Restaurar",
+    "forever": "Apagar para sempre",
+    "foreverNote": "Não dá para desfazer.",
+    "gone": "Apagado para sempre.",
+    "needsSignIn": "Para apagar por aqui, saia e entre de novo. Sair fica em Ajustes."
   },
   "add": {
     "title": "Pluck",

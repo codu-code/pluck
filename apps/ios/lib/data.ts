@@ -37,6 +37,7 @@ export const useOnline = () => useSyncExternalStore(subscribe, () => onlineManag
 export const keys = {
   items: (status: Status) => ["items", status] as const,
   archive: ["items", "archive"] as const, // under "items", so every move refreshes it
+  bin: ["items", "bin"] as const,
   item: (id: string) => ["item", id] as const,
   lists: ["lists"] as const,
   list: (id: string) => ["list", id] as const,
@@ -55,6 +56,14 @@ export const useArchive = () =>
   useInfiniteQuery({
     queryKey: keys.archive,
     queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=archive&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
+    initialPageParam: null as string | null,
+    getNextPageParam: (last) => last.nextCursor,
+  });
+// The bin: deleted Items, newest delete first, 50 at a time. Each goes for good 30 days after it was deleted.
+export const useBin = () =>
+  useInfiniteQuery({
+    queryKey: keys.bin,
+    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=bin&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.nextCursor,
   });

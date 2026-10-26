@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import {
-  applyExtraction, createTextItem, editItem, findByUrl, getContent, getItem, getItemBlobKeys, listItems, moveToBin, pluckLink, recordExtractionFailure, resetExtraction, setBlobKeys,
+  applyExtraction, createTextItem, editItem, findByUrl, getContent, getItem, getItemBlobKeys, listItems, moveToBin, pluckLink, purgeFromBin, recordExtractionFailure, restoreFromBin, resetExtraction, setBlobKeys,
 } from "./index.ts";
-import { items } from "./collections.ts";
+import { items, oid } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
 
 const page = { status: "inbox" as const, sort: "newest" as const, limit: 50 };
@@ -139,4 +139,19 @@ test("findByUrl finds only the person's own live item", async () => {
   expect(await findByUrl(b, "https://example.test/find-me")).toBeNull();
   await moveToBin(a, item.id);
   expect(await findByUrl(a, "https://example.test/find-me")).toBeNull();
+});
+
+test("Delete forever takes only the person's own Item, only from the bin, files first", async () => {
+  const { a, b } = await twoUsers();
+  const { item } = await pluckLink(a, { url: "https://example.test/gone-for-good", source: "web" });
+  const removed: string[][] = [];
+  const files = async (p: string[]) => void removed.push(p);
+  expect(await purgeFromBin(a, item.id, files)).toBe(false); // still in the Inbox: delete it first
+  await moveToBin(a, item.id);
+  expect(await purgeFromBin(b, item.id, files)).toBe(false); // not theirs
+  expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(1);
+  expect(await purgeFromBin(a, item.id, files)).toBe(true);
+  expect(removed).toEqual([[`u/${a}/items/${item.id}/`]]);
+  expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(0);
+  expect(await restoreFromBin(a, item.id)).toBeNull(); // nothing left to put back
 });
