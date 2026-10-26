@@ -119,7 +119,7 @@ These are the places where the code is shallower than it needs to be: a rule wri
 
 ### 7. Row words: one set of rules, translated at the edge (S to M)
 
-- **Files:** `packages/shared-schemas/src/format.ts` (`when`, `ago`, `dueLabel`, `rowSite`, `rowMeta`, `sourceLabel`, `MOVED`: English, used only by tests now), `apps/web/components/useFormat.ts`, `apps/ios/lib/format.ts` (`rowText`), and an inline `ago` in `apps/web/app/p/[handle]/[slug]/page.tsx`.
+- **Files:** `packages/shared-schemas/src/format.ts` (`when`, `ago`, `dueLabel`, `rowSite`, `rowMeta`), `apps/web/components/useFormat.ts`, `apps/ios/lib/format.ts` (`rowText`), and an inline `ago` in `apps/web/app/p/[handle]/[slug]/page.tsx`.
 - **Problem:** "5 min ago", "Due Friday" and the row's site and meta line are worked out in four places. The English versions in `shared-schemas` survive as a test oracle for the iPhone app, which makes them look used.
 - **Shape:** `shared-schemas` returns a message key and its values instead of words (for example `span(iso, now)` gives `["minutes", 5]`), plus `dueSpan`, `metaOf(item)` and `siteOf(item)`. Each app turns those into words with its own translator. One table test in `shared-schemas` covers the branching; delete the English copies.
 

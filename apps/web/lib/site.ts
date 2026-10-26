@@ -4,9 +4,8 @@ import { MCP_RESOURCE } from "./auth";
 import { siteAlternates } from "./siteUrls";
 import { ORIGIN } from "./origin";
 
-// Links the marketing site needs that only exist at launch. Placeholders stay [LIKE THIS] until then.
+// Where the marketing site sends people.
 export const REPO_URL = "https://github.com/codu-code/pluck";
-export const CLONE_URL = "https://github.com/codu-code/pluck";
 // shortcut: the TestFlight beta page while the app is in public beta; swap in the App Store URL once it is live.
 export const APP_STORE_URL = "/iphone";
 // The public beta: anyone with the link can join (up to the limit set in App Store Connect, TestFlight, Public beta).

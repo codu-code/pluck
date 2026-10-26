@@ -91,7 +91,7 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
       if (needsExtraction) toRead.push(item);
       entries.push({ itemId: item.id, note: e.note });
     } else {
-      const note = await createTextItem(userId, { kind: "note", text: [e.title, e.excerpt].filter(Boolean).join("\n"), source: "copied" });
+      const { item: note } = await createTextItem(userId, { kind: "note", text: [e.title, e.excerpt].filter(Boolean).join("\n"), source: "copied" });
       entries.push({ itemId: note.id, note: e.note });
     }
   }

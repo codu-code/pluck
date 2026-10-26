@@ -24,7 +24,7 @@ describe("search", () => {
     await applyExtraction(a, inBody.id, extracted("Long text where window functions appear deep inside the article body."));
     const inTitle = (await pluckLink(a, { url: "https://example.com/title", source: "web" })).item;
     await applyExtraction(a, inTitle.id, extracted("Nothing relevant here.", "Window functions, finally"));
-    const note = await createTextItem(a, { kind: "note", text: "Kitchen\nmeasure the worktop", source: "web" });
+    const { item: note } = await createTextItem(a, { kind: "note", text: "Kitchen\nmeasure the worktop", source: "web" });
     await editItem(a, note.id, { note: null });
     const tag = (await createTag(a, "postgres", "user"))!.tag;
     await setItemTags(a, note.id, [tag.id], "user");
@@ -41,7 +41,7 @@ describe("search", () => {
 
   test("tag renames and deletes reach search", async () => {
     const { a } = await twoUsers();
-    const note = await createTextItem(a, { kind: "note", text: "Plain", source: "web" });
+    const { item: note } = await createTextItem(a, { kind: "note", text: "Plain", source: "web" });
     const t = (await createTag(a, "pg", "user"))!.tag;
     await setItemTags(a, note.id, [t.id], "user");
     await renameTag(a, t.id, "databases");
@@ -55,9 +55,9 @@ describe("search", () => {
     const { a } = await twoUsers();
     const link = (await pluckLink(a, { url: "https://example.com/pinned?id=1", source: "web" })).item;
     await applyExtraction(a, link.id, extracted("sourdough starter notes"));
-    const archived = await createTextItem(a, { kind: "todo", text: "Feed the sourdough", source: "web" });
+    const { item: archived } = await createTextItem(a, { kind: "todo", text: "Feed the sourdough", source: "web" });
     await editItem(a, archived.id, { status: "archived" });
-    const binned = await createTextItem(a, { kind: "note", text: "sourdough in the bin", source: "web" });
+    const { item: binned } = await createTextItem(a, { kind: "note", text: "sourdough in the bin", source: "web" });
     await (await items()).updateOne({ _id: new ObjectId(binned.id) }, { $set: { deletedAt: new Date() } });
 
     expect((await searchItems(a, q("sourdough"))).total).toBe(2);

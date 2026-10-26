@@ -106,7 +106,7 @@ test("a malformed id finds nothing", async () => {
 describe("notes, todos and things", () => {
   test("a note takes its title from the first line until a title is typed, and back again when cleared", async () => {
     const { a, b } = await twoUsers();
-    const note = await createTextItem(a, { kind: "note", text: "Kitchen plan\nHob under the window.", source: "web" });
+    const { item: note } = await createTextItem(a, { kind: "note", text: "Kitchen plan\nHob under the window.", source: "web" });
     expect(note).toMatchObject({ kind: "note", url: null, title: "Kitchen plan", titleIsDerived: true, excerpt: "Hob under the window." });
     expect(note.extraction.state).toBe("none");
     expect((await getContent(a, note.id))?.textMarkdown).toBe("Kitchen plan\nHob under the window.");
@@ -124,13 +124,25 @@ describe("notes, todos and things", () => {
 
   test("kind and due date change, and notes have no URL hash so many can exist", async () => {
     const { a } = await twoUsers();
-    const one = await createTextItem(a, { kind: "note", text: "same", source: "web" });
-    const two = await createTextItem(a, { kind: "note", text: "same", source: "web" });
+    const { item: one } = await createTextItem(a, { kind: "note", text: "same", source: "web" });
+    const { item: two } = await createTextItem(a, { kind: "note", text: "same", source: "web" });
     expect(one.id).not.toBe(two.id);
     const due = new Date("2026-11-03T09:00:00.000Z");
     const todo = await editItem(a, one.id, { kind: "todo", dueAt: due });
     expect(todo).toMatchObject({ kind: "todo", dueAt: due.toISOString() });
     expect((await editItem(a, one.id, { dueAt: null }))?.dueAt).toBeNull();
+  });
+
+  test("a resent note with the same key is made once, even sent twice at once; another person's key is theirs", async () => {
+    const { a, b } = await twoUsers();
+    const send = (u: string) => createTextItem(u, { kind: "note", text: "Offline", source: "web", clientKey: "k-1" });
+    const [first, again] = await Promise.all([send(a), send(a)]);
+    expect([first.created, again.created].sort()).toEqual([false, true]);
+    expect(again.item.id).toBe(first.item.id);
+    expect((await send(a)).created).toBe(false);
+    const theirs = await send(b);
+    expect(theirs.created).toBe(true);
+    expect(theirs.item.id).not.toBe(first.item.id);
   });
 });
 

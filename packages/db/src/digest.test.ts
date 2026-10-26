@@ -8,15 +8,15 @@ const touch = async (id: string, daysAgo: number) => (await items()).updateOne({
 
 test("the digest: expiring within a week (not in a list), due this week, oldest inbox, quiet lists", async () => {
   const { a, b } = await twoUsers();
-  const expiring = await createTextItem(a, { kind: "note", text: "Expiring", source: "web" });
-  const listed = await createTextItem(a, { kind: "note", text: "Listed", source: "web" });
-  const tooOld = await createTextItem(a, { kind: "note", text: "Already past", source: "web" });
+  const { item: expiring } = await createTextItem(a, { kind: "note", text: "Expiring", source: "web" });
+  const { item: listed } = await createTextItem(a, { kind: "note", text: "Listed", source: "web" });
+  const { item: tooOld } = await createTextItem(a, { kind: "note", text: "Already past", source: "web" });
   await touch(expiring.id, 25);
   await touch(listed.id, 25);
   await touch(tooOld.id, 31);
-  const due = await createTextItem(a, { kind: "todo", text: "Due Friday", source: "web", dueAt: new Date(Date.now() + 3 * DAY) });
+  const { item: due } = await createTextItem(a, { kind: "todo", text: "Due Friday", source: "web", dueAt: new Date(Date.now() + 3 * DAY) });
   await createTextItem(a, { kind: "todo", text: "Due next month", source: "web", dueAt: new Date(Date.now() + 30 * DAY) });
-  const doneTodo = await createTextItem(a, { kind: "todo", text: "Done already", source: "web", dueAt: new Date(Date.now() + DAY) });
+  const { item: doneTodo } = await createTextItem(a, { kind: "todo", text: "Done already", source: "web", dueAt: new Date(Date.now() + DAY) });
   await editItem(a, doneTodo.id, { status: "done" });
   const list = await createList(a, { name: "Chapter 3", createdBy: "user" });
   await addToList(a, list.id, [listed.id], { by: "user" });

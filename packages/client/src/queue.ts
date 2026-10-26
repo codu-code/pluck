@@ -24,7 +24,7 @@ export function createQueue(store: QueueStore) {
         try {
           for (const q of await store.read()) {
             try {
-              await send(q.body);
+              await send(q.id ? { ...q.body, clientKey: q.id } : q.body); // the key makes a resend safe
             } catch (e) {
               if (!(e instanceof Refused)) break;
             }

@@ -60,6 +60,8 @@ export const CreateItemBody = z
     text: z.string().min(1).max(100_000).optional(),
     kind: Kind.optional(),
     dueAt: DueAt.optional(),
+    // A queued pluck's own id: sent again after a lost response, a Note, Todo or Thing with a key it has seen is not made twice.
+    clientKey: z.string().min(1).max(64).optional(),
     ...Optional,
   })
   .refine((b) => [b.url, b.urls, b.text].filter((v) => v !== undefined).length === 1, {

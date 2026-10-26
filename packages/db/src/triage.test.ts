@@ -15,7 +15,7 @@ describe("status changes", () => {
   test("archive, later, done and back, with the reason and the time of the move", async () => {
     const { a } = await twoUsers();
     const link = (await pluckLink(a, { url: "https://example.com/s", source: "web" })).item;
-    const todo = await createTextItem(a, { kind: "todo", text: "Book the room", source: "web" });
+    const { item: todo } = await createTextItem(a, { kind: "todo", text: "Book the room", source: "web" });
 
     const archived = await editItem(a, link.id, { status: "archived" });
     expect(archived).toMatchObject({ status: "archived", archivedReason: "user" });
@@ -48,7 +48,7 @@ describe("batch", () => {
     const { a, b } = await twoUsers();
     const l1 = (await pluckLink(a, { url: "https://example.com/b1", source: "web" })).item;
     const l2 = (await pluckLink(a, { url: "https://example.com/b2", source: "web" })).item;
-    const todo = await createTextItem(a, { kind: "todo", text: "t", source: "web" });
+    const { item: todo } = await createTextItem(a, { kind: "todo", text: "t", source: "web" });
     const theirs = (await pluckLink(b, { url: "https://example.com/b3", source: "web" })).item;
 
     expect(await batchUpdate(a, [l1.id, l2.id, theirs.id], { status: "later" })).toEqual({ matched: 2, updated: 2 });
@@ -118,7 +118,7 @@ describe("highlights", () => {
   test("only on the owner's links, listed in order, noted, removed", async () => {
     const { a, b } = await twoUsers();
     const link = (await pluckLink(a, { url: "https://example.com/h", source: "web" })).item;
-    const note = await createTextItem(a, { kind: "note", text: "n", source: "web" });
+    const { item: note } = await createTextItem(a, { kind: "note", text: "n", source: "web" });
     expect(await createHighlight(a, { itemId: note.id, quote: "n", selector })).toBeNull();
     expect(await createHighlight(b, { itemId: link.id, quote: "scope", selector })).toBeNull();
 

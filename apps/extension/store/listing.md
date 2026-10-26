@@ -47,7 +47,7 @@ Needs a free Pluck account at https://getpluck.io.
 
 **Homepage URL:** https://getpluck.io
 
-**Support URL:** https://github.com/codu-code/pluck/issues (people open an issue and we pick it up). Needs the repo public; leave it empty until then
+**Support URL:** https://getpluck.io/support
 
 ## Privacy practices
 
@@ -86,6 +86,6 @@ Tick all three certifications: not sold to third parties, not used for purposes 
 
 ## Distribution
 
-- **Visibility:** Unlisted for the first upload (only people with the link can install it), Public once it is checked.
+- **Visibility:** Public.
 - **Regions:** all.
 - **Test instructions** (for the reviewer, under Account or Test instructions): "Sign in with the email link at https://getpluck.io using the test account below, then click the Pluck toolbar button on any article." Give a test account whose inbox the reviewer can read, or an API key: Options → "Use an API key instead" with a `pk_live_…` key made in Settings, API keys.

@@ -1,6 +1,6 @@
 import { isTextKind } from "./notes.ts";
 import type { Item } from "./items.ts";
-import type { Kind, Source, Status } from "./enums.ts";
+import type { Kind } from "./enums.ts";
 
 // How an item reads in a row, shared by the web app and the iOS app.
 
@@ -95,18 +95,3 @@ export function tileIndex(key: string): number {
   for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   return h % 6;
 }
-
-const SOURCE: Record<Source, string> = {
-  web: "Plucked on the web", extension: "Plucked from the extension", ios: "Plucked from iOS", email: "Plucked by email",
-  mcp: "Plucked by your AI", import: "Imported", api: "Plucked with an API key", copied: "Plucked from a public list",
-};
-export const sourceLabel = (s: Source) => SOURCE[s];
-
-
-// What a move says once it is done, with Undo beside it.
-export const MOVED: Record<Status, string> = {
-  archived: "Gone. Well, archived.",
-  later: "Kept for later.",
-  done: "Done.",
-  inbox: "Back in the Inbox.",
-};

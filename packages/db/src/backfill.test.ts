@@ -12,7 +12,7 @@ test("the Preview backfill walks every link read before Previews once, then stop
   await (await items()).updateOne({ _id: oid(old.id) }, { $unset: { previewGuess: "", facts: "" } }); // as it was before
   const sorted = (await pluckLink(b, { url: "https://example.com/after-previews", source: "web" })).item;
   await applyExtraction(b, sorted.id, { ...read, kind: "link", preview: "site", facts: {} });
-  const note = await createTextItem(a, { kind: "note", text: "no link", source: "web" });
+  const { item: note } = await createTextItem(a, { kind: "note", text: "no link", source: "web" });
   await (await meta()).deleteMany({ _id: { $in: ["backfill:previews", "backfill:posts-2026-10", "backfill:app-links-2026-10"] } });
 
   const seen: string[] = [];
