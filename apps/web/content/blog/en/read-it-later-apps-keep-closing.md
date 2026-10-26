@@ -1,3 +1,9 @@
+---
+title: Read-it-later apps keep closing.
+description: Pocket went. Omnivore went. Five things to check before you trust the next one with your library.
+keywords: open source read it later, self-hosted read it later, Pocket alternative, Wallabag, Karakeep, Linkwarden
+---
+
 Omnivore went in November 2024, with about two weeks' notice. Pocket went in July 2025, with a few months to export. Both held years of things people meant to read.
 
 Neither closed because its users did anything wrong. A company decided, and the clock started.

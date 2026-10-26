@@ -1,3 +1,9 @@
+---
+title: A list is a plan.
+description: A trip, a talk, a kitchen. Put things in order, add a note to each, and share it with one link when you're ready.
+keywords: share a reading list, share a list of links, curated link list, public reading list, trip planning links
+---
+
 A tag says what something is. A list says what you're going to do with it.
 
 Lisbon in four days. The kitchen, room by room. The talk you're giving in March, in the order you'll give it. That's what lists in Pluck are for.

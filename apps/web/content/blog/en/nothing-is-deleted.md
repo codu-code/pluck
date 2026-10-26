@@ -1,3 +1,9 @@
+---
+title: Nothing is deleted.
+description: Untouched for 30 days, it moves to the Archive on its own, still searchable. How Pluck lets the pile shrink without throwing anything away.
+keywords: read later backlog, too many saved articles, read it later guilt, auto archive old links, inbox zero for links
+---
+
 Every app for reading things later ends the same way. Two hundred things in a pile, a little guilt each time you open it, and eventually you stop opening it.
 
 Pluck lets the pile shrink on its own, and never throws anything away.

@@ -1,3 +1,9 @@
+---
+title: Bring the rest across.
+description: A Raindrop CSV, or the file your browser exports. What comes with it, what doesn't, and where it lands.
+keywords: Raindrop alternative, Raindrop export, import Chrome bookmarks, export Safari bookmarks, search bookmarks full text
+---
+
 Pocket and Omnivore have their own walkthroughs. This one is for everything else: a Raindrop export, and the years of pages your browser has been holding on to.
 
 Both go in the same way. Here's what comes with them, and what doesn't.

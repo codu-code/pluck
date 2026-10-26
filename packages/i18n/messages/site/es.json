@@ -597,7 +597,6 @@
     "lede": "Traer tu biblioteca, conservar la página y poner a trabajar a tu IA. Corto, como todo aquí.",
     "all": "Todas las entradas",
     "minutes": "{minutes, number} min de lectura",
-    "englishOnly": "Esta entrada está en inglés.",
     "box": {
       "title": "Recógelo.",
       "body": "Gratis y de código abierto. <link>Consigue Pluck</link> con un enlace por correo, o aloja el tuyo."

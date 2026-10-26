@@ -1,14 +1,19 @@
+import { isLocale } from "@pluck/i18n";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages, getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import { CookieBanner } from "@/components/CookieBanner";
+import { LOCALE_HEADER } from "@/i18n/request";
+import { localePath } from "@/lib/siteUrls";
 import { fredoka, geist, geistMono, sourceSerif } from "./fonts";
 import "./globals.css";
 
 export const generateMetadata = async (): Promise<Metadata> => ({
-  // Absolute URLs for OG images and canonical links: the app's public origin.
-  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "http://localhost:3000"),
+  // Absolute URLs for OG images and canonical links: the app's public origin. A site page in another language goes
+  // under its prefix, so its preview card (/de/connect/opengraph-image-…) is fetched in that language (proxy.ts).
+  metadataBase: new URL((process.env.BETTER_AUTH_URL ?? "http://localhost:3000") + localePath(urlLocale(await headers()), "/")),
   title: "Pluck",
   description: (await getTranslations("site.meta"))("description"),
   icons: {
@@ -19,6 +24,11 @@ export const generateMetadata = async (): Promise<Metadata> => ({
   // Every page has a 1200 x 630 card (opengraph-image.tsx, lib/og.tsx); X shows it large too.
   twitter: { card: "summary_large_image" },
 });
+
+const urlLocale = (h: Headers) => {
+  const l = h.get(LOCALE_HEADER);
+  return isLocale(l) ? l : "en";
+};
 
 export const viewport: Viewport = {
   viewportFit: "cover", // the phone tab bar pads itself for the home indicator

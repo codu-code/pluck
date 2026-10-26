@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
-import { CLONE_URL, REPO_URL } from "@/lib/site";
+import Link from "@/components/SiteLink";
+import { CLONE_URL, REPO_URL, pageMeta } from "@/lib/site";
 import { SitePage } from "../SiteChrome";
 import styles from "../site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.openSource.meta");
-  return { title: t("title"), description: t("description"), alternates: { canonical: "/open-source" } };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/open-source")) };
 }
 
 const REASONS = ["export", "page", "public", "ai"] as const;

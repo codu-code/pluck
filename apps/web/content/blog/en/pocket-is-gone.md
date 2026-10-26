@@ -1,3 +1,9 @@
+---
+title: Pocket is gone. Your export isn’t.
+description: Pocket closed in July 2025. If you kept the CSV, your whole library fits in Pluck in one go, tags and dates included.
+keywords: Pocket alternative, Pocket export, import Pocket CSV, Pocket shut down, Mozilla Pocket replacement
+---
+
 Mozilla closed Pocket in July 2025. The app went first, and the export window shut in October.
 
 If you downloaded your CSV in time, you have every link you ever put in Pocket. One file, sitting in Downloads, doing nothing.

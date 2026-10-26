@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import Link from "@/components/SiteLink";
 import type { ReactNode } from "react";
 import { JsonLd } from "@/components/JsonLd";
-import { APP_STORE_URL, CHROME_STORE_URL, REPO_URL } from "@/lib/site";
+import { APP_STORE_URL, CHROME_STORE_URL, REPO_URL, pageMeta } from "@/lib/site";
 import { PasteBox } from "./PasteBox";
 import { Reveal } from "./Reveal";
 import { SitePage } from "./SiteChrome";
@@ -11,7 +11,7 @@ import styles from "./site.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.home.meta");
-  return { title: t("title"), description: t("description"), alternates: { canonical: "/" } };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/")) };
 }
 
 const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
@@ -206,8 +206,8 @@ export default async function Home() {
       <section className={`${styles.wrap} ${styles.closing}`}>
         <p className={`${styles.display} ${styles.closingBig}`}>{t.rich("closing.title", { br: () => <br />, dot })}</p>
         <div className={styles.buttons}>
-          <a href={CHROME_STORE_URL} className={`${styles.big} ${styles.bigPrimary}`}>{t("closing.chrome")}</a>
-          <a href={APP_STORE_URL} className={`${styles.big} ${styles.bigOutline}`}>{t("closing.iphone")}</a>
+          <Link href={CHROME_STORE_URL} className={`${styles.big} ${styles.bigPrimary}`}>{t("closing.chrome")}</Link>
+          <Link href={APP_STORE_URL} className={`${styles.big} ${styles.bigOutline}`}>{t("closing.iphone")}</Link>
           <Link href="/signin" className={`${styles.big} ${styles.bigOutline}`}>{t("closing.web")}</Link>
         </div>
       </section>

@@ -1,3 +1,9 @@
+---
+title: Omnivore is gone. The pages in your zip aren’t.
+description: If you kept your Omnivore export, Pluck reads the pages straight out of the zip. Even the ones whose sites are gone.
+keywords: Omnivore alternative, Omnivore export, import Omnivore zip, Omnivore shut down
+---
+
 Omnivore's hosted service shut down in November 2024. The team joined another company, and users had about two weeks to get their data out.
 
 If you exported in time, you have a zip. Keep it. Most of what you kept in Omnivore is in there as the page itself, not just a link to it.

@@ -1,3 +1,9 @@
+---
+title: Run your own Pluck.
+description: One docker compose, 1 GB of RAM, and the same app on your own server. The whole of it, the awkward parts included.
+keywords: self-hosted read it later, self-hosted Pocket alternative, read it later docker, self-hosted bookmark manager, open source read later server
+---
+
 Pluck at getpluck.io is free. The same code runs on your own server, and it's one command to start.
 
 Here's the whole of it, the awkward parts included.

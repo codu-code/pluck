@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { pageMeta } from "@/lib/site";
 import { LegalPage } from "../LegalPage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("site.privacy.meta");
-  return { title: t("title"), description: t("description"), alternates: { canonical: "/privacy" } };
+  return { title: t("title"), description: t("description"), ...(await pageMeta("/privacy")) };
 }
 
 // Each section's heading and paragraph, by key under site.privacy.sections.
