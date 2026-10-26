@@ -64,7 +64,7 @@ Settings, then AI tools, then Disconnect. It stops straight away, not at the end
 Self-hosted without a public address? Make an API key in Settings and bridge it locally:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 You get the same tools and the same prompts, pointed at your server.

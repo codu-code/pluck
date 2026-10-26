@@ -22,7 +22,7 @@ const TOOLS = [
   { key: "code", label: "Claude Code", code: `claude mcp add --transport http pluck ${CONNECTOR_URL}` },
   { key: "chatgpt", label: "ChatGPT", code: CONNECTOR_URL },
   { key: "cursor", label: "Cursor", codeLabel: "mcp.json", code: `{ "mcpServers": { "pluck": { "url": "${CONNECTOR_URL}" } } }` },
-  { key: "self", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…" },
+  { key: "self", code: "npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…" },
 ] as const;
 
 const TOOL_LIST = ["search_items", "list_items", "get_item", "save_item", "batch_update", "list_tags", "create_tag", "list_lists", "get_list", "create_list", "update_list", "get_digest"] as const;

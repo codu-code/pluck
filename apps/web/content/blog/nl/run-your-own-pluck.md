@@ -44,7 +44,7 @@ Pluck start niet op een openbaar adres met het standaardwachtwoord voor de opsla
 
 - **iPhone.** Open `pluck://signin?server=https://your.address` op de telefoon. De app logt dan in bij jouw server.
 - **Chrome.** De extensie uit de store praat alleen met getpluck.io. Bouw je eigen met `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` en laad hem met “Uitgepakte extensie laden”.
-- **Je AI.** Verbind hem met `https://your.address/mcp`. Heeft de server geen openbaar adres, maak dan een API-sleutel in Instellingen en gebruik `npx @pluck/mcp --server https://your.address --key pk_live_…`.
+- **Je AI.** Verbind hem met `https://your.address/mcp`. Heeft de server geen openbaar adres, maak dan een API-sleutel in Instellingen en gebruik `npx @getpluck/mcp --server https://your.address --key pk_live_…`.
 
 ## De lastige stukken
 

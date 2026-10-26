@@ -64,7 +64,7 @@ AIが作ったタグとリストには、すべて「AIによる」の印が付�
 公開アドレスのないセルフホスト環境なら、設定でAPIキーを作り、ローカルでつなぎます：
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 同じツールと同じプロンプトが、自分のサーバーに向けて使えます。

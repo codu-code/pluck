@@ -64,7 +64,7 @@ Instellingen, dan AI-tools, dan Loskoppelen. Hij stopt meteen, niet pas aan het 
 Zelf gehost zonder openbaar adres? Maak een API-sleutel in Instellingen en verbind die lokaal:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Je krijgt dezelfde tools en dezelfde prompts, gericht op je eigen server.

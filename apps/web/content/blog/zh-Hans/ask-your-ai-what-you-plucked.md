@@ -64,7 +64,7 @@ claude mcp add --transport http pluck https://getpluck.io/mcp
 自托管，但没有公网地址？在设置里生成一个 API 密钥，在本地做桥接：
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 你会得到同样的工具和同样的提示词，只是指向你的服务器。

@@ -64,7 +64,7 @@ Ajustes, luego Herramientas de IA y luego Desconectar. Se corta al instante, no 
 ¿Lo tienes autoalojado y sin dirección pública? Crea una clave de API en Ajustes y conéctalo en local:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Tienes las mismas herramientas y los mismos prompts, apuntando a tu servidor.

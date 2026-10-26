@@ -44,7 +44,7 @@ Pluck non parte su un indirizzo pubblico con la password di storage predefinita.
 
 - **iPhone.** Apri `pluck://signin?server=https://your.address` sul telefono. L'app accede al tuo server.
 - **Chrome.** L'estensione dello store parla solo con getpluck.io. Compila la tua con `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` e caricala con "Carica estensione non pacchettizzata".
-- **La tua IA.** Collegala a `https://your.address/mcp`. Se il server non ha un indirizzo pubblico, crea una chiave API in Impostazioni e usa `npx @pluck/mcp --server https://your.address --key pk_live_…`.
+- **La tua IA.** Collegala a `https://your.address/mcp`. Se il server non ha un indirizzo pubblico, crea una chiave API in Impostazioni e usa `npx @getpluck/mcp --server https://your.address --key pk_live_…`.
 
 ## Le parti scomode
 

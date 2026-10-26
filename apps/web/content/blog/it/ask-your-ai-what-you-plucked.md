@@ -64,7 +64,7 @@ Impostazioni, poi Strumenti di IA, poi Scollega. Si ferma subito, non alla fine 
 Self-hosting senza un indirizzo pubblico? Crea una chiave API in Impostazioni e fai da ponte in locale:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Hai gli stessi strumenti e gli stessi prompt, puntati sul tuo server.

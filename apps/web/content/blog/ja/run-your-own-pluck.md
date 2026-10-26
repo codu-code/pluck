@@ -44,7 +44,7 @@ HTTPS対応のリバースプロキシを前に置き、composeファイルの�
 
 - **iPhone**：iPhoneで `pluck://signin?server=https://your.address` を開きます。アプリは代わりに、自分のサーバーにサインインします。
 - **Chrome**：ストア版の拡張機能は、getpluck.ioとしか通信しません。`PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` で自分用をビルドし、「パッケージ化されていない拡張機能を読み込む」から読み込みます。
-- **お使いのAI**：`https://your.address/mcp` に接続します。サーバーに公開アドレスがなければ、設定でAPIキーを作り、`npx @pluck/mcp --server https://your.address --key pk_live_…` を使います。
+- **お使いのAI**：`https://your.address/mcp` に接続します。サーバーに公開アドレスがなければ、設定でAPIキーを作り、`npx @getpluck/mcp --server https://your.address --key pk_live_…` を使います。
 
 ## 面倒なところ
 

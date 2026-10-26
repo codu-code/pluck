@@ -44,7 +44,7 @@ Pluck startet auf einer öffentlichen Adresse nicht mit dem Standard-Passwort f�
 
 - **iPhone.** Öffne `pluck://signin?server=https://your.address` auf dem Handy. Die App meldet sich dann bei deinem Server an.
 - **Chrome.** Die Erweiterung aus dem Store spricht nur mit getpluck.io. Bau deine eigene mit `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` und lade sie mit „Entpackte Erweiterung laden“.
-- **Deine KI.** Verbinde sie mit `https://your.address/mcp`. Wenn der Server keine öffentliche Adresse hat, leg in den Einstellungen einen API-Schlüssel an und nutze `npx @pluck/mcp --server https://your.address --key pk_live_…`.
+- **Deine KI.** Verbinde sie mit `https://your.address/mcp`. Wenn der Server keine öffentliche Adresse hat, leg in den Einstellungen einen API-Schlüssel an und nutze `npx @getpluck/mcp --server https://your.address --key pk_live_…`.
 
 ## Die unbequemen Teile
 

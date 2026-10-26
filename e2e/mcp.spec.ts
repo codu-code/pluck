@@ -109,7 +109,7 @@ test("a personal API key works as a bearer token, and a bad one is refused", asy
   expect((await client.listTools()).tools.map((t) => t.name)).toContain("save_item");
   await client.close();
 
-  // The same key through the stdio bridge, the way a self-hoster's desktop app would run `npx @pluck/mcp`.
+  // The same key through the stdio bridge, the way a self-hoster's desktop app would run `npx @getpluck/mcp`.
   const local = new Client({ name: "desktop-app", version: "1.0.0" });
   await local.connect(new StdioClientTransport({ command: process.execPath, args: ["packages/mcp-stdio/src/cli.ts", "--server", BASE, "--key", key] }));
   const saved = await local.callTool({ name: "save_item", arguments: { text: "Plucked through the bridge", kind: "note" } });

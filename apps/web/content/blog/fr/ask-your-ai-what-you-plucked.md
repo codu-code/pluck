@@ -64,7 +64,7 @@ Réglages, puis Outils d’IA, puis Déconnecter. Elle s’arrête aussitôt, pa
 Auto-hébergé, sans adresse publique ? Créez une clé d’API dans les Réglages et faites le pont en local :
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Vous avez les mêmes outils et les mêmes prompts, pointés vers votre serveur.

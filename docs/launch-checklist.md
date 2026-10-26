@@ -43,8 +43,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 ## AI tools
 
-- [ ] Check the `@pluck` scope on npm is yours (`npm org ls pluck` signed in). It exists already; if it is not yours, rename the package (and `npx @pluck/mcp` in Settings, Connect, docs and the blog) before anyone copies the command.
-- [ ] Publish the stdio bridge: `pnpm --filter @pluck/mcp build`, then `npm publish --access public` from `packages/mcp-stdio` (package `@pluck/mcp`).
+- [ ] Publish the stdio bridge under the `@getpluck` scope: `npm login`, then `pnpm publish --access public` from `packages/mcp-stdio` (it builds first). Use pnpm, not npm: only pnpm applies `publishConfig.exports`, so the package points at `dist`, not `src`.
 - [ ] Add `https://getpluck.io/mcp` in Claude (web and desktop), ChatGPT, Claude Code and Cursor, and run each of the four prompts once.
 
 ## Day one
