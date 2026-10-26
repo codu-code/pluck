@@ -45,7 +45,7 @@ packages/shared-schemas   Zod types, OpenAPI, error codes
 packages/db       the only package that touches MongoDB
 packages/extract  Defuddle/Readability, fixtures
 packages/mcp      tools, resources, prompts
-packages/mcp-stdio  npx @pluck/mcp bridge for self-host
+packages/mcp-stdio  npx @getpluck/mcp bridge for self-host
 packages/ui       brand tokens, Logo and Icon components, kind glyphs
 infra/cdk         DataStack, EmailStack, DnsStack
 docs/             self-host.md, mcp.md
@@ -213,7 +213,7 @@ The MCP server is the product's brain socket and the only public integration sur
 | Claude Code | `claude mcp add --transport http pluck https://getpluck.io/mcp` | OAuth with loopback redirect, or `--header "Authorization: Bearer pk_live_..."` |
 | ChatGPT | Settings, Connectors, Create, MCP server URL | OAuth |
 | Cursor and other editors | `mcp.json` with `{ "mcpServers": { "pluck": { "url": "https://getpluck.io/mcp" } } }` | OAuth or API key |
-| Self-host without public HTTPS | `npx @pluck/mcp --server <url> --key pk_live_...` (stdio bridge) | API key |
+| Self-host without public HTTPS | `npx @getpluck/mcp --server <url> --key pk_live_...` (stdio bridge) | API key |
 
 **OAuth flow.** `POST /mcp` without a token returns `401` with `WWW-Authenticate: Bearer resource_metadata="https://getpluck.io/.well-known/oauth-protected-resource"`. The client reads the first `authorization_servers` entry, fetches `/.well-known/oauth-authorization-server`, uses CIMD if advertised and DCR otherwise, runs the authorisation code flow with PKCE and `resource=https://getpluck.io/mcp`, and refreshes on its own. The server validates `aud` on every request and includes `iss` in authorisation responses. Each discovery and token endpoint answers inside 10 seconds. No apex-to-www redirects on these paths.
 
@@ -370,7 +370,7 @@ Each step ends green in CI and deployable.
 4. Lists: CRUD, per-list note and tick, reorder, `a` shortcut, list page, Private/Public switch, public page with the narrow projection and its test, copy, report.
 5. Search with `$text`, filter chips, "Ask your AI" empty state.
 6. Worker: retry queue, expiry job, archive-stale, digest email, email-in, import, export.
-7. MCP server: OAuth metadata and CIMD, the 12 tools, 2 resources, 4 prompts, the end-to-end OAuth test. `npx @pluck/mcp` bridge. Settings AI tools section.
+7. MCP server: OAuth metadata and CIMD, the 12 tools, 2 resources, 4 prompts, the end-to-end OAuth test. `npx @getpluck/mcp` bridge. Settings AI tools section.
 8. Extension: popup, capture, list picker, all-tabs, context menus, badge, options.
 9. Marketing site, privacy, terms, Connect your AI page.
 10. iOS Shortcut, then the Expo app and the Swift share extension.

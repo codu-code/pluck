@@ -104,7 +104,7 @@ var TABS = {
   code: { label: "Claude Code", steps: ["Open a terminal.", "Run the one line on the right.", "Say “what did I pluck this week?” to test it."], codeLabel: "One line", code: "claude mcp add --transport http pluck https://getpluck.io/mcp", note: "Signs you in through your browser the first time." },
   chatgpt: { label: "ChatGPT", steps: ["Open ChatGPT, then Settings, then Connectors.", "Choose Create and paste the link as the MCP server URL.", "Sign in to Pluck when it asks."], codeLabel: "MCP server URL", code: "https://getpluck.io/mcp", note: "Needs a plan that allows custom connectors." },
   cursor: { label: "Cursor", steps: ["Open Cursor settings, then MCP.", "Add a server with the JSON on the right.", "Sign in to Pluck when it asks."], codeLabel: "mcp.json", code: "{ \"mcpServers\": { \"pluck\": { \"url\": \"https://getpluck.io/mcp\" } } }", note: "Any editor or client that supports remote MCP works the same way." },
-  self: { label: "Self-hosted", steps: ["Make an API key in Settings.", "Add the line on the right to your AI tool as a local (stdio) server.", "Ask it what you plucked this week."], codeLabel: "Without a public URL", code: "npx @pluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." }
+  self: { label: "Self-hosted", steps: ["Make an API key in Settings.", "Add the line on the right to your AI tool as a local (stdio) server.", "Ask it what you plucked this week."], codeLabel: "Without a public URL", code: "npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…", note: "The same tools and prompts, bridged to your own server." }
 };
 class Component extends DCLogic {
   constructor(p) { super(p); this.state = { tab: "claude" }; }

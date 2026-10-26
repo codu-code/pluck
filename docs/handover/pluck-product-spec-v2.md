@@ -186,7 +186,7 @@ The share sheet is the product on iOS. It saves in place, like Pocket did. The a
 
 The connector is the product's second half. It has to feel like your AI has read your library, not like it is poking an API. Pluck speaks MCP, so Claude, ChatGPT, Cursor, Claude Code and any other MCP client use the same URL. Claude is named only as one of them.
 
-**Setup.** Settings, AI tools: the connector URL with a copy button, install steps for Claude, Claude Code, ChatGPT, Cursor and self-hosted, a 20-second GIF, and a "Test it" button that opens your AI with "What did I pluck this week?" prefilled. Self-hosters without a public URL get `npx @pluck/mcp` with their API key.
+**Setup.** Settings, AI tools: the connector URL with a copy button, install steps for Claude, Claude Code, ChatGPT, Cursor and self-hosted, a 20-second GIF, and a "Test it" button that opens your AI with "What did I pluck this week?" prefilled. Self-hosters without a public URL get `npx @getpluck/mcp` with their API key.
 
 **The four prompts.** These are the only "AI features" Pluck has, and they live in your AI tool.
 

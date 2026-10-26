@@ -80,6 +80,6 @@ Everything an AI tool changes is marked "by AI" in Pluck: its tags until the per
 
 - `packages/mcp` holds the tools, resources and prompts. It sees the library only through `PluckLibrary` (`packages/mcp/src/library.ts`); `apps/web/lib/connector.ts` binds it to the in-process library for one person, with every write marked as made by AI.
 - `apps/web/app/mcp/route.ts` authenticates (OAuth token or API key), rate limits and serves.
-- `packages/mcp-stdio` is the `npx @getpluck/mcp` bridge.
+- `packages/mcp-stdio` is the `npx @getpluck/mcp` bridge, published as [`@getpluck/mcp`](https://www.npmjs.com/package/@getpluck/mcp).
 - Tests: `apps/web/lib/connector.test.ts` (every tool against a seeded database), `apps/web/lib/cimd.test.ts`, `packages/mcp-stdio/src/bridge.test.ts`, and `e2e/mcp.spec.ts` (the full OAuth dance, every tool, resource and prompt over HTTP, Disconnect, API keys and the stdio bridge).
 - Try it by hand: `npx @modelcontextprotocol/inspector`, then connect to `http://localhost:3000/mcp`.
