@@ -4,6 +4,7 @@
 
 ## How it was checked
 
+- [ ] Every commit is signed off (`git commit -s`, CONTRIBUTING.md, "Licence and sign-off")
 - [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test`
 - [ ] `pnpm e2e`, then `pnpm design`
 - [ ] Screenshots for anything you can see (light and dark, wide and phone)

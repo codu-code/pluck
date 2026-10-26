@@ -1,0 +1,33 @@
+# Every commit in a pull request carries a Signed-off-by line: the Developer Certificate of Origin
+# (CONTRIBUTING.md, "Licence and sign-off"). No app to install; it reads the pull request's own commits.
+name: DCO
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sign-off:
+    name: Signed off
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Every commit is signed off
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          missing=0
+          for c in $(git rev-list --no-merges "$BASE..$HEAD"); do
+            if ! git log -1 --format=%B "$c" | grep -qE '^Signed-off-by: .+ <.+>$'; then
+              # The short hash only: a commit subject could carry workflow commands.
+              echo "::error::Commit $(git rev-parse --short "$c") has no Signed-off-by line. Add one with git commit --amend -s, or git rebase --signoff for the branch."
+              missing=1
+            fi
+          done
+          exit $missing

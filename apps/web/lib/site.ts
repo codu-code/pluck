@@ -13,7 +13,7 @@ export const APP_STORE_URL = "/iphone";
 // The public beta: anyone with the link can join (up to the limit set in App Store Connect, TestFlight, Public beta).
 export const TESTFLIGHT_URL = "https://testflight.apple.com/join/9JbctwC4";
 export const TESTFLIGHT_APP_URL = "https://apps.apple.com/app/testflight/id899247664";
-export const LICENCE = "AGPL-3.0 (server) and MIT (apps)";
+export const LICENCE = "Apache-2.0";
 export const CONNECTOR_URL = MCP_RESOURCE;
 
 const ORIGIN = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";

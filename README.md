@@ -79,9 +79,6 @@ Questions about using Pluck: [getpluck.io/support](https://getpluck.io/support).
 
 ## Licence
 
-Pluck uses a copyleft licence for the server and a permissive one for what you install:
+Everything here, the server, the apps and the packages, is under the [Apache License 2.0](LICENSE). Use it, change it, run it, build on it, commercially too; keep the [`NOTICE`](NOTICE) file with it.
 
-- **AGPL-3.0** ([`LICENSE`](LICENSE)): the server and everything it runs on: `apps/web`, `packages/db`, `packages/extract`, `packages/blob`, `packages/mcp` and `infra`. Run a changed copy as a service and you share the changes.
-- **MIT** (a `LICENSE` in each folder): the clients and the pieces other software builds on: `apps/extension`, `apps/ios`, `packages/mcp-stdio`, `packages/shared-schemas` and `packages/ui`.
-
-A folder's `LICENSE` file wins; anything without one is AGPL-3.0.
+The name Pluck and the logo are not part of the licence: see [TRADEMARKS.md](TRADEMARKS.md). Fork it under your own name.

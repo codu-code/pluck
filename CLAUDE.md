@@ -1,6 +1,6 @@
 # CLAUDE.md — Pluck
 
-Pluck is a fast, open-source URL saver with an MCP connector. There is no AI inside the app. Read `docs/handover/pluck-technical-spec-v2.md` before any non-trivial change. Use the words in `GLOSSARY.md`. While the build loop runs, `docs/loop/PROGRESS.md` is the plan and overrides the spec's build order.
+Pluck is a fast, open-source URL saver with an MCP connector. There is no AI inside the app. Read `docs/architecture.md` before any non-trivial change; `docs/handover/pluck-technical-spec-v2.md` has the background. Use the words in `GLOSSARY.md`. `docs/history/` is the record of the first build, not current.
 
 ## Non-negotiables
 
@@ -8,7 +8,7 @@ Pluck is a fast, open-source URL saver with an MCP connector. There is no AI ins
 - **Only `packages/db` touches MongoDB.** Every query is scoped by `userId`. Every new query gets a two-user test.
 - **Public reads use one projection.** `packages/db/public.ts` is the only function that serves public list data. It never joins `contents`, `tags`, `ticked` or `status`. Its field list is pinned by a test.
 - **Nothing is deleted by expiry or by MCP.** Expiry and "Archive it all" set `status: archived`. MCP has no delete tool outside the `library:delete` scope, which the consent screen does not request.
-- **Every type starts as a Zod schema** in `packages/shared-schemas`. OpenAPI is generated from it.
+- **Every type starts as a Zod schema** in `packages/shared-schemas`; the API parses requests with it.
 - **MCP is the only public API.** The REST API serves our clients and the MCP layer. Do not add other integrations.
 
 ## Product words
@@ -19,7 +19,7 @@ Use these and no others in UI copy: Pluck (verb), Plucked (confirmation), Item, 
 
 ## Stack
 
-Next.js 16 App Router, TypeScript strict, Node 22, pnpm 10, ESM. MongoDB (`pluck` database; Atlas in prod, `mongo:8` single-node replica set locally). Better Auth with **email magic link only** (social logins later) and its OAuth provider for the extension, iOS and MCP. WXT for the extension. Expo (current SDK) plus a Swift share extension for iOS. One Docker image for web and worker. Search is `$text` only (no Atlas Search branch in v1).
+Next.js 16 App Router, TypeScript strict, Node 22, pnpm 10, ESM. MongoDB (`pluck` database; Atlas in prod, `mongo:8` single-node replica set locally). Better Auth with **email sign-in only** (a magic link on the web, a 6-digit code on the iPhone; App Review's account signs in with a password set in env; social logins later) and its OAuth provider for the extension, iOS and MCP. WXT for the extension. Expo (current SDK) plus a Swift share extension for iOS. One Docker image for web and worker. Search is `$text` only (no Atlas Search branch in v1).
 
 ## Decisions that differ from the spec
 
@@ -38,7 +38,8 @@ Next.js 16 App Router, TypeScript strict, Node 22, pnpm 10, ESM. MongoDB (`pluck
 
 - Build in vertical slices (db → API → UI → e2e → Chrome check). Infra lands with the first slice that needs it.
 - `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm e2e`, then `pnpm design` must pass. Services come up with `pnpm stack`. No `any` without a `// why:` comment.
-- **During the build loop:** each slice that passes its gate is one squash commit on local `main`. No remote, no PRs until the first draft is pushed by a human. After that, short branches and PRs; a human merges.
+- Short branches and PRs; a human merges. Every commit is signed off (`git commit -s`, the DCO in CONTRIBUTING.md), and a CI check refuses a PR with a commit that isn't.
+- Everything is Apache-2.0; keep `NOTICE`. The name and logo are trademarks (`TRADEMARKS.md`), not part of the licence.
 - Tests that matter: `packages/extract` fixtures, `packages/db` scoping and the public projection, `packages/mcp` tool tests, the MCP OAuth end-to-end, Playwright e2e per slice.
 - Keep `docs/self-host.md` and `docs/mcp.md` in the same commit as any env var or tool change.
 - Never run `cdk deploy`, `vercel deploy` or anything against real AWS or Vercel. Deploying is a human step in `docs/deploy.md`.

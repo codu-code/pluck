@@ -4,7 +4,7 @@
   "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/client" },
   "version": "0.0.0",
   "private": true,
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": { ".": "./src/index.ts" },
   "scripts": { "typecheck": "tsc -p ." },
