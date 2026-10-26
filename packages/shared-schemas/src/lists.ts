@@ -159,7 +159,8 @@ export const ImportStatus = z.object({
   state: z.enum(["waiting", "running", "done", "failed"]), error: z.string().nullable(), createdAt: z.string(),
 });
 export type ImportStatus = z.infer<typeof ImportStatus>;
-export const CreateImportBody = z.object({ source: ImportSourceEnum, size: z.number().int().min(1).max(500_000_000) });
+export const MAX_IMPORT_BYTES = 500_000_000; // also the most the worker will read back
+export const CreateImportBody = z.object({ source: ImportSourceEnum, size: z.number().int().min(1).max(MAX_IMPORT_BYTES) });
 
 // An AI tool the person connected over OAuth, shown in Settings with a Disconnect button.
 export const AiConnection = z.object({ clientId: z.string(), name: z.string(), scopes: z.array(z.string()), connectedAt: z.string() });

@@ -33,8 +33,15 @@ export async function putObject(key: string, body: Buffer | string, contentType:
   await s3().send(new PutObjectCommand({ Bucket: bucket(), Key: key, Body: body, ContentType: contentType }));
 }
 
-export async function getObject(key: string): Promise<Buffer> {
+export class TooLarge extends Error {}
+
+// `maxBytes` refuses an object before its body is read: a signed PUT URL takes whatever size is sent to it.
+export async function getObject(key: string, { maxBytes = Infinity } = {}): Promise<Buffer> {
   const res = await s3().send(new GetObjectCommand({ Bucket: bucket(), Key: key }));
+  if ((res.ContentLength ?? 0) > maxBytes) {
+    await res.Body?.transformToWebStream().cancel();
+    throw new TooLarge(`${key} is ${res.ContentLength} bytes, over ${maxBytes}`);
+  }
   return Buffer.from(await res.Body!.transformToByteArray());
 }
 

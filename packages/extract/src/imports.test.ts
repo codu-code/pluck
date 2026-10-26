@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { strToU8, zipSync } from "fflate";
 import { expect, test } from "vitest";
 import { parseCsv, parseImport } from "./imports.ts";
 
@@ -34,4 +35,14 @@ test("Omnivore: metadata plus the kept page when the zip has it", () => {
   expect(e[0]).toMatchObject({ url: "https://example.com/albums", tags: ["family"] });
   expect(e[0]!.html?.()).toContain("Every printed photograph");
   expect(e[1]!.html).toBeNull();
+});
+
+test("Omnivore: a zip that unpacks too large is refused before it is unpacked", () => {
+  const meta = strToU8(JSON.stringify([{ url: "https://example.com/a", slug: "a" }]));
+  const big = new Uint8Array(21_000_000); // zeros: a few kilobytes zipped
+  const e = parseImport("omnivore", zipSync({ "metadata_0.json": meta, "content/a.html": big }));
+  expect(e[0]!.html).toBeNull(); // a page too big to keep is fetched instead
+  expect(() => parseImport("omnivore", zipSync({ "metadata_0.json": big }))).toThrow(/too large/);
+  const many = Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`metadata_${i}.json`, big.subarray(0, 19_000_000)]));
+  expect(() => parseImport("omnivore", zipSync(many))).toThrow(/too large/);
 });
