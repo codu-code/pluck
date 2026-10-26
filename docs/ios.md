@@ -77,7 +77,7 @@ The share extension and the shared Keychain need real signing, so these are chec
 1. Set the team in Xcode (or EAS credentials) for both targets; check both have the App Group and the Keychain group, and that the share extension is embedded.
 2. Sign in with the code: type the email, then the code from Mail (iOS offers it above the keyboard as "From Mail"). It lands on "You're in." Check Send again counts down from 60, a wrong code says so, and the code from an email read on another device works too.
 3. Safari: share a long article to Pluck. "Plucked." appears in under a second with the title; the item's text in the app is the page as Safari rendered it. Select a sentence first and share: it becomes a highlight.
-4. Share sheet: toggle a tag chip, "Add to <last list>", change the kind, type a note, Done. All four show on the item. Without touching it, the sheet closes after two seconds.
+4. Share sheet: toggle a tag chip, "Add to <last list>", change the kind, type a note, Done. All four show on the item. The sheet stays until Done or a tap outside. A reel, a TikTok, a post or a picture also shows its title to edit (`isRenameable` in shared-schemas); an article shows its title as it is.
 5. Share text from Notes with three links: three items. Text with no links: a Note.
 6. Share a photo and a PDF from Files: the item appears at once; within a minute the PDF's text and the photo are on it (the worker must be running, or the cron tick on Vercel).
 7. Airplane mode, share a page: "Plucked. Will sync." Back online, open the app: the Inbox shows "N to sync" briefly, then the item.

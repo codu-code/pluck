@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Note",
+    "titleLabel": "Titre",
     "placeholder": "Pourquoi vous l’avez gardé, ou ce que vous comptez en faire.",
     "hint": "Visible par vous seulement. La recherche la trouve."
   },

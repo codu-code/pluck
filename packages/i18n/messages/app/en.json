@@ -843,6 +843,7 @@
     "removeHighlight": "Remove highlight",
     "about": "About this item",
     "note": "Note",
+    "titleLabel": "Title",
     "kind": "Kind",
     "highlights": "Highlights · {count}",
     "noHighlights": "Select text to highlight it.",

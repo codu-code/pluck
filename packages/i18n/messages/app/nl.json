@@ -843,6 +843,7 @@
     "removeHighlight": "Markering weghalen",
     "about": "Over dit item",
     "note": "Notitie",
+    "titleLabel": "Titel",
     "kind": "Soort",
     "highlights": "Markeringen · {count}",
     "noHighlights": "Selecteer tekst om die te markeren.",

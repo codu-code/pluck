@@ -44,6 +44,11 @@ export type Facts = z.infer<typeof Facts>;
 // with one way out. A Reader, a repo or a paper reads here as an article.
 export const isCardPreview = (preview: Preview | null | undefined) => preview === "player" || preview === "post" || preview === "product" || preview === "site" || preview === "app";
 
+// A link the person may name: a reel, a TikTok, a post or a picture often comes with no title of its own. An article,
+// a paper or a repo is named by its page. The iPhone share sheet (ShareView.swift) keeps the same rule.
+export const isRenameable = (item: { kind: Kind; preview: Preview | null | undefined }) =>
+  item.preview === "player" || item.preview === "post" || item.kind === "image";
+
 // The Preview an Item has before anything better is known: older Items, and Kinds with only one way to show.
 export function defaultPreview(kind: Kind): Preview | null {
   return kind === "link" ? "reader" : kind === "video" ? "player" : kind === "pdf" ? "document" : null;

@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Nota",
+    "titleLabel": "Título",
     "placeholder": "Por que você guardou, ou o que fazer com isso.",
     "hint": "Só você vê. A busca encontra."
   },

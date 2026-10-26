@@ -1,7 +1,7 @@
 import SwiftUI
 
-// The sheet from the IOSShare board: "Plucked." at once, two tags and the last list, the kind, a note, Done.
-// It closes itself after two seconds unless you start using it.
+// The sheet from the IOSShare board: "Plucked." at once, the title, two tags and the last list, the kind, a note, Done.
+// It stays until Done or a tap outside (the board closed it after two seconds, too soon to write anything).
 
 private extension Color {
   init(hex: UInt32) { self.init(red: Double((hex >> 16) & 0xFF) / 255, green: Double((hex >> 8) & 0xFF) / 255, blue: Double(hex & 0xFF) / 255) }
@@ -19,6 +19,16 @@ private enum Palette {
   static let mint = Color(hex: 0x7FD3AE)
   static let handle = Color(hex: 0xC3CABC)
   static let dashed = Color(hex: 0x9AA392)
+}
+
+// Geist, as in the app; each size follows the reader's text size setting.
+private enum Typeface {
+  static let heading = Font.custom("Geist-Bold", size: 24, relativeTo: .title)
+  static let title = Font.custom("Geist-SemiBold", size: 17, relativeTo: .body)
+  static let body = Font.custom("Geist-Regular", size: 17, relativeTo: .body)
+  static let chip = Font.custom("Geist-Regular", size: 15, relativeTo: .subheadline)
+  static let label = Font.custom("Geist-Regular", size: 13, relativeTo: .footnote)
+  static let button = Font.custom("Geist-SemiBold", size: 17, relativeTo: .body)
 }
 
 private let kinds: [(key: String, name: String, d: String)] = [
@@ -40,12 +50,21 @@ final class ShareModel: ObservableObject {
   @Published var tagIds: Set<String> = []
   @Published var addedToList = false
   @Published var note = ""
-  @Published var engaged = false // a tap or the note field keeps the sheet open
+  private var pluckedTitle = "" // what the server called it; a different title in the field is the person's
+  private var uploads: Task<Void, Never>?
+  private var finishing = false
   var close: () -> Void = {}
   var openApp: () -> Void = {}
   let client = PluckClient()
   lazy var tags = Array(client.tags.prefix(2))
   lazy var lastList = client.lastList
+
+  // shared-schemas isRenameable: a reel, a post or a picture often comes with no title of its own, so it can be named
+  // here; an article keeps its page's. A link still being read (its title is its address) can be named too.
+  var renameable: Bool {
+    guard let item else { return false }
+    return item.preview == "player" || item.preview == "post" || item.kind == "image" || pluckedTitle.hasPrefix("http")
+  }
 
   func run(with inputs: [ShareInput]) async {
     guard client.session() != nil else { phase = .signedOut; return }
@@ -74,7 +93,7 @@ final class ShareModel: ObservableObject {
             client.queue(file: (url, name, contentType)); queued = true; continue
           }
         }
-        if item == nil, let plucked { item = plucked; tagIds = Set(plucked.tagIds); if !plucked.title.isEmpty { self.title = plucked.title } }
+        if item == nil, let plucked { item = plucked; tagIds = Set(plucked.tagIds); if !plucked.title.isEmpty { self.title = plucked.title }; pluckedTitle = self.title }
       } catch PluckError.signedOut {
         phase = .signedOut; return
       } catch PluckError.refused(let message) {
@@ -84,14 +103,10 @@ final class ShareModel: ObservableObject {
       }
     }
     phase = queued && item == nil ? .queued : .plucked
-    let uploads = Task { [client] in for c in covers { await client.putCover(c.id, jpeg: c.jpeg) } } // while "Plucked." shows
-    try? await Task.sleep(for: .seconds(2))
-    await uploads.value
-    if !engaged { finish() }
+    uploads = Task { [client] in for c in covers { await client.putCover(c.id, jpeg: c.jpeg) } } // while the sheet is open
   }
 
   func toggle(_ tag: TagRef) {
-    engaged = true
     guard let id = item?.id else { return }
     if tagIds.contains(tag.id) { tagIds.remove(tag.id) } else { tagIds.insert(tag.id) }
     let ids = Array(tagIds)
@@ -99,23 +114,28 @@ final class ShareModel: ObservableObject {
   }
 
   func addToList() {
-    engaged = true
     guard let id = item?.id, let list = lastList, !addedToList else { return }
     addedToList = true
     Task { try? await client.addToList(list.id, id) }
   }
 
   func setKind(_ kind: String) {
-    engaged = true
     guard let id = item?.id else { return }
     Task { if let updated = try? await client.patch(id, ["kind": kind]) { item = updated } }
   }
 
+  // Done or a tap outside: the note and a typed title go up, and the cover finishes, before the sheet closes.
   func finish() {
-    let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard let id = item?.id, !trimmed.isEmpty else { return close() }
+    guard !finishing else { return }
+    finishing = true
+    var edit: [String: Any] = [:]
+    let typedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
+    let typedTitle = title.components(separatedBy: .newlines).joined(separator: " ").trimmingCharacters(in: .whitespaces) // one line
+    if !typedNote.isEmpty { edit["note"] = typedNote }
+    if renameable, !typedTitle.isEmpty, typedTitle != pluckedTitle { edit["title"] = typedTitle }
     Task {
-      _ = try? await client.patch(id, ["note": trimmed])
+      await uploads?.value
+      if let id = item?.id, !edit.isEmpty { _ = try? await client.patch(id, edit) }
       close()
     }
   }
@@ -124,7 +144,7 @@ final class ShareModel: ObservableObject {
 struct ShareView: View {
   @ObservedObject var model: ShareModel
   @Environment(\.colorScheme) private var scheme
-  @FocusState private var noteFocused: Bool
+  @State private var formHeight: CGFloat = 0 // the form's own height: it scrolls only when the keyboard leaves less room
   private var dark: Bool { scheme == .dark }
 
   var body: some View {
@@ -134,11 +154,13 @@ struct ShareView: View {
         Capsule().fill(Palette.handle).frame(width: 36, height: 5).frame(maxWidth: .infinity)
         content
       }
-      .padding(EdgeInsets(top: 10, leading: 20, bottom: 34, trailing: 20))
-      .background(Palette.ground(dark), in: UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16))
+      .padding(EdgeInsets(top: 10, leading: 20, bottom: 16, trailing: 20))
+      .background {
+        UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16).fill(Palette.ground(dark)).ignoresSafeArea(.container, edges: .bottom)
+      }
     }
-    .ignoresSafeArea(edges: .bottom)
-    .onChange(of: noteFocused) { _, focused in if focused { model.engaged = true } }
+    .font(Typeface.body)
+    .foregroundStyle(Palette.ink(dark))
   }
 
   @ViewBuilder private var content: some View {
@@ -146,43 +168,62 @@ struct ShareView: View {
     case .working:
       HStack(spacing: 12) { ProgressView(); Text("plucking").foregroundStyle(Palette.ink2(dark)) }.frame(minHeight: 44)
     case .signedOut:
-      Text("signedOutTitle").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
+      Text("signedOutTitle").font(Typeface.heading)
       Text("signedOutBody").foregroundStyle(Palette.ink2(dark))
       primary("openToSignIn") { model.openApp() }
     case .queued:
-      header(title: String(localized: "queuedTitle"), subtitle: String(localized: "queuedBody"), size: 22)
+      header(String(localized: "queuedTitle"), subtitle: String(localized: "queuedBody"))
       primary("done") { model.close() }
     case let .failed(message):
-      Text("failedTitle").font(.system(size: 22, weight: .bold)).foregroundStyle(Palette.ink(dark))
+      Text("failedTitle").font(Typeface.heading)
       Text(message).foregroundStyle(Palette.ink2(dark))
       primary("done") { model.close() }
     case .plucked:
-      header(title: String(localized: "plucked"), subtitle: model.title, size: 24)
+      header(String(localized: "plucked"), subtitle: model.renameable ? model.item?.siteName : model.title)
+      // What you came to change comes first, so the keyboard never hides it; Done stays above the keyboard.
+      ScrollView {
+        form.onGeometryChange(for: CGFloat.self) { $0.size.height } action: { formHeight = $0 }
+      }
+      .scrollBounceBehavior(.basedOnSize)
+      .scrollDismissesKeyboard(.interactively)
+      .frame(maxHeight: formHeight)
+      primary("done") { model.finish() }
+    }
+  }
+
+  private var form: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      if model.renameable {
+        group("title") {
+          TextField("title", text: $model.title, axis: .vertical).lineLimit(1...3).font(Typeface.title).boxed(dark)
+        }
+      }
+      group("note") {
+        TextField("notePlaceholder", text: $model.note, axis: .vertical).lineLimit(2...6).boxed(dark)
+      }
       if !model.tags.isEmpty || model.lastList != nil {
-        VStack(alignment: .leading, spacing: 8) {
-          label("tagsAndList")
+        group("tagsAndList") {
           HStack(spacing: 8) {
             ForEach(model.tags) { tag in chip(tag.name, on: model.tagIds.contains(tag.id)) { model.toggle(tag) } }
             if let list = model.lastList {
               Button { model.addToList() } label: {
                 HStack(spacing: 6) { glyph("M8 3v10M3 8h10", size: 14, color: Palette.ink(dark), width: 1.6); Text(list.name).lineLimit(1) }
+                  .font(Typeface.chip)
                   .padding(.horizontal, 14).frame(height: 44)
                   .background(model.addedToList ? Palette.chip(dark) : .clear, in: Capsule())
                   .overlay(Capsule().strokeBorder(Palette.dashed, style: StrokeStyle(lineWidth: 1.5, dash: model.addedToList ? [] : [4, 3])))
               }
-              .foregroundStyle(Palette.ink(dark))
               .accessibilityLabel(String(format: model.addedToList ? String(localized: "addedToList") : String(localized: "addToList"), list.name))
             }
           }
         }
       }
-      VStack(alignment: .leading, spacing: 8) {
-        label("kind")
+      group("kind") {
         HStack {
           ForEach(kinds, id: \.key) { k in
             let on = model.item?.kind == k.key
             Button { model.setKind(k.key) } label: {
-              glyph(k.d, size: 17, color: on ? Palette.onBrand : Palette.ink(dark), width: 1.4)
+              glyph(k.d, size: 17, color: on ? Palette.ground(dark) : Palette.ink(dark), width: 1.4) // the reverse of the rest, in both themes
                 .frame(width: 36, height: 44)
                 .background(on ? Palette.ink(dark) : Palette.surface(dark), in: RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(on ? Palette.ink(dark) : Palette.line(dark)))
@@ -194,32 +235,29 @@ struct ShareView: View {
           }
         }
       }
-      TextField("notePlaceholder", text: $model.note)
-        .focused($noteFocused)
-        .padding(.horizontal, 14).frame(height: 44)
-        .background(Palette.surface(dark), in: RoundedRectangle(cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Palette.line(dark)))
-        .submitLabel(.done)
-        .onSubmit { model.finish() }
-      primary("done") { model.finish() }
     }
   }
 
-  private func header(title: String, subtitle: String, size: CGFloat) -> some View {
+  private func group(_ name: LocalizedStringKey, @ViewBuilder _ body: () -> some View) -> some View {
+    VStack(alignment: .leading, spacing: 8) {
+      Text(name).font(Typeface.label).foregroundStyle(Palette.ink2(dark))
+      body()
+    }
+  }
+
+  private func header(_ title: String, subtitle: String?) -> some View {
     HStack(spacing: 12) {
       ZStack { Circle().fill(Palette.mint); glyph("M3.5 8.5l3 3 6-7", size: 24, color: Color(hex: 0x151A13), width: 2) }.frame(width: 44, height: 44)
       VStack(alignment: .leading, spacing: 0) {
-        Text(title).font(.system(size: size, weight: .bold)).tracking(-0.7).foregroundStyle(Palette.ink(dark))
-        Text(subtitle).lineLimit(1).truncationMode(.tail).foregroundStyle(Palette.ink2(dark))
+        Text(title).font(Typeface.heading).tracking(-0.7)
+        if let subtitle { Text(subtitle).lineLimit(1).truncationMode(.tail).foregroundStyle(Palette.ink2(dark)) }
       }
     }
   }
 
-  private func label(_ text: LocalizedStringKey) -> some View { Text(text).font(.system(size: 13)).foregroundStyle(Palette.ink2(dark)) }
-
   private func chip(_ text: String, on: Bool, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-      Text(text).padding(.horizontal, 16).frame(height: 44)
+      Text(text).font(Typeface.chip).padding(.horizontal, 16).frame(height: 44)
         .background(on ? Palette.brand : Palette.chip(dark), in: Capsule())
         .foregroundStyle(on ? Palette.onBrand : Palette.ink(dark))
     }
@@ -228,7 +266,7 @@ struct ShareView: View {
 
   private func primary(_ text: LocalizedStringKey, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-      Text(text).fontWeight(.semibold).frame(maxWidth: .infinity, minHeight: 50).background(Palette.brand, in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(Palette.onBrand)
+      Text(text).font(Typeface.button).frame(maxWidth: .infinity, minHeight: 50).background(Palette.brand, in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(Palette.onBrand)
     }
   }
 
@@ -236,3 +274,13 @@ struct ShareView: View {
     SVGPath(d: d).stroke(color, style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round)).frame(width: size, height: size)
   }
 }
+
+private extension View {
+  // A field on the sheet: the surface, a hairline, 44 points at least.
+  func boxed(_ dark: Bool) -> some View {
+    padding(.horizontal, 14).padding(.vertical, 11).frame(minHeight: 44)
+      .background(Palette.surface(dark), in: RoundedRectangle(cornerRadius: 10))
+      .overlay(RoundedRectangle(cornerRadius: 10).strokeBorder(Palette.line(dark)))
+  }
+}
+

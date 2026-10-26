@@ -219,6 +219,7 @@
   },
   "note": {
     "title": "Notiz",
+    "titleLabel": "Titel",
     "placeholder": "Warum du es behalten hast, oder was du damit vorhast.",
     "hint": "Nur du siehst sie. Die Suche findet sie."
   },

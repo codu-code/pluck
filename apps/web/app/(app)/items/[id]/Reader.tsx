@@ -1,6 +1,6 @@
 "use client";
 
-import { LINK_KINDS, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
+import { isRenameable, LINK_KINDS, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -26,6 +26,8 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [progress, setProgress] = useState(item.readingProgress);
   const [note, setNote] = useState(item.note ?? "");
+  const [title, setTitle] = useState(item.title);
+  const savedTitle = useRef(item.title);
   const [kind, setKind] = useState<Kind>(item.kind);
   const [focusNote, setFocusNote] = useState<string | null>(null);
   const saved = useRef(item.readingProgress);
@@ -139,7 +141,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
             <span className={styles.meta}>
               {[item.siteName, minutes && t("minutes", { n: minutes }), app(`format.sourceAgo.${item.source}`, { ago: f.ago(item.createdAt) })].filter(Boolean).join(" · ")}
             </span>
-            <h1 className={styles.title}>{item.title}</h1>
+            <h1 className={styles.title}>{title}</h1>
             {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
             <PreviewFacts item={item} />
           </div>
@@ -180,6 +182,30 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
           </>}
         </article>
         <aside aria-label={t("about")} className={styles.aside}>
+          {isRenameable(item) && (
+            // A reel or a post often came with no title of its own: name it here. Empty puts the last one back.
+            <label className={styles.group}>
+              <span className={styles.groupTitle}>{t("titleLabel")}</span>
+              <textarea
+                className={styles.note}
+                rows={2}
+                value={title}
+                onChange={(e) => setTitle(e.target.value.replace(/\s*\n\s*/g, " "))}
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter") return;
+                  e.preventDefault(); // one line: Enter keeps it
+                  e.currentTarget.blur();
+                }}
+                onBlur={() => {
+                  const typed = title.trim();
+                  if (!typed) return setTitle(savedTitle.current);
+                  if (typed === savedTitle.current) return;
+                  savedTitle.current = typed;
+                  void fetch(`/api/v1/items/${item.id}`, json("PATCH", { title: typed }));
+                }}
+              />
+            </label>
+          )}
           <label className={styles.group}>
             <span className={styles.groupTitle}>{t("note")}</span>
             <textarea
