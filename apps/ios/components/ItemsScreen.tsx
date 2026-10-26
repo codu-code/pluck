@@ -1,8 +1,8 @@
 import type { Item, Status } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
-import { router, usePathname } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { router, useFocusEffect, usePathname } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
@@ -12,7 +12,7 @@ import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
 import { Icon, ICONS } from "./Glyph";
 import { ItemRow } from "./ItemRow";
-import { Empty, TitledList } from "./Screen";
+import { Empty, TitledList, usePull } from "./Screen";
 import { toast } from "./Toast";
 import { ToolBar } from "./ToolBar";
 
@@ -43,6 +43,10 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   }, [items.data]);
 
   useEffect(() => void waiting.refetch(), [items.dataUpdatedAt]);
+  // Switching to this tab refetches it in the background (joining one already running), so it is never a tab behind.
+  const { refetch } = items;
+  useFocusEffect(useCallback(() => void refetch({ cancelRefetch: false }), [refetch]));
+  const pull = usePull(async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); });
   useEffect(() => {
     if (tags.data && lists.data) shareExtensionCache(tags.data, lists.data);
   }, [tags.data, lists.data]);
@@ -161,7 +165,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         </Animated.View>
       )}
       refreshControl={
-        <RefreshControl refreshing={items.isRefetching} onRefresh={async () => { await syncPending().catch(() => 0); await items.refetch(); void counts.refetch(); }} />
+        <RefreshControl {...pull} />
       }
       ListEmptyComponent={
         items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
