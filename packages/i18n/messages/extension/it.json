@@ -36,6 +36,8 @@
   },
   "popup": {
     "settings": "Opzioni ed esci",
+    "home": "Apri Pluck",
+    "deleteNeedsSignIn": "Per eliminare da qui, esci e accedi di nuovo. Trovi tutto sotto l’ingranaggio.",
     "plucking": "Lo prendo…",
     "signedOut": {
       "lede": "La pagina in cui sei, conservata con un clic. Accedi una volta, con la tua email.",
@@ -48,12 +50,12 @@
       "count": "{count, plural, one {# elemento} other {# elementi}} in coda su questo browser."
     },
     "already": {
-      "meta": "Preso il {date} · {status}",
-      "open": "Apri in Pluck"
+      "meta": "Preso il {date} · {status}"
     },
     "plucked": {
       "title": "Preso",
       "undo": "Annulla",
+      "delete": "Elimina",
       "tips": {
         "opening": "Basta aprire questa finestra e la pagina è conservata. Il trucco è tutto qui.",
         "shortcut": "Alt+Shift+P lo fa senza clic.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tag",
       "tagsPlaceholder": "Cerca tra i tuoi tag",
+      "newTag": "Aggiungi “{name}”",
       "kind": "Tipo",
       "toList": "In una lista",
       "noList": "Nessuna",
       "lastUsed": "{name} (l'ultima usata)",
       "note": "Nota",
       "notePlaceholder": "Una nota, se vuoi",
+      "inbox": "Inbox",
       "later": "Più tardi",
       "archive": "Archivia",
       "open": "Apri in Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Le prendo…",
       "done": "{count, plural, one {Presa # scheda in “{name}”.} other {Prese # schede in “{name}”.}}",
       "failed": "Pluck non risponde. Riprova tra poco."
+    },
+    "removed": {
+      "title": "Eliminato.",
+      "body": "Resta nel cestino per 30 giorni.",
+      "back": "Ripristina"
     }
   },
   "options": {

@@ -36,6 +36,8 @@
   },
   "popup": {
     "settings": "設定とサインアウト",
+    "home": "Pluckを開く",
+    "deleteNeedsSignIn": "ここから削除するには、一度サインアウトしてもう一度サインインしてください。どちらも歯車のアイコンから行えます。",
     "plucking": "Pluck中…",
     "signedOut": {
       "lede": "開いているページを、ワンクリックで残せます。サインインはメールで一度だけ。",
@@ -48,12 +50,12 @@
       "count": "{count, plural, other {#件のPluckがこのブラウザで待機中です。}}"
     },
     "already": {
-      "meta": "{date}にPluck · {status}",
-      "open": "Pluckで開く"
+      "meta": "{date}にPluck · {status}"
     },
     "plucked": {
       "title": "Pluckしました",
       "undo": "元に戻す",
+      "delete": "削除",
       "tips": {
         "opening": "このポップアップを開くだけでページが残ります。仕掛けはそれだけです。",
         "shortcut": "Alt+Shift+Pなら、クリックなしでPluckできます。",
@@ -61,12 +63,14 @@
       },
       "tags": "タグ",
       "tagsPlaceholder": "タグを検索",
+      "newTag": "「{name}」を追加",
       "kind": "種類",
       "toList": "リストへ",
       "noList": "なし",
       "lastUsed": "{name}（前回使用）",
       "note": "メモ",
       "notePlaceholder": "メモがあればどうぞ",
+      "inbox": "インボックス",
       "later": "あとで",
       "archive": "アーカイブ",
       "open": "Pluckで開く"
@@ -77,6 +81,11 @@
       "plucking": "Pluck中…",
       "done": "{count, plural, other {#個のタブを「{name}」にPluckしました。}}",
       "failed": "Pluckにつながりませんでした。少ししてからもう一度お試しください。"
+    },
+    "removed": {
+      "title": "削除しました。",
+      "body": "30日間はゴミ箱に残ります。",
+      "back": "復元"
     }
   },
   "options": {

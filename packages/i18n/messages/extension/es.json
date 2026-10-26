@@ -36,6 +36,8 @@
   },
   "popup": {
     "settings": "Opciones y cerrar sesión",
+    "home": "Abrir Pluck",
+    "deleteNeedsSignIn": "Para eliminar desde aquí, cierra sesión y vuelve a entrar. Las dos cosas están bajo el engranaje.",
     "plucking": "Recogiendo…",
     "signedOut": {
       "lede": "La página en la que estás, conservada con un clic. Inicia sesión una vez, con tu correo.",
@@ -48,12 +50,12 @@
       "count": "{count, plural, one {# elemento en cola} other {# elementos en cola}} en este navegador."
     },
     "already": {
-      "meta": "Recogido el {date} · {status}",
-      "open": "Abrir en Pluck"
+      "meta": "Recogido el {date} · {status}"
     },
     "plucked": {
       "title": "Recogido",
       "undo": "Deshacer",
+      "delete": "Eliminar",
       "tips": {
         "opening": "Al abrir esto, la página queda conservada. Ese es todo el truco.",
         "shortcut": "Alt+Shift+P hace lo mismo sin clic.",
@@ -61,12 +63,14 @@
       },
       "tags": "Etiquetas",
       "tagsPlaceholder": "Busca en tus etiquetas",
+      "newTag": "Añadir «{name}»",
       "kind": "Tipo",
       "toList": "A una lista",
       "noList": "Ninguna",
       "lastUsed": "{name} (la última usada)",
       "note": "Nota",
       "notePlaceholder": "Una nota, si quieres",
+      "inbox": "Entrada",
       "later": "Más tarde",
       "archive": "Archivar",
       "open": "Abrir en Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Recogiendo…",
       "done": "{count, plural, one {# pestaña recogida en “{name}”.} other {# pestañas recogidas en “{name}”.}}",
       "failed": "No se pudo conectar con Pluck. Inténtalo de nuevo en un momento."
+    },
+    "removed": {
+      "title": "Eliminado.",
+      "body": "Se queda en la papelera durante 30 días.",
+      "back": "Restaurar"
     }
   },
   "options": {

@@ -26,7 +26,7 @@ type Hooks = { pluckTest: { menu: (info: object, tab?: object) => Promise<unknow
 // Points the extension at the e2e server with a personal API key (the self-host path).
 async function useKey(page: Page, sw: Worker): Promise<string> {
   const email = await signIn(page);
-  const { key } = (await (await page.request.post("/api/v1/api-keys", { data: { name: "Extension" } })).json()) as { key: string };
+  const { key } = (await (await page.request.post("/api/v1/api-keys", { data: { name: "Extension", scopes: ["library:read", "library:write", "library:delete"] } })).json()) as { key: string };
   await sw.evaluate(async ({ key, server }) => {
     await chrome.storage.local.set({ settings: { server, defaultKind: "guess", sendContent: true, transcripts: true }, apiKey: key, seenTips: true });
   }, { key, server: BASE });
@@ -72,18 +72,37 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   expect(lists[0]!.itemCount).toBe(1);
   expect(await sw.evaluate(async (tabId) => chrome.action.getTitle({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("Plucked");
 
-  // Later moves it. Opening it again shows the item instead of plucking a second one, and the cog opens the options.
+  // Later moves it. Opening it again shows the same tools on the Item instead of plucking a second one.
   await popup.getByRole("button", { name: "Later" }).click();
   await expect.poll(async () => (await itemsOf(page, "later")).length).toBe(1);
   expect(await itemsOf(page)).toHaveLength(0);
   const again = await popupFor(context, sw, extId, `${FIX}/news-1.html`);
   await expect(again.getByText(/^Plucked .* · Later$/)).toBeVisible();
-  await expect(again.getByText("teams", { exact: true })).toBeVisible();
-  await expect(again.getByRole("button", { name: "Open in Pluck" })).toBeVisible();
+  await expect(again.getByRole("button", { name: "teams" })).toHaveAttribute("aria-pressed", "true");
+  await expect(again.getByPlaceholder("A note, if you like")).toHaveValue("for the talk");
+  await expect(again.getByRole("button", { name: "Later" })).toHaveCount(0); // it is there already: Inbox and Archive instead
+  await expect(again.getByRole("button", { name: "Inbox" })).toBeVisible();
   await snapshot(again, "extension-already");
+
+  // A new tag, made by typing it.
+  await again.getByPlaceholder("Search your tags").fill("for-the-talk");
+  await again.getByRole("button", { name: "Add “for-the-talk”" }).click();
+  await expect(again.getByRole("button", { name: "for-the-talk" })).toHaveAttribute("aria-pressed", "true");
+  expect((await itemsOf(page, "later"))[0]!.tagIds).toHaveLength(2);
+
+  // Delete sends it to the bin, and Restore brings it back where it was.
+  await again.getByRole("button", { name: "Delete" }).click();
+  await expect(again.getByRole("status")).toHaveText("Deleted.");
+  expect(await itemsOf(page, "later")).toHaveLength(0);
+  await again.getByRole("button", { name: "Restore" }).click();
+  await expect(again.getByText(/^Plucked .* · Later$/)).toBeVisible();
+  expect(await itemsOf(page, "later")).toHaveLength(1);
+
+  // The wordmark opens Pluck; the cog opens the options, with the account and Sign out.
+  const [home] = await Promise.all([context.waitForEvent("page"), again.getByRole("button", { name: "Open Pluck" }).click()]);
+  await expect(home).toHaveURL(/\/inbox$/);
   const [options] = await Promise.all([context.waitForEvent("page"), again.getByRole("button", { name: "Options and sign out" }).click()]);
   await expect(options).toHaveURL(/options\.html/);
-  expect(await itemsOf(page, "later")).toHaveLength(1);
 });
 
 test("the right-click menu plucks a link, an image and a selection as a highlight", async ({ context, sw, page }) => {
@@ -160,6 +179,11 @@ test("signing in with OAuth: consent once, then the popup plucks with the app's 
   const popup = await popupFor(context, sw, extId, `${FIX}/news-2.html`);
   await expect(popup.getByRole("status")).toHaveText("Plucked");
   expect(await itemsOf(page)).toHaveLength(1);
+  // The app's token can send it to the bin.
+  const back = await popupFor(context, sw, extId, `${FIX}/news-2.html`);
+  await back.getByRole("button", { name: "Delete" }).click();
+  await expect(back.getByRole("status")).toHaveText("Deleted.");
+  expect(await itemsOf(page)).toHaveLength(0);
 
   // The connection shows in Settings and can be cut off there.
   await page.goto("/settings");

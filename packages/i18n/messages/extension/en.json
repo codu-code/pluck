@@ -36,6 +36,8 @@
   },
   "popup": {
     "settings": "Options and sign out",
+    "home": "Open Pluck",
+    "deleteNeedsSignIn": "To delete from here, sign out and sign in again. Both are under the cog.",
     "plucking": "Plucking…",
     "signedOut": {
       "lede": "The page you are on, kept in one click. Sign in once, with your email.",
@@ -48,12 +50,12 @@
       "count": "{count, plural, one {# pluck} other {# plucks}} queued on this browser."
     },
     "already": {
-      "meta": "Plucked {date} · {status}",
-      "open": "Open in Pluck"
+      "meta": "Plucked {date} · {status}"
     },
     "plucked": {
       "title": "Plucked",
       "undo": "Undo",
+      "delete": "Delete",
       "tips": {
         "opening": "Opening this plucks the page. That's the whole trick.",
         "shortcut": "Alt+Shift+P does it without the click.",
@@ -61,12 +63,14 @@
       },
       "tags": "Tags",
       "tagsPlaceholder": "Search your tags",
+      "newTag": "Add “{name}”",
       "kind": "Kind",
       "toList": "To list",
       "noList": "None",
       "lastUsed": "{name} (last used)",
       "note": "Note",
       "notePlaceholder": "A note, if you like",
+      "inbox": "Inbox",
       "later": "Later",
       "archive": "Archive",
       "open": "Open in Pluck"
@@ -77,6 +81,11 @@
       "plucking": "Plucking…",
       "done": "{count, plural, one {Plucked # tab into “{name}”.} other {Plucked # tabs into “{name}”.}}",
       "failed": "Couldn't reach Pluck. Try again in a moment."
+    },
+    "removed": {
+      "title": "Deleted.",
+      "body": "It stays in the bin for 30 days.",
+      "back": "Restore"
     }
   },
   "options": {

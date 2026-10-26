@@ -36,6 +36,8 @@
   },
   "popup": {
     "settings": "选项与退出登录",
+    "home": "打开 Pluck",
+    "deleteNeedsSignIn": "要在这里删除，请先退出登录再重新登录。两者都在齿轮图标里。",
     "plucking": "正在摘下…",
     "signedOut": {
       "lede": "当前网页，点一下就留下。用邮箱登录一次即可。",
@@ -48,12 +50,12 @@
       "count": "{count, plural, other {# 条}}正在这个浏览器里排队。"
     },
     "already": {
-      "meta": "{date}摘下 · {status}",
-      "open": "在 Pluck 中打开"
+      "meta": "{date}摘下 · {status}"
     },
     "plucked": {
       "title": "已摘下",
       "undo": "撤销",
+      "delete": "删除",
       "tips": {
         "opening": "打开这个窗口就会留下网页，诀窍就这么简单。",
         "shortcut": "按 Alt+Shift+P，连点都不用点。",
@@ -61,12 +63,14 @@
       },
       "tags": "标签",
       "tagsPlaceholder": "搜索你的标签",
+      "newTag": "添加“{name}”",
       "kind": "类别",
       "toList": "加入清单",
       "noList": "无",
       "lastUsed": "{name}（上次使用）",
       "note": "笔记",
       "notePlaceholder": "想写就写一句",
+      "inbox": "收件箱",
       "later": "稍后",
       "archive": "归档",
       "open": "在 Pluck 中打开"
@@ -77,6 +81,11 @@
       "plucking": "正在摘下…",
       "done": "{count, plural, other {已把 # 个标签页摘进“{name}”。}}",
       "failed": "连不上 Pluck，请稍后再试。"
+    },
+    "removed": {
+      "title": "已删除。",
+      "body": "它会在回收站里保留 30 天。",
+      "back": "恢复"
     }
   },
   "options": {
