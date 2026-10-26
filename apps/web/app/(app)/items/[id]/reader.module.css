@@ -42,6 +42,7 @@
 @media (max-width: 600px) { .layout { padding: 24px 16px 48px; gap: 32px; } .title { font-size: 30px; line-height: 36px; } }
 .postImage { width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; background: var(--rail); }
 .said { margin: 0; font-size: 18px; line-height: 29px; white-space: pre-line; overflow-wrap: anywhere; }
+.said a { color: var(--brand); text-underline-offset: 2px; }
 .price { font-family: var(--font-ui); font-size: 20px; font-weight: 600; }
 .ways { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--font-ui); }
 .primary {

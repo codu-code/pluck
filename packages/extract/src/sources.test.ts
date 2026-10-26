@@ -13,7 +13,7 @@ vi.mock("./fetch.ts", async (real) => ({
 }));
 
 import { extract } from "./extract.ts";
-import { slugTitle } from "./sources.ts";
+import { slugTitle, syndicationToken, titleFromText } from "./sources.ts";
 
 describe("sources", () => {
   test("YouTube comes from its oEmbed, never its watch page", async () => {
@@ -30,6 +30,64 @@ describe("sources", () => {
     expect(x).toMatchObject({ preview: "post", siteName: "X", author: "Niall", markdown: "Shipping the Archive tonight.", facts: { handle: "@niall" }, raw: null });
   });
 
+  test("an X Article is its title and summary, from X's embed JSON, not \"Name (@name) on X\" and a t.co link", async () => {
+    // The shape X returned for a real Article post on 26 October 2026, trimmed.
+    answers.set("https://x.com/addyosmani/status/2114604912520921136", '<html><head><meta property="og:title" content="Addy Osmani (@addyosmani) on X"></head></html>');
+    answers.set("https://cdn.syndication.twimg.com/tweet-result?id=2114604912520921136&", {
+      text: "https://t.co/4Hfk0dYIBI",
+      user: { name: "Addy Osmani", screen_name: "addyosmani" },
+      entities: { urls: [{ url: "https://t.co/4Hfk0dYIBI", expanded_url: "https://x.com/i/article/2114435487905808384", display_url: "x.com/i/article/2114…" }] },
+      article: {
+        title: "How the Claude Code team does code review ",
+        preview_text: "We previously mentioned that Claude writes about 90 percent of the code for Claude Code. So how do we do code review at this scale?",
+        cover_media: { media_info: { original_img_url: "https://pbs.twimg.com/media/HVgF5M4bIAAvLxh.jpg" } },
+      },
+    });
+    const x = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136" });
+    expect(x).toMatchObject({ preview: "post", siteName: "X", title: "How the Claude Code team does code review", author: "Addy Osmani", coverUrl: "https://pbs.twimg.com/media/HVgF5M4bIAAvLxh.jpg", facts: { handle: "@addyosmani" } });
+    expect(x.markdown).toMatch(/^We previously mentioned/);
+    expect(x.markdown).not.toContain("t.co");
+  });
+
+  test("a post on X: its first line is the title, its links go where they go, the link it shares is kept", async () => {
+    answers.set("https://x.com/niall/status/186", "<html></html>");
+    answers.set("https://cdn.syndication.twimg.com/tweet-result?id=186&", {
+      text: "Wrote up how Pluck reads a link https://t.co/abc https://t.co/pic",
+      user: { name: "Niall", screen_name: "niall" },
+      entities: { urls: [{ url: "https://t.co/abc", expanded_url: "https://getpluck.io/blog/previews", display_url: "getpluck.io/blog/previews" }], media: [{ url: "https://t.co/pic" }] },
+      mediaDetails: [{ media_url_https: "https://pbs.twimg.com/media/one.jpg" }],
+      card: { url: "https://t.co/abc", binding_values: { title: { string_value: "Previews in Pluck" }, description: { string_value: "Every link as what it is." } } },
+    });
+    const x = await extract({ url: "https://x.com/niall/status/186" });
+    expect(x).toMatchObject({ title: "Wrote up how Pluck reads a link", coverUrl: "https://pbs.twimg.com/media/one.jpg" });
+    expect(x.markdown).toBe("Wrote up how Pluck reads a link [getpluck.io/blog/previews](https://getpluck.io/blog/previews)\n\n[Previews in Pluck](https://getpluck.io/blog/previews)\n\nEvery link as what it is.");
+    expect(x.excerpt).not.toContain("](");
+  });
+
+  test("a post sent from the browser still takes its words from the site's API, not the page around it", async () => {
+    answers.set("https://cdn.syndication.twimg.com/tweet-result?id=187&", { text: "Lists over folders.", user: { name: "Niall", screen_name: "niall" } });
+    const html = '<html><head><title>(3) Niall on X: "Lists over folders." / X</title><meta property="og:description" content="Home timeline"></head><body><main>Home timeline, who to follow, trends</main></body></html>';
+    expect(await extract({ url: "https://x.com/niall/status/187", html })).toMatchObject({ title: "Lists over folders.", markdown: "Lists over folders." });
+  });
+
+  test("the token X's embed script sends with an id", () => {
+    expect(syndicationToken("20")).toBe(((20 / 1e15) * Math.PI).toString(36).replace(/(0+|\.)/g, ""));
+  });
+
+  test("a title from a post's words: its first line with words in it, cut at a word", () => {
+    expect(titleFromText("https://example.com/only-a-link\n\nThe real first line")).toBe("The real first line");
+    expect(titleFromText("[getpluck.io](https://getpluck.io) is where it lives")).toBe("getpluck.io is where it lives");
+    const long = titleFromText("One sentence that keeps going well past the point where a title on a phone would still fit on two lines of text");
+    expect(long!.length).toBeLessThanOrEqual(91);
+    expect(long).toMatch(/\w…$/);
+    expect(titleFromText("https://t.co/4Hfk0dYIBI")).toBeNull();
+  });
+
+  test("YouTube's empty page title from the browser gives way to its oEmbed", async () => {
+    answers.set("https://www.youtube.com/oembed", { title: "How lists work", author_name: "Pluck" });
+    expect(await extract({ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", html: "<html><head><title>- YouTube</title></head><body></body></html>" })).toMatchObject({ title: "How lists work" });
+  });
+
   test("Hacker News, Bluesky and Mastodon through their open APIs", async () => {
     answers.set("https://news.ycombinator.com/item", "<html></html>");
     answers.set("https://hacker-news.firebaseio.com/v0/item/41000000.json", { title: "Show HN: Pluck", by: "niall", url: "https://getpluck.io" });
@@ -42,6 +100,18 @@ describe("sources", () => {
     answers.set("https://mastodon.social/@someone/112233445566", "<html></html>");
     answers.set("https://mastodon.social/api/v1/statuses/112233445566", { content: "<p>One</p><p>Two</p>", account: { display_name: "Some One", acct: "someone" }, media_attachments: [] });
     expect(await extract({ url: "https://mastodon.social/@someone/112233445566" })).toMatchObject({ preview: "post", author: "Some One", markdown: "One\n\nTwo" });
+
+    // Links stay links: Bluesky's by byte ranges (after an emoji here), Mastodon's anchors; a mention stays words.
+    answers.set("https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread", { thread: { post: { author: { handle: "someone.bsky.social" }, record: {
+      text: "📚 Read this getpluck.io",
+      facets: [{ index: { byteStart: 15, byteEnd: 26 }, features: [{ $type: "app.bsky.richtext.facet#link", uri: "https://getpluck.io" }] }],
+    }, embed: { external: { uri: "https://getpluck.io", title: "Pluck", description: "Keep what you find.", thumb: "https://cdn.bsky.app/thumb.jpg" } } } } });
+    expect(await extract({ url: "https://bsky.app/profile/someone.bsky.social/post/3kabd" })).toMatchObject({
+      title: "📚 Read this getpluck.io", coverUrl: "https://cdn.bsky.app/thumb.jpg",
+      markdown: "📚 Read this [getpluck.io](https://getpluck.io)\n\n[Pluck](https://getpluck.io)\n\nKeep what you find.",
+    });
+    answers.set("https://mastodon.social/api/v1/statuses/112233445567", { content: '<p>Hi <a href="https://mastodon.social/@pluck" class="u-url mention">@pluck</a>, see <a href="https://getpluck.io/lists">getpluck.io/lists</a></p>', account: { acct: "someone" }, media_attachments: [] });
+    expect(await extract({ url: "https://mastodon.social/@someone/112233445567" })).toMatchObject({ title: "Hi @pluck, see", markdown: "Hi @pluck, see [getpluck.io/lists](https://getpluck.io/lists)" });
   });
 
   test("npm, PyPI and Stack Overflow: their bot checks are never fetched", async () => {
