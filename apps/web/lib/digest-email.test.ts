@@ -24,7 +24,7 @@ test("the digest reads well as plain text and keeps the copy rules", () => {
   expect(e.text).toContain("move to your Archive on Thursday. Still searchable, never deleted.");
   expect(e.text).toContain("- Learn window functions, Fri");
   expect(e.text).toContain("14 of 22 ticked, 31 days");
-  expect(e.text).toContain("Plain rules, no model.");
+  expect(e.text).toContain("picked by simple rules, not AI.");
   expect(`${e.text}${(e.html ?? "").replace("<!doctype html>", "").replace(/<head>[\s\S]*<\/head>/, "")}`).not.toContain("!"); // no exclamation marks in the copy (the head's CSS has !important)
   expect(e.html).toContain("Notes on a &lt;good&gt; list"); // escaped
   expect(e.headers?.["List-Unsubscribe"]).toBe("<https://x/d/stop>");
