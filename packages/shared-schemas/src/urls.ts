@@ -87,3 +87,28 @@ export function withReferral(url: string): string {
   const [head, tail] = hash < 0 ? [url, ""] : [url.slice(0, hash), url.slice(hash)];
   return `${head}${head.includes("?") ? (head.endsWith("?") || head.endsWith("&") ? "" : "&") : "?"}${REFERRAL}${tail}`;
 }
+
+// A post's words as runs of text and links, for the screens that show them: [words](address) and bare addresses
+// become links, and a link whose words are its own address shows as host and path, shortened.
+export type TextRun = { text: string; href?: string };
+const RUN = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)|https?:\/\/[^\s<>()]*[^\s<>().,;:!?'"’”]/g;
+
+export function textRuns(text: string): TextRun[] {
+  const out: TextRun[] = [];
+  let at = 0;
+  for (const m of text.matchAll(RUN)) {
+    if (m.index > at) out.push({ text: text.slice(at, m.index) });
+    const href = m[2] ?? m[0];
+    const words = m[1] ?? href;
+    out.push({ text: /^https?:\/\//.test(words) ? shortAddress(words) : words, href });
+    at = m.index + m[0].length;
+  }
+  if (at < text.length) out.push({ text: text.slice(at) });
+  return out;
+}
+
+// "https://www.example.com/a/long/path?x=1" → "example.com/a/long/path?x…"
+export function shortAddress(url: string, max = 40): string {
+  const s = url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+  return s.length > max ? `${s.slice(0, max - 1)}…` : s;
+}

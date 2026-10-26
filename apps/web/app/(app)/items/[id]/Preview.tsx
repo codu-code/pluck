@@ -1,6 +1,6 @@
 "use client";
 
-import { isCardPreview, withReferral, type Item } from "@pluck/shared-schemas";
+import { isCardPreview, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,7 +21,11 @@ export function PreviewCard({ item, text }: { item: Item; text: string }) {
   return (
     <>
       {player ? <Player facts={item.facts} title={item.title} site={site} cover={cover} /> : cover && <img className={item.preview === "post" ? styles.postImage : styles.cover} src={cover} alt="" />}
-      {text && <p className={styles.said}>{text}</p>}
+      {text && (
+        <p className={styles.said}>
+          {textRuns(text).map((r, i) => (r.href ? <a key={i} href={withReferral(r.href)} target="_blank" rel="noopener">{r.text}</a> : r.text))}
+        </p>
+      )}
       <OpenOriginal item={item} />
     </>
   );

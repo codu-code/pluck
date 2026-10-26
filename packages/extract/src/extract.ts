@@ -183,11 +183,13 @@ function fromAddressOnly(url: string): Extracted {
 function merge(x: Extracted, f: Found | null, sent = false): Extracted {
   const out = { ...x, title: isGenericTitle(x.title) ? null : withoutPrefix(x.title), coverUrl: isGenericImage(x.coverUrl) ? null : x.coverUrl };
   if (!f) return out;
-  for (const k of ["title", "author", "siteName", "excerpt", "coverUrl"] as const) if (f[k] && !(sent && out[k])) out[k] = f[k];
+  // What the browser sent wins, except for a post: the site's API has the post itself, the page around it is the site.
+  const page = sent && (f.preview ?? out.preview) !== "post";
+  for (const k of ["title", "author", "siteName", "excerpt", "coverUrl"] as const) if (f[k] && !(page && out[k])) out[k] = f[k];
   if (f.preview) out.preview = f.preview;
   if (f.kind) out.kind = f.kind;
   out.facts = { ...x.facts, ...f.facts };
-  if (f.markdown && !(sent && x.wordCount)) {
+  if (f.markdown && !(page && x.wordCount)) {
     out.markdown = f.markdown;
     out.wordCount = countWords(f.markdown);
     out.extractor = "meta";

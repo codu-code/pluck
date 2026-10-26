@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { normalizeUrl, withReferral } from "./urls.ts";
+import { normalizeUrl, textRuns, withReferral } from "./urls.ts";
 
 test.each([
   ["https://Example.com/a?utm_source=x&b=2&a=1#top", "https://example.com/a?a=1&b=2"],
@@ -34,4 +34,16 @@ describe("withReferral", () => {
       "not a url",
     ]) expect(withReferral(url)).toBe(url);
   });
+});
+
+test("a post's words as text and links", () => {
+  expect(textRuns("Read [getpluck.io/blog](https://getpluck.io/blog) and https://www.example.com/a/b.")).toEqual([
+    { text: "Read " },
+    { text: "getpluck.io/blog", href: "https://getpluck.io/blog" },
+    { text: " and " },
+    { text: "example.com/a/b", href: "https://www.example.com/a/b" },
+    { text: "." },
+  ]);
+  expect(textRuns("No links here")).toEqual([{ text: "No links here" }]);
+  expect(textRuns("[https://t.co/abc](https://t.co/abc)")).toEqual([{ text: "t.co/abc", href: "https://t.co/abc" }]);
 });

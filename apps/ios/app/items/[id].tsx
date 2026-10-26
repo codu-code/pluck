@@ -1,5 +1,5 @@
 import { Unreachable } from "@pluck/client";
-import { isCardPreview, isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
+import { isCardPreview, isTextKind, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
@@ -174,7 +174,13 @@ function Reader({ data }: { data: FullItem }) {
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail, maxHeight: 520 }]} resizeMode="cover" accessibilityIgnoresInvertColors
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.6, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
         )}
-        {card && text ? <Text selectable style={[font.reader, styles.body, { color: t.ink }]}>{text}</Text> : null}
+        {card && text ? (
+          <Text selectable style={[font.reader, styles.body, { color: t.ink }]}>
+            {textRuns(text).map((r, i) => r.href
+              ? <Text key={i} accessibilityRole="link" onPress={() => void WebBrowser.openBrowserAsync(withReferral(r.href!))} style={{ color: t.actionInk, textDecorationLine: "underline" }}>{r.text}</Text>
+              : r.text)}
+          </Text>
+        ) : null}
         {item.url && item.extraction.state === "done" && (card || item.preview === "code" || item.preview === "document") && (
           <View style={styles.ways}>
             {/* The site's own app when it has one (a universal link), else Safari. */}
