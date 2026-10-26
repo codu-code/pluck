@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "接続しました",
     "lede": "これでブラウザからPluckできます。このタブは閉じてかまいません。これからは、どのページもボタンひとつでPluckできます。",
-    "page": "開いているページをPluckします。MacではAltはOptionです。",
+    "page": "開いているページをPluckします。",
     "selection": "選択した部分をハイライトとしてPluckします。"
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "拡張機能を追加",
-      "body": "どのページでも、ワンクリックかAlt+Shift+Pで。",
+      "body": "どのページでも、ワンクリックか{keys}で。",
       "chrome": "Chrome"
     },
     "three": {

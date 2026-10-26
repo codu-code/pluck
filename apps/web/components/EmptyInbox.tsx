@@ -1,10 +1,16 @@
+"use client";
+
 import { useTranslations } from "next-intl";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
+import { isMacAgent, shortcutText } from "@/lib/shortcut";
 import styles from "./EmptyInbox.module.css";
 
 // The Empty board's three ways to start.
 export function EmptyInbox() {
   const t = useTranslations("app.emptyInbox");
+  // Alt+Shift+P in the server render, ⌥⇧P once a Mac's browser takes over.
+  const mac = useSyncExternalStore(() => () => {}, () => isMacAgent(navigator.userAgent), () => false);
   return (
     <div className={styles.empty}>
       <div className={styles.head}>
@@ -23,7 +29,7 @@ export function EmptyInbox() {
           <span className={styles.num}>2</span>
           <span className={styles.text}>
             <b>{t("two.title")}</b>
-            <span>{t("two.body")}</span>
+            <span>{t("two.body", { keys: shortcutText(mac, "P") })}</span>
           </span>
           <span className={styles.actions}>
             <Link href="/connect#extension" className={styles.action}>{t("two.chrome")}</Link>

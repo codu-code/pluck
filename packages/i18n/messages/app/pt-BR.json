@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Conectado",
     "lede": "Agora você pode colher pelo navegador. Feche esta aba; daqui para a frente, qualquer página está a um atalho de distância.",
-    "page": "Colhe a página em que você está. No Mac, Alt é Option.",
+    "page": "Colhe a página em que você está.",
     "selection": "Colhe o que você selecionou, guardado como destaque."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Instale a extensão",
-      "body": "Um clique, ou Alt+Shift+P, em qualquer página.",
+      "body": "Um clique, ou {keys}, em qualquer página.",
       "chrome": "Chrome"
     },
     "three": {

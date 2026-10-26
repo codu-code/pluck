@@ -366,7 +366,7 @@
   "extensionConnected": {
     "title": "Connecté",
     "lede": "Vous pouvez désormais cueillir depuis votre navigateur. Fermez cet onglet ; à partir de maintenant, une touche suffit pour cueillir n’importe quelle page.",
-    "page": "Cueille la page que vous lisez. Alt correspond à Option sur Mac.",
+    "page": "Cueille la page que vous lisez.",
     "selection": "Cueille ce que vous avez sélectionné, gardé comme surlignage."
   },
   "shell": {
@@ -402,7 +402,7 @@
     },
     "two": {
       "title": "Ajoutez l’extension",
-      "body": "Un clic, ou Alt+Shift+P, sur n’importe quelle page.",
+      "body": "Un clic, ou {keys}, sur n’importe quelle page.",
       "chrome": "Chrome"
     },
     "three": {

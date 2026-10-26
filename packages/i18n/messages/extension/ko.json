@@ -58,7 +58,7 @@
       "delete": "삭제",
       "tips": {
         "opening": "이 창을 여는 것만으로 페이지가 담겨요. 그게 전부예요.",
-        "shortcut": "Alt+Shift+P를 누르면 클릭 없이 담겨요.",
+        "shortcut": "{keys}를 누르면 클릭 없이 담겨요.",
         "rightClick": "링크나 이미지를 오른쪽 클릭하면 그것만 담을 수 있어요."
       },
       "tags": "태그",
@@ -90,7 +90,7 @@
   },
   "options": {
     "title": "Pluck 옵션",
-    "shortcut": "단축키: Alt+Shift+P · 브라우저의 단축키 페이지에서 바꿀 수 있어요",
+    "shortcut": "단축키: {keys} · 브라우저의 단축키 페이지에서 바꿀 수 있어요",
     "server": "서버",
     "defaultKind": "기본 종류",
     "guess": "페이지를 보고 추측",

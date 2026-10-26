@@ -5,6 +5,7 @@ import { useFormatter, useTranslations } from "use-intl";
 import { api, openInPluck, Refused, Unreachable } from "@/lib/api";
 import { startSignIn } from "@/lib/auth";
 import { markTab, pluckTab, type PluckOutcome } from "@/lib/pluck";
+import { pageShortcut } from "@/lib/shortcut";
 import { get, set } from "@/lib/store";
 
 type Tab = { id?: number; url?: string; title?: string; windowId?: number };
@@ -179,8 +180,10 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
   const [listId, setListId] = useState("");
   const [tabCount, setTabCount] = useState(0);
   const [footer, setFooter] = useState<string | null>(null);
+  const [keys, setKeys] = useState("");
 
   useEffect(() => {
+    pageShortcut().then(setKeys);
     api<{ tags: Tag[] }>("/api/v1/tags").then((r) => setTags(r.tags)).catch(() => {});
     api<{ lists: List[] }>("/api/v1/lists").then((r) => setLists(r.lists)).catch(() => {});
     get("lastListId").then(setLastListId);
@@ -262,7 +265,7 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
       {tips ? (
         <div className="tips">
           <span>{t("popup.plucked.tips.opening")}</span>
-          <span>{t("popup.plucked.tips.shortcut")}</span>
+          {keys && <span>{t("popup.plucked.tips.shortcut", { keys })}</span>}
           <span>{t("popup.plucked.tips.rightClick")}</span>
         </div>
       ) : (
