@@ -1,5 +1,7 @@
 # @getpluck/mcp
 
+[npm](https://www.npmjs.com/package/@getpluck/mcp)
+
 Your [Pluck](https://getpluck.io) library in any MCP client that speaks stdio, with an API key. Clients that connect to
 a remote server (Claude, ChatGPT, Cursor) can use `https://getpluck.io/mcp` directly and need none of this.
 

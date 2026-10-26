@@ -13,7 +13,7 @@ Hosted at [getpluck.io](https://getpluck.io), or run your own with `docker compo
   - `packages/db`: the only code that touches MongoDB. Every query is scoped to one person.
   - `packages/extract`: reading pages, PDFs, email and imports.
   - `packages/blob`: S3 (MinIO locally).
-  - `packages/mcp`: the connector's tools, resources and prompts. `packages/mcp-stdio` is `npx @getpluck/mcp`.
+  - `packages/mcp`: the connector's tools, resources and prompts. `packages/mcp-stdio` is `npx @getpluck/mcp` ([npm](https://www.npmjs.com/package/@getpluck/mcp)).
   - `packages/shared-schemas`: every type, as a Zod schema, shared by server and clients.
   - `packages/client`: the API client, offline queue and PKCE shared by the iPhone app and the extension.
   - `packages/i18n`: the words in ten languages (English, Spanish, Portuguese (Brazil), French, German, Japanese, Italian, Dutch, Korean, Chinese (Simplified)).
