@@ -33,6 +33,7 @@ export const Facts = z
     pdfUrl: z.string().url().max(4096).optional(), // a Document's file, when the link is its landing page
     app: z.string().max(40).optional(), // what made an App: "claude", "chatgpt", "figma", "google-docs"…
     postedAt: z.string().optional(),
+    article: z.boolean().optional(), // an X Article: Pluck has its summary, the whole of it is on X
   })
   .strict();
 export type Facts = z.infer<typeof Facts>;

@@ -1002,6 +1002,7 @@
   "preview": {
     "open": "Openen op {site}",
     "openPdf": "Open de pdf",
+    "openArticle": "Lees het hele artikel op X",
     "playA11y": "{title} afspelen",
     "playNote": "Speelt af vanaf {site}. Daarvandaan laadt niets tot je op afspelen drukt.",
     "asArticle": "Toon als artikel",

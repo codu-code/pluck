@@ -16,7 +16,6 @@ export type Found = {
   preview?: Preview;
   kind?: "link" | "video";
   facts?: Facts;
-  article?: boolean; // an X Article: what is here is its summary, and the whole of it is only on the signed-in page
 };
 
 type Source = {
@@ -139,7 +138,7 @@ function fromSyndication(p: Syndicated): Found {
   if (p.article?.title) {
     // An X Article: its title and summary are what can be read without signing in.
     const summary = clean(p.article.preview_text);
-    return { ...base, article: true, title: clean(p.article.title), ...(summary ? { markdown: joined(xText(p), p.article.preview_text), excerpt: summary.slice(0, 400) } : {}) };
+    return { ...base, facts: { ...base.facts, article: true }, title: clean(p.article.title), ...(summary ? { markdown: joined(xText(p), p.article.preview_text), excerpt: summary.slice(0, 400) } : {}) };
   }
   const found = postOf(joined(xText(p), card, quoted), base);
   return { ...found, title: found.title ?? clean(v.title?.string_value) };

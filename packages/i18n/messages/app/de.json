@@ -1002,6 +1002,7 @@
   "preview": {
     "open": "Auf {site} öffnen",
     "openPdf": "PDF öffnen",
+    "openArticle": "Den ganzen Artikel auf X lesen",
     "playA11y": "{title} abspielen",
     "playNote": "Spielt von {site}. Von dort lädt nichts, bevor du auf Abspielen drückst.",
     "asArticle": "Als Artikel zeigen",

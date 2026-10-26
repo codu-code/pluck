@@ -560,6 +560,7 @@
   "preview": {
     "open": "在 {site} 打开",
     "openPdf": "打开 PDF",
+    "openArticle": "在 X 上阅读全文",
     "playA11y": "播放{title}",
     "playNote": "轻点播放后从 {site} 播放。",
     "asArticle": "以文章显示",

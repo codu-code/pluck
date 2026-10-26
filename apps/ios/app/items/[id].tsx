@@ -185,7 +185,7 @@ function Reader({ data }: { data: FullItem }) {
           <View style={styles.ways}>
             {/* The site's own app when it has one (a universal link), else Safari. */}
             <Pressable accessibilityRole="button" onPress={() => void Linking.openURL(withReferral(item.url!))} style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: pressed ? 0.85 : 1 }]}>
-              <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{tr("preview.open", { site })}</Text>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{item.facts.article ? tr("preview.openArticle") : tr("preview.open", { site })}</Text>
             </Pressable>
             {item.facts.pdfUrl && (
               <Pressable accessibilityRole="button" onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.facts.pdfUrl!))} style={[styles.quietButton, { borderColor: t.lineStrong }]}>
