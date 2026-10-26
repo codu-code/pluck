@@ -57,10 +57,11 @@ describe("sources", () => {
     expect(x.wordCount).toBeGreaterThan(150);
     expect(x.markdown).toContain("Paragraph 12 of the Article");
     expect(x.raw).not.toBeNull(); // the page is kept, as for any article
+    expect(x.facts.article).toBeUndefined(); // nothing more to read on X
 
     // A page with no more than the summary (signed out, or the post page without the Article) stays the card.
     const thin = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136", html: "<html><head><title>X</title></head><body><main>Sign in to X</main></body></html>" });
-    expect(thin).toMatchObject({ preview: "post", title: "How the Claude Code team does code review" });
+    expect(thin).toMatchObject({ preview: "post", title: "How the Claude Code team does code review", facts: { article: true } });
   });
 
   test("a post on X: its first line is the title, its links go where they go, the link it shares is kept", async () => {

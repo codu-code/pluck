@@ -31,14 +31,14 @@ export function PreviewCard({ item, text }: { item: Item; text: string }) {
   );
 }
 
-// "Open on github.com", and for a paper's landing page, its PDF too.
+// "Open on github.com", and for a paper's landing page, its PDF too. An X Article we hold only the summary of says so.
 export function OpenOriginal({ item }: { item: Item }) {
   const t = useTranslations("app.preview");
   const f = useFormat();
   if (!item.url) return null;
   return (
     <div className={styles.ways}>
-      <a className={styles.primary} href={withReferral(item.url)} target="_blank" rel="noopener">{t("open", { site: f.site(item) })}</a>
+      <a className={styles.primary} href={withReferral(item.url)} target="_blank" rel="noopener">{item.facts.article ? t("openArticle") : t("open", { site: f.site(item) })}</a>
       {item.facts.pdfUrl && <a className={styles.secondary} href={withReferral(item.facts.pdfUrl)} target="_blank" rel="noopener">{t("openPdf")}</a>}
     </div>
   );

@@ -1002,6 +1002,7 @@
   "preview": {
     "open": "在 {site} 打开",
     "openPdf": "打开 PDF",
+    "openArticle": "在 X 上阅读全文",
     "playA11y": "播放{title}",
     "playNote": "从 {site} 播放。按下播放之前，不会从那里加载任何内容。",
     "asArticle": "以文章显示",

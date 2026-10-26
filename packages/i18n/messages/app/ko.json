@@ -1002,6 +1002,7 @@
   "preview": {
     "open": "{site}에서 열기",
     "openPdf": "PDF 열기",
+    "openArticle": "X에서 글 전체 읽기",
     "playA11y": "{title} 재생",
     "playNote": "{site}에서 재생해요. 재생을 누르기 전까지 그곳에서 아무것도 불러오지 않아요.",
     "asArticle": "글로 보기",

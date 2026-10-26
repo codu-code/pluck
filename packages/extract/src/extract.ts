@@ -212,10 +212,10 @@ export async function extract({ url, html }: ExtractInput, { signal, asArticle }
   const f = await found;
   // An X Article plucked from the person's signed-in browser: that page has the whole Article, pictures and all, where
   // X's JSON has only its summary. Read it as an article when it really has more.
-  if (f?.article && html) {
+  if (f?.facts?.article && html) {
     const whole = await extractFromHtml(html, url, { asArticle: true }).catch(() => null);
     if (whole && whole.wordCount >= Math.max(150, countWords(f.markdown ?? "") * 2))
-      return { ...whole, kind: "link", preview: "reader", siteName: "X", title: f.title ?? whole.title, author: f.author ?? whole.author, coverUrl: f.coverUrl ?? whole.coverUrl, facts: { ...whole.facts, ...f.facts } };
+      return { ...whole, kind: "link", preview: "reader", siteName: "X", title: f.title ?? whole.title, author: f.author ?? whole.author, coverUrl: f.coverUrl ?? whole.coverUrl, facts: { ...whole.facts, ...(f.facts.handle ? { handle: f.facts.handle } : {}) } }; // the whole Article is here now
   }
   return merge(page ?? fromAddressOnly(url), f, Boolean(html && page));
 }

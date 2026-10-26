@@ -560,6 +560,7 @@
   "preview": {
     "open": "{site}에서 열기",
     "openPdf": "PDF 열기",
+    "openArticle": "X에서 글 전체 읽기",
     "playA11y": "{title} 재생",
     "playNote": "재생을 탭하면 {site}에서 재생해요.",
     "asArticle": "글로 보기",

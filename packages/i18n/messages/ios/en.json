@@ -560,6 +560,7 @@
   "preview": {
     "open": "Open on {site}",
     "openPdf": "Open the PDF",
+    "openArticle": "Read the whole Article on X",
     "playA11y": "Play {title}",
     "playNote": "Plays from {site} when you tap play.",
     "asArticle": "Show as article",

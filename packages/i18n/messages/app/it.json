@@ -1002,6 +1002,7 @@
   "preview": {
     "open": "Apri su {site}",
     "openPdf": "Apri il PDF",
+    "openArticle": "Leggi l’articolo completo su X",
     "playA11y": "Riproduci {title}",
     "playNote": "Si riproduce da {site}. Da lì non si carica nulla finché non premi play.",
     "asArticle": "Mostra come articolo",

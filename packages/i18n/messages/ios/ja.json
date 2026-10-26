@@ -560,6 +560,7 @@
   "preview": {
     "open": "{site}で開く",
     "openPdf": "PDFを開く",
+    "openArticle": "記事の全文を X で読む",
     "playA11y": "{title}を再生",
     "playNote": "再生をタップすると{site}から再生します。",
     "asArticle": "記事として表示",
