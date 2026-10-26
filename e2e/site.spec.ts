@@ -142,12 +142,35 @@ test("blog: the footer leads to the posts, and each one says what it is to searc
   expect(await (await request.get("/llms.txt")).text()).toContain("/blog/nothing-is-deleted");
 });
 
-test("languages: the browser's language is used, and the footer picker sticks", async ({ browser }) => {
+test("languages: each has its own URL; the browser's language leads there, and the footer picker sticks", async ({ browser }) => {
   const page = await (await browser.newContext({ locale: "de-DE" })).newPage();
   await page.goto("/");
+  await expect(page).toHaveURL(/\/de$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
   await page.locator("footer select").selectOption("ja"); // its label is in German here
+  await expect(page).toHaveURL(/\/ja$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
   await page.goto("/connect");
-  await expect(page.locator("html")).toHaveAttribute("lang", "ja"); // the pick outlives the page
+  await expect(page).toHaveURL(/\/ja\/connect$/); // the pick outlives the page
+  await page.locator("footer select").selectOption("en");
+  await expect(page).toHaveURL(/\/connect$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en-GB");
+});
+
+test("languages: a page in another language says so to search engines, and its links stay in it", async ({ page, request }) => {
+  await page.goto("/de/blog/pocket-is-gone");
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/de\/blog\/pocket-is-gone$/);
+  await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(11); // ten languages and the default
+  await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", /\/blog\/pocket-is-gone$/);
+  const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+  expect(ld).toMatchObject({ inLanguage: "de", url: expect.stringMatching(/\/de\/blog\/pocket-is-gone$/) });
+  await expect(page.getByRole("main").locator('a[href="/de/open-source"]').first()).toBeVisible(); // a link inside the post
+  await page.getByRole("contentinfo").getByRole("link", { name: "Blog" }).click();
+  await expect(page).toHaveURL(/\/de\/blog$/);
+
+  const sitemap = await (await request.get("/sitemap.xml")).text();
+  expect(sitemap).toContain("/zh-hans/blog/pocket-is-gone");
+  expect(sitemap).toContain('hreflang="ja"');
+  expect((await request.get("/en/connect", { maxRedirects: 0 })).headers().location).toBe("/connect");
 });

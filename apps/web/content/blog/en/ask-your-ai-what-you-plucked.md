@@ -1,3 +1,9 @@
+---
+title: Ask your AI what you plucked.
+description: One link puts your whole library in Claude, ChatGPT, Cursor or any AI tool that speaks MCP. Thirty seconds, and it never deletes.
+keywords: read it later MCP, MCP server for articles, connect Claude to reading list, ChatGPT reading list, Claude connector
+---
+
 In March you plucked a recipe for slow-roast tomato orzo, the 30-minute one. You know you did, but you can't find it.
 
 Your AI can. Give it one link and it reads your whole Pluck library: the titles, your notes, your tags, your lists and the text of every page Pluck kept.

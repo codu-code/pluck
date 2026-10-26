@@ -597,7 +597,6 @@
     "lede": "搬来你的资料库、留住页面、让你的 AI 干活。和这里的一切一样，简短。",
     "all": "全部文章",
     "minutes": "阅读约 {minutes, number} 分钟",
-    "englishOnly": "本文为英文。",
     "box": {
       "title": "先摘下。",
       "body": "免费且开源。用邮件里的链接<link>开始使用 Pluck</link>，或自己托管。"

@@ -1,10 +1,12 @@
-import { POSTS } from "@/lib/blog";
+import { LOCALE_NAMES, LOCALES } from "@pluck/i18n";
+import { postsIn } from "@/lib/blog";
+import { localePath } from "@/lib/siteUrls";
 import { CONNECTOR_URL, LICENCE, REPO_URL } from "@/lib/site";
 
 const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
 // llms.txt (llmstxt.org): what Pluck is, in plain Markdown, for AI tools that answer questions about it.
-export function GET() {
+export async function GET() {
   const body = `# Pluck
 
 > Pluck is a free, open-source read-it-later app. Pluck a link, a note, a todo, a PDF or an image in one tap from the iPhone share sheet, Chrome, email or your AI tool, and sort it later, by hand or with your AI. Pluck keeps the page, not just the link.
@@ -19,6 +21,7 @@ Key facts:
 - Lists: ordered, with a note and a tick per item. Private by default, public at /@handle/slug with one switch.
 - Imports from Pocket (CSV), Omnivore (export zip), Raindrop (CSV) and any browser's bookmarks HTML. Export everything as JSON and Markdown.
 - Made by Codú Limited, Ireland.
+- The site and the blog are in ${LOCALES.map((l) => `${LOCALE_NAMES[l]} (${base}${localePath(l, "/")})`).join(", ")}.
 
 ## Pages
 
@@ -31,7 +34,7 @@ Key facts:
 
 ## Blog
 
-${POSTS.map((p) => `- [${p.title}](${base}/blog/${p.slug}): ${p.description}`).join("\n")}
+${(await postsIn("en")).map((p) => `- [${p.title}](${base}/blog/${p.slug}): ${p.description}`).join("\n")}
 
 ## Optional
 

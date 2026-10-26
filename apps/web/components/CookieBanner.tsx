@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import Link from "@/components/SiteLink";
 import { useEffect, useState } from "react";
 import { analyticsOn, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
 import styles from "./cookie-banner.module.css";

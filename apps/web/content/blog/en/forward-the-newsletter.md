@@ -1,3 +1,9 @@
+---
+title: Forward the newsletter.
+description: Every Pluck account has its own email address. Forward a newsletter to it and it lands in your Inbox as something to read.
+keywords: read newsletters outside inbox, forward newsletter to read later, newsletter reader app, email to read later
+---
+
 Newsletters are good. Your email is a bad place to read them. They sit between a dentist reminder and a thread you're avoiding, and they're gone by Thursday.
 
 Every Pluck account has its own address. Forward a newsletter to it and it lands in your Inbox as something to read.

@@ -1,6 +1,6 @@
 import { Logo } from "@pluck/ui";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import Link from "@/components/SiteLink";
 import type { ReactNode } from "react";
 import { CookiesLink } from "@/components/CookieBanner";
 import { LanguageSelect } from "@/components/LanguageSelect";
