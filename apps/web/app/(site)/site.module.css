@@ -341,7 +341,8 @@
 .postBody code { font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; }
 .postBody a { text-underline-offset: 2px; }
 .postBody img { display: block; width: 100%; height: auto; aspect-ratio: auto 16 / 9; border-radius: 12px; } /* the blog's images are 1600 × 900; the ratio holds their room while they load */
-.postBody p:has(> img:only-child) { max-width: none; margin: 32px 0; }
+.postBody p:has(> img:only-child) { margin: 32px 0; } /* as wide as the text it sits in */
+@media (max-width: 600px) { .postBody p:has(> img:only-child) { max-width: none; margin-inline: -24px; } .postBody img { border-radius: 0; } } /* phones: edge to edge, past the frame's 24px */
 /* Dev only: where an image will go, with its brief for Claude Design (lib/blog.ts). */
 .postBody :global(.imageTodo) { margin: 32px 0; padding: 20px; border: 1px dashed var(--line-strong); border-radius: 12px; background: var(--rail); font: 14px/22px var(--font-ui); }
 .postBody :global(.imageTodo) figcaption { margin-bottom: 12px; font-weight: 600; }

@@ -21,7 +21,6 @@ const ALL: Post[] = [
     date: "2026-10-26",
     keywords: ["read later backlog", "too many saved articles", "read it later guilt", "auto archive old links", "inbox zero for links"],
     body: nothing,
-    draft: true,
   },
   {
     slug: "forward-the-newsletter",
@@ -30,7 +29,6 @@ const ALL: Post[] = [
     date: "2026-10-26",
     keywords: ["read newsletters outside inbox", "forward newsletter to read later", "newsletter reader app", "email to read later"],
     body: newsletter,
-    draft: true,
   },
   {
     slug: "a-list-is-a-plan",
@@ -39,7 +37,6 @@ const ALL: Post[] = [
     date: "2026-10-26",
     keywords: ["share a reading list", "share a list of links", "curated link list", "public reading list", "trip planning links"],
     body: aList,
-    draft: true,
   },
   {
     slug: "run-your-own-pluck",
@@ -48,7 +45,6 @@ const ALL: Post[] = [
     date: "2026-10-26",
     keywords: ["self-hosted read it later", "self-hosted Pocket alternative", "read it later docker", "self-hosted bookmark manager", "open source read later server"],
     body: selfHost,
-    draft: true,
   },
   {
     slug: "bring-the-rest-across",
@@ -57,7 +53,6 @@ const ALL: Post[] = [
     date: "2026-10-26",
     keywords: ["Raindrop alternative", "Raindrop export", "import Chrome bookmarks", "export Safari bookmarks", "search bookmarks full text"],
     body: rest,
-    draft: true,
   },
   {
     slug: "read-it-later-apps-keep-closing",

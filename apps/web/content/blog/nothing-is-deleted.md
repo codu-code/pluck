@@ -2,12 +2,7 @@ Every app for reading things later ends the same way. Two hundred things in a pi
 
 Pluck lets the pile shrink on its own, and never throws anything away.
 
-```image nothing-is-deleted/hero.png
-alt: Untouched items drifting from the Inbox into the Archive.
-1600 × 900 PNG, the hero for a Pluck blog post about expiry: untouched items move to the Archive and nothing is deleted.
-Ground: Ground Dark #10130F, flat. A column of Pluck Inbox rows in dark mode on the left, from the mixed library. Three rows near the bottom have slid right, one behind the other, into a calm, quieter column labelled Archive by its rail entry. The front row carries the "30 days" pill. At the bottom, the toast "Gone. Well, archived." with Undo. The three sparks from the logo, in Highlight #7FD3AE, pop once off the toast.
-Rules: no gradients, glows, cards inside cards, one-sided accent borders, pure black, cream or emoji. No logo, no device frame, no extra words.
-```
+![Untouched items drifting from the Inbox into the Archive.](/blog/nothing-is-deleted/hero.png)
 
 ## The rule
 

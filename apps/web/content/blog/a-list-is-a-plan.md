@@ -2,12 +2,7 @@ A tag says what something is. A list says what you're going to do with it.
 
 Lisbon in four days. The kitchen, room by room. The talk you're giving in March, in the order you'll give it. That's what lists in Pluck are for.
 
-```image a-list-is-a-plan/hero.png
-alt: A Pluck list for a trip, in order, with a note on each item.
-1600 × 900 PNG, the hero for a Pluck blog post about lists.
-Ground: Brand #1E5C45, flat. Centred: one Pluck list, light mode, on Ground #F6F8F4, drawn at true size: "Lisbon in four days", purpose line "Where to go and in what order. Tram 28 before 9." Nine entries in order with kind glyphs, two ticked, and a short note in Ink 2 under three of them: "Book a week ahead", "Closed Mondays", "The boarding pass, for the train down". Include "Boarding pass, Dublin to Lisbon.pdf". The three sparks from the logo, in Highlight #7FD3AE, pop once off the item being ticked.
-Rules: no gradients, glows, cards inside cards, one-sided accent borders, pure black, cream or emoji. No logo, no device frame, no extra words.
-```
+![A Pluck list for a trip, in order, with a note on each item.](/blog/a-list-is-a-plan/hero.png)
 
 ## Make one
 

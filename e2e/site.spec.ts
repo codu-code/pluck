@@ -137,10 +137,9 @@ test("blog: the footer leads to the posts, and each one says what it is to searc
   await expect(page.getByText("Image for Claude Design")).toHaveCount(0); // briefs for images still to be made show in dev only
   expect((await request.get("/blog/no-such-post")).status()).toBe(404);
   expect(await (await request.get("/sitemap.xml")).text()).toContain("/blog/pocket-is-gone");
-  // drafts show in dev only: no page, no sitemap entry, no llms.txt line
-  expect((await request.get("/blog/nothing-is-deleted")).status()).toBe(404);
-  expect(await (await request.get("/sitemap.xml")).text()).not.toContain("nothing-is-deleted");
-  expect(await (await request.get("/llms.txt")).text()).not.toContain("nothing-is-deleted");
+  await page.goto("/blog");
+  await expect(page.getByRole("main").getByRole("heading", { level: 2 })).toHaveCount(9); // every post, none held back as a draft
+  expect(await (await request.get("/llms.txt")).text()).toContain("/blog/nothing-is-deleted");
 });
 
 test("languages: the browser's language is used, and the footer picker sticks", async ({ browser }) => {
