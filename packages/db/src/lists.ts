@@ -175,7 +175,7 @@ export async function addToList(
     }
   }
   await (await items()).updateMany({ _id: { $in: ordered }, userId: uid }, { $set: { lastTouchedAt: now } });
-  await (await lists()).updateOne({ _id }, { $set: { lastAddedAt: now, lastActivityAt: now, updatedAt: now } });
+  await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastAddedAt: now, lastActivityAt: now, updatedAt: now } });
   await recountList(_id);
   await syncListNames(uid, ordered);
   return added;
@@ -186,7 +186,7 @@ export async function removeFromList(userId: string, listId: string, itemId: str
   const _id = oid(listId);
   const res = await (await listRows()).deleteOne({ listId: _id, userId: uid, itemId: oid(itemId) });
   if (!res.deletedCount) return false;
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
+  await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
   await recountList(_id);
   await syncListNames(uid, [oid(itemId)]);
   return true;
@@ -211,7 +211,7 @@ export async function updateEntry(userId: string, listId: string, itemId: string
   if (!res.matchedCount) return false;
   // A mark is the owner's alone: activity, but not an update anyone else sees ("updated 10 min ago").
   const seen = edit.note !== undefined || edit.position !== undefined;
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), ...(seen ? { updatedAt: new Date() } : {}) } });
+  await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: new Date(), ...(seen ? { updatedAt: new Date() } : {}) } });
   if (edit.ticked !== undefined) {
     await recountList(_id);
     await doneFollowsMark(uid, [oid(itemId)], edit.ticked);
@@ -228,7 +228,7 @@ export async function markEntries(userId: string, listId: string, itemIds: strin
   const ids = itemIds.map(oid);
   const now = new Date();
   const res = await (await listRows()).updateMany({ listId: _id, userId: uid, itemId: { $in: ids } }, { $set: { ticked, tickedAt: ticked ? now : null } });
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: now } });
+  await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: now } });
   await recountList(_id);
   await doneFollowsMark(uid, ids, ticked);
   return res.matchedCount;
@@ -280,8 +280,8 @@ export async function reorderList(userId: string, listId: string, itemIds: strin
   const rows = await col.find({ listId: _id, userId: uid }, { projection: { itemId: 1 } }).toArray();
   const have = new Set(rows.map((r) => r.itemId.toHexString()));
   if (have.size !== itemIds.length || itemIds.some((id) => !have.has(id))) return false;
-  await col.bulkWrite(itemIds.map((id, i) => ({ updateOne: { filter: { listId: _id, itemId: oid(id) }, update: { $set: { position: (i + 1) * GAP } } } })));
-  await (await lists()).updateOne({ _id }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
+  await col.bulkWrite(itemIds.map((id, i) => ({ updateOne: { filter: { listId: _id, userId: uid, itemId: oid(id) }, update: { $set: { position: (i + 1) * GAP } } } })));
+  await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
   return true;
 }
 
@@ -315,7 +315,7 @@ export async function setVisibility(userId: string, listId: string, visibility: 
   }
   const now = new Date();
   const doc = await col.findOneAndUpdate(
-    { _id },
+    { _id, userId: uid },
     { $set: { visibility, updatedAt: now, lastActivityAt: now, ...(visibility === "public" && !list.publishedAt ? { publishedAt: now } : {}) } },
     { returnDocument: "after" },
   );

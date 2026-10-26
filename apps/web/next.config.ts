@@ -22,9 +22,11 @@ const config: NextConfig = {
   skipTrailingSlashRedirect: true, // PostHog's ingest paths end in a slash
   // Dev: .env sets BETTER_AUTH_URL to 127.0.0.1, so the dev server must serve its scripts there too.
   allowedDevOrigins: ["127.0.0.1"],
-  // Sign-in cookies live on BETTER_AUTH_URL's host, so the other name for this machine (localhost for 127.0.0.1, or the
-  // reverse) is sent there instead of signing in and landing signed out.
+  // Dev: sign-in cookies live on BETTER_AUTH_URL's host, so the other name for this machine (localhost for 127.0.0.1, or
+  // the reverse) is sent there instead of signing in and landing signed out. Never in a build: redirects are fixed into
+  // it, and a self-host image built with the placeholder URL would send a proxy's 127.0.0.1 traffic to localhost.
   async redirects() {
+    if (process.env.NODE_ENV !== "development") return [];
     const origin = process.env.BETTER_AUTH_URL;
     const host = origin ? new URL(origin).hostname : "";
     const other = { "127.0.0.1": "localhost", localhost: "127.0.0.1" }[host];

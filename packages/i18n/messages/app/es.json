@@ -285,7 +285,7 @@
     "scopes": {
       "read": "Leer tu biblioteca: elementos, el texto que Pluck conservó, notas, etiquetas y listas",
       "write": "Recoger y organizar: añadir cosas, etiquetar, ordenar, crear y editar listas",
-      "delete": "Eliminar elementos. La mayoría de las herramientas de IA nunca lo necesitan.",
+      "delete": "Eliminar elementos, listas, etiquetas y destacados. La mayoría de las herramientas de IA nunca lo necesitan.",
       "account": "Gestionar tu cuenta: herramientas de IA conectadas, exportaciones y eliminarlo todo. Solo las apps de Pluck piden esto."
     },
     "signedInAs": "Sesión iniciada como {email}. Nunca puede eliminar nada a menos que aparezca arriba, y puedes desconectarla en Ajustes."

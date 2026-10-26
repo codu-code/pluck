@@ -16,7 +16,7 @@ export const PATCH = route<{ id: string }>({ kind: "write" }, async ({ req, call
 });
 
 // The list goes; its items stay in the library.
-export const DELETE = route<{ id: string }>({ kind: "write" }, async ({ caller, params }) => {
+export const DELETE = route<{ id: string }>({ kind: "write", scope: "library:delete" }, async ({ caller, params }) => {
   await removeList(caller.userId, params.id);
   return new Response(null, { status: 204 });
 });

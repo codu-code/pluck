@@ -15,6 +15,10 @@ x-app: &app
     BETTER_AUTH_URL: ${PLUCK_URL:-http://localhost:3000}
     BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
     EMAIL_FROM: ${EMAIL_FROM:-Pluck <pluck@localhost>}
+    DIGEST_FROM: ${DIGEST_FROM:-}
+    EMAIL_REPLY_TO: ${EMAIL_REPLY_TO:-}
+    WELCOME_FROM: ${WELCOME_FROM:-}
+    DIGEST_SECRET: ${DIGEST_SECRET:-}
     # Mailpit (below) catches sign-in links at http://localhost:8025. Point this at your own SMTP server to send real mail.
     SMTP_URL: ${SMTP_URL:-smtp://mailpit:1025}
     AWS_REGION: ${AWS_REGION:-eu-west-1}
@@ -30,6 +34,7 @@ x-app: &app
     POSTHOG_HOST: ${POSTHOG_HOST:-}
     REVIEW_EMAIL: ${REVIEW_EMAIL:-}
     REVIEW_PASSWORD: ${REVIEW_PASSWORD:-}
+    APPLE_TEAM_ID: ${APPLE_TEAM_ID:-}
   depends_on:
     mongo: { condition: service_healthy }
     minio-init: { condition: service_completed_successfully }

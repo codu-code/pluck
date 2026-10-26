@@ -26,11 +26,12 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `apps/web/lib/api.ts` | `route()` and `publicRoute()`: auth, scope, rate limits, body parsing and the error shape for every REST route. Most route files are a few lines. |
 | `apps/web/lib/library/*` | The library: the product rules over `packages/db` (URL normalisation, the hourly pluck budget, the Kind and text rules, unknown tags refused with the nearest ones, kicking extraction). REST routes and the connector both call it. |
 | `apps/web/lib/connector.ts` | Binds `PluckLibrary` (the interface in `packages/mcp/src/library.ts`) to the library for one person, with every write marked as made by AI. |
-| `apps/web/lib/capture.ts`, `jobs.ts`, `schedule.ts`, `worker.ts` | Keeping a page, the job handlers, and the time-based work (expiry, the Monday email, emptying the bin, polling email-in). |
+| `apps/web/lib/capture.ts`, `jobs.ts`, `schedule.ts`; `apps/web/worker.ts` | Keeping a page, the job handlers, and the time-based work (expiry, the Monday email, emptying the bin, polling email-in). `worker.ts` loops over them for self-host; on Vercel the cron route does. |
 | `apps/web/lib/auth.ts`, `signin-code.ts`, `signin-link.ts` | Better Auth: email magic link, the 6-digit code the iPhone app uses, and the OAuth provider for the extension, the iPhone app and AI tools. |
 | `apps/web/lib/email.ts`, `emails.ts`, `digest-email.ts` | `sendEmail` (SMTP to Mailpit locally, SES in production) and the email templates. |
 | `packages/db` | Every collection, index and query (`collections.ts` defines them all). Every query is scoped by `userId`; `public.ts` is the only reader for public Lists. |
-| `packages/mcp` | The connector's tools, resources and prompts. It sees the library only through `PluckLibrary`. `packages/mcp-stdio` is the `npx @pluck/mcp` bridge. |
+| `packages/mcp` | The connector's tools, resources and prompts (package `@pluck/mcp-server`). It sees the library only through `PluckLibrary`. |
+| `packages/mcp-stdio` | The `npx @pluck/mcp` bridge (package `@pluck/mcp`, the one published to npm): stdio to the hosted connector with an API key. |
 | `packages/extract` | Guarded fetch (`fetch.ts`), page and PDF reading (`extract.ts`, Defuddle then Readability), email (`email.ts`) and imports. Its fixtures are served by `pnpm stack` so tests never touch the internet. |
 | `packages/blob` | S3 through the AWS SDK; MinIO locally and for self-hosting. |
 | `packages/shared-schemas` | Every type as a Zod schema, used by the server and every client. |
@@ -61,7 +62,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 - **Web:** an email with a magic link and a code; a Better Auth session cookie. Sessions have the scope "full".
 - **Extension:** OAuth 2.1 with PKCE and dynamic registration, in a normal tab that ends on `/extension/connected`. Tokens and the queue live in `browser.storage.local`. A personal API key (`pk_live_…`) works instead.
 - **iPhone:** the same OAuth request, but the person types a 6-digit code from the email and the server answers with the redirect over HTTPS (`lib/signin-code.ts`), so no URL scheme carries a code. Tokens are one Keychain item, shared with the share extension.
-- **AI tools:** OAuth for the `/mcp` resource, with client ID metadata documents or dynamic registration, and scopes `library:read`, `library:write` and (never asked for by default) `library:delete`. API keys work too.
+- **AI tools:** OAuth for the `/mcp` resource, with client ID metadata documents or dynamic registration, and scopes `library:read`, `library:write` and (never asked for by default) `library:delete`, which deleting an Item, a List, a Tag or a highlight needs. API keys work too, with read and write unless made with delete.
 
 ## Offline
 

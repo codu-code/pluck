@@ -285,7 +285,7 @@
     "scopes": {
       "read": "Je bibliotheek lezen: items, de tekst die Pluck bewaarde, notities, tags en lijsten",
       "write": "Plukken en ordenen: dingen toevoegen, taggen, sorteren, lijsten maken en bewerken",
-      "delete": "Items verwijderen. De meeste AI-tools hebben dit nooit nodig.",
+      "delete": "Items, lijsten, tags en markeringen verwijderen. De meeste AI-tools hebben dit nooit nodig.",
       "account": "Je account beheren: verbonden AI-tools, exports en alles verwijderen. Alleen de eigen apps van Pluck vragen hierom."
     },
     "signedInAs": "Ingelogd als {email}. Hij kan nooit iets verwijderen, tenzij dat hierboven staat, en je kunt hem loskoppelen in Instellingen."

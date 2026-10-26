@@ -285,7 +285,7 @@
     "scopes": {
       "read": "Ler sua biblioteca: itens, o texto que o Pluck guardou, notas, tags e listas",
       "write": "Colher e organizar: adicionar coisas, colocar tags, ordenar, criar e editar listas",
-      "delete": "Apagar itens. A maioria das ferramentas de IA nunca precisa disso.",
+      "delete": "Apagar itens, listas, tags e destaques. A maioria das ferramentas de IA nunca precisa disso.",
       "account": "Gerenciar sua conta: ferramentas de IA conectadas, exportações e apagar tudo. Só os apps do próprio Pluck pedem isso."
     },
     "signedInAs": "Você entrou como {email}. Ela nunca pode apagar nada, a menos que isso esteja na lista acima, e você pode desconectá-la em Configurações."
