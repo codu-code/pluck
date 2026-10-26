@@ -2,12 +2,7 @@ Pocket and Omnivore have their own walkthroughs. This one is for everything else
 
 Both go in the same way. Here's what comes with them, and what doesn't.
 
-```image bring-the-rest-across/hero.png
-alt: A Raindrop CSV and a browser's bookmarks file arriving in one Pluck Archive.
-1600 × 900 PNG, the hero for a Pluck blog post about importing from Raindrop and from a browser.
-Ground: Surface #EDF0EA, flat. Two plain file sheets, top left and bottom left: "raindrop.csv" with a few CSV rows, and "bookmarks.html" with a few lines of the browser's HTML export. From both, rows arrive at the right as one Pluck Archive list, light mode, each item marked Imported, from the mixed library. One item has its Raindrop note showing in Ink 2. The three sparks from the logo, in Accent #34A07C, pop once where the two streams meet.
-Rules: no gradients, glows, cards inside cards, one-sided accent borders, pure black, cream or emoji. No logo, no device frame, no extra words.
-```
+![A Raindrop CSV and a browser's bookmarks file arriving in one Pluck Archive.](/blog/bring-the-rest-across/hero.png)
 
 ## Get the file
 

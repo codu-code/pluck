@@ -2,12 +2,7 @@ Pluck at getpluck.io is free. The same code runs on your own server, and it's on
 
 Here's the whole of it, the awkward parts included.
 
-```image run-your-own-pluck/hero.png
-alt: A terminal starting Pluck, and the same Inbox running at a home server address.
-1600 × 900 PNG, the hero for a Pluck blog post about self-hosting Pluck with Docker.
-Ground: Ground #F6F8F4, flat. Left: a terminal block in Geist Mono, Ink on Surface #EDF0EA, showing "git clone https://github.com/codu-code/pluck", "cd pluck", "docker compose up -d" and four short service lines, each ending "Started": mongo, minio, mailpit, web. Right: the Pluck web app Inbox, light mode, at true size, with the mixed library, at the address "pluck.home.lan". The three sparks from the logo, in Accent #34A07C, pop once between the two.
-Rules: no gradients, glows, cards inside cards, one-sided accent borders, pure black, cream or emoji. No logo, no device frame, no extra words.
-```
+![A terminal starting Pluck, and the same Inbox running at a home server address.](/blog/run-your-own-pluck/hero.png)
 
 ## What you need
 

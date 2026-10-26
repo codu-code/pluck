@@ -2,12 +2,7 @@ Newsletters are good. Your email is a bad place to read them. They sit between a
 
 Every Pluck account has its own address. Forward a newsletter to it and it lands in your Inbox as something to read.
 
-```image forward-the-newsletter/hero.png
-alt: A forwarded newsletter arriving in Pluck as a Read item.
-1600 × 900 PNG, the hero for a Pluck blog post about forwarding newsletters into Pluck by email.
-Ground: Highlight #7FD3AE, flat. Left: a plain email header block, neutral, drawn in Ink on Surface #EDF0EA: To "pluck+3f9a2c7e1b04@in.getpluck.io", Subject "The Sunday long read: why slow travel stuck". No mail app's chrome or logo. Right: the same newsletter as a Pluck Read item row and, beneath it, open in the reader in Source Serif 4, clean of the email's layout. The three sparks from the logo, in Brand #1E5C45, pop once where the email becomes the item.
-Rules: no gradients, glows, cards inside cards, one-sided accent borders, pure black, cream or emoji. No logo, no device frame, no extra words.
-```
+![A forwarded newsletter arriving in Pluck as a Read item.](/blog/forward-the-newsletter/hero.png)
 
 ## Find your address
 
