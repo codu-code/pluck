@@ -1,21 +1,16 @@
-# Pluck — handover to Claude Code
+# Design boards, brand and the original brief
 
-24 October 2026. Everything needed to build v1 of Pluck (getpluck.io), an open-source URL saver with an MCP connector and no AI inside the app.
+How Pluck works now is in [`docs/architecture.md`](../architecture.md). This folder holds what it was designed and built from.
 
-## Read in this order
-
-1. `pluck-technical-spec-v2.md` — the build spec. Architecture, data model, API, auth, MCP server, extension, iOS, infra, conventions, and a numbered build order at the end.
-2. `pluck-product-spec-v2.md` — what it is, the flows, every screen, the voice, the visual rules, the metrics.
-3. `CLAUDE.original.md` — the standing rules as handed over. The live, edited version is the repo-root `CLAUDE.md`.
-4. `CHANGES-since-v1.md` — if you read the v1 docs before, this is what moved.
+- `design/`: the visual source of truth. Copy values from these boards, never round them.
+- `brand/`: tokens, icons and the wordmark.
+- `pluck-technical-spec-v2.md`, `pluck-product-spec-v2.md`: the brief from 24 October 2026, kept as background. Where they and the code disagree, the code is right; `CLAUDE.md` lists the decisions that changed.
 
 ## Design
 
-`design/` holds the canvas as 43 `.dc.html` artboards plus `canvas.json` (the index with each board's title, size and position). Each file is a self-contained HTML page with inline styles, so the exact paddings, sizes, radii and colours are readable in the markup. Treat them as the visual source of truth and copy values from them rather than rounding.
+`design/` holds the canvas as 43 `.dc.html` artboards plus `canvas.json` (the index with each board's title, size and position). Each file is a self-contained HTML page with inline styles, so the exact paddings, sizes, radii and colours are readable in the markup.
 
-Two of the boards are shared components the others import: `Logo.dc.html` and `Icon.dc.html`. Port those first into `packages/ui`.
-
-Board map:
+Two of the boards are shared components the others import: `Logo.dc.html` and `Icon.dc.html`, ported to `packages/ui`.
 
 | File | What it is |
 |---|---|
@@ -34,19 +29,11 @@ Board map:
 | `Claude.dc.html` | The connector in use (two example conversations) |
 | `Email.dc.html` | The Monday digest |
 | `Landing.dc.html`, `SiteClaude.dc.html`, `SiteOpen.dc.html`, `SiteSupport.dc.html`, `SitePrivacy.dc.html`, `SiteTerms.dc.html` | Marketing site: home, connect your AI, open source, support, privacy, terms |
-| `SiteChrome.dc.html`, `SiteIPhone.dc.html` | "Soon." pages while the Chrome Web Store and App Store listings are in review |
-| `Cookies.dc.html` | The cookie banner, for the day an analytics cookie arrives (none is needed today) |
-| `ConnectLoop.dc.html` | The 10-second "connect your AI" loop: live, with timing, frames, spec and where it goes. The same CSS ships as `apps/web/components/ConnectLoop.tsx`; `motion/connect-loop.html` is the standalone page that `scripts/record-loop.mjs` records |
+| `SiteChrome.dc.html`, `SiteIPhone.dc.html` | The "Soon." pages from while the Chrome Web Store and App Store listings were in review |
+| `Cookies.dc.html` | The cookie banner |
+| `ConnectLoop.dc.html` | The 10-second "connect your AI" loop: live, with timing, frames and spec. The same CSS ships as `apps/web/components/ConnectLoop.tsx`; `motion/connect-loop.html` is the standalone page that `scripts/record-loop.mjs` records |
 | `AppStore1.dc.html` to `AppStore5.dc.html` | App Store screenshots at 1320 × 2868 (6.9 inch), built from the iOS boards |
 
 ## Brand
 
-`brand/tokens.json` is the palette, type, layout and the seven kind glyph paths. `brand/*.svg` are the app icon (regenerated with every other icon size by `node scripts/icons.mjs`, from `packages/ui/src/icon.json`) (forest, mint, dark), favicons at 32 and 16, the bare glyph, and the wordmark. The wordmark SVG uses the live Fredoka font; convert to outlines before shipping it anywhere the font is not loaded.
-
-## Placeholders to fill before launch
-
-Legal entity, address, privacy and abuse emails, hosting provider and region, licence, repo URL, takedown response time. They are marked `[LIKE THIS]` in the specs and the site boards.
-
-## The one rule
-
-No model calls on the server. Ever. AI features are MCP prompts in `packages/mcp`. A PR that adds one is declined.
+`brand/tokens.json` is the palette, type, layout and the seven kind glyph paths. `brand/*.svg` are the app icon (forest, mint, dark; regenerated with every other icon size by `node scripts/icons.mjs`, from `packages/ui/src/icon.json`), favicons at 32 and 16, the bare glyph, and the wordmark. The wordmark SVG uses the live Fredoka font; convert to outlines before using it anywhere the font is not loaded.

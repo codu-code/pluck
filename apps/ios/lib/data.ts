@@ -6,7 +6,7 @@ import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
-import { createQueue, Unreachable } from "@pluck/client";
+import { createQueue, Refused, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
 import { api, authHeader, getSession } from "./session";
@@ -184,11 +184,12 @@ async function sync(): Promise<number> {
       let record: SharedRecord | null = null;
       try {
         record = JSON.parse(await f.text()) as SharedRecord;
-        if (record.body) await api("/api/v1/items", { json: record.body });
+        // The file's name is the key: if the upload below fails, sending the body again makes no second Note.
+        if (record.body) await api("/api/v1/items", { json: { ...record.body, clientKey: f.name } });
         if (record.file) await uploadShared(record.file);
         f.delete();
       } catch (e) {
-        if (e instanceof Unreachable) break; // still offline: try next time
+        if (record && !(e instanceof Refused)) break; // offline, signed out, busy or down: keep it for next time
         f.delete(); // refused or unreadable: retrying will not help
         if (record?.file) removeShared(record.file.path);
       }

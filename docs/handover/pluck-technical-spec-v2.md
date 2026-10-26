@@ -1,5 +1,7 @@
 # Pluck — Technical Spec v2
 
+> **The brief Pluck was built from, kept as background.** Where it and the code disagree, the code is right: see `docs/architecture.md` for how Pluck works now and "Decisions that differ from the spec" in `CLAUDE.md`.
+
 24 October 2026. Supersedes v1. Read with the Product and Design Spec v2 and the design canvas.
 
 ## Purpose and scope
