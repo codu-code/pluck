@@ -32,37 +32,37 @@ describe("sources", () => {
   });
 
   test("an X Article is its title and summary, from X's embed JSON, not \"Name (@name) on X\" and a t.co link", async () => {
-    // The shape X returned for a real Article post on 26 October 2026, trimmed.
-    answers.set("https://x.com/addyosmani/status/2114604912520921136", '<html><head><meta property="og:title" content="Addy Osmani (@addyosmani) on X"></head></html>');
-    answers.set("https://cdn.syndication.twimg.com/tweet-result?id=2114604912520921136&", {
-      text: "https://t.co/4Hfk0dYIBI",
-      user: { name: "Addy Osmani", screen_name: "addyosmani" },
-      entities: { urls: [{ url: "https://t.co/4Hfk0dYIBI", expanded_url: "https://x.com/i/article/2114435487905808384", display_url: "x.com/i/article/2114…" }] },
+    // The shape X returns for an Article post (checked 26 October 2026), trimmed; the post itself is made up.
+    answers.set("https://x.com/fern_example/status/1990000000000000123", '<html><head><meta property="og:title" content="Fern Example (@fern_example) on X"></head></html>');
+    answers.set("https://cdn.syndication.twimg.com/tweet-result?id=1990000000000000123&", {
+      text: "https://t.co/pLuCkFiXt0",
+      user: { name: "Fern Example", screen_name: "fern_example" },
+      entities: { urls: [{ url: "https://t.co/pLuCkFiXt0", expanded_url: "https://x.com/i/article/1990000000000000124", display_url: "x.com/i/article/2114…" }] },
       article: {
-        title: "How the Claude Code team does code review ",
-        preview_text: "We previously mentioned that Claude writes about 90 percent of the code for Claude Code. So how do we do code review at this scale?",
-        cover_media: { media_info: { original_img_url: "https://pbs.twimg.com/media/HVgF5M4bIAAvLxh.jpg" } },
+        title: "How our small team reviews code ",
+        preview_text: "We write most of our code with tools now. So how do two people review all of it?",
+        cover_media: { media_info: { original_img_url: "https://pbs.twimg.com/media/fixture-cover.jpg" } },
       },
     });
-    const x = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136" });
-    expect(x).toMatchObject({ preview: "post", siteName: "X", title: "How the Claude Code team does code review", author: "Addy Osmani", coverUrl: "https://pbs.twimg.com/media/HVgF5M4bIAAvLxh.jpg", facts: { handle: "@addyosmani" } });
-    expect(x.markdown).toMatch(/^We previously mentioned/);
+    const x = await extract({ url: "https://x.com/fern_example/status/1990000000000000123" });
+    expect(x).toMatchObject({ preview: "post", siteName: "X", title: "How our small team reviews code", author: "Fern Example", coverUrl: "https://pbs.twimg.com/media/fixture-cover.jpg", facts: { handle: "@fern_example" } });
+    expect(x.markdown).toMatch(/^We write most of our code/);
     expect(x.markdown).not.toContain("t.co");
   });
 
   test("an X Article plucked from a signed-in browser keeps the whole Article, to read here", async () => {
-    const body = Array.from({ length: 12 }, (_, i) => `<p>Paragraph ${i + 1} of the Article, about how review works when Claude writes most of the code and people read what matters.</p>`).join("");
-    const html = `<html><head><title>(2) Addy Osmani on X: "https://t.co/4Hfk0dYIBI" / X</title></head><body><main><article><h1>How the Claude Code team does code review</h1><img src="https://pbs.twimg.com/media/inline.jpg" alt="A diagram">${body}</article></main></body></html>`;
-    const x = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136", html });
-    expect(x).toMatchObject({ preview: "reader", kind: "link", siteName: "X", title: "How the Claude Code team does code review", author: "Addy Osmani" });
+    const body = Array.from({ length: 12 }, (_, i) => `<p>Paragraph ${i + 1} of the Article, about how review works when tools write most of the code and people read what matters.</p>`).join("");
+    const html = `<html><head><title>(2) Fern Example on X: "https://t.co/pLuCkFiXt0" / X</title></head><body><main><article><h1>How our small team reviews code</h1><img src="https://pbs.twimg.com/media/inline.jpg" alt="A diagram">${body}</article></main></body></html>`;
+    const x = await extract({ url: "https://x.com/fern_example/status/1990000000000000123", html });
+    expect(x).toMatchObject({ preview: "reader", kind: "link", siteName: "X", title: "How our small team reviews code", author: "Fern Example" });
     expect(x.wordCount).toBeGreaterThan(150);
     expect(x.markdown).toContain("Paragraph 12 of the Article");
     expect(x.raw).not.toBeNull(); // the page is kept, as for any article
     expect(x.facts.article).toBeUndefined(); // nothing more to read on X
 
     // A page with no more than the summary (signed out, or the post page without the Article) stays the card.
-    const thin = await extract({ url: "https://x.com/addyosmani/status/2114604912520921136", html: "<html><head><title>X</title></head><body><main>Sign in to X</main></body></html>" });
-    expect(thin).toMatchObject({ preview: "post", title: "How the Claude Code team does code review", facts: { article: true } });
+    const thin = await extract({ url: "https://x.com/fern_example/status/1990000000000000123", html: "<html><head><title>X</title></head><body><main>Sign in to X</main></body></html>" });
+    expect(thin).toMatchObject({ preview: "post", title: "How our small team reviews code", facts: { article: true } });
   });
 
   test("a post on X: its first line is the title, its links go where they go, the link it shares is kept", async () => {
@@ -96,7 +96,7 @@ describe("sources", () => {
     const long = titleFromText("One sentence that keeps going well past the point where a title on a phone would still fit on two lines of text");
     expect(long!.length).toBeLessThanOrEqual(91);
     expect(long).toMatch(/\w…$/);
-    expect(titleFromText("https://t.co/4Hfk0dYIBI")).toBeNull();
+    expect(titleFromText("https://t.co/pLuCkFiXt0")).toBeNull();
   });
 
   test("YouTube's empty page title from the browser gives way to its oEmbed", async () => {

@@ -44,6 +44,7 @@ export type ItemDoc = {
   searchText?: string; // excerpt, site, host, author
   searchBody?: string; // the kept text or the note body, capped
   deletedAt: Date | null; // in the bin; purged 30 days later
+  purging?: true; // claimed by a purge (purgeDocs in items.ts): its files and rows are going, and it cannot come back
 };
 
 export type TagDoc = {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { ItemList } from "@/components/ItemList";
-import { requireUser } from "@/lib/auth";
+import { ORIGIN, requireUser } from "@/lib/auth";
 import { browse, count, me, tagsOf } from "@/lib/library";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,7 +18,7 @@ export default async function Inbox({ searchParams }: { searchParams: Promise<{ 
   const [tags, profile, expiringThisWeek] = await Promise.all([tagsOf(user.id), me(user.id), Promise.resolve(0)]);
   return (
     <ItemList view="inbox" initial={page} total={total} tags={tags} deletedId={deleted}
-      expiry={{ days: profile.settings.expiryDays, scope: profile.settings.expiryScope }} expiringThisWeek={expiringThisWeek}
+      expiry={{ days: profile.settings.expiryDays, scope: profile.settings.expiryScope }} expiringThisWeek={expiringThisWeek} sample={`${ORIGIN}/sample`}
     />
   );
 }

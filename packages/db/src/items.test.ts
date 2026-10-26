@@ -157,3 +157,39 @@ test("Delete forever takes only the person's own Item, only from the bin, files 
   expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(0);
   expect(await restoreFromBin(a, item.id)).toBeNull(); // nothing left to put back
 });
+
+test("a purge claims its Items first: a Restore or re-pluck while it runs never revives one whose text is going", async () => {
+  const { a, b } = await twoUsers();
+  const url = "https://example.test/mid-purge";
+  const { item } = await pluckLink(a, { url, source: "web" });
+  await applyExtraction(a, item.id, extraction);
+  const theirs = (await pluckLink(b, { url, source: "web" })).item;
+  await applyExtraction(b, theirs.id, extraction);
+  await moveToBin(a, item.id);
+  await moveToBin(b, theirs.id);
+  let fresh: Awaited<ReturnType<typeof pluckLink>> | undefined;
+  // Restore and re-pluck land while the files are being removed, after the claim.
+  expect(await purgeFromBin(a, item.id, async () => {
+    expect(await restoreFromBin(a, item.id)).toBeNull();
+    fresh = await pluckLink(a, { url, source: "web" });
+  })).toBe(true);
+  expect(fresh?.created).toBe(true);
+  expect(fresh?.item.id).not.toBe(item.id);
+  await applyExtraction(a, fresh!.item.id, extraction);
+  expect(await getContent(a, fresh!.item.id)).not.toBeNull();
+  expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(0);
+  expect((await findByUrl(a, url))?.id).toBe(fresh!.item.id);
+  // B's Item at the same address is B's alone: still in their bin with its text, and theirs to restore.
+  expect((await restoreFromBin(b, theirs.id))?.id).toBe(theirs.id);
+  expect(await getContent(b, theirs.id)).not.toBeNull();
+});
+
+test("a purge whose files fail keeps its claim: the Item cannot be restored, and the next try finishes it", async () => {
+  const { a } = await twoUsers();
+  const { item } = await pluckLink(a, { url: "https://example.test/purge-retry", source: "web" });
+  await moveToBin(a, item.id);
+  await expect(purgeFromBin(a, item.id, async () => { throw new Error("S3 down"); })).rejects.toThrow("S3 down");
+  expect(await restoreFromBin(a, item.id)).toBeNull();
+  expect(await purgeFromBin(a, item.id)).toBe(true);
+  expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(0);
+});
