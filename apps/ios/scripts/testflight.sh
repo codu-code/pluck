@@ -2,11 +2,12 @@
 # Builds the iPhone app for the App Store and uploads it to App Store Connect, where it shows under TestFlight
 # once processed. Signing and the upload use an App Store Connect API key, so Xcode needs no account sign-in.
 #
-# Needs: APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_PATH (the .p8 file). docs/ios.md, TestFlight.
-# Raise ios.buildNumber in app.config.ts first: every upload needs a new one.
+# Needs: APPLE_TEAM_ID, ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_PATH (the .p8 file) and ASC_APP_ID. docs/ios.md, TestFlight.
+# The version is `version` in app.config.ts, raised only for a release. The build number is not in the repo: it is
+# one more than App Store Connect's highest, asked for here, so every upload has a new one.
 # Usage: apps/ios/scripts/testflight.sh
 set -euo pipefail
-: "${APPLE_TEAM_ID:?set APPLE_TEAM_ID}" "${ASC_KEY_ID:?set ASC_KEY_ID}" "${ASC_ISSUER_ID:?set ASC_ISSUER_ID}" "${ASC_KEY_PATH:?set ASC_KEY_PATH}"
+: "${APPLE_TEAM_ID:?set APPLE_TEAM_ID}" "${ASC_KEY_ID:?set ASC_KEY_ID}" "${ASC_ISSUER_ID:?set ASC_ISSUER_ID}" "${ASC_KEY_PATH:?set ASC_KEY_PATH}" "${ASC_APP_ID:?set ASC_APP_ID}"
 [ -r "$ASC_KEY_PATH" ] || { echo "Can't read the key at $ASC_KEY_PATH" >&2; exit 1; }
 cd "$(dirname "$0")/.."
 unset PLUCK_SERVER PLUCK_SHOW_SERVER # store builds point at getpluck.io, with no server picker
@@ -15,6 +16,9 @@ out="${TMPDIR:-/tmp}/pluck-testflight"
 rm -rf "$out" && mkdir -p "$out"
 auth=(-allowProvisioningUpdates -authenticationKeyPath "$ASC_KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
 
+PLUCK_BUILD_NUMBER=$(node scripts/next-build.mjs)
+export PLUCK_BUILD_NUMBER
+echo "Building build $PLUCK_BUILD_NUMBER"
 pnpm exec expo prebuild -p ios --clean
 xcodebuild -workspace ios/Pluck.xcworkspace -scheme Pluck -configuration Release -destination "generic/platform=iOS" \
   -archivePath "$out/Pluck.xcarchive" archive "${auth[@]}"
