@@ -35,6 +35,7 @@
     "done": "Done"
   },
   "popup": {
+    "settings": "Options and sign out",
     "plucking": "Plucking…",
     "signedOut": {
       "lede": "The page you are on, kept in one click. Sign in once, with your email.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Plucked {date} · {status}",
-      "open": "Open in Pluck",
-      "again": "Pluck it again"
+      "open": "Open in Pluck"
     },
     "plucked": {
       "title": "Plucked",

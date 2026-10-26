@@ -35,6 +35,7 @@
     "done": "已完成"
   },
   "popup": {
+    "settings": "选项与退出登录",
     "plucking": "正在摘下…",
     "signedOut": {
       "lede": "当前网页，点一下就留下。用邮箱登录一次即可。",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "{date}摘下 · {status}",
-      "open": "在 Pluck 中打开",
-      "again": "再摘一次"
+      "open": "在 Pluck 中打开"
     },
     "plucked": {
       "title": "已摘下",

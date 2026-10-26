@@ -35,6 +35,7 @@
     "done": "Terminé"
   },
   "popup": {
+    "settings": "Options et déconnexion",
     "plucking": "Cueillette…",
     "signedOut": {
       "lede": "La page que vous lisez, gardée en un clic. Connectez-vous une fois, avec votre e-mail.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Cueilli {date} · {status}",
-      "open": "Ouvrir dans Pluck",
-      "again": "Cueillir à nouveau"
+      "open": "Ouvrir dans Pluck"
     },
     "plucked": {
       "title": "Cueilli",

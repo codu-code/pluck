@@ -35,6 +35,7 @@
     "done": "完了"
   },
   "popup": {
+    "settings": "設定とサインアウト",
     "plucking": "Pluck中…",
     "signedOut": {
       "lede": "開いているページを、ワンクリックで残せます。サインインはメールで一度だけ。",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "{date}にPluck · {status}",
-      "open": "Pluckで開く",
-      "again": "もう一度Pluck"
+      "open": "Pluckで開く"
     },
     "plucked": {
       "title": "Pluckしました",

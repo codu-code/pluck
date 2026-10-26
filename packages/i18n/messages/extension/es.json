@@ -35,6 +35,7 @@
     "done": "Hecho"
   },
   "popup": {
+    "settings": "Opciones y cerrar sesión",
     "plucking": "Recogiendo…",
     "signedOut": {
       "lede": "La página en la que estás, conservada con un clic. Inicia sesión una vez, con tu correo.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Recogido el {date} · {status}",
-      "open": "Abrir en Pluck",
-      "again": "Recogerlo otra vez"
+      "open": "Abrir en Pluck"
     },
     "plucked": {
       "title": "Recogido",

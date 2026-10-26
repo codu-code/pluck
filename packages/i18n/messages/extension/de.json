@@ -35,6 +35,7 @@
     "done": "Erledigt"
   },
   "popup": {
+    "settings": "Optionen und Abmelden",
     "plucking": "Wird gepflückt …",
     "signedOut": {
       "lede": "Die Seite, auf der du bist, mit einem Klick behalten. Melde dich einmal an, mit deiner E-Mail.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Gepflückt {date} · {status}",
-      "open": "In Pluck öffnen",
-      "again": "Erneut pflücken"
+      "open": "In Pluck öffnen"
     },
     "plucked": {
       "title": "Gepflückt",

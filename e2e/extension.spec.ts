@@ -72,15 +72,18 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   expect(lists[0]!.itemCount).toBe(1);
   expect(await sw.evaluate(async (tabId) => chrome.action.getTitle({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("Plucked");
 
-  // Opening it again shows the item instead of plucking a second one; Later moves it.
-  await popup.close();
-  const again = await popupFor(context, sw, extId, `${FIX}/news-1.html`);
-  await expect(again.getByText(/^Plucked .* · Inbox$/)).toBeVisible();
-  await expect(again.getByText("teams", { exact: true })).toBeVisible();
-  await again.getByRole("button", { name: "Pluck it again" }).click();
-  await again.getByRole("button", { name: "Later" }).click();
+  // Later moves it. Opening it again shows the item instead of plucking a second one, and the cog opens the options.
+  await popup.getByRole("button", { name: "Later" }).click();
   await expect.poll(async () => (await itemsOf(page, "later")).length).toBe(1);
   expect(await itemsOf(page)).toHaveLength(0);
+  const again = await popupFor(context, sw, extId, `${FIX}/news-1.html`);
+  await expect(again.getByText(/^Plucked .* · Later$/)).toBeVisible();
+  await expect(again.getByText("teams", { exact: true })).toBeVisible();
+  await expect(again.getByRole("button", { name: "Open in Pluck" })).toBeVisible();
+  await snapshot(again, "extension-already");
+  const [options] = await Promise.all([context.waitForEvent("page"), again.getByRole("button", { name: "Options and sign out" }).click()]);
+  await expect(options).toHaveURL(/options\.html/);
+  expect(await itemsOf(page, "later")).toHaveLength(1);
 });
 
 test("the right-click menu plucks a link, an image and a selection as a highlight", async ({ context, sw, page }) => {

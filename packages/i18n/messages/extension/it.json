@@ -35,6 +35,7 @@
     "done": "Fatto"
   },
   "popup": {
+    "settings": "Opzioni ed esci",
     "plucking": "Lo prendo…",
     "signedOut": {
       "lede": "La pagina in cui sei, conservata con un clic. Accedi una volta, con la tua email.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Preso il {date} · {status}",
-      "open": "Apri in Pluck",
-      "again": "Prendilo di nuovo"
+      "open": "Apri in Pluck"
     },
     "plucked": {
       "title": "Preso",

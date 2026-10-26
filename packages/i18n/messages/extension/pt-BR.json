@@ -35,6 +35,7 @@
     "done": "Concluído"
   },
   "popup": {
+    "settings": "Opções e sair",
     "plucking": "Colhendo…",
     "signedOut": {
       "lede": "A página em que você está, guardada com um clique. Entre uma vez, com seu e-mail.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Colhido em {date} · {status}",
-      "open": "Abrir no Pluck",
-      "again": "Colher de novo"
+      "open": "Abrir no Pluck"
     },
     "plucked": {
       "title": "Colhido",

@@ -35,6 +35,7 @@
     "done": "Klaar"
   },
   "popup": {
+    "settings": "Opties en uitloggen",
     "plucking": "Plukken…",
     "signedOut": {
       "lede": "De pagina waar je op bent, bewaard met één klik. Log één keer in, met je e-mailadres.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "Geplukt {date} · {status}",
-      "open": "Openen in Pluck",
-      "again": "Opnieuw plukken"
+      "open": "Openen in Pluck"
     },
     "plucked": {
       "title": "Geplukt",

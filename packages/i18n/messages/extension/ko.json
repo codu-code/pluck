@@ -35,6 +35,7 @@
     "done": "완료"
   },
   "popup": {
+    "settings": "옵션 및 로그아웃",
     "plucking": "담는 중…",
     "signedOut": {
       "lede": "보고 있는 페이지를 클릭 한 번으로 담아 둬요. 이메일로 한 번만 로그인하세요.",
@@ -48,8 +49,7 @@
     },
     "already": {
       "meta": "{date}에 담음 · {status}",
-      "open": "Pluck에서 열기",
-      "again": "다시 담기"
+      "open": "Pluck에서 열기"
     },
     "plucked": {
       "title": "담았어요",

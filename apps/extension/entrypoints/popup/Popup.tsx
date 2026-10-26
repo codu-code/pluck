@@ -13,7 +13,7 @@ type View =
   | { k: "signedOut" }
   | { k: "nothing" }
   | { k: "message"; text: string }
-  | { k: "already"; item: Item; tab: Tab }
+  | { k: "already"; item: Item }
   | { k: "plucked"; item: Item; created: boolean; tips: boolean }
   | { k: "queued"; count: number };
 
@@ -50,7 +50,7 @@ export function Popup() {
         const { item } = await api<{ item: Item | null }>(`/api/v1/items/lookup?url=${encodeURIComponent(tab.url)}`);
         if (item) {
           if (tab.id !== undefined) await markTab(tab.id, true);
-          return setView({ k: "already", item, tab });
+          return setView({ k: "already", item });
         }
       } catch (e) {
         if (!(e instanceof Unreachable)) return setView({ k: "signedOut" });
@@ -80,7 +80,10 @@ export function Popup() {
     case "nothing":
       return (
         <div className="card">
-          <b className="title">{t("errors.nothing")}</b>
+          <div className="row-6 between">
+            <b className="title">{t("errors.nothing")}</b>
+            <Cog />
+          </div>
           <span className="meta">{t("popup.nothingHint")}</span>
         </div>
       );
@@ -101,13 +104,26 @@ export function Popup() {
         </div>
       );
     case "already":
-      return <Already item={view.item} again={async () => { setView({ k: "loading" }); await show(await pluckTab(view.tab)); }} />;
+      return <Already item={view.item} />;
     case "plucked":
       return <Plucked initial={view.item} created={view.created} tips={view.tips} />;
   }
 }
 
-function Already({ item, again }: { item: Item; again: () => void }) {
+// Options: the account (and Sign out), the server, what a pluck sends.
+function Cog() {
+  const t = useTranslations("extension");
+  return (
+    <button type="button" className="cog" aria-label={t("popup.settings")} title={t("popup.settings")} onClick={() => browser.runtime.openOptionsPage()}>
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    </button>
+  );
+}
+
+function Already({ item }: { item: Item }) {
   const t = useTranslations("extension");
   const format = useFormatter();
   const [tags, setTags] = useState<Tag[]>([]);
@@ -115,13 +131,13 @@ function Already({ item, again }: { item: Item; again: () => void }) {
   const names = item.tagIds.map((id) => tags.find((t) => t.id === id)?.name).filter(Boolean);
   return (
     <div className="card stack-14">
-      <span className="meta">{t("popup.already.meta", { date: format.dateTime(new Date(item.createdAt), DAY_MONTH), status: t(`status.${item.status}`) })}</span>
+      <div className="row-6 between">
+        <span className="meta">{t("popup.already.meta", { date: format.dateTime(new Date(item.createdAt), DAY_MONTH), status: t(`status.${item.status}`) })}</span>
+        <Cog />
+      </div>
       <b className="title">{item.title}</b>
       {names.length > 0 && <div className="row-6">{names.map((n) => <span key={n} className="chip-static">{n}</span>)}</div>}
-      <div className="row-6">
-        <button type="button" className="primary grow" onClick={() => openInPluck(`/items/${item.id}`)}>{t("popup.already.open")}</button>
-        <button type="button" className="secondary grow" onClick={again}>{t("popup.already.again")}</button>
-      </div>
+      <button type="button" className="primary wide" onClick={() => openInPluck(`/items/${item.id}`)}>{t("popup.already.open")}</button>
     </div>
   );
 }
@@ -197,6 +213,7 @@ function Plucked({ initial, created, tips }: { initial: Item; created: boolean; 
             window.close();
           }}>{t("popup.plucked.undo")}</button>
         )}
+        <Cog />
       </div>
       {tips ? (
         <div className="tips">
