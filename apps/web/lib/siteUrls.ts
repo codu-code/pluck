@@ -3,7 +3,9 @@ import { DEFAULT_LOCALE, LOCALES, type Locale } from "@pluck/i18n";
 // The marketing site has one URL per language so search engines can list each: English at the root, the others
 // under a prefix (/de/connect, /pt-br/blog/pocket-is-gone). proxy.ts reads the prefix; the signed-in app keeps one
 // URL and goes by the cookie (i18n/request.ts).
-export const SITE_PAGES = ["/", "/connect", "/open-source", "/iphone", "/chrome", "/support", "/privacy", "/terms", "/blog"];
+export const CHROME_STORE_URL = "https://chromewebstore.google.com/detail/pluck/plcknnahikagnmlliangabeofipkhecc";
+
+export const SITE_PAGES = ["/", "/connect", "/open-source", "/iphone", "/support", "/privacy", "/terms", "/blog"];
 export const isSitePath = (path: string) => SITE_PAGES.includes(path) || /^\/blog\/[a-z0-9-]+$/.test(path);
 const prefix = (l: Locale) => l.toLowerCase();
 

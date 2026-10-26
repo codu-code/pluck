@@ -17,7 +17,7 @@ What to paste into each field of the developer dashboard. The zip is `pnpm --fil
 ```
 Pluck the page you are on. One click keeps it in your Pluck library, with the text as you see it, so you can read it later, find it again, or ask your AI about it.
 
-Click Pluck, or press Alt+Shift+P. "Plucked" appears with the title, and the popup lets you add a tag, change the Kind, put it on a List, write a note, or send it straight to Later or the Archive.
+Click Pluck, or press Alt+Shift+P (⌥⇧P on a Mac). "Plucked" appears with the title, and the popup lets you add a tag, change the Kind, put it on a List, write a note, or send it straight to Later or the Archive.
 
 Right-click a link, an image or the page to pluck it without opening it. Select a sentence and press Alt+Shift+H to keep it as a highlight. Pluck all your tabs into a new List at once.
 
@@ -26,6 +26,8 @@ Pages behind your logins are kept as your browser rendered them. YouTube videos 
 The Pluck icon fills in on pages already in your library, so you can see at a glance what you have plucked.
 
 No connection? Plucks wait on your computer and go when you are back online.
+
+Pluck speaks English, Spanish, Brazilian Portuguese, French, German, Japanese, Italian, Dutch, Korean and Simplified Chinese, and follows your browser's language.
 
 Pluck is open source. Use getpluck.io, or build the extension for a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.
 

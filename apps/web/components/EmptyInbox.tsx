@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { isMacAgent, shortcutText } from "@/lib/shortcut";
+import { CHROME_STORE_URL } from "@/lib/siteUrls";
 import styles from "./EmptyInbox.module.css";
 
 // The Empty board's three ways to start.
@@ -32,7 +33,7 @@ export function EmptyInbox() {
             <span>{t("two.body", { keys: shortcutText(mac, "P") })}</span>
           </span>
           <span className={styles.actions}>
-            <Link href="/connect#extension" className={styles.action}>{t("two.chrome")}</Link>
+            <a href={CHROME_STORE_URL} className={styles.action} target="_blank" rel="noopener">{t("two.chrome")}</a>
           </span>
         </li>
         <li className={styles.step}>
@@ -42,7 +43,7 @@ export function EmptyInbox() {
             <span>{t("three.body")}</span>
           </span>
           <span className={styles.actions}>
-            <Link href="/connect#ios" className={styles.action}>{t("three.ios")}</Link>
+            <Link href="/iphone" className={styles.action}>{t("three.ios")}</Link>
             <Link href="/settings#shortcut" className={styles.action}>{t("three.shortcut")}</Link>
           </span>
         </li>

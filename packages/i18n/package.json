@@ -6,7 +6,7 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
-  "exports": { ".": "./src/index.ts", "./messages/*": "./messages/*" },
+  "exports": { ".": "./src/index.ts", "./extension": "./src/extension.ts", "./messages/*": "./messages/*" },
   "scripts": { "typecheck": "tsc -p ." },
   "devDependencies": { "intl-messageformat": "12.1.4" }
 }

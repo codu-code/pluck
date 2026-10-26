@@ -152,19 +152,6 @@
       "web": "Webで使う"
     }
   },
-  "soon": {
-    "title": "もうすぐ<dot>。</dot>",
-    "web": "Webで使う",
-    "connect": "AIと接続",
-    "chrome": {
-      "meta": {
-        "title": "Chrome版Pluck · Pluck",
-        "description": "Chrome版PluckはChromeウェブストアの審査待ちです。もうすぐ公開です。"
-      },
-      "para1": "Chrome版Pluckは、Chromeウェブストアの審査待ちです。数千のクーポン拡張機能の後ろに並んでいます。もうすぐ公開です。",
-      "para2": "それまでは、Web版のPluckをお使いください。リンクを貼り付ければPluckできます。お使いのAIにPluckしてもらうこともできます。"
-    }
-  },
   "openSource": {
     "meta": {
       "title": "オープンソース · Pluck",

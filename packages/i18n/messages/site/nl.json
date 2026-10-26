@@ -152,19 +152,6 @@
       "web": "Gebruik het op het web"
     }
   },
-  "soon": {
-    "title": "Binnenkort<dot>.</dot>",
-    "web": "Gebruik het op het web",
-    "connect": "Verbind je AI",
-    "chrome": {
-      "meta": {
-        "title": "Pluck voor Chrome · Pluck",
-        "description": "Pluck voor Chrome wacht op beoordeling door de Chrome Web Store. Komt elk moment uit."
-      },
-      "para1": "Pluck voor Chrome wacht op beoordeling door de Chrome Web Store, ergens achter een paar duizend kortingscodezoekers. Komt elk moment uit.",
-      "para2": "Tot die tijd werkt Pluck op het web: plak een link en hij is geplukt. Je AI kan ook voor je plukken."
-    }
-  },
   "openSource": {
     "meta": {
       "title": "Open source · Pluck",

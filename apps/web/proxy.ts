@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { LOCALE_COOKIE, LOCALE_HEADER, localeFrom } from "@/i18n/request";
-import { cardPage, isSitePath, localePath, splitLocale } from "@/lib/siteUrls";
+import { CHROME_STORE_URL, cardPage, isSitePath, localePath, splitLocale } from "@/lib/siteUrls";
 
 // The marketing site's language URLs (lib/siteUrls.ts). /de/connect is served by the /connect page in German.
 // An English URL sends someone who picked another language, or whose browser asks for one, to that language's URL;
@@ -9,6 +9,7 @@ export function proxy(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
   if (pathname === "/en" || pathname.startsWith("/en/")) return NextResponse.redirect(new URL((pathname.slice(3) || "/") + search, req.url), 308);
   const { locale, path } = splitLocale(pathname);
+  if (path === "/chrome") return NextResponse.redirect(CHROME_STORE_URL, 308); // the coming-soon page, before the listing
   const headers = new Headers(req.headers);
   headers.delete(LOCALE_HEADER); // only a site URL says which language it is
   const card = cardPage(path);

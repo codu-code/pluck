@@ -2,7 +2,7 @@
   "name": "@pluck/extension",
   "description": "The Pluck browser extension: pluck the page you are on, a link, an image or a selection.",
   "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "apps/extension" },
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",

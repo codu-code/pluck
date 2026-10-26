@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { linkFromEmail, openSignInLink, signIn, uniqueEmail } from "./helpers";
 
 const FIX = "http://127.0.0.1:4180";
+const CHROME_STORE_URL = "https://chromewebstore.google.com/detail/pluck/plcknnahikagnmlliangabeofipkhecc";
 
 test("a visitor pastes links on the home page, signs up, and finds them in the Inbox", async ({ page }) => {
   await page.goto("/");
@@ -61,12 +62,14 @@ test("the site: connect your AI with tabs, open source, privacy and terms", asyn
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pluck it.");
 });
 
-test("Add to Chrome: a coming-soon page until the store listing is live", async ({ page }) => {
+test("Add to Chrome goes to the store listing, and so does the old coming-soon page", async ({ page, request }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "Add to Chrome" }).first().click();
-  await expect(page).toHaveURL(/\/chrome$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Soon.");
-  await expect(page.getByRole("link", { name: "Use it on the web" })).toHaveAttribute("href", "/signin");
+  await expect(page.getByRole("link", { name: "Add to Chrome" }).first()).toHaveAttribute("href", CHROME_STORE_URL);
+  for (const old of ["/chrome", "/de/chrome"]) {
+    const res = await request.get(old, { maxRedirects: 0 });
+    expect(res.status(), old).toBe(308);
+    expect(res.headers().location, old).toBe(CHROME_STORE_URL);
+  }
 });
 
 test("home: drawn pieces below the fold play once in view; reduced motion leaves them drawn", async ({ page, browser }) => {

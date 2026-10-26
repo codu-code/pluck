@@ -30,7 +30,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 - [ ] Load it unpacked once and go through `docs/history/loop/BLOCKED.md` (slice 14).
 - [ ] `pnpm --filter @pluck/extension zip`. (Firefox is not planned for launch; the build still supports it.)
 - [ ] Chrome Web Store listing: description, screenshots, a 30-second video, privacy policy `https://getpluck.io/privacy`, data-use answers (the page you pluck and its address go to your own Pluck server; nothing else, no selling, no ads).
-- [ ] Once the listings are live, put the store URL in `CHROME_STORE_URL` (it points at the `/chrome` coming-soon page until then).
+- [x] Once the listings are live, put the store URL in `CHROME_STORE_URL` (`apps/web/lib/siteUrls.ts`; `/chrome` redirects there).
 
 ## iPhone
 

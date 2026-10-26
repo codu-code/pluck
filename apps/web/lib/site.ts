@@ -7,8 +7,6 @@ import { ORIGIN } from "./origin";
 // Links the marketing site needs that only exist at launch. Placeholders stay [LIKE THIS] until then.
 export const REPO_URL = "https://github.com/codu-code/pluck";
 export const CLONE_URL = "https://github.com/codu-code/pluck";
-// shortcut: a "coming soon" page while the listing is in review; swap in the store URL once it is live.
-export const CHROME_STORE_URL = "/chrome";
 // shortcut: the TestFlight beta page while the app is in public beta; swap in the App Store URL once it is live.
 export const APP_STORE_URL = "/iphone";
 // The public beta: anyone with the link can join (up to the limit set in App Store Connect, TestFlight, Public beta).

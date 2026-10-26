@@ -152,19 +152,6 @@
       "web": "在网页上使用"
     }
   },
-  "soon": {
-    "title": "快了<dot>。</dot>",
-    "web": "在网页上使用",
-    "connect": "连接你的 AI",
-    "chrome": {
-      "meta": {
-        "title": "Pluck for Chrome · Pluck",
-        "description": "Pluck for Chrome 正在 Chrome 网上应用店排队审核，随时可能上线。"
-      },
-      "para1": "Pluck for Chrome 正在 Chrome 网上应用店排队审核，前面大概还有几千个优惠券插件。随时可能上线。",
-      "para2": "在那之前，Pluck 可以在网页上用：粘贴一个链接，它就摘下了。你的 AI 也能替你摘。"
-    }
-  },
   "openSource": {
     "meta": {
       "title": "开源 · Pluck",
