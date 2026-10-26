@@ -189,19 +189,24 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
               <textarea
                 className={styles.note}
                 rows={2}
+                maxLength={500}
                 value={title}
                 onChange={(e) => setTitle(e.target.value.replace(/\s*\n\s*/g, " "))}
                 onKeyDown={(e) => {
-                  if (e.key !== "Enter") return;
+                  if (e.key !== "Enter" || e.nativeEvent.isComposing) return; // Enter also confirms Japanese, Korean and Chinese input
                   e.preventDefault(); // one line: Enter keeps it
                   e.currentTarget.blur();
                 }}
-                onBlur={() => {
+                onBlur={async () => {
                   const typed = title.trim();
-                  if (!typed) return setTitle(savedTitle.current);
-                  if (typed === savedTitle.current) return;
+                  const before = savedTitle.current;
+                  if (!typed) return setTitle(before);
+                  if (typed === before) return;
                   savedTitle.current = typed;
-                  void fetch(`/api/v1/items/${item.id}`, json("PATCH", { title: typed }));
+                  const res = await fetch(`/api/v1/items/${item.id}`, json("PATCH", { title: typed })).catch(() => null);
+                  if (res?.ok) return;
+                  savedTitle.current = before; // not kept: the old title comes back rather than one that only looks saved
+                  setTitle(before);
                 }}
               />
             </label>

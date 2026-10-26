@@ -50,20 +50,25 @@ final class ShareModel: ObservableObject {
   @Published var tagIds: Set<String> = []
   @Published var addedToList = false
   @Published var note = ""
-  private var pluckedTitle = "" // what the server called it; a different title in the field is the person's
-  private var uploads: Task<Void, Never>?
-  private var finishing = false
+  @Published private(set) var finishing = false
+  private var titleEdited = false // only a title the person typed goes up, never the one shown
+  private var work: [Task<Void, Never>] = [] // tags, list, kind and covers still on their way up
   var close: () -> Void = {}
   var openApp: () -> Void = {}
   let client = PluckClient()
   lazy var tags = Array(client.tags.prefix(2))
   lazy var lastList = client.lastList
 
-  // shared-schemas isRenameable: a reel, a post or a picture often comes with no title of its own, so it can be named
-  // here; an article keeps its page's. A link still being read (its title is its address) can be named too.
+  // shared-schemas isRenameable, the same rule: a reel, a post or a picture often comes with no title of its own, and
+  // nor does a link whose title is still its address, so it can be named here. An article keeps its page's.
   var renameable: Bool {
     guard let item else { return false }
-    return item.preview == "player" || item.preview == "post" || item.kind == "image" || pluckedTitle.hasPrefix("http")
+    return item.preview == "player" || item.preview == "post" || item.kind == "image" || (item.titleIsDerived == true && item.title == item.url)
+  }
+
+  // The title field: what the person types there, and only that, is sent as the new title.
+  var editableTitle: Binding<String> {
+    Binding(get: { self.title }, set: { self.title = $0; self.titleEdited = true })
   }
 
   func run(with inputs: [ShareInput]) async {
@@ -76,7 +81,7 @@ final class ShareModel: ObservableObject {
         let plucked: PluckedItem?
         switch input {
         case let .page(url, title, selection, html):
-          self.title = title ?? url
+          if item == nil { self.title = title ?? url } // the sheet is about the first thing shared
           let preview = html == nil ? await Shared.preview(of: url) : nil // from an app, not Safari
           var body: [String: Any] = ["url": url]
           if let title = title ?? preview?.title { body["title"] = title }
@@ -85,15 +90,15 @@ final class ShareModel: ObservableObject {
           do { plucked = try await client.pluck(body) } catch PluckError.offline { client.queue(body: body); queued = true; continue }
           if let plucked, plucked.hasCover != true, let jpeg = preview?.jpeg { covers.append((plucked.id, jpeg)) }
         case let .text(text):
-          self.title = String(text.prefix(80))
+          if item == nil { self.title = String(text.prefix(80)) }
           do { plucked = try await client.pluck(["text": text]) } catch PluckError.offline { client.queue(body: ["text": text]); queued = true; continue }
         case let .file(url, name, contentType):
-          self.title = name
+          if item == nil { self.title = name }
           do { plucked = try await client.pluckFile(url, name: name, contentType: contentType) } catch PluckError.offline {
             client.queue(file: (url, name, contentType)); queued = true; continue
           }
         }
-        if item == nil, let plucked { item = plucked; tagIds = Set(plucked.tagIds); if !plucked.title.isEmpty { self.title = plucked.title }; pluckedTitle = self.title }
+        if item == nil, let plucked { item = plucked; tagIds = Set(plucked.tagIds); if !plucked.title.isEmpty { self.title = plucked.title } }
       } catch PluckError.signedOut {
         phase = .signedOut; return
       } catch PluckError.refused(let message) {
@@ -103,38 +108,45 @@ final class ShareModel: ObservableObject {
       }
     }
     phase = queued && item == nil ? .queued : .plucked
-    uploads = Task { [client] in for c in covers { await client.putCover(c.id, jpeg: c.jpeg) } } // while the sheet is open
+    for c in covers { work.append(Task { [client] in await client.putCover(c.id, jpeg: c.jpeg) }) } // while the sheet is open
   }
 
   func toggle(_ tag: TagRef) {
     guard let id = item?.id else { return }
     if tagIds.contains(tag.id) { tagIds.remove(tag.id) } else { tagIds.insert(tag.id) }
     let ids = Array(tagIds)
-    Task { _ = try? await client.patch(id, ["tagIds": ids]) }
+    work.append(Task { [client] in _ = try? await client.patch(id, ["tagIds": ids]) })
   }
 
   func addToList() {
     guard let id = item?.id, let list = lastList, !addedToList else { return }
     addedToList = true
-    Task { try? await client.addToList(list.id, id) }
+    work.append(Task { [client] in try? await client.addToList(list.id, id) })
   }
 
   func setKind(_ kind: String) {
     guard let id = item?.id else { return }
-    Task { if let updated = try? await client.patch(id, ["kind": kind]) { item = updated } }
+    work.append(Task { if let updated = try? await client.patch(id, ["kind": kind]) { item = updated } })
   }
 
-  // Done or a tap outside: the note and a typed title go up, and the cover finishes, before the sheet closes.
+  // Done or a tap outside: the note and a typed title go up, and what was tapped finishes, before the sheet closes.
+  // The wait is capped: a cover that is slow to upload is not worth holding the sheet open for.
   func finish() {
     guard !finishing else { return }
     finishing = true
     var edit: [String: Any] = [:]
-    let typedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-    let typedTitle = title.components(separatedBy: .newlines).joined(separator: " ").trimmingCharacters(in: .whitespaces) // one line
+    let typedNote = String(note.trimmingCharacters(in: .whitespacesAndNewlines).prefix(10_000)) // the API's limits
+    let typedTitle = String(title.components(separatedBy: .newlines).joined(separator: " ").trimmingCharacters(in: .whitespaces).prefix(500))
     if !typedNote.isEmpty { edit["note"] = typedNote }
-    if renameable, !typedTitle.isEmpty, typedTitle != pluckedTitle { edit["title"] = typedTitle }
+    if renameable, titleEdited, !typedTitle.isEmpty, typedTitle != item?.title { edit["title"] = typedTitle }
+    let pending = work
     Task {
-      await uploads?.value
+      await withTaskGroup(of: Void.self) { group in
+        group.addTask { for t in pending { await t.value } }
+        group.addTask { try? await Task.sleep(for: .seconds(4)) }
+        await group.next() // whichever is first
+        group.cancelAll()
+      }
       if let id = item?.id, !edit.isEmpty { _ = try? await client.patch(id, edit) }
       close()
     }
@@ -187,7 +199,7 @@ struct ShareView: View {
       .scrollBounceBehavior(.basedOnSize)
       .scrollDismissesKeyboard(.interactively)
       .frame(maxHeight: formHeight)
-      primary("done") { model.finish() }
+      primary("done", busy: model.finishing) { model.finish() }
     }
   }
 
@@ -195,7 +207,7 @@ struct ShareView: View {
     VStack(alignment: .leading, spacing: 16) {
       if model.renameable {
         group("title") {
-          TextField("title", text: $model.title, axis: .vertical).lineLimit(1...3).font(Typeface.title).boxed(dark)
+          TextField("title", text: model.editableTitle, axis: .vertical).lineLimit(1...3).font(Typeface.title).boxed(dark)
         }
       }
       group("note") {
@@ -264,10 +276,14 @@ struct ShareView: View {
     .accessibilityAddTraits(on ? .isSelected : [])
   }
 
-  private func primary(_ text: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+  // busy: what was changed is still going up; the label stays for VoiceOver, hidden behind the spinner.
+  private func primary(_ text: LocalizedStringKey, busy: Bool = false, action: @escaping () -> Void) -> some View {
     Button(action: action) {
-      Text(text).font(Typeface.button).frame(maxWidth: .infinity, minHeight: 50).background(Palette.brand, in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(Palette.onBrand)
+      Text(text).font(Typeface.button).opacity(busy ? 0 : 1)
+        .overlay { if busy { ProgressView().tint(Palette.onBrand) } }
+        .frame(maxWidth: .infinity, minHeight: 50).background(Palette.brand, in: RoundedRectangle(cornerRadius: 12)).foregroundStyle(Palette.onBrand)
     }
+    .disabled(busy)
   }
 
   private func glyph(_ d: String, size: CGFloat, color: Color, width: CGFloat) -> some View {

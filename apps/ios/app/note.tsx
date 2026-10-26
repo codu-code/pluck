@@ -23,10 +23,10 @@ export default function Note() {
   const renameable = item.data ? isRenameable(item.data.item) : false;
 
   const done = () => {
-    const typed = title.replace(/\s*\n\s*/g, " ").trim(); // empty keeps the old title
+    const typed = title.replace(/\s*\n\s*/g, " ").trim().slice(0, 500); // one line, the API's limit; empty keeps the old title
     const edit = {
       ...(text.trim() !== current.trim() ? { note: text.trim() || null } : {}),
-      ...(renameable && typed && typed !== named ? { title: typed } : {}),
+      ...(renameable && titleDraft !== null && typed && typed !== named ? { title: typed } : {}), // only when it was edited
     };
     if (Object.keys(edit).length) patch.mutate({ id, patch: edit });
     router.back();
@@ -47,6 +47,7 @@ export default function Note() {
         <TextInput
           value={title}
           onChangeText={setTitleDraft}
+          maxLength={500}
           multiline
           submitBehavior="blurAndSubmit"
           returnKeyType="next"
