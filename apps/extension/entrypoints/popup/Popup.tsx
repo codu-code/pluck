@@ -19,7 +19,7 @@ type View =
 
 const KINDS: Kind[] = ["link", "video", "pdf", "image", "todo", "note", "thing"];
 const LINK_KINDS = new Set<Kind>(["link", "video", "pdf", "image"]);
-const MOVES: Status[] = ["inbox", "later", "archived"];
+const MOVES = { inbox: "popup.plucked.inbox", later: "popup.plucked.later", archived: "popup.plucked.archive" } as const; // where an Item can go, and its button
 const DAY_MONTH = { day: "numeric", month: "short" } as const;
 
 // The tab to pluck: the active one, or ?tab=<id> (the e2e suite opens the popup as a page).
@@ -322,8 +322,8 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
               />
             </label>
             <div className="actions">
-              {MOVES.filter((s) => s !== item.status).map((s) => (
-                <button key={s} type="button" className="secondary grow" onClick={() => void move(s)}>{t(`popup.plucked.${s === "archived" ? "archive" : s}`)}</button>
+              {(Object.keys(MOVES) as (keyof typeof MOVES)[]).filter((s) => s !== item.status).map((s) => (
+                <button key={s} type="button" className="secondary grow" onClick={() => void move(s)}>{t(MOVES[s])}</button>
               ))}
               <button type="button" className="primary grow-more" onClick={() => openInPluck(`/items/${item.id}`)}>{t("popup.plucked.open")}</button>
             </div>
