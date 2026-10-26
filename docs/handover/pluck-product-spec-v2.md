@@ -1,6 +1,8 @@
 # Pluck — Product and Design Spec v2
 
-24 October 2026. Supersedes v1. The design canvas (33 boards) is the visual source of truth; this doc is the written one.
+> **The brief Pluck was built from, kept as background.** Where it and the code disagree, the code is right: see `docs/architecture.md` for how Pluck works now and "Decisions that differ from the spec" in `CLAUDE.md`.
+
+24 October 2026. Supersedes v1. The design canvas (now 43 boards) is the visual source of truth; this doc is the written one.
 
 ## What Pluck is
 

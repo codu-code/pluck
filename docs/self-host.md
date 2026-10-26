@@ -21,7 +21,9 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 |---|---|---|
 | `PLUCK_URL` | The public address, no trailing slash. Becomes the sign-in link host, the OAuth issuer and the connector URL (`<PLUCK_URL>/mcp`) | `http://localhost:3000` |
 | `PLUCK_PORT` | Host port for the web app, on 127.0.0.1 only, for your proxy | `3000` |
+| `MINIO_PORT`, `MAILPIT_PORT` | Host ports for MinIO and Mailpit's inbox, on 127.0.0.1 only | `9000`, `8025` |
 | `BETTER_AUTH_SECRET` | 32+ random bytes. Leave unset to have one generated and kept in the `secrets` volume | generated |
+| `DIGEST_SECRET` | Optional: a separate key for the Monday email's one-tap links, so you can revoke them without signing everyone out | `BETTER_AUTH_SECRET` |
 | `SMTP_URL` | Your mail relay, e.g. `smtps://user:pass@smtp.example.com:465` | the bundled Mailpit |
 | `EMAIL_FROM` | The From line for sign-in links and the Monday email | `Pluck <pluck@localhost>` |
 | `DIGEST_FROM`, `EMAIL_REPLY_TO` | Optional: a separate From line for the Monday email (a subdomain keeps spam reports on it away from sign-in links), and where replies go if your From address takes no mail | `EMAIL_FROM`, none |

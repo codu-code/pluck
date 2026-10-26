@@ -1,6 +1,6 @@
 # CLAUDE.md — Pluck
 
-Pluck is a fast, open-source URL saver with an MCP connector. There is no AI inside the app. Read `docs/architecture.md` before any non-trivial change; `docs/handover/pluck-technical-spec-v2.md` has the background. Use the words in `GLOSSARY.md`. `docs/history/` is the record of the first build, not current.
+Pluck is a fast, open-source URL saver with an MCP connector. There is no AI inside the app. Read `docs/architecture.md` before any non-trivial change; `docs/handover/pluck-technical-spec-v2.md` has the background. Use the words in `GLOSSARY.md`.
 
 ## Non-negotiables
 
