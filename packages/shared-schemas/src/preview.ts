@@ -14,6 +14,8 @@ export const PLAYERS = {
   loom: { id: /^[a-f0-9]{32}$/, src: (id: string) => `https://www.loom.com/embed/${id}?autoplay=1`, ratio: 16 / 9 },
   spotify: { id: /^(episode|track|show|album|playlist)\/[A-Za-z0-9]{22}$/, src: (id: string) => `https://open.spotify.com/embed/${id}`, ratio: 0 }, // 0: a fixed 152pt bar
   tiktok: { id: /^\d{8,24}$/, src: (id: string) => `https://www.tiktok.com/player/v1/${id}?music_info=1&description=1`, ratio: 9 / 16 },
+  // Meta's terms allow showing a post, not keeping what its oEmbed says, so a reel is played from its address alone.
+  instagram: { id: /^[\w-]{5,40}$/, src: (id: string) => `https://www.instagram.com/reel/${id}/embed/`, ratio: 9 / 16 },
 } as const;
 export type Player = keyof typeof PLAYERS;
 

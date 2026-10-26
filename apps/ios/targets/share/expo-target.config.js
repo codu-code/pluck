@@ -5,7 +5,7 @@ module.exports = (config) => ({
   displayName: "Pluck",
   // No `icon`: scripts/icons.mjs writes Assets.xcassets, so prebuild leaves it alone.
   deploymentTarget: "17.0",
-  frameworks: ["SwiftUI", "UniformTypeIdentifiers"],
+  frameworks: ["SwiftUI", "UniformTypeIdentifiers", "LinkPresentation"],
   entitlements: {
     "com.apple.security.application-groups": config.ios.entitlements["com.apple.security.application-groups"],
     "keychain-access-groups": config.ios.entitlements["keychain-access-groups"],

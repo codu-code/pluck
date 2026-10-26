@@ -8,6 +8,7 @@ vi.mock("./fetch.ts", async (real) => ({
     const key = [...answers.keys()].find((k) => url.startsWith(k));
     if (!key) throw Object.assign(new Error(`HTTP 403 for ${url}`), { status: 403 });
     const v = answers.get(key);
+    if (v && typeof v === "object" && "movedTo" in v) return { url: String(v.movedTo), contentType: "text/html", body: Buffer.from(String((v as { html?: string }).html ?? "")) }; // a redirect
     return { url, contentType: typeof v === "string" ? "text/html" : "application/json", body: Buffer.from(typeof v === "string" ? v : JSON.stringify(v)) };
   },
 }));
@@ -142,10 +143,24 @@ describe("sources", () => {
 
   test("shells and shops that turn servers away still come out as what they are, from the address", async () => {
     expect(await extract({ url: "https://www.amazon.co.uk/Stoneware-Coffee-Mug-Blue/dp/B000123456" })).toMatchObject({ preview: "product", title: "Stoneware Coffee Mug Blue", siteName: "Amazon" });
-    expect(await extract({ url: "https://www.instagram.com/reel/C9xYz/" })).toMatchObject({ preview: "post", kind: "video", siteName: "Instagram" });
+    expect(await extract({ url: "https://www.instagram.com/reel/C9xYz/" })).toMatchObject({ preview: "player", kind: "video", siteName: "Instagram", title: "Instagram reel" });
+    expect(await extract({ url: "https://www.instagram.com/p/C9xYz/" })).toMatchObject({ preview: "post", kind: "link", title: "Instagram post" });
+    expect(await extract({ url: "https://www.instagram.com/rj.bernaldo/reel/De6Q_cyzWLC/" })).toMatchObject({ title: "@rj.bernaldo · Instagram", facts: { handle: "@rj.bernaldo" } });
     expect(await extract({ url: "https://www.tiktok.com/@someone/video/7400000000000000000" })).toMatchObject({ preview: "player", title: "@someone · TikTok", facts: { vertical: true } });
+    // The app's short link lands on /@/video/…: a player with no handle, named after where it went.
+    answers.set("https://vm.tiktok.com/ZMabc/", { movedTo: "https://www.tiktok.com/@/video/7418692211224661253?_r=1", html: "<html><head><title>TikTok - Make Your Day</title></head></html>" });
+    const short = await extract({ url: "https://vm.tiktok.com/ZMabc/" });
+    expect(short).toMatchObject({ preview: "player", title: "TikTok video", facts: { player: { provider: "tiktok", id: "7418692211224661253" }, vertical: true } });
+    expect(short.facts.handle).toBeUndefined();
     expect(await extract({ url: "https://www.reddit.com/r/typescript/comments/abc123/strict_mode_in_five_steps/" })).toMatchObject({ preview: "post", title: "Strict mode in five steps", facts: { handle: "r/typescript" } });
     expect(await extract({ url: "https://claude.ai/public/artifacts/0b4c7f3e" })).toMatchObject({ preview: "app", siteName: "Claude", facts: { app: "claude" } });
+  });
+
+  test("the title a person's phone saw beats a name from the address, never what a site found", async () => {
+    expect(await extract({ url: "https://www.instagram.com/reel/C9xYz/", title: "Rj Bernaldo on Instagram" })).toMatchObject({ title: "Rj Bernaldo on Instagram" });
+    expect(await extract({ url: "https://www.instagram.com/reel/C9xYz/", title: "Instagram" })).toMatchObject({ title: "Instagram reel" }); // generic
+    answers.set("https://www.youtube.com/oembed", { title: "Never Gonna Give You Up" });
+    expect(await extract({ url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", title: "something else" })).toMatchObject({ title: "Never Gonna Give You Up" });
   });
 
   test("what a person's browser sent beats a guess from the address", async () => {

@@ -51,17 +51,20 @@ final class ShareModel: ObservableObject {
     guard client.session() != nil else { phase = .signedOut; return }
     guard !inputs.isEmpty else { phase = .failed(String(localized: "nothingToKeep")); return }
     var queued = false
+    var covers: [(id: String, jpeg: Data)] = []
     for input in inputs {
       do {
         let plucked: PluckedItem?
         switch input {
         case let .page(url, title, selection, html):
           self.title = title ?? url
+          let preview = html == nil ? await Shared.preview(of: url) : nil // from an app, not Safari
           var body: [String: Any] = ["url": url]
-          if let title { body["title"] = title }
+          if let title = title ?? preview?.title { body["title"] = title }
           if let selection { body["selection"] = selection }
           if let html { body["html"] = html }
           do { plucked = try await client.pluck(body) } catch PluckError.offline { client.queue(body: body); queued = true; continue }
+          if let plucked, plucked.hasCover != true, let jpeg = preview?.jpeg { covers.append((plucked.id, jpeg)) }
         case let .text(text):
           self.title = String(text.prefix(80))
           do { plucked = try await client.pluck(["text": text]) } catch PluckError.offline { client.queue(body: ["text": text]); queued = true; continue }
@@ -81,7 +84,9 @@ final class ShareModel: ObservableObject {
       }
     }
     phase = queued && item == nil ? .queued : .plucked
+    let uploads = Task { [client] in for c in covers { await client.putCover(c.id, jpeg: c.jpeg) } } // while "Plucked." shows
     try? await Task.sleep(for: .seconds(2))
+    await uploads.value
     if !engaged { finish() }
   }
 

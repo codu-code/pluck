@@ -1,6 +1,22 @@
 {
   "extends": "expo/tsconfig.base",
-  "compilerOptions": { "strict": true, "noUncheckedIndexedAccess": true, "allowImportingTsExtensions": true, "paths": { "@/*": ["./*"] } },
-  "include": ["**/*.ts", "**/*.tsx", "expo-env.d.ts"],
-  "exclude": ["node_modules", "ios", "targets"]
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "ios",
+    "targets"
+  ]
 }

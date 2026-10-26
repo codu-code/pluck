@@ -7,10 +7,12 @@ A link Item opens on a Preview (GLOSSARY): Reader, Player, Post, Code, Product, 
 
 What Pluck does, in order:
 
-1. **The address.** Players (YouTube, Vimeo, Loom, Spotify, TikTok), posts (X, Threads, Bluesky, Reddit, Instagram, LinkedIn, Facebook, Hacker News, Mastodon), code (GitHub, GitLab, Codeberg, Bitbucket, gists, npm, PyPI, crates, Stack Exchange, CodePen and the like) and apps (Claude, ChatGPT, Gemini, v0, Bolt, Lovable, Perplexity, Replit, Figma, Google Docs and Drive, Notion, Canva, Miro).
+1. **The address.** Players (YouTube, Vimeo, Loom, Spotify, TikTok, Instagram reels), posts (X, Threads, Bluesky, Reddit, Instagram, LinkedIn, Facebook, Hacker News, Mastodon), code (GitHub, GitLab, Codeberg, Bitbucket, gists, npm, PyPI, crates, Stack Exchange, CodePen and the like) and apps (Claude, ChatGPT, Gemini, v0, Bolt, Lovable, Perplexity, Replit, Figma, Google Docs and Drive, Notion, Canva, Miro).
 2. **The source's API or oEmbed**, never a token: YouTube, Vimeo, Loom and Spotify oEmbed; for X, the JSON its own embed widget reads (`cdn.syndication.twimg.com/tweet-result`), then X's oEmbed; Reddit's oEmbed; the Hacker News, Bluesky, Mastodon, npm, PyPI, Stack Exchange and GitHub APIs. Sites marked `only` are never fetched by the server (an app shell, a bot check, or terms that forbid reading the page); what the person's browser sent (the extension, Safari's share sheet) is still read.
 3. **The page's own signals:** `citation_pdf_url` (a paper's landing page), schema.org Product and Offer, `product:price:*`, Article types and `og:type=article`, a site's root or a locale root (a homepage), and too little to read (a landing page or a shell).
 4. **Generic metadata is dropped:** the share titles and images some sites give every page alike.
+5. **The phone's link preview.** A link shared from an app (Instagram, TikTok) comes with no page, so the share extension asks iOS's own link preview (`LPMetadataProvider`, what Messages shows). It reads the page from the person's phone, as they would see it, and its title and picture go up with the pluck. Pluck's server never asks the site.
+6. **A name from the address**, never the address itself, when nothing above gave a title: "@name · TikTok", "TikTok video" (a short link, named once it is followed), "Instagram reel", "Instagram post".
 
 Only a Reader, Code or Document keeps its body; only a Reader keeps its HTML. A Post keeps its words, a Product,
 Site, App or Player what it says it is. Players load only when pressed, from an id checked against the allowlist,
@@ -21,7 +23,7 @@ copied, and never on signed links.
 
 ## Open decisions
 
-- **YouTube** wants API data refreshed within 30 days; **Spotify** and **SoundCloud** forbid keeping their content indefinitely; **Meta** (Instagram, Facebook, Threads) forbids keeping anything from its oEmbed, so Pluck keeps none of it and shows those posts from their address. Pluck keeps the title and cover of a YouTube, Vimeo, Loom or Spotify link as every read-later app does; refreshing them when an Item is opened after 30 days is the stricter reading.
+- **YouTube** wants API data refreshed within 30 days; **Spotify** and **SoundCloud** forbid keeping their content indefinitely; **Meta** (Instagram, Facebook, Threads) forbids keeping anything from its oEmbed, so Pluck keeps none of it and shows those posts from their address; a reel plays in Instagram's own embed, built from the id in its address. Since November 2025 Meta's oEmbed has no thumbnail or author, and Meta points developers at the post's own HTML metadata; the phone's link preview (step 5) is that metadata, read by the person's device. Pluck keeps the title and cover of a YouTube, Vimeo, Loom or Spotify link as every read-later app does; refreshing them when an Item is opened after 30 days is the stricter reading.
 - **arXiv** asks that e-prints are not served from our own servers unless the licence allows. Save to Files on the iPhone downloads from the original first.
 
 The research behind this, as of 2026-10-25:

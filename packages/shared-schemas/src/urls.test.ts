@@ -7,6 +7,7 @@ test.each([
   ["https://x.com/niall/status/1?s=20&t=abc", "https://x.com/niall/status/1"],
   ["https://www.youtube.com/watch?v=abc&si=xyz&feature=share", "https://www.youtube.com/watch?v=abc"],
   ["https://example.com/p?fbclid=1&gclid=2&id=7", "https://example.com/p?id=7"],
+  ["https://www.instagram.com/reel/De6Q_cyzWLC/?dlrf=MTdo&igsh=a&srtk=MTBr", "https://www.instagram.com/reel/De6Q_cyzWLC/"],
   ["  https://example.com/x  ", "https://example.com/x"],
 ])("%s → %s", (input, expected) => {
   expect(normalizeUrl(input)).toBe(expected);

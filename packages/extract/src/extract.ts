@@ -167,7 +167,8 @@ export async function extractFile({ body, contentType, fileName }: { body: Buffe
   };
 }
 
-export type ExtractInput = { url: string; html?: string | null };
+// `title`: what the person's device called the link (the iPhone's own link preview), when the page has none.
+export type ExtractInput = { url: string; html?: string | null; title?: string | null };
 
 // What a link says with nothing fetched: the Preview its address gives, and nothing else.
 function fromAddressOnly(url: string): Extracted {
@@ -199,7 +200,7 @@ function merge(x: Extracted, f: Found | null, sent = false): Extracted {
 
 // Client HTML wins (the extension and the Safari share sheet send what the browser rendered). Otherwise fetch, except
 // from the sites whose own pages are no use to a server, which answer through their APIs (sources.ts) instead.
-export async function extract({ url, html }: ExtractInput, { signal, asArticle }: { signal?: AbortSignal; asArticle?: boolean } = {}): Promise<Extracted> {
+export async function extract({ url, html, title }: ExtractInput, { signal, asArticle }: { signal?: AbortSignal; asArticle?: boolean } = {}): Promise<Extracted> {
   const source = sourceFor(url);
   const found = source?.resolve ? source.resolve(new URL(url), signal).catch(() => null) : Promise.resolve(null);
   let page: Extracted | null = null;
@@ -217,7 +218,12 @@ export async function extract({ url, html }: ExtractInput, { signal, asArticle }
     if (whole && whole.wordCount >= Math.max(150, countWords(f.markdown ?? "") * 2))
       return { ...whole, kind: "link", preview: "reader", siteName: "X", title: f.title ?? whole.title, author: f.author ?? whole.author, coverUrl: f.coverUrl ?? whole.coverUrl, facts: { ...whole.facts, ...(f.facts.handle ? { handle: f.facts.handle } : {}) } }; // the whole Article is here now
   }
-  return merge(page ?? fromAddressOnly(url), f, Boolean(html && page));
+  const x = merge(page ?? fromAddressOnly(url), f, Boolean(html && page));
+  // Nothing from the page or the site: the device's title, else a name from the address, never the address itself.
+  // The address it ended at names it: a short link (vm.tiktok.com) says nothing until it is followed.
+  const at = x.url || url;
+  if (!x.title) x.title = (isGenericTitle(title) ? null : clean(title)) ?? (sourceFor(at) ?? source)?.name?.(new URL(at)) ?? null;
+  return x;
 }
 
 async function fetchAndRead(url: string, signal?: AbortSignal, asArticle?: boolean): Promise<Extracted> {

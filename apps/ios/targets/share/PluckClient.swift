@@ -26,7 +26,7 @@ struct Session: Codable {
 
 struct TagRef: Codable, Identifiable, Hashable { let id: String; let name: String }
 struct ListRef: Codable { let id: String; let name: String }
-struct PluckedItem: Codable { let id: String; let title: String; let kind: String; let tagIds: [String] }
+struct PluckedItem: Codable { let id: String; let title: String; let kind: String; let tagIds: [String]; let hasCover: Bool? }
 
 enum PluckError: Error { case signedOut, offline, refused(String) }
 
@@ -114,6 +114,16 @@ final class PluckClient {
 
   func patch(_ id: String, _ body: [String: Any]) async throws -> PluckedItem? {
     item(from: try await call("PATCH", "/api/v1/items/\(id)", body))
+  }
+
+  // The link preview's picture, for an item the server has none for (it keeps its own when it finds one).
+  func putCover(_ id: String, jpeg: Data) async {
+    guard let (server, auth) = try? await bearer(), let url = URL(string: "\(server)/api/v1/items/\(id)/cover") else { return }
+    var req = URLRequest(url: url, timeoutInterval: 10)
+    req.httpMethod = "PUT"
+    req.setValue(auth, forHTTPHeaderField: "authorization")
+    req.setValue("image/jpeg", forHTTPHeaderField: "content-type")
+    _ = try? await URLSession.shared.upload(for: req, from: jpeg)
   }
 
   func addToList(_ listId: String, _ itemId: String) async throws {
