@@ -44,7 +44,7 @@ Pluck refuse de démarrer sur une adresse publique avec le mot de passe de stock
 
 - **iPhone.** Ouvrez `pluck://signin?server=https://your.address` sur le téléphone. L’app se connecte alors à votre serveur.
 - **Chrome.** L’extension du store ne parle qu’à getpluck.io. Compilez la vôtre avec `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` et chargez-la avec « Charger l’extension non empaquetée ».
-- **Votre IA.** Connectez-la à `https://your.address/mcp`. Si le serveur n’a pas d’adresse publique, créez une clé d’API dans les Réglages et utilisez `npx @pluck/mcp --server https://your.address --key pk_live_…`.
+- **Votre IA.** Connectez-la à `https://your.address/mcp`. Si le serveur n’a pas d’adresse publique, créez une clé d’API dans les Réglages et utilisez `npx @getpluck/mcp --server https://your.address --key pk_live_…`.
 
 ## Les parties pénibles
 

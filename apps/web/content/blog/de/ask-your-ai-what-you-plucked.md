@@ -64,7 +64,7 @@ Einstellungen, dann KI-Tools, dann Trennen. Sie hört sofort auf, nicht erst am 
 Selbst gehostet, ohne öffentliche Adresse? Leg in den Einstellungen einen API-Schlüssel an und verbinde ihn lokal:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Du bekommst dieselben Tools und dieselben Prompts, nur mit deinem Server verbunden.

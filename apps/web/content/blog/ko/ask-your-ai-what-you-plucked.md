@@ -64,7 +64,7 @@ AI가 만든 태그와 리스트에는 모두 “AI” 표시가 붙어요. 일�
 공개 주소 없이 직접 호스팅하고 있나요? 설정에서 API 키를 만들고 로컬로 연결하세요.
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 같은 도구, 같은 프롬프트가 내 서버를 향해 작동해요.

@@ -64,7 +64,7 @@ Configurações, depois Ferramentas de IA, depois Desconectar. Para na hora, nã
 Hospeda o seu e não tem endereço público? Crie uma chave de API nas Configurações e faça a ponte localmente:
 
 ```
-npx @pluck/mcp --server https://pluck.your.host --key pk_live_…
+npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…
 ```
 
 Você tem as mesmas ferramentas e os mesmos prompts, apontados para o seu servidor.

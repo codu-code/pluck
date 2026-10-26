@@ -2,7 +2,7 @@
 import { parseArgs } from "node:util";
 import { bridge } from "./bridge.ts";
 
-const USAGE = `Usage: npx @pluck/mcp [--server https://getpluck.io] --key pk_live_…
+const USAGE = `Usage: npx @getpluck/mcp [--server https://getpluck.io] --key pk_live_…
 
 Connects any stdio MCP client to your Pluck library. Make a key in Pluck, Settings, API keys.
 The key can also come from PLUCK_API_KEY, and the server from PLUCK_SERVER.`;

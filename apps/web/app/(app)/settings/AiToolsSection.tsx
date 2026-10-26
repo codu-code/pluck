@@ -20,7 +20,7 @@ export function AiToolsSection({ connectorUrl, keyPrefix, initial, lastCallAt }:
   const [lastCall, setLastCall] = useState<string | null>(null); // relative time is worked out after hydration
   useEffect(() => setLastCall(lastCallAt && ago(lastCallAt)), [lastCallAt, ago]); // a new ago each render sets the same string: no loop
   const hosted = new URL(connectorUrl).hostname === "getpluck.io";
-  const npx = `npx @pluck/mcp${hosted ? "" : ` --server ${new URL(connectorUrl).origin}`} --key ${keyPrefix ? `pk_live_${keyPrefix}••••` : "pk_live_…"}`;
+  const npx = `npx @getpluck/mcp${hosted ? "" : ` --server ${new URL(connectorUrl).origin}`} --key ${keyPrefix ? `pk_live_${keyPrefix}••••` : "pk_live_…"}`;
   const copy = async (text: string, copied: string) => {
     await navigator.clipboard?.writeText(text).catch(() => {});
     showToast({ message: copied });

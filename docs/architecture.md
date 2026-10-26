@@ -31,7 +31,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `apps/web/lib/email.ts`, `emails.ts`, `digest-email.ts` | `sendEmail` (SMTP to Mailpit locally, SES in production) and the email templates. |
 | `packages/db` | Every collection, index and query (`collections.ts` defines them all). Every query is scoped by `userId`; `public.ts` is the only reader for public Lists. |
 | `packages/mcp` | The connector's tools, resources and prompts (package `@pluck/mcp-server`). It sees the library only through `PluckLibrary`. |
-| `packages/mcp-stdio` | The `npx @pluck/mcp` bridge (package `@pluck/mcp`, the one published to npm): stdio to the hosted connector with an API key. |
+| `packages/mcp-stdio` | The `npx @getpluck/mcp` bridge (package `@getpluck/mcp`, the one published to npm): stdio to the hosted connector with an API key. |
 | `packages/extract` | Guarded fetch (`fetch.ts`), page and PDF reading (`extract.ts`, Defuddle then Readability), email (`email.ts`) and imports. Its fixtures are served by `pnpm stack` so tests never touch the internet. |
 | `packages/blob` | S3 through the AWS SDK; MinIO locally and for self-hosting. |
 | `packages/shared-schemas` | Every type as a Zod schema, used by the server and every client. |

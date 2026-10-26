@@ -12,7 +12,7 @@ The endpoint is `https://getpluck.io/mcp` (or `<your server>/mcp` when you self-
 | ChatGPT | Settings, Connectors, Create, paste the connector URL |
 | Claude Code | `claude mcp add --transport http pluck https://getpluck.io/mcp`, or add `--header "Authorization: Bearer pk_live_…"` to use a key |
 | Cursor and other editors | `{ "mcpServers": { "pluck": { "url": "https://getpluck.io/mcp" } } }` in `mcp.json` |
-| Anything that only speaks stdio | `npx @pluck/mcp --server https://your.server --key pk_live_…` (the key can come from `PLUCK_API_KEY`) |
+| Anything that only speaks stdio | `npx @getpluck/mcp --server https://your.server --key pk_live_…` (the key can come from `PLUCK_API_KEY`) |
 
 Settings, AI tools in Pluck shows the same lines, which tools are connected, when one last called, and a Disconnect button for each.
 
@@ -80,6 +80,6 @@ Everything an AI tool changes is marked "by AI" in Pluck: its tags until the per
 
 - `packages/mcp` holds the tools, resources and prompts. It sees the library only through `PluckLibrary` (`packages/mcp/src/library.ts`); `apps/web/lib/connector.ts` binds it to the in-process library for one person, with every write marked as made by AI.
 - `apps/web/app/mcp/route.ts` authenticates (OAuth token or API key), rate limits and serves.
-- `packages/mcp-stdio` is the `npx @pluck/mcp` bridge.
+- `packages/mcp-stdio` is the `npx @getpluck/mcp` bridge.
 - Tests: `apps/web/lib/connector.test.ts` (every tool against a seeded database), `apps/web/lib/cimd.test.ts`, `packages/mcp-stdio/src/bridge.test.ts`, and `e2e/mcp.spec.ts` (the full OAuth dance, every tool, resource and prompt over HTTP, Disconnect, API keys and the stdio bridge).
 - Try it by hand: `npx @modelcontextprotocol/inspector`, then connect to `http://localhost:3000/mcp`.

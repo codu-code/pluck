@@ -19,7 +19,7 @@ Tell us what you found, how to see it, and what someone could do with it. A proo
 
 ## What is in scope
 
-The hosted service at getpluck.io, the code in this repository (web app, API, MCP connector, browser extension, iPhone app and share extension, the Docker image), and the published `@pluck/mcp` package.
+The hosted service at getpluck.io, the code in this repository (web app, API, MCP connector, browser extension, iPhone app and share extension, the Docker image), and the published `@getpluck/mcp` package.
 
 Self-hosted copies are run by their owners; report problems in the code here, and the owner of that copy for problems in how it is run.
 

@@ -44,7 +44,7 @@ Pluck won't start on a public address with the default storage password. That's 
 
 - **iPhone.** Open `pluck://signin?server=https://your.address` on the phone. The app signs in to your server instead.
 - **Chrome.** The store extension only talks to getpluck.io. Build your own with `PLUCK_SERVER=https://your.address pnpm --filter @pluck/extension build` and load it unpacked.
-- **Your AI.** Connect it to `https://your.address/mcp`. If the server has no public address, make an API key in Settings and use `npx @pluck/mcp --server https://your.address --key pk_live_…`.
+- **Your AI.** Connect it to `https://your.address/mcp`. If the server has no public address, make an API key in Settings and use `npx @getpluck/mcp --server https://your.address --key pk_live_…`.
 
 ## The awkward parts
 
