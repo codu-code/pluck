@@ -5,7 +5,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 ## Before anything ships
 
 - [x] Push the repo to GitHub (`codu-code/pluck`, private until launch) and fill the repo links.
-- [x] Licences: AGPL-3.0 for the server (root `LICENSE`), MIT for the clients and shared schemas (a `LICENSE` in each of their folders, and in `site.ts` and every package.json).
+- [x] Licence: Apache-2.0 for everything (root `LICENSE` and `NOTICE`, every package.json, `LICENCE` in `site.ts`), with `TRADEMARKS.md` for the name and logo, and a DCO sign-off on every commit (CONTRIBUTING.md, `.github/workflows/dco.yml`).
 - [ ] Fill the legal placeholders left on Terms: `[RESPONSE DAYS]`. Add the registered address of Codú Limited to Privacy once known. `pnpm test` lists every placeholder left (`scripts/placeholders.test.ts`).
 - [x] The connector clip: `ConnectLoop` plays in Settings, AI tools and on Connect your AI (`scripts/record-loop.mjs` records it for socials).
 - [ ] Design pass on `docs/design-gaps.md`: screens with no board, departures from the boards.
@@ -19,7 +19,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 ## Browser extension
 
-- [ ] Load it unpacked once and go through `docs/loop/BLOCKED.md` (slice 14).
+- [ ] Load it unpacked once and go through `docs/history/loop/BLOCKED.md` (slice 14).
 - [ ] `pnpm --filter @pluck/extension zip`. (Firefox is not planned for launch; the build still supports it.)
 - [ ] Chrome Web Store listing: description, screenshots, a 30-second video, privacy policy `https://getpluck.io/privacy`, data-use answers (the page you pluck and its address go to your own Pluck server; nothing else, no selling, no ads).
 - [ ] Once the listings are live, put the store URL in `CHROME_STORE_URL` (it points at the `/chrome` coming-soon page until then).

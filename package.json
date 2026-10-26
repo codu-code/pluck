@@ -2,7 +2,7 @@
   "name": "pluck",
   "description": "Pluck: a fast, open-source URL saver with an MCP connector for the AI tool you already use.",
   "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git" },
-  "license": "AGPL-3.0-only",
+  "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.34.8",

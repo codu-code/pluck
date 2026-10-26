@@ -78,6 +78,14 @@ If you cannot translate, write your best attempt and say so in the pull request;
 - Fill in the template: what and why, how you checked it, screenshots for anything visible (light and dark, wide and phone).
 - A maintainer reviews and squash-merges. Merging to `main` deploys getpluck.io, so `main` stays green.
 
-## Licence
+## Licence and sign-off
 
-By contributing you agree your work is released under the licence of the folder you changed: AGPL-3.0 for the server and everything it runs on, MIT for the apps and the packages others build on. See the [README](README.md#licence).
+Your contribution is released under the [Apache License 2.0](LICENSE), like the rest of Pluck (its section 5: what comes in goes out under the same licence). There is no CLA to sign.
+
+Each commit carries a sign-off, the [Developer Certificate of Origin](https://developercertificate.org): a line saying you wrote the change, or otherwise have the right to submit it under this licence. `git commit -s` adds it from your git name and email:
+
+```
+Signed-off-by: Your Name <you@example.com>
+```
+
+Forgot it? `git commit --amend -s` for the last commit, or `git rebase --signoff main` for the whole branch, then push again. A check on each pull request looks for it.

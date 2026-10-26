@@ -18,7 +18,7 @@ Pluck is a fast, open-source URL saver with a first-class MCP connector. You plu
 | MCP server (inside Next.js at /mcp) | 12 tools, 2 resources, 4 prompts, OAuth for any MCP client, API-key auth for scripts and self-host | A delete tool by default (behind a scope). Any other public API |
 | Backend | REST API (used by our clients and the MCP layer only), Better Auth, page extraction and archiving, text search, public list pages with a narrow projection, email-in, expiry job, weekly rule-based digest | Any model call |
 
-**Fixed decisions.** Next.js App Router with TypeScript. MongoDB on the existing Assemble Pro Atlas cluster (multi-region), in its own database. AWS for S3, SES and the small worker, defined with CDK. One Docker image for hosted and self-host. Free to use. MCP is the only public integration surface; the REST API is documented for self-hosters but not promised stable.
+**Fixed decisions.** Next.js App Router with TypeScript. MongoDB on an existing multi-region MongoDB Atlas cluster, in its own database. AWS for S3, SES and the small worker, defined with CDK. One Docker image for hosted and self-host. Free to use. MCP is the only public integration surface; the REST API is documented for self-hosters but not promised stable.
 
 **Done means.** A save from Safari on iPhone, the Chrome popup, an email or an MCP tool call lands in the inbox within 300 ms, has the page text and a cover within 10 seconds, is searchable within 30 seconds, and shows up in the user's AI tool through the connector with full text available on request.
 
@@ -55,7 +55,7 @@ docs/             self-host.md, mcp.md
 
 ## Data model
 
-Pluck lives in its own database, `pluck`, on the existing Assemble Pro Atlas cluster, with its own database user scoped to that database only. Every document carries `userId`. Notes, todos and things are `items` with no URL, so there is one inbox and one search.
+Pluck lives in its own database, `pluck`, on an existing MongoDB Atlas cluster, with its own database user scoped to that database only. Every document carries `userId`. Notes, todos and things are `items` with no URL, so there is one inbox and one search.
 
 | Collection | Key fields | Purpose |
 |---|---|---|
@@ -81,7 +81,7 @@ Pluck lives in its own database, `pluck`, on the existing Assemble Pro Atlas clu
 
 **Notes.** `kind: note` with `url: null`. `title` is set by the user, or derived from the first non-empty line of `contents.textMarkdown` with `titleIsDerived: true`, recomputed on every body save until the user edits the title by hand. `PATCH /items/:id` with `{ text }` writes `contents.textMarkdown` for notes only.
 
-**Indexes.** `items`: `{ userId, status, createdAt: -1 }`, `{ userId, status, lastTouchedAt: 1 }` (untouched-first sort and the expiry job), `{ userId, urlHash }` unique sparse, `{ userId, tagIds, createdAt: -1 }`, `{ userId, kind, dueAt }`, `{ 'extraction.state', updatedAt }`. `contents`: `{ itemId }` unique plus a `$text` index on `textMarkdown` and a denormalised `items.searchText` (title, excerpt, note, tag names, list names). `tags`: `{ userId, slug }` unique. `lists`: `{ userId, slug }` unique, `{ userId, updatedAt: -1 }`, `{ userId, lastActivityAt }`. `listItems`: `{ listId, position }`, `{ itemId }`, `{ userId, itemId, listId }` unique. `jobs`: `{ queue, state, visibleAt }`. If the Assemble cluster tier has Atlas Search, add one `$search` index over `items.searchText` and `contents.textMarkdown` with `userId` as a filter field, and keep `$text` as the fallback.
+**Indexes.** `items`: `{ userId, status, createdAt: -1 }`, `{ userId, status, lastTouchedAt: 1 }` (untouched-first sort and the expiry job), `{ userId, urlHash }` unique sparse, `{ userId, tagIds, createdAt: -1 }`, `{ userId, kind, dueAt }`, `{ 'extraction.state', updatedAt }`. `contents`: `{ itemId }` unique plus a `$text` index on `textMarkdown` and a denormalised `items.searchText` (title, excerpt, note, tag names, list names). `tags`: `{ userId, slug }` unique. `lists`: `{ userId, slug }` unique, `{ userId, updatedAt: -1 }`, `{ userId, lastActivityAt }`. `listItems`: `{ listId, position }`, `{ itemId }`, `{ userId, itemId, listId }` unique. `jobs`: `{ queue, state, visibleAt }`. If the cluster tier has Atlas Search, add one `$search` index over `items.searchText` and `contents.textMarkdown` with `userId` as a filter field, and keep `$text` as the fallback.
 
 **Public reads.** A public list page reads `lists` by `(handle, slug)`, then `listItems` in position order, then the matching `items` projected to `title, siteName, excerpt, coverKey, url` plus the `listItems.note`. It never touches `contents`, `tags`, `ticked` or `status`. The projection is a single function in `packages/db/public.ts` with a test that asserts the field list. Ordering is a `position` float with periodic renumbering, which makes drag reorder one write.
 
@@ -304,14 +304,14 @@ Served by the same Next.js app at `/`, `/connect`, `/open-source`, `/privacy`, `
 
 ## Infrastructure and costs
 
-Pluck piggybacks on what already exists. The database is the Assemble Pro Atlas cluster, which is multi-region, backed up and paid for. The rest is S3, SES and one small compute slot.
+Pluck piggybacks on what already exists. The database is an existing multi-region Atlas cluster, already backed up and paid for. The rest is S3, SES and one small compute slot.
 
 **Hosted (getpluck.io).**
 
 | Piece | Choice | Why |
 |---|---|---|
 | Compute | Vercel Hobby or Pro for the Next.js app to start, with the worker as a Vercel cron plus a `/api/worker/tick` route. Move to one Fargate task later if MCP long requests or egress cost bite | Zero ops, zero floor cost |
-| Database | Existing Assemble Atlas cluster, `pluck` database, dedicated user scoped to that database | Multi-region, backups and monitoring already paid for |
+| Database | An existing Atlas cluster, `pluck` database, dedicated user scoped to that database | Multi-region, backups and monitoring already paid for |
 | Blobs | One S3 bucket `pluck-content` in eu-west-1, lifecycle to IA at 90 days | Pennies |
 | Email | SES: domain identity for `in.getpluck.io`, MX record, receipt rule to S3, and outbound for the digest, magic links and report alerts | Pennies |
 | DNS and certs | Route53 for the domain, Vercel handles certs for the app, ACM for SES | |
@@ -395,7 +395,7 @@ Each step ends green in CI and deployable.
 **Open decisions.**
 
 - Vercel vs one Fargate task for the hosted app (start on Vercel, revisit at 500 users)
-- Does the Assemble cluster tier include Atlas Search? If yes, `SEARCH_BACKEND=atlas` from day one
+- Does the cluster tier include Atlas Search? If yes, `SEARCH_BACKEND=atlas` from day one
 - Expo SDK 55 vs 54
 - Public list URL: `/@handle/slug` or `/l/<short-id>`
 - Email-in domain: `in.getpluck.io`
