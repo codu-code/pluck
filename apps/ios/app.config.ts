@@ -35,7 +35,7 @@ const withDarkIcon: ConfigPlugin = (c) => {
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
-  version: "1.2.1", // raised once per release, in its own change; never per feature (docs/ios.md)
+  version: "1.2.2", // raised once per release, in its own change; never per feature (docs/ios.md)
   // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect (withOnlyPluckScheme below):
   // sign-in comes back over HTTPS from the code the person types (lib/session.ts), so no scheme carries it.
   scheme: "pluck",
