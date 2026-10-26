@@ -1,4 +1,4 @@
-import { deleteObject, getObject, keys, listKeys, moveObject } from "@pluck/blob";
+import { TooLarge, deleteObject, getObject, keys, listKeys, moveObject } from "@pluck/blob";
 import { aliasOf, claimOnce, createEmailItem, enqueue, hitRateLimit, regenerateAlias, setRawEmailKey, userForAlias } from "@pluck/db";
 import { parseEmail } from "@pluck/extract";
 import { log } from "../log";
@@ -31,13 +31,19 @@ export async function pollInbound(): Promise<number> {
 }
 
 export async function ingestInbound(key: string): Promise<"created" | "duplicate" | "dropped"> {
-  const raw = await getObject(key);
   const drop = async (why: string) => {
     log("warn", "email-in dropped", { key, why });
     await deleteObject(key);
     return "dropped" as const;
   };
-  if (raw.length > MAX_BYTES) return drop("too large");
+  // Refused before it is read: SES itself accepts messages up to 40 MB.
+  let raw: Buffer;
+  try {
+    raw = await getObject(key, { maxBytes: MAX_BYTES });
+  } catch (e) {
+    if (e instanceof TooLarge) return drop("too large");
+    throw e;
+  }
   const mail = await parseEmail(raw).catch(() => null);
   if (!mail) return drop("unreadable"); // retrying will not make it parse
   if (mail.spam) return drop("spam or virus verdict");

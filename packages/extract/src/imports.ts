@@ -82,16 +82,24 @@ function bookmarksHtml(text: string): ImportEntry[] {
   });
 }
 
+// fflate unpacks each file into a buffer of the size the zip claims and never grows it, so checking that size
+// before unpacking is what stops a zip bomb.
+const MAX_ZIP_ENTRY = 20_000_000;
+const MAX_ZIP_METADATA = 100_000_000;
+
 // Omnivore: a zip of metadata_*.json arrays, with the kept page at content/<slug>.html when present.
 function omnivore(zip: Uint8Array): ImportEntry[] {
   // Unzip only the metadata; note where each kept page is. The import runs in batches and parses the file
   // each time, so a page is decompressed only when its batch asks for it.
   const pages = new Map<string, string>(); // slug → file name
+  let total = 0;
   const files = unzipSync(zip, {
     filter: (f) => {
       const slug = f.name.match(/(?:^|\/)content\/(.+)\.html$/)?.[1];
-      if (slug) pages.set(slug, f.name);
-      return /(^|\/)metadata_[^/]*\.json$/.test(f.name);
+      if (slug && f.originalSize <= MAX_ZIP_ENTRY) pages.set(slug, f.name); // a bigger page is fetched instead
+      if (!/(^|\/)metadata_[^/]*\.json$/.test(f.name)) return false;
+      if (f.originalSize > MAX_ZIP_ENTRY || (total += f.originalSize) > MAX_ZIP_METADATA) throw new Error("the zip unpacks too large");
+      return true;
     },
   });
   const read = (name: string) => () => strFromU8(unzipSync(zip, { filter: (f) => f.name === name })[name]!);

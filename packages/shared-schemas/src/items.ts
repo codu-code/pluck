@@ -186,10 +186,11 @@ export type SearchResults = z.infer<typeof SearchResults>;
 
 // A file shared from the phone (the share extension): the client uploads it to the returned URL.
 export const FILE_TYPES = { "application/pdf": "pdf", "image/jpeg": "jpg", "image/png": "png", "image/heic": "heic", "image/webp": "webp", "image/gif": "gif" } as const;
+export const MAX_FILE_BYTES = 50_000_000; // also the most the worker will read back
 export const CreateFileItemBody = z.object({
   name: z.string().trim().min(1).max(255),
   contentType: z.enum(Object.keys(FILE_TYPES) as [keyof typeof FILE_TYPES, ...(keyof typeof FILE_TYPES)[]]),
-  size: z.number().int().min(1).max(50_000_000),
+  size: z.number().int().min(1).max(MAX_FILE_BYTES),
   source: Source.optional(),
 });
 export type CreateFileItemBody = z.infer<typeof CreateFileItemBody>;

@@ -10,9 +10,10 @@ export const BROWSER_UA =
 // Never fetch our own network on a user's behalf. Checked on the URL host and again at connect time,
 // so DNS answers and redirects cannot point the server at private addresses.
 const blocked = new BlockList();
-for (const [net, prefix] of [["0.0.0.0", 8], ["10.0.0.0", 8], ["100.64.0.0", 10], ["127.0.0.0", 8], ["169.254.0.0", 16], ["172.16.0.0", 12], ["192.168.0.0", 16], ["198.18.0.0", 15], ["224.0.0.0", 4]] as const)
+for (const [net, prefix] of [["0.0.0.0", 8], ["10.0.0.0", 8], ["100.64.0.0", 10], ["127.0.0.0", 8], ["169.254.0.0", 16], ["172.16.0.0", 12], ["192.0.0.0", 24], ["192.168.0.0", 16], ["198.18.0.0", 15], ["224.0.0.0", 4], ["240.0.0.0", 4]] as const)
   blocked.addSubnet(net, prefix, "ipv4");
-for (const [net, prefix] of [["::", 128], ["::1", 128], ["fc00::", 7], ["fe80::", 10]] as const)
+// NAT64 (64:ff9b::/96) and 6to4 (2002::/16) carry an IPv4 address inside, private ones included: refused whole.
+for (const [net, prefix] of [["::", 128], ["::1", 128], ["64:ff9b::", 96], ["2002::", 16], ["fc00::", 7], ["fe80::", 10]] as const)
   blocked.addSubnet(net, prefix, "ipv6");
 
 export function isPrivateAddress(ip: string): boolean {

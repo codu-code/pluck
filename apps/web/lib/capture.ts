@@ -24,10 +24,13 @@ const toResult = (x: Extracted): ExtractionResult => ({
   canonicalUrl: x.canonicalUrl, lang: x.lang, wordCount: x.wordCount, markdown: x.markdown, extractor: x.extractor,
 });
 
+// Pictures only: an SVG can carry script, and a self-host may serve its blob store from its own domain.
+const picture = (contentType: string) => /^image\/(jpeg|png|webp|gif|avif)\b/i.test(contentType);
+
 // Raw page, file and cover to the blob store. Covers go through the same guarded fetch as pages.
 export async function storeBlobs(userId: string, itemId: string, x: Pick<Extracted, "kind" | "raw" | "coverUrl">): Promise<void> {
   const update: { coverKey?: string; htmlKey?: string } = {};
-  if (x.raw) {
+  if (x.raw && (x.kind !== "image" || picture(x.raw.contentType))) {
     const key = x.kind === "pdf" ? keys.file(userId, itemId, "pdf") : x.kind === "image" ? keys.cover(userId, itemId) : keys.html(userId, itemId);
     await putObject(key, x.raw.body, x.raw.contentType);
     if (x.kind === "image") update.coverKey = key;
@@ -36,7 +39,7 @@ export async function storeBlobs(userId: string, itemId: string, x: Pick<Extract
   if (x.coverUrl && !update.coverKey) {
     try {
       const img = await guardedFetch(x.coverUrl, { maxBytes: 5_000_000, accept: "image/*", signal: AbortSignal.timeout(8000) });
-      if (img.contentType.startsWith("image/")) {
+      if (picture(img.contentType)) {
         await putObject(keys.cover(userId, itemId), img.body, img.contentType);
         update.coverKey = keys.cover(userId, itemId);
       }

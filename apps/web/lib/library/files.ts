@@ -1,7 +1,7 @@
-import { getObject, keys, signedPutUrl } from "@pluck/blob";
-import { applyExtraction, createFileItem, enqueue, getItem, setBlobKeys } from "@pluck/db";
+import { TooLarge, deleteObject, getObject, keys, signedPutUrl } from "@pluck/blob";
+import { applyExtraction, createFileItem, enqueue, getItem, recordExtractionFailure, setBlobKeys } from "@pluck/db";
 import { extractFile } from "@pluck/extract";
-import { FILE_TYPES, type CreateFileItemBody, type Item } from "@pluck/shared-schemas";
+import { FILE_TYPES, MAX_FILE_BYTES, type CreateFileItemBody, type Item } from "@pluck/shared-schemas";
 
 const keyFor = (userId: string, itemId: string, contentType: CreateFileItemBody["contentType"]) =>
   contentType === "application/pdf" ? keys.file(userId, itemId, "pdf") : keys.file(userId, itemId, FILE_TYPES[contentType]);
@@ -21,7 +21,15 @@ export async function finishFile(userId: string, itemId: string, key: string, co
   const item = await getItem(userId, itemId);
   if (!item || item.extraction.state !== "pending") return;
   // shortcut: an upload that never arrives leaves the item pending once the job gives up (five tries, about 15 minutes); mark it failed if that shows up.
-  const body = await getObject(key); // missing yet: throws, and the job tries again later
+  let body: Buffer;
+  try {
+    body = await getObject(key, { maxBytes: MAX_FILE_BYTES }); // missing yet: throws, and the job tries again later
+  } catch (e) {
+    if (!(e instanceof TooLarge)) throw e;
+    await recordExtractionFailure(userId, itemId, "That file is over 50 MB.", true);
+    await deleteObject(key);
+    return;
+  }
   const x = await extractFile({ body, contentType, fileName: name });
   if (x.kind === "image") await setBlobKeys(userId, itemId, { coverKey: key });
   await applyExtraction(userId, itemId, {

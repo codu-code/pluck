@@ -15,3 +15,9 @@ cdk.out/
 apps/ios/ios/
 apps/ios/.expo/
 .vercel
+
+# Claude Code: worktrees and personal settings
+.claude/worktrees/
+.claude/settings.local.json
+*.tsbuildinfo
+coverage/

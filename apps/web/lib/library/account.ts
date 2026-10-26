@@ -1,10 +1,10 @@
-import { deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
+import { TooLarge, deleteObject, deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
   aiConnections, applyExtraction, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
-import { normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
+import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
@@ -82,9 +82,14 @@ export async function runImport(userId: string, importId: string): Promise<void>
   if (!record || record.state !== "running") return;
   let entries;
   try {
-    entries = parseImport(record.source, new Uint8Array(await getObject(record.blobKey)));
+    entries = parseImport(record.source, new Uint8Array(await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES })));
   } catch (e) {
-    await updateImport(importId, { state: "failed", error: "That file could not be read. Check it is the export from the right service." });
+    const tooLarge = e instanceof TooLarge;
+    if (tooLarge) await deleteObject(record.blobKey);
+    await updateImport(importId, {
+      state: "failed",
+      error: tooLarge ? "That file is over 500 MB." : "That file could not be read. Check it is the export from the right service.",
+    });
     log("warn", "import unreadable", { userId, importId, error: String(e) });
     return;
   }
