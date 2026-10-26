@@ -152,19 +152,6 @@
       "web": "Úsalo en la web"
     }
   },
-  "soon": {
-    "title": "Pronto<dot>.</dot>",
-    "web": "Úsalo en la web",
-    "connect": "Conecta tu IA",
-    "chrome": {
-      "meta": {
-        "title": "Pluck para Chrome · Pluck",
-        "description": "Pluck para Chrome está en la cola de revisión de Chrome Web Store. Saldrá cualquier día de estos."
-      },
-      "para1": "Pluck para Chrome está en la cola de revisión de Chrome Web Store, en algún lugar detrás de unos cuantos miles de buscadores de cupones. Saldrá cualquier día de estos.",
-      "para2": "Mientras tanto, Pluck funciona en la web: pega un enlace y queda recogido. Tu IA también puede recoger por ti."
-    }
-  },
   "openSource": {
     "meta": {
       "title": "Código abierto · Pluck",

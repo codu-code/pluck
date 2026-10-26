@@ -152,19 +152,6 @@
       "web": "Im Web nutzen"
     }
   },
-  "soon": {
-    "title": "Bald<dot>.</dot>",
-    "web": "Im Web nutzen",
-    "connect": "Deine KI verbinden",
-    "chrome": {
-      "meta": {
-        "title": "Pluck für Chrome · Pluck",
-        "description": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store. Es kann jeden Tag so weit sein."
-      },
-      "para1": "Pluck für Chrome wartet auf die Prüfung im Chrome Web Store, irgendwo hinter ein paar Tausend Gutschein-Findern. Es kann jeden Tag so weit sein.",
-      "para2": "Bis dahin funktioniert Pluck im Web: Füg einen Link ein, und er ist gepflückt. Auch deine KI kann für dich pflücken."
-    }
-  },
   "openSource": {
     "meta": {
       "title": "Open Source · Pluck",

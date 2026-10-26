@@ -1,7 +1,7 @@
 import { isTextKind, withReferral, type Item } from "@pluck/shared-schemas";
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import Link from "next/link";
+import { CHROME_STORE_URL } from "@/lib/siteUrls";
 import { cache } from "react";
 import { notFound } from "next/navigation";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -68,7 +68,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
           <div className={styles.tip}>
             <b>{t("failed.loginTitle")}</b>
             <span>{t("failed.loginBody")}</span>
-            <Link href="/connect#extension" className={styles.tipLink}>{t("failed.extension")}</Link>
+            <a href={CHROME_STORE_URL} className={styles.tipLink} target="_blank" rel="noopener">{t("failed.extension")}</a>
           </div>
           <div className={styles.kept}>
             <span className={styles.keptTitle}>{t("failed.keptTitle")}</span>

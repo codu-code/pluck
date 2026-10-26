@@ -1,6 +1,6 @@
 import { LOCALE_NAMES, LOCALES } from "@pluck/i18n";
 import { postsIn } from "@/lib/blog";
-import { localePath } from "@/lib/siteUrls";
+import { CHROME_STORE_URL, localePath } from "@/lib/siteUrls";
 import { CONNECTOR_URL, LICENCE, REPO_URL } from "@/lib/site";
 
 const base = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
@@ -30,7 +30,7 @@ Key facts:
 - [Open source](${base}/open-source): self-hosting, export and what Pluck does with your data
 - [Support](${base}/support): answers about the extension, iPhone, your AI and your account
 - [iPhone](${base}/iphone): the iPhone app
-- [Chrome](${base}/chrome): the Chrome extension
+- [Chrome](${CHROME_STORE_URL}): the Chrome extension, in the Chrome Web Store
 
 ## Blog
 

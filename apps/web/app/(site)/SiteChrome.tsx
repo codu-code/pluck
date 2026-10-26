@@ -7,7 +7,7 @@ import { LanguageSelect } from "@/components/LanguageSelect";
 import { REPO_URL } from "@/lib/site";
 import styles from "./site.module.css";
 
-type Page = "home" | "chrome" | "iphone" | "connect" | "open-source" | "support" | "privacy" | "terms" | "blog";
+type Page = "home" | "iphone" | "connect" | "open-source" | "support" | "privacy" | "terms" | "blog";
 
 // Header and footer for the marketing pages (the boards' shared chrome).
 export async function SitePage({ page, dark = false, footerNote, children }: { page: Page; dark?: boolean; footerNote?: ReactNode; children: ReactNode }) {

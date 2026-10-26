@@ -152,19 +152,6 @@
       "web": "웹에서 쓰기"
     }
   },
-  "soon": {
-    "title": "곧 나와요<dot>.</dot>",
-    "web": "웹에서 쓰기",
-    "connect": "내 AI 연결",
-    "chrome": {
-      "meta": {
-        "title": "Chrome용 Pluck · Pluck",
-        "description": "Chrome용 Pluck은 Chrome 웹 스토어 심사를 기다리고 있어요. 곧 나와요."
-      },
-      "para1": "Chrome용 Pluck은 Chrome 웹 스토어 심사 대기열에 있어요. 쿠폰 찾기 확장 프로그램 몇천 개 뒤 어딘가예요. 곧 나와요.",
-      "para2": "그때까지는 웹에서 Pluck을 쓸 수 있어요. 링크를 붙여 넣으면 담겨요. 내 AI가 대신 담아 줄 수도 있어요."
-    }
-  },
   "openSource": {
     "meta": {
       "title": "오픈소스 · Pluck",

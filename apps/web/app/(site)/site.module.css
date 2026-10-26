@@ -292,7 +292,7 @@
 @media (max-width: 760px) {
   .beta { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .qr { display: none; }
-} /* the iPhone and Chrome pages: room above the footer */
+} /* the iPhone page: room above the footer */
 .supportTitle { margin: 0 0 0.16em; font-size: clamp(88px, 15vw, 210px); line-height: 0.86; } /* 0.16em: room for the tail of a y or a g */
 .heroPara a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--accent); }
 .topics { display: flex; flex-wrap: wrap; gap: 8px; }

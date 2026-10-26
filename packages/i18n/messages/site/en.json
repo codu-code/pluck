@@ -152,19 +152,6 @@
       "web": "Use it on the web"
     }
   },
-  "soon": {
-    "title": "Soon<dot>.</dot>",
-    "web": "Use it on the web",
-    "connect": "Connect your AI",
-    "chrome": {
-      "meta": {
-        "title": "Pluck for Chrome · Pluck",
-        "description": "Pluck for Chrome is in the Chrome Web Store's review queue. Out any day now."
-      },
-      "para1": "Pluck for Chrome is in the Chrome Web Store's review queue, somewhere behind a few thousand coupon finders. Out any day now.",
-      "para2": "Until then, Pluck works on the web: paste a link and it is plucked. Your AI can pluck for you too."
-    }
-  },
   "openSource": {
     "meta": {
       "title": "Open source · Pluck",
