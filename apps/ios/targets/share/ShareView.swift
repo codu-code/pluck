@@ -52,7 +52,11 @@ final class ShareModel: ObservableObject {
   @Published var note = ""
   @Published private(set) var finishing = false
   private var titleEdited = false // only a title the person typed goes up, never the one shown
-  private var work: [Task<Void, Never>] = [] // tags, list, kind and covers still on their way up
+  private var tagsEdited = false
+  // Every change goes up one after another, in the order it was made: a tag tapped on and off again must not land as
+  // on because the two requests crossed. Covers upload alongside.
+  private var saves: Task<Void, Never>?
+  private var uploads: [Task<Void, Never>] = []
   var close: () -> Void = {}
   var openApp: () -> Void = {}
   let client = PluckClient()
@@ -108,25 +112,31 @@ final class ShareModel: ObservableObject {
       }
     }
     phase = queued && item == nil ? .queued : .plucked
-    for c in covers { work.append(Task { [client] in await client.putCover(c.id, jpeg: c.jpeg) }) } // while the sheet is open
+    uploads = covers.map { c in Task { [client] in await client.putCover(c.id, jpeg: c.jpeg) } } // while the sheet is open
+  }
+
+  private func save(_ step: @escaping @MainActor () async -> Void) {
+    let before = saves
+    saves = Task { await before?.value; await step() }
   }
 
   func toggle(_ tag: TagRef) {
     guard let id = item?.id else { return }
     if tagIds.contains(tag.id) { tagIds.remove(tag.id) } else { tagIds.insert(tag.id) }
+    tagsEdited = true
     let ids = Array(tagIds)
-    work.append(Task { [client] in _ = try? await client.patch(id, ["tagIds": ids]) })
+    save { [client] in _ = try? await client.patch(id, ["tagIds": ids]) }
   }
 
   func addToList() {
     guard let id = item?.id, let list = lastList, !addedToList else { return }
     addedToList = true
-    work.append(Task { [client] in try? await client.addToList(list.id, id) })
+    save { [client] in try? await client.addToList(list.id, id) }
   }
 
   func setKind(_ kind: String) {
     guard let id = item?.id else { return }
-    work.append(Task { if let updated = try? await client.patch(id, ["kind": kind]) { item = updated } })
+    save { [client] in if let updated = try? await client.patch(id, ["kind": kind]) { self.item = updated } }
   }
 
   // Done or a tap outside: the note and a typed title go up, and what was tapped finishes, before the sheet closes.
@@ -139,7 +149,9 @@ final class ShareModel: ObservableObject {
     let typedTitle = String(title.components(separatedBy: .newlines).joined(separator: " ").trimmingCharacters(in: .whitespaces).prefix(500))
     if !typedNote.isEmpty { edit["note"] = typedNote }
     if renameable, titleEdited, !typedTitle.isEmpty, typedTitle != item?.title { edit["title"] = typedTitle }
-    let pending = work
+    if tagsEdited { edit["tagIds"] = Array(tagIds) } // the tags as the sheet shows them, last, whatever went before
+    if let id = item?.id, !edit.isEmpty { save { [client] in _ = try? await client.patch(id, edit) } }
+    let pending = [saves].compactMap { $0 } + uploads
     Task {
       await withTaskGroup(of: Void.self) { group in
         group.addTask { for t in pending { await t.value } }
@@ -147,7 +159,6 @@ final class ShareModel: ObservableObject {
         await group.next() // whichever is first
         group.cancelAll()
       }
-      if let id = item?.id, !edit.isEmpty { _ = try? await client.patch(id, edit) }
       close()
     }
   }
