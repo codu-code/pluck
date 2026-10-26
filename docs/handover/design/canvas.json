@@ -307,42 +307,70 @@
       "y": 12900,
       "w": 1320,
       "h": 2868,
-      "title": "App Store · screenshot 1 of 5 (6.9 in)"
+      "title": "App Store · 1 of 7 · 1320 × 2868"
     },
     "AppStore2.dc.html": {
       "x": 1400,
       "y": 12900,
       "w": 1320,
       "h": 2868,
-      "title": "App Store · screenshot 2 of 5 (6.9 in)"
+      "title": "App Store · 2 of 7 · 1320 × 2868"
     },
     "AppStore3.dc.html": {
       "x": 2800,
       "y": 12900,
       "w": 1320,
       "h": 2868,
-      "title": "App Store · screenshot 3 of 5 (6.9 in)"
+      "title": "App Store · 3 of 7 · 1320 × 2868"
     },
     "AppStore4.dc.html": {
       "x": 4200,
       "y": 12900,
       "w": 1320,
       "h": 2868,
-      "title": "App Store · screenshot 4 of 5 (6.9 in)"
+      "title": "App Store · 4 of 7 · 1320 × 2868"
     },
     "AppStore5.dc.html": {
       "x": 5600,
       "y": 12900,
       "w": 1320,
       "h": 2868,
-      "title": "App Store · screenshot 5 of 5 (6.9 in)"
+      "title": "App Store · 5 of 7 · 1320 × 2868"
     },
     "ConnectLoop.dc.html": {
-      "x": 7200,
+      "x": 9900,
       "y": 12900,
       "w": 1440,
       "h": 3400,
       "title": "Motion · Connect your AI loop, 10 s"
+    },
+    "AppStore6.dc.html": {
+      "x": 7000,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · 6 of 7 · 1320 × 2868"
+    },
+    "AppStore7.dc.html": {
+      "x": 8400,
+      "y": 12900,
+      "w": 1320,
+      "h": 2868,
+      "title": "App Store · 7 of 7 · 1320 × 2868"
+    },
+    "AppStoreListing.dc.html": {
+      "x": 0,
+      "y": 16100,
+      "w": 1440,
+      "h": 3250,
+      "title": "App Store · listing, featuring, posts"
+    },
+    "Promo.dc.html": {
+      "x": 1600,
+      "y": 16100,
+      "w": 1440,
+      "h": 1900,
+      "title": "Promo · 20 s for LinkedIn and X"
     }
   },
   "createdOnFiles": {
@@ -404,8 +432,8 @@
     },
     "t-appstore": {
       "kind": "title1",
-      "maxW": 6920,
-      "text": "App Store screenshots, 1320 × 2868",
+      "maxW": 9720,
+      "text": "App Store, 1320 × 2868",
       "w": 240,
       "x": 0,
       "y": 12600
@@ -415,8 +443,16 @@
       "maxW": 1440,
       "text": "Motion",
       "w": 240,
-      "x": 7200,
+      "x": 9900,
       "y": 12600
+    },
+    "t-launch": {
+      "kind": "title1",
+      "maxW": 3040,
+      "text": "Launch: listing, nomination, promo",
+      "w": 240,
+      "x": 0,
+      "y": 15800
     }
   },
   "order": [
@@ -462,7 +498,11 @@
     "AppStore3.dc.html",
     "AppStore4.dc.html",
     "AppStore5.dc.html",
-    "ConnectLoop.dc.html"
+    "ConnectLoop.dc.html",
+    "AppStore6.dc.html",
+    "AppStore7.dc.html",
+    "AppStoreListing.dc.html",
+    "Promo.dc.html"
   ],
   "pages": [],
   "title": "Pluck — Product and Design"
