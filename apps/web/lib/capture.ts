@@ -67,7 +67,8 @@ export async function extractAttempt(
   try {
     // Shown as an article by the person's choice: its body is kept, whatever the link looks like.
     const asArticle = item.preview === "reader" && item.previewGuess !== "reader";
-    const x = withTranscript(await extract({ url: item.url!, html }, { signal: AbortSignal.timeout(timeoutMs), asArticle }), transcript);
+    const named = item.titleIsDerived && item.title !== item.url ? item.title : null; // the device's, or an earlier read's
+    const x = withTranscript(await extract({ url: item.url!, html, title: named }, { signal: AbortSignal.timeout(timeoutMs), asArticle }), transcript);
     const updated = (await applyExtraction(userId, item.id, toResult(x))) ?? item;
     const blobs = () =>
       storeBlobs(userId, item.id, x).catch(async (e) => {
@@ -95,7 +96,7 @@ export async function sortBackfill(limit = 10): Promise<number> {
   for (const u of page) {
     try {
       const html = u.htmlKey ? (await getObject(u.htmlKey)).toString("utf8") : null;
-      await applyExtraction(u.userId, u.itemId, toResult(await extract({ url: u.url, html }, { signal: AbortSignal.timeout(10_000) })));
+      await applyExtraction(u.userId, u.itemId, toResult(await extract({ url: u.url, html, title: u.title }, { signal: AbortSignal.timeout(10_000) })));
     } catch (e) {
       log("warn", "preview backfill skipped an item", { userId: u.userId, itemId: u.itemId, error: errorText(e) }); // it keeps its old look
     }

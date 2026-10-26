@@ -1,3 +1,4 @@
+import LinkPresentation
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -76,6 +77,32 @@ extension Shared {
     try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     let dest = dir.appendingPathComponent("\(UUID().uuidString).\(url.pathExtension.isEmpty ? "bin" : url.pathExtension)")
     return (try? FileManager.default.copyItem(at: url, to: dest)) == nil ? nil : dest
+  }
+
+  // A link shared from an app comes with no page. iOS's own link preview (what Messages shows) reads it from this
+  // phone, as the person would see it, so a reel or a TikTok arrives with a name and a picture; the server never asks.
+  @MainActor
+  static func preview(of address: String) async -> (title: String?, jpeg: Data?) {
+    guard let url = URL(string: address) else { return (nil, nil) }
+    let provider = LPMetadataProvider()
+    provider.timeout = 3 // the sheet is waiting; without it the server still names the link
+    guard let m = try? await provider.startFetchingMetadata(for: url) else { return (nil, nil) }
+    guard let p = m.imageProvider else { return (m.title, nil) }
+    let image = await withCheckedContinuation { (done: CheckedContinuation<UIImage?, Never>) in
+      _ = p.loadObject(ofClass: UIImage.self) { o, _ in done.resume(returning: o as? UIImage) }
+    }
+    return (m.title, image.flatMap(jpeg))
+  }
+
+  // At most 1080 points on the long side, at 1x, under the API's 2 MB.
+  private static func jpeg(_ image: UIImage) -> Data? {
+    guard image.size.width > 0, image.size.height > 0 else { return nil }
+    let scale = min(1, 1080 / max(image.size.width, image.size.height))
+    let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+    let format = UIGraphicsImageRendererFormat()
+    format.scale = 1
+    let data = UIGraphicsImageRenderer(size: size, format: format).image { _ in image.draw(in: CGRect(origin: .zero, size: size)) }.jpegData(compressionQuality: 0.8)
+    return data.flatMap { $0.count <= 2_000_000 ? $0 : nil }
   }
 
   private static func mime(_ url: URL) -> String {

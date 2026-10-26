@@ -4,7 +4,7 @@ const TRACKING = /^(utm_[a-z]+|fbclid|gclid|dclid|gbraid|wbraid|msclkid|mc_cid|m
 const PER_HOST: [RegExp, RegExp][] = [
   [/(^|\.)(x|twitter)\.com$/, /^(s|t)$/],
   [/(^|\.)(youtube\.com|youtu\.be)$/, /^(si|feature|pp)$/],
-  [/(^|\.)instagram\.com$/, /^(igsh)$/],
+  [/(^|\.)instagram\.com$/, /^(igsh|dlrf|srtk)$/],
 ];
 
 // The form a URL is deduped on: lowercase scheme and host, no default port, no fragment,

@@ -7,10 +7,21 @@ export type Guess = { preview: Preview; kind?: "link" | "video"; facts: Facts };
 const host = (u: URL) => u.hostname.toLowerCase().replace(/^(www|m|mobile)\./, "");
 const parts = (u: URL) => u.pathname.split("/").filter(Boolean);
 
+// An Instagram post or reel: /reel/ID, /p/ID, or the same after its author's name (/name/reel/ID).
+function instagram(u: URL): { what: string; id: string; handle?: string } | null {
+  if (host(u) !== "instagram.com") return null;
+  const p = parts(u);
+  const at = [0, 1].find((i) => ["p", "reel", "reels", "tv"].includes(p[i] ?? ""));
+  const id = at === undefined ? undefined : p[at + 1];
+  return at !== undefined && id && /^[\w-]{5,40}$/.test(id) ? { what: p[at]!, id, ...(at ? { handle: `@${p[0]}` } : {}) } : null;
+}
+
 // Ids for the players we embed (shared-schemas PLAYERS), from every address form each site uses.
 function player(u: URL): Facts["player"] | null {
   const h = host(u);
   const p = parts(u);
+  const ig = instagram(u);
+  if (ig) return ig.what === "p" ? null : { provider: "instagram", id: ig.id };
   if (h === "youtube.com" || h === "music.youtube.com" || h === "youtube-nocookie.com") {
     const id = u.searchParams.get("v") ?? (["shorts", "embed", "live", "v"].includes(p[0] ?? "") ? p[1] : null);
     return id && /^[\w-]{11}$/.test(id) ? { provider: "youtube", id } : null;
@@ -76,7 +87,8 @@ function post(u: URL): Facts | null {
   if ((h === "threads.net" || h === "threads.com") && p[0]?.startsWith("@") && p[1] === "post") return { handle: p[0] };
   if (h === "bsky.app" && p[0] === "profile" && p[2] === "post") return { handle: `@${p[1]}` };
   if (h === "reddit.com" || h === "old.reddit.com" || h === "redd.it") return p[0] === "r" && p[2] === "comments" ? { handle: `r/${p[1]}` } : h === "redd.it" ? {} : null;
-  if (h === "instagram.com" && ["p", "reel", "reels", "tv"].includes(p[0] ?? "")) return {};
+  const ig = instagram(u);
+  if (ig) return ig.handle ? { handle: ig.handle } : {};
   if (h === "linkedin.com" && (p[0] === "posts" || (p[0] === "feed" && p[1] === "update"))) return {};
   if (h === "facebook.com" && (p.includes("posts") || p[0] === "share" || p[0] === "permalink.php")) return {};
   if (h === "news.ycombinator.com" && p[0] === "item") return {};
@@ -96,14 +108,15 @@ export function fromAddress(url: string): Guess | null {
   const pl = player(u);
   if (pl) {
     const facts: Facts = { player: pl };
-    if (pl.provider === "tiktok") Object.assign(facts, { handle: parts(u)[0], vertical: true });
+    if (pl.provider === "tiktok") Object.assign(facts, { ...(/^@[\w.]+$/.test(parts(u)[0] ?? "") ? { handle: parts(u)[0] } : {}), vertical: true }); // a short link lands on /@/video/…
+    if (pl.provider === "instagram") Object.assign(facts, { ...post(u), vertical: true });
     if (pl.provider === "youtube" && parts(u)[0] === "shorts") facts.vertical = true;
     return { preview: "player", kind: pl.provider === "spotify" ? "link" : "video", facts };
   }
   const c = code(u);
   if (c) return { preview: "code", facts: c };
   const s = post(u);
-  if (s) return { preview: "post", kind: h === "instagram.com" && parts(u)[0] !== "p" ? "video" : "link", facts: s };
+  if (s) return { preview: "post", kind: "link", facts: s };
   for (const [re, app, path] of APPS) if (re.test(h) && (!path || path.test(u.pathname))) return { preview: "app", facts: { app } };
   return null;
 }

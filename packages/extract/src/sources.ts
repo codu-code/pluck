@@ -24,6 +24,8 @@ type Source = {
   // (the extension, the share sheet in Safari) is still read.
   only?: boolean;
   resolve?: (u: URL, signal?: AbortSignal) => Promise<Found | null>;
+  // A name from the address for when nothing better turns up. The title the person's phone saw comes first.
+  name?: (u: URL) => string | null;
 };
 
 const host = (u: URL) => u.hostname.toLowerCase().replace(/^(www|m|mobile|old)\./, "");
@@ -178,9 +180,19 @@ const SOURCES: Source[] = [
   { match: (u) => host(u) === "open.spotify.com", only: true, resolve: async (u, signal) => ({ ...fromOEmbed(await oembed("https://open.spotify.com/oembed", u, signal)), siteName: "Spotify" }) },
 
   // App shells with nothing to read and no API that may be kept from: the address says what it is.
-  { match: (u) => host(u) === "tiktok.com", only: true, resolve: async (u) => ({ siteName: "TikTok", title: parts(u)[0]?.startsWith("@") ? `${parts(u)[0]} · TikTok` : null }) },
-  { match: (u) => host(u) === "instagram.com", only: true, resolve: async () => ({ siteName: "Instagram" }) },
-  { match: (u) => /^threads\.(net|com)$/.test(host(u)), only: true, resolve: async (u) => ({ siteName: "Threads", title: parts(u)[0]?.startsWith("@") ? `${parts(u)[0]} · Threads` : null }) },
+  { match: (u) => host(u) === "tiktok.com", only: true, resolve: async () => ({ siteName: "TikTok" }), name: (u) => (/^@[\w.]+$/.test(parts(u)[0] ?? "") ? `${parts(u)[0]} · TikTok` : parts(u)[1] === "video" ? "TikTok video" : null) },
+  {
+    match: (u) => host(u) === "instagram.com",
+    only: true,
+    resolve: async () => ({ siteName: "Instagram" }),
+    // docs/previews.md: whose it is when the address says, else "Instagram post" or "Instagram reel".
+    name: (u) => {
+      const p = parts(u);
+      const at = [0, 1].find((i) => ["p", "reel", "reels", "tv"].includes(p[i] ?? ""));
+      return at === undefined ? null : at ? `@${p[0]} · Instagram` : p[0] === "p" ? "Instagram post" : "Instagram reel";
+    },
+  },
+  { match: (u) => /^threads\.(net|com)$/.test(host(u)), only: true, resolve: async () => ({ siteName: "Threads" }), name: (u) => (parts(u)[0]?.startsWith("@") ? `${parts(u)[0]} · Threads` : null) },
   { match: (u) => host(u) === "facebook.com", only: true, resolve: async () => ({ siteName: "Facebook" }) },
 
   // X: the JSON its own embed widget reads (cdn.syndication.twimg.com, as react-tweet does) has the post with its links

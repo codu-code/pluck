@@ -4,7 +4,7 @@
 .article { position: relative; flex: 999 1 480px; max-width: 680px; min-width: 0; display: flex; flex-direction: column; gap: 20px; font-family: var(--font-reader); }
 .head { display: flex; flex-direction: column; gap: 10px; }
 .meta { font-family: var(--font-ui); color: var(--ink2); font-size: 13px; }
-.title { margin: 0; font-size: 40px; line-height: 46px; font-weight: 600; letter-spacing: -0.015em; }
+.title { margin: 0; font-size: 40px; line-height: 46px; font-weight: 600; letter-spacing: -0.015em; overflow-wrap: anywhere; }
 .byline { font-size: 17px; font-style: italic; color: var(--ink2); }
 .cover { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; }
 .image { width: 100%; border-radius: 8px; }
