@@ -35,7 +35,8 @@ export function createLibrary(call: Client) {
     // Returns the Items as they are now; `known` holds their Tags before.
     setTag: async <I extends Pick<Item, "id" | "tagIds">>(ids: string[], tagId: string, on: boolean, known: I[]): Promise<(I | Item)[]> => {
       const next = (tagIds: string[]) => (on ? [...new Set([...tagIds, tagId])] : tagIds.filter((t) => t !== tagId));
-      if (ids.length === 1) return [(await call<{ item: Item }>(`/api/v1/items/${ids[0]}`, { method: "PATCH", json: { tagIds: next(known.find((i) => i.id === ids[0])?.tagIds ?? []) } })).item];
+      const one = ids.length === 1 ? known.find((i) => i.id === ids[0]) : undefined; // its Tags unknown: a whole set would drop them
+      if (one) return [(await call<{ item: Item }>(`/api/v1/items/${one.id}`, { method: "PATCH", json: { tagIds: next(one.tagIds) } })).item];
       await call("/api/v1/items/batch", { json: { itemIds: ids, patch: on ? { addTagIds: [tagId] } : { removeTagIds: [tagId] } } });
       // The batch did exactly this to each Item, so apply it here rather than fetching every Item back.
       return known.filter((i) => ids.includes(i.id)).map((i) => ({ ...i, tagIds: next(i.tagIds) }));
