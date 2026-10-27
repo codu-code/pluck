@@ -1,4 +1,4 @@
-import type { Item, Status } from "@pluck/shared-schemas";
+import { isTask, type Item, type Status } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect, usePathname } from "expo-router";
@@ -93,7 +93,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const more = () => {
     const options = [
       ...(one && one.url ? ["note" as const] : []),
-      ...(chosen.every((i) => i.kind === "todo" || i.kind === "thing") ? ["done" as const] : []),
+      ...(chosen.every((i) => isTask(i.kind)) ? ["done" as const] : []),
       "all" as const,
     ];
     const names = { note: tr("items.addNote"), done: tr("common.done"), all: tr("items.selectAll") };

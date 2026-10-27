@@ -1,6 +1,6 @@
 "use client";
 
-import type { Item, ItemPage, List, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
+import { isTask, type Item, type ItemPage, type List, type PluckResponse, type Status, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -137,7 +137,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   // Moves slide the rows out, then call the API; a failure puts them back.
   const move = useCallback(
     async (ids: string[], status: Status) => {
-      const moved = real.filter((r) => ids.includes(r.id) && (status !== "done" || r.kind === "todo" || r.kind === "thing"));
+      const moved = real.filter((r) => ids.includes(r.id) && (status !== "done" || isTask(r.kind)));
       if (!moved.length) return;
       const movedIds = moved.map((r) => r.id);
       setLeaving(new Set(movedIds));
@@ -301,7 +301,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const emptyNode = !everPlucked && rows.length === 0 ? empty() : null;
   const selecting = selected.size > 0;
   const selectedRows = real.filter((r) => selected.has(r.id));
-  const allTodo = selectedRows.length > 0 && selectedRows.every((r) => r.kind === "todo" || r.kind === "thing");
+  const allTodo = selectedRows.length > 0 && selectedRows.every((r) => isTask(r.kind));
 
   return (
     <>
@@ -381,7 +381,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
                           <RowAction label={t("actions.archive")} keyHint="e" onClick={() => move([r.id], "archived")} />
                           <RowAction label={t("actions.tag")} keyHint="t" onClick={() => setPicking([r.id])} />
                           <RowAction label={t("actions.list")} keyHint="a" onClick={() => openLists([r.id])} />
-                          {(r.kind === "todo" || r.kind === "thing") && <RowAction label={t("actions.done")} keyHint="d" onClick={() => move([r.id], "done")} />}
+                          {isTask(r.kind) && <RowAction label={t("actions.done")} keyHint="d" onClick={() => move([r.id], "done")} />}
                           <RowAction label={t("actions.open")} keyHint="o" href={`/items/${r.id}`} />
                         </>
                       )

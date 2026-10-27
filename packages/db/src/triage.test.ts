@@ -44,24 +44,29 @@ describe("status changes", () => {
 });
 
 describe("batch", () => {
-  test("applies one change to many, skipping what does not fit, never touching B's items", async () => {
+  test("applies one change to many, all or none, never touching B's items", async () => {
     const { a, b } = await twoUsers();
     const l1 = (await pluckLink(a, { url: "https://example.com/b1", source: "web" })).item;
     const l2 = (await pluckLink(a, { url: "https://example.com/b2", source: "web" })).item;
     const { item: todo } = await createTextItem(a, { kind: "todo", text: "t", source: "web" });
+    const { item: note } = await createTextItem(b, { kind: "note", text: "n", source: "web" });
     const theirs = (await pluckLink(b, { url: "https://example.com/b3", source: "web" })).item;
 
     expect(await batchUpdate(a, [l1.id, l2.id, theirs.id], { status: "later" })).toEqual({ matched: 2, updated: 2 });
     expect((await getItem(b, theirs.id))?.status).toBe("inbox");
 
-    // Done only fits the todo.
-    expect((await batchUpdate(a, [l1.id, todo.id], { status: "done" })).updated).toBe(1);
-    expect((await getItem(a, l1.id))?.status).toBe("later");
-    // A link kind only fits links; a text kind only fits items with no URL.
-    expect((await batchUpdate(a, [l1.id, todo.id], { kind: "video" })).updated).toBe(1);
-    expect((await getItem(a, todo.id))?.kind).toBe("todo");
-    expect((await batchUpdate(a, [l1.id, todo.id], { kind: "thing" })).updated).toBe(1);
-    expect((await getItem(a, l1.id))?.kind).toBe("video");
+    // Done only fits the todo, so nothing moves and the link is named, as an edit of it alone would be refused.
+    expect(await batchUpdate(a, [l1.id, todo.id], { status: "done" })).toEqual({
+      matched: 2, updated: 0, refused: { reason: "Done is for todos and things.", itemIds: [l1.id] },
+    });
+    expect((await getItem(a, todo.id))?.status).toBe("inbox");
+    // A link kind only fits links; a text kind only fits notes, todos and things.
+    expect((await batchUpdate(a, [l1.id, todo.id], { kind: "video" })).refused?.itemIds).toEqual([todo.id]);
+    expect((await batchUpdate(a, [l1.id, l2.id], { kind: "video" })).updated).toBe(2);
+    expect((await batchUpdate(a, [todo.id], { kind: "note", status: "done" })).refused?.reason).toBe("Done is for todos and things.");
+    // B's items are neither changed nor named, even ones that would not fit.
+    expect(await batchUpdate(a, [todo.id, note.id, theirs.id], { status: "done" })).toEqual({ matched: 1, updated: 1 });
+    expect((await getItem(b, theirs.id))?.status).toBe("inbox");
   });
 });
 

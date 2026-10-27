@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
-import { BIN_DAYS, defaultPreview, deriveExcerpt, deriveTitle, isTextKind, LINK_KINDS, TEXT_KINDS, type Item, type ItemPage, type Facts, type Kind, type ListItemsQuery, type Preview, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
+import { BIN_DAYS, defaultPreview, deriveExcerpt, deriveTitle, isTextKind, Kind, TASK_KINDS, type Item, type ItemPage, type Facts, type ListItemsQuery, type Preview, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
+import { misfit, newItem, onInsert, replucked, statusFields } from "./item-doc.ts";
 import { markFollowsDone, recountList, recountListsOf } from "./lists.ts";
 import { recountTags } from "./tags.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
@@ -57,22 +58,13 @@ export async function pluckLink(
   const now = new Date();
   const uid = oid(userId);
   const hash = urlHash(input.url);
+  const set = replucked(now);
+  const fresh = newItem(userId, {
+    kind: "link", url: input.url, urlHash: hash, title: input.title?.trim() || input.url, siteName: new URL(input.url).hostname.replace(/^www\./, ""),
+    note: input.note?.trim() || null, source: input.source, searchText: textForSearch({ url: input.url }),
+  }, now);
   const run = () =>
-    col.findOneAndUpdate(
-      { userId: uid, urlHash: hash },
-      {
-        $set: { status: "inbox", archivedReason: null, deletedAt: null, lastTouchedAt: now, updatedAt: now, statusChangedAt: now },
-        $setOnInsert: {
-          userId: uid, kind: "link", url: input.url, urlHash: hash, canonicalUrl: null,
-          title: input.title?.trim() || input.url, titleIsDerived: true, siteName: new URL(input.url).hostname.replace(/^www\./, ""),
-          author: null, excerpt: null, coverKey: null, htmlKey: null, dueAt: null, tagIds: [], note: input.note?.trim() || null,
-          source: input.source, readingProgress: 0, wordCount: null, lang: null,
-          extraction: { state: "pending", attempts: 0, lastError: null }, createdAt: now, lastOpenedAt: null,
-          searchText: textForSearch({ url: input.url }),
-        },
-      },
-      { upsert: true, returnDocument: "after", includeResultMetadata: true },
-    );
+    col.findOneAndUpdate({ userId: uid, urlHash: hash }, { $set: set, $setOnInsert: onInsert(fresh, set) }, { upsert: true, returnDocument: "after", includeResultMetadata: true });
   let res;
   try {
     res = await run();
@@ -111,17 +103,10 @@ export const recountAround = (userId: string, doc: Pick<ItemDoc, "_id" | "tagIds
 
 // An Image or PDF shared as a file: no URL, the bytes arrive in blob storage and the worker reads them.
 export async function createFileItem(userId: string, input: { kind: "image" | "pdf"; title: string; source: Source }): Promise<Item> {
-  const now = new Date();
-  const _id = new ObjectId();
+  const doc = newItem(userId, { kind: input.kind, title: input.title, source: input.source, searchText: textForSearch({}) }, new Date());
   const col = await items();
-  await col.insertOne({
-    _id, userId: oid(userId), kind: input.kind, url: null, canonicalUrl: null, title: input.title, titleIsDerived: true, siteName: null,
-    author: null, excerpt: null, coverKey: null, htmlKey: null, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], note: null,
-    source: input.source, readingProgress: 0, wordCount: null, lang: null, extraction: { state: "pending", attempts: 0, lastError: null },
-    createdAt: now, updatedAt: now, lastOpenedAt: null, lastTouchedAt: now, statusChangedAt: now, deletedAt: null,
-    searchText: textForSearch({}),
-  });
-  return toItem((await col.findOne({ _id }))!);
+  await col.insertOne(doc);
+  return toItem((await col.findOne({ _id: doc._id }))!);
 }
 
 export type TextItemInput = { kind: TextKind; text: string; title?: string | null; dueAt?: Date | null; source: Source; clientKey?: string };
@@ -132,15 +117,11 @@ export async function createTextItem(userId: string, input: TextItemInput): Prom
   const now = new Date();
   const uid = oid(userId);
   const typed = input.title?.trim();
-  const doc: ItemDoc = {
-    _id: new ObjectId(), userId: uid, kind: input.kind, url: null, canonicalUrl: null,
-    title: typed || deriveTitle(input.text), titleIsDerived: !typed, siteName: null, author: null,
-    excerpt: deriveExcerpt(input.text, !typed), coverKey: null, htmlKey: null, status: "inbox", archivedReason: null,
-    dueAt: input.dueAt ?? null, tagIds: [], note: null, source: input.source, readingProgress: 0, wordCount: null, lang: null,
-    extraction: { state: "none", attempts: 0, lastError: null }, createdAt: now, updatedAt: now, lastOpenedAt: null,
-    lastTouchedAt: now, statusChangedAt: now, deletedAt: null, searchBody: bodyForSearch(input.text),
+  const doc = newItem(userId, {
+    kind: input.kind, title: typed || deriveTitle(input.text), titleIsDerived: !typed, excerpt: deriveExcerpt(input.text, !typed),
+    dueAt: input.dueAt ?? null, source: input.source, extraction: { state: "none", attempts: 0, lastError: null }, searchBody: bodyForSearch(input.text),
     ...(input.clientKey ? { clientKey: input.clientKey } : {}),
-  };
+  }, now);
   const col = await items();
   const sent = async () => (input.clientKey ? await col.findOne({ userId: uid, clientKey: input.clientKey }) : null);
   const first = await sent();
@@ -163,13 +144,8 @@ export type ItemEdit = {
   preview?: Preview | null; // the person's choice of screen; null goes back to the guess
 };
 
-// The fields a status change sets: archived by the person is "user"; leaving the archive clears the reason.
-function statusFields(status: Status, now: Date): Partial<ItemDoc> {
-  return { status, statusChangedAt: now, archivedReason: status === "archived" ? "user" : null };
-}
-
 // Edits by the person. Title rules: a typed title sticks; an empty one goes back to the first line.
-// The caller has already checked the edit fits the item (text and text kinds only on items with no URL).
+// The caller has already checked the edit fits the item (`misfit` in item-doc.ts).
 export async function editItem(userId: string, itemId: string, edit: ItemEdit): Promise<Item | null> {
   const uid = oid(userId);
   const _id = oid(itemId);
@@ -221,34 +197,31 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
 // A Todo or Thing's mark in its Lists follows its Done (see markFollowsDone).
 async function marksFollow(uid: ObjectId, ids: ObjectId[], status: Status): Promise<void> {
   if (status === "archived") return;
-  const tasks = await (await items()).find({ _id: { $in: ids }, userId: uid, kind: { $in: ["todo", "thing"] } }, { projection: { _id: 1 } }).toArray();
+  const tasks = await (await items()).find({ _id: { $in: ids }, userId: uid, kind: { $in: [...TASK_KINDS] } }, { projection: { _id: 1 } }).toArray();
   await markFollowsDone(uid, tasks.map((t) => t._id), status === "done");
 }
 
 export type BatchEdit = { status?: Status; kind?: Kind; dueAt?: Date | null; note?: string | null };
 
-// One change over many of the person's items. Changes that do not fit an item are skipped for that item:
-// Done only for todos and things, link kinds only for links, text kinds only for items with no URL.
-export async function batchUpdate(userId: string, itemIds: string[], patch: BatchEdit): Promise<{ matched: number; updated: number }> {
+export type BatchResult = { matched: number; updated: number; refused?: { reason: string; itemIds: string[] } };
+
+// One change over many of the person's items, all or none: if it does not fit one of them (`misfit`), nothing
+// changes and `refused` names those items, as an edit of one would be refused.
+export async function batchUpdate(userId: string, itemIds: string[], patch: BatchEdit): Promise<BatchResult> {
   const col = await items();
   const now = new Date();
   const base = { userId: oid(userId), _id: { $in: itemIds.map(oid) }, deletedAt: null };
+  const fits = Kind.options.filter((k) => !misfit(k, patch));
+  const odd = await col.find({ ...base, kind: { $nin: fits } }, { projection: { _id: 1, kind: 1 } }).toArray();
+  const matched = await col.countDocuments(base);
+  if (odd.length) return { matched, updated: 0, refused: { reason: misfit(odd[0]!.kind, patch)!, itemIds: odd.map((d) => d._id.toHexString()) } };
   const set: Partial<ItemDoc> = { updatedAt: now, lastTouchedAt: now };
   if (patch.dueAt !== undefined) set.dueAt = patch.dueAt;
   if (patch.note !== undefined) set.note = patch.note?.trim() || null;
-  const filter: Record<string, unknown> = { ...base };
-  if (patch.status) {
-    Object.assign(set, statusFields(patch.status, now));
-    if (patch.status === "done") filter.kind = { $in: ["todo", "thing"] };
-  }
-  if (patch.kind) {
-    set.kind = patch.kind;
-    // A link kind fits links (with or without a URL, like email-in); a text kind fits notes, todos and things.
-    const group: readonly string[] = (LINK_KINDS as readonly string[]).includes(patch.kind) ? LINK_KINDS : TEXT_KINDS;
-    filter.kind = { $in: (patch.status === "done" ? group.filter((k) => k === "todo" || k === "thing") : group) as Kind[] };
-  }
-  const matched = await col.countDocuments(base);
-  const res = await col.updateMany(filter, { $set: set });
+  if (patch.status) Object.assign(set, statusFields(patch.status, now));
+  if (patch.kind) set.kind = patch.kind;
+  // The Kind is checked again as it is written, so one changed since the read above is left alone.
+  const res = await col.updateMany({ ...base, kind: { $in: fits } }, { $set: set });
   if (patch.status) {
     const moved = await col.find({ ...base, status: patch.status }, { projection: { _id: 1 } }).toArray();
     await marksFollow(base.userId, moved.map((d) => d._id), patch.status);

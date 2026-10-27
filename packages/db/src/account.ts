@@ -3,6 +3,7 @@ import type { ImportEntry } from "@pluck/extract";
 import type { ImportStatus, Item } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { apiKeys, contents, db, emailAliases, exportsCol, highlights, imports, items, listRows, lists, listShares, oid, reports, tags, users, type ImportDoc } from "./collections.ts";
+import { newItem } from "./item-doc.ts";
 import { toItem } from "./items.ts";
 import { textForSearch } from "./search.ts";
 import { createTag } from "./tags.ts";
@@ -43,13 +44,10 @@ export async function importLink(userId: string, url: string, e: Pick<ImportEntr
   const res = await (await items()).findOneAndUpdate(
     { userId: uid, urlHash },
     {
-      $setOnInsert: {
-        userId: uid, kind: "link", url, urlHash, canonicalUrl: null, title: e.title?.trim() || url, titleIsDerived: true,
-        siteName: new URL(url).hostname.replace(/^www\./, ""), author: null, excerpt: null, coverKey: null, htmlKey: null, status: "archived",
-        archivedReason: "import", dueAt: null, tagIds: [], note: e.note?.trim() || null, source: "import", readingProgress: 0, wordCount: null, lang: null,
-        extraction: { state: "pending", attempts: 0, lastError: null }, createdAt: e.createdAt ?? now, updatedAt: now, lastOpenedAt: null,
-        lastTouchedAt: now, statusChangedAt: now, deletedAt: null, searchText: textForSearch({ url }),
-      },
+      $setOnInsert: newItem(userId, {
+        kind: "link", url, urlHash, title: e.title?.trim() || url, siteName: new URL(url).hostname.replace(/^www\./, ""), status: "archived",
+        archivedReason: "import", note: e.note?.trim() || null, source: "import", createdAt: e.createdAt ?? now, searchText: textForSearch({ url }),
+      }, now),
     },
     { upsert: true, returnDocument: "after", includeResultMetadata: true },
   );

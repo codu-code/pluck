@@ -109,12 +109,17 @@ test("edits follow the rules for links and notes", async () => {
   expect((await updateItem(a, link.id, { kind: "video" })).kind).toBe("video");
 });
 
-test("Done is only for todos and things; batch skips what does not fit", async () => {
-  const { updateItem: update, batch } = await import("./index");
+test("Done is only for todos and things; batch refuses it as an edit does, before any tag moves", async () => {
+  const { updateItem: update, batch, addTag } = await import("./index");
   const { a } = await twoUsers();
   const link = (await pluckAny(a, { url: `${FIX}/blog-4.html` })).results[0]!.item;
   const todo = (await pluckAny(a, { text: "Book the room", kind: "todo" })).results[0]!.item;
+  const tag = (await addTag(a, "errands")).tag;
   await expect(update(a, link.id, { status: "done" })).rejects.toMatchObject({ status: 400, message: "Done is for todos and things." });
+  await expect(batch(a, { itemIds: [link.id, todo.id], patch: { status: "done", addTagIds: [tag.id] } })).rejects.toMatchObject({
+    status: 400, message: "Done is for todos and things.", details: { itemIds: [link.id] },
+  });
+  expect(await readItem(a, todo.id)).toMatchObject({ status: "inbox", tagIds: [] });
   expect((await update(a, todo.id, { status: "done" })).status).toBe("done");
   expect(await batch(a, { itemIds: [link.id, todo.id], patch: { status: "archived" } })).toEqual({ matched: 2, updated: 2 });
 });

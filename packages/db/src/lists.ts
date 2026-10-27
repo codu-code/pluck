@@ -1,6 +1,7 @@
-import type { Item, List, ListEntry, ListMembership } from "@pluck/shared-schemas";
+import { isTask, TASK_KINDS, type Item, type List, type ListEntry, type ListMembership } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { items, LEAN, listRows, lists, listShares, oid, users, type ListDoc, type ListItemDoc } from "./collections.ts";
+import { statusFields } from "./item-doc.ts";
 import { toItem } from "./items.ts";
 import { getMe } from "./users.ts";
 import { slugify } from "./tags.ts";
@@ -234,20 +235,18 @@ export async function markEntries(userId: string, listId: string, itemIds: strin
   return res.matchedCount;
 }
 
-const isTask = (kind: string) => kind === "todo" || kind === "thing";
-
 // A Todo or Thing marked in a List is Done; unmarked, a Done one goes back to the Inbox. Its other Lists follow.
 async function doneFollowsMark(uid: ObjectId, itemIds: ObjectId[], ticked: boolean): Promise<void> {
   const col = await items();
   const tasks = await col
-    .find({ _id: { $in: itemIds }, userId: uid, kind: { $in: ["todo", "thing"] }, status: ticked ? { $ne: "done" } : "done" }, { projection: { _id: 1 } })
+    .find({ _id: { $in: itemIds }, userId: uid, kind: { $in: [...TASK_KINDS] }, status: ticked ? { $ne: "done" } : "done" }, { projection: { _id: 1 } })
     .toArray();
   if (!tasks.length) return;
   const ids = tasks.map((t) => t._id);
   const now = new Date();
   await col.updateMany(
     { _id: { $in: ids }, userId: uid },
-    { $set: { status: ticked ? "done" : "inbox", statusChangedAt: now, archivedReason: null, updatedAt: now, lastTouchedAt: now } },
+    { $set: { ...statusFields(ticked ? "done" : "inbox", now), updatedAt: now, lastTouchedAt: now } },
   );
   await markFollowsDone(uid, ids, ticked);
 }

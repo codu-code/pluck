@@ -2,6 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import type { Item } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { contents, emailAliases, items, oid } from "./collections.ts";
+import { newItem, replucked } from "./item-doc.ts";
 import { recountAround, toItem } from "./items.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
@@ -49,7 +50,7 @@ export async function createEmailItem(userId: string, m: EmailItemInput): Promis
   if (hash) {
     const existing = await col.findOneAndUpdate(
       { userId: uid, urlHash: hash },
-      { $set: { status: "inbox", archivedReason: null, deletedAt: null, lastTouchedAt: now, updatedAt: now, statusChangedAt: now } },
+      { $set: replucked(now) },
       { returnDocument: "after" },
     );
     if (existing) {
@@ -57,16 +58,14 @@ export async function createEmailItem(userId: string, m: EmailItemInput): Promis
       return { item: toItem(existing), created: false };
     }
   }
-  const _id = new ObjectId();
-  await col.insertOne({
-    _id, userId: uid, kind: "link", url: null, ...(hash ? { urlHash: hash } : {}), canonicalUrl: null, title: m.subject, titleIsDerived: true,
-    siteName, author: m.fromName, excerpt: m.excerpt, coverKey: null, htmlKey: null, status: "inbox", archivedReason: null, dueAt: null,
-    tagIds: [], note: null, source: "email", readingProgress: 0, wordCount: m.wordCount, lang: null,
-    extraction: { state: "done", attempts: 1, lastError: null }, createdAt: now, updatedAt: now, lastOpenedAt: null, lastTouchedAt: now,
-    statusChangedAt: now, deletedAt: null, searchText: textForSearch({ excerpt: m.excerpt, siteName, author: m.fromAddress }), searchBody: bodyForSearch(m.markdown),
-  });
-  await (await contents()).insertOne({ _id: new ObjectId(), itemId: _id, userId: uid, textMarkdown: m.markdown, extractor: "email", bytes: Buffer.byteLength(m.markdown) });
-  return { item: toItem((await col.findOne({ _id }))!), created: true };
+  const doc = newItem(userId, {
+    kind: "link", ...(hash ? { urlHash: hash } : {}), title: m.subject, siteName, author: m.fromName, excerpt: m.excerpt, source: "email",
+    wordCount: m.wordCount, extraction: { state: "done", attempts: 1, lastError: null },
+    searchText: textForSearch({ excerpt: m.excerpt, siteName, author: m.fromAddress }), searchBody: bodyForSearch(m.markdown),
+  }, now);
+  await col.insertOne(doc);
+  await (await contents()).insertOne({ _id: new ObjectId(), itemId: doc._id, userId: uid, textMarkdown: m.markdown, extractor: "email", bytes: Buffer.byteLength(m.markdown) });
+  return { item: toItem((await col.findOne({ _id: doc._id }))!), created: true };
 }
 
 export async function setRawEmailKey(userId: string, itemId: string, key: string): Promise<void> {
