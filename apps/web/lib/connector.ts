@@ -1,7 +1,7 @@
 import type { PluckLibrary } from "@pluck/mcp-server";
 import {
   addItems, addTag, batch, browse, deleteItem, digest, editEntry, editList, highlightsOf, membershipsOf, newList, pluckAny, readItem, readList,
-  readText, removeItem, reorder, search, setListVisibility, tagsOf, listsOf,
+  readText, removeItem, reorder, search, setListVisibility, tagIdsFor, tagsOf, listsOf,
 } from "./library";
 
 type Defer = (task: () => Promise<void>) => void;
@@ -19,6 +19,7 @@ export function connectorFor(userId: string, { defer }: { defer?: Defer } = {}):
     pluck: (body) => pluckAny(userId, body, { defer }),
     batch: (body) => batch(userId, body, { by }),
     tags: () => tagsOf(userId),
+    tagIdsFor: (refs) => tagIdsFor(userId, refs),
     createTag: (name) => addTag(userId, name, { by }),
     lists: () => listsOf(userId),
     list: (id) => readList(userId, id),
@@ -28,7 +29,7 @@ export function connectorFor(userId: string, { defer }: { defer?: Defer } = {}):
     removeFromList: (id, itemId) => removeItem(userId, id, itemId),
     editEntry: (id, itemId, edit) => editEntry(userId, id, itemId, edit, { by }),
     reorder: (id, itemIds) => reorder(userId, id, itemIds),
-    setVisibility: async (id, visibility) => void (await setListVisibility(userId, id, visibility)),
+    makePrivate: async (id) => void (await setListVisibility(userId, id, "private")),
     digest: (limit) => digest(userId, { limit }),
     deleteItem: (id) => deleteItem(userId, id),
   };
