@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import * as Crypto from "expo-crypto";
 import * as SecureStore from "expo-secure-store";
-import { codeFrom, createClient, pkcePair, tokenRequest } from "@pluck/client";
+import { codeFrom, createClient, createSession, pkcePair, register, tokenRequest } from "@pluck/client";
 import { locale } from "./i18n";
 import { kv } from "./kv";
 
@@ -44,8 +44,21 @@ async function setSession(s: Session | null) {
   listeners.forEach((fn) => fn(s));
 }
 
-const signedIn = (s: Session | null) => Boolean(s?.access || s?.apiKey);
-export const isSignedIn = async () => signedIn(await getSession());
+// The share extension (Swift) refreshes from the same Keychain item and cannot share a lock with the app, so the
+// session re-reads the Keychain before refreshing and keeps the extension's tokens when it got there first.
+const session = createSession({
+  read: async (fresh) => {
+    if (fresh) current = undefined;
+    const s = await getSession();
+    return s && { server: s.server, clientId: s.clientId, apiKey: s.apiKey, tokens: s.access ? { access: s.access, refresh: s.refresh ?? null, expiresAt: s.expiresAt ?? 0 } : null };
+  },
+  write: async (t) => {
+    const s = await getSession();
+    if (s) await setSession(t ? { ...s, ...t } : { server: s.server }); // refused: show sign-in rather than screens where every request fails
+  },
+});
+
+export const { authHeader, isSignedIn } = session;
 
 // ---- OAuth with PKCE ---------------------------------------------------------------------------------
 
@@ -53,18 +66,9 @@ async function clientIdFor(server: string): Promise<string> {
   // v3: registered with library:delete; a client from before cannot ask for it, so it registers again.
   const ids = await kv.get<Record<string, string>>("clientIds.v3", {});
   if (ids[server]) return ids[server];
-  const res = await fetch(`${server}/api/auth/oauth2/register`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      client_name: "Pluck for iPhone", redirect_uris: [REDIRECT], token_endpoint_auth_method: "none",
-      grant_types: ["authorization_code", "refresh_token"], response_types: ["code"], scope: SCOPE, resources: [`${server}/api/v1`],
-    }),
-  });
-  if (!res.ok) throw new Error(`Could not reach ${server}.`);
-  const { client_id } = (await res.json()) as { client_id: string };
-  await kv.set("clientIds.v3", { ...ids, [server]: client_id });
-  return client_id;
+  const clientId = await register(server, { name: "Pluck for iPhone", redirect: REDIRECT, scope: SCOPE });
+  await kv.set("clientIds.v3", { ...ids, [server]: clientId });
+  return clientId;
 }
 
 type Pending = { server: string; clientId: string; verifier: string; state: string; challenge: string; at: number };
@@ -134,32 +138,6 @@ async function finishSignIn(p: Pending, url: string): Promise<boolean> {
   return true;
 }
 
-let refreshing: Promise<string | null> | null = null;
-
-// "Bearer …" for the API: a personal key, or an access token refreshed a minute before it runs out.
-export async function authHeader(): Promise<string | null> {
-  const s = await getSession();
-  if (!s) return null;
-  if (s.apiKey) return `Bearer ${s.apiKey}`;
-  if (s.access && (s.expiresAt ?? 0) - Date.now() > 60_000) return `Bearer ${s.access}`;
-  refreshing ??= (async () => {
-    // The share extension refreshes too, and a refresh token works once: spending the one this app read at launch
-    // after the extension replaced it signs both out. So read the Keychain again first.
-    current = undefined;
-    const now = await getSession();
-    if (!now?.refresh || !now.clientId) return null;
-    if (now.access && (now.expiresAt ?? 0) - Date.now() > 60_000) return `Bearer ${now.access}`;
-    const t = await tokenRequest(now.server, { grant_type: "refresh_token", refresh_token: now.refresh, client_id: now.clientId, resource: `${now.server}/api/v1` });
-    if (!t) {
-      await setSession({ server: now.server }); // refused: show sign-in rather than screens where every request fails
-      return null;
-    }
-    await setSession({ ...now, ...t });
-    return `Bearer ${t.access}`;
-  })().finally(() => (refreshing = null));
-  return refreshing;
-}
-
 export async function signInWithKey(server: string, key: string): Promise<boolean> {
   const res = await fetch(`${server}/api/v1/me`, { headers: { authorization: `Bearer ${key.trim()}` } }).catch(() => null);
   if (!res?.ok) return false;
@@ -175,13 +153,7 @@ async function rememberEmail() {
 }
 
 export async function signOut(): Promise<void> {
-  const s = await getSession();
-  if (s?.refresh && s.clientId) {
-    await fetch(`${s.server}/api/auth/oauth2/revoke`, {
-      method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ token: s.refresh, token_type_hint: "refresh_token", client_id: s.clientId }).toString(),
-    }).catch(() => {});
-  }
+  await session.revoke();
   await setSession(null);
 }
 

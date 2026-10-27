@@ -1,4 +1,4 @@
-import { b64url, tokenRequest } from "@pluck/client";
+import { createSession, pkcePair, register, tokenRequest } from "@pluck/client";
 import { get, set, settings } from "./store";
 
 // Sign-in is OAuth 2.1 with PKCE against the person's Pluck server. The authorisation runs in an ordinary tab,
@@ -10,42 +10,27 @@ const clientKey = (server: string) => `${server} ${SCOPE}`;
 
 type Pending = { server: string; clientId: string; verifier: string; state: string };
 
-const random = (n = 32) => b64url(crypto.getRandomValues(new Uint8Array(n)));
-
 // Each server gets its own client registration (dynamic registration), made once and remembered for these scopes:
 // a registration made before a scope was added cannot ask for it, so a new SCOPE registers again.
 async function clientIdFor(server: string): Promise<string> {
   const ids = await get("clientIds");
   const key = clientKey(server);
   if (ids[key]) return ids[key];
-  const res = await fetch(`${server}/api/auth/oauth2/register`, {
-    method: "POST",
-    credentials: "omit",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      client_name: "Pluck for your browser",
-      redirect_uris: [redirectFor(server)],
-      token_endpoint_auth_method: "none",
-      grant_types: ["authorization_code", "refresh_token"],
-      response_types: ["code"],
-      scope: SCOPE,
-      resources: [`${server}/api/v1`],
-    }),
-  });
-  if (!res.ok) throw new Error(`Could not register with ${server} (${res.status})`);
-  const { client_id } = (await res.json()) as { client_id: string };
-  await set({ clientIds: { ...ids, [key]: client_id } });
-  return client_id;
+  const clientId = await register(server, { name: "Pluck for your browser", redirect: redirectFor(server), scope: SCOPE });
+  await set({ clientIds: { ...ids, [key]: clientId } });
+  return clientId;
 }
 
 export async function startSignIn(): Promise<void> {
   const { server } = await settings();
   const clientId = await clientIdFor(server);
-  const pending: Pending = { server, clientId, verifier: random(), state: random(16) };
-  await browser.storage.session.set({ pending });
-  const challenge = b64url(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pending.verifier))));
+  const { verifier, challenge, state } = await pkcePair(
+    (n) => crypto.getRandomValues(new Uint8Array(n)),
+    async (s) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s))),
+  );
+  await browser.storage.session.set({ pending: { server, clientId, verifier, state } satisfies Pending });
   const q = new URLSearchParams({
-    response_type: "code", client_id: clientId, redirect_uri: redirectFor(server), scope: SCOPE, state: pending.state,
+    response_type: "code", client_id: clientId, redirect_uri: redirectFor(server), scope: SCOPE, state,
     code_challenge: challenge, code_challenge_method: "S256", resource: `${server}/api/v1`,
   });
   await browser.tabs.create({ url: `${server}/api/auth/oauth2/authorize?${q}` });
@@ -68,28 +53,18 @@ export async function finishSignIn(url: string): Promise<boolean> {
   return true;
 }
 
-let refreshing: Promise<string | null> | null = null;
-
-// The Authorization header for the API, refreshing an access token that is about to run out. One refresh at a time:
-// a refresh token works once, and the popup and the badge asking together would spend it twice and sign you out.
-// Offline throws Unreachable and keeps the tokens, so the pluck is queued rather than lost.
-export async function authHeader(): Promise<string | null> {
-  const apiKey = await get("apiKey");
-  if (apiKey) return `Bearer ${apiKey}`;
-  const tokens = await get("tokens");
-  if (!tokens) return null;
-  if (tokens.expiresAt - Date.now() > 60_000) return `Bearer ${tokens.access}`;
-  if (!tokens.refresh) return null;
-  refreshing ??= (async () => {
+// The popup, the options page and the service worker each load this, so the refresh is guarded by a Web Lock,
+// which all of them share, not by memory, which they do not.
+const session = createSession({
+  read: async () => {
     const { server } = await settings();
-    const fresh = await tokenRequest(server, {
-      grant_type: "refresh_token", refresh_token: tokens.refresh!, client_id: (await get("clientIds"))[clientKey(server)] ?? "", resource: `${server}/api/v1`,
-    });
-    await set({ tokens: fresh });
-    return fresh ? `Bearer ${fresh.access}` : null;
-  })().finally(() => (refreshing = null));
-  return refreshing;
-}
+    return { server, clientId: (await get("clientIds"))[clientKey(server)], apiKey: await get("apiKey"), tokens: await get("tokens") };
+  },
+  write: (tokens) => set({ tokens }),
+  lock: async (fn) => await navigator.locks.request("pluck-refresh", fn),
+});
+
+export const { authHeader, isSignedIn } = session;
 
 export async function useApiKey(key: string): Promise<boolean> {
   await set({ apiKey: key.trim(), tokens: null });
@@ -109,13 +84,6 @@ async function rememberEmail(): Promise<boolean> {
 }
 
 export async function signOut(): Promise<void> {
-  const tokens = await get("tokens");
-  const { server } = await settings();
-  const clientId = (await get("clientIds"))[clientKey(server)];
-  if (tokens?.refresh && clientId) {
-    await fetch(`${server}/api/auth/oauth2/revoke`, {
-      method: "POST", credentials: "omit", body: new URLSearchParams({ token: tokens.refresh, token_type_hint: "refresh_token", client_id: clientId }),
-    }).catch(() => {});
-  }
+  await session.revoke();
   await set({ tokens: null, apiKey: null, email: null });
 }

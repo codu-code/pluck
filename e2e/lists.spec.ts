@@ -162,5 +162,6 @@ test("share a List with one person, See only: the email link, their Lists, no ta
 
   // The owner takes it back; it is gone for them at once.
   await owner.getByRole("button", { name: `Stop sharing with ${friend}` }).click();
+  await expect(owner.getByRole("button", { name: `Stop sharing with ${friend}` })).toHaveCount(0); // the row goes once the server agreed
   expect((await visitor.request.get(`/api/v1/shared/${list.id}`)).status()).toBe(404);
 });

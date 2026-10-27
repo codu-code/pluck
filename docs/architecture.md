@@ -35,7 +35,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `packages/extract` | Guarded fetch (`fetch.ts`), page and PDF reading (`extract.ts`, Defuddle then Readability), email (`email.ts`) and imports. Its fixtures are served by `pnpm stack` so tests never touch the internet. |
 | `packages/blob` | S3 through the AWS SDK; MinIO locally and for self-hosting. |
 | `packages/shared-schemas` | Every type as a Zod schema, used by the server and every client. |
-| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, refresh a minute early, errors mapped to `Unreachable`, `SignedOut` or `Refused` by `answer`), `createQueue` (the offline queue) and PKCE. The web's offline queue is `createQueue` too, over `localStorage`; the iPhone app drains the share extension's App Group files with `createDrain`, the same keep and drop rules. |
+| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, errors mapped to `Unreachable`, `SignedOut` or `Refused` by `answer`), `createSession` (the token refresh, once across every context that shares a store, and sign-out), `register`, `createQueue` (the offline queue) and PKCE. The web's offline queue is `createQueue` too, over `localStorage`; the iPhone app drains the share extension's App Group files with `createDrain`, the same keep and drop rules. |
 | `packages/i18n` | The words, in ten languages, one catalog per surface. See [i18n.md](i18n.md). |
 | `packages/ui` | Tokens, the logo, the icon and the Kind glyphs. |
 | `apps/extension` | WXT. The popup, options and a background worker that drains the queue every minute. |

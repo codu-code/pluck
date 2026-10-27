@@ -3,7 +3,7 @@ import { KindGlyph, Logo } from "@pluck/ui";
 import { useEffect, useState, type ReactNode } from "react";
 import { useFormatter, useTranslations } from "use-intl";
 import { api, openInPluck, Refused, Unreachable } from "@/lib/api";
-import { startSignIn } from "@/lib/auth";
+import { isSignedIn, startSignIn } from "@/lib/auth";
 import { markTab, pluckTab, type PluckOutcome } from "@/lib/pluck";
 import { pageShortcut } from "@/lib/shortcut";
 import { get, set } from "@/lib/store";
@@ -45,7 +45,7 @@ export function Popup() {
 
   useEffect(() => {
     (async () => {
-      if (!(await get("tokens")) && !(await get("apiKey"))) return setView({ k: "signedOut" });
+      if (!(await isSignedIn())) return setView({ k: "signedOut" });
       const tab = await targetTab();
       if (!tab?.url || !/^https?:\/\//.test(tab.url)) return setView({ k: "nothing" });
       try {
