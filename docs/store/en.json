@@ -1,0 +1,53 @@
+{
+  "appStore": {
+    "name": "Pluck: Read Later",
+    "subtitle": "Pluck it. Sort it later.",
+    "promotionalText": "One tap in the share sheet and it's yours: the page, not just the link. Sort it later by hand, or ask your AI. Free and open source.",
+    "description": "Pluck it from any app. Tap Share, then Pluck. Pluck keeps the page as you saw it, and the app doesn't even open.\n\nSort it later. Your Inbox holds everything you plucked: a recipe, a longread, a travel guide, the lamp you keep meaning to buy. Swipe right for Later, left for the Archive. Tag it, put it on a List, or tick off a Todo.\n\nThe page, not just the link. Pluck keeps the text of every page, so you can read it in a clean reader, offline, long after the site has changed. Highlight the good bits.\n\nLists are what you're making. A trip, a kitchen, a reading list for a friend. Put things in order, write a note on each, tick off what's done, and share a List when you want to.\n\nFind it in a second. Search covers titles, notes, tags and the full text of every page.\n\nNothing is lost. Things you leave untouched for 30 days move to the Archive. Nothing is deleted. You pick how long, or switch it off.\n\nBring your own AI. There's no AI in here. Connect the AI tools you already use, like Claude, ChatGPT or Cursor, and ask what you plucked this week, or have it tidy your Inbox while you watch. It marks everything it touched, and it can't delete a thing.\n\nFree and open source. Use getpluck.io, or run Pluck on your own server. Export everything in one go, any time. No ads. Analytics only if you say yes.\n\nComing from Pocket or Omnivore? Bring your old library across in one go.\n\nPluck works on iPhone, in Chrome, on the web and by email. Your library is the same everywhere.",
+    "keywords": "reading list,bookmarks,articles,offline,save links,highlights,notes,recipes,open source,mcp,inbox"
+  },
+  "appStoreDetails": {
+    "supportUrl": "https://getpluck.io/support",
+    "marketingUrl": "https://getpluck.io",
+    "privacyPolicyUrl": "https://getpluck.io/privacy",
+    "category": {
+      "primary": "Productivity",
+      "secondary": "News"
+    },
+    "copyright": "2026 Codú Limited"
+  },
+  "screenshots": [
+    {
+      "title": "Pluck it from any app.",
+      "subtitle": "One tap in Share. The app stays shut."
+    },
+    {
+      "title": "Sort it later.",
+      "subtitle": "Right for Later. Left for the Archive."
+    },
+    {
+      "title": "The page, not just the link.",
+      "subtitle": "Still here when the site isn't."
+    },
+    {
+      "title": "Lists are what you're making.",
+      "subtitle": "A trip. A kitchen. A reading list for a friend."
+    },
+    {
+      "title": "Gone. Well, archived.",
+      "subtitle": "Untouched for 30 days? To the Archive. Nothing is deleted."
+    },
+    {
+      "title": "There's no AI in here.",
+      "subtitle": "Bring your own. It can't delete a thing."
+    },
+    {
+      "title": "Free. Open. Yours.",
+      "subtitle": "No ads. Export it all. Run your own."
+    }
+  ],
+  "chrome": {
+    "summary": "Pluck the page you are on into your Pluck library, with one click.",
+    "description": "Pluck the page you are on. One click keeps it in your Pluck library, with the text as you see it, so you can read it later, find it again, or ask your AI about it.\n\nClick Pluck, or press Alt+Shift+P. \"Plucked\" appears with the title, and the popup lets you add a tag, change the Kind, put it on a List, write a note, or send it straight to Later or the Archive.\n\nRight-click a link, an image or the page to pluck it without opening it. Select a sentence and press Alt+Shift+H to keep it as a highlight. Pluck all your tabs into a new List at once.\n\nPages behind your logins are kept as your browser rendered them. YouTube videos come with their transcript, so search and your AI tools can read what was said.\n\nThe Pluck icon fills in on pages already in your library, so you can see at a glance what you have plucked.\n\nNo connection? Plucks wait on your computer and go when you are back online.\n\nPluck is open source. Use getpluck.io, or build the extension for a server you run yourself. There is no AI inside Pluck: you connect the AI tools you already use, if you want to.\n\nNeeds a free Pluck account at https://getpluck.io."
+  }
+}

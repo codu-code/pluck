@@ -1,0 +1,2 @@
+# The IndexNow key is public by design: getpluck.io serves it at /<key>.txt so search engines can check it.
+7fb5835fe5f68d5451a9302c21d41d3d7111331a:apps/web/lib/indexnow.ts:generic-api-key:11
