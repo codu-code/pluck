@@ -1,6 +1,6 @@
 {
   "name": "@pluck/client",
-  "description": "The API client, offline queue and PKCE shared by the Pluck iPhone app and browser extension.",
+  "description": "The API client, offline queue and PKCE shared by the Pluck iPhone app and browser extension; the web uses the queue too.",
   "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/client" },
   "version": "0.0.0",
   "private": true,

@@ -1,6 +1,7 @@
 "use client";
 
-import { extractUrls, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
+import { answer, createQueue, type Queued } from "@pluck/client";
+import { extractUrls, type CreateItemBody, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
@@ -13,38 +14,37 @@ type Props = {
   // The empty inbox's look: 1.5px ink border and a "Pluck it" button, pointing at step 1.
   emphasis?: boolean;
   onPluck?: (draft: PluckDraft) => void;
-  onPlucked?: (draft: PluckDraft, result: PluckResponse) => void;
+  onPlucked?: (key: string, result: PluckResponse) => void;
   onFailed?: (draft: PluckDraft) => void;
 };
 
 const KINDS: TextKind[] = ["note", "todo", "thing"];
 
 const QUEUE_KEY = "pluck:queue";
-type Queued = { draft: PluckDraft; body: Record<string, unknown> };
 
-// Plucks made offline wait in this browser and go when the network is back.
-function readQueue(): Queued[] {
-  try {
-    return JSON.parse(localStorage.getItem(QUEUE_KEY) ?? "[]") as Queued[];
-  } catch {
-    return [];
-  }
-}
-function writeQueue(q: Queued[]) {
-  try {
-    if (q.length) localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
-    else localStorage.removeItem(QUEUE_KEY);
-  } catch {
-    // storage blocked: the pluck stays on screen as a draft row until reload
-  }
-}
+// Plucks made offline wait in this browser and go when the network is back. A page that closes mid-send leaves its
+// pluck queued though it may have landed; the queue sends each with a clientKey, so a resend never makes a second Note.
+const queue = createQueue({
+  read: async () => {
+    try {
+      // Entries queued before the shared queue were { draft, body }: the draft's key is their id.
+      const q = JSON.parse(localStorage.getItem(QUEUE_KEY) ?? "[]") as (Queued & { draft?: { key: string } })[];
+      return q.map((x) => (x.id || !x.draft ? x : { id: x.draft.key, body: x.body, at: 0 }));
+    } catch {
+      return [];
+    }
+  },
+  write: async (q) => {
+    try {
+      if (q.length) localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+      else localStorage.removeItem(QUEUE_KEY);
+    } catch {
+      // storage blocked: the pluck stays on screen as a draft row until reload
+    }
+  },
+});
 
-// One flush at a time, across every open tab: mount, the online event and a re-render can all start one. A page that
-// closes mid-send leaves its pluck queued though it may have landed, so each carries a clientKey and a resend of a
-// Note never makes a second one (a link is safe either way). A Web Lock where the browser has one, else one per page.
-let flushing: Promise<void> | null = null;
-
-const post = (body: Record<string, unknown>) =>
+const post = (body: CreateItemBody) =>
   fetch("/api/v1/items", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 // The paste box (Flow 3): one link, a block of links, or a sentence that becomes a Note, Todo or Thing. No modal.
@@ -60,24 +60,16 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
 
   // Send anything queued while offline, now and whenever the network comes back.
   useEffect(() => {
-    async function send() {
-      for (const q of readQueue()) {
-        const res = await post(q.body).catch(() => null);
-        // Offline, signed out, busy or down: it stays queued, and so does everything after it.
-        if (!res || res.status === 401 || res.status === 429 || res.status >= 500) return;
-        writeQueue(readQueue().filter((x) => x.draft.key !== q.draft.key)); // sent, or refused for good
-        const result = res.ok ? ((await res.json().catch(() => null)) as PluckResponse | null) : null;
-        if (result) onPlucked?.(q.draft, result);
-      }
-    }
+    // One drain at a time across every open tab: mount, the online event and a re-render can all start one.
+    // A Web Lock where the browser has one, else the queue's own guard, one per page.
     function flush() {
-      if (!navigator.onLine || flushing) return;
-      flushing = (navigator.locks
-        ? navigator.locks.request(QUEUE_KEY, { ifAvailable: true }, async (lock) => {
-            if (lock) await send();
-          }).then(() => undefined)
-        : send()
-      ).finally(() => (flushing = null));
+      if (!navigator.onLine) return;
+      const drain = () =>
+        queue.drain(async (body, q) => {
+          const result = await answer<PluckResponse | null>(await post(body)); // a gateway error page is not JSON
+          if (result && q.id) onPlucked?.(q.id, result);
+        });
+      void (navigator.locks ? navigator.locks.request(QUEUE_KEY, { ifAvailable: true }, (lock) => lock && drain()) : drain());
     }
     flush();
     window.addEventListener("online", flush);
@@ -94,7 +86,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     setError(null);
     setNotice(null);
     const draft: PluckDraft = { key: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, urls, text: isText ? text : null, kind: isText ? kind : null };
-    const body = isText
+    const body: CreateItemBody = isText
       ? { text, kind, source: "web", ...(due && kind !== "note" ? { dueAt: new Date(`${due}T09:00:00`).toISOString() } : {}) }
       : { text, source: "web" };
     setValue("");
@@ -105,7 +97,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       if (!navigator.onLine) throw new TypeError("offline");
       res = await post(body);
     } catch {
-      writeQueue([...readQueue(), { draft, body: { ...body, clientKey: draft.key } }]); // the key makes a resend safe
+      await queue.add(body, draft.key); // the draft's row and the queued pluck share a key
       setNotice(t("queued"));
       return;
     }
@@ -115,7 +107,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
       if (!json) return;
       const result = json as PluckResponse;
       if (result.rejected.length) setError(t("rejected", { count: result.rejected.length, reason: result.rejected[0]!.message }));
-      return onPlucked?.(draft, result);
+      return onPlucked?.(draft.key, result);
     }
     setError(json?.rejected?.[0]?.message ?? json?.error?.message ?? t("failed"));
     setValue(text);

@@ -77,6 +77,21 @@ describe("the offline queue under load", () => {
     expect(sent).toEqual(["a note", "another"]);
   });
 
+  test.each([
+    ["signed out", new SignedOut("sign in")],
+    ["offline or down", new Unreachable("down")],
+    ["anything else unexpected", new TypeError("fetch failed")],
+  ])("%s: the pluck is kept, with its key, for next time", async (_, error) => {
+    const { box, q } = store();
+    await q.add({ text: "a note" }, "draft-1");
+    const keys: (string | undefined)[] = [];
+    expect(await q.drain(async (b) => { keys.push(b.clientKey); throw error; })).toBe(1);
+    expect(box.saved).toMatchObject([{ id: "draft-1", body: { text: "a note" } }]);
+    await q.drain(async (b) => void keys.push(b.clientKey));
+    expect(keys).toEqual(["draft-1", "draft-1"]); // the same key every time, so a resend makes no second Note
+    expect(box.saved).toEqual([]);
+  });
+
   test("the first pluck that cannot be sent stops the drain", async () => {
     const { q } = store();
     for (const u of ["a", "b", "c"]) await q.add({ url: `https://${u}.test` });

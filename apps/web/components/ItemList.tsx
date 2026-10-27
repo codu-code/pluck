@@ -290,11 +290,11 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     setRows((cur) => [...drafts, ...cur]);
   };
   // A re-pluck returns an existing item: it moves to the top instead of appearing twice.
-  const onPlucked = (d: PluckDraft, { results }: PluckResponse) => {
+  const onPlucked = (key: string, { results }: PluckResponse) => {
     if (view !== "inbox") return;
     const ids = new Set(results.map((r) => r.item.id));
     setTotal((t) => t + results.filter((r) => r.created).length);
-    setRows((cur) => [...results.map((r) => r.item), ...cur.filter((r) => r.draft !== d.key && !ids.has(r.id))]);
+    setRows((cur) => [...results.map((r) => r.item), ...cur.filter((r) => r.draft !== key && !ids.has(r.id))]);
   };
   const onFailed = (d: PluckDraft) => setRows((cur) => cur.filter((r) => r.draft !== d.key));
 
