@@ -11,10 +11,9 @@ import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
 import { Empty, usePull } from "@/components/Screen";
 import { toast } from "@/components/Toast";
-import { keys, useArchive, useMe, usePatchItem } from "@/lib/data";
+import { keys, library, useArchive, useMe, usePatchItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { kv } from "@/lib/kv";
-import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 
 const FOLD = "fold:archive"; // the months folded away, remembered on this phone
@@ -78,13 +77,11 @@ export default function Archive() {
     qc.setQueryData(keys.archive, without);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
-      await api(`/api/v1/items/${item.id}`, { method: "DELETE" });
+      await library.remove(item.id);
     } catch (e) {
-      void qc.invalidateQueries({ queryKey: keys.archive });
       return toast(e instanceof Refused && e.status === 403 ? tr("archive.needsSignIn") : tr("common.failed.title"));
     }
-    void qc.invalidateQueries({ queryKey: keys.bin });
-    toast(tr("moved.deleted"), () => void api(`/api/v1/items/${item.id}/restore`, { method: "POST" }).then(() => qc.invalidateQueries({ queryKey: ["items"] })));
+    toast(tr("moved.deleted"), () => void library.fromBin(item.id));
   };
 
   return (

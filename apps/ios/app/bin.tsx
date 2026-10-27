@@ -10,9 +10,8 @@ import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
 import { Empty, usePull } from "@/components/Screen";
 import { toast } from "@/components/Toast";
-import { keys, useBin } from "@/lib/data";
+import { keys, library, useBin } from "@/lib/data";
 import { useRowText } from "@/lib/format";
-import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 
 const DAY = 86_400_000;
@@ -35,8 +34,7 @@ export default function Bin() {
 
   const restore = async (item: Item) => {
     drop(item);
-    await api(`/api/v1/items/${item.id}/restore`, { method: "POST" }).catch(() => toast(tr("common.failed.title")));
-    void qc.invalidateQueries({ queryKey: ["items"] });
+    await library.fromBin(item.id).catch(() => toast(tr("common.failed.title")));
     toast(tr("archive.outOfBin"));
   };
 
@@ -44,10 +42,9 @@ export default function Bin() {
     drop(item);
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     try {
-      await api(`/api/v1/items/${item.id}/forever`, { method: "DELETE" });
+      await library.forever(item.id);
       toast(tr("archive.gone"));
     } catch (e) {
-      void qc.invalidateQueries({ queryKey: keys.bin });
       toast(e instanceof Refused && e.status === 403 ? tr("archive.needsSignIn") : tr("common.failed.title"));
     }
   };

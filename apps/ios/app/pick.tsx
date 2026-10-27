@@ -1,4 +1,4 @@
-import type { Item, ItemPage, List, Tag } from "@pluck/shared-schemas";
+import type { Item, ItemPage } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
@@ -7,8 +7,7 @@ import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
-import { keys, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
-import { api } from "@/lib/session";
+import { library, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // One sheet for three picks (no board: built from the web pickers): an item's tags, an item's lists,
@@ -69,7 +68,6 @@ function Row({ label, on, onPress, left }: { label: string; on: boolean; onPress
 // Search your tags, or make one from what you typed: one tap either way.
 function TagsFor({ itemId }: { itemId: string }) {
   const tr = useTranslations("ios.pick");
-  const qc = useQueryClient();
   const item = useItem(itemId);
   const tags = useTags();
   const patch = usePatchItem();
@@ -79,10 +77,9 @@ function TagsFor({ itemId }: { itemId: string }) {
   const shown = (tags.data ?? []).filter((x) => x.name.toLowerCase().includes(name.toLowerCase()));
   const fresh = name && !(tags.data ?? []).some((x) => x.name.toLowerCase() === name.toLowerCase());
   const make = async () => {
-    const { tag } = await api<{ tag: Tag }>("/api/v1/tags", { json: { name } });
+    const tag = await library.newTag(name);
     patch.mutate({ id: itemId, patch: { tagIds: [...on, tag.id] } });
     setFilter("");
-    void qc.invalidateQueries({ queryKey: keys.tags });
   };
   return (
     <Sheet
@@ -101,7 +98,6 @@ function TagsFor({ itemId }: { itemId: string }) {
 // The lists an item is in, a tap to add or take it out, and a new list from what you typed.
 function ListsFor({ itemId }: { itemId: string }) {
   const tr = useTranslations("ios.pick");
-  const qc = useQueryClient();
   const item = useItem(itemId);
   const lists = useLists();
   const [filter, setFilter] = useState("");
@@ -109,20 +105,14 @@ function ListsFor({ itemId }: { itemId: string }) {
   const name = filter.trim();
   const shown = (lists.data ?? []).filter((l) => l.name.toLowerCase().includes(name.toLowerCase()));
   const fresh = name && !(lists.data ?? []).some((l) => l.name.toLowerCase() === name.toLowerCase());
-  const settle = async (listId?: string) => {
-    await item.refetch();
-    void qc.invalidateQueries({ queryKey: keys.lists });
-    if (listId) void qc.invalidateQueries({ queryKey: keys.list(listId) });
-  };
   const toggle = async (listId: string) => {
-    if (inLists.has(listId)) await api(`/api/v1/lists/${listId}/items/${itemId}`, { method: "DELETE" }).catch(() => {});
-    else await api(`/api/v1/lists/${listId}/items`, { json: { itemId } }).catch(() => {});
-    await settle(listId);
+    await library.setInList([itemId], listId, !inLists.has(listId)).catch(() => {});
+    await item.refetch();
   };
   const start = async () => {
-    await api<{ list: List }>("/api/v1/lists", { json: { name, items: [{ itemId }] } });
+    await library.newList(name, [itemId]);
     setFilter("");
-    await settle();
+    await item.refetch();
   };
   return (
     <Sheet
@@ -153,12 +143,10 @@ function TagsForMany({ ids }: { ids: string[] }) {
   const fresh = name && !(tags.data ?? []).some((x) => x.name.toLowerCase() === name.toLowerCase());
   const apply = async (tagId: string, on: boolean) => {
     setAll((cur) => { const next = new Set(cur); if (on) next.add(tagId); else next.delete(tagId); return next; });
-    await api("/api/v1/items/batch", { json: { itemIds: ids, patch: on ? { addTagIds: [tagId] } : { removeTagIds: [tagId] } } }).catch(() => {});
-    void qc.invalidateQueries({ queryKey: ["items"] });
-    void qc.invalidateQueries({ queryKey: keys.tags });
+    await library.setTag(ids, tagId, on, loaded).catch(() => {});
   };
   const make = async () => {
-    const { tag } = await api<{ tag: Tag }>("/api/v1/tags", { json: { name } });
+    const tag = await library.newTag(name);
     setFilter("");
     await apply(tag.id, true);
   };
@@ -177,7 +165,6 @@ function TagsForMany({ ids }: { ids: string[] }) {
 // Lists for many selected rows: a tap adds them all; a new list can start with them.
 function ListsForMany({ ids }: { ids: string[] }) {
   const tr = useTranslations("ios.pick");
-  const qc = useQueryClient();
   const lists = useLists();
   const [filter, setFilter] = useState("");
   const [added, setAdded] = useState<Set<string>>(new Set());
@@ -187,15 +174,12 @@ function ListsForMany({ ids }: { ids: string[] }) {
   const add = async (listId: string) => {
     if (added.has(listId)) return;
     setAdded((cur) => new Set(cur).add(listId));
-    await api(`/api/v1/lists/${listId}/items`, { json: { itemIds: ids } }).catch(() => {});
-    void qc.invalidateQueries({ queryKey: keys.lists });
-    void qc.invalidateQueries({ queryKey: keys.list(listId) });
+    await library.setInList(ids, listId, true).catch(() => {});
   };
   const start = async () => {
-    const { list } = await api<{ list: List }>("/api/v1/lists", { json: { name, items: ids.map((itemId) => ({ itemId })) } });
+    const list = await library.newList(name, ids);
     setFilter("");
     setAdded((cur) => new Set(cur).add(list.id));
-    void qc.invalidateQueries({ queryKey: keys.lists });
   };
   return (
     <Sheet
@@ -231,7 +215,6 @@ function Finder({ value, onChange, label, make }: { value: string; onChange: (v:
 function AddTo({ listId }: { listId: string }) {
   const t = useTheme();
   const tr = useTranslations("ios.pick");
-  const qc = useQueryClient();
   const list = useList(listId);
   const inbox = useItems("inbox");
   const later = useItems("later");
@@ -239,9 +222,7 @@ function AddTo({ listId }: { listId: string }) {
   const candidates: Item[] = [...(inbox.data?.items ?? []), ...(later.data?.items ?? [])];
   const add = async (itemId: string) => {
     if (inList.has(itemId)) return;
-    await api(`/api/v1/lists/${listId}/items`, { json: { itemId } }).catch(() => {});
-    await list.refetch();
-    void qc.invalidateQueries({ queryKey: keys.lists });
+    await library.setInList([itemId], listId, true).catch(() => {});
   };
   return (
     <Sheet

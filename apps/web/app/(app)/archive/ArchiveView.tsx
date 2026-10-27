@@ -9,7 +9,7 @@ import { ItemRow } from "@/components/ItemRow";
 import { useToast } from "@/components/Toast";
 import { TopBar } from "@/components/TopBar";
 import { useFormat } from "@/components/useFormat";
-import { moveItems } from "@/lib/moves";
+import { library, moveItems, went } from "@/lib/actions";
 import styles from "./archive.module.css";
 import { useNow } from "@/lib/use-now";
 
@@ -73,13 +73,13 @@ export function ArchiveView({ initial, bin, expiryDays }: { initial: ItemPage; b
   }
 
   async function restore(item: Item) {
-    const ok = bin ? (await fetch(`/api/v1/items/${item.id}/restore`, { method: "POST" })).ok : await moveItems([item.id], "inbox");
+    const ok = bin ? await went(library.fromBin(item.id)) : await moveItems([item.id], "inbox");
     if (!ok) return showToast({ message: app("common.didNotGoThrough") });
     setRows((cur) => cur.filter((r) => r.id !== item.id));
     showToast({
       message: bin ? t("outOfBin") : app("moved.inbox"),
       undo: bin
-        ? () => void fetch(`/api/v1/items/${item.id}`, { method: "DELETE" }).then(() => load(filter))
+        ? () => void went(library.remove(item.id)).then(() => load(filter))
         : () => void moveItems([item.id], item.status).then(() => load(filter)),
     });
   }

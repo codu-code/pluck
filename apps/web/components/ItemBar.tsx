@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { useToast } from "@/components/Toast";
-import { moveItems } from "@/lib/moves";
+import { library, moveItems, went } from "@/lib/actions";
 import { isTyping } from "@/lib/keys";
 import styles from "./ItemBar.module.css";
 
@@ -92,8 +92,7 @@ export function DeleteButton({ id }: { id: string }) {
       type="button"
       className={styles.delete}
       onClick={async () => {
-        const res = await fetch(`/api/v1/items/${id}`, { method: "DELETE" });
-        if (res.ok) router.push(`/inbox?deleted=${id}`);
+        if (await went(library.remove(id))) router.push(`/inbox?deleted=${id}`);
       }}
     >
       {t("delete")}

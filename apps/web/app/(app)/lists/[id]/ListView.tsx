@@ -10,6 +10,7 @@ import { ItemRow, RowAction, RowLead, RowMark, RowNote } from "@/components/Item
 import { useToast } from "@/components/Toast";
 import { People } from "./People";
 import { TopBar } from "@/components/TopBar";
+import { library, went } from "@/lib/actions";
 import { isTyping } from "@/lib/keys";
 import { useNow } from "@/lib/use-now";
 import styles from "./list.module.css";
@@ -70,8 +71,7 @@ export function ListView({ initial, handle, host, people }: { initial: { list: L
   async function mark(ids: string[], ticked: boolean) {
     const back = entries;
     setEntries((cur) => cur.map((x) => (ids.includes(x.item.id) ? { ...x, ticked } : x)));
-    const res = ids.length === 1 ? await send(`${base}/items/${ids[0]}`, "PATCH", { ticked }) : await send(`${base}/items`, "PATCH", { itemIds: ids, ticked });
-    if (!res.ok) fail(back);
+    if (!(await went(library.mark(list.id, ids, ticked)))) fail(back);
   }
 
   async function saveNote(e: ListEntry) {
@@ -99,18 +99,17 @@ export function ListView({ initial, handle, host, people }: { initial: { list: L
     const order = [...entries.filter((e) => ids.includes(e.item.id)), ...entries.filter((e) => !ids.includes(e.item.id))];
     const back = entries;
     setEntries(order.map((e, i) => ({ ...e, position: (i + 1) * 1024 })));
-    if (!(await send(`${base}/reorder`, "POST", { itemIds: order.map((e) => e.item.id) })).ok) fail(back);
+    if (!(await went(library.reorder(list.id, order.map((e) => e.item.id))))) fail(back);
   }
 
   async function remove(gone: ListEntry[]) {
     const ids = gone.map((e) => e.item.id);
     setEntries((cur) => cur.filter((x) => !ids.includes(x.item.id)));
-    for (const id of ids) await send(`${base}/items/${id}`, "DELETE");
+    await went(library.setInList(ids, list.id, false));
     showToast({
       message: gone.length === 1 ? t("takenOut", { name: list.name }) : t("takenOutMany", { count: gone.length, name: list.name }),
       undo: async () => {
-        for (const e of gone) await send(`${base}/items`, "POST", { itemId: e.item.id, position: e.position, note: e.note });
-        if (gone.some((e) => e.ticked)) await send(`${base}/items`, "PATCH", { itemIds: gone.filter((e) => e.ticked).map((e) => e.item.id), ticked: true });
+        await went(library.putBack(list.id, gone));
         router.refresh();
       },
     });

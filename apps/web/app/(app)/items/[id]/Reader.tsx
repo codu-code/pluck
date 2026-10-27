@@ -7,6 +7,7 @@ import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
 import { useFormat } from "@/components/useFormat";
+import { library, went } from "@/lib/actions";
 import { coverSrc } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
 import { isCard, OpenOriginal, PreviewCard, PreviewFacts, PreviewSwitch } from "./Preview";
@@ -203,8 +204,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
                   if (!typed) return setTitle(before);
                   if (typed === before) return;
                   savedTitle.current = typed;
-                  const res = await fetch(`/api/v1/items/${item.id}`, json("PATCH", { title: typed })).catch(() => null);
-                  if (res?.ok) return;
+                  if (await went(library.edit(item.id, { title: typed }))) return;
                   savedTitle.current = before; // not kept: the old title comes back rather than one that only looks saved
                   setTitle(before);
                 }}
@@ -218,7 +218,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              onBlur={() => void fetch(`/api/v1/items/${item.id}`, json("PATCH", { note: note || null }))}
+              onBlur={() => void went(library.edit(item.id, { note: note || null }))}
             />
           </label>
           <ItemTags item={item} vocabulary={tags} />
@@ -230,7 +230,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
               onChange={(e) => {
                 const k = e.target.value as Kind;
                 setKind(k);
-                void fetch(`/api/v1/items/${item.id}`, json("PATCH", { kind: k }));
+                void went(library.edit(item.id, { kind: k }));
               }}
             >
               {LINK_KINDS.map((k) => (
