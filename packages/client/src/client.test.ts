@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { describe, expect, test, vi } from "vitest";
-import { codeFrom, createClient, createQueue, pkcePair, Refused, SignedOut, tokenRequest, Unreachable, type Queued } from "./index";
+import { codeFrom, createClient, createQueue, createSession, pkcePair, Refused, SignedOut, tokenRequest, Unreachable, type Queued, type SessionStore, type Stored } from "./index";
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
@@ -113,4 +113,65 @@ test("token requests: offline or a 5xx is Unreachable, so nobody is signed out f
   await expect(tokenRequest("https://pluck.test", {}, (async () => json(503, {})) as typeof fetch)).rejects.toBeInstanceOf(Unreachable);
   expect(await tokenRequest("https://pluck.test", {}, (async () => json(400, { error: "invalid_grant" })) as typeof fetch)).toBeNull();
   expect(await tokenRequest("https://pluck.test", {}, (async () => json(200, { access_token: "a", refresh_token: "r", expires_in: 3600 })) as typeof fetch)).toMatchObject({ access: "a", refresh: "r" });
+});
+
+describe("the session", () => {
+  // The token endpoint as Better Auth runs it: a refresh token works once, and of two refreshes at once one wins and
+  // the other gets invalid_grant (a retry within 30 seconds of the win would be replayed the same pair; one in flight is not).
+  const tokenServer = () => {
+    let n = 0;
+    const live = new Set(["r0"]);
+    const spend = (r: string) => (live.delete(r) ? (live.add(`r${++n}`), { access: `a${n}`, refresh: `r${n}` }) : null);
+    const f = vi.fn(async (_url: string, init?: RequestInit) => {
+      const pair = spend(new URLSearchParams(String(init?.body)).get("refresh_token")!);
+      await new Promise((r) => setTimeout(r, 5)); // both requests are on the wire before either answers
+      return pair ? json(200, { access_token: pair.access, refresh_token: pair.refresh, expires_in: 3600 }) : json(400, { error: "invalid_grant" });
+    });
+    return { f, spend, fetch: f as unknown as typeof fetch };
+  };
+  const expired = { access: "a0", refresh: "r0", expiresAt: Date.now() - 1 };
+  const memory = (lock?: SessionStore["lock"]) => {
+    const box: { s: Stored } = { s: { server: "https://pluck.test", clientId: "c", tokens: expired } };
+    const store: SessionStore = { read: async () => structuredClone(box.s), write: async (tokens) => void (box.s = { ...box.s, tokens }), lock };
+    return { box, store };
+  };
+  // A Web Lock: one holder at a time across every context of the extension.
+  const webLock = () => {
+    let held: Promise<unknown> = Promise.resolve();
+    return <T>(fn: () => Promise<T>) => {
+      const run = held.then(fn);
+      held = run.catch(() => {});
+      return run;
+    };
+  };
+
+  test("the popup and the background refreshing at once both stay signed in, spending the refresh token once", async () => {
+    const server = tokenServer();
+    const { box, store } = memory(webLock());
+    const popup = createSession(store, server.fetch), background = createSession(store, server.fetch);
+    expect(await Promise.all([popup.authHeader(), background.authHeader()])).toEqual(["Bearer a1", "Bearer a1"]);
+    expect(box.s.tokens).toMatchObject({ access: "a1", refresh: "r1" });
+    expect(server.f).toHaveBeenCalledTimes(1);
+  });
+
+  test("a refresh refused because another app (the share extension) spent the token first keeps that app's tokens", async () => {
+    const server = tokenServer();
+    const { box, store } = memory();
+    server.f.mockImplementationOnce(async () => {
+      const pair = server.spend("r0")!; // the share extension refreshed and wrote the Keychain while we were asking
+      box.s = { ...box.s, tokens: { ...pair, expiresAt: Date.now() + 3600_000 } };
+      return json(400, { error: "invalid_grant" });
+    });
+    expect(await createSession(store, server.fetch).authHeader()).toBe("Bearer a1");
+    expect(box.s.tokens).toMatchObject({ refresh: "r1" });
+  });
+
+  test("a refresh token the server refuses signs out; offline keeps the tokens", async () => {
+    const { box, store } = memory();
+    expect(await createSession(store, (async () => json(400, { error: "invalid_grant" })) as typeof fetch).authHeader()).toBeNull();
+    expect(box.s.tokens).toBeNull();
+    box.s.tokens = expired;
+    await expect(createSession(store, (async () => { throw new TypeError("offline"); }) as typeof fetch).authHeader()).rejects.toBeInstanceOf(Unreachable);
+    expect(box.s.tokens).toEqual(expired);
+  });
 });

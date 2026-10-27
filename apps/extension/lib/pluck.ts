@@ -1,5 +1,6 @@
 import type { CreateItemBody, Item, PluckResponse } from "@pluck/shared-schemas";
 import { api, Refused, Unreachable } from "./api";
+import { isSignedIn } from "./auth";
 import { capture, screenshot } from "./capture";
 import { createQueue } from "@pluck/client";
 import { get, set, settings } from "./store";
@@ -85,7 +86,7 @@ export async function markTab(tabId: number, plucked: boolean) {
 }
 
 export async function refreshBadge(tabId: number, url?: string) {
-  if (!isWeb(url) || !(await get("tokens")) && !(await get("apiKey"))) return markTab(tabId, false);
+  if (!isWeb(url) || !(await isSignedIn())) return markTab(tabId, false);
   const res = await api<{ item: Item | null }>(`/api/v1/items/lookup?url=${encodeURIComponent(url!)}`).catch(() => null);
   if (res) await markTab(tabId, Boolean(res.item));
 }
