@@ -1,8 +1,7 @@
 import { claimOnce, narrowAiGrants, runDueExpiry } from "@pluck/db";
 import { FIRST_PARTY_REDIRECTS } from "./auth";
-import { sortBackfill } from "./capture";
 import { announceNewPosts } from "./indexnow";
-import { pollInbound, purgeBinNow, queueDueDigests } from "./library";
+import { pollInbound, purgeBinNow, queueDueDigests, sortBackfill } from "./library";
 import { log } from "./log";
 
 // Time-based work, run from every cron tick and the worker loop. Each piece is claimed in the

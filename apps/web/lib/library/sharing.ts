@@ -9,7 +9,7 @@ import { sendEmail } from "../email";
 import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
-import { queueExtraction } from "./items";
+import { keepLater } from "./keeping";
 import { ORIGIN } from "../origin";
 
 type Defer = (task: () => Promise<void>) => void;
@@ -96,7 +96,7 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
     }
   }
   const list = await createList(userId, { name: page.list.name, purpose: page.list.purpose, createdBy: "user", items: entries });
-  await queueExtraction(userId, toRead, { defer });
+  await keepLater(userId, toRead, { defer });
   return list;
 }
 

@@ -1,6 +1,6 @@
 import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, enqueue, findByUrl, getContent, getItem, getItemBlobKeys,
+  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
   hitRateLimit, listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
@@ -9,7 +9,7 @@ import {
   type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
-import { extractAttempt } from "../capture";
+import { keepLater, keepNow } from "./keeping";
 
 type Defer = (task: () => Promise<void>) => void;
 const INLINE_TIMEOUT_MS = 5000;
@@ -52,19 +52,8 @@ export async function pluckAny(userId: string, body: CreateItemBody, { defer }: 
     results.push({ item, created });
     if (needsExtraction) toExtract.push(item);
   }
-  await queueExtraction(userId, toExtract, { defer });
+  await keepLater(userId, toExtract, { defer });
   return { results, rejected };
-}
-
-// Many pages are read by the job queue, so a function cut off at 60 s leaves none of them behind;
-// `defer` starts on them as soon as the response is out, and the cron tick carries on with the rest.
-export async function queueExtraction(userId: string, items: Item[], { defer }: { defer?: Defer } = {}): Promise<void> {
-  for (const item of items) await enqueue("extract", { userId, itemId: item.id });
-  if (!items.length) return;
-  const { runJobs } = await import("../jobs"); // jobs imports the library, so not at the top
-  const work = async () => void (await runJobs({ budgetMs: 40_000 }));
-  if (defer) defer(work);
-  else await work();
 }
 
 export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
@@ -72,7 +61,7 @@ export async function pluck(userId: string, body: CreateItemBody & { url: string
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
   const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
   const kept = needsExtraction || body.html || body.transcript
-    ? await extractAttempt(userId, item, { html: body.html, transcript: body.transcript, timeoutMs: INLINE_TIMEOUT_MS, defer })
+    ? await keepNow(userId, item, { html: body.html, transcript: body.transcript, timeoutMs: INLINE_TIMEOUT_MS, defer })
     : item;
   // A selection becomes a highlight anchored by its quote; the reader finds it in the kept text.
   const quote = body.selection?.trim();
@@ -98,7 +87,7 @@ export async function setCoverFromApp(userId: string, itemId: string, body: Uint
 export async function retryExtraction(userId: string, itemId: string, { defer }: { defer?: Defer } = {}): Promise<Item> {
   const item = await resetExtraction(userId, itemId);
   if (!item) throw new ApiError("not_found", "No such item.", 404);
-  return extractAttempt(userId, item, { timeoutMs: INLINE_TIMEOUT_MS, defer });
+  return keepNow(userId, item, { timeoutMs: INLINE_TIMEOUT_MS, defer });
 }
 
 export async function readItem(userId: string, itemId: string): Promise<Item> {
