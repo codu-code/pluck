@@ -38,15 +38,18 @@ export function createClient({ server, auth, onSignedOut, fetch: f = fetch, time
     } catch {
       throw new Unreachable("Couldn't reach Pluck.");
     }
-    if (res.status === 401) {
-      await onSignedOut();
-      throw new SignedOut("Sign in again to pluck.");
-    }
-    if (res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
-    const body = (await res.json().catch(() => null)) as ({ error?: { code: string; message: string; details?: unknown } } & T) | null;
-    if (!res.ok) throw new Refused(body?.error?.code ?? "error", body?.error?.message ?? "That did not work.", res.status, body?.error?.details);
-    return body as T;
+    if (res.status === 401) await onSignedOut();
+    return answer<T>(res);
   };
+}
+
+// What a response means: its JSON, or the error the queue and the screens act on. The web reads its own fetches with it.
+export async function answer<T>(res: Response): Promise<T> {
+  if (res.status === 401) throw new SignedOut("Sign in again to pluck.");
+  if (res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
+  const body = (await res.json().catch(() => null)) as ({ error?: { code: string; message: string; details?: unknown } } & T) | null;
+  if (!res.ok) throw new Refused(body?.error?.code ?? "error", body?.error?.message ?? "That did not work.", res.status, body?.error?.details);
+  return body as T;
 }
 
 export type Tokens = { access: string; refresh: string | null; expiresAt: number };

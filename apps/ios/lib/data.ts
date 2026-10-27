@@ -6,7 +6,7 @@ import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
-import { createQueue, Refused, Unreachable } from "@pluck/client";
+import { createDrain, createQueue, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
 import { api, authHeader, getSession } from "./session";
@@ -169,32 +169,32 @@ export async function toSync(): Promise<number> {
 }
 
 type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string } };
+type Share = { f: File; record: SharedRecord | null }; // null: unreadable
 
-// Runs when the app comes to the foreground: the phone's queue, then the share extension's leftovers.
-// One run at a time: opening the app and pulling to refresh must not send the same share twice.
-let syncing: Promise<number> | null = null;
-export const syncPending = (): Promise<number> => (syncing ??= sync().finally(() => (syncing = null)));
+// The share extension's leftovers go by the same rules as the phone's queue. The extension writes them and the app
+// only takes them away (with their file, if any), so the store reads and removes rather than rewriting a list.
+const shares = createDrain<Share>({
+  read: async () => {
+    const dir = pendingDir();
+    const files = dir?.exists ? dir.list().filter((f): f is File => f instanceof File && f.name.endsWith(".json")) : [];
+    return Promise.all(files.map(async (f) => ({ f, record: ((await f.text().then(JSON.parse).catch(() => null)) as SharedRecord | null) })));
+  },
+  remove: async ({ f, record }) => {
+    if (f.exists) f.delete();
+    if (record?.file) removeShared(record.file.path);
+  },
+});
 
-async function sync(): Promise<number> {
+// Runs when the app comes to the foreground: the phone's queue, then the share extension's leftovers. Each runs one
+// at a time: opening the app and pulling to refresh must not send the same share twice.
+export async function syncPending(): Promise<number> {
   await queue.drain((body) => api("/api/v1/items", { json: body }));
-  const dir = pendingDir();
-  if (dir?.exists) {
-    for (const f of dir.list()) {
-      if (!(f instanceof File) || !f.name.endsWith(".json")) continue;
-      let record: SharedRecord | null = null;
-      try {
-        record = JSON.parse(await f.text()) as SharedRecord;
-        // The file's name is the key: if the upload below fails, sending the body again makes no second Note.
-        if (record.body) await api("/api/v1/items", { json: { ...record.body, clientKey: f.name } });
-        if (record.file) await uploadShared(record.file);
-        f.delete();
-      } catch (e) {
-        if (record && !(e instanceof Refused)) break; // offline, signed out, busy or down: keep it for next time
-        f.delete(); // refused or unreadable: retrying will not help
-        if (record?.file) removeShared(record.file.path);
-      }
-    }
-  }
+  await shares(async ({ f, record }) => {
+    if (!record) return; // unreadable: nothing to send, so it goes
+    // The file's name is the key: if the upload below fails, sending the body again makes no second Note.
+    if (record.body) await api("/api/v1/items", { json: { ...record.body, clientKey: f.name } });
+    if (record.file) await uploadShared(record.file);
+  });
   void queryClient.invalidateQueries({ queryKey: ["items"] });
   void queryClient.invalidateQueries({ queryKey: keys.pending });
   return toSync();

@@ -35,7 +35,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `packages/extract` | Guarded fetch (`fetch.ts`), page and PDF reading (`extract.ts`, Defuddle then Readability), email (`email.ts`) and imports. Its fixtures are served by `pnpm stack` so tests never touch the internet. |
 | `packages/blob` | S3 through the AWS SDK; MinIO locally and for self-hosting. |
 | `packages/shared-schemas` | Every type as a Zod schema, used by the server and every client. |
-| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, refresh a minute early, errors mapped to `Unreachable`, `SignedOut` or `Refused`), `createQueue` (the offline queue) and PKCE. |
+| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, refresh a minute early, errors mapped to `Unreachable`, `SignedOut` or `Refused` by `answer`), `createQueue` (the offline queue) and PKCE. The web's offline queue is `createQueue` too, over `localStorage`; the iPhone app drains the share extension's App Group files with `createDrain`, the same keep and drop rules. |
 | `packages/i18n` | The words, in ten languages, one catalog per surface. See [i18n.md](i18n.md). |
 | `packages/ui` | Tokens, the logo, the icon and the Kind glyphs. |
 | `apps/extension` | WXT. The popup, options and a background worker that drains the queue every minute. |
@@ -98,12 +98,6 @@ These are the places where the code is shallower than it needs to be: a rule wri
 - **Files:** `apps/web/lib/capture.ts` (`extractAttempt`, its own backoff of 30 s, 2 min, 10 min over four attempts), `lib/jobs.ts` (the `extract` handler, and the generic job retry of `30s * 2^n` over five attempts), `lib/library/items.ts` (`pluck`, `retryExtraction`, `queueExtraction`, and a dynamic `import("../jobs")` to dodge an import cycle), `library/files.ts` and `library/account.ts` (each builds an `ExtractionResult` its own way), and `pluckLink` in `packages/db` (decides whether a page needs reading).
 - **Problem:** this is where a newcomer gets lost. Two retry policies live in two files, and which one governs a failed extraction is not obvious from either. The cycle between the library and the jobs is a sign the seam is in the wrong place.
 - **Shape:** one `lib/library/keeping.ts` with `keepNow(userId, item, { html?, transcript?, timeoutMs })`, `keepLater(userId, itemIds)` and `keepFile(userId, item)`. It owns the retry policy and the mapping from what `packages/extract` returns to what `packages/db` stores; `jobs.ts` becomes a plain table of handlers. Pass the "run the queue now" kick in, instead of the library importing jobs. Tests cross `keepNow` with the fixture server: a permanent 4xx fails at once, a transient failure retries the stated number of times.
-
-### 4. One offline queue for every client (M)
-
-- **Files:** `packages/client/src/queue.ts` (`createQueue`, used by the extension and the iPhone app, well tested), `apps/web/components/TopBar.tsx` (its own `localStorage` queue), `apps/ios/lib/data.ts` (a second drain loop over the share extension's App Group files), `apps/ios/targets/share/PluckClient.swift` (writes those files).
-- **Problem:** the web keeps its own copy of the queue. Two flushes at once are now kept apart by a Web Lock (`TopBar.tsx`), the guard `client.test.ts` tests for the shared queue ("two drains at once send each note once"), but it is still a second implementation of the same rules. The iPhone app drains the App Group files with a third, hand-written copy.
-- **Shape:** make `createQueue<T>(store)` generic over what an entry carries, then add two store adapters: `localStorage` for the web and the App Group folder for the iPhone. Two adapters make it a real seam. Swift cannot share TypeScript, so pin the file format with a JSON fixture that a TS test parses and the Swift code names in a comment.
 
 ### 5. One session module for the extension and the iPhone app (M)
 

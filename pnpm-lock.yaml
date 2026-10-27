@@ -241,6 +241,9 @@ importers:
       '@pluck/blob':
         specifier: workspace:*
         version: link:../../packages/blob
+      '@pluck/client':
+        specifier: workspace:*
+        version: link:../../packages/client
       '@pluck/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -7640,9 +7643,7 @@ snapshots:
       metro-runtime: 0.87.1
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.79.7': {}
 

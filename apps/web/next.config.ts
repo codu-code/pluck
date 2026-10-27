@@ -11,7 +11,7 @@ try {
 const posthog = process.env.POSTHOG_HOST || "https://eu.i.posthog.com";
 
 const config: NextConfig = {
-  transpilePackages: ["@pluck/ui", "@pluck/shared-schemas", "@pluck/db", "@pluck/extract", "@pluck/blob", "@pluck/i18n"],
+  transpilePackages: ["@pluck/ui", "@pluck/shared-schemas", "@pluck/db", "@pluck/extract", "@pluck/blob", "@pluck/i18n", "@pluck/client"],
   // Parsers with large or native-ish dependency trees run from node_modules instead of the bundle.
   serverExternalPackages: ["defuddle", "linkedom", "unpdf", "@mozilla/readability", "undici"],
   // Monorepo root, so env and tracing resolve from there.
