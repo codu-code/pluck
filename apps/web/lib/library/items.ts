@@ -1,11 +1,11 @@
 import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
   batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
-  hitRateLimit, listHighlights, listItems, listsForItem, markOpened, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
+  hitRateLimit, listHighlights, listItems, listsForItem, markOpened, misfit, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
 import {
-  extractUrls, isTextKind, LINK_KINDS, normalizeUrl, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
+  extractUrls, isTextKind, normalizeUrl, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
   type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
@@ -106,13 +106,9 @@ import { tagIdsFor, type Actor } from "./tags";
 // Edits from the person. Text and the text kinds belong to items with no URL; link kinds to items with one.
 export async function updateItem(userId: string, itemId: string, patch: UpdateItemBody, { by = "user" }: { by?: Actor } = {}): Promise<Item> {
   const current = await readItem(userId, itemId);
-  const isLink = !isTextKind(current.kind);
-  if (patch.text !== undefined && isLink) throw new ApiError("bad_request", "Only notes, todos and things have text to edit.", 400);
-  if (patch.kind && isLink !== (LINK_KINDS as readonly string[]).includes(patch.kind))
-    throw new ApiError("bad_request", isLink ? "A link can be Read, Watch, PDF or Image." : "This can be a Note, Todo or Thing.", 400);
+  const refused = misfit(current.kind, patch);
+  if (refused) throw new ApiError("bad_request", refused, 400);
   if (patch.preview !== undefined && current.preview === null) throw new ApiError("bad_request", "Only links open on a Preview.", 400);
-  if (patch.status === "done" && !["todo", "thing"].includes(patch.kind ?? current.kind))
-    throw new ApiError("bad_request", "Done is for todos and things.", 400);
   const { tagIds, ...rest } = patch;
   if (tagIds) await setItemTags(userId, itemId, await tagIdsFor(userId, tagIds), by);
   if (!Object.keys(rest).length) return readItem(userId, itemId);
@@ -131,10 +127,12 @@ export async function batch(userId: string, body: BatchBody, { by = "user" }: { 
   const { addTagIds, removeTagIds, ...p } = body.patch;
   const add = addTagIds ? await tagIdsFor(userId, addTagIds) : [];
   const remove = removeTagIds ? await tagIdsFor(userId, removeTagIds) : [];
-  let tagged = 0;
-  if (add.length || remove.length) tagged = await batchTags(userId, body.itemIds, add, remove, by);
-  if (!Object.keys(p).length) return { matched: body.itemIds.length, updated: tagged };
-  const res = await batchUpdate(userId, body.itemIds, { ...p, dueAt: p.dueAt === undefined ? undefined : p.dueAt === null ? null : new Date(p.dueAt) });
+  // The change goes first: one that does not fit every Item is refused, like an edit of one, before any tag moves.
+  const res = Object.keys(p).length
+    ? await batchUpdate(userId, body.itemIds, { ...p, dueAt: p.dueAt === undefined ? undefined : p.dueAt === null ? null : new Date(p.dueAt) })
+    : { matched: body.itemIds.length, updated: 0, refused: undefined };
+  if (res.refused) throw new ApiError("bad_request", res.refused.reason, 400, { itemIds: res.refused.itemIds });
+  const tagged = add.length || remove.length ? await batchTags(userId, body.itemIds, add, remove, by) : 0;
   return { matched: res.matched, updated: Math.max(res.updated, tagged) };
 }
 

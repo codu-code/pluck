@@ -1,6 +1,6 @@
 "use client";
 
-import type { Item, Status } from "@pluck/shared-schemas";
+import { isTask, type Item, type Status } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -43,7 +43,7 @@ export function ItemBar({ item, top, state, before }: { item: Item; top?: ReactN
         return void (before ?? (async () => {}))().then(() => router.push(backHref(origin)));
       }
       if (isTyping(e.target) || window.getSelection()?.toString()) return;
-      const run = { l: () => move("later"), e: () => move("archived"), d: () => (item.kind === "todo" || item.kind === "thing") && move("done") }[e.key];
+      const run = { l: () => move("later"), e: () => move("archived"), d: () => isTask(item.kind) && move("done") }[e.key];
       if (run) {
         e.preventDefault();
         void run();
@@ -71,7 +71,7 @@ export function ItemBar({ item, top, state, before }: { item: Item; top?: ReactN
           <button type="button" className={styles.action} aria-pressed={status === "archived"} onClick={() => move("archived")}>
             {t("itemBar.archive")} <kbd className={styles.hint}>e</kbd>
           </button>
-          {(item.kind === "todo" || item.kind === "thing") && (
+          {isTask(item.kind) && (
             <button type="button" className={styles.action} aria-pressed={status === "done"} onClick={() => move("done")}>
               {t("itemBar.done")} <kbd className={styles.hint}>d</kbd>
             </button>

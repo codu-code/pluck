@@ -202,7 +202,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "batch_update",
       {
-        description: "Apply one change to up to 100 items: status, kind, due date, note, or adding and removing existing tags.",
+        description: "Apply one change to up to 100 items (status, kind, due date, note, or adding and removing existing tags), all or none: if it does not fit some items, such as Done on a note, nothing changes and the error names them.",
         inputSchema: z.object({
           itemIds: z.array(ObjectIdString).min(1).max(100),
           patch: z

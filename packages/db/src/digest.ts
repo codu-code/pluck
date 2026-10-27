@@ -1,4 +1,4 @@
-import type { Digest } from "@pluck/shared-schemas";
+import { TASK_KINDS, type Digest } from "@pluck/shared-schemas";
 import { DEFAULT_SETTINGS, items, lists, oid, users, type UserSettings } from "./collections.ts";
 import { localNow } from "./expiry.ts";
 
@@ -30,7 +30,7 @@ export async function digestFor(userId: string, settings: UserSettings, now = ne
           .toArray()
       : [],
     col
-      .find({ ...base, kind: { $in: ["todo", "thing"] }, status: { $ne: "done" }, dueAt: { $gte: new Date(now.getTime() - DAY), $lt: new Date(now.getTime() + 7 * DAY) } }, lean)
+      .find({ ...base, kind: { $in: [...TASK_KINDS] }, status: { $ne: "done" }, dueAt: { $gte: new Date(now.getTime() - DAY), $lt: new Date(now.getTime() + 7 * DAY) } }, lean)
       .sort({ dueAt: 1 })
       .limit(limit)
       .toArray(),

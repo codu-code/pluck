@@ -7,6 +7,7 @@ export {
   countItems, BIN_DAYS,
   type PluckLinkInput, type TextItemInput, type ItemEdit, type BatchEdit, type ExtractionResult,
 } from "./items.ts";
+export { misfit } from "./item-doc.ts";
 export { createHighlight, listHighlights, updateHighlight, deleteHighlight, type HighlightInput } from "./highlights.ts";
 export { enqueue, claimJob, completeJob, retryJob, failJob, pendingJobCount, type Job } from "./jobs.ts";
 export { hitRateLimit } from "./rate-limit.ts";

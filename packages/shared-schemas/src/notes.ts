@@ -3,6 +3,9 @@
 export const TEXT_KINDS = ["note", "todo", "thing"] as const;
 export type TextKind = (typeof TEXT_KINDS)[number];
 export const isTextKind = (k: string | undefined): k is TextKind => (TEXT_KINDS as readonly string[]).includes(k ?? "");
+// The Kinds that can be Done: a Todo or Thing gets finished, a Note does not.
+export const TASK_KINDS = ["todo", "thing"] as const;
+export const isTask = (k: string): boolean => (TASK_KINDS as readonly string[]).includes(k);
 
 export function deriveTitle(text: string): string {
   const line = text.split("\n").map((l) => l.trim()).find(Boolean);

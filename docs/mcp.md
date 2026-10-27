@@ -44,7 +44,7 @@ A tool is only listed when the token carries its scope.
 | `list_items` | Browse by status; `status, kinds[], sort (newest, untouched), limit (max 25), cursor` |
 | `get_item` | One item with its facts, its kept text (paged at about 20k tokens, follow `textCursor`), note, highlights and lists |
 | `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. `tagIds` take existing tag ids or names; unknown tags (refused with the nearest existing ones) or an unknown `listId` refuse the call before anything is saved |
-| `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here |
+| `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here. A change that does not fit every item (Done is only for Todos and Things; a link Kind only for links) refuses the call, naming those items in `details.itemIds`, and nothing changes |
 | `list_tags` | Tags with counts, and whether an AI made them; paged with `cursor` |
 | `create_tag` | A new tag, only after the person agreed. Marked as made by AI |
 | `list_lists` | Lists with purpose, counts and visibility |
