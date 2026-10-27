@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Player } from "@/components/Player";
 import { useFormat } from "@/components/useFormat";
+import { library, went } from "@/lib/actions";
 import { coverSrc } from "@/lib/format";
 import styles from "./reader.module.css";
 
@@ -68,7 +69,7 @@ export function PreviewSwitch({ item }: { item: Item }) {
   return (
     <button type="button" className={styles.switch} disabled={busy} onClick={async () => {
       setBusy(true);
-      await fetch(`/api/v1/items/${item.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ preview: reading ? null : "reader" }) });
+      await went(library.edit(item.id, { preview: reading ? null : "reader" }));
       router.refresh();
       setBusy(false);
     }}>

@@ -5,8 +5,8 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ListPicker } from "@/components/ListPicker";
+import { library, went } from "@/lib/actions";
 import { isTyping } from "@/lib/keys";
-import { createListNamed, fetchLists, membershipsOf, setInList } from "@/lib/listing";
 import styles from "./ItemLists.module.css";
 
 // "In 2 lists" in an item's side column: each list, the item's place in it and its note there.
@@ -16,7 +16,7 @@ export function ItemLists({ itemId, initial }: { itemId: string; initial: ListMe
   const t = useTranslations("app.itemLists");
 
   async function open() {
-    setPicker(await fetchLists());
+    setPicker(await library.lists().catch(() => []));
   }
 
   useEffect(() => {
@@ -51,12 +51,12 @@ export function ItemLists({ itemId, initial }: { itemId: string; initial: ListMe
           lists={picker}
           state={(id) => (memberships.some((m) => m.list.id === id) ? "on" : "off")}
           onToggle={async (list, on) => {
-            if (!(await setInList([itemId], list, on))) return;
-            setMemberships(await membershipsOf(itemId));
-            const lists = await fetchLists();
+            if (!(await went(library.setInList([itemId], list.id, on)))) return;
+            setMemberships(await library.memberships(itemId).catch(() => []));
+            const lists = await library.lists().catch(() => []);
             setPicker((cur) => cur && lists); // closed while saving stays closed
           }}
-          onCreate={createListNamed}
+          onCreate={(name) => library.newList(name).catch(() => null)}
           onClose={() => setPicker(null)}
         />
       )}

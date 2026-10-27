@@ -1,10 +1,11 @@
 "use client";
 
+import { Refused } from "@pluck/client";
 import type { Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
-import { fetchTags } from "@/lib/tagging";
+import { library, went } from "@/lib/actions";
 import styles from "./settings.module.css";
 
 type Mode = { id: string; kind: "rename" | "merge" | "delete" } | null;
@@ -22,7 +23,7 @@ export function TagsSection({ initial, aiWeek: initialAi }: { initial: Tag[]; ai
   const t = useTranslations("app.settings.tags");
   const app = useTranslations("app.common");
 
-  const refresh = async () => setTags(await fetchTags());
+  const refresh = async () => setTags(await library.tags().catch(() => []));
   const open = (id: string, kind: "rename" | "merge" | "delete", name = "") => {
     setMode({ id, kind });
     setDraft(name);
@@ -31,16 +32,14 @@ export function TagsSection({ initial, aiWeek: initialAi }: { initial: Tag[]; ai
   };
 
   async function rename(tag: Tag) {
-    const res = await fetch(`/api/v1/tags/${tag.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: draft }) });
-    if (!res.ok) return setError(((await res.json()) as { error: { message: string } }).error.message);
+    const err = await library.renameTag(tag.id, draft).then(() => null, (e: unknown) => e);
+    if (err) return setError(err instanceof Refused ? err.message : app("didNotGoThrough"));
     setMode(null);
     await refresh();
   }
 
   async function remove(tag: Tag, into?: Tag) {
-    const qs = into ? `reassignTo=${into.id}` : "removeFromItems=true";
-    const res = await fetch(`/api/v1/tags/${tag.id}?${qs}`, { method: "DELETE" });
-    if (!res.ok) return setError(app("didNotGoThrough"));
+    if (!(await went(library.deleteTag(tag.id, into?.id)))) return setError(app("didNotGoThrough"));
     setMode(null);
     await refresh();
     showToast({ message: into ? t("merged", { name: tag.name, into: into.name }) : t("deleted", { name: tag.name }) });

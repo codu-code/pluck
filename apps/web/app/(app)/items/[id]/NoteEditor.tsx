@@ -7,6 +7,7 @@ import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ItemLists } from "@/components/ItemLists";
 import { ItemTags } from "@/components/ItemTags";
 import { useFormat } from "@/components/useFormat";
+import { library } from "@/lib/actions";
 import styles from "./note.module.css";
 
 type Patch = { title?: string; text?: string; kind?: TextKind; dueAt?: string | null };
@@ -30,12 +31,12 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
     pending.current = {};
     if (!Object.keys(patch).length) return;
     setState("saving");
-    const res = await fetch(`/api/v1/items/${item.id}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(patch) });
-    if (!res.ok) {
+    const saved = await library.edit(item.id, patch).catch(() => null);
+    if (!saved) {
       pending.current = { ...patch, ...pending.current };
       return setState("error");
     }
-    setEdited(((await res.json()) as { item: Item }).item.updatedAt);
+    setEdited(saved.updatedAt);
     setState(Object.keys(pending.current).length ? "saving" : "saved");
   }
 

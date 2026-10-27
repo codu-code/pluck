@@ -6,8 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
-import { api } from "@/lib/session";
-import { keys, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
+import { keys, library, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
 import { Icon, ICONS } from "./Glyph";
@@ -80,12 +79,8 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     setPicked(null);
     qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => !ids.includes(i.id)) } : old));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    const send = (s: Status) => api("/api/v1/items/batch", { json: { itemIds: ids, patch: { status: s } } }).finally(() => {
-      void qc.invalidateQueries({ queryKey: ["items"] });
-      void qc.invalidateQueries({ queryKey: ["counts"] });
-    });
-    await send(to).catch(() => toast(tr("items.moveFailed")));
-    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void send(status));
+    await library.move(ids, to).catch(() => toast(tr("items.moveFailed")));
+    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void library.restore(moved));
   };
 
   const away: Status = status === "later" ? "inbox" : "later";

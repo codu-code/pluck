@@ -11,9 +11,8 @@ import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
 import { toast } from "@/components/Toast";
 import { ToolBar } from "@/components/ToolBar";
-import { keys, useList } from "@/lib/data";
+import { keys, library, useList } from "@/lib/data";
 import { kv } from "@/lib/kv";
-import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
 
 type Row = { e: ListEntry; n: number } | "head";
@@ -52,42 +51,27 @@ export default function ListScreen() {
   const chosen = entries.filter((e) => picked?.has(e.item.id));
 
   const edit = (fn: (entries: ListEntry[]) => ListEntry[]) => qc.setQueryData<Data>(keys.list(id), (old) => old && { ...old, entries: fn(old.entries) });
-  const refresh = () => {
-    void qc.invalidateQueries({ queryKey: keys.list(id) });
-    void qc.invalidateQueries({ queryKey: keys.lists });
-    void qc.invalidateQueries({ queryKey: ["items"] }); // a Todo marked here is Done there
-    void qc.invalidateQueries({ queryKey: ["counts"] });
-  };
   const failed = () => toast(tr("common.failed.title"));
 
   const mark = async (ids: string[], ticked: boolean) => {
     edit((es) => es.map((e) => (ids.includes(e.item.id) ? { ...e, ticked } : e)));
     void Haptics.selectionAsync();
-    await (ids.length === 1
-      ? api(`/api/v1/lists/${id}/items/${ids[0]}`, { method: "PATCH", json: { ticked } })
-      : api(`/api/v1/lists/${id}/items`, { method: "PATCH", json: { itemIds: ids, ticked } })
-    ).catch(failed);
-    refresh();
+    await library.mark(id, ids, ticked).catch(failed);
   };
 
   const toTop = async () => {
     const order = [...chosen, ...entries.filter((e) => !picked?.has(e.item.id))];
     setPicked(null);
     edit(() => order);
-    await api(`/api/v1/lists/${id}/reorder`, { json: { itemIds: order.map((e) => e.item.id) } }).catch(failed);
-    refresh();
+    await library.reorder(id, order.map((e) => e.item.id)).catch(failed);
   };
 
   const takeOut = async () => {
     const gone = chosen;
     setPicked(null);
     edit((es) => es.filter((e) => !gone.includes(e)));
-    for (const e of gone) await api(`/api/v1/lists/${id}/items/${e.item.id}`, { method: "DELETE" }).catch(failed);
-    refresh();
-    toast(tr("list.takenOut", { count: gone.length }), async () => {
-      for (const e of gone) await api(`/api/v1/lists/${id}/items`, { json: { itemId: e.item.id, position: e.position, note: e.note } }).catch(failed);
-      refresh();
-    });
+    await library.setInList(gone.map((e) => e.item.id), id, false).catch(failed);
+    toast(tr("list.takenOut", { count: gone.length }), () => void library.putBack(id, gone).catch(failed));
   };
 
   const share = () => router.push({ pathname: "/share", params: { id } });

@@ -13,9 +13,7 @@ import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
 import { useToast } from "@/components/Toast";
 import { TopBar, type PluckDraft } from "@/components/TopBar";
-import { moveItems, restoreStatuses } from "@/lib/moves";
-import { createListNamed, fetchLists, membershipsOf, setInList } from "@/lib/listing";
-import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
+import { library, moveItems, restoreStatuses, went } from "@/lib/actions";
 import { isTyping } from "@/lib/keys";
 import styles from "./ItemList.module.css";
 import { useNow } from "@/lib/use-now";
@@ -92,7 +90,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
     router.replace(`/${view}`, { scroll: false });
     showToast({
       message: t("deleted"),
-      undo: () => void fetch(`/api/v1/items/${deletedId}/restore`, { method: "POST" }).then(() => router.refresh()),
+      undo: () => void went(library.fromBin(deletedId)).then(() => router.refresh()),
     });
   }, [deletedId, showToast, router, view]);
 
@@ -221,19 +219,19 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   }
   async function toggleTag(tag: Tag, on: boolean) {
     const ids = picking ?? [];
-    const updated = await setTagOn(ids, tag, on, real);
+    const updated = await library.setTag(ids, tag.id, on, real).catch(() => null);
     if (updated) setRows((cur) => cur.map((r) => updated.find((u) => u.id === r.id) ?? r));
-    setVocab(await fetchTags());
+    setVocab(await library.tags().catch(() => []));
   }
   // For one item the picker shows the lists it is already in; for many it starts empty and adds to all.
   async function openLists(ids: string[]) {
-    const [lists, memberships] = await Promise.all([fetchLists(), ids.length === 1 ? membershipsOf(ids[0]!) : Promise.resolve([])]);
+    const [lists, memberships] = await Promise.all([library.lists().catch(() => []), ids.length === 1 ? library.memberships(ids[0]!).catch(() => []) : []]);
     setListing({ ids, lists, on: new Set(memberships.map((m) => m.list.id)) });
   }
   async function toggleList(list: List, on: boolean) {
     const ids = listing?.ids;
-    if (!ids || !(await setInList(ids, list, on))) return showToast({ message: app("common.didNotGoThrough") });
-    const lists = await fetchLists();
+    if (!ids || !(await went(library.setInList(ids, list.id, on)))) return showToast({ message: app("common.didNotGoThrough") });
+    const lists = await library.lists().catch(() => []);
     // Only refresh the picker this toggle came from: one closed (Esc) or reopened for other items stays as it is.
     setListing((cur) => {
       if (!cur || cur.ids !== ids) return cur;
@@ -415,7 +413,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
           lists={listing.lists}
           state={(id) => (listing.on.has(id) ? "on" : "off")}
           onToggle={toggleList}
-          onCreate={createListNamed}
+          onCreate={(name) => library.newList(name).catch(() => null)}
           onClose={() => setListing(null)}
         />
       )}
@@ -426,7 +424,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
           state={pickState}
           onToggle={toggleTag}
           onCreate={async (name) => {
-            const t = await createTagNamed(name);
+            const t = await library.newTag(name).catch(() => null);
             if (t) setVocab((v) => [...v.filter((x) => x.id !== t.id), t]);
             return t;
           }}

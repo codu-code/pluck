@@ -1,5 +1,5 @@
-// The API client the extension and the iPhone app share. No platform imports, so it is tested under Node;
-// each app supplies where the server is and how to authenticate.
+// The API client the extension and the iPhone app share, and the web's `sameOrigin`. No platform imports, so it is
+// tested under Node; each app supplies where the server is and how to authenticate.
 
 // Reaching the server failed (offline, DNS, a 5xx, a 429): plucks wait in the queue and try again.
 export class Unreachable extends Error {}
@@ -25,22 +25,26 @@ export function createClient({ server, auth, onSignedOut, fetch: f = fetch, time
   return async <T>(path: string, init: Init = {}) => {
     const header = await auth();
     if (!header) throw new SignedOut("Sign in to pluck.");
-    const contentType = init.json !== undefined ? "application/json" : init.contentType;
-    let res: Response;
-    try {
-      res = await f(`${await server()}${path}`, {
-        method: init.method ?? (init.json === undefined && init.body === undefined ? "GET" : "POST"),
-        credentials: "omit", // only the token speaks for the person, never a cookie
-        headers: { authorization: header, ...(contentType ? { "content-type": contentType } : {}) },
-        body: init.json !== undefined ? JSON.stringify(init.json) : init.body,
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-    } catch {
-      throw new Unreachable("Couldn't reach Pluck.");
-    }
+    // only the token speaks for the person, never a cookie
+    const res = await send(f, `${await server()}${path}`, init, { credentials: "omit", headers: { authorization: header }, signal: AbortSignal.timeout(timeoutMs) });
     if (res.status === 401) await onSignedOut();
     return answer<T>(res);
   };
+}
+
+// The web's own pages: the same origin, so the session cookie speaks for the person.
+export const sameOrigin = (f: typeof fetch = fetch): Client => async <T>(path: string, init: Init = {}) => answer<T>(await send(f, path, init, {}));
+
+function send(f: typeof fetch, url: string, init: Init, req: RequestInit & { headers?: Record<string, string> }): Promise<Response> {
+  const contentType = init.json !== undefined ? "application/json" : init.contentType;
+  return f(url, {
+    ...req,
+    method: init.method ?? (init.json === undefined && init.body === undefined ? "GET" : "POST"),
+    headers: { ...req.headers, ...(contentType ? { "content-type": contentType } : {}) },
+    body: init.json !== undefined ? JSON.stringify(init.json) : init.body,
+  }).catch(() => {
+    throw new Unreachable("Couldn't reach Pluck.");
+  });
 }
 
 // What a response means: its JSON, or the error the queue and the screens act on. The web reads its own fetches with it.

@@ -35,7 +35,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `packages/extract` | Guarded fetch (`fetch.ts`), page and PDF reading (`extract.ts`, Defuddle then Readability), email (`email.ts`) and imports. Its fixtures are served by `pnpm stack` so tests never touch the internet. |
 | `packages/blob` | S3 through the AWS SDK; MinIO locally and for self-hosting. |
 | `packages/shared-schemas` | Every type as a Zod schema, used by the server and every client. |
-| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, errors mapped to `Unreachable`, `SignedOut` or `Refused` by `answer`), `createSession` (the token refresh, once across every context that shares a store, and sign-out), `register`, `createQueue` (the offline queue) and PKCE. The web's offline queue is `createQueue` too, over `localStorage`; the iPhone app drains the share extension's App Group files with `createDrain`, the same keep and drop rules. |
+| `packages/client` | What the iPhone app and the extension share: `createClient` (bearer auth, errors mapped to `Unreachable`, `SignedOut` or `Refused` by `answer`), `createSession` (the token refresh, once across every context that shares a store, and sign-out), `register`, `createQueue` (the offline queue) and PKCE. The web's offline queue is `createQueue` too, over `localStorage`; the iPhone app drains the share extension's App Group files with `createDrain`, the same keep and drop rules. `createLibrary` is the library actions both the web and the iPhone app take (move, restore, edit, delete, Tags, in and out of Lists, mark, reorder, put back), each owning its route, its body and how its error reads; the web runs it over `sameOrigin` (the session cookie, `apps/web/lib/actions.ts`), the iPhone app over its bearer client (`apps/ios/lib/data.ts`, which also refetches what each action makes stale). |
 | `packages/i18n` | The words, in ten languages, one catalog per surface. See [i18n.md](i18n.md). |
 | `packages/ui` | Tokens, the logo, the icon and the Kind glyphs. |
 | `apps/extension` | WXT. The popup, options and a background worker that drains the queue every minute. |
@@ -79,7 +79,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 ## Where it could be deeper
 
-These are the places where the code is shallower than it needs to be: a rule written in several places, an interface that leaks what is behind it, or a file that changes for several reasons. Each names the files, the problem, a proposed shape and a rough size (S: an afternoon, M: a day or two, L: several days). None of them is done yet; each would be its own pull request.
+These are the places where the code is shallower than it needs to be: a rule written in several places, an interface that leaks what is behind it, or a file that changes for several reasons. Each names the files, the problem, a proposed shape and a rough size (S: an afternoon, M: a day or two, L: several days). Finished ones are removed; a "Done so far" line says what is left of a half-done one. Each would be its own pull request.
 
 ### 1. One owner for an Item's shape and its Status changes (M)
 
@@ -94,19 +94,6 @@ These are the places where the code is shallower than it needs to be: a rule wri
 - **Problem:** `tagNames`, `listNames`, `inList`, `searchText` and `searchBody` are "kept in step by the writes that change them", so each writer has to know which helpers to call. `inList` carries a product rule (Items in a List never expire): a writer that forgets `syncListNames` breaks expiry without a failing test.
 - **Shape:** one `afterItemsChanged(userId, itemIds)` that recomputes every derived field and count, called by writers instead of picking helpers. Test: an invariant test that runs each write and checks the stored fields equal a fresh recompute.
 
-
-### 5. One session module for the extension and the iPhone app (M)
-
-- **Files:** `apps/extension/lib/auth.ts`, `apps/ios/lib/session.ts`, `apps/ios/targets/share/PluckClient.swift`, and the readers of raw storage keys in `apps/extension/entrypoints/popup/Popup.tsx` and `lib/pluck.ts`.
-- **Problem:** dynamic registration, the one-at-a-time token refresh, remembering the email and sign-out are written twice in TypeScript, nearly line for line; the extension also hand-rolls PKCE instead of using `pkcePair`. The popup decides "signed in" by reading `tokens` and `apiKey` from storage directly. The Swift copy in the share extension is a third: it now treats a 5xx or 429 during refresh as offline, as the TypeScript client does ("nobody is signed out for being on a train"), but only a comment keeps the two in step.
-- **Shape:** `createSession({ store, clientName, scope, redirect })` in `packages/client`, with `authHeader()`, `isSignedIn()`, `register(server)`, `exchange(code, pending)` and `signOut()`. The storage differs (browser storage, Keychain) and goes behind the `store` adapter. Write the status-to-outcome table once as a test in `client.test.ts` and mirror it in a Swift comment.
-
-### 6. The library actions, once, for the web and the iPhone app (L)
-
-- **Files:** web `apps/web/lib/moves.ts`, `tagging.ts`, `listing.ts` and three copies of a `send` helper (`listing.ts`, `tagging.ts`, `app/(app)/lists/[id]/ListView.tsx`); about 30 raw `fetch("/api/v1…")` calls across the web components; iPhone `components/ItemsScreen.tsx`, `app/pick.tsx`, `app/lists/[id].tsx`. The Done check (`kind === "todo" || kind === "thing"`) is written in `ItemBar.tsx`, `ItemList.tsx`, `ItemsScreen.tsx` and privately in `packages/db/src/lists.ts`.
-- **Problem:** the rules for acting on Items (one Item by PATCH, many through `/items/batch`; Done only for Todos and Things; a 404 on delete counts as done) live in loose web helpers, and the iPhone app writes them again inline. The iPhone copies in `pick.tsx` swallow errors where the web shows a toast. Each web helper reads errors its own way.
-- **Shape:** `createLibrary(client)` in `packages/client` with `move(ids, status)`, `restore(previous)`, `setTag(ids, tag, on)`, `setInList(ids, listId, on)`, `mark(listId, ids, ticked)`, `reorder` and `takeOut`. Give `createClient` a cookie transport for the web, so the web and the native clients are two adapters at one seam. Export `isTask` from `shared-schemas`. Tests use a fake `fetch` and check which route each call picks and how errors map. Start with the web and `pick.tsx`.
-
 ### 7. Row words: one set of rules, translated at the edge (S to M)
 
 - **Files:** `packages/shared-schemas/src/format.ts` (`when`, `ago`, `dueLabel`, `rowSite`, `rowMeta`), `apps/web/components/useFormat.ts`, `apps/ios/lib/format.ts` (`rowText`), and an inline `ago` in `apps/web/app/p/[handle]/[slug]/page.tsx`.
@@ -118,6 +105,7 @@ These are the places where the code is shallower than it needs to be: a rule wri
 - **Files:** `packages/mcp/src/server.ts` (`save_item`, `update_list`), `packages/mcp/src/shape.ts`, `apps/web/lib/connector.ts`, `apps/web/lib/library/tags.ts` (`tagIdsFor`).
 - **Problem:** `save_item` checks tag ids itself (ids only, no nearest suggestions), while `batch_update` goes through `tagIdsFor` (names too, with the nearest Tags). One rule, two behaviours. `update_list` sequences rename, remove, add and reorder inside the tool, so the steps are not one unit. "Only the person makes a List public" is enforced in tool code while `connectorFor` still offers `setVisibility("public")`. Errors are plain `Error`s with a `code` added on.
 - **Shape:** a library call `pluckInto(userId, body, { tagIds, listId, by })` that checks every reference through `tagIdsFor` and `readList` before making anything. Narrow the connector's `setVisibility` to `makePrivate`, so the rule lives at the adapter. Share one error type (`ApiError` or a `libraryError(code, message, details)`) between `apps/web` and `packages/mcp`. `connector.test.ts` stays as it is and gains "an unknown Tag makes no Item".
+- **Done so far:** `save_item` reads tags through `tagIdsFor`, and the connector offers only `makePrivate`. Left: `pluckInto` as one call, `update_list`'s steps as one unit, and the shared error type.
 
 ### 9. The web's list screens: shared cursor, selection and row state (M)
 
@@ -129,8 +117,7 @@ These are the places where the code is shallower than it needs to be: a rule wri
 
 - **The expiry window is worked out twice** (`packages/db/src/expiry.ts` and `digest.ts`): export one `expiringFilter(userId, settings, now, withinDays)` from `expiry.ts` and use it in the digest, with a test that the Monday email and Later's "expiring soon" agree. S.
 - **The edge envelope is copied** (`apps/web/lib/api.ts` repeats its catch block in `route` and `publicRoute`; `app/mcp/route.ts` re-implements API-key and OAuth checks and rate limits): one `authenticate(req, { audience })` and one `errorBody(e)` used by both. S; do it after the larger items.
-- **iPhone cache keys leak into screens** (`apps/ios/lib/data.ts` has a `keys` object, but screens use raw keys and repeat the same invalidations about 20 times): named mutations in `data.ts` (`useMove`, `useListEntries(id)`) that own invalidation; easiest after item 6. S to M.
-- **The `"pluck:counts"` event name** is a constant in `RailNav.tsx` but a string literal in `TopBar.tsx` and `lib/moves.ts`. S.
+- **The `"pluck:counts"` event name** is a constant in `RailNav.tsx` but a string literal in `TopBar.tsx` and `lib/actions.ts`. S.
 
 ### Already deep: leave these alone
 

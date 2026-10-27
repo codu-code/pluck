@@ -1,12 +1,12 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
-import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag } from "@pluck/shared-schemas";
-import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
+import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
-import { createDrain, createQueue, Unreachable } from "@pluck/client";
+import { createDrain, createLibrary, createQueue, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
 import { api, authHeader, getSession } from "./session";
@@ -47,7 +47,24 @@ export const keys = {
   pending: ["pending"] as const,
 };
 
-export type FullItem = { item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
+// The library actions (packages/client), each followed by the queries it makes stale, whether or not it went through
+// (a failure refetches the truth over what the screen assumed).
+const stale = (...ks: QueryKey[]) => { for (const queryKey of ks) void queryClient.invalidateQueries({ queryKey }); };
+const moved = () => stale(["items"], ["counts"], keys.lists); // the Item lists (Archive and bin too), their counts, Lists' rows
+const tagged = () => stale(keys.tags, ["items"]);
+const listed = (listId?: string) => stale(keys.lists, ...(listId ? [keys.list(listId)] : []), ["items"], ["counts"]); // a Todo marked in a List is Done
+const after = <A extends unknown[], R>(act: (...a: A) => Promise<R>, then: (...a: A) => void) => (...a: A) => act(...a).finally(() => then(...a));
+const lib = createLibrary(api);
+export const library = {
+  ...lib,
+  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, moved),
+  remove: after(lib.remove, moved), fromBin: after(lib.fromBin, moved), forever: after(lib.forever, moved),
+  setTag: after(lib.setTag<Item>, tagged), newTag: after(lib.newTag, tagged), renameTag: after(lib.renameTag, tagged), deleteTag: after(lib.deleteTag, tagged),
+  newList: after(lib.newList, () => listed()), setInList: after(lib.setInList, (_, listId) => listed(listId)),
+  mark: after(lib.mark, listed), reorder: after(lib.reorder, listed), putBack: after(lib.putBack, listed),
+};
+
+export type FullItem ={ item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
 
 export const useItems = (status: Status) =>
   useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`), refetchOnWindowFocus: "always" });
@@ -98,10 +115,10 @@ export function useCover(item: Pick<Item, "id" | "hasCover">, path?: string): { 
   }, [item.id, item.hasCover, path]);
   return src;
 }
-export const useLists = () => useQuery({ queryKey: keys.lists, queryFn: async () => (await api<{ lists: List[] }>("/api/v1/lists")).lists });
+export const useLists = () => useQuery({ queryKey: keys.lists, queryFn: () => library.lists() });
 export const useList = (id: string) =>
   useQuery({ queryKey: keys.list(id), queryFn: () => api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${id}`) });
-export const useTags = () => useQuery({ queryKey: keys.tags, queryFn: async () => (await api<{ tags: Tag[] }>("/api/v1/tags")).tags });
+export const useTags = () => useQuery({ queryKey: keys.tags, queryFn: () => library.tags() });
 export const useCounts = () =>
   useQuery({ queryKey: ["counts"], queryFn: () => api<{ inbox: number; later: number; lists: number }>("/api/v1/counts"), refetchOnWindowFocus: "always" });
 export const useMe = () => useQuery({ queryKey: keys.me, queryFn: async () => (await api<{ me: Me }>("/api/v1/me")).me });
@@ -126,13 +143,8 @@ export const useSearch = (q: string, f: SearchFilters) =>
 export function usePatchItem() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, patch }: { id: string; patch: Record<string, unknown> }) => api<{ item: Item }>(`/api/v1/items/${id}`, { method: "PATCH", json: patch }),
-    onSuccess: ({ item }) => {
-      qc.setQueryData<FullItem>(keys.item(item.id), (old) => (old ? { ...old, item } : old));
-      void qc.invalidateQueries({ queryKey: ["items"] });
-      void qc.invalidateQueries({ queryKey: ["counts"] });
-      void qc.invalidateQueries({ queryKey: keys.lists });
-    },
+    mutationFn: ({ id, patch }: { id: string; patch: UpdateItemBody }) => library.edit(id, patch),
+    onSuccess: (item) => qc.setQueryData<FullItem>(keys.item(item.id), (old) => (old ? { ...old, item } : old)),
   });
 }
 

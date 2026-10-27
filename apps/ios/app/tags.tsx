@@ -1,37 +1,30 @@
 import type { Tag } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ActionSheetIOS, Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Empty } from "@/components/Screen";
 import { toast } from "@/components/Toast";
-import { keys, useTags } from "@/lib/data";
-import { api } from "@/lib/session";
+import { library, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // Your tags, from Settings (the web's Tags section): rename one, or take it off everything. Items never go with it.
 export default function Tags() {
   const t = useTheme();
   const tr = useTranslations("ios");
-  const qc = useQueryClient();
   const tags = useTags();
-  const settle = () => {
-    void qc.invalidateQueries({ queryKey: keys.tags });
-    void qc.invalidateQueries({ queryKey: ["items"] });
-  };
   const failed = (e: unknown) => Alert.alert(tr("common.failed.title"), e instanceof Refused ? e.message : tr("common.failed.body"));
   const rename = (tag: Tag) =>
     Alert.prompt(tr("tags.renameTitle"), undefined, [
       { text: tr("common.cancel"), style: "cancel" },
-      { text: tr("common.save"), onPress: (name?: string) => void api(`/api/v1/tags/${tag.id}`, { method: "PATCH", json: { name: name ?? "" } }).then(settle).catch(failed) },
+      { text: tr("common.save"), onPress: (name?: string) => void library.renameTag(tag.id, name ?? "").catch(failed) },
     ], "plain-text", tag.name);
   const remove = (tag: Tag) =>
     Alert.alert(tr("tags.deleteTitle", { name: tag.name }), tr("tags.deleteBody", { count: tag.count }), [
       { text: tr("common.cancel"), style: "cancel" },
       {
         text: tr("tags.deleteTag"), style: "destructive", onPress: () =>
-          void api(`/api/v1/tags/${tag.id}?removeFromItems=true`, { method: "DELETE" }).then(() => { settle(); toast(tr("tags.deleted", { name: tag.name })); }).catch(failed),
+          void library.deleteTag(tag.id).then(() => toast(tr("tags.deleted", { name: tag.name }))).catch(failed),
       },
     ]);
   const open = (tag: Tag) =>

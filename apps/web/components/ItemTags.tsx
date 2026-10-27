@@ -5,8 +5,8 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
+import { library } from "@/lib/actions";
 import { isTyping } from "@/lib/keys";
-import { createTagNamed, fetchTags, setTagOn } from "@/lib/tagging";
 import styles from "./ItemTags.module.css";
 
 // The Tags block in an item's side column (Item and ItemNote boards).
@@ -30,19 +30,15 @@ export function ItemTags({ item: initial, vocabulary }: { item: Item; vocabulary
   }, []);
 
   async function toggle(tag: Tag, on: boolean) {
-    const updated = await setTagOn([item.id], tag, on, [item]);
+    const updated = await library.setTag([item.id], tag.id, on, [item]).catch(() => null);
     if (updated?.[0]) setItem(updated[0]);
-    setVocab(await fetchTags());
+    setVocab(await library.tags().catch(() => []));
   }
 
   // Keeping an AI tag is a touch: saving the same set makes every tag on the item the person's.
   async function keepAll() {
-    const res = await fetch(`/api/v1/items/${item.id}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ tagIds: item.tagIds }),
-    });
-    if (res.ok) setItem(((await res.json()) as { item: Item }).item);
+    const kept = await library.edit(item.id, { tagIds: item.tagIds }).catch(() => null);
+    if (kept) setItem(kept);
   }
 
   return (
@@ -78,7 +74,7 @@ export function ItemTags({ item: initial, vocabulary }: { item: Item; vocabulary
           state={(id) => (item.tagIds.includes(id) ? "on" : "off")}
           onToggle={toggle}
           onCreate={async (name) => {
-            const t = await createTagNamed(name);
+            const t = await library.newTag(name).catch(() => null);
             if (t) setVocab((v) => [...v.filter((x) => x.id !== t.id), t]);
             return t;
           }}
