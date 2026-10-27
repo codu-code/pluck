@@ -8,7 +8,7 @@ import { localePath } from "./siteUrls";
 // IndexNow (indexnow.org): a new post is announced to Bing (and Yandex, Seznam, Naver) in all ten languages as soon
 // as it is out, instead of waiting for a crawl. Only getpluck.io announces; the protocol checks the key against the
 // file of the same name at the site's root (public/<key>.txt).
-export const INDEXNOW_KEY = "2a2940bd0ceed62a1fd5c0a15b0b5836";
+export const INDEXNOW_KEY = "2a2940bd0ceed62a1fd5c0a15b0b5836"; // gitleaks:allow (public by design)
 const HOSTED = "https://getpluck.io";
 // A post counts as new for three days from its date, and its claim lasts seven (meta's expiry), so it goes once.
 const NEW_FOR_MS = 3 * 86_400_000;
