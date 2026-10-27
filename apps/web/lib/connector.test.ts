@@ -3,7 +3,7 @@ import { createPluckServer } from "@pluck/mcp-server";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { connectorFor } from "./connector";
-import { addTag, newList, pluckAny, readItem, readList, setListVisibility, tagsOf, updateMe } from "./library";
+import { addTag, newList, pluckAny, readItem, readList, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
 
 const FIX = "http://127.0.0.1:4180";
 const ALL = ["library:read", "library:write"];
@@ -69,6 +69,18 @@ test("save_item checks the tags and the list first: an unknown one saves nothing
   const badList = await call("save_item", { text: "Nor this one", listId: "000000000000000000000000" });
   expect(badList.error.code).toBe("not_found");
   expect((await call("list_items", { status: "inbox" })).items).toHaveLength(before);
+});
+
+test("save_item reads tags as REST does: ids or names, and an unknown one is refused with the same nearest Tags", async () => {
+  const { a } = await twoUsers();
+  const { call } = await connect(a);
+  const { tag } = await addTag(a, "Reading");
+  const byName = await call("save_item", { text: "Tagged by name", kind: "note", tagIds: ["reading"] });
+  expect(byName.saved[0].tags).toEqual(["Reading"]);
+  const refused = await call("save_item", { text: "Must not land", kind: "note", tagIds: ["Readng"] });
+  expect(refused.error).toMatchObject({ code: "unknown_tags", details: { unknown: ["Readng"], nearest: [{ id: tag.id, name: "Reading" }] } });
+  await expect(tagIdsFor(a, ["Readng"])).rejects.toMatchObject(refused.error);
+  expect((await call("list_items", { status: "inbox" })).items).toHaveLength(1);
 });
 
 test("an error that is not one of ours stays on our side: logged, and the AI tool gets a plain internal error", async () => {
@@ -159,6 +171,18 @@ test("create_list is private with AI notes; update_list changes everything but t
   expect((await readList(a, list.id)).list.visibility).toBe("private");
   expect((await call("update_list", { id: list.id, visibility: "private" })).list.visibility).toBe("private");
   expect((await call("list_lists")).lists.map((l: { id: string }) => l.id)).toEqual([list.id]);
+});
+
+test("the connector has no way to make a list public, even when the person could", async () => {
+  const { a } = await twoUsers();
+  await updateMe(a, { handle: `ai-${Date.now().toString(36)}` });
+  const list = await newList(a, { name: "Mine" });
+  await setListVisibility(a, list.id, "public");
+  const lib = connectorFor(a);
+  expect(Object.keys(lib).filter((k) => /visib|public|share/i.test(k))).toEqual([]);
+  // A caller that ignores the types still cannot pass "public" through.
+  await (lib.makePrivate as (...args: unknown[]) => Promise<void>)(list.id, "public");
+  expect((await readList(a, list.id)).list.visibility).toBe("private");
 });
 
 test("another person's list is not found, and nothing is changed", async () => {

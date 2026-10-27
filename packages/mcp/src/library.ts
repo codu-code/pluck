@@ -16,6 +16,7 @@ export interface PluckLibrary {
   pluck(body: CreateItemBody): Promise<PluckResponse>;
   batch(body: BatchBody): Promise<{ matched: number; updated: number }>;
   tags(): Promise<Tag[]>;
+  tagIdsFor(refs: string[]): Promise<string[]>; // ids or names of existing Tags; unknown ones throw unknown_tags with the nearest
   createTag(name: string): Promise<{ tag: Tag; created: boolean }>;
   lists(): Promise<List[]>;
   list(id: string): Promise<{ list: List; entries: ListEntry[] }>;
@@ -25,7 +26,7 @@ export interface PluckLibrary {
   removeFromList(id: string, itemId: string): Promise<void>;
   editEntry(id: string, itemId: string, edit: { note?: string | null; ticked?: boolean }): Promise<void>;
   reorder(id: string, itemIds: string[]): Promise<void>;
-  setVisibility(id: string, visibility: "private" | "public"): Promise<void>;
+  makePrivate(id: string): Promise<void>; // there is no way to make a List public here: only the person does that, in Pluck
   digest(limit: number): Promise<Digest>;
   deleteItem(id: string): Promise<void>;
 }

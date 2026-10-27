@@ -177,27 +177,23 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
             kind: Kind.optional(),
             title: z.string().max(500).optional(),
             note: z.string().max(10_000).optional(),
-            tagIds: z.array(ObjectIdString).max(20).optional().describe("Existing tags only."),
+            tagIds: z.array(z.string().min(1).max(64)).max(20).optional().describe("Existing tag ids or names; unknown ones are refused with the nearest matches."),
             listId: ObjectIdString.optional(),
             dueAt: DueAt.optional(),
           })
           .refine((b) => (b.url === undefined) !== (b.text === undefined), { message: "Send url or text." }),
         annotations: WRITE, // a link twice is one item, but a note twice is two
       },
-      async ({ tagIds, listId, ...body }) => {
+      async ({ tagIds: tagRefs, listId, ...body }) => {
         // Check the tags and the list before anything is saved: an error after the pluck would leave the item made,
         // and an AI tool that retries would make it again.
         if (listId) await lib.list(listId);
-        if (tagIds?.length) {
-          const known = new Set((await lib.tags()).map((t) => t.id));
-          const unknown = tagIds.filter((t) => !known.has(t));
-          if (unknown.length) throw Object.assign(new Error("Use existing tags only: list_tags has them."), { code: "unknown_tags", details: { unknown } });
-        }
+        const tagIds = tagRefs?.length ? await lib.tagIdsFor(tagRefs) : [];
         const res = await lib.pluck({ ...body, source: "mcp" });
         const ids = res.results.map((r) => r.item.id);
-        if (ids.length && tagIds?.length) await lib.batch({ itemIds: ids, patch: { addTagIds: tagIds } });
+        if (ids.length && tagIds.length) await lib.batch({ itemIds: ids, patch: { addTagIds: tagIds } });
         if (ids.length && listId) await lib.addToList(listId, ids);
-        const items = tagIds?.length ? await Promise.all(ids.map((id) => lib.item(id))) : res.results.map((r) => r.item);
+        const items = tagIds.length ? await Promise.all(ids.map((id) => lib.item(id))) : res.results.map((r) => r.item);
         const n = await names();
         return { saved: items.map((item, i) => ({ ...card(item, n), created: res.results[i]!.created })), rejected: res.rejected };
       },
@@ -277,7 +273,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
         for (const a of add ?? []) await lib.addToList(id, [a.itemId], a.note);
         for (const e of entries ?? []) await lib.editEntry(id, e.itemId, { note: e.note, ticked: e.ticked });
         if (order) await lib.reorder(id, order);
-        if (visibility) await lib.setVisibility(id, visibility);
+        if (visibility) await lib.makePrivate(id);
         const { list } = await lib.list(id);
         return { list: listRow(list) };
       },
