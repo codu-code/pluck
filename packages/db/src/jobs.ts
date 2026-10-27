@@ -13,10 +13,10 @@ export async function enqueue(queue: string, payload: Record<string, unknown>, {
   return res.insertedId.toHexString();
 }
 
-export async function claimJob(leaseMs = 60_000): Promise<Job | null> {
+export async function claimJob(leaseMs = 60_000, queue?: string): Promise<Job | null> {
   const now = new Date();
   const doc: JobDoc | null = await (await jobs()).findOneAndUpdate(
-    { state: { $in: ["queued", "running"] }, visibleAt: { $lte: now } },
+    { state: { $in: ["queued", "running"] }, visibleAt: { $lte: now }, ...(queue && { queue }) },
     { $set: { state: "running", visibleAt: new Date(now.getTime() + leaseMs) }, $inc: { attempts: 1 } },
     { sort: { visibleAt: 1 }, returnDocument: "after" },
   );

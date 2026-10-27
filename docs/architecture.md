@@ -26,7 +26,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 | `apps/web/lib/api.ts` | `route()` and `publicRoute()`: auth, scope, rate limits, body parsing and the error shape for every REST route. Most route files are a few lines. |
 | `apps/web/lib/library/*` | The library: the product rules over `packages/db` (URL normalisation, the hourly pluck budget, the Kind and text rules, unknown tags refused with the nearest ones, kicking extraction). REST routes and the connector both call it. |
 | `apps/web/lib/connector.ts` | Binds `PluckLibrary` (the interface in `packages/mcp/src/library.ts`) to the library for one person, with every write marked as made by AI. |
-| `apps/web/lib/capture.ts`, `jobs.ts`, `schedule.ts`; `apps/web/worker.ts` | Keeping a page, the job handlers, and the time-based work (expiry, the Monday email, emptying the bin, polling email-in). `worker.ts` loops over them for self-host; on Vercel the cron route does. |
+| `apps/web/lib/library/keeping.ts`, `jobs.ts`, `job-runner.ts`, `schedule.ts`; `apps/web/worker.ts` | Keeping a page (now, later, from a file or an import, with its one retry policy), the job handlers and the loop that runs them, and the time-based work (expiry, the Monday email, emptying the bin, polling email-in). `worker.ts` loops over them for self-host; on Vercel the cron route does. |
 | `apps/web/lib/auth.ts`, `signin-code.ts`, `signin-link.ts` | Better Auth: email magic link, the 6-digit code the iPhone app uses, and the OAuth provider for the extension, the iPhone app and AI tools. |
 | `apps/web/lib/email.ts`, `emails.ts`, `digest-email.ts` | `sendEmail` (SMTP to Mailpit locally, SES in production) and the email templates. |
 | `packages/db` | Every collection, index and query (`collections.ts` defines them all). Every query is scoped by `userId`; `public.ts` is the only reader for public Lists. |
@@ -45,13 +45,13 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 ## How a pluck travels
 
-**From the web, the extension or the iPhone app.** `POST /api/v1/items` goes through `route()` (`lib/api.ts`), then `pluckAny` (`lib/library/items.ts`), then `pluckLink` in `packages/db`, which upserts on the person and the URL's hash. A Re-pluck finds the existing Item, moves it to the Inbox, takes it out of the bin and touches it; it never makes a second Item. The page is then read inline with a 5-second cap (`extractAttempt` in `lib/capture.ts`); covers and the kept HTML go to blob storage after the response. A block of many links makes the rows at once and queues an `extract` job for each.
+**From the web, the extension or the iPhone app.** `POST /api/v1/items` goes through `route()` (`lib/api.ts`), then `pluckAny` (`lib/library/items.ts`), then `pluckLink` in `packages/db`, which upserts on the person and the URL's hash. A Re-pluck finds the existing Item, moves it to the Inbox, takes it out of the bin and touches it; it never makes a second Item. The page is then read inline with a 5-second cap (`keepNow` in `lib/library/keeping.ts`); covers and the kept HTML go to blob storage after the response. A block of many links makes the rows at once and queues an `extract` job for each (`keepLater`). A page gets four tries, counted on the Item: now, then 30 s, 2 min and 10 min after each failure; a 4xx is final at once.
 
 **From your AI.** `app/mcp/route.ts` checks the OAuth token or API key, that the tool is still connected and the rate limits, then serves `createPluckServer` (`packages/mcp/src/server.ts`), which lists only the tools the token's scopes allow. Tools call `connectorFor(userId)`, which reaches the same library, with `by: "mcp"` so Tags, notes, Lists and saves show "by AI".
 
 **From email.** SES writes the message to the bucket under `inbound/`; the schedule polls it and queues an `email-in` job, which becomes an Item through `ingestInbound` (`lib/library/email-in.ts`).
 
-**Jobs.** The queue is the `jobs` collection (`packages/db/src/jobs.ts`: claim with a lease, retry, fail). The handlers are in `apps/web/lib/jobs.ts`. They run:
+**Jobs.** The queue is the `jobs` collection (`packages/db/src/jobs.ts`: claim with a lease, retry, fail). The handlers are in `apps/web/lib/jobs.ts`; the loop that claims and retries them is `lib/job-runner.ts`. They run:
 
 - locally: `pnpm --filter @pluck/web worker`;
 - self-hosted: the `worker` service in `docker-compose.yml`, the same image as `web`;
@@ -93,11 +93,6 @@ These are the places where the code is shallower than it needs to be: a rule wri
 - **Problem:** `tagNames`, `listNames`, `inList`, `searchText` and `searchBody` are "kept in step by the writes that change them", so each writer has to know which helpers to call. `inList` carries a product rule (Items in a List never expire): a writer that forgets `syncListNames` breaks expiry without a failing test.
 - **Shape:** one `afterItemsChanged(userId, itemIds)` that recomputes every derived field and count, called by writers instead of picking helpers. Test: an invariant test that runs each write and checks the stored fields equal a fresh recompute.
 
-### 3. Keeping a page is spread over four files (M)
-
-- **Files:** `apps/web/lib/capture.ts` (`extractAttempt`, its own backoff of 30 s, 2 min, 10 min over four attempts), `lib/jobs.ts` (the `extract` handler, and the generic job retry of `30s * 2^n` over five attempts), `lib/library/items.ts` (`pluck`, `retryExtraction`, `queueExtraction`, and a dynamic `import("../jobs")` to dodge an import cycle), `library/files.ts` and `library/account.ts` (each builds an `ExtractionResult` its own way), and `pluckLink` in `packages/db` (decides whether a page needs reading).
-- **Problem:** this is where a newcomer gets lost. Two retry policies live in two files, and which one governs a failed extraction is not obvious from either. The cycle between the library and the jobs is a sign the seam is in the wrong place.
-- **Shape:** one `lib/library/keeping.ts` with `keepNow(userId, item, { html?, transcript?, timeoutMs })`, `keepLater(userId, itemIds)` and `keepFile(userId, item)`. It owns the retry policy and the mapping from what `packages/extract` returns to what `packages/db` stores; `jobs.ts` becomes a plain table of handlers. Pass the "run the queue now" kick in, instead of the library importing jobs. Tests cross `keepNow` with the fixture server: a permanent 4xx fails at once, a transient failure retries the stated number of times.
 
 ### 5. One session module for the extension and the iPhone app (M)
 

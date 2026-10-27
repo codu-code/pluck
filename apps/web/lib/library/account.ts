@@ -1,9 +1,9 @@
 import { TooLarge, deleteObject, deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiConnections, applyExtraction, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
+  aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
-import { extractFromHtml, parseImport, type ImportSource } from "@pluck/extract";
+import { parseImport, type ImportSource } from "@pluck/extract";
 import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
@@ -11,6 +11,7 @@ import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 import { ORIGIN } from "../origin";
+import { keepImported } from "./keeping";
 
 // ---- Welcome -------------------------------------------------------------------------------------
 
@@ -105,18 +106,8 @@ export async function runImport(userId: string, importId: string): Promise<void>
     }
     const { item, created, tagIds } = await importLink(userId, url, e);
     touchedTags.push(...tagIds);
-    if (created) {
-      const page = e.html ? await extractFromHtml(e.html(), url).catch(() => null) : null;
-      if (page && page.wordCount > 0) {
-        await applyExtraction(userId, item.id, {
-          kind: page.kind, preview: page.preview, facts: page.facts, title: e.title ?? page.title, siteName: page.siteName, author: page.author, excerpt: page.excerpt,
-          canonicalUrl: page.canonicalUrl, lang: page.lang, wordCount: page.wordCount, markdown: page.markdown, extractor: page.extractor,
-        });
-      } else {
-        // Spread the fetching out: a thousand imports should not hit the network at once.
-        await enqueue("extract", { userId, itemId: item.id }, { delayMs: (done % 1000) * 3000 });
-      }
-    }
+    // Spread the fetching out: a thousand imports should not hit the network at once.
+    if (created) await keepImported(userId, item, { html: e.html, title: e.title, delayMs: (done % 1000) * 3000 });
     done++;
   }
   await recountTags(userId, touchedTags);
