@@ -22,3 +22,8 @@ test("what anyone plucked never leaves: titles, queries and hashes are dropped, 
   expect(out.properties.$current_url).toBe("https://getpluck.io/search");
   expect(out.properties.$referrer).toBe("https://getpluck.io/?utm_source=newsletter");
 });
+
+test("an error from another origin's script, with no message or stack, is not sent", () => {
+  expect(scrub(event("$exception", { $exception_list: [{ type: "Error", value: "Script error." }] }), null)).toBeNull();
+  expect(scrub(event("$exception", { $exception_list: [{ type: "TypeError", value: "x is undefined" }] }), null)?.event).toBe("$exception");
+});
