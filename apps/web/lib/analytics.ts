@@ -94,6 +94,8 @@ export function scrub(event: CaptureResult | null, given: Consent | null): Captu
   if (!event) return null;
   if (given !== "yes" && event.event !== "$exception") return null;
   const p = event.properties;
+  // A script from another origin (an in-app browser's, an extension's) fails with no message and no stack: nothing to fix.
+  if (event.event === "$exception" && /^Script error\.?$/.test(p.$exception_list?.[0]?.value ?? "")) return null;
   delete p.title; // item pages are titled with the item
   delete p.$title;
   for (const k of ["$current_url", "$referrer", "$initial_current_url", "$initial_referrer"]) if (typeof p[k] === "string") p[k] = keepUtm(p[k]);
