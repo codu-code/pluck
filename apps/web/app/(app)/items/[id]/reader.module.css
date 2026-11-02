@@ -40,6 +40,7 @@
 .original { font-weight: 500; }
 .visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 600px) { .layout { padding: 24px 16px 48px; gap: 32px; } .title { font-size: 30px; line-height: 36px; } }
+.pdf { width: 100%; height: 85vh; border: 1px solid var(--line); border-radius: 8px; background: var(--rail); }
 .postImage { width: 100%; max-height: 520px; object-fit: contain; border-radius: 8px; background: var(--rail); }
 .said { margin: 0; font-size: 18px; line-height: 29px; white-space: pre-line; overflow-wrap: anywhere; }
 .said a { color: var(--brand); text-underline-offset: 2px; }

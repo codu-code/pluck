@@ -2,7 +2,7 @@ import { getContent, getItemBlobKeys, hitRateLimit, pendingJobCount } from "@plu
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
-import { highlightsOf, lookup, pluck, pluckAny, readItem, readText, setCoverFromApp, updateItem } from "./index";
+import { fileLocation, highlightsOf, lookup, pluck, pluckAny, readItem, readText, setCoverFromApp, updateItem } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -45,12 +45,19 @@ test("a page that fails once is picked up by the retry queue", async () => {
   expect(await pendingJobCount()).toBe(0);
 });
 
-test("a PDF link keeps its text and the file", async () => {
-  const { a } = await twoUsers();
+test("a PDF link keeps its text and the file, shown in the page or saved under its title", async () => {
+  const { a, b } = await twoUsers();
   const { item } = await pluck(a, { url: `${FIX}/doc.pdf` });
   expect(item.kind).toBe("pdf");
   expect(item.extraction.state).toBe("done");
   expect((await getContent(a, item.id))?.textMarkdown).toContain("Estimating for small builders");
+
+  const view = await fetch(await fileLocation(a, item.id, "view"));
+  expect(view.headers.get("content-disposition")).toBe("inline");
+  expect(Buffer.from(await view.arrayBuffer()).subarray(0, 5).toString("latin1")).toBe("%PDF-");
+  const saved = await fetch(await fileLocation(a, item.id, "download"));
+  expect(saved.headers.get("content-disposition")).toBe(`attachment; filename*=UTF-8''${encodeURIComponent(`${item.title.replace(/[^\p{L}\p{N} ._-]+/gu, "").trim()}.pdf`)}`);
+  await expect(fileLocation(b, item.id, "view")).rejects.toMatchObject({ status: 404 });
 });
 
 test("not a link is a 400 with a sentence a person can read", async () => {

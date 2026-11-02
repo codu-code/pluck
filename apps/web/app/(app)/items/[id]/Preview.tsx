@@ -45,6 +45,23 @@ export function OpenOriginal({ item }: { item: Item }) {
   );
 }
 
+// A PDF as it was plucked, in the browser's own viewer and from our copy (the original may move or go), with a way to
+// keep the file and a way out to where it came from. A PDF shared from a phone has no original.
+export function PdfView({ item }: { item: Item }) {
+  const t = useTranslations("app.preview");
+  const f = useFormat();
+  const file = `/api/v1/items/${item.id}/file`;
+  return (
+    <>
+      <div className={styles.ways}>
+        <a className={styles.primary} href={`${file}?as=download`}>{t("downloadPdf")}</a>
+        {item.url && <a className={styles.secondary} href={withReferral(item.url)} target="_blank" rel="noopener">{t("open", { site: f.site(item) })}</a>}
+      </div>
+      <iframe className={styles.pdf} src={`${file}?as=view`} title={item.title} />
+    </>
+  );
+}
+
 // Under the title: the facts a Preview has (the handle, the price, the repo's language and stars, the pages).
 export function PreviewFacts({ item }: { item: Item }) {
   const t = useTranslations("app.preview");
