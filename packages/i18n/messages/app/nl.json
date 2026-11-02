@@ -196,7 +196,8 @@
     "list": "Lijst · Pluck",
     "settings": "Instellingen · Pluck",
     "admin": "Beheer · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "Verwijderd · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "Plukt de pagina waar je op bent.",
     "selection": "Plukt wat je selecteerde, bewaard als markering."
   },
+  "extensionBye": {
+    "title": "Verwijderd",
+    "lede": "Alles wat je hebt geplukt staat nog in je bibliotheek, op het web, op de iPhone en in je AI. Er wordt niets verwijderd.",
+    "question": "Als je even tijd hebt: waarom heb je hem verwijderd?",
+    "why": {
+      "unused": "Ik gebruikte hem niet",
+      "in-the-way": "Hij zat in de weg",
+      "missing": "Er ontbrak iets",
+      "other": "Iets anders"
+    },
+    "thanks": "Bedankt",
+    "open": "Pluck openen"
+  },
   "shell": {
     "main": "Hoofdmenu",
     "offline": "Offline",
@@ -473,6 +487,24 @@
     },
     "more": "Wat elke cookie doet",
     "link": "Cookies"
+  },
+  "heardFrom": {
+    "title": "Hoe heb je Pluck gevonden",
+    "body": "Eén tik vertelt ons wat werkt. Dit is de enige vraag.",
+    "choices": {
+      "search": "Via zoeken",
+      "friend": "Een vriend of collega",
+      "social": "Sociale media",
+      "public-list": "Iemands Lijst",
+      "ai-tool": "Een AI-tool",
+      "newsletter": "Een nieuwsbrief of blog",
+      "other": "Ergens anders"
+    },
+    "skip": "Zeg ik liever niet",
+    "thanks": {
+      "title": "Bedankt.",
+      "note": "Dat helpt."
+    }
   },
   "connectLoop": {
     "label": "Iemand plakt de link van Pluck in een AI-tool, geeft toestemming in het scherm van Pluck, vraagt dan wat er over MCP-auth is geplukt en krijgt drie eigen items terug.",

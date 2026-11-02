@@ -13,3 +13,11 @@ export type Source = z.infer<typeof Source>;
 export const Visibility = z.enum(["private", "public"]);
 export const ExtractionState = z.enum(["pending", "done", "failed", "none"]);
 export const ArchivedReason = z.enum(["user", "expired", "bulk", "import"]);
+
+// Why someone removed the browser extension: the one question on its goodbye page, counted with no one named.
+export const ExtensionRemovedReason = z.enum(["unused", "in-the-way", "missing", "other"]);
+export type ExtensionRemovedReason = z.infer<typeof ExtensionRemovedReason>;
+
+// "How did you find Pluck?", asked once after the first Pluck. "skipped" is "Rather not say".
+export const HeardFrom = z.enum(["search", "friend", "social", "public-list", "ai-tool", "newsletter", "other", "skipped"]);
+export type HeardFrom = z.infer<typeof HeardFrom>;

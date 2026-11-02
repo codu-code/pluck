@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AnalyticsUser } from "@/components/AnalyticsUser";
 import { AppShell } from "@/components/AppShell";
+import { HeardFromPrompt } from "@/components/HeardFrom";
 import { currentUser } from "@/lib/auth";
 import { count, listsOf, me } from "@/lib/library";
 
@@ -15,6 +16,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     <NextIntlClientProvider>
       <AppShell user={user} counts={{ inbox, later, lists: lists.length }} timezone={profile.settings.timezone}>
         <AnalyticsUser id={user.id} answer={profile.settings.analytics} />
+        <HeardFromPrompt ask={profile.heardFrom === null && inbox + later > 0} />
         {children}
       </AppShell>
     </NextIntlClientProvider>

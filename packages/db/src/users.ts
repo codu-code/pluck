@@ -1,4 +1,4 @@
-import { funHandle, HANDLE, type Me } from "@pluck/shared-schemas";
+import { funHandle, HANDLE, type HeardFrom, type Me } from "@pluck/shared-schemas";
 import { DEFAULT_SETTINGS, oid, users, type SignUpVia, type UserDoc, type UserSettings } from "./collections.ts";
 
 const RESERVED = new Set(
@@ -12,7 +12,13 @@ const toMe = (d: UserDoc): Me => ({
   createdAt: d.createdAt.toISOString(),
   settings: { ...DEFAULT_SETTINGS, ...d.settings },
   lastMcpCallAt: d.lastMcpCallAt?.toISOString() ?? null,
+  heardFrom: d.heardFrom ?? null,
 });
+
+// "How did you find Pluck?": the first answer stays.
+export async function setHeardFrom(userId: string, heardFrom: HeardFrom): Promise<boolean> {
+  return (await (await users()).updateOne({ _id: oid(userId), heardFrom: { $exists: false } }, { $set: { heardFrom } })).modifiedCount > 0;
+}
 
 // Settings shows "Connected · last call"; one write a minute at most, however busy the AI tool is.
 export async function markMcpCall(userId: string, now = new Date()): Promise<void> {

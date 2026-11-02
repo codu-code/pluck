@@ -1,5 +1,5 @@
 import type { Locale } from "@pluck/i18n";
-import type { ArchivedReason, ExtractionState, Facts, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
+import type { ArchivedReason, ExtractionState, Facts, HeardFrom, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
 import { getDb } from "./client.ts";
@@ -109,6 +109,7 @@ export type UserDoc = {
   digestSentOn?: string; // local date of the last Monday digest
   lastMcpCallAt?: Date; // the connector's last call, for Settings, written at most once a minute
   via?: SignUpVia; // where the account was made, set once at sign-up
+  heardFrom?: HeardFrom; // "How did you find Pluck?", answered once
 };
 
 export type SignUpVia = "try" | "mcp" | "public-page" | "shared-list" | "ios" | "extension" | "direct";
@@ -277,7 +278,7 @@ export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
   return (await db()).collection<EmailAliasDoc>("emailAliases");
 }
 // One-off claims (claimOnce) and the place a long-running pass (the Preview backfill) keeps its cursor.
-export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean };
+export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean; n?: number; key?: string };
 export async function meta(): Promise<Collection<MetaDoc>> {
   return (await db()).collection<MetaDoc>("meta");
 }

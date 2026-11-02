@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
   aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, listApiKeys, recountTags,
-  listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setVia, updateSettings,
+  listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setHeardFrom, setVia, updateSettings,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -80,4 +80,7 @@ test("the analytics answer and where the account began are per person, and via i
   expect((await getMe(a))?.settings.analytics).toBe("yes");
   await pluckLink(a, { url: "https://example.com/counted", source: "web" });
   expect([await countItems(a), await countItems(b)]).toEqual([1, 0]);
+  expect(await setHeardFrom(a, "friend")).toBe(true);
+  expect(await setHeardFrom(a, "search")).toBe(false); // the first answer stays
+  expect([(await getMe(a))?.heardFrom, (await getMe(b))?.heardFrom]).toEqual(["friend", null]);
 });

@@ -4,6 +4,7 @@ import { extract, extractFile, extractFromHtml, FetchError, guardedFetch, type E
 import { MAX_FILE_BYTES, type Item } from "@pluck/shared-schemas";
 import { runQueue } from "../job-runner";
 import { log } from "../log";
+import { trackAnonymous } from "../telemetry";
 
 // Keeping an Item's page: now (a pluck waits up to `timeoutMs`), later (the job queue), from a file, or from an import.
 //
@@ -37,12 +38,21 @@ const toResult = (x: Extracted): ExtractionResult => ({
   canonicalUrl: x.canonicalUrl, lang: x.lang, wordCount: x.wordCount, markdown: x.markdown, extractor: x.extractor,
 });
 
+// Why a page could not be kept, as one of a few words: never the address or the error's own text.
+export function failureReason(e: unknown): string {
+  if (e instanceof TooLarge) return "too_large";
+  if (e instanceof FetchError && e.status) return e.status >= 500 ? "http_5xx" : e.status === 429 ? "http_429" : [401, 403].includes(e.status) ? "http_denied" : "http_4xx";
+  if (e instanceof FetchError) return /blocked/.test(e.message) ? "blocked" : /unsupported/.test(e.message) ? "unsupported" : "other";
+  return e instanceof Error && e.name === "TimeoutError" ? "timeout" : e instanceof Error && e.name === "NoSuchKey" ? "not_arrived" : "other";
+}
+
 // A failed try: recorded on the Item and, unless it is final, the next one queued.
 async function failed(userId: string, item: Item, e: unknown, retry: { queue: string; payload: Record<string, unknown> }, started: number): Promise<Item> {
   const attempt = item.extraction.attempts + 1;
   const final = isPermanent(e) || attempt >= MAX_TRIES;
   const updated = (await recordExtractionFailure(userId, item.id, errorText(e), final)) ?? item;
   if (!final) await enqueue(retry.queue, retry.payload, { delayMs: BACKOFF_MS[attempt - 1] });
+  else trackAnonymous("extract_failed", { kind: item.kind, preview: item.previewGuess ?? item.preview, reason: failureReason(e) });
   log("warn", "extraction failed", { userId, itemId: item.id, durationMs: Date.now() - started, attempt, final, error: errorText(e) });
   return updated;
 }
