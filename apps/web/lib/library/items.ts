@@ -6,9 +6,10 @@ import {
 } from "@pluck/db";
 import {
   extractUrls, isTextKind, normalizeUrl, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
-  type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Status, type UpdateItemBody,
+  type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
+import { itemsBucket, track } from "../telemetry";
 import { keepLater, keepNow } from "./keeping";
 
 type Defer = (task: () => Promise<void>) => void;
@@ -18,7 +19,23 @@ const INLINE_TIMEOUT_MS = 5000;
 const LINKS_PER_HOUR = 2000;
 
 // Everything POST /items accepts: one URL, many URLs, text with links in it, or a note, todo or thing.
-export async function pluckAny(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<PluckResponse> {
+export async function pluckAny(userId: string, body: CreateItemBody, opts: { defer?: Defer } = {}): Promise<PluckResponse> {
+  const res = await pluckAll(userId, body, opts);
+  trackPlucked(userId, body.source ?? "web", res.results);
+  return res;
+}
+
+// One event a pluck, however many links it held.
+export function trackPlucked(userId: string, source: Source, results: CreateItemResult[]): void {
+  if (!results.length) return;
+  track(
+    userId, "plucked",
+    { source, kind: results.length === 1 ? results[0]!.item.kind : null, re_pluck: results.every((r) => !r.created), count: results.length },
+    { person: async () => ({ [`plucked_from_${source}`]: true, items_bucket: itemsBucket(await countItems(userId)) }) },
+  );
+}
+
+async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer?: Defer } = {}): Promise<PluckResponse> {
   const source = body.source ?? "web";
   if (body.text !== undefined && (isTextKind(body.kind) || extractUrls(body.text).length === 0)) {
     const result = await createTextItem(userId, {
@@ -138,7 +155,13 @@ export async function batch(userId: string, body: BatchBody, { by = "user" }: { 
 
 
 
-export const openItem = (userId: string, itemId: string) => markOpened(userId, itemId);
+export async function openItem(userId: string, itemId: string): Promise<void> {
+  await markOpened(userId, itemId);
+  track(userId, "item_opened", async () => {
+    const item = await getItem(userId, itemId);
+    return { kind: item?.kind, preview: item?.preview };
+  });
+}
 export const count = (userId: string, status: Status) => countItems(userId, status);
 
 export async function deleteItem(userId: string, itemId: string): Promise<void> {
@@ -172,6 +195,7 @@ export const highlightsOf = (userId: string, itemId: string): Promise<Highlight[
 export async function addHighlight(userId: string, body: CreateHighlightBody): Promise<Highlight> {
   const h = await createHighlight(userId, body);
   if (!h) throw new ApiError("not_found", "Highlights are for links you plucked.", 404);
+  track(userId, "highlight_made");
   return h;
 }
 

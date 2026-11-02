@@ -68,6 +68,7 @@ export const Settings = z.object({
   digestDay: z.number().int().min(0).max(6).nullable(), // null: no weekly email
   timezone: z.string().min(1).max(64),
   locale: z.enum(LOCALES).nullable(), // null: follow the browser or phone
+  analytics: z.enum(["yes", "no"]).nullable(), // the cookie question, for the whole account; null: not asked yet
 });
 export type Settings = z.infer<typeof Settings>;
 

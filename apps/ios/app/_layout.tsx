@@ -11,12 +11,12 @@ import { IntlProvider } from "use-intl";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
-import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { forgetUser, identify, loadConsent, onConsent, screen, setConsent, type Consent } from "@/lib/analytics";
 import { formatLocale } from "@pluck/i18n";
 import { locale, messages, timeZone } from "@/lib/i18n";
 import { clearKept, keepForOffline, queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
-import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
+import { api, defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
 import { useTheme } from "@/lib/theme";
 import { appIcons, type AppIcon } from "@/modules/app-icon";
 
@@ -122,14 +122,25 @@ function Screens() {
   return null;
 }
 
-// Ties usage to the account once they said yes, and asks the question once.
+// Ties usage to the account once they said yes, and asks the question once. The answer is the account's
+// (settings.analytics), shared with the website: the phone takes the account's, or gives the account its own.
 function SignedInAnalytics() {
   const me = useMe();
   const id = me.data?.id;
+  const answer = me.data?.settings.analytics ?? null;
   useEffect(() => {
     if (!id) return;
+    let account = answer;
+    const save = (analytics: Consent) => void api("/api/v1/me", { method: "PATCH", json: { settings: { analytics } } }).catch(() => {});
+    void loadConsent().then((local) => {
+      if (account && account !== local) void setConsent(account);
+      else if (!account && local) save((account = local));
+    });
     identify(id);
-    return onConsent(() => identify(id));
-  }, [id]);
+    return onConsent((c) => {
+      identify(id);
+      if (c && c !== account) save((account = c));
+    });
+  }, [id, answer]);
   return <UsagePrompt />;
 }

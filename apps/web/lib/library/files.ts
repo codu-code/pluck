@@ -1,6 +1,7 @@
 import { keys, signedPutUrl } from "@pluck/blob";
 import { createFileItem, enqueue } from "@pluck/db";
 import { FILE_TYPES, type CreateFileItemBody, type Item } from "@pluck/shared-schemas";
+import { trackPlucked } from "./items";
 
 const keyFor = (userId: string, itemId: string, contentType: CreateFileItemBody["contentType"]) =>
   contentType === "application/pdf" ? keys.file(userId, itemId, "pdf") : keys.file(userId, itemId, FILE_TYPES[contentType]);
@@ -10,6 +11,7 @@ const keyFor = (userId: string, itemId: string, contentType: CreateFileItemBody[
 export async function beginFile(userId: string, body: CreateFileItemBody): Promise<{ item: Item; uploadUrl: string }> {
   const kind = body.contentType === "application/pdf" ? "pdf" : "image";
   const item = await createFileItem(userId, { kind, title: body.name, source: body.source ?? "ios" });
+  trackPlucked(userId, body.source ?? "ios", [{ item, created: true }]);
   const key = keyFor(userId, item.id, body.contentType);
   await enqueue("file", { userId, itemId: item.id, key, contentType: body.contentType, name: body.name }, { delayMs: 15_000 });
   return { item, uploadUrl: await signedPutUrl(key, body.contentType) };

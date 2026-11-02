@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
   aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, listApiKeys, recountTags,
-  listTags, pluckLink, revokeApiKey, verifyApiKey,
+  listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setVia, updateSettings,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -68,4 +68,16 @@ test("export gathers everything; delete removes one person entirely and leaves t
   for (const c of ["items", "contents", "lists", "listItems", "highlights", "apiKeys", "emailAliases", "tags"]) expect(await d.collection(c).countDocuments({ userId: uid })).toBe(0);
   expect(await d.collection("users").countDocuments({ _id: uid })).toBe(0);
   expect(await getItem(b, theirs.id)).not.toBeNull();
+});
+
+test("the analytics answer and where the account began are per person, and via is written once", async () => {
+  const { a, b } = await twoUsers();
+  await updateSettings(a, { analytics: "yes" });
+  await setVia(a, "try");
+  await setVia(a, "direct");
+  expect(await analyticsOf(a)).toMatchObject({ consent: "yes", via: "try" });
+  expect(await analyticsOf(b)).toMatchObject({ consent: null, via: null });
+  expect((await getMe(a))?.settings.analytics).toBe("yes");
+  await pluckLink(a, { url: "https://example.com/counted", source: "web" });
+  expect([await countItems(a), await countItems(b)]).toEqual([1, 0]);
 });

@@ -1,5 +1,5 @@
 import { funHandle, HANDLE, type Me } from "@pluck/shared-schemas";
-import { DEFAULT_SETTINGS, oid, users, type UserDoc, type UserSettings } from "./collections.ts";
+import { DEFAULT_SETTINGS, oid, users, type SignUpVia, type UserDoc, type UserSettings } from "./collections.ts";
 
 const RESERVED = new Set(
   "admin api app settings inbox later lists archive search signin signup login logout p copy help support pluck getpluck www mail root about terms privacy open-source connect offline items u mcp oauth".split(" "),
@@ -20,6 +20,17 @@ export async function markMcpCall(userId: string, now = new Date()): Promise<voi
     { _id: oid(userId), $or: [{ lastMcpCallAt: { $exists: false } }, { lastMcpCallAt: { $lt: new Date(now.getTime() - 60_000) } }] },
     { $set: { lastMcpCallAt: now } },
   );
+}
+
+// Where the account was made. Written once, by the sign-up hook.
+export async function setVia(userId: string, via: SignUpVia): Promise<void> {
+  await (await users()).updateOne({ _id: oid(userId), via: { $exists: false } }, { $set: { via } });
+}
+
+// What usage analytics may know of an account: its answer to the cookie question, and (for signed_up) when and how it began.
+export async function analyticsOf(userId: string): Promise<{ consent: "yes" | "no" | null; createdAt: Date; via: SignUpVia | null } | null> {
+  const d = await (await users()).findOne({ _id: oid(userId) }, { projection: { "settings.analytics": 1, createdAt: 1, via: 1 } });
+  return d && { consent: d.settings?.analytics ?? null, createdAt: d.createdAt, via: d.via ?? null };
 }
 
 export async function updateSettings(userId: string, patch: Partial<UserSettings>): Promise<Me | null> {

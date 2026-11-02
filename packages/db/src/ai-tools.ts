@@ -21,6 +21,12 @@ export async function aiConnections(userId: string): Promise<AiConnection[]> {
   }));
 }
 
+// The name an AI tool registered with ("Claude", "Cursor"), for usage analytics; its host when it gave none.
+export async function aiClientName(clientId: string): Promise<string> {
+  const c = await (await db()).collection<ClientDoc>("oauthClient").findOne({ clientId }, { projection: { name: 1 } });
+  return c?.name || (clientId.startsWith("https://") ? new URL(clientId).host : "unknown");
+}
+
 // Checked on every connector call, so Disconnect takes effect at once rather than when the access token runs out.
 export async function isAiConnected(userId: string, clientId: string): Promise<boolean> {
   return (await (await db()).collection("oauthConsent").countDocuments({ ...byUser(userId), clientId }, { limit: 1 })) > 0;

@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { AnalyticsUser } from "@/components/AnalyticsUser";
 import { auth, currentUser, FIRST_PARTY_REDIRECTS, ORIGIN } from "@/lib/auth";
+import { me } from "@/lib/library";
 import { ConsentButtons } from "./ConsentButtons";
 import { BigMark, Dot, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
@@ -53,6 +55,8 @@ export default async function Consent({ searchParams }: { searchParams: Promise<
         </div>
       )}
     >
+      {/* Most people who connect an AI tool never open the app, so their cookie answer joins the account here. */}
+      <AnalyticsUser id={user.id} answer={(await me(user.id)).settings.analytics} />
       {!forApp && returnsTo && (
         <p className={s.notice}>{t.rich("returnsTo", { host: returnsTo, b: (c) => <b>{c}</b> })}</p>
       )}

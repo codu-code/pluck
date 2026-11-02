@@ -76,6 +76,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 - Expiry and "Archive it all" set the Status to Archived. Items in a List are never expired (the `inList` field). Nothing is deleted by expiry or by an AI tool.
 - Types start as Zod schemas in `packages/shared-schemas`.
 - The connector is the only public API; the REST API is for our own clients and may change.
+- Usage analytics go through `track()` in `apps/web/lib/telemetry.ts`, which sends only for an account whose `settings.analytics` is yes and only the properties listed in [analytics.md](analytics.md). A new event or property goes in both, or `telemetry.test.ts` fails.
 
 ## Where it could be deeper
 

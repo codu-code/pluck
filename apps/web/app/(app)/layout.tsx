@@ -14,7 +14,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     // The whole catalog for the app's client components (the root layout sends only the site's).
     <NextIntlClientProvider>
       <AppShell user={user} counts={{ inbox, later, lists: lists.length }} timezone={profile.settings.timezone}>
-        <AnalyticsUser id={user.id} />
+        <AnalyticsUser id={user.id} answer={profile.settings.analytics} />
         {children}
       </AppShell>
     </NextIntlClientProvider>

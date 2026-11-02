@@ -1,6 +1,6 @@
 import { TooLarge, deleteObject, deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
+  aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
 import { parseImport, type ImportSource } from "@pluck/extract";
@@ -11,6 +11,7 @@ import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 import { ORIGIN } from "../origin";
+import { track } from "../telemetry";
 import { keepImported } from "./keeping";
 
 // ---- Welcome -------------------------------------------------------------------------------------
@@ -37,7 +38,11 @@ export async function sendWelcome(userId: string): Promise<boolean> {
 // ---- API keys -------------------------------------------------------------------------------------
 
 export const keysOf = (userId: string): Promise<ApiKey[]> => listApiKeys(userId);
-export const newKey = (userId: string, name: string, scopes?: string[]) => createApiKey(userId, name, scopes);
+export async function newKey(userId: string, name: string, scopes?: string[]) {
+  const made = await createApiKey(userId, name, scopes);
+  track(userId, "api_key_created");
+  return made;
+}
 export async function revokeKey(userId: string, id: string): Promise<void> {
   if (!(await revokeApiKey(userId, id))) throw new ApiError("not_found", "No such key.", 404);
 }
@@ -47,6 +52,14 @@ export async function revokeKey(userId: string, id: string): Promise<void> {
 export const aiToolsOf = (userId: string): Promise<AiConnection[]> => aiConnections(userId);
 export async function disconnectAiTool(userId: string, clientId: string): Promise<void> {
   if (!(await disconnectAi(userId, clientId))) throw new ApiError("not_found", "That AI tool is not connected.", 404);
+  trackAiTool(userId, "ai_tool_disconnected", clientId);
+}
+
+// Connected (the consent screen's yes, in lib/auth.ts) or disconnected, with the names of the tools still connected.
+export function trackAiTool(userId: string, event: "ai_tool_connected" | "ai_tool_disconnected", clientId: string): void {
+  track(userId, event, async () => ({ client_name: await aiClientName(clientId) }), {
+    person: async () => ({ ai_tools: [...new Set((await aiConnections(userId)).map((c) => c.name))] }),
+  });
 }
 
 // ---- Import ---------------------------------------------------------------------------------------
@@ -114,6 +127,7 @@ export async function runImport(userId: string, importId: string): Promise<void>
   const finished = done + failed >= entries.length;
   await updateImport(importId, { done, failed, state: finished ? "done" : "running" });
   if (!finished) await enqueue("import", { userId, importId });
+  else track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
 }
 
 // ---- Export ---------------------------------------------------------------------------------------
@@ -121,6 +135,7 @@ export async function runImport(userId: string, importId: string): Promise<void>
 export async function requestExport(userId: string): Promise<{ id: string }> {
   const id = await startExport(userId);
   await enqueue("export", { userId, exportId: id });
+  track(userId, "export_requested");
   return { id };
 }
 
