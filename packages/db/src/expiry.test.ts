@@ -8,7 +8,8 @@ import { oid } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
 
 const DAY = 86_400_000;
-const age = async (id: string, days: number) => (await items()).updateOne({ _id: oid(id) }, { $set: { lastTouchedAt: new Date(Date.now() - days * DAY) } });
+// `from` is the run date a test passes to runDueExpiry, so the test does not depend on today's date.
+const age = async (id: string, days: number, from = new Date()) => (await items()).updateOne({ _id: oid(id) }, { $set: { lastTouchedAt: new Date(from.getTime() - days * DAY) } });
 
 describe("expiry", () => {
   test("moves untouched items to the Archive, never items in a list, and respects scope", async () => {
@@ -37,12 +38,12 @@ describe("expiry", () => {
     await updateSettings(b, { expiryDays: null });
     const mine = (await pluckLink(a, { url: "https://example.com/n1", source: "web" })).item;
     const theirs = (await pluckLink(b, { url: "https://example.com/n2", source: "web" })).item;
-    await age(mine.id, 20);
-    await age(theirs.id, 400);
-
     const oneAm = new Date("2026-10-25T00:30:00Z"); // 01:30 in Dublin (IST ends that night)
-    expect((await runDueExpiry(oneAm)).perUser.find((p) => p.userId === a)).toBeUndefined();
     const threeAm = new Date("2026-10-25T02:30:00Z");
+    await age(mine.id, 20, threeAm);
+    await age(theirs.id, 400, threeAm);
+
+    expect((await runDueExpiry(oneAm)).perUser.find((p) => p.userId === a)).toBeUndefined();
     expect((await runDueExpiry(threeAm)).perUser.find((p) => p.userId === a)?.archived).toBe(1);
     expect((await runDueExpiry(new Date("2026-10-25T05:00:00Z"))).perUser.find((p) => p.userId === a)).toBeUndefined(); // same local day
     expect(await getItem(a, mine.id)).toMatchObject({ status: "archived", archivedReason: "expired" });
@@ -52,8 +53,9 @@ describe("expiry", () => {
   test("someone who never opened Settings gets the default 30 days", async () => {
     const { a } = await twoUsers(); // no settings stored
     const old = (await pluckLink(a, { url: "https://example.com/n3", source: "web" })).item;
-    await age(old.id, 40);
-    expect((await runDueExpiry(new Date("2026-10-25T03:00:00Z"))).perUser.find((p) => p.userId === a)?.archived).toBe(1);
+    const at = new Date("2026-10-25T03:00:00Z");
+    await age(old.id, 40, at);
+    expect((await runDueExpiry(at)).perUser.find((p) => p.userId === a)?.archived).toBe(1);
   });
 
   test("expiring-soon counts the week before, and local dates follow the timezone", async () => {
