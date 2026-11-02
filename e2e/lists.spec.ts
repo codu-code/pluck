@@ -59,27 +59,36 @@ test("build an ordered list from the Inbox, then note, reorder, mark, fold, bulk
   await expect(items.nth(2)).toContainText("Open with this");
 
   // Marks are worded by Kind (notes are read). Nothing shows until something is marked; a marked row keeps its number
-  // and moves under a header that folds, remembered after a reload.
+  // and folds away under a header, saying where the List stands, with Undo. The header shows them, remembered after a reload.
   await expect(page.getByText(/of 3 read/)).toHaveCount(0);
-  await Promise.all([saved(page, "PATCH"), page.getByRole("checkbox", { name: "Mark Demo one as read" }).check()]);
-  await expect(page.getByText("1 of 3 read")).toBeVisible();
-  const read = page.getByRole("list", { name: "Read", exact: true }).getByRole("listitem");
-  await expect(read).toHaveCount(1);
+  const markOne = page.getByRole("checkbox", { name: "Mark Demo one as read" });
+  await Promise.all([saved(page, "PATCH"), markOne.click()]); // not check(): the row folds away at once
   await expect(items).toHaveCount(2);
-  await expect(read.first()).toContainText("Open with this");
+  await Promise.all([saved(page, "PATCH"), page.getByRole("status").filter({ hasText: "1 of 3 read" }).getByRole("button", { name: "Undo" }).click()]);
+  await expect(page.getByText(/of 3 read/)).toHaveCount(0);
+  await expect(items).toHaveCount(3);
+  await Promise.all([saved(page, "PATCH"), markOne.click()]); // not check(): the row folds away at once
+  await expect(page.getByText("1 of 3 read").first()).toBeVisible();
+  const read = page.getByRole("list", { name: "Read", exact: true }).getByRole("listitem");
   const fold = page.getByRole("button", { name: "Read 1" });
+  await expect(fold).toHaveAttribute("aria-expanded", "false"); // folded until shown
+  await expect(read).toHaveCount(0);
+  await expect(items).toHaveCount(2);
+  await fold.click();
+  await expect(read).toHaveCount(1);
+  await expect(read.first()).toContainText("Open with this");
+  await page.reload();
   await expect(fold).toHaveAttribute("aria-expanded", "true");
   await fold.click();
-  await expect(fold).toHaveAttribute("aria-expanded", "false");
   await expect(read).toHaveCount(0);
   await page.reload();
   await expect(fold).toHaveAttribute("aria-expanded", "false");
   await fold.click();
   await expect(read).toHaveCount(1);
-  await expect(page.getByRole("checkbox", { name: "Mark Demo one as read" })).toBeChecked();
+  await expect(markOne).toBeChecked();
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur()); // off the fold button
   await page.keyboard.press(" "); // Space marks the row under the cursor: Demo three
-  await expect(page.getByText("2 of 3 read")).toBeVisible();
+  await expect(page.getByText("2 of 3 read").first()).toBeVisible();
 
   // Bulk: select, then unmark, and move to the top.
   await page.getByRole("button", { name: "Select", exact: true }).click();
@@ -88,7 +97,7 @@ test("build an ordered list from the Inbox, then note, reorder, mark, fold, bulk
   const bar = page.getByRole("toolbar", { name: "Bulk actions" });
   await expect(bar).toContainText("2 selected");
   await bar.getByRole("button", { name: "Unmark" }).click();
-  await expect(page.getByText(/of 3 read/)).toHaveCount(0);
+  await expect(page.locator("span").filter({ hasText: /of 3 read/ })).toHaveCount(0); // the count; the last tick's toast may still be up
   await expect(items).toHaveCount(3);
   await page.getByRole("button", { name: "Select", exact: true }).click();
   await page.getByRole("checkbox", { name: "Select Demo two" }).check();

@@ -46,6 +46,10 @@ _Avoid_: Label, category, smart tag
 A named, ordered group of Items with a purpose line. Each Item in a List has its own note and tick, which belong to the List, not the Item. Private or Public.
 _Avoid_: Collection, folder, board, playlist
 
+**Tick**:
+An Item marked finished in one List: it belongs to that List, not the Item, so the same Item stays unticked in its other Lists and keeps its Status. It reads as Read, Watched, Seen or Done, by the Kinds the List holds. Ticking a Todo or Thing also makes it Done.
+_Avoid_: Check, complete, mark as done
+
 **Public page**:
 The read-only, logged-out view of a Public List at `/@handle/slug`.
 _Avoid_: Share page, unlisted link

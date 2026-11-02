@@ -160,6 +160,7 @@ test("create_list is private with AI notes; update_list changes everything but t
   const after = await readList(a, list.id);
   expect(after.list.name).toBe("Talk reading");
   expect(after.entries.map((e) => [e.item.id, e.ticked])).toEqual([[z.id, false], [x.id, true]]);
+  expect((await call("get_list", { id: list.id, open: true })).entries.map((e: { id: string }) => e.id)).toEqual([z.id]); // what is left
 
   const purpose = await call("update_list", { id: list.id, purpose: "Something else" });
   expect(purpose.error.code).toBe("invalid_input");

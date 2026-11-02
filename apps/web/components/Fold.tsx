@@ -6,18 +6,18 @@ import styles from "./Fold.module.css";
 const KEY = (id: string) => `pluck.fold.${id}`;
 
 // Whether a group is folded, remembered on this device. Storage can be missing (private windows): then it is not remembered.
-export function useFolded(id: string): [boolean, () => void] {
-  const [folded, setFolded] = useState(false);
+export function useFolded(id: string, byDefault = false): [boolean, () => void] {
+  const [folded, setFolded] = useState(byDefault);
   useEffect(() => {
     try {
-      setFolded(localStorage.getItem(KEY(id)) === "1");
+      const kept = localStorage.getItem(KEY(id));
+      setFolded(kept === null ? byDefault : kept === "1");
     } catch {}
-  }, [id]);
+  }, [id, byDefault]);
   const toggle = () =>
     setFolded((was) => {
       try {
-        if (was) localStorage.removeItem(KEY(id));
-        else localStorage.setItem(KEY(id), "1");
+        localStorage.setItem(KEY(id), was ? "0" : "1");
       } catch {}
       return !was;
     });

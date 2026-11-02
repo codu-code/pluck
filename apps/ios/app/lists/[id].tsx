@@ -30,8 +30,8 @@ export default function ListScreen() {
   const list = data.data?.list;
   const entries = data.data?.entries ?? [];
   const foldKey = `fold:list:${id}:marked`;
-  const [folded, setFolded] = useState(false);
-  useEffect(() => void kv.get(foldKey, false).then(setFolded), [foldKey]);
+  const [folded, setFolded] = useState(true); // ticked rows are folded away until shown
+  useEffect(() => void kv.get(foldKey, true).then(setFolded), [foldKey]);
   const fold = () => {
     setFolded(!folded);
     void kv.set(foldKey, !folded);
@@ -53,9 +53,15 @@ export default function ListScreen() {
   const edit = (fn: (entries: ListEntry[]) => ListEntry[]) => qc.setQueryData<Data>(keys.list(id), (old) => old && { ...old, entries: fn(old.entries) });
   const failed = () => toast(tr("common.failed.title"));
 
+  // A tick folds the row away, so it says where the List stands and can be undone (only the rows this tick changed).
   const mark = async (ids: string[], ticked: boolean) => {
+    const changed = entries.filter((e) => ids.includes(e.item.id) && e.ticked !== ticked).map((e) => e.item.id);
     edit((es) => es.map((e) => (ids.includes(e.item.id) ? { ...e, ticked } : e)));
     void Haptics.selectionAsync();
+    if (ticked && changed.length) {
+      const count = entries.filter((e) => e.ticked || ids.includes(e.item.id)).length;
+      toast(tr(`list.mark.${word}.progress`, { ticked: count, count: entries.length }), () => void mark(changed, false));
+    }
     await library.mark(id, ids, ticked).catch(failed);
   };
 

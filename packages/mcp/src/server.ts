@@ -145,11 +145,15 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
 
     tool(
       "get_list",
-      { description: "One list in order, with each item's note and tick for that list.", inputSchema: z.object({ id: ObjectIdString, cursor: Cursor }), annotations: READ },
-      async ({ id, cursor }) => {
+      {
+        description: "One list in order, with each item's note and tick for that list, or only the unticked items with open.",
+        inputSchema: z.object({ id: ObjectIdString, open: z.boolean().optional().describe("Only the items not ticked yet: what is left. Send it on every page."), cursor: Cursor }),
+        annotations: READ,
+      },
+      async ({ id, open, cursor }) => {
         const { list, entries } = await lib.list(id);
         const n = await names();
-        const { rows, nextCursor } = fit(entries.map((e) => entryRow(e, n)), readOffset(cursor));
+        const { rows, nextCursor } = fit(entries.filter((e) => !open || !e.ticked).map((e) => entryRow(e, n)), readOffset(cursor));
         return { list: listRow(list), entries: rows, nextCursor };
       },
     );
