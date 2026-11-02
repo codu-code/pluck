@@ -2,3 +2,9 @@ packages:
   - apps/*
   - packages/*
   - infra/*
+
+# Security fixes for build-time dependencies whose parents have no patched release yet.
+# Drop each line once the parent ships the fix: @bacons/apple-targets → @bacons/xcode.
+overrides:
+  "@expo/plist@0.0.18>@xmldom/xmldom": 0.8.15
+  "@bacons/xcode>uuid": 11.1.1

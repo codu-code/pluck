@@ -16,7 +16,7 @@
     "@mozilla/readability": "^0.6.0",
     "@pluck/shared-schemas": "workspace:*",
     "defuddle": "0.19.5",
-    "fflate": "0.8.2",
+    "fflate": "0.8.3",
     "linkedom": "^0.18.14",
     "mailparser": "^3.12.4",
     "undici": "^8.12.3",
