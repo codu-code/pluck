@@ -1,6 +1,6 @@
 "use client";
 
-import { isRenameable, LINK_KINDS, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
+import { isRenameable, LINK_KINDS, showsFile, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -10,7 +10,7 @@ import { useFormat } from "@/components/useFormat";
 import { library, went } from "@/lib/actions";
 import { coverSrc } from "@/lib/format";
 import { paint, selectorFor } from "@/lib/highlight-dom";
-import { isCard, OpenOriginal, PreviewCard, PreviewFacts, PreviewSwitch } from "./Preview";
+import { isCard, OpenOriginal, PdfView, PreviewCard, PreviewFacts, PreviewSwitch } from "./Preview";
 import styles from "./reader.module.css";
 
 type Toolbar = { x: number; y: number } & ({ kind: "new"; selector: Highlight["selector"] } | { kind: "existing"; id: string });
@@ -22,6 +22,7 @@ const json = (method: string, body: unknown) => ({ method, headers: { "content-t
 // with the same note, tags and lists alongside; a repo or a paper reads as an article under its facts.
 export function Reader({ item, html, text, initialHighlights, showCover, tags, lists }: { item: Item; html: string; text: string; initialHighlights: Highlight[]; showCover: boolean; tags: Tag[]; lists: ListMembership[] }) {
   const card = isCard(item);
+  const pdf = showsFile(item); // pages as laid out; no text here to highlight or track
   const article = useRef<HTMLDivElement>(null);
   const [highlights, setHighlights] = useState(initialHighlights);
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
@@ -38,7 +39,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
 
   useLayoutEffect(() => {
     if (article.current) paint(article.current, html, highlights);
-  }, [html, highlights]);
+  }, [html, highlights, card, pdf]); // the body is a new element after a switch to it
 
   // Opening is a touch; resume where you left off.
   useEffect(() => {
@@ -124,13 +125,13 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
     return () => window.removeEventListener("keydown", onKey, true);
   });
 
-  const minutes = item.wordCount && !card ? Math.max(1, Math.round(item.wordCount / 230)) : null;
+  const minutes = item.wordCount && !card && !pdf ? Math.max(1, Math.round(item.wordCount / 230)) : null;
 
   return (
     <>
       <ItemBar
         item={item}
-        top={card ? undefined : (
+        top={card || pdf ? undefined : (
           <div className={styles.progress} role="progressbar" aria-label={t("progress")} aria-valuenow={Math.round(progress * 100)} aria-valuemin={0} aria-valuemax={100}>
             <div className={styles.progressFill} style={{ width: `${progress * 100}%` }} />
           </div>
@@ -146,7 +147,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
             {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
             <PreviewFacts item={item} />
           </div>
-          {card ? <PreviewCard item={item} text={text} /> : <>
+          {card ? <PreviewCard item={item} text={text} /> : pdf ? <PdfView item={item} /> : <>
           {(item.preview === "code" || item.preview === "document") && <OpenOriginal item={item} />}
           {showCover && item.kind !== "image" && <img className={styles.cover} src={coverSrc(item.id)} alt="" />}
           {item.kind === "image" && <img className={styles.image} src={coverSrc(item.id)} alt={item.title} />}
@@ -240,7 +241,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
           </label>
           <PreviewSwitch item={item} />
           <ItemLists itemId={item.id} initial={lists} />
-          {!card && <div className={styles.group}>
+          {!card && !pdf && <div className={styles.group}>
             <span className={styles.groupTitle}>{t("highlights", { count: highlights.length })}</span>
             {highlights.length === 0 && <span className={styles.meta}>{t("noHighlights")}</span>}
             {highlights.map((h) => (
@@ -266,7 +267,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
           <div className={styles.foot}>
             {/* A card kept what the link said, not the page; its way out is already the main button. */}
             <span>{t(card ? "sourceOnly" : "source", { via: app(`format.via.${item.source}`) })}</span>
-            {item.url && !card && <a href={withReferral(item.url)} target="_blank" rel="noopener" className={styles.original}>{app("common.openOriginal")}</a>}
+            {item.url && !card && !pdf && <a href={withReferral(item.url)} target="_blank" rel="noopener" className={styles.original}>{app("common.openOriginal")}</a>}
             <DeleteButton id={item.id} />
           </div>
         </aside>

@@ -44,6 +44,10 @@ export type Facts = z.infer<typeof Facts>;
 // with one way out. A Reader, a repo or a paper reads here as an article.
 export const isCardPreview = (preview: Preview | null | undefined) => preview === "player" || preview === "post" || preview === "product" || preview === "site" || preview === "app";
 
+// A PDF opens on its own file, pages as they were laid out; "Show as article" reads its text instead. A paper's
+// landing page is a Document too, but it is a link, so it reads as an article.
+export const showsFile = (item: Pick<Item, "kind" | "preview" | "extraction">) => item.kind === "pdf" && item.preview === "document" && item.extraction.state === "done";
+
 // A link the person may name: a reel, a TikTok, a post or a picture often comes with no title of its own, and nor does
 // a link whose title is still its address. An article, a paper or a repo is named by its page. The iPhone share
 // sheet (ShareView.swift, `renameable`) keeps the same rule.

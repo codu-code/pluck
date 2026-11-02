@@ -1,12 +1,14 @@
 import { Unreachable } from "@pluck/client";
-import { isCardPreview, isTextKind, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
+import { isCardPreview, isTextKind, showsFile, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
+import type { File } from "expo-file-system";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Image, Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { WebView } from "react-native-webview";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
@@ -113,7 +115,8 @@ function Reader({ data }: { data: FullItem }) {
   const qc = useQueryClient();
   // A video, a post, a product, a homepage or an app is shown as what it is, with the way out; the rest is read here.
   const card = isCardPreview(item.preview);
-  const reading = !card && blocks.length > 0;
+  const pdf = showsFile(item); // its pages as laid out, full height; "Show as article" reads the text
+  const reading = !card && !pdf && blocks.length > 0;
   const site = row(item).site;
   const [switching, setSwitching] = useState(false);
   const switchTo = async (preview: "reader" | null) => {
@@ -140,6 +143,13 @@ function Reader({ data }: { data: FullItem }) {
     return () => clearTimeout(id);
   }, [progress]); // only on movement; the item and mutation are stable for this screen
 
+  // The guess can be wrong: an article that looks like a homepage, a blog's front page that is the read, a PDF wanted as text.
+  const switcher = item.previewGuess && item.previewGuess !== "reader" && item.extraction.state === "done" && (
+    <Pressable accessibilityRole="button" disabled={switching} onPress={() => void switchTo(item.preview === "reader" ? null : "reader")} style={styles.switch}>
+      {switching ? <ActivityIndicator color={t.ink2} /> : <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr(item.preview === "reader" ? "preview.asPreview" : "preview.asArticle")}</Text>}
+    </Pressable>
+  );
+
   const minutes = item.wordCount ? Math.max(1, Math.round((item.wordCount * (1 - progress)) / 230)) : null;
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
@@ -157,6 +167,7 @@ function Reader({ data }: { data: FullItem }) {
           </View>
         }
       />
+      {pdf ? <><View style={styles.pdfBar}>{switcher}</View><PdfFile item={item} /></> : <>
       <View style={[styles.track, { backgroundColor: t.line }]}>{reading && <View style={{ width: `${Math.round(progress * 100)}%`, height: 2, backgroundColor: t.accent }} />}</View>
       <ScrollView
         contentContainerStyle={styles.article}
@@ -194,12 +205,7 @@ function Reader({ data }: { data: FullItem }) {
             )}
           </View>
         )}
-        {item.previewGuess && item.previewGuess !== "reader" && item.extraction.state === "done" && (
-          // The guess can be wrong: an article that looks like a homepage, a blog's front page that is the read.
-          <Pressable accessibilityRole="button" disabled={switching} onPress={() => void switchTo(item.preview === "reader" ? null : "reader")} style={styles.switch}>
-            {switching ? <ActivityIndicator color={t.ink2} /> : <Text style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr(item.preview === "reader" ? "preview.asPreview" : "preview.asArticle")}</Text>}
-          </Pressable>
-        )}
+        {switcher}
         {cover && item.kind === "image" && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
@@ -235,9 +241,30 @@ function Reader({ data }: { data: FullItem }) {
         )}
         {!card && blocks.map((b, i) => <BlockView key={i} block={b} quotes={quotes} t={t} />)}
       </ScrollView>
+      </>}
       <Toolbar item={item} />
     </View>
   );
+}
+
+// A PDF as it was plucked, in the iPhone's own viewer: the copy kept on this iPhone (the download mark), else the
+// file fetched for now. Offline and not kept, it says so; the text is one tap away.
+function PdfFile({ item }: { item: Item }) {
+  const t = useTheme();
+  const tr = useTranslations("ios");
+  const online = useOnline();
+  const [file, setFile] = useState<File | null>();
+  useEffect(() => void fileOf(item).then(setFile, () => setFile(null)), [item.id]); // the item is stable for this screen
+  if (!file) {
+    return (
+      <View style={styles.centre} accessibilityLiveRegion="polite">
+        {file === undefined ? <ActivityIndicator accessibilityLabel={tr("common.loading")} /> : (
+          <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>{tr(online ? "item.didntLoad" : "item.notKept")}</Text>
+        )}
+      </View>
+    );
+  }
+  return <WebView source={{ uri: file.uri }} originWhitelist={["file://*"]} allowingReadAccessToURL={file.parentDirectory.uri} accessibilityLabel={item.title} style={{ flex: 1, backgroundColor: t.ground }} />;
 }
 
 async function share(item: Item) {
@@ -364,6 +391,7 @@ const styles = StyleSheet.create({
   ways: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   kept: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   switch: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center" },
+  pdfBar: { paddingHorizontal: 20 },
   doneButton: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 12 },
   ring: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
 });

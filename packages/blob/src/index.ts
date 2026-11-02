@@ -50,8 +50,9 @@ export function signedPutUrl(key: string, contentType: string, expiresIn = 900):
   return getSignedUrl(s3Public(), new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }), { expiresIn });
 }
 
-export function signedUrl(key: string, expiresIn = 300): Promise<string> {
-  return getSignedUrl(s3Public(), new GetObjectCommand({ Bucket: bucket(), Key: key }), { expiresIn });
+// `disposition` tells the browser to show the file ("inline") or save it ("attachment; filename*=…").
+export function signedUrl(key: string, expiresIn = 300, disposition?: string): Promise<string> {
+  return getSignedUrl(s3Public(), new GetObjectCommand({ Bucket: bucket(), Key: key, ResponseContentDisposition: disposition }), { expiresIn });
 }
 
 // Removes everything under a prefix. Used by account deletion.

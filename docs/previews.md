@@ -16,7 +16,10 @@ What Pluck does, in order:
 
 Only a Reader, Code or Document keeps its body; only a Reader keeps its HTML. A Post keeps its words, a Product,
 Site, App or Player what it says it is. Players load only when pressed, from an id checked against the allowlist,
-on each provider's quieter domain, with the Referer YouTube requires.
+on each provider's quieter domain, with the Referer YouTube requires. A PDF's Document opens on the file
+Pluck kept (`showsFile` in `packages/shared-schemas`): the browser's own viewer on the web (`/file?as=view`, with
+Download from `/file?as=download`) and WebKit on the iPhone. Its text is still read and kept for the excerpt, search
+and your AI; "Show as article" shows it.
 
 Outbound links carry `utm_source=getpluck.io` as they open (`withReferral` in `urls.ts`), never in what is stored or
 copied, and never on signed links.

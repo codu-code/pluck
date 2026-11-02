@@ -1003,6 +1003,7 @@
   "preview": {
     "open": "{site}で開く",
     "openPdf": "PDFを開く",
+    "downloadPdf": "PDFをダウンロード",
     "openArticle": "記事の全文を X で読む",
     "playA11y": "{title}を再生",
     "playNote": "{site}から再生します。再生を押すまで、{site}からは何も読み込みません。",

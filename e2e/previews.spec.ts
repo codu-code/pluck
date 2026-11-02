@@ -26,3 +26,25 @@ test("a product opens on its Preview: price, picture, one way out, and Show as a
   await page.getByRole("button", { name: "Show as preview" }).click();
   await expect(page.getByRole("link", { name: "Open on Kiln & Co" })).toBeVisible();
 });
+
+test("a PDF opens on its own file, with Download, and Show as article reads its text", async ({ page }) => {
+  await signIn(page);
+  const box = page.getByRole("textbox", { name: "Pluck" });
+  await box.fill(`${FIX}/doc.pdf`);
+  await box.press("Enter");
+  const row = page.getByRole("listitem").filter({ hasText: /pages?/ });
+  await row.getByRole("link").first().click({ timeout: 10_000 });
+  await page.waitForURL(/\/items\//);
+  const id = page.url().split("/items/")[1];
+
+  await expect(page.locator(`iframe[src="/api/v1/items/${id}/file?as=view"]`)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Download the PDF" })).toHaveAttribute("href", `/api/v1/items/${id}/file?as=download`);
+  const saved = await page.request.get(`/api/v1/items/${id}/file?as=download`);
+  expect(saved.headers()["content-disposition"]).toMatch(/^attachment; filename\*=UTF-8''.+\.pdf$/);
+  await expect(page.getByText(/Chapter four covers rates/)).toHaveCount(0); // the pages, not the text pulled out of them
+  await expect(page.getByRole("progressbar")).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Show as article" }).click();
+  await expect(page.getByText(/Chapter four covers rates/).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator("iframe")).toHaveCount(0);
+});
