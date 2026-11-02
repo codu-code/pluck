@@ -15,8 +15,9 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 - [x] Settings → General: make `codu-code/pluck` public.
 - [x] Settings → Code security: secret scanning and push protection on; Dependabot alerts on; private vulnerability reporting on (`SECURITY.md` links to it).
-- [ ] Settings → Branches: protect `main` (pull request required, the DCO check required, no force pushes).
-- [ ] Description, topics (`read-it-later`, `mcp`, `self-hosted`, `nextjs`, `bookmarks`) and the social preview image.
+- [x] Settings → Branches: protect `main` (pull request required; the DCO, unit and end-to-end checks required; linear history; no force pushes or deletion). Admins can still bypass in an emergency.
+- [x] Description and topics (`read-it-later`, `mcp`, `self-hosted`, `nextjs`, `bookmarks`).
+- [ ] The social preview image (Settings → General; it can only be uploaded in the browser).
 - [ ] Tag `v0.1.0` and write its release notes.
 
 ## Hosted service
