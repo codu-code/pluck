@@ -51,7 +51,7 @@ export function ListView({ initial, handle, host, people }: { initial: { list: L
   const app = useTranslations("app");
   const listRef = useRef<HTMLDivElement>(null);
   const base = `/api/v1/lists/${list.id}`;
-  const [folded, toggleFold] = useFolded(`list:${list.id}:marked`);
+  const [folded, toggleFold] = useFolded(`list:${list.id}:marked`, true); // ticked rows are folded away until shown
 
   const word = listMarkWord(entries.map((e) => e.item.kind));
   const open = entries.filter((e) => !e.ticked);
@@ -67,11 +67,17 @@ export function ListView({ initial, handle, host, people }: { initial: { list: L
     showToast({ message: app("common.didNotGoThrough") });
   };
 
-  // Marks one or many. A Todo or Thing is Done when marked (the server keeps the two in step).
+  // Marks one or many. A Todo or Thing is Done when marked (the server keeps the two in step). A tick folds the row
+  // away, so it says where the List stands and can be undone; Undo unticks only the rows this tick changed.
   async function mark(ids: string[], ticked: boolean) {
     const back = entries;
+    const changed = entries.filter((x) => ids.includes(x.item.id) && x.ticked !== ticked).map((x) => x.item.id);
     setEntries((cur) => cur.map((x) => (ids.includes(x.item.id) ? { ...x, ticked } : x)));
-    if (!(await went(library.mark(list.id, ids, ticked)))) fail(back);
+    if (!(await went(library.mark(list.id, ids, ticked)))) return fail(back);
+    if (ticked && changed.length) {
+      const count = entries.filter((x) => x.ticked || ids.includes(x.item.id)).length;
+      showToast({ message: t(`mark.${word}.progress`, { ticked: count, count: entries.length }), undo: () => void mark(changed, false) });
+    }
   }
 
   async function saveNote(e: ListEntry) {

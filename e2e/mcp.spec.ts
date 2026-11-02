@@ -88,6 +88,7 @@ test("an AI tool connects over OAuth and calls the connector", async ({ page, re
 
   // What the person sees: the list the AI made, and the connection in Settings, which they can cut off at once.
   await page.goto(`/lists/${list.id}`);
+  await page.getByRole("button", { name: /^Read 1/ }).click(); // the AI ticked it, so it is folded away until shown
   await expect(page.getByText("start here")).toBeVisible();
   await page.goto("/settings");
   const ai = page.locator("#ai");
