@@ -3,8 +3,11 @@ packages:
   - packages/*
   - infra/*
 
-# Security fixes for build-time dependencies whose parents have no patched release yet.
-# Drop each line once the parent ships the fix: @bacons/apple-targets → @bacons/xcode.
+# Security fixes for build-time dependencies (Expo, ESLint) whose parents have no patched release yet.
+# Drop each line once the parent ships the fix.
 overrides:
   "@expo/plist@0.0.18>@xmldom/xmldom": 0.8.15
   "@bacons/xcode>uuid": 11.1.1
+  "node-forge@<1.4.1": 1.4.2
+  "glob@>=9 <14.0.2": 14.0.3
+  "minimatch@<11.0.1": 11.0.4
