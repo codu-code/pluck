@@ -117,7 +117,7 @@ test("token requests: offline or a 5xx is Unreachable, so nobody is signed out f
 
 describe("the session", () => {
   // The token endpoint as Better Auth runs it: a refresh token works once, and of two refreshes at once one wins and
-  // the other gets invalid_grant (a retry within 30 seconds of the win would be replayed the same pair; one in flight is not).
+  // the other gets invalid_grant (a retry within 30 days of the win is replayed the same pair; one in flight is not).
   const tokenServer = () => {
     let n = 0;
     const live = new Set(["r0"]);
@@ -164,6 +164,14 @@ describe("the session", () => {
     });
     expect(await createSession(store, server.fetch).authHeader()).toBe("Bearer a1");
     expect(box.s.tokens).toMatchObject({ refresh: "r1" });
+  });
+
+  test("a replayed refresh that comes back already expired refreshes again rather than sending a dead token", async () => {
+    const server = tokenServer();
+    const { box, store } = memory();
+    server.f.mockImplementationOnce(async () => json(200, { access_token: "stale", refresh_token: "r0", expires_in: 0 })); // the server's replay of a lost answer
+    expect(await createSession(store, server.fetch).authHeader()).toBe("Bearer a1");
+    expect(box.s.tokens).toMatchObject({ access: "a1", refresh: "r1" });
   });
 
   test("a refresh token the server refuses signs out; offline keeps the tokens", async () => {
