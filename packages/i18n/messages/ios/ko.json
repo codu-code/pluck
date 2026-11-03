@@ -605,6 +605,13 @@
       "messages": "메시지",
       "mail": "Mail",
       "notes": "메모"
+    },
+    "add": {
+      "new": "{kind, select, note {새 노트} todo {새 할 일} other {새 물건}}",
+      "link": "링크",
+      "pluck": "담기",
+      "titlePlaceholder": "제목",
+      "keys": "<key>⌘</key> <key>↩</key> 담기   <key>esc</key> 취소"
     }
   }
 }

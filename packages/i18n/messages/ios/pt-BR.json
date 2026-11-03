@@ -605,6 +605,13 @@
       "messages": "Mensagens",
       "mail": "Mail",
       "notes": "Notas"
+    },
+    "add": {
+      "new": "{kind, select, note {Nova nota} todo {Nova tarefa} other {Nova coisa}}",
+      "link": "Link",
+      "pluck": "Colher",
+      "titlePlaceholder": "Título",
+      "keys": "<key>⌘</key> <key>↩</key> para colher   <key>esc</key> para cancelar"
     }
   }
 }

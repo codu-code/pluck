@@ -36,7 +36,7 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 | 2 | done | The sidebar (iPad-Inbox, iPad-Spec): Inbox, Later, Lists with the person's Lists nested under it, Search, Archive, Bin, and Settings at the bottom; `--rail`, 300 wide in 13" landscape; in portrait and on mini it hides behind its button and slides over the list from the left, including from an edge swipe; the Pluck logo and + at the top | Board match, light and dark |
 | 3 | done | List column and detail column: Inbox, Later and Archive in the middle (380, 360 portrait, 320 mini); the Item reader or the List in detail (640 text column, ticked entries folded, Undo toast); selected and hover states (`onHoverIn`), and hover swaps the time for Later, Archive and Tag | iPad-Inbox, iPad-List, iPad-Mini |
 | 4 | done | Search, Settings (sections in the middle, the open section in detail), Sign in and the empty Inbox | iPad-Search, iPad-Settings, iPad-SignIn, iPad-Empty |
-| 5 | todo | Add and Note as a 580-wide form sheet | iPad-Add |
+| 5 | done | Add and Note as a 580-wide form sheet | iPad-Add |
 | 6 | todo | Hardware keyboard: the iPad-Shortcuts set through `UIKeyCommand` so they show in the hold-⌘ overlay; a small Expo module (`modules/key-commands`) next to `modules/app-icon` | Simulator with a hardware keyboard, hold ⌘ |
 | 7 | todo | App Store: real Simulator screenshots of the sample library (`docs/store/app-store.md`) in the AppStore-iPad-1 to 7 frames, keeping the text layer; exported with and without text | 2064 × 2752, seven of each |
 
@@ -57,12 +57,15 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 - **Words that named the iPhone now name the iPad on an iPad.** Nine messages (Language hint, Not on this iPhone yet, the keep mark and its toasts, the Settings footnotes) are `{device, select, ipad {…} other {…}}`. The iPhone branch is the old text unchanged, in all ten languages. The share sheet has `queuedBodyPad` for "It's on your iPad", chosen in Swift by `userInterfaceIdiom`.
 - **Action sheets on iPad** (`ActionSheetIOS` without an anchor) show as a centred popover with no arrow. React Native does that itself on iPad (`RCTActionSheetManager.mm`), so nothing needed changing.
 
+- **Slice 5, where it differs from the board, and why.** Add on iPad has the board's header (Cancel, the title, a Pluck button), the Link, Note, Todo and Thing control, a title and the words, and the key hints. It leaves out the board's Tags, List and Status rows: creating an Item can't take them (`CreateItemBody`), and setting them in follow-up calls would break a pluck made offline, which waits in a queue that only knows how to make the Item. They're one tap away on the Item once it's made. The sheet is iOS's own form sheet (about 580 wide on iPad, centred, on the system scrim), so its height is the system's rather than the board's fixed top of 96. Note (an Item's note) stays a system page sheet.
+
 ## Helps the iPhone too (proposals, not done without a yes)
 
 The iPhone stays exactly as it is in this work. These came up along the way and would help it on its own merits:
 
 - **Keyboard shortcuts on iPhone.** The `UIKeyCommand` module from slice 6 works on an iPhone with a keyboard as well. It changes nothing on screen.
 - **Pointer hover.** `onHoverIn` does nothing on iPhone, so it's safe to share.
+- **Tags, a List and a Status when making an Item** (iPad-Add's three rows). Needs `tagIds`, `listId` and `status` on `CreateItemBody` and on the queued body, so an offline pluck keeps them. Then both Add sheets can offer them.
 
 ## Environment
 

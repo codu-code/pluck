@@ -605,6 +605,13 @@
       "messages": "メッセージ",
       "mail": "メール",
       "notes": "メモ"
+    },
+    "add": {
+      "new": "{kind, select, note {新しいメモ} todo {新しいToDo} other {新しいモノ}}",
+      "link": "リンク",
+      "pluck": "Pluckする",
+      "titlePlaceholder": "タイトル",
+      "keys": "<key>⌘</key> <key>↩</key> でPluck   <key>esc</key> でキャンセル"
     }
   }
 }

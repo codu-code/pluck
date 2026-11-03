@@ -605,6 +605,13 @@
       "messages": "信息",
       "mail": "邮件",
       "notes": "备忘录"
+    },
+    "add": {
+      "new": "{kind, select, note {新笔记} todo {新待办} other {新物品}}",
+      "link": "链接",
+      "pluck": "摘下",
+      "titlePlaceholder": "标题",
+      "keys": "<key>⌘</key> <key>↩</key> 摘下   <key>esc</key> 取消"
     }
   }
 }
