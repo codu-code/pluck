@@ -125,21 +125,24 @@ function Screens() {
   return null;
 }
 
-// Ties usage to the account once they said yes, and asks the question once a year. The answer is the account's
+// Ties usage to the account once they said yes, and asks the question once, ever. The answer is the account's
 // (settings.analytics), shared with the website, and the newest wins: the phone takes the account's when that is
-// newer, and gives the account its own when that is (a new answer, or one whose save failed offline).
+// newer, and gives the account its own when that is (a new answer, or one whose save failed offline). The question
+// waits until the account's answer is known, so a phone that is new to the account never asks what it already said.
 function SignedInAnalytics() {
   const me = useMe();
   const id = me.data?.id;
   const analytics = me.data?.settings.analytics ?? null;
   const analyticsAt = me.data?.settings.analyticsAt ?? null;
+  const [known, setKnown] = useState(false);
   useEffect(() => {
     if (!id) return;
     let account = freshAnswer({ analytics, analyticsAt });
     const save = (a: ConsentAnswer) => void api("/api/v1/me", { method: "PATCH", json: { settings: { analytics: a.answer, analyticsAt: a.at } } }).catch(() => {});
-    void loadConsent().then((local) => {
+    void loadConsent().then(async (local) => {
       if (local && local.at > (account?.at ?? -1)) save((account = local));
-      else if (account && account.at > (local?.at ?? -1)) void setConsent(account.answer, account.at);
+      else if (account && account.at > (local?.at ?? -1)) await setConsent(account.answer, account.at);
+      setKnown(true);
     });
     identify(id);
     return onConsent(() => {
@@ -148,5 +151,5 @@ function SignedInAnalytics() {
       if (now && now.at > (account?.at ?? -1)) save((account = now));
     });
   }, [id, analytics, analyticsAt]);
-  return <UsagePrompt />;
+  return known ? <UsagePrompt /> : null;
 }

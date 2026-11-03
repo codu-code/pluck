@@ -1,4 +1,4 @@
-import { ANSWER_LASTS_MS, type ConsentAnswer } from "@pluck/shared-schemas";
+import type { ConsentAnswer } from "@pluck/shared-schemas";
 import PostHog from "posthog-react-native";
 import { kv } from "./kv";
 
@@ -6,7 +6,8 @@ import { kv } from "./kv";
 // self-hosted builds without it send nothing.
 //
 // Crashes and errors are sent either way, under a random id that is never tied to the account. Screens and the
-// account are sent only after "Pluck it, I'm in", the same question the website asks, asked again after a year.
+// account are sent only after "Pluck it, I'm in", the same question the website asks. It is asked once: the answer is
+// the account's, kept here and on the server, until it is changed in Settings.
 const KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY;
 export type Consent = "yes" | "no";
 
@@ -25,10 +26,17 @@ export const posthog = KEY
 
 export const analyticsOn = posthog !== null;
 
-// This phone's answer and when it was given.
+// This phone's answer and when it was given. Builds before 1.4.0 kept only the answer, as "consent": it carries over,
+// dated now, so an update never asks again.
 export async function loadConsent(): Promise<ConsentAnswer | null> {
-  const saved = await kv.get<ConsentAnswer | null>("answer", null);
-  answered = saved && Date.now() - saved.at < ANSWER_LASTS_MS ? saved : null;
+  let saved = await kv.get<ConsentAnswer | null>("answer", null);
+  const older = saved ? null : await kv.get<Consent | null>("consent", null);
+  if (older === "yes" || older === "no") {
+    saved = { answer: older, at: Date.now() };
+    await kv.set("answer", saved);
+    await kv.remove("consent");
+  }
+  answered = saved;
   consent = answered?.answer ?? null;
   listeners.forEach((fn) => fn(consent));
   return answered;

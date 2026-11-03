@@ -73,11 +73,12 @@ export const Settings = z.object({
 });
 export type Settings = z.infer<typeof Settings>;
 
-// The cookie answer holds for a year, then it is asked again: on every device, and the server stops counting meanwhile.
+// An account's cookie answer holds until it is changed (Settings, or Cookies on the site, on any device): it is never
+// asked again once the account has one. A browser with no account asks again after a year (ANSWER_LASTS_MS).
 export const ANSWER_LASTS_MS = 365 * 86_400_000;
 export type ConsentAnswer = { answer: "yes" | "no"; at: number };
-export const freshAnswer = (s: Pick<Settings, "analytics" | "analyticsAt">, now = Date.now()): ConsentAnswer | null =>
-  s.analytics && s.analyticsAt !== null && now - s.analyticsAt < ANSWER_LASTS_MS ? { answer: s.analytics, at: s.analyticsAt } : null;
+export const freshAnswer = (s: Pick<Settings, "analytics" | "analyticsAt">): ConsentAnswer | null =>
+  s.analytics && s.analyticsAt !== null ? { answer: s.analytics, at: s.analyticsAt } : null;
 
 export const Me = z.object({
   id: ObjectIdString,

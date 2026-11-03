@@ -85,7 +85,7 @@ test("the analytics answer and where the account began are per person, and via i
   expect([(await getMe(a))?.heardFrom, (await getMe(b))?.heardFrom]).toEqual(["friend", null]);
 });
 
-test("the newest analytics answer wins: an older one from an offline device does not undo it, and a year later it lapses", async () => {
+test("the newest analytics answer wins: an older one from an offline device does not undo it, and it never lapses", async () => {
   const { a, b } = await twoUsers();
   const now = Date.now();
   await updateSettings(a, { analytics: "no", analyticsAt: now - 1000 });
@@ -96,6 +96,6 @@ test("the newest analytics answer wins: an older one from an offline device does
   await updateSettings(a, { analytics: "no" });
   expect(await analyticsOf(a)).toMatchObject({ consent: "no" });
   expect((await getMe(b))?.settings).toMatchObject({ analytics: null, analyticsAt: null });
-  await updateSettings(b, { analytics: "yes", analyticsAt: now - 366 * 86_400_000 });
-  expect(await analyticsOf(b)).toMatchObject({ consent: null });
+  await updateSettings(b, { analytics: "yes", analyticsAt: now - 366 * 86_400_000 }); // a year and more ago: still the answer
+  expect(await analyticsOf(b)).toMatchObject({ consent: "yes" });
 });
