@@ -1,0 +1,29 @@
+{
+  "ipadScreenshots": [
+    {
+      "title": "Pflück es aus jeder App.",
+      "subtitle": "Ein Fingertipp im Teilen-Menü. Pluck behält die Seite, die App bleibt zu."
+    },
+    {
+      "title": "Sortier es später.",
+      "subtitle": "Dein Eingang in einer Spalte, die Seite in der nächsten. Wischen, tippen oder schreiben."
+    },
+    {
+      "title": "Die Seite, nicht nur der Link.",
+      "subtitle": "Ein ruhiger Reader mit deinen Markierungen. Noch da, wenn die Website weg ist."
+    },
+    {
+      "title": "Listen sind, was du vorhast.",
+      "subtitle": "Eine Reise, eine Küche, Lesestoff für einen Freund. In Reihenfolge, mit Notizen."
+    },
+    {
+      "title": "Weg. Na ja, archiviert.",
+      "subtitle": "30 Tage unberührt? Ins Archiv. Nichts wird gelöscht."
+    }
+  ],
+  "chips": [
+    "Kostenlos",
+    "Open Source",
+    "Keine Werbung"
+  ]
+}

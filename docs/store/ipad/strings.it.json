@@ -1,0 +1,29 @@
+{
+  "ipadScreenshots": [
+    {
+      "title": "Prendilo da qualsiasi app.",
+      "subtitle": "Un tocco su Condividi. Pluck tiene la pagina e l’app resta chiusa."
+    },
+    {
+      "title": "Sistemalo dopo.",
+      "subtitle": "La tua Inbox in una colonna, la pagina nell’altra. Scorri, tocca o scrivi."
+    },
+    {
+      "title": "La pagina, non solo il link.",
+      "subtitle": "Un lettore pulito con le tue evidenziazioni. Resta qui anche se il sito sparisce."
+    },
+    {
+      "title": "Le liste sono i tuoi progetti.",
+      "subtitle": "Un viaggio, una cucina, letture per un amico. In ordine, con le note."
+    },
+    {
+      "title": "Sparito. Anzi, archiviato.",
+      "subtitle": "Non lo tocchi da 30 giorni? Nell’Archivio. Non viene eliminato nulla."
+    }
+  ],
+  "chips": [
+    "Gratis",
+    "Open source",
+    "Niente pubblicità"
+  ]
+}

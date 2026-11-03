@@ -1,0 +1,29 @@
+{
+  "ipadScreenshots": [
+    {
+      "title": "Cueillez depuis n’importe quelle app.",
+      "subtitle": "Un geste dans Partager. Pluck garde la page, et l’app reste fermée."
+    },
+    {
+      "title": "Triez plus tard.",
+      "subtitle": "Votre Réception dans une colonne, la page dans la suivante. Balayez, touchez ou tapez."
+    },
+    {
+      "title": "La page, pas seulement le lien.",
+      "subtitle": "Un lecteur épuré avec vos surlignages. Toujours là, même si le site disparaît."
+    },
+    {
+      "title": "Vos listes, vos projets.",
+      "subtitle": "Un voyage, une cuisine, des lectures pour un ami. Dans l’ordre, avec des notes."
+    },
+    {
+      "title": "Parti. Enfin, archivé.",
+      "subtitle": "Pas touché depuis 30 jours ? Direction les Archives. Rien n’est supprimé."
+    }
+  ],
+  "chips": [
+    "Gratuit",
+    "Open source",
+    "Sans pub"
+  ]
+}

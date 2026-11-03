@@ -1,0 +1,29 @@
+{
+  "ipadScreenshots": [
+    {
+      "title": "Recógelo desde cualquier app.",
+      "subtitle": "Un toque en Compartir. Pluck guarda la página y la app sigue cerrada."
+    },
+    {
+      "title": "Ordénalo después.",
+      "subtitle": "Tu Entrada en una columna, la página en la siguiente. Desliza, toca o escribe."
+    },
+    {
+      "title": "La página, no solo el enlace.",
+      "subtitle": "Un lector limpio con tus subrayados. Sigue aquí aunque la web desaparezca."
+    },
+    {
+      "title": "Listas para lo que preparas.",
+      "subtitle": "Un viaje, una cocina, lecturas para un amigo. En orden y con notas."
+    },
+    {
+      "title": "Adiós. Bueno, al Archivo.",
+      "subtitle": "¿Sin tocar en 30 días? Al Archivo. No se borra nada."
+    }
+  ],
+  "chips": [
+    "Gratis",
+    "Código abierto",
+    "Sin anuncios"
+  ]
+}
