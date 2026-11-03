@@ -66,6 +66,12 @@ App Store Connect takes `es` for both es-ES and es-MX. Frames 6 and 7 are not up
 
 No app preview video for launch. A preview must be a screen recording of the app itself (886 × 1920, 15 to 30 s).
 
+## Preview
+
+`pnpm --filter @pluck/web dev`, then `/dev/store`: the listing as the App Store shows it, in every language, iPhone or iPad, light or dark, with the search result, Apple's limits and voice.md's rules checked. "All languages" lays every language's screenshots side by side. It reads this folder, so it shows what is here; keep it in step with App Store Connect. Production answers 404.
+
+`screenshots/<lang>/` is each other language's iPhone set as uploaded (1206 × 2622); English is `screenshots/6.9in`.
+
 ## Featuring art
 
 In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), and also the 16:9 master Apple takes for a product page header or a search result asset. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
