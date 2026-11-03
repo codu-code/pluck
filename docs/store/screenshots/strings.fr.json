@@ -1,0 +1,24 @@
+{
+  "iphoneScreenshots": [
+    {
+      "title": "Cueillez depuis n’importe quelle app.",
+      "subtitle": "Un geste dans le menu Partager. L’app ne s’ouvre même pas."
+    },
+    {
+      "title": "Triez plus tard.",
+      "subtitle": "Balayez à droite pour Plus tard, à gauche pour les Archives."
+    },
+    {
+      "title": "La page, pas seulement le lien.",
+      "subtitle": "Toujours là, même si le site disparaît."
+    },
+    {
+      "title": "Vos listes, vos projets.",
+      "subtitle": "Un voyage. Une cuisine. Des lectures pour un ami."
+    },
+    {
+      "title": "Parti. Enfin, archivé.",
+      "subtitle": "Pas touché depuis 30 jours ? Direction les Archives. Rien n’est supprimé."
+    }
+  ]
+}

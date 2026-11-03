@@ -66,6 +66,18 @@ App Store Connect takes `es` for both es-ES and es-MX. Frames 6 and 7 are not up
 
 No app preview video for launch. A preview must be a screen recording of the app itself (886 × 1920, 15 to 30 s).
 
+## Preview
+
+`pnpm --filter @pluck/web dev`, then `/dev/store`: the listing as the App Store shows it, in every language, iPhone or iPad, light or dark, with the search result, Apple's limits and voice.md's rules checked. "All languages" lays every language's screenshots side by side. It reads this folder, so it shows what is here; keep it in step with App Store Connect. Production answers 404.
+
+Every page opens with what is still to do for that language and device, and marks the screenshots it covers: the known issues in `audit.json` (remove an entry once it is fixed), and what the page checks for itself (a field over Apple's limit, a line voice.md rules out, a set shorter than English's). Red is an App Review risk, orange is polish.
+
+`screenshots/<lang>/` is each other language's iPhone set as uploaded, at 1320 × 2868; English is `screenshots/6.9in`. They're boards `AppStore1` to `5` drawn with that language's words (`screenshots/strings.<lang>.json`) and, in frames 2 to 5, real captures of the app in that language (iPhone 17 Simulator, `-AppleLanguages "(de)"`, the store library):
+
+```sh
+node scripts/store-iphone.mjs de <dir with that language's 2.png … 5.png>
+```
+
 ## Featuring art
 
 In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), and also the 16:9 master Apple takes for a product page header or a search result asset. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
