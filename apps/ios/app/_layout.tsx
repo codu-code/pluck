@@ -40,6 +40,8 @@ export default function Root() {
       // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY is never set for the store): sign in with a key.
       const demoKey = process.env.EXPO_PUBLIC_DEMO_KEY;
       if (demoKey && !(await getSession())?.apiKey) await signInWithKey(defaultServer, demoKey);
+      // …and answer the usage question no, so screenshots never show it.
+      if (demoKey && (await loadConsent()) === null) await setConsent("no");
       setSignedIn(await isSignedIn());
       // Demo builds take a screen to open as a launch argument (simctl launch … -demoRoute /lists/…), for screenshots.
       const route = demoKey ? (Settings.get("demoRoute") as string | undefined) : undefined;

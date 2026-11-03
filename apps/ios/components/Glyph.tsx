@@ -41,6 +41,11 @@ export const ICONS = {
   ring: "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z", // an unmarked List mark
   toTop: "M3 2.5h10M8 14V6M4.5 9.5L8 6l3.5 3.5",
   keep: "M8 2v8M4.5 6.5L8 10l3.5-3.5M2.5 11v2.5h11V11", // into the phone: Kept on this iPhone
+  // The iPad sidebar (iPad-Inbox board): its button, the Bin and Settings as it draws them, and the Lists fold.
+  sidebar: "M2 3h12v10H2zM6 3v10",
+  binSide: "M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 9h5.6l.7-9",
+  settings: "M8 10.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4zM8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M3.6 12.4l1.1-1.1M11.3 4.7l1.1-1.1",
+  fold: "M4 6l4 4 4-4",
 };
 
 export function Icon({ d, size = 22, color, width = 1.4 }: { d: string; size?: number; color: string; width?: number }) {

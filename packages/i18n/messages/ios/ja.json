@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "言語",
-    "hint": "PluckはiPhoneの言語を使います。iOSの設定の「Pluck」→「言語」で変更できます。"
+    "hint": "{device, select, ipad {PluckはiPadの言語を使います。iOSの設定の「Pluck」→「言語」で変更できます。} other {PluckはiPhoneの言語を使います。iOSの設定の「Pluck」→「言語」で変更できます。}}"
   },
   "common": {
     "cancel": "キャンセル",
@@ -260,31 +260,39 @@
         "label": "読了",
         "progress": "{count}件中{ticked}件読了",
         "a11y": "{title}を読了にする",
-        "bulk": "読了にする"
+        "bulk": "読了にする",
+        "folded": "{count}件読了"
       },
       "watched": {
         "label": "視聴済み",
         "progress": "{count}件中{ticked}件視聴済み",
         "a11y": "{title}を視聴済みにする",
-        "bulk": "視聴済みにする"
+        "bulk": "視聴済みにする",
+        "folded": "{count}件視聴済み"
       },
       "seen": {
         "label": "閲覧済み",
         "progress": "{count}件中{ticked}件閲覧済み",
         "a11y": "{title}を閲覧済みにする",
-        "bulk": "閲覧済みにする"
+        "bulk": "閲覧済みにする",
+        "folded": "{count}件閲覧済み"
       },
       "done": {
         "label": "完了",
         "progress": "{count}件中{ticked}件完了",
         "a11y": "{title}を完了にする",
-        "bulk": "完了にする"
+        "bulk": "完了にする",
+        "folded": "{count}件完了"
       }
     },
     "unmark": "チェックを外す",
     "toTop": "先頭へ",
     "takeOut": "外す",
-    "takenOut": "{count, plural, other {#件}}を外しました。ライブラリには残っています。"
+    "takenOut": "{count, plural, other {#件}}を外しました。ライブラリには残っています。",
+    "show": "表示",
+    "hide": "隠す",
+    "private": "非公開",
+    "public": "公開"
   },
   "shared": {
     "copied": "Pluckしました。自分用のコピーが「リスト」にあります。",
@@ -425,7 +433,7 @@
     "backArchive": "アーカイブ",
     "didntLoad": "読み込めませんでした。",
     "didntLoadBody": "なくなったか、接続が切れているようです。少ししてからもう一度お試しください。",
-    "notKept": "まだこのiPhoneにありません。",
+    "notKept": "{device, select, ipad {まだこのiPadにありません。} other {まだこのiPhoneにありません。}}",
     "notKeptBody": "オンラインに戻ると開きます。Wi-Fi接続中に、新しいアイテムをこのiPhoneに残してオフラインで読めるようにします。",
     "minutesLeft": "{percent} · 残り{minutes}分",
     "openOriginal": "元のページを開く",
@@ -460,7 +468,7 @@
     "handle": "ハンドル",
     "signOut": "サインアウト",
     "signOutTitle": "サインアウトしますか？",
-    "signOutBody": "このiPhoneで送信待ちのPluckは、もう一度サインインするまでここに残ります。",
+    "signOutBody": "{device, select, ipad {このiPadで送信待ちのPluckは、もう一度サインインするまでここに残ります。} other {このiPhoneで送信待ちのPluckは、もう一度サインインするまでここに残ります。}}",
     "accountFootnote": "名前とハンドルは公開したリストにだけ表示され、ほかの場所には出ません。",
     "connectorCopied": "コピーしました。お使いのAIに貼り付けてください。",
     "copied": "コピーしました",
@@ -507,13 +515,13 @@
     "clearTitle": "オフライン用のコピーを消去しますか？",
     "clearBody": "ライブラリはサーバーに残ります。使っているうちに、アプリがまたダウンロードします。",
     "clear": "消去",
-    "keepFootnote": "Wi-Fi接続中に、インボックス・あとで・リストの新しいアイテム{count}件を画像ごとこのiPhoneに残し、接続がなくても読めるようにします。ほかのアイテムも、ダウンロードの印をタップすれば、外すまでここに残せます。",
+    "keepFootnote": "{device, select, ipad {Wi-Fi接続中に、インボックス・あとで・リストの新しいアイテム{count}件を画像ごとこのiPadに残し、接続がなくても読めるようにします。ほかのアイテムも、ダウンロードの印をタップすれば、外すまでここに残せます。} other {Wi-Fi接続中に、インボックス・あとで・リストの新しいアイテム{count}件を画像ごとこのiPhoneに残し、接続がなくても読めるようにします。ほかのアイテムも、ダウンロードの印をタップすれば、外すまでここに残せます。}}",
     "server": "サーバー",
-    "serverBody": "このiPhoneは{host}を使っています。別のサーバーを使うには、サインアウトしてから「自分のサーバーを使う」を選んでください。",
+    "serverBody": "{device, select, ipad {このiPadは{host}を使っています。別のサーバーを使うには、サインアウトしてから「自分のサーバーを使う」を選んでください。} other {このiPhoneは{host}を使っています。別のサーバーを使うには、サインアウトしてから「自分のサーバーを使う」を選んでください。}}",
     "iconLight": "ライト",
     "iconDark": "ダーク",
     "iconA11y": "{name}アイコン",
-    "iconFootnote": "変わるのはアイコンだけです。アプリ本体はiPhoneの設定に従います。",
+    "iconFootnote": "{device, select, ipad {変わるのはアイコンだけです。アプリ本体はiPadの設定に従います。} other {変わるのはアイコンだけです。アプリ本体はiPhoneの設定に従います。}}",
     "usage": "利用状況を共有",
     "usageFootnote": "どの画面を使っているかを、アカウントと結びつけて送ります。Pluckしたものは送りません。クラッシュレポートはどちらを選んでも、名前を外して送られます。",
     "tipTitle": "共有メニューでPluckを先頭に",
@@ -569,9 +577,47 @@
     "stars": "スター{count}",
     "pages": "{count}ページ",
     "offline": "オンラインに戻ると再生できます。",
-    "keep": "このiPhoneに保存",
-    "kept": "このiPhoneに保存済み",
-    "letGo": "このiPhoneに保存しないようにしました。",
+    "keep": "{device, select, ipad {このiPadに保存} other {このiPhoneに保存}}",
+    "kept": "{device, select, ipad {このiPadに保存済み} other {このiPhoneに保存済み}}",
+    "letGo": "{device, select, ipad {このiPadに保存しないようにしました。} other {このiPhoneに保存しないようにしました。}}",
     "saveFile": "“ファイル”に保存"
+  },
+  "ipad": {
+    "pickSomething": "読むものがあれば、ここで選べます。",
+    "showSidebar": "サイドバーを表示",
+    "hideSidebar": "サイドバーを隠す",
+    "showLists": "リストを表示",
+    "hideLists": "リストを隠す",
+    "filter": {
+      "all": "すべて",
+      "links": "リンク",
+      "notes": "メモ",
+      "todos": "ToDo",
+      "things": "モノ"
+    },
+    "listsSub": "リスト{count}件、公開{shared}件",
+    "listMeta": "{count}件 · {count}件中{ticked}件完了",
+    "results": "「{q}」の結果 {count}件",
+    "empty": {
+      "sub": "仕分けるものはありません",
+      "title": "インボックスは空です。",
+      "body": "どのアプリでも共有シートからPluckできます。<key>⌘</key> <key>N</key> でメモを書くこともできます。",
+      "messages": "メッセージ",
+      "mail": "メール",
+      "notes": "メモ"
+    },
+    "add": {
+      "new": "{kind, select, note {新しいメモ} todo {新しいToDo} other {新しいモノ}}",
+      "link": "リンク",
+      "pluck": "Pluckする",
+      "titlePlaceholder": "タイトル",
+      "keys": "<key>⌘</key> <key>↩</key> でPluck   <key>esc</key> でキャンセル"
+    },
+    "keys": {
+      "paste": "ペーストしてPluck",
+      "sidebar": "サイドバーを表示/非表示",
+      "next": "次へ",
+      "previous": "前へ"
+    }
   }
 }

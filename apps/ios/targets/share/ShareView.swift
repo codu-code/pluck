@@ -195,7 +195,8 @@ struct ShareView: View {
       Text("signedOutBody").foregroundStyle(Palette.ink2(dark))
       primary("openToSignIn") { model.openApp() }
     case .queued:
-      header(String(localized: "queuedTitle"), subtitle: String(localized: "queuedBody"))
+      // On iPad the words say iPad (the share sheet runs on both since Pluck for iPad).
+      header(String(localized: "queuedTitle"), subtitle: UIDevice.current.userInterfaceIdiom == .pad ? String(localized: "queuedBodyPad") : String(localized: "queuedBody"))
       primary("done") { model.close() }
     case let .failed(message):
       Text("failedTitle").font(Typeface.heading)

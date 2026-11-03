@@ -10,6 +10,7 @@ import { useCover, useKeptByHand } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS, KindGlyph } from "./Glyph";
+import { useSplit } from "./split/context";
 
 const COMMIT = 80; // how far a swipe goes before letting go moves the item
 const GAP = 8; // between the swipe's pill and the row
@@ -55,6 +56,9 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
   const note = () => router.push({ pathname: "/note", params: { id: item.id } });
   const swipe = useRef<SwipeableMethods>(null);
   const held = useRef(false);
+  // On iPad (the Archive, the Bin, Search in the list column) the Item opens in the detail column beside it.
+  const split = useSplit();
+  const open = split?.detail?.kind === "item" && split.detail.id === item.id;
 
   const row = (
     <Pressable
@@ -62,6 +66,7 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
         if (held.current) return void (held.current = false); // the lift after a long press is not a tap
         if (selecting) onSelect?.();
         else if (onPress) onPress();
+        else if (split) split.show({ kind: "item", id: item.id });
         else router.push(`/items/${item.id}`);
       }}
       onLongPress={onSelect && !selecting ? () => { held.current = true; void Haptics.selectionAsync(); onSelect(); } : undefined}
@@ -94,7 +99,7 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
       }}
     >
       {({ pressed }) => (
-        <View style={[styles.row, { backgroundColor: pressed || selected ? t.selected : t.ground, borderBottomColor: t.line }]}>
+        <View style={[styles.row, { backgroundColor: pressed || selected || open ? t.selected : t.ground, borderBottomColor: t.line }]}>
           {n !== undefined && <Text maxFontSizeMultiplier={scale.badge} style={[font.regular, styles.n, { color: t.ink2 }]}>{n}</Text>}
           {selecting ? (
             // The tile's place holds the tick ring todos use for Done: filled when chosen.

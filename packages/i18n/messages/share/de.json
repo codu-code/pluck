@@ -6,6 +6,7 @@
   "openToSignIn": "Pluck öffnen und anmelden",
   "queuedTitle": "Gepflückt. Wird synchronisiert.",
   "queuedBody": "Es ist auf deinem iPhone und wird hochgeladen, sobald du wieder online bist.",
+  "queuedBodyPad": "Es ist auf deinem iPad und wird hochgeladen, sobald du wieder online bist.",
   "done": "Fertig",
   "failedTitle": "Das ließ sich nicht pflücken.",
   "nothingToKeep": "Hier gibt es nichts, was Pluck behalten kann.",

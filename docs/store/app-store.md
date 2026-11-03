@@ -1,6 +1,6 @@
 # App Store launch
 
-Everything for the iPhone listing, the featuring nomination and the launch posts. The English copy lives in `en.json` (the source the nine translations follow) and on the design canvas as the `AppStoreListing` board. Research behind it: the Pluck App Store Research page, 26 October 2026.
+Everything for the iPhone and iPad listing, the featuring nomination and the launch posts. The English copy lives in `en.json` (the source the nine translations follow) and on the design canvas as the `AppStoreListing` board. Research behind it: the Pluck App Store Research page, 26 October 2026.
 
 ## Product page
 
@@ -33,13 +33,36 @@ Before launch, swap each drawn phone screen for a real Simulator capture of the 
 | Thing | Linen duvet cover, king, €89 |
 | List | Lisbon, May: six places with a note each |
 
+### iPad
+
+`ipad/with-text` and `ipad/art-only` (2064 × 2752, PNG with no alpha), the `AppStore-iPad-1` to `7` boards. Captions in `ipad/strings.en.json`. Frames 2 to 5 are real captures of the sample library on the 13 in iPad Pro Simulator, in portrait (5 in dark mode). Frames 1, 6 and 7 are still drawn:
+
+- 1 is the share sheet over Safari, which needs driving by hand.
+- 6 and 7 are Settings, which against a local server shows `127.0.0.1` and no connected AI tool. Capture them from a TestFlight build signed in to getpluck.io with an AI tool connected.
+
+To make them again:
+
+```sh
+cd packages/extract/fixtures/pages && python3 -m http.server 4181 --bind 127.0.0.1 &   # or the fixtures container on 4180
+PLUCK_FIXTURES=http://127.0.0.1:4181 node scripts/demo-seed.mjs http://127.0.0.1:3000 <new email> --store
+pnpm --filter @pluck/web worker   # reads the picture and the PDF; stop it once both are done
+cd apps/ios && EXPO_NO_DOTENV=1 PLUCK_SERVER=http://127.0.0.1:3000 EXPO_PUBLIC_DEMO_KEY=<key> \
+  xcodebuild -workspace ios/Pluck.xcworkspace -scheme Pluck -configuration Release -sdk iphonesimulator \
+  -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build-release CODE_SIGN_IDENTITY=- build
+xcrun simctl status_bar booted override --time 9:41 --batteryState charged --batteryLevel 100
+xcrun simctl launch booted io.getpluck.app -demoDetail item:<id>   # then: xcrun simctl io booted screenshot 2.png
+node scripts/store-ipad.mjs <dir with 2.png … 7.png>
+```
+
+`EXPO_NO_DOTENV=1` keeps `.env.local`'s PostHog key out of the build. Each number's launch arguments: 2 `-demoDetail item:<kitchen>`, 3 `-demoDetail item:<habits>`, 4 `-demoRoute /lists -demoDetail list:<Lisbon, May>`, 5 (dark: `xcrun simctl ui booted appearance dark`) `-demoSection archive -demoDetail item:<Pastéis de Belém>`.
+
 No app preview video for launch. A preview must be a screen recording of the app itself (886 × 1920, 15 to 30 s).
 
 ## Featuring nomination
 
 App Store Connect, Pluck, Featuring, Nominations, Create Nomination. Send it at least three weeks before launch. The type and related apps can't change after it is sent.
 
-- **Name:** Pluck for iPhone, launch
+- **Name:** Pluck for iPhone and iPad, launch (14 January 2027)
 - **Type:** App Launch
 - **Description:** Pluck is a read-it-later app for everything, not just articles: a recipe from TikTok, a longread, a travel PDF, a lamp to buy, a note to self. You pluck it from the share sheet in one tap and the app never opens. Later, you sort it by hand, or ask the AI tool you already use, because Pluck has no AI inside. It connects to Claude, ChatGPT, Cursor and others over MCP, an open standard, and that AI can never delete anything. Things you leave alone move to the Archive after 30 days. Nothing is deleted. Pluck is free and open source, so it can't vanish the way Pocket and Omnivore did.
 - **What is unique:** A fresh take on a familiar category. Read-it-later apps either nag you or quietly delete things. Pluck does neither: untouched items go to an Archive you can search, and the share sheet saves in place without opening the app. There's no AI in the app. People bring their own AI, and every change it makes is marked and can be undone in one tap. The whole app is open source, and anyone can run their own server.

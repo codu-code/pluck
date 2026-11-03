@@ -9,6 +9,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
+import { SidebarButton } from "@/components/split/Sidebar";
+import { useSplit } from "@/components/split/context";
 import { Empty, usePull } from "@/components/Screen";
 import { toast } from "@/components/Toast";
 import { keys, library, useArchive, useMe, usePatchItem } from "@/lib/data";
@@ -38,6 +40,7 @@ export default function Archive() {
   const tr = useTranslations("ios");
   const format = useFormatter();
   const insets = useSafeAreaInsets();
+  const split = useSplit();
   const qc = useQueryClient();
   const data = useArchive();
   const pull = usePull(() => data.refetch());
@@ -87,10 +90,13 @@ export default function Archive() {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
-        <Pressable accessibilityRole="button" accessibilityLabel={tr("common.backToLists")} onPress={() => router.back()} style={styles.back}>
-          <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("tabs.lists")}</Text>
-        </Pressable>
+        {/* On iPad the Archive is a place in the sidebar, not a screen pushed from Lists. */}
+        {split ? <SidebarButton /> : (
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("common.backToLists")} onPress={() => router.back()} style={styles.back}>
+            <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("tabs.lists")}</Text>
+          </Pressable>
+        )}
       </View>
       <View style={styles.head}>
         <Text accessibilityRole="header" style={[font.bold, styles.title, { color: t.ink }]}>{tr("archive.title")}</Text>
@@ -105,7 +111,7 @@ export default function Archive() {
         onEndReached={() => { if (data.hasNextPage && !data.isFetchingNextPage) void data.fetchNextPage(); }}
         onEndReachedThreshold={0.5}
         ListHeaderComponent={
-          <Pressable accessibilityRole="button" onPress={() => router.push("/bin")}
+          <Pressable accessibilityRole="button" onPress={() => (split ? split.go("bin") : router.push("/bin"))}
             style={({ pressed }) => [styles.bin, { borderBottomColor: t.line, backgroundColor: pressed ? t.selected : t.ground }]}>
             <Icon d={ICONS.bin} size={18} color={t.ink} width={1.5} />
             <View style={{ flex: 1, gap: 2 }}>

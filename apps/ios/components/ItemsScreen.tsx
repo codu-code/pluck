@@ -3,12 +3,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect, usePathname } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { ActionSheetIOS, ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInUp } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
 import { keys, library, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
+import { shown, useSplit } from "./split/context";
+import { EmptyInbox } from "./split/EmptyInbox";
+import { SplitRow } from "./split/SplitRow";
 import { Icon, ICONS } from "./Glyph";
 import { ItemRow } from "./ItemRow";
 import { Empty, TitledList, usePull } from "./Screen";
@@ -32,7 +35,13 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const waiting = usePending();
   const online = useOnline();
   const pending = waiting.data ?? 0;
-  const rows = items.data?.items ?? [];
+  const split = useSplit();
+  // iPad's kind chips (iPad-Inbox): All, Links, Notes, Todos, Things.
+  const [only, setOnly] = useState<Filter>("all");
+  const rows = (items.data?.items ?? []).filter((i) => only === "all" || !split || FILTERS[only].includes(i.kind)); // narrower than 600 the chips are gone, and so is their filter
+  // ↓ and ↑ on iPad's keyboard walk the rows of the column you are looking at.
+  const rowIds = rows.map((r) => r.id).join(",");
+  useFocusEffect(useCallback(() => void (shown.rows = rowIds ? rowIds.split(",") : []), [rowIds]));
 
   // Rows that were not here last time slide in (a pluck arriving); the first paint and rows scrolled into view do not.
   const seen = useRef<Set<string> | null>(null);
@@ -111,9 +120,25 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     ]} />
   ) : null;
 
+  const sub = !counts.data ? " " : status === "inbox" && counts.data.inbox === 0 ? tr("ipad.empty.sub") : tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] });
   return (
     <TitledList
       title={picked ? tr("items.selected", { count: picked.size }) : tr(`tabs.${status}`)}
+      sub={split && !picked ? sub : undefined}
+      bar={split && (picked ? (
+        <Pressable accessibilityRole="button" onPress={() => setPicked(null)} style={styles.textButton}>
+          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>{tr("common.done")}</Text>
+        </Pressable>
+      ) : (
+        <>
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("tabs.search")} onPress={() => router.navigate("/search")} hitSlop={8}>
+            <Icon d={ICONS.search} size={20} color={t.actionInk} />
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("actions.select")} onPress={() => setPicked(new Set())} hitSlop={8}>
+            <Icon d={ICONS.more} size={20} color={t.actionInk} />
+          </Pressable>
+        </>
+      ))}
       right={picked ? (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Pressable accessibilityRole="button" onPress={() => setPicked(new Set(rows.map((r) => r.id)))} style={styles.textButton}>
@@ -135,7 +160,24 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
           </Pressable>
         </View>
       )}
-      head={actions ?? (
+      head={actions ?? (split ? (
+        <View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+            {(["all", "links", "notes", "todos", "things"] as const).map((f) => (
+              <Pressable key={f} accessibilityRole="button" accessibilityState={{ selected: only === f }} onPress={() => setOnly(f)}
+                style={[styles.chip, only === f ? { backgroundColor: t.ink } : { borderWidth: 1, borderColor: t.lineStrong }]}>
+                <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { fontSize: 13, color: only === f ? t.ground : t.ink }]}>{tr(`ipad.filter.${f}`)}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+          {online && pending > 0 && (
+            <View style={[styles.sync, styles.syncWide, { backgroundColor: t.syncBg }]}>
+              <View style={[styles.syncDot, { backgroundColor: t.syncDot }]} />
+              <Text style={[font.regular, { color: t.syncInk, fontSize: 12 }]}>{tr("items.toSync", { count: pending })}</Text>
+            </View>
+          )}
+        </View>
+      ) : (
         <View style={styles.sub}>
           <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
             {counts.data ? tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] }) : " "}
@@ -147,7 +189,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
             </View>
           )}
         </View>
-      )}
+      ))}
       layout
       data={rows}
       extraData={picked} // rows redraw when the selection changes, not only when the data does
@@ -156,14 +198,20 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         // No exit animation: inside a FlatList on the new architecture, a row leaving with one can stay drawn after it
         // has gone from the list (an archived row that would not move). Arriving rows still slide in.
         <Animated.View entering={fresh.has(item.id) ? FadeInUp.duration(260) : undefined}>
-          <ItemRow item={item} onMove={(to) => move(item, to)} selecting={Boolean(picked)} selected={Boolean(picked?.has(item.id))} onSelect={() => select(item.id)} />
+          {split ? (
+            <SplitRow item={item} open={split.detail?.kind === "item" && split.detail.id === item.id} onOpen={() => split.show({ kind: "item", id: item.id })}
+              onMove={(to) => move(item, to)} selecting={Boolean(picked)} selected={Boolean(picked?.has(item.id))} onSelect={() => select(item.id)} />
+          ) : (
+            <ItemRow item={item} onMove={(to) => move(item, to)} selecting={Boolean(picked)} selected={Boolean(picked?.has(item.id))} onSelect={() => select(item.id)} />
+          )}
         </Animated.View>
       )}
       refreshControl={
         <RefreshControl {...pull} />
       }
       ListEmptyComponent={
-        items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
+        items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : split && status === "inbox" && only === "all" ? <EmptyInbox />
+          : status === "inbox"
           ? <Empty art={<ShareRow />} title={tr("items.empty.inbox.title")} body={tr("items.empty.inbox.body")} />
           : <Empty art={<SwipeToLater />} title={tr("items.empty.later.title")} body={tr("items.empty.later.body")} />
       }
@@ -171,7 +219,18 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   );
 }
 
+type Filter = "all" | "links" | "notes" | "todos" | "things";
+const FILTERS: Record<Exclude<Filter, "all">, Item["kind"][]> = {
+  links: ["link", "video", "pdf", "image"],
+  notes: ["note"],
+  todos: ["todo"],
+  things: ["thing"],
+};
+
 const styles = StyleSheet.create({
+  chips: { flexDirection: "row", gap: 6, paddingHorizontal: 22, paddingTop: 6, paddingBottom: 12 },
+  chip: { height: 30, paddingHorizontal: 12, borderRadius: 15, justifyContent: "center" },
+  syncWide: { alignSelf: "flex-start", marginLeft: 22, marginBottom: 10 },
   headerButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   textButton: { minHeight: 44, minWidth: 44, paddingHorizontal: 10, alignItems: "center", justifyContent: "center" },
   avatar: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },

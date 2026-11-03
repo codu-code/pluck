@@ -6,6 +6,7 @@
   "openToSignIn": "Open Pluck om in te loggen",
   "queuedTitle": "Geplukt. Synchroniseert straks.",
   "queuedBody": "Het staat op je telefoon en wordt verstuurd zodra je weer online bent.",
+  "queuedBodyPad": "Het staat op je iPad en wordt verstuurd zodra je weer online bent.",
   "done": "Klaar",
   "failedTitle": "Plukken lukte niet.",
   "nothingToKeep": "Niets wat Pluck hier kan bewaren.",

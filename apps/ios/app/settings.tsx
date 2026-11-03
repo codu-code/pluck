@@ -10,9 +10,11 @@ import { ActionSheetIOS, Alert, Image, Linking, Pressable, ScrollView, StyleShee
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
+import { useSplit } from "@/components/split/context";
+import { SidebarButton } from "@/components/split/Sidebar";
 import { toast } from "@/components/Toast";
 import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
-import { locale } from "@/lib/i18n";
+import { device, locale } from "@/lib/i18n";
 import { kv } from "@/lib/kv";
 import { clearKept, keepSetting, keptSize, keys, queryClient, setKeepSetting, useMe, useTags } from "@/lib/data";
 import { KEEP } from "@/lib/keep";
@@ -27,15 +29,21 @@ const ICONS_SHOWN: { id: AppIcon; label: "iconLight" | "iconDark"; art: number }
 const EXPIRY: UserSettings["expiryDays"][] = [14, 30, 60, 90, null];
 const SCOPES: ["scopeInboxLater" | "scopeInbox", UserSettings["expiryScope"]][] = [["scopeInboxLater", "inbox_later"], ["scopeInbox", "inbox"]];
 
+// The groups of Settings. On iPad (iPad-Settings) they are rows in the list column and the one open shows in the
+// detail column; on iPhone the sheet shows them all, in this order.
+export type Part = "account" | "aiTools" | "emailIn" | "expiry" | "library" | "language" | "appIcon" | "privacy" | "delete";
+const PARTS: Part[] = ["account", "aiTools", "emailIn", "expiry", "library", "language", "appIcon", "privacy", "delete"];
+
 // Settings (IOSSettings board): everything the web's Settings does, so the phone never needs it.
 // Account things (AI tools, export, delete) need the "account" scope; a phone signed in before it asks to sign in again.
-export default function Settings() {
+export default function Settings({ part }: { part?: Part }) {
   const tl = useTranslations("ios.language");
   const tc = useTranslations("ios.common");
   const tr = useTranslations("ios.settings");
   const format = useFormatter();
   const t = useTheme();
   const insets = useSafeAreaInsets();
+  const split = useSplit();
   const qc = useQueryClient();
   const me = useMe();
   const tags = useTags();
@@ -74,6 +82,7 @@ export default function Settings() {
   const days = [0, 1, 2, 3, 4, 5, 6].map((d) => format.dateTime(new Date(2024, 0, 7 + d), { weekday: "long" }));
   const expiryName = (d: UserSettings["expiryDays"]) => (d ? tr("days", { count: d }) : tr("never"));
   const scope = SCOPES.find(([, s]) => s === settings?.expiryScope)?.[0];
+  const shows = (p: Part) => !part || part === p;
 
   // One of a few choices from the system action sheet.
   const choose = (title: string, options: string[], done: (i: number) => void) =>
@@ -152,7 +161,8 @@ export default function Settings() {
   const card = [styles.card, { backgroundColor: t.surface }];
   const label = [font.regular, styles.label, { color: t.ink }];
   const value = [font.regular, styles.value, { color: t.ink2 }];
-  const section = (title: string) => <Text accessibilityRole="header" style={[font.regular, styles.section, { color: t.ink2 }]}>{title.toUpperCase()}</Text>;
+  // On iPad's detail column the group's name is the title already.
+  const section = (title: string) => (part ? null : <Text accessibilityRole="header" style={[font.regular, styles.section, { color: t.ink2 }]}>{title.toUpperCase()}</Text>);
   const footnote = (text: string) => <Text style={[font.regular, styles.footnote, { color: t.ink2 }]}>{text}</Text>;
   // A row of an inset group: label, then the value and a chevron when it opens something; they stack when the text is large.
   const row = (children: ReactNode, onPress: (() => void) | undefined, last = false, a11y?: string) => (
@@ -184,68 +194,80 @@ export default function Settings() {
     </View>
   );
 
+  if (split && !part) return <Sections email={profile?.email ?? session?.email ?? ""} />;
+  const partTitle = part === "language" ? tl("label") : part === "delete" ? tr("deleteTitle") : part ? tr(`sections.${part}`) : tr("title");
+
   return (
-    // A sheet: it already sits below the status bar, so no top inset.
-    <ScrollView style={{ backgroundColor: t.rail }} contentContainerStyle={[styles.page, { paddingTop: 20, paddingBottom: insets.bottom + 24 }]}>
+    // A sheet: it already sits below the status bar, so no top inset. On iPad, the detail column.
+    <ScrollView style={{ backgroundColor: part ? t.ground : t.rail }}
+      contentContainerStyle={part ? [styles.page, styles.wide, { paddingTop: insets.top + 52, paddingBottom: insets.bottom + 24 }] : [styles.page, { paddingTop: 20, paddingBottom: insets.bottom + 24 }]}>
       <View style={styles.head}>
-        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.title, { color: t.ink }]}>{tr("title")}</Text>
-        <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
-          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tc("done")}</Text>
-        </Pressable>
+        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, part ? styles.wideTitle : styles.title, { color: t.ink }]}>{partTitle}</Text>
+        {!split && ( // on iPad Settings is a place in the sidebar, with nothing to close>
+          <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tc("done")}</Text>
+          </Pressable>
+        )}
       </View>
 
-      <View style={styles.group}>
-        {section(tr("sections.account"))}
-        <View style={card}>
-          <View style={[styles.account, { borderBottomColor: t.tint }]}>
-            <View style={[styles.avatar, { backgroundColor: t.avatar }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 13 }]}>{initials}</Text></View>
-            <View style={{ flex: 1, minWidth: 0 }}>
-              <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{profile?.name || tr("yourAccount")}</Text>
-              <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{profile?.email ?? session?.email ?? ""}</Text>
-            </View>
-          </View>
-          {row(pair(tr("name"), profile?.name || tr("addName")), editName)}
-          {row(pair(tr("handle"), profile?.handle ? `@${profile.handle}` : ""), () => router.push({ pathname: "/handle", params: { host } }))}
-          {row(<Text style={label}>{tr("signOut")}</Text>, () => Alert.alert(tr("signOutTitle"), tr("signOutBody"), [
-            { text: tc("cancel"), style: "cancel" },
-            { text: tr("signOut"), style: "destructive", onPress: () => void signOut() },
-          ]), true)}
-        </View>
-        {footnote(tr("accountFootnote"))}
-      </View>
-
-      <View style={styles.group}>
-        {section(tr("sections.aiTools"))}
-        <View style={card}>
-          {copyRow(`${host}/mcp`, true, async () => { await Clipboard.setStringAsync(`${server}/mcp`); setCopied(true); toast(tr("connectorCopied")); }, copied ? tr("copied") : tr("copyConnector"))}
-          {(tools.data ?? []).map((tool) => row(
-            <>
+      {shows("account") && (
+        <View style={styles.group}>
+          {section(tr("sections.account"))}
+          <View style={card}>
+            <View style={[styles.account, { borderBottomColor: t.tint }]}>
+              <View style={[styles.avatar, { backgroundColor: t.avatar }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 13 }]}>{initials}</Text></View>
               <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={label}>{tool.name}</Text>
-                <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("connected", { date: format.dateTime(new Date(tool.connectedAt), { day: "numeric", month: "short" }) })}</Text>
+                <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{profile?.name || tr("yourAccount")}</Text>
+                <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{profile?.email ?? session?.email ?? ""}</Text>
               </View>
-              <Text style={[font.regular, { color: t.danger, fontSize: 15 }]}>{tr("disconnect")}</Text>
-            </>,
-            () => disconnect(tool),
-            false,
-            tr("disconnectA11y", { name: tool.name }),
-          ))}
-          <Text style={[font.regular, styles.caption, { color: t.ink2 }]}>
-            {tr(needsAccount ? "toolsNeedAccount" : tools.data?.length === 0 ? "toolsNone" : "toolsHint")}
-          </Text>
+            </View>
+            {row(pair(tr("name"), profile?.name || tr("addName")), editName)}
+            {row(pair(tr("handle"), profile?.handle ? `@${profile.handle}` : ""), () => router.push({ pathname: "/handle", params: { host } }))}
+            {row(<Text style={label}>{tr("signOut")}</Text>, () => Alert.alert(tr("signOutTitle"), tr("signOutBody", { device }), [
+              { text: tc("cancel"), style: "cancel" },
+              { text: tr("signOut"), style: "destructive", onPress: () => void signOut() },
+            ]), true)}
+          </View>
+          {footnote(tr("accountFootnote"))}
         </View>
-      </View>
+      )}
 
-      <View style={styles.group}>
-        {section(tr("sections.emailIn"))}
-        <View style={card}>
-          {address.data ? copyRow(address.data, false, async () => { await Clipboard.setStringAsync(address.data!); toast(tr("addressCopied")); }, tr("copyEmailIn")) : null}
-          {row(<Text style={[font.regular, styles.label, { color: t.actionInk }]}>{tr("newAddress")}</Text>, newAddress, true)}
+      {shows("aiTools") && (
+        <View style={styles.group}>
+          {section(tr("sections.aiTools"))}
+          <View style={card}>
+            {copyRow(`${host}/mcp`, true, async () => { await Clipboard.setStringAsync(`${server}/mcp`); setCopied(true); toast(tr("connectorCopied")); }, copied ? tr("copied") : tr("copyConnector"))}
+            {(tools.data ?? []).map((tool) => row(
+              <>
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <Text style={label}>{tool.name}</Text>
+                  <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("connected", { date: format.dateTime(new Date(tool.connectedAt), { day: "numeric", month: "short" }) })}</Text>
+                </View>
+                <Text style={[font.regular, { color: t.danger, fontSize: 15 }]}>{tr("disconnect")}</Text>
+              </>,
+              () => disconnect(tool),
+              false,
+              tr("disconnectA11y", { name: tool.name }),
+            ))}
+            <Text style={[font.regular, styles.caption, { color: t.ink2 }]}>
+              {tr(needsAccount ? "toolsNeedAccount" : tools.data?.length === 0 ? "toolsNone" : "toolsHint")}
+            </Text>
+          </View>
         </View>
-        {footnote(tr("emailInFootnote"))}
-      </View>
+      )}
 
-      {settings && (
+      {shows("emailIn") && (
+        <View style={styles.group}>
+          {section(tr("sections.emailIn"))}
+          <View style={card}>
+            {address.data ? copyRow(address.data, false, async () => { await Clipboard.setStringAsync(address.data!); toast(tr("addressCopied")); }, tr("copyEmailIn")) : null}
+            {row(<Text style={[font.regular, styles.label, { color: t.actionInk }]}>{tr("newAddress")}</Text>, newAddress, true)}
+          </View>
+          {footnote(tr("emailInFootnote"))}
+        </View>
+      )}
+
+      {settings && shows("expiry") && (
         <View style={styles.group}>
           {section(tr("sections.expiry"))}
           <View style={card}>
@@ -266,37 +288,41 @@ export default function Settings() {
         </View>
       )}
 
-      <View style={styles.group}>
-        {section(tr("sections.library"))}
-        <View style={card}>
-          {row(pair(tr("tags"), `${tags.data?.length ?? ""}`), () => router.push("/tags"))}
-          {row(pair(tr("export"), tr("byEmail")), () => void exportAll())}
-          <View style={[styles.switchRow, { borderBottomColor: t.tint, borderBottomWidth: StyleSheet.hairlineWidth * 2 }]}>
-            <Text style={[label, { flex: 1 }]}>{tr("keep")}</Text>
-            <Switch accessibilityLabel={tr("keep")} value={keep} trackColor={{ true: t.accent }} onValueChange={(on) => {
-              setKeep(on);
-              void setKeepSetting(on).then(measure);
-            }} />
+      {shows("library") && (
+        <View style={styles.group}>
+          {section(tr("sections.library"))}
+          <View style={card}>
+            {row(pair(tr("tags"), `${tags.data?.length ?? ""}`), () => router.push("/tags"))}
+            {row(pair(tr("export"), tr("byEmail")), () => void exportAll())}
+            <View style={[styles.switchRow, { borderBottomColor: t.tint, borderBottomWidth: StyleSheet.hairlineWidth * 2 }]}>
+              <Text style={[label, { flex: 1 }]}>{tr("keep")}</Text>
+              <Switch accessibilityLabel={tr("keep")} value={keep} trackColor={{ true: t.accent }} onValueChange={(on) => {
+                setKeep(on);
+                void setKeepSetting(on).then(measure);
+              }} />
+            </View>
+            {row(<><Text style={label}>{tr("offline")}</Text><Text style={value}>{tr("offlineValue", { count: cache.items, mb: Math.max(1, Math.round(cache.bytes / 1_000_000)) })}</Text></>, () =>
+              Alert.alert(tr("clearTitle"), tr("clearBody"), [
+                { text: tc("cancel"), style: "cancel" },
+                { text: tr("clear"), onPress: async () => { queryClient.clear(); await Promise.all([kv.remove("queryCache"), clearKept()]); setCache({ items: 0, bytes: 0 }); } },
+              ]))}
+            {row(<><Text style={label}>{tr("server")}</Text><Text style={value}>{host}</Text></>, () =>
+              Alert.alert(tr("server"), tr("serverBody", { host, device })), true)}
           </View>
-          {row(<><Text style={label}>{tr("offline")}</Text><Text style={value}>{tr("offlineValue", { count: cache.items, mb: Math.max(1, Math.round(cache.bytes / 1_000_000)) })}</Text></>, () =>
-            Alert.alert(tr("clearTitle"), tr("clearBody"), [
-              { text: tc("cancel"), style: "cancel" },
-              { text: tr("clear"), onPress: async () => { queryClient.clear(); await Promise.all([kv.remove("queryCache"), clearKept()]); setCache({ items: 0, bytes: 0 }); } },
-            ]))}
-          {row(<><Text style={label}>{tr("server")}</Text><Text style={value}>{host}</Text></>, () =>
-            Alert.alert(tr("server"), tr("serverBody", { host })), true)}
+          {footnote(tr("keepFootnote", { count: KEEP, device }))}
         </View>
-        {footnote(tr("keepFootnote", { count: KEEP }))}
-      </View>
+      )}
 
       {/* iOS keeps a language per app (Settings, Pluck, Language); changing it restarts Pluck in that language. */}
-      <View style={styles.group}>
-        {section(tl("label"))}
-        <View style={card}>{row(pair(LOCALE_NAMES[locale], ""), () => void Linking.openSettings(), true)}</View>
-        {footnote(tl("hint"))}
-      </View>
+      {shows("language") && (
+        <View style={styles.group}>
+          {section(tl("label"))}
+          <View style={card}>{row(pair(LOCALE_NAMES[locale], ""), () => void Linking.openSettings(), true)}</View>
+          {footnote(tl("hint", { device }))}
+        </View>
+      )}
 
-      {appIcons.supported && icon && (
+      {appIcons.supported && icon && shows("appIcon") && (
         <View style={styles.group}>
           {section(tr("sections.appIcon"))}
           <View style={card} accessibilityRole="radiogroup">
@@ -315,11 +341,11 @@ export default function Settings() {
               </Pressable>
             ))}
           </View>
-          {footnote(tr("iconFootnote"))}
+          {footnote(tr("iconFootnote", { device }))}
         </View>
       )}
 
-      {analyticsOn && (
+      {analyticsOn && shows("privacy") && (
         <View style={styles.group}>
           {section(tr("sections.privacy"))}
           <View style={card}>
@@ -332,28 +358,68 @@ export default function Settings() {
         </View>
       )}
 
-      <View style={[styles.tip, { backgroundColor: t.surface }]}>
+      {!part && <View style={[styles.tip, { backgroundColor: t.surface }]}>
         <Image source={require("../assets/icon.png")} style={{ width: 36, height: 36, borderRadius: 8 }} />
         <View style={{ flex: 1, gap: 2 }}>
           <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tr("tipTitle")}</Text>
           <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]}>{tr("tipBody")}</Text>
         </View>
-      </View>
+      </View>}
 
-      <Pressable accessibilityRole="button" onPress={deleteAll} style={[styles.delete, { backgroundColor: t.surface }]}>
+      {part === "delete" && <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 22 }]}>{tr("deleteBody")}</Text>}
+      {shows("delete") && <Pressable accessibilityRole="button" onPress={deleteAll} style={[styles.delete, { backgroundColor: t.surface }]}>
         <Text style={[font.medium, { color: t.danger, fontSize: 15, textAlign: "center" }]}>{tr("deleteAll")}</Text>
-      </Pressable>
+      </Pressable>}
 
       {/* Which build this is, from the app itself, to match against TestFlight. */}
-      <Text selectable style={[font.regular, styles.footnote, { color: t.ink2, textAlign: "center" }]}>
+      {shows("delete") && <Text selectable style={[font.regular, styles.footnote, { color: t.ink2, textAlign: "center" }]}>
         Pluck {Application.nativeApplicationVersion} ({Application.nativeBuildVersion})
-      </Text>
+      </Text>}
+    </ScrollView>
+  );
+}
+
+// The list column on iPad (iPad-Settings): Settings, the email, then a row per group, the open one on --selected.
+function Sections({ email }: { email: string }) {
+  const t = useTheme();
+  const tr = useTranslations("ios.settings");
+  const tl = useTranslations("ios.language");
+  const top = useSafeAreaInsets().top;
+  const split = useSplit();
+  const parts = PARTS.filter((p) => (p === "appIcon" ? appIcons.supported : p === "privacy" ? analyticsOn : true));
+  return (
+    <ScrollView style={{ backgroundColor: t.ground }} contentContainerStyle={{ paddingTop: top, paddingBottom: 24 }}>
+      <View style={styles.columnBar}><SidebarButton /></View>
+      <View style={styles.columnHead}>
+        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.columnTitle, { color: t.ink }]}>{tr("title")}</Text>
+        <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, marginTop: 2 }]}>{email}</Text>
+      </View>
+      <View style={{ gap: 2, marginTop: 8 }}>
+        {parts.map((p) => {
+          const on = split?.detail?.kind === "settings" && split.detail.id === p;
+          const name = p === "language" ? tl("label") : p === "delete" ? tr("deleteAll") : tr(`sections.${p}`);
+          return (
+            <Pressable key={p} accessibilityRole="button" accessibilityState={{ selected: on }} onPress={() => split?.show({ kind: "settings", id: p })}
+              style={({ pressed }) => [styles.part, { backgroundColor: on || pressed ? t.selected : "transparent" }]}>
+              <Text maxFontSizeMultiplier={scale.title} style={[on ? font.semibold : font.regular, { flex: 1, fontSize: 15, color: p === "delete" ? t.danger : t.ink }]}>{name}</Text>
+              <Icon d={ICONS.chevron} size={14} color={t.ink2} width={1.6} />
+            </Pressable>
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   page: { paddingHorizontal: 16, gap: 22 },
+  // iPad: the detail column's 640 column, and the list column's bar, title and rows (iPad-Settings).
+  wide: { width: "100%", maxWidth: 640, alignSelf: "center", paddingHorizontal: 32 },
+  wideTitle: { fontSize: 30, lineHeight: 36, letterSpacing: -0.6 },
+  columnBar: { height: 52, flexDirection: "row", alignItems: "center", paddingHorizontal: 18 },
+  columnHead: { paddingHorizontal: 22, paddingBottom: 6 },
+  columnTitle: { fontSize: 34, lineHeight: 41, letterSpacing: -0.68 },
+  part: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 46, paddingHorizontal: 14, borderRadius: 12, marginHorizontal: 8 },
   head: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   title: { fontSize: 28, lineHeight: 34, letterSpacing: -0.84 },
   done: { minHeight: 44, minWidth: 44, alignItems: "flex-end", justifyContent: "center", paddingHorizontal: 4 },

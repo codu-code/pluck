@@ -30,6 +30,14 @@ xcrun simctl io booted screenshot list.png
 
 Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 
+## iPad
+
+The same app, universal since the iPad work (`supportsTablet: true`; the share extension builds for iPad too). From 600 wide it shows a split view: the sidebar, the list column and the detail column (`components/split`, sizes in `lib/layout.ts` from the `iPad-Spec` board). Under 600 wide (an iPhone, or an iPad window in Split View or Stage Manager) it is the iPhone layout and tab bar, unchanged. The sidebar is pinned in landscape, and in portrait and on iPad mini it comes over the list from its button or a swipe from the left edge. Rows open beside the list. A link from Safari (`/items/…`, `/lists/…`) still opens full screen. Settings lists its groups in the list column and shows one at a time in the detail column. A hardware keyboard gets the shortcuts in `components/split/Shortcuts.tsx`, which `modules/key-commands` turns into `UIKeyCommand`s so they show when ⌘ is held. Messages that name the device take `{device}`, so an iPad says iPad.
+
+Demo builds take three more launch arguments for the iPad's state: `-demoDetail item:<id>` or `list:<id>` or `settings:<group>`, `-demoSection archive|bin|settings`, and `-demoSidebar 1`. A demo build also answers the usage question no, so screenshots never show it.
+
+For a Simulator build pointed at a local server, pass `PLUCK_SERVER` to `xcodebuild` as well as to prebuild (the config is embedded when the app builds), and sign ad hoc (`CODE_SIGN_IDENTITY=-` alone, not `CODE_SIGNING_REQUIRED=NO`) so the app keeps its Keychain group and the session sticks.
+
 ## TestFlight
 
 0. Once, in App Store Connect: New App, platform iOS, bundle ID `io.getpluck.app` (register it, and `io.getpluck.app.share` for the share extension, under Certificates, Identifiers & Profiles with the App Group `group.io.getpluck.app`; Xcode's automatic signing can do this for you the first time you archive).
