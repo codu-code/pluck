@@ -200,7 +200,8 @@ function Reader({ data }: { data: FullItem }) {
         }}
       >
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{row(item).siteMeta}</Text>
-        <Text accessibilityRole="header" style={[font.readerTitle, inDetail ? styles.wideH1 : styles.h1, { color: t.ink }]}>{item.title}</Text>
+        {/* The title stops growing at the titles' ceiling, so a long word stays whole at the largest text sizes; the body grows on. */}
+        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.readerTitle, inDetail ? styles.wideH1 : styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
         {inDetail && <Tags item={item} />}
         <Facts item={item} />

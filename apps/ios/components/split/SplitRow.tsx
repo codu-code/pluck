@@ -92,7 +92,7 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
       )}
       <View style={styles.middle}>
         <View style={styles.top}>
-          <Text numberOfLines={3} style={[font.semibold, styles.title, { color: t.ink }]}>{marked(item.title, mark, t.highlightWash, t.ink)}</Text>
+          <Text numberOfLines={3} maxFontSizeMultiplier={scale.title} style={[font.semibold, styles.title, { color: t.ink }]}>{marked(item.title, mark, t.highlightWash, t.ink)}</Text>
           {hover && onMove && !selecting ? (
             <View style={styles.hoverTools}>
               <HoverTool icon={away === "inbox" ? ICONS.inbox : ICONS.later} label={tr(away === "inbox" ? "actions.backToInbox" : "actions.later")} onPress={() => onMove(away)} />
@@ -103,7 +103,7 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
             <Text maxFontSizeMultiplier={scale.title} style={[font.regular, styles.when, { color: t.ink2 }]}>{when ?? words.when}</Text>
           )}
         </View>
-        <Text numberOfLines={1} style={[font.regular, styles.site, { color: t.ink2 }]}>{words.siteMeta}</Text>
+        <Text numberOfLines={1} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.site, { color: t.ink2 }]}>{words.siteMeta}</Text>
         {below}
         {names.length > 0 && (
           <View style={styles.tags}>

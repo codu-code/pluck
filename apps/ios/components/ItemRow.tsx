@@ -2,7 +2,7 @@ import { initials, tileIndex, type Item, type Status } from "@pluck/shared-schem
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useRef, useState, type ReactNode } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import ReanimatedSwipeable, { type SwipeableMethods } from "react-native-gesture-handler/ReanimatedSwipeable";
 import Animated, { interpolate, runOnJS, useAnimatedReaction, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { useTranslations } from "use-intl";
@@ -56,6 +56,9 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
   const note = () => router.push({ pathname: "/note", params: { id: item.id } });
   const swipe = useRef<SwipeableMethods>(null);
   const held = useRef(false);
+  // At the accessibility text sizes the title and its site stop growing at the titles' ceiling and wrap instead, so
+  // a long word stays whole.
+  const big = useWindowDimensions().fontScale > 1.35;
   // On iPad (the Archive, the Bin, Search in the list column) the Item opens in the detail column beside it.
   const split = useSplit();
   const open = split?.detail?.kind === "item" && split.detail.id === item.id;
@@ -119,8 +122,8 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
             </View>
           )}
           <View style={styles.middle}>
-            <Text numberOfLines={1} style={[font.semibold, styles.title, { color: marked ? t.ink2 : t.ink }]}>{item.title}</Text>
-            <Text numberOfLines={1} style={[font.regular, styles.meta, { color: t.ink2 }]}>{site}</Text>
+            <Text numberOfLines={big ? 3 : 1} maxFontSizeMultiplier={scale.title} style={[font.semibold, styles.title, { color: marked ? t.ink2 : t.ink }]}>{item.title}</Text>
+            <Text numberOfLines={big ? 2 : 1} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.meta, { color: t.ink2 }]}>{site}</Text>
             {below !== undefined && typeof below !== "string" ? below
               : noteText ? <Text numberOfLines={2} style={[font.regular, styles.meta, { color: marked ? t.ink2 : t.ink }]}>{noteText}</Text> : null}
           </View>
@@ -129,7 +132,7 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
             {when || kept ? (
               <View style={styles.whenRow}>
                 {kept && <Icon d={ICONS.keep} size={11} color={t.ink2} width={1.6} />}
-                {when ? <Text style={[font.regular, styles.when, { color: t.ink2 }]}>{when}</Text> : null}
+                {when ? <Text maxFontSizeMultiplier={scale.title} style={[font.regular, styles.when, { color: t.ink2 }]}>{when}</Text> : null}
               </View>
             ) : null}
           </View>
