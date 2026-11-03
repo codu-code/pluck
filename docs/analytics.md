@@ -5,7 +5,7 @@ Pluck uses PostHog (EU) on getpluck.io to see how people come to Pluck and wheth
 ## Who is counted
 
 - **Errors**, from the browser, the iPhone and the server, are sent for everyone, with no person: the error and where it happened.
-- **Usage** is sent only for someone who said yes to the cookie question ("Pluck it, I'm in"). The answer belongs to the account (`settings.analytics`): the website's banner, the consent screen an AI tool opens and the iPhone's prompt all read and write it. A device that has no answer takes the account's, and the latest answer anywhere wins. Why it lives on the account: [ADR 0001](adr/0001-analytics-consent-on-the-account.md).
+- **Usage** is sent only for someone who said yes to the cookie question ("Pluck it, I'm in"). The answer belongs to the account (`settings.analytics`): the website's banner, the consent screen an AI tool opens and the iPhone's prompt all read and write it. Each answer carries when it was given (`settings.analyticsAt`), and the newest wins: a device takes the account's when that is newer and gives the account its own when that is, and the server ignores a save older than the answer it has, so a phone that was offline cannot undo a newer "Pluck off". An answer holds for a year; then every device asks again and the server counts nothing meanwhile. Why it lives on the account: [ADR 0001](adr/0001-analytics-consent-on-the-account.md).
 - After "Pluck off", or before any answer, nothing about usage leaves, from any app or from the server.
 
 ## What is never sent

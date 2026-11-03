@@ -81,3 +81,18 @@ test("the analytics answer and where the account began are per person, and via i
   await pluckLink(a, { url: "https://example.com/counted", source: "web" });
   expect([await countItems(a), await countItems(b)]).toEqual([1, 0]);
 });
+
+test("the newest analytics answer wins: an older one from an offline device does not undo it, and a year later it lapses", async () => {
+  const { a, b } = await twoUsers();
+  const now = Date.now();
+  await updateSettings(a, { analytics: "no", analyticsAt: now - 1000 });
+  await updateSettings(a, { analytics: "yes", analyticsAt: now - 5000 }); // answered earlier, saved later
+  expect(await analyticsOf(a)).toMatchObject({ consent: "no" });
+  await updateSettings(a, { analytics: "yes", analyticsAt: now + 86_400_000 }); // dated ahead: kept as now, so it can still change
+  expect((await getMe(a))?.settings.analyticsAt).toBeLessThanOrEqual(Date.now());
+  await updateSettings(a, { analytics: "no" });
+  expect(await analyticsOf(a)).toMatchObject({ consent: "no" });
+  expect((await getMe(b))?.settings).toMatchObject({ analytics: null, analyticsAt: null });
+  await updateSettings(b, { analytics: "yes", analyticsAt: now - 366 * 86_400_000 });
+  expect(await analyticsOf(b)).toMatchObject({ consent: null });
+});

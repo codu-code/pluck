@@ -69,8 +69,15 @@ export const Settings = z.object({
   timezone: z.string().min(1).max(64),
   locale: z.enum(LOCALES).nullable(), // null: follow the browser or phone
   analytics: z.enum(["yes", "no"]).nullable(), // the cookie question, for the whole account; null: not asked yet
+  analyticsAt: z.number().int().nonnegative().nullable(), // when that answer was given (ms): the newest answer on any device wins
 });
 export type Settings = z.infer<typeof Settings>;
+
+// The cookie answer holds for a year, then it is asked again: on every device, and the server stops counting meanwhile.
+export const ANSWER_LASTS_MS = 365 * 86_400_000;
+export type ConsentAnswer = { answer: "yes" | "no"; at: number };
+export const freshAnswer = (s: Pick<Settings, "analytics" | "analyticsAt">, now = Date.now()): ConsentAnswer | null =>
+  s.analytics && s.analyticsAt !== null && now - s.analyticsAt < ANSWER_LASTS_MS ? { answer: s.analytics, at: s.analyticsAt } : null;
 
 export const Me = z.object({
   id: ObjectIdString,
