@@ -66,6 +66,12 @@ App Store Connect takes `es` for both es-ES and es-MX. Frames 6 and 7 are not up
 
 No app preview video for launch. A preview must be a screen recording of the app itself (886 × 1920, 15 to 30 s).
 
+## Featuring art
+
+In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), and also the 16:9 master Apple takes for a product page header or a search result asset. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
+
+The listing text in `<lang>.json` is what is live in App Store Connect; change it there first, then here.
+
 ## Featuring nomination
 
 App Store Connect, Pluck, Featuring, Nominations, Create Nomination. Send it at least three weeks before launch. The type and related apps can't change after it is sent.
