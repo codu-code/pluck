@@ -371,6 +371,167 @@
       "w": 1440,
       "h": 1900,
       "title": "Promo · 20 s for LinkedIn and X"
+    },
+    "iPad-Inbox.dc.html": {
+      "x": 0,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Inbox, item open, 13 in landscape"
+    },
+    "iPad-List.dc.html": {
+      "x": 1476,
+      "y": 24800,
+      "w": 1032,
+      "h": 1376,
+      "title": "iPad · List open, 13 in portrait"
+    },
+    "iPad-Search.dc.html": {
+      "x": 2608,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Search with results, 13 in landscape"
+    },
+    "iPad-Add.dc.html": {
+      "x": 4084,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Add and Note as a sheet, 13 in landscape"
+    },
+    "iPad-Settings.dc.html": {
+      "x": 5560,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Settings, 13 in landscape"
+    },
+    "iPad-SignIn.dc.html": {
+      "x": 7036,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Sign in, 13 in landscape"
+    },
+    "iPad-Empty.dc.html": {
+      "x": 8512,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Empty Inbox, 13 in landscape"
+    },
+    "iPad-Mini.dc.html": {
+      "x": 9988,
+      "y": 24800,
+      "w": 744,
+      "h": 1133,
+      "title": "iPad · Inbox and reader, iPad mini portrait"
+    },
+    "iPad-Shortcuts.dc.html": {
+      "x": 10832,
+      "y": 24800,
+      "w": 1376,
+      "h": 1032,
+      "title": "iPad · Keyboard shortcuts overlay, 13 in landscape"
+    },
+    "iPad-Spec.dc.html": {
+      "x": 12308,
+      "y": 24800,
+      "w": 1600,
+      "h": 2100,
+      "title": "iPad · Spec and sizes"
+    },
+    "AppStore-iPad-1.dc.html": {
+      "x": 0,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 1 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-2.dc.html": {
+      "x": 2200,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 2 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-3.dc.html": {
+      "x": 4400,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 3 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-4.dc.html": {
+      "x": 6600,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 4 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-5.dc.html": {
+      "x": 8800,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 5 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-6.dc.html": {
+      "x": 11000,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 6 of 7 · 2064 × 2752"
+    },
+    "AppStore-iPad-7.dc.html": {
+      "x": 13200,
+      "y": 27100,
+      "w": 2064,
+      "h": 2752,
+      "title": "App Store iPad · 7 of 7 · 2064 × 2752"
+    },
+    "Featuring-KeyArt.dc.html": {
+      "x": 0,
+      "y": 30300,
+      "w": 5244,
+      "h": 2950,
+      "title": "Featuring · KeyArt"
+    },
+    "Featuring-Hero-16x9.dc.html": {
+      "x": 5444,
+      "y": 30300,
+      "w": 3840,
+      "h": 2160,
+      "title": "Featuring · Hero-16x9"
+    },
+    "Featuring-Wide-4x1.dc.html": {
+      "x": 9484,
+      "y": 30300,
+      "w": 3840,
+      "h": 960,
+      "title": "Featuring · Wide-4x1"
+    },
+    "Featuring-Square.dc.html": {
+      "x": 13524,
+      "y": 30300,
+      "w": 2160,
+      "h": 2160,
+      "title": "Featuring · Square"
+    },
+    "Featuring-Portrait-3x4.dc.html": {
+      "x": 15884,
+      "y": 30300,
+      "w": 2160,
+      "h": 2880,
+      "title": "Featuring · Portrait-3x4"
+    },
+    "Featuring-AppOfTheDay.dc.html": {
+      "x": 18244,
+      "y": 30300,
+      "w": 2160,
+      "h": 2700,
+      "title": "Featuring · App of the Day card"
     }
   },
   "createdOnFiles": {
@@ -453,6 +614,30 @@
       "w": 240,
       "x": 0,
       "y": 15800
+    },
+    "t-ipad": {
+      "kind": "title1",
+      "maxW": 14008,
+      "text": "iPad, light and dark (Theme tweak on each board)",
+      "w": 240,
+      "x": 0,
+      "y": 24500
+    },
+    "t-asipad": {
+      "kind": "title1",
+      "maxW": 15400,
+      "text": "App Store iPad, 2064 × 2752 (words on their own layer)",
+      "w": 240,
+      "x": 0,
+      "y": 26800
+    },
+    "t-feat": {
+      "kind": "title1",
+      "maxW": 20604,
+      "text": "App Store featuring art, no text, focal point centred",
+      "w": 240,
+      "x": 0,
+      "y": 30000
     }
   },
   "order": [
@@ -502,7 +687,30 @@
     "AppStore6.dc.html",
     "AppStore7.dc.html",
     "AppStoreListing.dc.html",
-    "Promo.dc.html"
+    "Promo.dc.html",
+    "iPad-Inbox.dc.html",
+    "iPad-List.dc.html",
+    "iPad-Search.dc.html",
+    "iPad-Add.dc.html",
+    "iPad-Settings.dc.html",
+    "iPad-SignIn.dc.html",
+    "iPad-Empty.dc.html",
+    "iPad-Mini.dc.html",
+    "iPad-Shortcuts.dc.html",
+    "iPad-Spec.dc.html",
+    "AppStore-iPad-1.dc.html",
+    "AppStore-iPad-2.dc.html",
+    "AppStore-iPad-3.dc.html",
+    "AppStore-iPad-4.dc.html",
+    "AppStore-iPad-5.dc.html",
+    "AppStore-iPad-6.dc.html",
+    "AppStore-iPad-7.dc.html",
+    "Featuring-KeyArt.dc.html",
+    "Featuring-Hero-16x9.dc.html",
+    "Featuring-Wide-4x1.dc.html",
+    "Featuring-Square.dc.html",
+    "Featuring-Portrait-3x4.dc.html",
+    "Featuring-AppOfTheDay.dc.html"
   ],
   "pages": [],
   "title": "Pluck — Product and Design"
