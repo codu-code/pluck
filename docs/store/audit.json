@@ -1,0 +1,41 @@
+{
+  "about": "What the store listing still needs, shown as warnings in the dev preview (/dev/store). Remove an entry once it's fixed. device: iphone, ipad or listing. locales: the languages it covers, or [\"*\"] for all. frames: the screenshots it marks, counted from 1. level: review (App Review may turn it down) or polish.",
+  "issues": [
+    {
+      "device": "iphone",
+      "locales": ["en"],
+      "frames": [6, 7],
+      "level": "review",
+      "title": "Shows Settings the app doesn't have",
+      "detail": "\"What it changed this week\", \"Remove all of it\", \"Your server, Change\", \"Export everything, JSON and Markdown\" (the app exports by email) and \"Ads, None. Ever.\" Guideline 2.3.3 asks for the app as it is.",
+      "todo": "Redraw to match the app (Claude Design, ask 2 in the featuring brief), then upload over these two."
+    },
+    {
+      "device": "iphone",
+      "locales": ["es", "pt-BR", "fr", "de", "ja", "it", "nl", "ko", "zh-Hans"],
+      "frames": [1, 2, 3, 4, 5],
+      "level": "polish",
+      "title": "The older set, with the app in English",
+      "detail": "The developer library (\"How MCP auth actually works\"), five frames where English has seven, and the app inside still in English.",
+      "todo": "Rebuild like the iPad set: real captures in each language over an art-only export of the seven iPhone frames (Claude Design, ask 2)."
+    },
+    {
+      "device": "ipad",
+      "locales": ["*"],
+      "frames": [1],
+      "level": "polish",
+      "title": "Drawn, not captured",
+      "detail": "The share sheet over Safari is the board's drawing. It matches the app, but the other frames are real captures.",
+      "todo": "Capture it on an iPad: Safari, Share, Pluck. Then node scripts/store-ipad.mjs with that 1.png."
+    },
+    {
+      "device": "ipad",
+      "locales": ["*"],
+      "frames": [],
+      "level": "polish",
+      "title": "Five frames, where iPhone English has seven",
+      "detail": "Frames 6 and 7 aren't uploaded: the boards show Settings the app doesn't have.",
+      "todo": "Redraw both to match the app (Claude Design, ask 2), then upload."
+    }
+  ]
+}

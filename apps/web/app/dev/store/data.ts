@@ -81,3 +81,27 @@ const around = (text: string, at: number, len: number) => {
   const start = Math.max(0, at - 30);
   return `${start > 0 ? "…" : ""}${text.slice(start, at + len + 30).replace(/\s+/g, " ")}${at + len + 30 < text.length ? "…" : ""}`;
 };
+
+// What's still to do (docs/store/audit.json), for one language and device, plus what the page can tell by itself:
+// a field over Apple's limit, a voice flag, a set shorter than English's.
+export type Issue = { level: "review" | "polish"; title: string; detail: string; todo: string; frames: number[] };
+
+export function issues(store: Store, device: "iphone" | "ipad", english: Store): Issue[] {
+  const audit = JSON.parse(readFileSync(join(storeRoot(), "audit.json"), "utf8")) as { issues: (Issue & { device: string; locales: string[] })[] };
+  const out: Issue[] = audit.issues
+    .filter((i) => (i.device === device || i.device === "listing") && (i.locales.includes("*") || i.locales.includes(store.locale)))
+    .map(({ level, title, detail, todo, frames }) => ({ level, title, detail, todo, frames }));
+  for (const f of Object.keys(LIMITS) as (keyof typeof LIMITS)[]) {
+    const n = length(f, store.listing[f] ?? "");
+    if (n > LIMITS[f]) out.push({ level: "review", title: `${f} is over Apple's limit`, detail: `${n} of ${LIMITS[f]}.`, todo: "Shorten it in App Store Connect, then here.", frames: [] });
+  }
+  if (store.flags.length) {
+    out.push({ level: "polish", title: `${store.flags.length} line${store.flags.length > 1 ? "s" : ""} voice.md rules out`, detail: store.flags.map((f) => `${f.field}: ${f.rule}`).join("; "), todo: "Rewrite in Pluck's voice; the check panel quotes each one.", frames: [] });
+  }
+  const mine = device === "ipad" ? store.ipad.length : store.iphone.length;
+  const theirs = device === "ipad" ? english.ipad.length : english.iphone.length;
+  if (store.locale !== "en" && mine < theirs && !out.some((i) => i.title.startsWith("The older set"))) {
+    out.push({ level: "polish", title: `${mine} screenshots where English has ${theirs}`, detail: "The set is shorter than English's.", todo: "Make the missing frames in this language.", frames: [] });
+  }
+  return out;
+}

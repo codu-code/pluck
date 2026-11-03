@@ -70,6 +70,8 @@ No app preview video for launch. A preview must be a screen recording of the app
 
 `pnpm --filter @pluck/web dev`, then `/dev/store`: the listing as the App Store shows it, in every language, iPhone or iPad, light or dark, with the search result, Apple's limits and voice.md's rules checked. "All languages" lays every language's screenshots side by side. It reads this folder, so it shows what is here; keep it in step with App Store Connect. Production answers 404.
 
+Every page opens with what is still to do for that language and device, and marks the screenshots it covers: the known issues in `audit.json` (remove an entry once it is fixed), and what the page checks for itself (a field over Apple's limit, a line voice.md rules out, a set shorter than English's). Red is an App Review risk, orange is polish.
+
 `screenshots/<lang>/` is each other language's iPhone set as uploaded (1206 × 2622); English is `screenshots/6.9in`.
 
 ## Featuring art

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, LOCALES, type Locale } from "@pluck/i18n";
-import { length, LIMITS, load, loadAll, type Store } from "./data";
+import { issues, length, LIMITS, load, loadAll, type Issue, type Store } from "./data";
 import s from "./store.module.css";
 
 export const metadata: Metadata = { title: "Store preview", robots: { index: false, follow: false } };
@@ -44,18 +44,54 @@ export default async function StorePreview({ searchParams }: { searchParams: Pro
           </nav>
         )}
       </header>
-      {view === "all" ? <All stores={loadAll()} device={device} href={href} /> : <Page store={load(lang)} device={device} />}
+      {view === "all" ? <All stores={loadAll()} device={device} href={href} /> : <Page store={load(lang)} device={device} english={load("en")} />}
     </div>
   );
 }
 
 const src = (path: string) => `/dev/store/file/${path}`;
+const frame = (path: string) => parseInt(path.split("/").pop() ?? "0");
 
-function Page({ store, device }: { store: Store; device: Device }) {
+// What's still to do on this page, before anything else: the known issues (docs/store/audit.json) and what the
+// checks found. Review-level ones first.
+function Warnings({ list, device, locale }: { list: Issue[]; device: Device; locale: string }) {
+  if (!list.length) return <p className={s.clear}>Nothing left to do for {locale} on {device === "ipad" ? "iPad" : "iPhone"}.</p>;
+  const sorted = [...list].sort((a, b) => (a.level === b.level ? 0 : a.level === "review" ? -1 : 1));
+  return (
+    <section className={s.warnings} role="alert">
+      <h2>Still to do · {locale} · {device === "ipad" ? "iPad" : "iPhone"}</h2>
+      <ul>
+        {sorted.map((i) => (
+          <li key={i.title} data-level={i.level}>
+            <b>{i.level === "review" ? "App Review risk" : "Polish"}{i.frames.length ? ` · frame${i.frames.length > 1 ? "s" : ""} ${i.frames.join(", ")}` : ""}:</b> {i.title}.
+            <span> {i.detail}</span>
+            <em> To do: {i.todo}</em>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// A screenshot, marked when an issue covers its frame.
+function Shot({ path, list }: { path: string; list: Issue[] }) {
+  const mine = list.filter((i) => i.frames.includes(frame(path)));
+  const worst = mine.find((i) => i.level === "review") ?? mine[0];
+  return (
+    <figure className={s.shot} data-level={worst?.level}>
+      <img src={src(path)} alt={path} title={path} loading="lazy" />
+      {worst && <figcaption>{worst.level === "review" ? "App Review risk" : "Polish"}: {worst.title}</figcaption>}
+    </figure>
+  );
+}
+
+function Page({ store, device, english }: { store: Store; device: Device; english: Store }) {
   const shots = device === "ipad" ? store.ipad : store.iphone;
   const { listing } = store;
+  const list = issues(store, device, english);
   return (
     <main className={s.main}>
+      <Warnings list={list} device={device} locale={store.label} />
       <div className={device === "ipad" ? s.storeWide : s.store} lang={store.locale}>
         <section className={s.head}>
           <img className={s.icon} src="/icon-512.png" alt="" />
@@ -73,7 +109,7 @@ function Page({ store, device }: { store: Store; device: Device }) {
           <div><dt>Languages</dt><dd>{store.locale.toUpperCase()} + 9 more</dd></div>
         </dl>
         <div className={device === "ipad" ? s.shotsWide : s.shots}>
-          {shots.map((p) => <img key={p} src={src(p)} alt={p} title={p} loading="lazy" />)}
+          {shots.map((p) => <Shot key={p} path={p} list={list} />)}
           {shots.length === 0 && <p className={s.missing}>No {device === "ipad" ? "iPad" : "iPhone"} screenshots for {store.locale}.</p>}
         </div>
         <p className={s.promo}>{listing.promotionalText}</p>
@@ -146,6 +182,7 @@ function All({ stores, device, href }: { stores: Store[]; device: Device; href: 
     <main className={s.all}>
       {stores.map((store) => {
         const shots = device === "ipad" ? store.ipad : store.iphone;
+        const list = issues(store, device, stores[0]!);
         return (
           <section key={store.locale} className={s.row} lang={store.locale}>
             <div className={s.rowText}>
@@ -154,9 +191,14 @@ function All({ stores, device, href }: { stores: Store[]; device: Device; href: 
               <span>{store.listing.subtitle}</span>
               <small>{store.listing.promotionalText}</small>
               <small className={store.flags.length ? s.warn : s.ok}>{store.flags.length ? `${store.flags.length} voice flag${store.flags.length > 1 ? "s" : ""}` : "Voice clear"}</small>
+              {list.length > 0 && (
+                <ul className={s.rowWarnings}>
+                  {list.map((i) => <li key={i.title} data-level={i.level}><b>{i.level === "review" ? "Review risk" : "Polish"}:</b> {i.title}. <em>{i.todo}</em></li>)}
+                </ul>
+              )}
             </div>
             <div className={device === "ipad" ? s.rowShotsWide : s.rowShots}>
-              {shots.map((p) => <img key={p} src={src(p)} alt={p} title={p} loading="lazy" />)}
+              {shots.map((p) => <Shot key={p} path={p} list={list} />)}
             </div>
           </section>
         );
