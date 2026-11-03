@@ -54,6 +54,14 @@ xcrun simctl launch booted io.getpluck.app -demoDetail item:<id>   # then: xcrun
 node scripts/store-ipad.mjs <dir with 2.png … 7.png>
 ```
 
+Every other language has its own set in `ipad/<lang>/` (frames 1 to 5), with the app itself in that language: the words in `ipad/strings.<lang>.json`, drawn with each board's own text layer over `art-only`, and the captures made with the Simulator in that language (`xcrun simctl launch booted io.getpluck.app -AppleLanguages "(de)" -AppleLocale de_DE …`):
+
+```sh
+node scripts/store-ipad.mjs --lang de <dir with that language's 2.png … 5.png>
+```
+
+App Store Connect takes `es` for both es-ES and es-MX. Frames 6 and 7 are not uploaded: they draw Settings that the iPad app does not have yet ("What it changed this week").
+
 `EXPO_NO_DOTENV=1` keeps `.env.local`'s PostHog key out of the build. Each number's launch arguments: 2 `-demoDetail item:<kitchen>`, 3 `-demoDetail item:<habits>`, 4 `-demoRoute /lists -demoDetail list:<Lisbon, May>`, 5 (dark: `xcrun simctl ui booted appearance dark`) `-demoSection archive -demoDetail item:<Pastéis de Belém>`.
 
 No app preview video for launch. A preview must be a screen recording of the app itself (886 × 1920, 15 to 30 s).

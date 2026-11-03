@@ -1,0 +1,29 @@
+{
+  "ipadScreenshots": [
+    {
+      "title": "Pluk het vanuit elke app.",
+      "subtitle": "Eén tik in Deel. Pluck bewaart de pagina en de app blijft dicht."
+    },
+    {
+      "title": "Sorteer het later.",
+      "subtitle": "Je Inbox in de ene kolom, de pagina in de volgende. Veeg, tik of typ."
+    },
+    {
+      "title": "De pagina, niet alleen de link.",
+      "subtitle": "Een rustige lezer met je markeringen. Nog hier als de site weg is."
+    },
+    {
+      "title": "Lijsten voor wat je maakt.",
+      "subtitle": "Een reis, een keuken, leesvoer voor een vriend. Op volgorde, met notities."
+    },
+    {
+      "title": "Weg. Nou ja, gearchiveerd.",
+      "subtitle": "30 dagen niet aangeraakt? Naar het Archief. Er wordt niets verwijderd."
+    }
+  ],
+  "chips": [
+    "Gratis",
+    "Open source",
+    "Geen advertenties"
+  ]
+}
