@@ -189,6 +189,9 @@ export const auth = betterAuth({
       advertisedMetadata: { scopes_supported: ["openid", "profile", "email", ...AI_TOOL_SCOPES] },
       accessTokenExpiresIn: 60 * 60,
       refreshTokenExpiresIn: 90 * DAY,
+      // A refresh whose answer never arrived (the share sheet closed, a cold start outlasted the timeout) leaves the device
+      // holding the spent token. Better Auth replays the answer for this long instead of signing every device out.
+      refreshTokenReuseInterval: 30 * DAY,
       // CIMD first; dynamic registration as the fallback for clients that do not speak CIMD yet.
       allowDynamicClientRegistration: true,
       allowUnauthenticatedClientRegistration: true,

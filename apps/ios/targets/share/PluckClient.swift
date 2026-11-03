@@ -54,7 +54,7 @@ final class PluckClient {
   }
 
   // A key, or an access token refreshed a minute before it runs out (the app refreshes the same way).
-  private func bearer() async throws -> (String, String) {
+  private func bearer(_ tries: Int = 3) async throws -> (String, String) {
     guard var s = session() else { throw PluckError.signedOut }
     if let key = s.apiKey { return (s.server, "Bearer \(key)") }
     if let access = s.access, (s.expiresAt ?? 0) / 1000 - Date().timeIntervalSince1970 > 60 { return (s.server, "Bearer \(access)") }
@@ -74,8 +74,11 @@ final class PluckClient {
           let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let access = json["access_token"] as? String else { throw PluckError.signedOut }
     s.access = access
     s.refresh = (json["refresh_token"] as? String) ?? s.refresh
-    s.expiresAt = (Date().timeIntervalSince1970 + ((json["expires_in"] as? Double) ?? 3600)) * 1000
+    let expiresIn = (json["expires_in"] as? Double) ?? 3600
+    s.expiresAt = (Date().timeIntervalSince1970 + expiresIn) * 1000
     save(s)
+    // A replayed answer (to a refresh whose response was lost) can come back already expired: go again with its token.
+    if expiresIn <= 60 && tries > 1 { return try await bearer(tries - 1) }
     return (s.server, "Bearer \(access)")
   }
 

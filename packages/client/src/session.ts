@@ -18,7 +18,7 @@ export function createSession(store: SessionStore, f: typeof fetch = fetch) {
 
   // A refresh token works once, and of two refreshes at once the server refuses the second. So read the store again
   // under the lock (another context may have refreshed already), and treat a refusal as success if it did meanwhile.
-  async function refresh(): Promise<string | null> {
+  async function refresh(tries = 3): Promise<string | null> {
     const s = await store.read(true);
     if (ready(s)) return ready(s);
     if (!s?.tokens?.refresh || !s.clientId) return null;
@@ -26,7 +26,8 @@ export function createSession(store: SessionStore, f: typeof fetch = fetch) {
     const fresh = await tokenRequest(s.server, { grant_type: "refresh_token", refresh_token: spent, client_id: s.clientId, resource: `${s.server}/api/v1` }, f);
     if (fresh) {
       await store.write(fresh);
-      return `Bearer ${fresh.access}`;
+      // A replayed answer (to a refresh whose response was lost) can come back already expired: go again with its token.
+      return ready({ ...s, tokens: fresh }) ?? (tries > 1 && fresh.refresh ? refresh(tries - 1) : `Bearer ${fresh.access}`);
     }
     const now = await store.read(true); // the iPhone's share extension cannot share a lock with the app
     if (now?.tokens?.refresh !== spent && ready(now)) return ready(now);

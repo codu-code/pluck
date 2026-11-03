@@ -62,6 +62,27 @@ test("the code from the app's email signs the iPhone app in, with no link, no br
   await expect(appRedirectFromCode({ email: "code-user@example.test", code, authorize: a.authorize, ip: nextIp() })).rejects.toMatchObject({ code: "bad_code" });
 });
 
+test("a refresh whose answer was lost a day ago is replayed, not a sign-out", async () => {
+  const a = await appAsksFor();
+  const { code } = await codeFor("lost-refresh@example.test");
+  const url = new URL((await appRedirectFromCode({ email: "lost-refresh@example.test", code, authorize: a.authorize, ip: nextIp() })).replace(APP_REDIRECT, "http://app"));
+  const token = async (form: Record<string, string>) => {
+    const res = await call("/oauth2/token", { form: new URLSearchParams({ client_id: a.clientId, resource: `${BASE}/api/v1`, ...form }) });
+    expect(res.status, await res.clone().text()).toBe(200);
+    return (await res.json()) as { refresh_token: string };
+  };
+  const first = await token({ grant_type: "authorization_code", code: url.searchParams.get("code")!, redirect_uri: APP_REDIRECT, code_verifier: a.verifier });
+  const lost = await token({ grant_type: "refresh_token", refresh_token: first.refresh_token }); // the device never heard this answer
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    vi.setSystemTime(Date.now() + 24 * 60 * 60 * 1000);
+    expect((await token({ grant_type: "refresh_token", refresh_token: first.refresh_token })).refresh_token).toBe(lost.refresh_token);
+    await token({ grant_type: "refresh_token", refresh_token: lost.refresh_token });
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 test("no browser can get the app's redirect: not through authorize, not through consent, not through an email link", async () => {
   const a = await appAsksFor();
   // A signed-in browser asking to authorize the app's redirect is refused before any code exists.
