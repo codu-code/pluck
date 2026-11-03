@@ -38,7 +38,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const split = useSplit();
   // iPad's kind chips (iPad-Inbox): All, Links, Notes, Todos, Things.
   const [only, setOnly] = useState<Filter>("all");
-  const rows = (items.data?.items ?? []).filter((i) => only === "all" || FILTERS[only].includes(i.kind));
+  const rows = (items.data?.items ?? []).filter((i) => only === "all" || !split || FILTERS[only].includes(i.kind)); // narrower than 600 the chips are gone, and so is their filter
   // ↓ and ↑ on iPad's keyboard walk the rows of the column you are looking at.
   const rowIds = rows.map((r) => r.id).join(",");
   useFocusEffect(useCallback(() => void (shown.rows = rowIds ? rowIds.split(",") : []), [rowIds]));

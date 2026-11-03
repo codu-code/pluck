@@ -14,7 +14,7 @@ import { toast } from "@/components/Toast";
 import { ToolBar } from "@/components/ToolBar";
 import { keys, library, useList, useMe } from "@/lib/data";
 import { useRowText } from "@/lib/format";
-import { defaultServer } from "@/lib/session";
+import { getSession } from "@/lib/session";
 import { kv } from "@/lib/kv";
 import { font, scale, useTheme } from "@/lib/theme";
 
@@ -35,6 +35,8 @@ export function ListView({ id }: { id: string }) {
   const insets = useSafeAreaInsets();
   const inDetail = useInDetail();
   const handle = useMe().data?.handle;
+  const [server, setServer] = useState("https://getpluck.io");
+  useEffect(() => void getSession().then((x) => x && setServer(x.server)), []); // the server signed in to, as share.tsx does
   const qc = useQueryClient();
   const data = useList(id);
   const list = data.data?.list;
@@ -97,7 +99,7 @@ export function ListView({ id }: { id: string }) {
   if (inDetail) {
     // A public List shares its page; a private one opens who can see it, as the pill does.
     const send = () => (list?.visibility === "public" && handle
-      ? void Share.share({ url: `${defaultServer}/@${handle}/${list.slug}` })
+      ? void Share.share({ url: `${server}/@${handle}/${list.slug}` })
       : share());
     return (
       <View style={{ flex: 1, backgroundColor: t.ground }}>
