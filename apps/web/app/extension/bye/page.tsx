@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: (await getTranslations("app.meta"))("extensionBye"), robots: { index: false } };
 }
 
-// Where the browser sends someone who removed the extension. One optional question, each answer a plain link.
+// Where the browser sends someone who removed the extension. One optional question, each answer a button in one form.
 export default async function Bye({ searchParams }: { searchParams: Promise<{ thanks?: string }> }) {
   const t = await getTranslations("app.extensionBye");
   const thanks = (await searchParams).thanks === "1";
@@ -17,11 +17,13 @@ export default async function Bye({ searchParams }: { searchParams: Promise<{ th
       {!thanks && (
         <>
           <p className={s.lede}>{t("question")}</p>
-          <Actions>
-            {ExtensionRemovedReason.options.map((why) => (
-              <a key={why} className={s.secondary} href={`/api/v1/extension/bye?why=${why}`} rel="nofollow">{t(`why.${why}`)}</a>
-            ))}
-          </Actions>
+          <form method="post" action="/api/v1/extension/bye">
+            <Actions>
+              {ExtensionRemovedReason.options.map((why) => (
+                <button key={why} type="submit" name="why" value={why} className={s.secondary}>{t(`why.${why}`)}</button>
+              ))}
+            </Actions>
+          </form>
         </>
       )}
       <Actions><Link className={s.primary} href="/inbox">{t("open")}</Link></Actions>

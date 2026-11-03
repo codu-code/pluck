@@ -194,8 +194,8 @@ test("removing the extension lands on a goodbye page that counts one answer, wit
   await page.goto("/api/v1/extension/bye");
   await expect(page).toHaveURL(/\/extension\/bye$/);
   await expect(page.getByRole("heading", { name: "Removed." })).toBeVisible();
-  await page.getByRole("link", { name: "Something was missing" }).click();
+  await page.getByRole("button", { name: "Something was missing" }).click();
   await expect(page).toHaveURL(/\/extension\/bye\?thanks=1$/);
   await expect(page.getByRole("heading", { name: "Thanks." })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Something was missing" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Something was missing" })).toHaveCount(0);
 });

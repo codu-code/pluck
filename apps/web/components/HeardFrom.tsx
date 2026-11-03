@@ -14,14 +14,15 @@ export function HeardFromPrompt({ ask }: { ask: boolean }) {
   const t = useTranslations("app.heardFrom");
   const [open, setOpen] = useState(false);
   const [thanked, setThanked] = useState(false);
+  const [done, setDone] = useState(false); // answered on this page: a later cookie answer must not ask again
 
   useEffect(() => {
-    if (!ask || !analyticsOn) return;
+    if (!ask || done || !analyticsOn) return;
     const check = () => setOpen(readConsent() !== null);
     check();
     window.addEventListener(CONSENT_EVENT, check);
     return () => window.removeEventListener(CONSENT_EVENT, check);
-  }, [ask]);
+  }, [ask, done]);
 
   useEffect(() => {
     if (!thanked) return;
@@ -32,6 +33,7 @@ export function HeardFromPrompt({ ask }: { ask: boolean }) {
   const answer = (heardFrom: Choice) => {
     void fetch("/api/v1/me", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ heardFrom }) }).catch(() => null);
     setOpen(false);
+    setDone(true);
     setThanked(heardFrom !== "skipped");
   };
 
