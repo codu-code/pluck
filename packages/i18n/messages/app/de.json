@@ -196,7 +196,8 @@
     "list": "Liste · Pluck",
     "settings": "Einstellungen · Pluck",
     "admin": "Admin · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "Entfernt · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "Pflückt die Seite, auf der du bist.",
     "selection": "Pflückt deine Auswahl, behalten als Markierung."
   },
+  "extensionBye": {
+    "title": "Entfernt",
+    "lede": "Alles, was du gepflückt hast, ist noch in deiner Bibliothek, im Web, auf dem iPhone und in deiner KI. Nichts wird gelöscht.",
+    "question": "Falls du kurz Zeit hast: Warum hast du es entfernt?",
+    "why": {
+      "unused": "Ich habe es nicht genutzt",
+      "in-the-way": "Es war im Weg",
+      "missing": "Mir hat etwas gefehlt",
+      "other": "Etwas anderes"
+    },
+    "thanks": "Danke",
+    "open": "Pluck öffnen"
+  },
   "shell": {
     "main": "Hauptbereich",
     "offline": "Offline",
@@ -473,6 +487,24 @@
     },
     "more": "Was in jedem steckt",
     "link": "Cookies"
+  },
+  "heardFrom": {
+    "title": "Wie hast du Pluck gefunden",
+    "body": "Ein Tipp zeigt uns, was funktioniert. Das ist die einzige Frage.",
+    "choices": {
+      "search": "Über eine Suche",
+      "friend": "Durch Freunde oder Kollegen",
+      "social": "Soziale Medien",
+      "public-list": "Die Liste von jemandem",
+      "ai-tool": "Ein KI-Tool",
+      "newsletter": "Ein Newsletter oder Blog",
+      "other": "Woanders"
+    },
+    "skip": "Möchte ich nicht sagen",
+    "thanks": {
+      "title": "Danke.",
+      "note": "Das hilft."
+    }
   },
   "connectLoop": {
     "label": "Jemand fügt den Link von Pluck in sein KI-Tool ein, erlaubt den Zugriff auf dem Bildschirm von Pluck, fragt dann, was er zu MCP auth gepflückt hat, und bekommt drei seiner Einträge zurück.",

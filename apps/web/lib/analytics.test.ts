@@ -27,3 +27,13 @@ test("an error from another origin's script, with no message or stack, is not se
   expect(scrub(event("$exception", { $exception_list: [{ type: "Error", value: "Script error." }] }), null)).toBeNull();
   expect(scrub(event("$exception", { $exception_list: [{ type: "TypeError", value: "x is undefined" }] }), null)?.event).toBe("$exception");
 });
+
+test("web vitals keep their numbers and lose their URLs' queries and their attribution", () => {
+  const out = scrub(event("$web_vitals", {
+    $current_url: "https://getpluck.io/items/1?q=x",
+    $web_vitals_LCP_value: 1200,
+    $web_vitals_LCP_event: { name: "LCP", value: 1200, $current_url: "https://getpluck.io/search?q=secret", attribution: { url: "https://bucket/cover?sig=1" } },
+  }), "yes")!;
+  expect(out.properties.$web_vitals_LCP_value).toBe(1200);
+  expect(out.properties.$web_vitals_LCP_event).toEqual({ name: "LCP", value: 1200, $current_url: "https://getpluck.io/search" });
+});

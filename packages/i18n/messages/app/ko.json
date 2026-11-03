@@ -196,7 +196,8 @@
     "list": "리스트 · Pluck",
     "settings": "설정 · Pluck",
     "admin": "관리 · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "삭제됨 · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "보고 있는 페이지를 담아요.",
     "selection": "선택한 부분을 하이라이트로 담아요."
   },
+  "extensionBye": {
+    "title": "삭제됐어요",
+    "lede": "담아 둔 것은 웹, iPhone, 내 AI에서 그대로 라이브러리에 있어요. 아무것도 삭제되지 않아요.",
+    "question": "잠깐 시간이 된다면: 왜 삭제했나요?",
+    "why": {
+      "unused": "쓰지 않았어요",
+      "in-the-way": "방해가 됐어요",
+      "missing": "필요한 기능이 없었어요",
+      "other": "다른 이유"
+    },
+    "thanks": "고마워요",
+    "open": "Pluck 열기"
+  },
   "shell": {
     "main": "메인",
     "offline": "오프라인",
@@ -473,6 +487,24 @@
     },
     "more": "쿠키별로 하는 일",
     "link": "쿠키"
+  },
+  "heardFrom": {
+    "title": "Pluck을 어떻게 알게 됐나요",
+    "body": "한 번만 누르면 무엇이 효과가 있는지 알 수 있어요. 질문은 이것뿐이에요.",
+    "choices": {
+      "search": "검색",
+      "friend": "친구나 동료",
+      "social": "소셜 미디어",
+      "public-list": "누군가의 리스트",
+      "ai-tool": "AI 도구",
+      "newsletter": "뉴스레터나 블로그",
+      "other": "다른 곳"
+    },
+    "skip": "말하지 않을래요",
+    "thanks": {
+      "title": "고마워요.",
+      "note": "큰 도움이 돼요."
+    }
   },
   "connectLoop": {
     "label": "AI 도구에 Pluck 링크를 붙여 넣고, Pluck 화면에서 허용한 다음, MCP 인증에 관해 뭘 담았는지 물어서 담은 항목 세 개를 돌려받는 모습.",

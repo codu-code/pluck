@@ -1,6 +1,6 @@
 import { LOCALES } from "@pluck/i18n";
 import { z } from "zod";
-import { Kind, Visibility } from "./enums.ts";
+import { HeardFrom, Kind, Visibility } from "./enums.ts";
 import { Item, ObjectIdString } from "./items.ts";
 import { Facts, Preview } from "./preview.ts";
 
@@ -88,10 +88,11 @@ export const Me = z.object({
   createdAt: z.string(),
   settings: Settings,
   lastMcpCallAt: z.string().nullable(), // when an AI tool last used the connector
+  heardFrom: HeardFrom.nullable(), // "How did you find Pluck?", null until answered
 });
 export type Me = z.infer<typeof Me>;
 export const UpdateMeBody = z
-  .object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional(), settings: Settings.partial().optional() })
+  .object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional(), settings: Settings.partial().optional(), heardFrom: HeardFrom.optional() })
   .strict();
 export const ArchiveStaleBody = z.object({ olderThanDays: z.number().int().min(1).max(3650).optional(), dryRun: z.boolean().default(false) });
 

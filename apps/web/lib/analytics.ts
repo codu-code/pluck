@@ -40,6 +40,7 @@ export function startAnalytics(): void {
     persistence: consent === "yes" ? "localStorage+cookie" : "memory",
     person_profiles: "identified_only",
     capture_exceptions: true,
+    capture_performance: { web_vitals: true, network_timing: false }, // how fast pages are; never the requests they made
     disable_session_recording: true,
     disable_surveys: true,
     advanced_disable_flags: true, // no feature flags, so no flags call carrying an id before anyone said yes
@@ -102,6 +103,13 @@ export function scrub(event: CaptureResult | null, given: Consent | null): Captu
   delete p.title; // item pages are titled with the item
   delete p.$title;
   for (const k of ["$current_url", "$referrer", "$initial_current_url", "$initial_referrer"]) if (typeof p[k] === "string") p[k] = keepUtm(p[k]);
+  // Each web vital carries its own copy of the page's URL, and its attribution can name a cover's address.
+  for (const [k, v] of Object.entries(p)) {
+    if (!k.startsWith("$web_vitals_") || !v || typeof v !== "object") continue;
+    delete (v as Record<string, unknown>).attribution;
+    const url = (v as Record<string, unknown>).$current_url;
+    if (typeof url === "string") (v as Record<string, unknown>).$current_url = keepUtm(url);
+  }
   if (event.$set_once) for (const k of ["$initial_current_url", "$initial_referrer"]) if (typeof event.$set_once[k] === "string") event.$set_once[k] = keepUtm(event.$set_once[k]);
   return event;
 }

@@ -48,7 +48,7 @@ export const EVENTS = {
 } as const satisfies Record<string, readonly string[]>;
 
 export const PERSON = [
-  "via", "signed_up_at", "items_bucket", "ai_tools", "has_public_list", "digest_on", "locale",
+  "via", "signed_up_at", "heard_from", "items_bucket", "ai_tools", "has_public_list", "digest_on", "locale",
   ...Source.options.map((s) => `plucked_from_${s}` as const),
 ] as const;
 
@@ -93,6 +93,14 @@ export async function trackSignUp(userId: string): Promise<void> {
   const hex = `${userId}00000000`;
   const uuid = `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
   track(userId, "signed_up", { via: a.via ?? "direct" }, { once: { via: a.via ?? "direct", signed_up_at: a.createdAt.toISOString() }, at: a.createdAt, uuid });
+}
+
+// Sent for everyone, like errors: something broke, with nobody named (no person, the same "server" id as errors).
+export const ANONYMOUS = { extract_failed: ["kind", "preview", "reason"] } as const satisfies Record<string, readonly string[]>;
+
+export function trackAnonymous<E extends keyof typeof ANONYMOUS>(event: E, props: Partial<Record<(typeof ANONYMOUS)[E][number], Value>>): void {
+  if (!KEY) return;
+  keepAlive(posthog().captureImmediate({ distinctId: "server", event, properties: { ...pick(props, ANONYMOUS[event]), $process_person_profile: false } }).catch(() => {}));
 }
 
 export const itemsBucket = (n: number) => (n === 0 ? "0" : n < 10 ? "1-9" : n < 100 ? "10-99" : "100+");

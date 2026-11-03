@@ -4,7 +4,7 @@ Pluck uses PostHog (EU) on getpluck.io to see how people come to Pluck and wheth
 
 ## Who is counted
 
-- **Errors**, from the browser, the iPhone and the server, are sent for everyone, with no person: the error and where it happened.
+- **Errors**, from the browser, the iPhone and the server, are sent for everyone, with no person: the error and where it happened. So is a page Pluck could not keep (`extract_failed`, below).
 - **Usage** is sent only for someone who said yes to the cookie question ("Pluck it, I'm in"). The answer belongs to the account (`settings.analytics`): the website's banner, the consent screen an AI tool opens and the iPhone's prompt all read and write it. Each answer carries when it was given (`settings.analyticsAt`), and the newest wins: a device takes the account's when that is newer and gives the account its own when that is, and the server ignores a save older than the answer it has, so a phone that was offline cannot undo a newer "Pluck off". An answer holds for a year; then every device asks again and the server counts nothing meanwhile. Why it lives on the account: [ADR 0001](adr/0001-analytics-consent-on-the-account.md).
 - After "Pluck off", or before any answer, nothing about usage leaves, from any app or from the server.
 
@@ -43,8 +43,23 @@ Sent from the server under the account's id, so they count the same whichever ap
 
 ## Person properties
 
-`via` and `signed_up_at` (set once), `plucked_from_<source>` (true once any Item came from it), `items_bucket` (`0`, `1-9`, `10-99`, `100+`), `ai_tools` (names of the tools connected now), `has_public_list`, `digest_on`, `locale`.
+`via` and `signed_up_at` (set once), `heard_from` (the answer to "How did you find Pluck?"), `plucked_from_<source>` (true once any Item came from it), `items_bucket` (`0`, `1-9`, `10-99`, `100+`), `ai_tools` (names of the tools connected now), `has_public_list`, `digest_on`, `locale`.
+
+## Sent for everyone, with no person
+
+Like errors: under the server's own id, with no person profile.
+
+| Event | Properties | When |
+|---|---|---|
+| `extract_failed` | `kind`, `preview`, `reason` | A page's last try failed. `reason` is one of `http_4xx`, `http_429`, `http_denied`, `http_5xx`, `timeout`, `blocked`, `unsupported`, `too_large`, `not_arrived`, `other`; never the address |
+
+## Counted in MongoDB, never in PostHog
+
+- **"How did you find Pluck?"**, asked once on the web after the first Pluck (hosted only), on the cookie board's frame and after the cookie question. The answer is kept on the account (`heardFrom`) like any setting, and goes to PostHog as `heard_from` only after a yes.
+- **Extension removals.** The extension's uninstall URL is `/api/v1/extension/bye`, which adds one to a daily count (`meta`, `count:extension-removed:<day>`) and shows a goodbye page with one optional question. Each answer is counted the same way. No cookie, no account, no person.
+
+`pnpm numbers` (with `MONGODB_URI` set) prints these with the other totals: sign-ups by `via`, Items by `source`, accounts by how many surfaces they pluck from, AI tool connections, answers to the cookie question and to "How did you find Pluck?", and extension removals with their reasons, for the last seven days.
 
 ## In the browser and on the iPhone
 
-After a yes, the browser sends pageviews and clicks with all text and attributes masked, page titles dropped, and URLs cut to their path and `utm_*` tags. The iPhone sends screen views (routes, never their content). Both identify the account with the same id the server uses, so a person's visits before sign-up join their account. No session recordings, surveys or feature flags.
+After a yes, the browser sends pageviews, clicks with all text and attributes masked, and web vitals (how fast each page loaded and responded, with no attribution and no network timings), with page titles dropped and URLs cut to their path and `utm_*` tags. The iPhone sends screen views (routes, never their content). Both identify the account with the same id the server uses, so a person's visits before sign-up join their account. No session recordings, surveys or feature flags.

@@ -19,7 +19,7 @@ export {
   createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
-export { analyticsOf, getMe, markMcpCall, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
+export { analyticsOf, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";
@@ -34,4 +34,4 @@ export {
 export { aiClientName, aiConnections, disconnectAi, isAiConnected, narrowAiGrants } from "./ai-tools.ts";
 export { holdTry, takeTry } from "./tries.ts";
 export { nextUnsorted, type Unsorted } from "./backfill.ts";
-export { numbers } from "./numbers.ts";
+export { countAnonymous, numbers } from "./numbers.ts";

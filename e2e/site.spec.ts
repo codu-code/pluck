@@ -189,3 +189,13 @@ test("languages: a page in another language says so to search engines, and its l
   expect(sitemap).toContain('hreflang="ja"');
   expect((await request.get("/en/connect", { maxRedirects: 0 })).headers().location).toBe("/connect");
 });
+
+test("removing the extension lands on a goodbye page that counts one answer, with nobody named", async ({ page }) => {
+  await page.goto("/api/v1/extension/bye");
+  await expect(page).toHaveURL(/\/extension\/bye$/);
+  await expect(page.getByRole("heading", { name: "Removed." })).toBeVisible();
+  await page.getByRole("button", { name: "Something was missing" }).click();
+  await expect(page).toHaveURL(/\/extension\/bye\?thanks=1$/);
+  await expect(page.getByRole("heading", { name: "Thanks." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Something was missing" })).toHaveCount(0);
+});

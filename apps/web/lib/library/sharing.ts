@@ -2,9 +2,9 @@ import { signedUrl } from "@pluck/blob";
 import {
   createList, createReport, createTextItem, getListMeta, getMe, hitRateLimit, leaveSharedList, listOwnedBy, listsSharedWith, pluckLink, publicCoverKey,
   publicList, publicListById, recordView, setHandle, setName, setVisibility, sharedCoverKey, sharedList, shareList, sharesOf, unshareList,
-  updateSettings, MAX_PEOPLE,
+  setHeardFrom, updateSettings, MAX_PEOPLE,
 } from "@pluck/db";
-import { normalizeUrl, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
+import { normalizeUrl, type HeardFrom, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
 import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
@@ -28,9 +28,10 @@ const HANDLE_ERRORS = {
   too_soon: new ApiError("conflict", "You can change your handle once a month.", 409),
 };
 
-export async function updateMe(userId: string, patch: { name?: string; handle?: string; settings?: Partial<Settings> }): Promise<Me> {
+export async function updateMe(userId: string, patch: { name?: string; handle?: string; settings?: Partial<Settings>; heardFrom?: HeardFrom }): Promise<Me> {
   const was = await me(userId);
   if (patch.name !== undefined) await setName(userId, patch.name);
+  if (patch.heardFrom && (await setHeardFrom(userId, patch.heardFrom))) track(userId, "$set", {}, { person: { heard_from: patch.heardFrom } });
   if (patch.settings) await updateSettings(userId, patch.settings);
   if (patch.handle !== undefined) {
     const res = await setHandle(userId, patch.handle);

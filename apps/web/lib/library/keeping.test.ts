@@ -2,7 +2,9 @@ import { getContent, pendingJobCount, pluckLink } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
-import { keepLater, keepNow, readItem } from "./index";
+import { FetchError } from "@pluck/extract";
+import { TooLarge } from "@pluck/blob";
+import { failureReason, keepLater, keepNow, readItem } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 const link = async (userId: string, url: string) => (await pluckLink(userId, { url, source: "web" })).item;
@@ -52,4 +54,14 @@ test("a 4xx is final at once", async () => {
   const item = await keepNow(a, await link(a, `${FIX}/missing-page.html`), { timeoutMs: 5000 });
   expect(item.extraction).toEqual({ state: "failed", attempts: 1, lastError: "HTTP 404" });
   expect(await pendingJobCount()).toBe(0);
+});
+
+test("a failure is reported as one of a few words, never its address or text", () => {
+  expect(failureReason(new FetchError("https://secret.example/x returned 503", 503))).toBe("http_5xx");
+  expect(failureReason(new FetchError("nope", 403))).toBe("http_denied");
+  expect(failureReason(new FetchError("nope", 404))).toBe("http_4xx");
+  expect(failureReason(new FetchError("blocked: private address"))).toBe("blocked");
+  expect(failureReason(Object.assign(new Error("slow"), { name: "TimeoutError" }))).toBe("timeout");
+  expect(failureReason(new TooLarge())).toBe("too_large");
+  expect(failureReason("weird")).toBe("other");
 });

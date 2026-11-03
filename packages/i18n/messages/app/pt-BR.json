@@ -196,7 +196,8 @@
     "list": "Lista · Pluck",
     "settings": "Configurações · Pluck",
     "admin": "Admin · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "Removida · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "Colhe a página em que você está.",
     "selection": "Colhe o que você selecionou, guardado como destaque."
   },
+  "extensionBye": {
+    "title": "Removida",
+    "lede": "Tudo o que você colheu continua na sua biblioteca, na web, no iPhone e na sua IA. Nada é apagado.",
+    "question": "Se tiver um segundo: por que você a removeu?",
+    "why": {
+      "unused": "Eu não usava",
+      "in-the-way": "Atrapalhava",
+      "missing": "Faltava alguma coisa",
+      "other": "Outra coisa"
+    },
+    "thanks": "Valeu",
+    "open": "Abrir o Pluck"
+  },
   "shell": {
     "main": "Principal",
     "offline": "Offline",
@@ -473,6 +487,24 @@
     },
     "more": "O que tem em cada um",
     "link": "Cookies"
+  },
+  "heardFrom": {
+    "title": "Como você conheceu o Pluck",
+    "body": "Um toque nos diz o que está funcionando. É a única pergunta.",
+    "choices": {
+      "search": "Uma busca",
+      "friend": "Um amigo ou colega",
+      "social": "Redes sociais",
+      "public-list": "A Lista de alguém",
+      "ai-tool": "Uma ferramenta de IA",
+      "newsletter": "Uma newsletter ou blog",
+      "other": "Outro lugar"
+    },
+    "skip": "Prefiro não dizer",
+    "thanks": {
+      "title": "Valeu.",
+      "note": "Ajuda muito."
+    }
   },
   "connectLoop": {
     "label": "Alguém cola o link do Pluck na própria ferramenta de IA, permite na tela do Pluck, depois pergunta o que colheu sobre autenticação no MCP e recebe de volta três coisas que colheu.",

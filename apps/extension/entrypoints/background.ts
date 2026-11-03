@@ -1,10 +1,17 @@
 import { finishSignIn } from "@/lib/auth";
 import { drain, pluckTab, pluckUrl, refreshBadge, type PluckOutcome } from "@/lib/pluck";
+import { settings } from "@/lib/store";
 import { t } from "@/lib/t";
+
+// Removing the extension opens a goodbye page on the person's server, which counts it with nobody named.
+const sayBye = async () => void (await browser.runtime.setUninstallURL(`${(await settings()).server}/api/v1/extension/bye`));
 
 // The service worker can stop after 30 seconds idle: every handler reads what it needs from storage.
 export default defineBackground(() => {
+  browser.runtime.onStartup.addListener(() => void sayBye());
+  browser.storage.onChanged.addListener((change) => void (change.settings && sayBye())); // a new server in Options
   browser.runtime.onInstalled.addListener(() => {
+    void sayBye();
     browser.contextMenus.removeAll().then(() => {
       browser.contextMenus.create({ id: "pluck-link", title: t("menu.link"), contexts: ["link"] });
       browser.contextMenus.create({ id: "pluck-selection", title: t("menu.selection"), contexts: ["selection"] });
