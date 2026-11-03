@@ -10,6 +10,7 @@ import { keys, library, shareExtensionCache, syncPending, useCounts, useItems, u
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
 import { useSplit } from "./split/context";
+import { EmptyInbox } from "./split/EmptyInbox";
 import { SplitRow } from "./split/SplitRow";
 import { Icon, ICONS } from "./Glyph";
 import { ItemRow } from "./ItemRow";
@@ -116,7 +117,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     ]} />
   ) : null;
 
-  const sub = counts.data ? tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] }) : " ";
+  const sub = !counts.data ? " " : status === "inbox" && counts.data.inbox === 0 ? tr("ipad.empty.sub") : tr(status === "inbox" ? "items.toTriage" : "items.forLater", { count: counts.data[status] });
   return (
     <TitledList
       title={picked ? tr("items.selected", { count: picked.size }) : tr(`tabs.${status}`)}
@@ -206,7 +207,8 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
         <RefreshControl {...pull} />
       }
       ListEmptyComponent={
-        items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : status === "inbox"
+        items.isLoading ? <ActivityIndicator accessibilityLabel={tr("common.loading")} color={t.ink2} style={{ padding: 32 }} /> : split && status === "inbox" && only === "all" ? <EmptyInbox />
+          : status === "inbox"
           ? <Empty art={<ShareRow />} title={tr("items.empty.inbox.title")} body={tr("items.empty.inbox.body")} />
           : <Empty art={<SwipeToLater />} title={tr("items.empty.later.title")} body={tr("items.empty.later.body")} />
       }

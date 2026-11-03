@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Taal",
-    "hint": "Pluck gebruikt de taal van je iPhone. Wijzig die in iOS-instellingen, Pluck, Taal."
+    "hint": "{device, select, ipad {Pluck gebruikt de taal van je iPad. Wijzig die in iOS-instellingen, Pluck, Taal.} other {Pluck gebruikt de taal van je iPhone. Wijzig die in iOS-instellingen, Pluck, Taal.}}"
   },
   "common": {
     "cancel": "Annuleer",
@@ -433,7 +433,7 @@
     "backArchive": "Archief",
     "didntLoad": "Dit item laadde niet.",
     "didntLoadBody": "Misschien is het item weg, of de verbinding. Probeer het straks opnieuw.",
-    "notKept": "Nog niet op deze iPhone.",
+    "notKept": "{device, select, ipad {Nog niet op deze iPad.} other {Nog niet op deze iPhone.}}",
     "notKeptBody": "Het item opent zodra je weer online bent. Op wifi bewaart Pluck je nieuwste items hier om offline te lezen.",
     "minutesLeft": "{percent} · nog {minutes} min",
     "openOriginal": "Open het origineel",
@@ -468,7 +468,7 @@
     "handle": "Gebruikersnaam",
     "signOut": "Log uit",
     "signOutTitle": "Uitloggen?",
-    "signOutBody": "Wat op deze telefoon in de wachtrij staat, blijft hier tot je weer inlogt.",
+    "signOutBody": "{device, select, ipad {Wat op deze iPad in de wachtrij staat, blijft hier tot je weer inlogt.} other {Wat op deze telefoon in de wachtrij staat, blijft hier tot je weer inlogt.}}",
     "accountFootnote": "Je naam en gebruikersnaam staan op Lijsten die je openbaar maakt, en nergens anders.",
     "connectorCopied": "Gekopieerd. Plak het in je AI.",
     "copied": "Gekopieerd",
@@ -515,13 +515,13 @@
     "clearTitle": "Offline kopie wissen?",
     "clearBody": "Je bibliotheek blijft op de server. De app downloadt hem opnieuw terwijl je hem gebruikt.",
     "clear": "Wis",
-    "keepFootnote": "Op wifi bewaart Pluck je {count} nieuwste items uit Inbox, Later en Lijsten met hun afbeeldingen op deze iPhone, zodat je ze zonder verbinding kunt lezen. Tik op het downloadteken bij elk ander item om het hier te bewaren tot je het weghaalt.",
+    "keepFootnote": "{device, select, ipad {Op wifi bewaart Pluck je {count} nieuwste items uit Inbox, Later en Lijsten met hun afbeeldingen op deze iPad, zodat je ze zonder verbinding kunt lezen. Tik op het downloadteken bij elk ander item om het hier te bewaren tot je het weghaalt.} other {Op wifi bewaart Pluck je {count} nieuwste items uit Inbox, Later en Lijsten met hun afbeeldingen op deze iPhone, zodat je ze zonder verbinding kunt lezen. Tik op het downloadteken bij elk ander item om het hier te bewaren tot je het weghaalt.}}",
     "server": "Server",
-    "serverBody": "Deze telefoon gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".",
+    "serverBody": "{device, select, ipad {Deze iPad gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".} other {Deze telefoon gebruikt {host}. Wil je een andere server, log dan uit en kies \"Gebruik je eigen server\".}}",
     "iconLight": "Licht",
     "iconDark": "Donker",
     "iconA11y": "Symbool {name}",
-    "iconFootnote": "Alleen het symbool. De app zelf volgt je telefoon.",
+    "iconFootnote": "{device, select, ipad {Alleen het symbool. De app zelf volgt je iPad.} other {Alleen het symbool. De app zelf volgt je telefoon.}}",
     "usage": "Deel hoe ik Pluck gebruik",
     "usageFootnote": "Welke schermen je gebruikt, gekoppeld aan je account. Nooit wat je plukt. Crashrapporten worden hoe dan ook verstuurd, zonder je naam.",
     "tipTitle": "Zet Pluck vooraan in Deel",
@@ -577,9 +577,9 @@
     "stars": "{count, plural, one {# ster} other {# sterren}}",
     "pages": "{count, plural, one {# pagina} other {# pagina's}}",
     "offline": "Speelt af zodra je weer online bent.",
-    "keep": "Bewaar op deze iPhone",
-    "kept": "Bewaard op deze iPhone",
-    "letGo": "Niet meer bewaard op deze iPhone.",
+    "keep": "{device, select, ipad {Bewaar op deze iPad} other {Bewaar op deze iPhone}}",
+    "kept": "{device, select, ipad {Bewaard op deze iPad} other {Bewaard op deze iPhone}}",
+    "letGo": "{device, select, ipad {Niet meer bewaard op deze iPad.} other {Niet meer bewaard op deze iPhone.}}",
     "saveFile": "Bewaar in Bestanden"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "Dingen"
     },
     "listsSub": "{count, plural, one {# lijst} other {# lijsten}}, {shared, plural, =0 {geen openbaar} other {# openbaar}}",
-    "listMeta": "{count, plural, one {# item} other {# items}} · {ticked} van {count} klaar"
+    "listMeta": "{count, plural, one {# item} other {# items}} · {ticked} van {count} klaar",
+    "results": "{count, plural, one {# resultaat} other {# resultaten}} voor ‘{q}’",
+    "empty": {
+      "sub": "Niets te sorteren",
+      "title": "Niets in je Inbox.",
+      "body": "Pluk iets via het deelmenu in een app, of druk op <key>⌘</key> <key>N</key> om een notitie te schrijven.",
+      "messages": "Berichten",
+      "mail": "Mail",
+      "notes": "Notities"
+    }
   }
 }

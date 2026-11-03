@@ -1,7 +1,7 @@
 import type { Item, Status } from "@pluck/shared-schemas";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useTags } from "@/lib/data";
@@ -17,12 +17,30 @@ type Props = {
   selecting?: boolean;
   selected?: boolean;
   onSelect?: () => void;
+  // Search (iPad-Search): where the Item is now in place of when, the words found marked in the title, the snippet under.
+  when?: string;
+  mark?: string;
+  below?: ReactNode;
 };
+
+// The title with each place `mark` appears in it on --highlight-wash, as the board marks a search's words.
+function marked(title: string, mark: string | undefined, wash: string, ink: string): ReactNode {
+  const q = mark?.trim().toLowerCase();
+  if (!q) return title;
+  const out: ReactNode[] = [];
+  let at = 0;
+  for (let i = title.toLowerCase().indexOf(q); i >= 0; i = title.toLowerCase().indexOf(q, at)) {
+    out.push(title.slice(at, i), <Text key={i} style={{ backgroundColor: wash, color: ink }}>{title.slice(i, i + q.length)}</Text>);
+    at = i + q.length;
+  }
+  out.push(title.slice(at));
+  return out;
+}
 
 // A row in the iPad list column (iPad-Inbox, iPad-Spec, List column): padding 12 14, radius 12, inset 8; a 40
 // dashed tile with the kind glyph; title 15/20 600, source 13 --ink2, tags as 22 tall chips. The open one sits on
 // --selected; the pointer over one puts it on --tint and swaps the time for Later, Archive and Tag (30 by 30).
-export function SplitRow({ item, open, onOpen, onMove, selecting = false, selected = false, onSelect }: Props) {
+export function SplitRow({ item, open, onOpen, onMove, selecting = false, selected = false, onSelect, when, mark, below }: Props) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const words = useRowText()(item);
@@ -74,7 +92,7 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
       )}
       <View style={styles.middle}>
         <View style={styles.top}>
-          <Text numberOfLines={3} style={[font.semibold, styles.title, { color: t.ink }]}>{item.title}</Text>
+          <Text numberOfLines={3} style={[font.semibold, styles.title, { color: t.ink }]}>{marked(item.title, mark, t.highlightWash, t.ink)}</Text>
           {hover && onMove && !selecting ? (
             <View style={styles.hoverTools}>
               <HoverTool icon={away === "inbox" ? ICONS.inbox : ICONS.later} label={tr(away === "inbox" ? "actions.backToInbox" : "actions.later")} onPress={() => onMove(away)} />
@@ -82,10 +100,11 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
               <HoverTool icon={ICONS.tag} label={tr("actions.tags")} onPress={pickTags} />
             </View>
           ) : (
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, styles.when, { color: t.ink2 }]}>{words.when}</Text>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, styles.when, { color: t.ink2 }]}>{when ?? words.when}</Text>
           )}
         </View>
         <Text numberOfLines={1} style={[font.regular, styles.site, { color: t.ink2 }]}>{words.siteMeta}</Text>
+        {below}
         {names.length > 0 && (
           <View style={styles.tags}>
             {names.map((n) => <Text key={n} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.tag, { backgroundColor: t.chip, color: t.ink }]}>{n}</Text>)}

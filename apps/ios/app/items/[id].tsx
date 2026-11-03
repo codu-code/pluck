@@ -18,6 +18,7 @@ import { ToolBar, type Tool } from "@/components/ToolBar";
 import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
+import { device } from "@/lib/i18n";
 import { api } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
 
@@ -45,7 +46,7 @@ export function ItemView({ id }: { id: string }) {
           {away ? (
             <>
               <Icon d={ICONS.offline} size={28} color={t.ink2} width={1.3} />
-              <Text style={[font.semibold, { color: t.ink, fontSize: 17, textAlign: "center" }]}>{tr("item.notKept")}</Text>
+              <Text style={[font.semibold, { color: t.ink, fontSize: 17, textAlign: "center" }]}>{tr("item.notKept", { device })}</Text>
               <Text style={[font.regular, { color: t.ink2, fontSize: 15, lineHeight: 21, textAlign: "center", maxWidth: 320 }]}>{tr("item.notKeptBody")}</Text>
             </>
           ) : data.isError ? (
@@ -294,7 +295,7 @@ function PdfFile({ item }: { item: Item }) {
     return (
       <View style={styles.centre} accessibilityLiveRegion="polite">
         {file === undefined ? <ActivityIndicator accessibilityLabel={tr("common.loading")} /> : (
-          <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>{tr(online ? "item.didntLoad" : "item.notKept")}</Text>
+          <Text style={[font.regular, { color: t.ink2, fontSize: 15, textAlign: "center" }]}>{online ? tr("item.didntLoad") : tr("item.notKept", { device })}</Text>
         )}
       </View>
     );
@@ -317,10 +318,10 @@ function KeepButton({ item }: { item: Item }) {
   const kept = useKeptByHand(item.id);
   const inDetail = useInDetail();
   return (
-    <Pressable accessibilityRole="switch" accessibilityState={{ checked: kept }} accessibilityLabel={tr("preview.keep")} style={inDetail ? styles.detailIcon : styles.iconButton}
+    <Pressable accessibilityRole="switch" accessibilityState={{ checked: kept }} accessibilityLabel={tr("preview.keep", { device })} style={inDetail ? styles.detailIcon : styles.iconButton}
       onPress={() => {
         void Haptics.selectionAsync();
-        toast(tr(kept ? "preview.letGo" : "preview.kept"));
+        toast(tr(kept ? "preview.letGo" : "preview.kept", { device }));
         void keepByHand(item, !kept).catch(() => toast(tr("common.failed.title")));
       }}>
       <View style={kept ? [styles.kept, { backgroundColor: t.highlightWash }] : styles.kept}><Icon d={ICONS.keep} size={inDetail ? 20 : 18} color={inDetail ? t.actionInk : kept ? t.ink : t.ink2} width={inDetail ? 1.4 : 1.6} /></View>

@@ -6,6 +6,7 @@
   "openToSignIn": "打开 Pluck 登录",
   "queuedTitle": "已摘下，稍后同步。",
   "queuedBody": "它先留在你的手机上，联网后就会上传。",
+  "queuedBodyPad": "它先留在你的 iPad 上，联网后就会上传。",
   "done": "完成",
   "failedTitle": "没能摘下。",
   "nothingToKeep": "这里没有 Pluck 能留下的内容。",

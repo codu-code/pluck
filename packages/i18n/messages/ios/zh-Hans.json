@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "语言",
-    "hint": "Pluck 跟随 iPhone 的语言。可在 iOS 的“设置”>“Pluck”>“语言”中更改。"
+    "hint": "{device, select, ipad {Pluck 跟随 iPad 的语言。可在 iOS 的“设置”>“Pluck”>“语言”中更改。} other {Pluck 跟随 iPhone 的语言。可在 iOS 的“设置”>“Pluck”>“语言”中更改。}}"
   },
   "common": {
     "cancel": "取消",
@@ -433,7 +433,7 @@
     "backArchive": "归档",
     "didntLoad": "这条没有载入。",
     "didntLoadBody": "可能是它不在了，也可能是网络断了。稍后再试。",
-    "notKept": "这台 iPhone 上还没有它。",
+    "notKept": "{device, select, ipad {这台 iPad 上还没有它。} other {这台 iPhone 上还没有它。}}",
     "notKeptBody": "联网后就能打开。连接 Wi-Fi 时，Pluck 会把最新的条目留在这里供离线阅读。",
     "minutesLeft": "{percent} · 还剩 {minutes} 分钟",
     "openOriginal": "打开原网页",
@@ -468,7 +468,7 @@
     "handle": "用户名",
     "signOut": "退出登录",
     "signOutTitle": "退出登录？",
-    "signOutBody": "在这台手机上排队等待上传的内容会一直留着，直到你再次登录。",
+    "signOutBody": "{device, select, ipad {在这台 iPad上排队等待上传的内容会一直留着，直到你再次登录。} other {在这台手机上排队等待上传的内容会一直留着，直到你再次登录。}}",
     "accountFootnote": "你的名字和用户名只会显示在你公开的清单上，其他地方都不会出现。",
     "connectorCopied": "已拷贝。把它粘贴到你的 AI 里。",
     "copied": "已拷贝",
@@ -515,13 +515,13 @@
     "clearTitle": "清除离线副本？",
     "clearBody": "你的资料库仍在服务器上。App 会在你使用时重新下载。",
     "clear": "清除",
-    "keepFootnote": "连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目连同图片留在这台 iPhone 上，没有网络也能读。在其他条目上轻点下载标记，就能一直留在这里，直到你移除。",
+    "keepFootnote": "{device, select, ipad {连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目连同图片留在这台 iPad 上，没有网络也能读。在其他条目上轻点下载标记，就能一直留在这里，直到你移除。} other {连接 Wi-Fi 时，Pluck 会把收件箱、稍后和清单中最新 {count} 条条目连同图片留在这台 iPhone 上，没有网络也能读。在其他条目上轻点下载标记，就能一直留在这里，直到你移除。}}",
     "server": "服务器",
-    "serverBody": "这台手机使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。",
+    "serverBody": "{device, select, ipad {这台 iPad使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。} other {这台手机使用的是 {host}。要使用其他服务器，请先退出登录，然后选择“使用你自己的服务器”。}}",
     "iconLight": "浅色",
     "iconDark": "深色",
     "iconA11y": "{name}图标",
-    "iconFootnote": "只是图标而已。App 本身跟随你的手机外观。",
+    "iconFootnote": "{device, select, ipad {只是图标而已。App 本身跟随你的 iPad外观。} other {只是图标而已。App 本身跟随你的手机外观。}}",
     "usage": "分享我如何使用 Pluck",
     "usageFootnote": "你常用哪些页面，与你的账号关联。永远不包括你摘下的内容。崩溃报告照常发送，不带你的名字。",
     "tipTitle": "把 Pluck 放到“分享”最前面",
@@ -577,9 +577,9 @@
     "stars": "{count} 颗星",
     "pages": "{count} 页",
     "offline": "恢复联网后即可播放。",
-    "keep": "保留在此 iPhone 上",
-    "kept": "已保留在此 iPhone 上",
-    "letGo": "不再保留在此 iPhone 上。",
+    "keep": "{device, select, ipad {保留在此 iPad 上} other {保留在此 iPhone 上}}",
+    "kept": "{device, select, ipad {已保留在此 iPad 上} other {已保留在此 iPhone 上}}",
+    "letGo": "{device, select, ipad {不再保留在此 iPad 上。} other {不再保留在此 iPhone 上。}}",
     "saveFile": "存储到“文件”"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "物品"
     },
     "listsSub": "{count} 个清单，{shared} 个公开",
-    "listMeta": "{count} 项 · 已完成 {ticked}/{count}"
+    "listMeta": "{count} 项 · 已完成 {ticked}/{count}",
+    "results": "“{q}”的结果：{count} 条",
+    "empty": {
+      "sub": "没有要整理的",
+      "title": "收件箱里什么都没有。",
+      "body": "在任何 App 的共享菜单里摘下内容，或按 <key>⌘</key> <key>N</key> 写一条笔记。",
+      "messages": "信息",
+      "mail": "邮件",
+      "notes": "备忘录"
+    }
   }
 }

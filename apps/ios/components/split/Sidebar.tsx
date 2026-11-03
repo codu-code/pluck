@@ -32,6 +32,9 @@ export function Sidebar({ onGo }: { onGo?: () => void }) {
 
   const go = (to: keyof typeof TABS | Exclude<Section, "tabs">) => {
     void Haptics.selectionAsync();
+    // Settings opens on its first group; anywhere else, a Settings group does not stay in the detail column.
+    if (to === "settings") split?.show({ kind: "settings", id: "account" });
+    else if (split?.detail?.kind === "settings") split.show(null);
     if (to in TABS) {
       split?.go("tabs");
       router.navigate(TABS[to as keyof typeof TABS]);

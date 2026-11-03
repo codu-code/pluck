@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Sprache",
-    "hint": "Pluck nutzt die Sprache deines iPhones. Ändern kannst du sie in den iOS-Einstellungen unter Pluck, Sprache."
+    "hint": "{device, select, ipad {Pluck nutzt die Sprache deines iPads. Ändern kannst du sie in den iOS-Einstellungen unter Pluck, Sprache.} other {Pluck nutzt die Sprache deines iPhones. Ändern kannst du sie in den iOS-Einstellungen unter Pluck, Sprache.}}"
   },
   "common": {
     "cancel": "Abbrechen",
@@ -433,7 +433,7 @@
     "backArchive": "Archiv",
     "didntLoad": "Das ließ sich nicht laden.",
     "didntLoadBody": "Vielleicht ist es weg, oder die Verbindung. Versuch es gleich noch mal.",
-    "notKept": "Noch nicht auf diesem iPhone.",
+    "notKept": "{device, select, ipad {Noch nicht auf diesem iPad.} other {Noch nicht auf diesem iPhone.}}",
     "notKeptBody": "Es öffnet sich, sobald du wieder online bist. Im WLAN behält Pluck deine neuesten Einträge hier zum Offline-Lesen.",
     "minutesLeft": "{percent} · noch {minutes} Min.",
     "openOriginal": "Original öffnen",
@@ -468,7 +468,7 @@
     "handle": "Handle",
     "signOut": "Abmelden",
     "signOutTitle": "Abmelden?",
-    "signOutBody": "Was auf diesem iPhone noch wartet, bleibt hier, bis du dich wieder anmeldest.",
+    "signOutBody": "{device, select, ipad {Was auf diesem iPad noch wartet, bleibt hier, bis du dich wieder anmeldest.} other {Was auf diesem iPhone noch wartet, bleibt hier, bis du dich wieder anmeldest.}}",
     "accountFootnote": "Dein Name und dein Handle erscheinen auf Listen, die du öffentlich machst, und sonst nirgends.",
     "connectorCopied": "Kopiert. Füg es in deine KI ein.",
     "copied": "Kopiert",
@@ -515,13 +515,13 @@
     "clearTitle": "Offline-Kopie löschen?",
     "clearBody": "Deine Bibliothek bleibt auf dem Server. Die App lädt sie beim Benutzen wieder herunter.",
     "clear": "Löschen",
-    "keepFootnote": "Im WLAN behält Pluck deine {count} neuesten Einträge aus Eingang, Später und Listen mit ihren Bildern auf diesem iPhone, damit du sie ohne Verbindung lesen kannst. Tippe bei jedem anderen Eintrag auf das Download-Zeichen, um ihn hier zu behalten, bis du ihn entfernst.",
+    "keepFootnote": "{device, select, ipad {Im WLAN behält Pluck deine {count} neuesten Einträge aus Eingang, Später und Listen mit ihren Bildern auf diesem iPad, damit du sie ohne Verbindung lesen kannst. Tippe bei jedem anderen Eintrag auf das Download-Zeichen, um ihn hier zu behalten, bis du ihn entfernst.} other {Im WLAN behält Pluck deine {count} neuesten Einträge aus Eingang, Später und Listen mit ihren Bildern auf diesem iPhone, damit du sie ohne Verbindung lesen kannst. Tippe bei jedem anderen Eintrag auf das Download-Zeichen, um ihn hier zu behalten, bis du ihn entfernst.}}",
     "server": "Server",
-    "serverBody": "Dieses iPhone nutzt {host}. Für einen anderen Server meldest du dich ab und wählst dann „Eigenen Server nutzen“.",
+    "serverBody": "{device, select, ipad {Dieses iPad nutzt {host}. Für einen anderen Server meldest du dich ab und wählst dann „Eigenen Server nutzen“.} other {Dieses iPhone nutzt {host}. Für einen anderen Server meldest du dich ab und wählst dann „Eigenen Server nutzen“.}}",
     "iconLight": "Hell",
     "iconDark": "Dunkel",
     "iconA11y": "Symbol {name}",
-    "iconFootnote": "Nur das Symbol. Die App selbst richtet sich nach deinem iPhone.",
+    "iconFootnote": "{device, select, ipad {Nur das Symbol. Die App selbst richtet sich nach deinem iPad.} other {Nur das Symbol. Die App selbst richtet sich nach deinem iPhone.}}",
     "usage": "Teilen, wie ich Pluck nutze",
     "usageFootnote": "Welche Bildschirme du nutzt, verknüpft mit deinem Konto. Nie, was du pflückst. Absturzberichte gehen so oder so raus, ohne deinen Namen.",
     "tipTitle": "Pluck im Teilen-Menü nach vorn",
@@ -577,9 +577,9 @@
     "stars": "{count, plural, one {# Stern} other {# Sterne}}",
     "pages": "{count, plural, one {# Seite} other {# Seiten}}",
     "offline": "Spielt, sobald du wieder online bist.",
-    "keep": "Auf diesem iPhone behalten",
-    "kept": "Auf diesem iPhone behalten",
-    "letGo": "Nicht mehr auf diesem iPhone behalten.",
+    "keep": "{device, select, ipad {Auf diesem iPad behalten} other {Auf diesem iPhone behalten}}",
+    "kept": "{device, select, ipad {Auf diesem iPad behalten} other {Auf diesem iPhone behalten}}",
+    "letGo": "{device, select, ipad {Nicht mehr auf diesem iPad behalten.} other {Nicht mehr auf diesem iPhone behalten.}}",
     "saveFile": "In Dateien sichern"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "Dinge"
     },
     "listsSub": "{count, plural, one {# Liste} other {# Listen}}, {shared, plural, =0 {keine öffentlich} other {# öffentlich}}",
-    "listMeta": "{count, plural, one {# Eintrag} other {# Einträge}} · {ticked} von {count} erledigt"
+    "listMeta": "{count, plural, one {# Eintrag} other {# Einträge}} · {ticked} von {count} erledigt",
+    "results": "{count, plural, one {# Ergebnis} other {# Ergebnisse}} für „{q}“",
+    "empty": {
+      "sub": "Nichts zu sortieren",
+      "title": "Nichts in deinem Eingang.",
+      "body": "Pflück etwas über das Teilen-Menü einer beliebigen App oder drück <key>⌘</key> <key>N</key>, um eine Notiz zu schreiben.",
+      "messages": "Nachrichten",
+      "mail": "Mail",
+      "notes": "Notizen"
+    }
   }
 }

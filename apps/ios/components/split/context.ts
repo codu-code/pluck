@@ -8,8 +8,8 @@ export function useColumns(): Columns {
   return columnsFor(useWindowDimensions().width);
 }
 
-// What the detail column shows: an Item, a List, or nothing yet.
-export type Detail = { kind: "item" | "list"; id: string } | null;
+// What the detail column shows: an Item, a List, a group of Settings, or nothing yet.
+export type Detail = { kind: "item" | "list" | "settings"; id: string } | null;
 // What the list column shows: the tab you are on, or one of the sidebar's places that is not a tab.
 export type Section = "tabs" | "archive" | "bin" | "settings";
 type Split = {

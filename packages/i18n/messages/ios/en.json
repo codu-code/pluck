@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Language",
-    "hint": "Pluck uses your iPhone's language. Change it in iOS Settings, Pluck, Language."
+    "hint": "{device, select, ipad {Pluck uses your iPad's language. Change it in iOS Settings, Pluck, Language.} other {Pluck uses your iPhone's language. Change it in iOS Settings, Pluck, Language.}}"
   },
   "common": {
     "cancel": "Cancel",
@@ -433,7 +433,7 @@
     "backArchive": "Archive",
     "didntLoad": "This one didn't load.",
     "didntLoadBody": "It may be gone, or the connection is. Try again in a bit.",
-    "notKept": "Not on this iPhone yet.",
+    "notKept": "{device, select, ipad {Not on this iPad yet.} other {Not on this iPhone yet.}}",
     "notKeptBody": "It opens when you are back online. On Wi-Fi, Pluck keeps your newest items here for reading offline.",
     "minutesLeft": "{percent} · {minutes} min left",
     "openOriginal": "Open the original",
@@ -468,7 +468,7 @@
     "handle": "Handle",
     "signOut": "Sign out",
     "signOutTitle": "Sign out?",
-    "signOutBody": "Plucks queued on this phone stay here until you sign in again.",
+    "signOutBody": "{device, select, ipad {Plucks queued on this iPad stay here until you sign in again.} other {Plucks queued on this phone stay here until you sign in again.}}",
     "accountFootnote": "Your name and handle show on Lists you make public, and nowhere else.",
     "connectorCopied": "Copied. Paste it into your AI.",
     "copied": "Copied",
@@ -515,13 +515,13 @@
     "clearTitle": "Clear the offline copy?",
     "clearBody": "Your library stays on the server. The app downloads it again as you use it.",
     "clear": "Clear",
-    "keepFootnote": "On Wi-Fi, Pluck keeps your newest {count} items in Inbox, Later and Lists on this iPhone, with their pictures, so you can read them with no connection. Tap the download mark on any other item to keep it here until you let it go.",
+    "keepFootnote": "{device, select, ipad {On Wi-Fi, Pluck keeps your newest {count} items in Inbox, Later and Lists on this iPad, with their pictures, so you can read them with no connection. Tap the download mark on any other item to keep it here until you let it go.} other {On Wi-Fi, Pluck keeps your newest {count} items in Inbox, Later and Lists on this iPhone, with their pictures, so you can read them with no connection. Tap the download mark on any other item to keep it here until you let it go.}}",
     "server": "Server",
-    "serverBody": "This phone uses {host}. To use another server, sign out, then choose \"Use your own server\".",
+    "serverBody": "{device, select, ipad {This iPad uses {host}. To use another server, sign out, then choose \"Use your own server\".} other {This phone uses {host}. To use another server, sign out, then choose \"Use your own server\".}}",
     "iconLight": "Light",
     "iconDark": "Dark",
     "iconA11y": "{name} icon",
-    "iconFootnote": "Just the icon. The app itself follows your phone.",
+    "iconFootnote": "{device, select, ipad {Just the icon. The app itself follows your iPad.} other {Just the icon. The app itself follows your phone.}}",
     "usage": "Share how I use Pluck",
     "usageFootnote": "Which screens you use, tied to your account. Never what you pluck. Crash reports go either way, without your name.",
     "tipTitle": "Put Pluck first in Share",
@@ -577,9 +577,9 @@
     "stars": "{count, plural, one {# star} other {# stars}}",
     "pages": "{count, plural, one {# page} other {# pages}}",
     "offline": "Plays when you are back online.",
-    "keep": "Keep on this iPhone",
-    "kept": "Kept on this iPhone",
-    "letGo": "No longer kept on this iPhone.",
+    "keep": "{device, select, ipad {Keep on this iPad} other {Keep on this iPhone}}",
+    "kept": "{device, select, ipad {Kept on this iPad} other {Kept on this iPhone}}",
+    "letGo": "{device, select, ipad {No longer kept on this iPad.} other {No longer kept on this iPhone.}}",
     "saveFile": "Save to Files"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "Things"
     },
     "listsSub": "{count, plural, one {# List} other {# Lists}}, {shared, plural, =0 {none public} other {# public}}",
-    "listMeta": "{count, plural, one {# Item} other {# Items}} · {ticked} of {count} done"
+    "listMeta": "{count, plural, one {# Item} other {# Items}} · {ticked} of {count} done",
+    "results": "{count, plural, one {# result} other {# results}} for “{q}”",
+    "empty": {
+      "sub": "Nothing to triage",
+      "title": "Nothing in your Inbox.",
+      "body": "Pluck something from the share sheet in any app, or press <key>⌘</key> <key>N</key> to write a note.",
+      "messages": "Messages",
+      "mail": "Mail",
+      "notes": "Notes"
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Langue",
-    "hint": "Pluck suit la langue de votre iPhone. Pour la changer : Réglages iOS, Pluck, Langue."
+    "hint": "{device, select, ipad {Pluck suit la langue de votre iPad. Pour la changer : Réglages iOS, Pluck, Langue.} other {Pluck suit la langue de votre iPhone. Pour la changer : Réglages iOS, Pluck, Langue.}}"
   },
   "common": {
     "cancel": "Annuler",
@@ -433,7 +433,7 @@
     "backArchive": "Archives",
     "didntLoad": "Celui-ci ne s’est pas chargé.",
     "didntLoadBody": "Il a peut-être disparu, ou c’est la connexion. Réessayez dans un moment.",
-    "notKept": "Pas encore sur cet iPhone.",
+    "notKept": "{device, select, ipad {Pas encore sur cet iPad.} other {Pas encore sur cet iPhone.}}",
     "notKeptBody": "Il s’ouvrira à votre retour en ligne. En Wi-Fi, Pluck garde ici vos éléments les plus récents pour les lire hors ligne.",
     "minutesLeft": "{percent} · encore {minutes} min",
     "openOriginal": "Ouvrir l’original",
@@ -468,7 +468,7 @@
     "handle": "Pseudo",
     "signOut": "Se déconnecter",
     "signOutTitle": "Se déconnecter ?",
-    "signOutBody": "Les cueillettes en attente sur ce téléphone y restent jusqu’à votre prochaine connexion.",
+    "signOutBody": "{device, select, ipad {Les cueillettes en attente sur cet iPad y restent jusqu’à votre prochaine connexion.} other {Les cueillettes en attente sur ce téléphone y restent jusqu’à votre prochaine connexion.}}",
     "accountFootnote": "Votre nom et votre pseudo apparaissent sur les listes que vous rendez publiques, et nulle part ailleurs.",
     "connectorCopied": "Copié. Collez-le dans votre IA.",
     "copied": "Copié",
@@ -515,13 +515,13 @@
     "clearTitle": "Effacer la copie hors ligne ?",
     "clearBody": "Votre bibliothèque reste sur le serveur. L’app la télécharge à nouveau au fil de l’utilisation.",
     "clear": "Effacer",
-    "keepFootnote": "En Wi-Fi, Pluck garde sur cet iPhone vos {count} éléments les plus récents de Réception, Plus tard et Listes, avec leurs images, pour les lire sans connexion. Touchez la marque de téléchargement d’un autre élément pour le garder ici jusqu’à ce que vous le retiriez.",
+    "keepFootnote": "{device, select, ipad {En Wi-Fi, Pluck garde sur cet iPad vos {count} éléments les plus récents de Réception, Plus tard et Listes, avec leurs images, pour les lire sans connexion. Touchez la marque de téléchargement d’un autre élément pour le garder ici jusqu’à ce que vous le retiriez.} other {En Wi-Fi, Pluck garde sur cet iPhone vos {count} éléments les plus récents de Réception, Plus tard et Listes, avec leurs images, pour les lire sans connexion. Touchez la marque de téléchargement d’un autre élément pour le garder ici jusqu’à ce que vous le retiriez.}}",
     "server": "Serveur",
-    "serverBody": "Ce téléphone utilise {host}. Pour changer de serveur, déconnectez-vous, puis choisissez « Utiliser votre propre serveur ».",
+    "serverBody": "{device, select, ipad {Cet iPad utilise {host}. Pour changer de serveur, déconnectez-vous, puis choisissez « Utiliser votre propre serveur ».} other {Ce téléphone utilise {host}. Pour changer de serveur, déconnectez-vous, puis choisissez « Utiliser votre propre serveur ».}}",
     "iconLight": "Clair",
     "iconDark": "Sombre",
     "iconA11y": "Icône {name}",
-    "iconFootnote": "Juste l’icône. L’app elle-même suit votre téléphone.",
+    "iconFootnote": "{device, select, ipad {Juste l’icône. L’app elle-même suit votre iPad.} other {Juste l’icône. L’app elle-même suit votre téléphone.}}",
     "usage": "Partager mon utilisation de Pluck",
     "usageFootnote": "Les écrans que vous utilisez, liés à votre compte. Jamais ce que vous cueillez. Les rapports de plantage partent dans tous les cas, sans votre nom.",
     "tipTitle": "Mettez Pluck en premier dans Partager",
@@ -577,9 +577,9 @@
     "stars": "{count, plural, one {# étoile} other {# étoiles}}",
     "pages": "{count, plural, one {# page} other {# pages}}",
     "offline": "Lecture possible une fois reconnecté.",
-    "keep": "Garder sur cet iPhone",
-    "kept": "Gardé sur cet iPhone",
-    "letGo": "N’est plus gardé sur cet iPhone.",
+    "keep": "{device, select, ipad {Garder sur cet iPad} other {Garder sur cet iPhone}}",
+    "kept": "{device, select, ipad {Gardé sur cet iPad} other {Gardé sur cet iPhone}}",
+    "letGo": "{device, select, ipad {N’est plus gardé sur cet iPad.} other {N’est plus gardé sur cet iPhone.}}",
     "saveFile": "Enregistrer dans Fichiers"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "Objets"
     },
     "listsSub": "{count, plural, one {# liste} other {# listes}}, {shared, plural, =0 {aucune publique} one {# publique} other {# publiques}}",
-    "listMeta": "{count, plural, one {# élément} other {# éléments}} · {ticked} sur {count} terminés"
+    "listMeta": "{count, plural, one {# élément} other {# éléments}} · {ticked} sur {count} terminés",
+    "results": "{count, plural, one {# résultat} other {# résultats}} pour « {q} »",
+    "empty": {
+      "sub": "Rien à trier",
+      "title": "Rien dans votre Réception.",
+      "body": "Cueillez quelque chose depuis le menu Partager de n’importe quelle app, ou appuyez sur <key>⌘</key> <key>N</key> pour écrire une note.",
+      "messages": "Messages",
+      "mail": "Mail",
+      "notes": "Notes"
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "언어",
-    "hint": "Pluck은 iPhone의 언어를 따라요. iOS 설정 > Pluck > 언어에서 바꿀 수 있어요."
+    "hint": "{device, select, ipad {Pluck은 iPad의 언어를 따라요. iOS 설정 > Pluck > 언어에서 바꿀 수 있어요.} other {Pluck은 iPhone의 언어를 따라요. iOS 설정 > Pluck > 언어에서 바꿀 수 있어요.}}"
   },
   "common": {
     "cancel": "취소",
@@ -433,7 +433,7 @@
     "backArchive": "보관함",
     "didntLoad": "불러오지 못했어요.",
     "didntLoadBody": "항목이 없어졌거나 연결이 끊겼을 수 있어요. 조금 뒤에 다시 해 보세요.",
-    "notKept": "아직 이 iPhone에 없어요.",
+    "notKept": "{device, select, ipad {아직 이 iPad에 없어요.} other {아직 이 iPhone에 없어요.}}",
     "notKeptBody": "다시 온라인이 되면 열려요. Wi-Fi에 연결되면 최신 항목을 여기에 보관해서 오프라인으로 읽을 수 있어요.",
     "minutesLeft": "{percent} · {minutes}분 남음",
     "openOriginal": "원본 열기",
@@ -468,7 +468,7 @@
     "handle": "핸들",
     "signOut": "로그아웃",
     "signOutTitle": "로그아웃할까요?",
-    "signOutBody": "이 휴대폰에서 기다리는 항목은 다시 로그인할 때까지 여기 남아요.",
+    "signOutBody": "{device, select, ipad {이 iPad에서 기다리는 항목은 다시 로그인할 때까지 여기 남아요.} other {이 휴대폰에서 기다리는 항목은 다시 로그인할 때까지 여기 남아요.}}",
     "accountFootnote": "이름과 핸들은 공개한 리스트에만 표시되고, 다른 곳에는 나오지 않아요.",
     "connectorCopied": "복사했어요. 내 AI에 붙여 넣으세요.",
     "copied": "복사됨",
@@ -515,13 +515,13 @@
     "clearTitle": "오프라인 사본을 지울까요?",
     "clearBody": "라이브러리는 서버에 그대로 있어요. 앱을 쓰는 동안 다시 내려받아요.",
     "clear": "지우기",
-    "keepFootnote": "Wi-Fi에 연결되면 수신함, 나중에, 리스트의 최신 항목 {count}개를 이미지와 함께 이 iPhone에 보관해서 연결 없이도 읽을 수 있어요. 다른 항목도 다운로드 표시를 탭하면 지울 때까지 여기에 보관해요.",
+    "keepFootnote": "{device, select, ipad {Wi-Fi에 연결되면 수신함, 나중에, 리스트의 최신 항목 {count}개를 이미지와 함께 이 iPad에 보관해서 연결 없이도 읽을 수 있어요. 다른 항목도 다운로드 표시를 탭하면 지울 때까지 여기에 보관해요.} other {Wi-Fi에 연결되면 수신함, 나중에, 리스트의 최신 항목 {count}개를 이미지와 함께 이 iPhone에 보관해서 연결 없이도 읽을 수 있어요. 다른 항목도 다운로드 표시를 탭하면 지울 때까지 여기에 보관해요.}}",
     "server": "서버",
-    "serverBody": "이 휴대폰은 {host}을(를) 사용해요. 다른 서버를 쓰려면 로그아웃한 다음 \"내 서버 사용하기\"를 고르세요.",
+    "serverBody": "{device, select, ipad {이 iPad은 {host}을(를) 사용해요. 다른 서버를 쓰려면 로그아웃한 다음 \"내 서버 사용하기\"를 고르세요.} other {이 휴대폰은 {host}을(를) 사용해요. 다른 서버를 쓰려면 로그아웃한 다음 \"내 서버 사용하기\"를 고르세요.}}",
     "iconLight": "라이트",
     "iconDark": "다크",
     "iconA11y": "{name} 아이콘",
-    "iconFootnote": "아이콘만 바뀌어요. 앱 화면은 휴대폰 설정을 따라요.",
+    "iconFootnote": "{device, select, ipad {아이콘만 바뀌어요. 앱 화면은 iPad 설정을 따라요.} other {아이콘만 바뀌어요. 앱 화면은 휴대폰 설정을 따라요.}}",
     "usage": "Pluck 사용 방식 공유",
     "usageFootnote": "어떤 화면을 쓰는지, 계정과 함께. 무엇을 담았는지는 절대 보내지 않아요. 오류 보고는 어느 쪽을 골라도 이름 없이 전송돼요.",
     "tipTitle": "공유 메뉴에서 Pluck을 맨 앞에",
@@ -577,9 +577,9 @@
     "stars": "별 {count}개",
     "pages": "{count}페이지",
     "offline": "다시 온라인이 되면 재생할 수 있어요.",
-    "keep": "이 iPhone에 보관",
-    "kept": "이 iPhone에 보관됨",
-    "letGo": "이 iPhone에 더는 보관하지 않아요.",
+    "keep": "{device, select, ipad {이 iPad에 보관} other {이 iPhone에 보관}}",
+    "kept": "{device, select, ipad {이 iPad에 보관됨} other {이 iPhone에 보관됨}}",
+    "letGo": "{device, select, ipad {이 iPad에 더는 보관하지 않아요.} other {이 iPhone에 더는 보관하지 않아요.}}",
     "saveFile": "파일에 저장"
   },
   "ipad": {
@@ -596,6 +596,15 @@
       "things": "물건"
     },
     "listsSub": "리스트 {count}개, 공개 {shared}개",
-    "listMeta": "{count}개 · {count}개 중 {ticked}개 완료"
+    "listMeta": "{count}개 · {count}개 중 {ticked}개 완료",
+    "results": "“{q}” 결과 {count}개",
+    "empty": {
+      "sub": "정리할 것이 없어요",
+      "title": "수신함이 비어 있어요.",
+      "body": "어떤 앱에서든 공유 시트로 Pluck에 담거나, <key>⌘</key> <key>N</key>을 눌러 노트를 써 보세요.",
+      "messages": "메시지",
+      "mail": "Mail",
+      "notes": "메모"
+    }
   }
 }

@@ -8,7 +8,7 @@ import Archive from "@/app/archive";
 import Bin from "@/app/bin";
 import { ItemView } from "@/app/items/[id]";
 import { ListView } from "@/app/lists/[id]";
-import SettingsScreen from "@/app/settings";
+import SettingsScreen, { type Part } from "@/app/settings";
 import { font, useTheme } from "@/lib/theme";
 import { OfflinePill } from "../Offline";
 import { InDetail, SplitContext, useColumns, type Detail, type Section } from "./context";
@@ -19,7 +19,7 @@ import { Sidebar } from "./Sidebar";
 const demo = (key: string) => (process.env.EXPO_PUBLIC_DEMO_KEY ? (Settings.get(key) as string | undefined) : undefined);
 const demoDetail = (): Detail => {
   const [kind, id] = (demo("demoDetail") ?? "").split(":");
-  return (kind === "item" || kind === "list") && id ? { kind, id } : null;
+  return (kind === "item" || kind === "list" || kind === "settings") && id ? { kind, id } : null;
 };
 
 const SIDEBAR = 300;
@@ -111,7 +111,7 @@ function DetailColumn({ detail }: { detail: Detail }) {
   return (
     <InDetail.Provider value>
       <View key={`${detail.kind}:${detail.id}`} style={styles.fill}>
-        {detail.kind === "item" ? <ItemView id={detail.id} /> : <ListView id={detail.id} />}
+        {detail.kind === "item" ? <ItemView id={detail.id} /> : detail.kind === "list" ? <ListView id={detail.id} /> : <SettingsScreen part={detail.id as Part} />}
       </View>
     </InDetail.Provider>
   );
