@@ -1,6 +1,10 @@
 import AppIntents
 import Foundation
 
+// The extension's entry point. Without it the executable has no __swift5_entry and iOS refuses to install the app.
+@main
+struct PluckIntentsExtension: AppIntentsExtension {}
+
 // "Pluck a link" and "Pluck a note", for Siri, Spotlight, Shortcuts and the Action button. They pluck the way the
 // share sheet does: the same session, the same answers ("Plucked."), and with no connection the same queue, which
 // the app sends when it next opens. The words are the share catalog's (packages/i18n/messages/share).
