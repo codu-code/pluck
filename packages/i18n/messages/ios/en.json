@@ -573,5 +573,12 @@
     "kept": "Kept on this iPhone",
     "letGo": "No longer kept on this iPhone.",
     "saveFile": "Save to Files"
+  },
+  "ipad": {
+    "pickSomething": "Pick something to read, when there is something.",
+    "showSidebar": "Show sidebar",
+    "hideSidebar": "Hide sidebar",
+    "showLists": "Show your Lists",
+    "hideLists": "Hide your Lists"
   }
 }

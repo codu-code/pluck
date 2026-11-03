@@ -573,5 +573,12 @@
     "kept": "Bewaard op deze iPhone",
     "letGo": "Niet meer bewaard op deze iPhone.",
     "saveFile": "Bewaar in Bestanden"
+  },
+  "ipad": {
+    "pickSomething": "Kies iets om te lezen, zodra er iets is.",
+    "showSidebar": "Navigatiekolom tonen",
+    "hideSidebar": "Navigatiekolom verbergen",
+    "showLists": "Je lijsten tonen",
+    "hideLists": "Je lijsten verbergen"
   }
 }

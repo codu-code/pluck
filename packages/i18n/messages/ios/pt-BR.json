@@ -573,5 +573,12 @@
     "kept": "Guardado neste iPhone",
     "letGo": "Não fica mais guardado neste iPhone.",
     "saveFile": "Salvar em Arquivos"
+  },
+  "ipad": {
+    "pickSomething": "Escolha algo para ler, quando houver algo.",
+    "showSidebar": "Mostrar barra lateral",
+    "hideSidebar": "Ocultar barra lateral",
+    "showLists": "Mostrar suas listas",
+    "hideLists": "Ocultar suas listas"
   }
 }

@@ -573,5 +573,12 @@
     "kept": "このiPhoneに保存済み",
     "letGo": "このiPhoneに保存しないようにしました。",
     "saveFile": "“ファイル”に保存"
+  },
+  "ipad": {
+    "pickSomething": "読むものがあれば、ここで選べます。",
+    "showSidebar": "サイドバーを表示",
+    "hideSidebar": "サイドバーを隠す",
+    "showLists": "リストを表示",
+    "hideLists": "リストを隠す"
   }
 }

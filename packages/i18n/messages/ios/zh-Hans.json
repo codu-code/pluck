@@ -573,5 +573,12 @@
     "kept": "已保留在此 iPhone 上",
     "letGo": "不再保留在此 iPhone 上。",
     "saveFile": "存储到“文件”"
+  },
+  "ipad": {
+    "pickSomething": "有内容时，在这里选一项来读。",
+    "showSidebar": "显示边栏",
+    "hideSidebar": "隐藏边栏",
+    "showLists": "显示你的清单",
+    "hideLists": "隐藏你的清单"
   }
 }

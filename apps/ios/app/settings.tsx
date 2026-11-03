@@ -10,6 +10,7 @@ import { ActionSheetIOS, Alert, Image, Linking, Pressable, ScrollView, StyleShee
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
+import { useSplit } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { analyticsOn, loadConsent, onConsent, setConsent, type Consent } from "@/lib/analytics";
 import { locale } from "@/lib/i18n";
@@ -36,6 +37,7 @@ export default function Settings() {
   const format = useFormatter();
   const t = useTheme();
   const insets = useSafeAreaInsets();
+  const split = useSplit();
   const qc = useQueryClient();
   const me = useMe();
   const tags = useTags();
@@ -189,9 +191,11 @@ export default function Settings() {
     <ScrollView style={{ backgroundColor: t.rail }} contentContainerStyle={[styles.page, { paddingTop: 20, paddingBottom: insets.bottom + 24 }]}>
       <View style={styles.head}>
         <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.bold, styles.title, { color: t.ink }]}>{tr("title")}</Text>
-        <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
-          <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tc("done")}</Text>
-        </Pressable>
+        {!split && ( // on iPad Settings is a place in the sidebar, with nothing to close
+          <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.done}>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{tc("done")}</Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={styles.group}>

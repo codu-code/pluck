@@ -573,5 +573,12 @@
     "kept": "이 iPhone에 보관됨",
     "letGo": "이 iPhone에 더는 보관하지 않아요.",
     "saveFile": "파일에 저장"
+  },
+  "ipad": {
+    "pickSomething": "읽을 것이 생기면 여기서 고르세요.",
+    "showSidebar": "사이드바 보기",
+    "hideSidebar": "사이드바 숨기기",
+    "showLists": "내 리스트 보기",
+    "hideLists": "내 리스트 숨기기"
   }
 }
