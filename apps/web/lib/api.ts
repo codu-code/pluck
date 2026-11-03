@@ -1,7 +1,7 @@
 import { verifyBearerToken } from "better-auth/oauth2";
 import { hitRateLimit, isAiConnected, verifyApiKey } from "@pluck/db";
 import { ZodError, type ZodType } from "zod";
-import { API_RESOURCE, auth } from "./auth";
+import { API_RESOURCE, auth, TRY_COOKIE } from "./auth";
 import { ApiError } from "./errors";
 import { clientIp } from "./ip";
 import { log } from "./log";
@@ -115,7 +115,6 @@ export function publicRoute<P = Record<string, never>>(name: string, perMinute: 
   };
 }
 
-// The home page paste box holds a visitor's links against this cookie until they sign up.
-export const TRY_COOKIE = "pluck_try";
+export { TRY_COOKIE };
 export const tryToken = (cookieHeader: string | null | undefined): string | null =>
   cookieHeader?.match(new RegExp(`(?:^|; )${TRY_COOKIE}=([a-f0-9]{32})`))?.[1] ?? null;

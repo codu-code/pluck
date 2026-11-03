@@ -298,8 +298,8 @@ async function purgeDocs(docs: { _id: ObjectId; userId: ObjectId }[], still: Fil
   return claimed;
 }
 
-export async function countItems(userId: string, status: Status): Promise<number> {
-  return (await items()).countDocuments({ userId: oid(userId), status, deletedAt: null });
+export async function countItems(userId: string, status?: Status): Promise<number> {
+  return (await items()).countDocuments({ userId: oid(userId), ...(status ? { status } : {}), deletedAt: null }); // no status: every Item
 }
 
 export type ExtractionResult = {

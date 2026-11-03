@@ -11,12 +11,13 @@ import { IntlProvider } from "use-intl";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
-import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { currentAnswer, forgetUser, identify, loadConsent, onConsent, screen, setConsent } from "@/lib/analytics";
+import { freshAnswer, type ConsentAnswer } from "@pluck/shared-schemas";
 import { formatLocale } from "@pluck/i18n";
 import { locale, messages, timeZone } from "@/lib/i18n";
 import { clearKept, keepForOffline, queryClient, syncPending, useMe } from "@/lib/data";
 import { kv } from "@/lib/kv";
-import { defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
+import { api, defaultServer, getSession, isSignedIn, onSession, signInWithKey } from "@/lib/session";
 import { useTheme } from "@/lib/theme";
 import { appIcons, type AppIcon } from "@/modules/app-icon";
 
@@ -122,14 +123,28 @@ function Screens() {
   return null;
 }
 
-// Ties usage to the account once they said yes, and asks the question once.
+// Ties usage to the account once they said yes, and asks the question once a year. The answer is the account's
+// (settings.analytics), shared with the website, and the newest wins: the phone takes the account's when that is
+// newer, and gives the account its own when that is (a new answer, or one whose save failed offline).
 function SignedInAnalytics() {
   const me = useMe();
   const id = me.data?.id;
+  const analytics = me.data?.settings.analytics ?? null;
+  const analyticsAt = me.data?.settings.analyticsAt ?? null;
   useEffect(() => {
     if (!id) return;
+    let account = freshAnswer({ analytics, analyticsAt });
+    const save = (a: ConsentAnswer) => void api("/api/v1/me", { method: "PATCH", json: { settings: { analytics: a.answer, analyticsAt: a.at } } }).catch(() => {});
+    void loadConsent().then((local) => {
+      if (local && local.at > (account?.at ?? -1)) save((account = local));
+      else if (account && account.at > (local?.at ?? -1)) void setConsent(account.answer, account.at);
+    });
     identify(id);
-    return onConsent(() => identify(id));
-  }, [id]);
+    return onConsent(() => {
+      identify(id);
+      const now = currentAnswer();
+      if (now && now.at > (account?.at ?? -1)) save((account = now));
+    });
+  }, [id, analytics, analyticsAt]);
   return <UsagePrompt />;
 }

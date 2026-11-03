@@ -3,6 +3,7 @@ import {
 } from "@pluck/db";
 import type { List, ListEntry } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
+import { track } from "../telemetry";
 import type { Actor } from "./tags";
 
 const missing = () => new ApiError("not_found", "No such list.", 404);
@@ -14,7 +15,9 @@ export async function newList(
   body: { name: string; purpose?: string; items?: { itemId: string; note?: string | null }[] },
   { by = "user" }: { by?: Actor } = {},
 ): Promise<List> {
-  return createList(userId, { ...body, createdBy: by });
+  const list = await createList(userId, { ...body, createdBy: by });
+  track(userId, "list_created", { by });
+  return list;
 }
 
 export async function readList(userId: string, listId: string): Promise<{ list: List; entries: ListEntry[] }> {

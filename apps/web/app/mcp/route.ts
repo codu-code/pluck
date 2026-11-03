@@ -1,19 +1,27 @@
 import { requireMcpAuth } from "@better-auth/mcp";
 import { createMcpHandler } from "@modelcontextprotocol/server";
 import { createPluckServer } from "@pluck/mcp-server";
-import { hitRateLimit, isAiConnected, markMcpCall, verifyApiKey } from "@pluck/db";
+import { aiClientName, hitRateLimit, isAiConnected, markMcpCall, verifyApiKey } from "@pluck/db";
 import { after } from "next/server";
 import { clientIp, type Caller } from "@/lib/api";
 import { auth, MCP_RESOURCE } from "@/lib/auth";
 import { connectorFor } from "@/lib/connector";
 import { log } from "@/lib/log";
+import { track } from "@/lib/telemetry";
 
 // The connector. Stateless: each HTTP request gets a fresh server bound to the caller, for both protocol eras.
 const handler = createMcpHandler(({ authInfo }) => {
   const userId = String(authInfo?.extra?.userId);
+  const clientId = authInfo?.clientId ?? "";
+  const clientName = async () => (clientId === "api-key" ? "api-key" : aiClientName(clientId));
   return createPluckServer(connectorFor(userId, { defer: after }), {
     scopes: authInfo?.scopes ?? [],
     onError: (error, tool) => log("error", "mcp tool error", { userId, tool, error }),
+    onCall: (c) =>
+      track(userId, "mcp_tool_called", async () => ({
+        tool: c.tool, client_name: await clientName(), ok: c.ok, error_code: c.errorCode, result_count: c.resultCount, duration_ms: c.ms,
+      })),
+    onPrompt: (prompt) => track(userId, "mcp_prompt_used", async () => ({ prompt, client_name: await clientName() })),
   });
 });
 

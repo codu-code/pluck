@@ -33,7 +33,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `ADMIN_EMAILS` | Who can open `/admin` (reports, take-downs), comma separated | none |
 | `ABUSE_EMAIL` | Where reports of public lists are emailed | none |
 | `APPLE_TEAM_ID` | Only if you build the iPhone app for your own server: your Apple team ID, so links to your server open the app (universal links). The app needs `applinks:<your host>` too | off |
-| `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST` | Your own PostHog project, if you want analytics and error tracking. The key is read when the image is built (`docker compose build` with it in the environment); unset, there is no cookie banner and nothing is sent anywhere. The host defaults to PostHog's EU cloud | off |
+| `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST` | Your own PostHog project, if you want analytics and error tracking. The key is read when the image is built (`docker compose build` with it in the environment); unset, there is no cookie banner and nothing is sent anywhere. The host defaults to PostHog's EU cloud. What is sent: [analytics.md](analytics.md) | off |
 | `WELCOME_FROM` | A From line for a welcome note sent 27 minutes after each sign-up, signed by the person who runs getpluck.io. Leave it unset on your own server | off |
 | `REVIEW_EMAIL`, `REVIEW_PASSWORD` | Only if you submit your own build of the iPhone app to App Review: the one address that signs in with a password instead of an email link or code (it gets no email). Leave both unset | off |
 | `EMAIL_IN_DOMAIN` | For email-in: the domain whose mail lands in the bucket under `inbound/` (needs an inbound mail service that writes raw messages there, like SES receipt rules) | off |

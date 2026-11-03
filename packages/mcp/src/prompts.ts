@@ -7,10 +7,13 @@ const say = (text: string) => ({ messages: [{ role: "user" as const, content: { 
 const ASK_FIRST =
   "Propose first and wait for my yes before you change anything. Use my existing tags; only suggest a new tag when none fits, and only call create_tag after I agree to its name.";
 
-export function registerPrompts(server: McpServer, { canWrite }: { canWrite: boolean }) {
+export function registerPrompts(server: McpServer, { canWrite, onPrompt }: { canWrite: boolean; onPrompt?: (name: string) => void }) {
+  // Each prompt as registered, plus a note to onPrompt when an AI tool fetches it.
+  const prompt = ((name: string, config: object, cb: (...a: unknown[]) => unknown) =>
+    server.registerPrompt(name, config as never, ((...a: unknown[]) => (onPrompt?.(name), cb(...a))) as never)) as typeof server.registerPrompt;
   const readOnly = canWrite ? "" : "\n\nThis connection can only read, so tell me the changes and I will make them in Pluck.";
 
-  server.registerPrompt(
+  prompt(
     "tidy_inbox",
     { title: "Tidy my inbox", description: "Go through the inbox and propose tags and a keep, later or archive call for each item." },
     () =>
@@ -24,7 +27,7 @@ export function registerPrompts(server: McpServer, { canWrite }: { canWrite: boo
       ),
   );
 
-  server.registerPrompt(
+  prompt(
     "build_list",
     {
       title: "Build a list",
@@ -42,7 +45,7 @@ export function registerPrompts(server: McpServer, { canWrite }: { canWrite: boo
       ),
   );
 
-  server.registerPrompt(
+  prompt(
     "content_ideas",
     {
       title: "Content ideas",
@@ -59,7 +62,7 @@ export function registerPrompts(server: McpServer, { canWrite }: { canWrite: boo
       ),
   );
 
-  server.registerPrompt(
+  prompt(
     "weekly_review",
     { title: "Weekly review", description: "Walk through what is expiring, due, oldest in the inbox and quiet lists, one decision at a time." },
     () =>

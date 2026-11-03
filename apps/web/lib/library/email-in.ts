@@ -2,6 +2,8 @@ import { TooLarge, deleteObject, getObject, keys, listKeys, moveObject } from "@
 import { aliasOf, claimOnce, createEmailItem, enqueue, hitRateLimit, regenerateAlias, setRawEmailKey, userForAlias } from "@pluck/db";
 import { parseEmail } from "@pluck/extract";
 import { log } from "../log";
+import { track } from "../telemetry";
+import { trackPlucked } from "./items";
 
 // Email-in: SES drops each message into the bucket under inbound/. The scheduler queues one job per
 // object; the job parses it, finds the person by the pluck+<token> address, and makes a Read item.
@@ -65,5 +67,7 @@ export async function ingestInbound(key: string): Promise<"created" | "duplicate
   await moveObject(key, kept);
   await setRawEmailKey(userId, item.id, kept);
   log("info", "email-in", { userId, itemId: item.id });
+  trackPlucked(userId, "email", [{ item, created }]);
+  track(userId, "email_in_used");
   return "created";
 }
