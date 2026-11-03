@@ -72,7 +72,11 @@ No app preview video for launch. A preview must be a screen recording of the app
 
 Every page opens with what is still to do for that language and device, and marks the screenshots it covers: the known issues in `audit.json` (remove an entry once it is fixed), and what the page checks for itself (a field over Apple's limit, a line voice.md rules out, a set shorter than English's). Red is an App Review risk, orange is polish.
 
-`screenshots/<lang>/` is each other language's iPhone set as uploaded (1206 × 2622); English is `screenshots/6.9in`.
+`screenshots/<lang>/` is each other language's iPhone set as uploaded, at 1320 × 2868; English is `screenshots/6.9in`. They're boards `AppStore1` to `5` drawn with that language's words (`screenshots/strings.<lang>.json`) and, in frames 2 to 5, real captures of the app in that language (iPhone 17 Simulator, `-AppleLanguages "(de)"`, the store library):
+
+```sh
+node scripts/store-iphone.mjs de <dir with that language's 2.png … 5.png>
+```
 
 ## Featuring art
 

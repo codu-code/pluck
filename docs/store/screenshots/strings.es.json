@@ -1,0 +1,24 @@
+{
+  "iphoneScreenshots": [
+    {
+      "title": "Recógelo desde cualquier app.",
+      "subtitle": "Un toque en Compartir. La app ni se abre."
+    },
+    {
+      "title": "Ordénalo después.",
+      "subtitle": "Derecha para Más tarde, izquierda para el Archivo."
+    },
+    {
+      "title": "La página, no solo el enlace.",
+      "subtitle": "Sigue aquí aunque la web desaparezca."
+    },
+    {
+      "title": "Listas para lo que preparas.",
+      "subtitle": "Un viaje. Una cocina. Lecturas para un amigo."
+    },
+    {
+      "title": "Adiós. Bueno, al Archivo.",
+      "subtitle": "¿Sin tocar en 30 días? Al Archivo. No se borra nada."
+    }
+  ]
+}
