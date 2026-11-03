@@ -11,7 +11,7 @@ import { IntlProvider } from "use-intl";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ToastHost } from "@/components/Toast";
 import { UsagePrompt } from "@/components/UsagePrompt";
-import { forgetUser, identify, onConsent, screen } from "@/lib/analytics";
+import { forgetUser, identify, loadConsent, onConsent, screen, setConsent } from "@/lib/analytics";
 import { formatLocale } from "@pluck/i18n";
 import { locale, messages, timeZone } from "@/lib/i18n";
 import { clearKept, keepForOffline, queryClient, syncPending, useMe } from "@/lib/data";
@@ -39,6 +39,8 @@ export default function Root() {
       // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY is never set for the store): sign in with a key.
       const demoKey = process.env.EXPO_PUBLIC_DEMO_KEY;
       if (demoKey && !(await getSession())?.apiKey) await signInWithKey(defaultServer, demoKey);
+      // …and answer the usage question no, so screenshots never show it.
+      if (demoKey && (await loadConsent()) === null) await setConsent("no");
       setSignedIn(await isSignedIn());
       // Demo builds take a screen to open as a launch argument (simctl launch … -demoRoute /lists/…), for screenshots.
       const route = demoKey ? (Settings.get("demoRoute") as string | undefined) : undefined;

@@ -38,7 +38,7 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 | 4 | done | Search, Settings (sections in the middle, the open section in detail), Sign in and the empty Inbox | iPad-Search, iPad-Settings, iPad-SignIn, iPad-Empty |
 | 5 | done | Add and Note as a 580-wide form sheet | iPad-Add |
 | 6 | done (hands-on check in BLOCKED.md) | Hardware keyboard: the iPad-Shortcuts set through `UIKeyCommand` so they show in the hold-⌘ overlay; a small Expo module (`modules/key-commands`) next to `modules/app-icon` | Simulator with a hardware keyboard, hold ⌘ |
-| 7 | todo | App Store: real Simulator screenshots of the sample library (`docs/store/app-store.md`) in the AppStore-iPad-1 to 7 frames, keeping the text layer; exported with and without text | 2064 × 2752, seven of each |
+| 7 | done (frames 1, 6, 7 in BLOCKED.md) | App Store: real Simulator screenshots of the sample library (`docs/store/app-store.md`) in the AppStore-iPad-1 to 7 frames, keeping the text layer; exported with and without text | 2064 × 2752, seven of each |
 
 ## Notes from the slices
 
@@ -60,6 +60,9 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 - **Slice 5, where it differs from the board, and why.** Add on iPad has the board's header (Cancel, the title, a Pluck button), the Link, Note, Todo and Thing control, a title and the words, and the key hints. It leaves out the board's Tags, List and Status rows: creating an Item can't take them (`CreateItemBody`), and setting them in follow-up calls would break a pluck made offline, which waits in a queue that only knows how to make the Item. They're one tap away on the Item once it's made. The sheet is iOS's own form sheet (about 580 wide on iPad, centred, on the system scrim), so its height is the system's rather than the board's fixed top of 96. Note (an Item's note) stays a system page sheet.
 
 - **Slice 6.** `modules/key-commands` adds `UIKeyCommand`s with titles to the root view controller. Each command's action goes up the responder chain to a `UIViewController` extension, which posts it to JS as `onKeyCommand`. `components/split/Shortcuts.tsx` registers them while the split view is showing and runs them. Commands marked `typing: false` (L, E, D, T, A, ⌘V, ↓, ↑) are taken away while a text field is being edited, so typing and pasting still work. Built, and launched on the Simulator. The keys themselves are a hands-on check (BLOCKED.md).
+
+- **Slice 7.** `node scripts/demo-seed.mjs … --store` builds the sample library from `docs/store/app-store.md` from the pages in `packages/extract/fixtures/pages/store`. The videos go in with their real-style address and the page's HTML, so they're players with a length and nothing is fetched. The picture and the PDF are uploaded as files, as the share sheet sends them. `scripts/store-ipad.mjs` puts 13" captures into the designer's own exports at the screen's place, with and without text, as PNG with no alpha. Frames 2 to 5 are real Release-build captures. 1, 6 and 7 stay drawn (BLOCKED.md). Steps are in `docs/store/app-store.md`. Demo builds now answer the usage question no, so it never shows in a capture.
+- **Local stack, found along the way:** two copies of `pluck-dev` are running, in Docker Desktop and in OrbStack. Docker Desktop holds the host ports, and its fixtures container serves an old worktree (`.claude/worktrees/wf_7560d043…`), not this checkout. I left it alone and served this checkout's pages on 4181 for the seed. Worth tidying: stop one of the two.
 
 ## Helps the iPhone too (proposals, not done without a yes)
 
