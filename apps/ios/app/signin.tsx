@@ -257,9 +257,9 @@ function CodeField({ t, value, label, a11y, invalid, busy, onChange }: { t: Pale
             );
           })}
         </View>
-        <TextInput ref={input} value={value} maxLength={6} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code"
+        <TextInput ref={input} value={value} keyboardType="number-pad" textContentType="oneTimeCode" autoComplete="one-time-code"
           editable={!busy} caretHidden onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-          onChangeText={(v) => onChange(v.replace(/\D/g, "").slice(0, 6))}
+          onChangeText={(v) => onChange(v.replace(/\D/g, "").slice(0, 6))} // no maxLength: iOS drops a whole paste longer than it, and a code copied from Mail often brings a space or newline
           style={styles.hiddenInput} accessibilityLabel={a11y} accessibilityLabelledBy="code-label" />
       </Pressable>
     </View>

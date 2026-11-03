@@ -23,7 +23,7 @@ OAuth 2.1 with PKCE (S256) and a resource indicator. A call without a token gets
 - **Client ID metadata documents** (CIMD) are supported: a client whose `client_id` is an HTTPS URL is looked up there, with no registration.
 - **Dynamic client registration** is the fallback, at `/api/auth/oauth2/register`.
 - The person signs in with an email link and sees one consent screen (`/oauth/consent`) with the scopes in plain words.
-- Access tokens are JWTs for the `/mcp` audience, valid for an hour, with refresh tokens for 90 days. Disconnecting in Settings cuts a tool off at once, even mid-token.
+- Access tokens are JWTs for the `/mcp` audience, valid for an hour, with refresh tokens for 90 days. A refresh token works once; asking again with a spent one within 30 days replays the answer it got, so a lost response does not sign a device out. Disconnecting in Settings cuts a tool off at once, even mid-token.
 - Personal API keys (`pk_live_…`, made in Settings) work as bearer tokens for scripts, Claude Code and the stdio bridge.
 
 ## Scopes
