@@ -64,6 +64,10 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 - **Slice 7.** `node scripts/demo-seed.mjs … --store` builds the sample library from `docs/store/app-store.md` from the pages in `packages/extract/fixtures/pages/store`. The videos go in with their real-style address and the page's HTML, so they're players with a length and nothing is fetched. The picture and the PDF are uploaded as files, as the share sheet sends them. `scripts/store-ipad.mjs` puts 13" captures into the designer's own exports at the screen's place, with and without text, as PNG with no alpha. Frames 2 to 5 are real Release-build captures. 1, 6 and 7 stay drawn (BLOCKED.md). Steps are in `docs/store/app-store.md`. Demo builds now answer the usage question no, so it never shows in a capture.
 - **Local stack, found along the way:** two copies of `pluck-dev` are running, in Docker Desktop and in OrbStack. Docker Desktop holds the host ports, and its fixtures container serves an old worktree (`.claude/worktrees/wf_7560d043…`), not this checkout. I left it alone and served this checkout's pages on 4181 for the seed. Worth tidying: stop one of the two.
 
+## Final gate (3 November 2026)
+
+`pnpm typecheck`, `pnpm lint`, `pnpm test` (508), `pnpm e2e` (57 passed) and `pnpm design` (pass, with one advisory note on the web's Connect page, from before this work) all pass. Debug and Release Simulator builds succeed, app and share extension. The iPhone 17 screenshots of Inbox, an Item, a List and Add are unchanged.
+
 ## Helps the iPhone too (proposals, not done without a yes)
 
 The iPhone stays exactly as it is in this work. These came up along the way and would help it on its own merits:
