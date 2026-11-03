@@ -1,6 +1,7 @@
 // Writes the two catalogs that cannot read packages/i18n at runtime, from it:
 // - the Chrome extension's _locales (the manifest's name, description and shortcuts in each language), and
-// - the iPhone share extension's Localizable.xcstrings (Swift reads an Apple String Catalog).
+// - the iPhone share extension's Localizable.xcstrings (Swift reads an Apple String Catalog), and the same catalog for
+//   the App Intents extension (targets/intents), with its Siri and Spotlight phrases as AppShortcuts.xcstrings.
 // Usage: node scripts/i18n-sync.mjs           writes them
 //        node scripts/i18n-sync.mjs --check   fails if they are out of date (the test runs this)
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -49,7 +50,25 @@ export function shareCatalog() {
     }
     strings[key] = { extractionState: "manual", localizations };
   }
-  return { "apps/ios/targets/share/Localizable.xcstrings": `${JSON.stringify({ sourceLanguage: "en", strings, version: "1.0" }, null, 2)}\n` };
+  const catalog = `${JSON.stringify({ sourceLanguage: "en", strings, version: "1.0" }, null, 2)}\n`;
+  return { "apps/ios/targets/share/Localizable.xcstrings": catalog, "apps/ios/targets/intents/Localizable.xcstrings": catalog, ...phraseCatalog() };
+}
+
+// App Shortcuts' phrases (share catalog keys phrase*): the key is the English phrase, and {app} is the app's name,
+// which Siri writes as ${applicationName}.
+export function phraseCatalog() {
+  const en = read("share", "en");
+  const app = (m) => m.replace(/\{app\}/g, "${applicationName}");
+  const strings = {};
+  for (const key of Object.keys(en).filter((k) => k.startsWith("phrase")).sort()) {
+    const localizations = {};
+    for (const locale of LOCALES) {
+      const value = read("share", locale)[key];
+      if (typeof value === "string") localizations[locale] = { stringUnit: { state: "translated", value: app(value) } };
+    }
+    strings[app(en[key])] = { extractionState: "manual", localizations };
+  }
+  return { "apps/ios/targets/intents/AppShortcuts.xcstrings": `${JSON.stringify({ sourceLanguage: "en", strings, version: "1.0" }, null, 2)}\n` };
 }
 
 export const generated = () => ({ ...chromeLocales(), ...shareCatalog() });

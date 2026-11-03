@@ -26,5 +26,13 @@
   "kindImage": "图片",
   "kindTodo": "待办",
   "kindNote": "笔记",
-  "kindThing": "物品"
+  "kindThing": "物品",
+  "intentLinkTitle": "摘下链接",
+  "intentLinkDescription": "像共享菜单一样，把网页放进收件箱。",
+  "intentLink": "链接",
+  "intentNoteTitle": "摘下笔记",
+  "intentNoteDescription": "把几句话作为笔记放进收件箱。里面的链接会各自成为条目。",
+  "intentNoteText": "文字",
+  "phraseLink": "用 {app} 摘下链接",
+  "phraseNote": "用 {app} 摘下笔记"
 }

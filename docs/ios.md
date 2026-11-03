@@ -38,6 +38,10 @@ Demo builds take three more launch arguments for the iPad's state: `-demoDetail 
 
 For a Simulator build pointed at a local server, pass `PLUCK_SERVER` to `xcodebuild` as well as to prebuild (the config is embedded when the app builds), and sign ad hoc (`CODE_SIGN_IDENTITY=-` alone, not `CODE_SIGNING_REQUIRED=NO`) so the app keeps its Keychain group and the session sticks.
 
+## Siri, Spotlight and Shortcuts
+
+`apps/ios/targets/intents`, an App Intents extension (`io.getpluck.app.intents`) added at prebuild like the share extension: "Pluck a link" and "Pluck a note", with the phrases "Pluck a link with Pluck" and "Pluck a note with Pluck" for Siri and Spotlight, in every language. They pluck through the share extension's client (`PluckClient.swift` is a link to `targets/share`), so they use the same session, give the same answers ("Plucked."), and with no connection add to the same queue the app sends later. Their words are in the `share` catalog (`intent*`, `phrase*`), and `scripts/i18n-sync.mjs` writes the target's `Localizable.xcstrings` and `AppShortcuts.xcstrings`. On a phone: Shortcuts, the + button, search Pluck; or say "Pluck a link with Pluck" to Siri with a link on screen.
+
 ## TestFlight
 
 0. Once, in App Store Connect: New App, platform iOS, bundle ID `io.getpluck.app` (register it, and `io.getpluck.app.share` for the share extension, under Certificates, Identifiers & Profiles with the App Group `group.io.getpluck.app`; Xcode's automatic signing can do this for you the first time you archive).

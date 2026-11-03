@@ -26,5 +26,13 @@
   "kindImage": "이미지",
   "kindTodo": "할 일",
   "kindNote": "메모",
-  "kindThing": "물건"
+  "kindThing": "물건",
+  "intentLinkTitle": "링크 담기",
+  "intentLinkDescription": "공유 시트처럼 페이지를 수신함에 담아요.",
+  "intentLink": "링크",
+  "intentNoteTitle": "노트 담기",
+  "intentNoteDescription": "몇 마디를 노트로 수신함에 담아요. 안에 있는 링크는 각각 따로 담겨요.",
+  "intentNoteText": "텍스트",
+  "phraseLink": "{app}에 링크 담기",
+  "phraseNote": "{app}에 노트 담기"
 }

@@ -26,5 +26,13 @@
   "kindImage": "画像",
   "kindTodo": "ToDo",
   "kindNote": "メモ",
-  "kindThing": "モノ"
+  "kindThing": "モノ",
+  "intentLinkTitle": "リンクをPluck",
+  "intentLinkDescription": "共有シートと同じように、ページをインボックスに入れます。",
+  "intentLink": "リンク",
+  "intentNoteTitle": "メモをPluck",
+  "intentNoteDescription": "短い言葉をメモとしてインボックスに入れます。中のリンクはそれぞれ別のアイテムになります。",
+  "intentNoteText": "テキスト",
+  "phraseLink": "{app}でリンクをPluck",
+  "phraseNote": "{app}でメモをPluck"
 }

@@ -26,5 +26,13 @@
   "kindImage": "Imagem",
   "kindTodo": "Tarefa",
   "kindNote": "Nota",
-  "kindThing": "Coisa"
+  "kindThing": "Coisa",
+  "intentLinkTitle": "Colher um link",
+  "intentLinkDescription": "Põe a página na sua Entrada, como o menu Compartilhar.",
+  "intentLink": "Link",
+  "intentNoteTitle": "Colher uma nota",
+  "intentNoteDescription": "Põe algumas palavras na sua Entrada como Nota. Os links nela viram Itens próprios.",
+  "intentNoteText": "Texto",
+  "phraseLink": "Colher um link com o {app}",
+  "phraseNote": "Colher uma nota com o {app}"
 }

@@ -115,12 +115,12 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: false },
 };
 
-// apple-targets builds a share extension's Release like its Debug. Optimise it, keep a dSYM so crash reports
-// symbolicate, and build it for iPhone and iPad like the app. Its targets are written in its own pass, so the change goes there.
+// apple-targets builds an extension's Release like its Debug. Optimise the share extension and the App Intents
+// extension, keep a dSYM so crash reports symbolicate, and build them for iPhone and iPad like the app. Its targets are written in its own pass, so the change goes there.
 const withShareRelease: ConfigPlugin = (c) =>
   withXcodeProjectBeta(c, (m) => {
     for (const { props: p } of m.modResults.values() as Iterable<{ props: { isa?: string; name?: string; buildSettings?: Record<string, unknown> } }>) {
-      if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings?.PRODUCT_BUNDLE_IDENTIFIER === "io.getpluck.app.share")
+      if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings && ["io.getpluck.app.share", "io.getpluck.app.intents"].includes(String(p.buildSettings.PRODUCT_BUNDLE_IDENTIFIER)))
         Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1,2" });
     }
     return m;

@@ -26,5 +26,13 @@
   "kindImage": "Afbeelding",
   "kindTodo": "Taak",
   "kindNote": "Notitie",
-  "kindThing": "Ding"
+  "kindThing": "Ding",
+  "intentLinkTitle": "Een link plukken",
+  "intentLinkDescription": "Zet de pagina in je Inbox, net als het deelmenu.",
+  "intentLink": "Link",
+  "intentNoteTitle": "Een notitie plukken",
+  "intentNoteDescription": "Zet een paar woorden als Notitie in je Inbox. Links erin worden losse items.",
+  "intentNoteText": "Tekst",
+  "phraseLink": "Pluk een link met {app}",
+  "phraseNote": "Pluk een notitie met {app}"
 }

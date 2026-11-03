@@ -26,5 +26,13 @@
   "kindImage": "Bild",
   "kindTodo": "Aufgabe",
   "kindNote": "Notiz",
-  "kindThing": "Ding"
+  "kindThing": "Ding",
+  "intentLinkTitle": "Einen Link pflücken",
+  "intentLinkDescription": "Legt die Seite in deinen Eingang, wie das Teilen-Menü.",
+  "intentLink": "Link",
+  "intentNoteTitle": "Eine Notiz pflücken",
+  "intentNoteDescription": "Legt ein paar Worte als Notiz in deinen Eingang. Links darin werden eigene Einträge.",
+  "intentNoteText": "Text",
+  "phraseLink": "Mit {app} einen Link pflücken",
+  "phraseNote": "Mit {app} eine Notiz pflücken"
 }
