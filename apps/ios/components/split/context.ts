@@ -31,3 +31,7 @@ export const useSplit = () => useContext(SplitContext);
 // and bottom toolbar.
 export const InDetail = createContext(false);
 export const useInDetail = () => useContext(InDetail);
+
+// For the keyboard (components/split/Shortcuts.tsx): the rows the list column shows now, in order, for ↓ and ↑;
+// and the sheet that is open (Add), for ⌘↩ and Escape.
+export const shown: { rows: string[]; sheet: { submit: () => void } | null } = { rows: [], sheet: null };

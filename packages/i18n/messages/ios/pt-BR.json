@@ -612,6 +612,12 @@
       "pluck": "Colher",
       "titlePlaceholder": "Título",
       "keys": "<key>⌘</key> <key>↩</key> para colher   <key>esc</key> para cancelar"
+    },
+    "keys": {
+      "paste": "Colar e colher",
+      "sidebar": "Mostrar ou ocultar a barra lateral",
+      "next": "Próximo",
+      "previous": "Anterior"
     }
   }
 }

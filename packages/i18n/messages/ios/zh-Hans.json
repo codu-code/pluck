@@ -612,6 +612,12 @@
       "pluck": "摘下",
       "titlePlaceholder": "标题",
       "keys": "<key>⌘</key> <key>↩</key> 摘下   <key>esc</key> 取消"
+    },
+    "keys": {
+      "paste": "粘贴并摘下",
+      "sidebar": "显示或隐藏边栏",
+      "next": "下一项",
+      "previous": "上一项"
     }
   }
 }

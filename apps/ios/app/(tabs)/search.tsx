@@ -1,11 +1,11 @@
 import type { Status } from "@pluck/shared-schemas";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ActionSheetIOS, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS, KINDS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
-import { useSplit } from "@/components/split/context";
+import { shown, useSplit } from "@/components/split/context";
 import { SplitRow } from "@/components/split/SplitRow";
 import { Empty, TitledList } from "@/components/Screen";
 import { useLists, useSearch, useTags, type SearchFilters } from "@/lib/data";
@@ -60,6 +60,8 @@ export default function Search() {
     </Pressable>
   );
   const count = q && results.data ? results.data.results.length : null;
+  const ids = q ? (results.data?.results ?? []).map((r) => r.item.id).join(",") : "";
+  useFocusEffect(useCallback(() => void (shown.rows = ids ? ids.split(",") : []), [ids]));
 
   return (
     <TitledList

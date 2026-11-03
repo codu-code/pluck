@@ -30,15 +30,10 @@ export function Sidebar({ onGo }: { onGo?: () => void }) {
   const here = split?.section !== "tabs" ? split?.section : tab;
   const openList = split?.detail?.kind === "list" && path === "/lists" ? split.detail.id : null;
 
-  const go = (to: keyof typeof TABS | Exclude<Section, "tabs">) => {
+  const goTo = useGo();
+  const go = (to: Place) => {
     void Haptics.selectionAsync();
-    // Settings opens on its first group; anywhere else, a Settings group does not stay in the detail column.
-    if (to === "settings") split?.show({ kind: "settings", id: "account" });
-    else if (split?.detail?.kind === "settings") split.show(null);
-    if (to in TABS) {
-      split?.go("tabs");
-      router.navigate(TABS[to as keyof typeof TABS]);
-    } else split?.go(to as Exclude<Section, "tabs">);
+    goTo(to);
     onGo?.();
   };
 
@@ -69,6 +64,22 @@ export function Sidebar({ onGo }: { onGo?: () => void }) {
       <Row icon={ICONS.settings} label={tr("settings.title")} on={here === "settings"} onPress={() => go("settings")} />
     </View>
   );
+}
+
+export type Place = keyof typeof TABS | Exclude<Section, "tabs">;
+
+// Going to one of the sidebar's places, from the sidebar or the keyboard (⌘1 to ⌘4, ⌘F, ⌘,).
+export function useGo() {
+  const split = useSplit();
+  return (to: Place) => {
+    // Settings opens on its first group; anywhere else, a Settings group does not stay in the detail column.
+    if (to === "settings") split?.show({ kind: "settings", id: "account" });
+    else if (split?.detail?.kind === "settings") split.show(null);
+    if (to in TABS) {
+      split?.go("tabs");
+      router.navigate(TABS[to as keyof typeof TABS]);
+    } else split?.go(to as Exclude<Section, "tabs">);
+  };
 }
 
 // Shows and hides the sidebar. In the sidebar's own bar it hides it; at the top of the list column it is there only

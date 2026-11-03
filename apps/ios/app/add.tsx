@@ -1,12 +1,12 @@
 import { extractUrls, TEXT_KINDS, type TextKind } from "@pluck/shared-schemas";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { KindGlyph } from "@/components/Glyph";
-import { useColumns } from "@/components/split/context";
+import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { pluck } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
@@ -111,7 +111,8 @@ const MODES: Mode[] = ["link", ...TEXT_KINDS];
 function AddWide() {
   const t = useTheme();
   const tr = useTranslations("ios");
-  const [mode, setMode] = useState<Mode>("link");
+  const asked = useLocalSearchParams<{ kind?: string }>().kind; // ⌘N and ⌘⇧N open on a Note or a Todo
+  const [mode, setMode] = useState<Mode>(MODES.includes(asked as Mode) ? (asked as Mode) : "link");
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
@@ -134,6 +135,14 @@ function AddWide() {
       setBusy(false);
     }
   };
+
+  // ⌘↩ plucks from here (components/split/Shortcuts.tsx); the latest submit, so it sends what is typed now.
+  const latest = useRef(submit);
+  latest.current = submit;
+  useEffect(() => {
+    shown.sheet = { submit: () => void latest.current() };
+    return () => void (shown.sheet = null);
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>

@@ -612,6 +612,12 @@
       "pluck": "Pluck",
       "titlePlaceholder": "Title",
       "keys": "<key>⌘</key> <key>↩</key> to pluck   <key>esc</key> to cancel"
+    },
+    "keys": {
+      "paste": "Paste and pluck",
+      "sidebar": "Show or hide sidebar",
+      "next": "Next",
+      "previous": "Previous"
     }
   }
 }

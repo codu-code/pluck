@@ -612,6 +612,12 @@
       "pluck": "Recoger",
       "titlePlaceholder": "Título",
       "keys": "<key>⌘</key> <key>↩</key> para recoger   <key>esc</key> para cancelar"
+    },
+    "keys": {
+      "paste": "Pegar y recoger",
+      "sidebar": "Mostrar u ocultar la barra lateral",
+      "next": "Siguiente",
+      "previous": "Anterior"
     }
   }
 }

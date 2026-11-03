@@ -612,6 +612,12 @@
       "pluck": "Pluk",
       "titlePlaceholder": "Titel",
       "keys": "<key>⌘</key> <key>↩</key> om te plukken   <key>esc</key> om te annuleren"
+    },
+    "keys": {
+      "paste": "Plakken en plukken",
+      "sidebar": "Navigatiekolom tonen of verbergen",
+      "next": "Volgende",
+      "previous": "Vorige"
     }
   }
 }

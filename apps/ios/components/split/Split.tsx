@@ -12,6 +12,7 @@ import SettingsScreen, { type Part } from "@/app/settings";
 import { font, useTheme } from "@/lib/theme";
 import { OfflinePill } from "../Offline";
 import { InDetail, SplitContext, useColumns, type Detail, type Section } from "./context";
+import { Shortcuts } from "./Shortcuts";
 import { Sidebar } from "./Sidebar";
 
 // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY, never set for the store), as launch arguments:
@@ -51,6 +52,7 @@ export function Split({ children }: { children: ReactNode }) {
         </View>
         {wide && <DetailColumn detail={detail} />}
         {wide && !pinned && <Overlay open={sidebar} onClose={() => setSidebar(false)} />}
+        {wide && <Shortcuts />}
       </View>
     </SplitContext.Provider>
   );

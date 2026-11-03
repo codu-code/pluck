@@ -37,7 +37,7 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 | 3 | done | List column and detail column: Inbox, Later and Archive in the middle (380, 360 portrait, 320 mini); the Item reader or the List in detail (640 text column, ticked entries folded, Undo toast); selected and hover states (`onHoverIn`), and hover swaps the time for Later, Archive and Tag | iPad-Inbox, iPad-List, iPad-Mini |
 | 4 | done | Search, Settings (sections in the middle, the open section in detail), Sign in and the empty Inbox | iPad-Search, iPad-Settings, iPad-SignIn, iPad-Empty |
 | 5 | done | Add and Note as a 580-wide form sheet | iPad-Add |
-| 6 | todo | Hardware keyboard: the iPad-Shortcuts set through `UIKeyCommand` so they show in the hold-⌘ overlay; a small Expo module (`modules/key-commands`) next to `modules/app-icon` | Simulator with a hardware keyboard, hold ⌘ |
+| 6 | done (hands-on check in BLOCKED.md) | Hardware keyboard: the iPad-Shortcuts set through `UIKeyCommand` so they show in the hold-⌘ overlay; a small Expo module (`modules/key-commands`) next to `modules/app-icon` | Simulator with a hardware keyboard, hold ⌘ |
 | 7 | todo | App Store: real Simulator screenshots of the sample library (`docs/store/app-store.md`) in the AppStore-iPad-1 to 7 frames, keeping the text layer; exported with and without text | 2064 × 2752, seven of each |
 
 ## Notes from the slices
@@ -58,6 +58,8 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 - **Action sheets on iPad** (`ActionSheetIOS` without an anchor) show as a centred popover with no arrow. React Native does that itself on iPad (`RCTActionSheetManager.mm`), so nothing needed changing.
 
 - **Slice 5, where it differs from the board, and why.** Add on iPad has the board's header (Cancel, the title, a Pluck button), the Link, Note, Todo and Thing control, a title and the words, and the key hints. It leaves out the board's Tags, List and Status rows: creating an Item can't take them (`CreateItemBody`), and setting them in follow-up calls would break a pluck made offline, which waits in a queue that only knows how to make the Item. They're one tap away on the Item once it's made. The sheet is iOS's own form sheet (about 580 wide on iPad, centred, on the system scrim), so its height is the system's rather than the board's fixed top of 96. Note (an Item's note) stays a system page sheet.
+
+- **Slice 6.** `modules/key-commands` adds `UIKeyCommand`s with titles to the root view controller. Each command's action goes up the responder chain to a `UIViewController` extension, which posts it to JS as `onKeyCommand`. `components/split/Shortcuts.tsx` registers them while the split view is showing and runs them. Commands marked `typing: false` (L, E, D, T, A, ⌘V, ↓, ↑) are taken away while a text field is being edited, so typing and pasting still work. Built, and launched on the Simulator. The keys themselves are a hands-on check (BLOCKED.md).
 
 ## Helps the iPhone too (proposals, not done without a yes)
 

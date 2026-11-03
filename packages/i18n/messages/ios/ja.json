@@ -612,6 +612,12 @@
       "pluck": "Pluckする",
       "titlePlaceholder": "タイトル",
       "keys": "<key>⌘</key> <key>↩</key> でPluck   <key>esc</key> でキャンセル"
+    },
+    "keys": {
+      "paste": "ペーストしてPluck",
+      "sidebar": "サイドバーを表示/非表示",
+      "next": "次へ",
+      "previous": "前へ"
     }
   }
 }

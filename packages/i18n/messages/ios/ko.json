@@ -612,6 +612,12 @@
       "pluck": "담기",
       "titlePlaceholder": "제목",
       "keys": "<key>⌘</key> <key>↩</key> 담기   <key>esc</key> 취소"
+    },
+    "keys": {
+      "paste": "붙여넣고 담기",
+      "sidebar": "사이드바 보기 또는 숨기기",
+      "next": "다음",
+      "previous": "이전"
     }
   }
 }

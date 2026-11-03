@@ -9,7 +9,7 @@ import { useTranslations } from "use-intl";
 import { keys, library, shareExtensionCache, syncPending, useCounts, useItems, useLists, useMe, useOnline, usePatchItem, usePending, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 import { ShareRow, SwipeToLater } from "./Art";
-import { useSplit } from "./split/context";
+import { shown, useSplit } from "./split/context";
 import { EmptyInbox } from "./split/EmptyInbox";
 import { SplitRow } from "./split/SplitRow";
 import { Icon, ICONS } from "./Glyph";
@@ -39,6 +39,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   // iPad's kind chips (iPad-Inbox): All, Links, Notes, Todos, Things.
   const [only, setOnly] = useState<Filter>("all");
   const rows = (items.data?.items ?? []).filter((i) => only === "all" || FILTERS[only].includes(i.kind));
+  // ↓ and ↑ on iPad's keyboard walk the rows of the column you are looking at.
+  const rowIds = rows.map((r) => r.id).join(",");
+  useFocusEffect(useCallback(() => void (shown.rows = rowIds ? rowIds.split(",") : []), [rowIds]));
 
   // Rows that were not here last time slide in (a pluck arriving); the first paint and rows scrolled into view do not.
   const seen = useRef<Set<string> | null>(null);

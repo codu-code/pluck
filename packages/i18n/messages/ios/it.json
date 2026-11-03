@@ -612,6 +612,12 @@
       "pluck": "Prendi",
       "titlePlaceholder": "Titolo",
       "keys": "<key>⌘</key> <key>↩</key> per prendere   <key>esc</key> per annullare"
+    },
+    "keys": {
+      "paste": "Incolla e prendi",
+      "sidebar": "Mostra o nascondi la barra laterale",
+      "next": "Successivo",
+      "previous": "Precedente"
     }
   }
 }

@@ -612,6 +612,12 @@
       "pluck": "Pflücken",
       "titlePlaceholder": "Titel",
       "keys": "<key>⌘</key> <key>↩</key> zum Pflücken   <key>esc</key> zum Abbrechen"
+    },
+    "keys": {
+      "paste": "Einsetzen und pflücken",
+      "sidebar": "Seitenleiste ein- oder ausblenden",
+      "next": "Nächster",
+      "previous": "Vorheriger"
     }
   }
 }

@@ -612,6 +612,12 @@
       "pluck": "Cueillir",
       "titlePlaceholder": "Titre",
       "keys": "<key>⌘</key> <key>↩</key> pour cueillir   <key>esc</key> pour annuler"
+    },
+    "keys": {
+      "paste": "Coller et cueillir",
+      "sidebar": "Afficher ou masquer la barre latérale",
+      "next": "Suivant",
+      "previous": "Précédent"
     }
   }
 }
