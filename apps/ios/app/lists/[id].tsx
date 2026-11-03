@@ -3,15 +3,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, Share, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
-import { Icon, ICONS } from "@/components/Glyph";
+import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
+import { useInDetail } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { ToolBar } from "@/components/ToolBar";
-import { keys, library, useList } from "@/lib/data";
+import { keys, library, useList, useMe } from "@/lib/data";
+import { useRowText } from "@/lib/format";
+import { defaultServer } from "@/lib/session";
 import { kv } from "@/lib/kv";
 import { font, scale, useTheme } from "@/lib/theme";
 
@@ -21,10 +24,17 @@ type Data = { list: List; entries: ListEntry[] };
 // One list (IOSLists board), in Inbox rows: unmarked in order, then the marked ones under a header that folds.
 // Each row has its order number, its List note and a round mark worded by Kind. Long press to select.
 export default function ListScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <ListView id={id} />;
+}
+
+// The List, as its own screen on iPhone and in the iPad split view's detail column (iPad-List board).
+export function ListView({ id }: { id: string }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const insets = useSafeAreaInsets();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const inDetail = useInDetail();
+  const handle = useMe().data?.handle;
   const qc = useQueryClient();
   const data = useList(id);
   const list = data.data?.list;
@@ -82,6 +92,49 @@ export default function ListScreen() {
 
   const share = () => router.push({ pathname: "/share", params: { id } });
   const chosenWord = listMarkWord(chosen.map((e) => e.item.kind));
+  const add = () => router.push({ pathname: "/pick", params: { mode: "add", id } });
+
+  if (inDetail) {
+    // A public List shares its page; a private one opens who can see it, as the pill does.
+    const send = () => (list?.visibility === "public" && handle
+      ? void Share.share({ url: `${defaultServer}/@${handle}/${list.slug}` })
+      : share());
+    return (
+      <View style={{ flex: 1, backgroundColor: t.ground }}>
+        <View style={[styles.detailBar, { paddingTop: insets.top }]}>
+          {list && (
+            <Pressable accessibilityRole="button" onPress={share} style={[styles.pill, { borderColor: t.lineStrong }]}>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 13 }]}>{tr(list.visibility === "public" ? "list.public" : "list.private")}</Text>
+            </Pressable>
+          )}
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("list.addA11y")} onPress={add} style={styles.barIcon}><Icon d={ICONS.plus} size={20} color={t.actionInk} /></Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("actions.share")} onPress={send} style={styles.barIcon}><Icon d={ICONS.share} size={20} color={t.actionInk} /></Pressable>
+        </View>
+        <FlatList
+          data={rows}
+          keyExtractor={(r) => (r === "head" ? "head" : r.e.item.id)}
+          contentContainerStyle={styles.column}
+          ListHeaderComponent={list && (
+            <View style={styles.detailHead}>
+              <Text accessibilityRole="header" style={[font.bold, styles.detailTitle, { color: t.ink }]}>{list.name}</Text>
+              {list.purpose ? <Text style={[font.regular, { color: t.ink2, fontSize: 16 }]}>{list.purpose}</Text> : null}
+              <Text style={[font.regular, { color: t.ink2, fontSize: 13, marginTop: 2, marginBottom: 12 }]}>{tr(`list.mark.${word}.progress`, { ticked: marked.length, count: entries.length })}</Text>
+            </View>
+          )}
+          ListEmptyComponent={data.isLoading ? undefined : <Empty title={tr("list.empty.title")} body={tr("list.empty.body")} />}
+          renderItem={({ item: r, index }) => r === "head" ? (
+            <Pressable accessibilityRole="button" accessibilityState={{ expanded: !folded }} onPress={fold} style={styles.detailFold}>
+              <View style={{ transform: [{ rotate: folded ? "0deg" : "90deg" }] }}><Icon d={ICONS.chevron} size={14} color={t.ink2} width={1.6} /></View>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { flex: 1, color: t.ink2, fontSize: 15 }]}>{tr(`list.mark.${word}.folded`, { count: marked.length })}</Text>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.medium, { color: t.actionInk, fontSize: 15 }]}>{tr(folded ? "list.show" : "list.hide")}</Text>
+            </Pressable>
+          ) : (
+            <Entry e={r.e} n={r.n} first={index === 0} onMark={() => void mark([r.e.item.id], !r.e.ticked)} />
+          )}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
@@ -163,7 +216,44 @@ export default function ListScreen() {
   );
 }
 
+// A List entry in the detail column (iPad-List): the ring, its number, the kind glyph, the title with its site
+// beside it, and the List's note under. Tapping it opens the Item.
+function Entry({ e, n, first, onMark }: { e: ListEntry; n: number; first: boolean; onMark: () => void }) {
+  const t = useTheme();
+  const tr = useTranslations("ios");
+  const words = useRowText()(e.item);
+  const w = markWord(e.item.kind);
+  const note = e.note ? (e.noteBy === "mcp" ? tr("list.noteByAi", { note: e.note }) : e.note) : null;
+  return (
+    <View style={[styles.entry, { borderBottomColor: t.line }, first && { borderTopWidth: StyleSheet.hairlineWidth * 2, borderTopColor: t.line }]}>
+      <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: e.ticked }} accessibilityLabel={tr(`list.mark.${w}.a11y`, { title: e.item.title })} onPress={onMark} hitSlop={10}
+        style={[styles.ring, e.ticked ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.lineStrong }]}>
+        {e.ticked && <Icon d={ICONS.tick} size={13} color={t.onHighlight} width={2.2} />}
+      </Pressable>
+      <Text maxFontSizeMultiplier={scale.title} style={[font.regular, styles.n, { color: t.ink2 }]}>{n}</Text>
+      <KindGlyph kind={e.item.kind} color={t.ink} />
+      <Pressable accessibilityRole="button" onPress={() => router.push(`/items/${e.item.id}`)} style={{ flex: 1, minWidth: 0, gap: 2, opacity: e.ticked ? 0.6 : 1 }}>
+        <Text>
+          <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{e.item.title}</Text>
+          <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{"  "}{words.siteMeta}</Text>
+        </Text>
+        {note && <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{note}</Text>}
+      </Pressable>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  detailBar: { minHeight: 52, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", justifyContent: "flex-end", gap: 6 },
+  pill: { height: 32, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, justifyContent: "center" },
+  barIcon: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
+  column: { width: "100%", maxWidth: 680, alignSelf: "center", paddingVertical: 8, paddingHorizontal: 32, paddingBottom: 96 },
+  detailHead: { gap: 6 },
+  detailTitle: { fontSize: 34, lineHeight: 41, letterSpacing: -0.68 },
+  detailFold: { minHeight: 56, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 4 },
+  entry: { flexDirection: "row", alignItems: "center", gap: 14, minHeight: 56, paddingVertical: 8, paddingHorizontal: 4, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
+  ring: { width: 24, height: 24, borderRadius: 12, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
+  n: { width: 18, textAlign: "right", fontSize: 13, fontVariant: ["tabular-nums"] },
   top: { paddingHorizontal: 8, flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 52 },
   back: { flexDirection: "row", alignItems: "center", gap: 4, height: 44, paddingHorizontal: 8 },
   count: { fontSize: 17, paddingHorizontal: 8 },

@@ -260,31 +260,39 @@
         "label": "読了",
         "progress": "{count}件中{ticked}件読了",
         "a11y": "{title}を読了にする",
-        "bulk": "読了にする"
+        "bulk": "読了にする",
+        "folded": "{count}件読了"
       },
       "watched": {
         "label": "視聴済み",
         "progress": "{count}件中{ticked}件視聴済み",
         "a11y": "{title}を視聴済みにする",
-        "bulk": "視聴済みにする"
+        "bulk": "視聴済みにする",
+        "folded": "{count}件視聴済み"
       },
       "seen": {
         "label": "閲覧済み",
         "progress": "{count}件中{ticked}件閲覧済み",
         "a11y": "{title}を閲覧済みにする",
-        "bulk": "閲覧済みにする"
+        "bulk": "閲覧済みにする",
+        "folded": "{count}件閲覧済み"
       },
       "done": {
         "label": "完了",
         "progress": "{count}件中{ticked}件完了",
         "a11y": "{title}を完了にする",
-        "bulk": "完了にする"
+        "bulk": "完了にする",
+        "folded": "{count}件完了"
       }
     },
     "unmark": "チェックを外す",
     "toTop": "先頭へ",
     "takeOut": "外す",
-    "takenOut": "{count, plural, other {#件}}を外しました。ライブラリには残っています。"
+    "takenOut": "{count, plural, other {#件}}を外しました。ライブラリには残っています。",
+    "show": "表示",
+    "hide": "隠す",
+    "private": "非公開",
+    "public": "公開"
   },
   "shared": {
     "copied": "Pluckしました。自分用のコピーが「リスト」にあります。",
@@ -579,6 +587,15 @@
     "showSidebar": "サイドバーを表示",
     "hideSidebar": "サイドバーを隠す",
     "showLists": "リストを表示",
-    "hideLists": "リストを隠す"
+    "hideLists": "リストを隠す",
+    "filter": {
+      "all": "すべて",
+      "links": "リンク",
+      "notes": "メモ",
+      "todos": "ToDo",
+      "things": "モノ"
+    },
+    "listsSub": "リスト{count}件、公開{shared}件",
+    "listMeta": "{count}件 · {count}件中{ticked}件完了"
   }
 }

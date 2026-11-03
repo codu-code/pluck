@@ -260,31 +260,39 @@
         "label": "Lu",
         "progress": "{ticked} sur {count} lus",
         "a11y": "Marquer {title} comme lu",
-        "bulk": "Marquer comme lu"
+        "bulk": "Marquer comme lu",
+        "folded": "{count} lus"
       },
       "watched": {
         "label": "Vu",
         "progress": "{ticked} sur {count} vus",
         "a11y": "Marquer {title} comme vu",
-        "bulk": "Marquer comme vu"
+        "bulk": "Marquer comme vu",
+        "folded": "{count} vus"
       },
       "seen": {
         "label": "Vu",
         "progress": "{ticked} sur {count} vus",
         "a11y": "Marquer {title} comme vu",
-        "bulk": "Marquer comme vu"
+        "bulk": "Marquer comme vu",
+        "folded": "{count} vus"
       },
       "done": {
         "label": "Terminé",
         "progress": "{ticked} sur {count} terminés",
         "a11y": "Marquer {title} comme terminé",
-        "bulk": "Marquer comme terminé"
+        "bulk": "Marquer comme terminé",
+        "folded": "{count} terminés"
       }
     },
     "unmark": "Décocher",
     "toTop": "En haut",
     "takeOut": "Retirer",
-    "takenOut": "{count, plural, one {# élément retiré} other {# éléments retirés}}. Toujours dans votre bibliothèque."
+    "takenOut": "{count, plural, one {# élément retiré} other {# éléments retirés}}. Toujours dans votre bibliothèque.",
+    "show": "Afficher",
+    "hide": "Masquer",
+    "private": "Privée",
+    "public": "Publique"
   },
   "shared": {
     "copied": "Cueillie. Votre propre copie est dans Listes.",
@@ -579,6 +587,15 @@
     "showSidebar": "Afficher la barre latérale",
     "hideSidebar": "Masquer la barre latérale",
     "showLists": "Afficher vos listes",
-    "hideLists": "Masquer vos listes"
+    "hideLists": "Masquer vos listes",
+    "filter": {
+      "all": "Tout",
+      "links": "Liens",
+      "notes": "Notes",
+      "todos": "Tâches",
+      "things": "Objets"
+    },
+    "listsSub": "{count, plural, one {# liste} other {# listes}}, {shared, plural, =0 {aucune publique} one {# publique} other {# publiques}}",
+    "listMeta": "{count, plural, one {# élément} other {# éléments}} · {ticked} sur {count} terminés"
   }
 }

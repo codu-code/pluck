@@ -1,16 +1,26 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Pressable, Settings, StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { Easing, runOnJS, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import Archive from "@/app/archive";
 import Bin from "@/app/bin";
-import Settings from "@/app/settings";
+import { ItemView } from "@/app/items/[id]";
+import { ListView } from "@/app/lists/[id]";
+import SettingsScreen from "@/app/settings";
 import { font, useTheme } from "@/lib/theme";
 import { OfflinePill } from "../Offline";
-import { SplitContext, useColumns, type Detail, type Section } from "./context";
+import { InDetail, SplitContext, useColumns, type Detail, type Section } from "./context";
 import { Sidebar } from "./Sidebar";
+
+// Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY, never set for the store), as launch arguments:
+// -demoDetail item:<id> or list:<id>, -demoSection archive|bin|settings, -demoSidebar 1 (over the list).
+const demo = (key: string) => (process.env.EXPO_PUBLIC_DEMO_KEY ? (Settings.get(key) as string | undefined) : undefined);
+const demoDetail = (): Detail => {
+  const [kind, id] = (demo("demoDetail") ?? "").split(":");
+  return (kind === "item" || kind === "list") && id ? { kind, id } : null;
+};
 
 const SIDEBAR = 300;
 const EDGE = 20; // how far in from the left edge a swipe brings the sidebar out
@@ -22,12 +32,12 @@ const SCRIM = { light: "rgba(21,26,19,0.28)", dark: "rgba(0,0,0,0.5)" }; // iPad
 export function Split({ children }: { children: ReactNode }) {
   const t = useTheme();
   const { wide, pinned, list } = useColumns();
-  const [detail, show] = useState<Detail>(null);
-  const [section, go] = useState<Section>("tabs");
-  const [sidebar, setSidebar] = useState(pinned);
-  useEffect(() => setSidebar(pinned), [pinned]); // turning the iPad puts it back the way that orientation has it
+  const [detail, show] = useState<Detail>(demoDetail);
+  const [section, go] = useState<Section>(() => (demo("demoSection") as Section | undefined) ?? "tabs");
+  const [sidebar, setSidebar] = useState(pinned || Boolean(demo("demoSidebar")));
+  useEffect(() => setSidebar(pinned || Boolean(demo("demoSidebar"))), [pinned]); // turning the iPad puts it back the way that orientation has it
   const value = useMemo(() => ({ detail, show, section, go, pinned, sidebar, setSidebar }), [detail, section, pinned, sidebar]);
-  const middle = section === "archive" ? <Archive /> : section === "bin" ? <Bin /> : section === "settings" ? <Settings /> : null;
+  const middle = section === "archive" ? <Archive /> : section === "bin" ? <Bin /> : section === "settings" ? <SettingsScreen /> : null;
   return (
     <SplitContext.Provider value={wide ? value : null}>
       <View style={[styles.row, { backgroundColor: t.ground }]}>
@@ -97,7 +107,14 @@ function DetailColumn({ detail }: { detail: Detail }) {
       </View>
     );
   }
-  return <View style={styles.fill} />;
+  // Keyed by what is open, so moving between Items starts each one at its top.
+  return (
+    <InDetail.Provider value>
+      <View key={`${detail.kind}:${detail.id}`} style={styles.fill}>
+        {detail.kind === "item" ? <ItemView id={detail.id} /> : <ListView id={detail.id} />}
+      </View>
+    </InDetail.Provider>
+  );
 }
 
 const styles = StyleSheet.create({

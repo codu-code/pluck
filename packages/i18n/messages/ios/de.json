@@ -260,31 +260,39 @@
         "label": "Gelesen",
         "progress": "{ticked} von {count} gelesen",
         "a11y": "{title} als gelesen markieren",
-        "bulk": "Als gelesen markieren"
+        "bulk": "Als gelesen markieren",
+        "folded": "{count} gelesen"
       },
       "watched": {
         "label": "Angesehen",
         "progress": "{ticked} von {count} angesehen",
         "a11y": "{title} als angesehen markieren",
-        "bulk": "Als angesehen markieren"
+        "bulk": "Als angesehen markieren",
+        "folded": "{count} angesehen"
       },
       "seen": {
         "label": "Gesehen",
         "progress": "{ticked} von {count} gesehen",
         "a11y": "{title} als gesehen markieren",
-        "bulk": "Als gesehen markieren"
+        "bulk": "Als gesehen markieren",
+        "folded": "{count} gesehen"
       },
       "done": {
         "label": "Erledigt",
         "progress": "{ticked} von {count} erledigt",
         "a11y": "{title} als erledigt markieren",
-        "bulk": "Als erledigt markieren"
+        "bulk": "Als erledigt markieren",
+        "folded": "{count} erledigt"
       }
     },
     "unmark": "Häkchen entfernen",
     "toTop": "Nach oben",
     "takeOut": "Herausnehmen",
-    "takenOut": "{count, plural, one {# Eintrag} other {# Einträge}} herausgenommen. Weiterhin in deiner Bibliothek."
+    "takenOut": "{count, plural, one {# Eintrag} other {# Einträge}} herausgenommen. Weiterhin in deiner Bibliothek.",
+    "show": "Einblenden",
+    "hide": "Ausblenden",
+    "private": "Privat",
+    "public": "Öffentlich"
   },
   "shared": {
     "copied": "Gepflückt. Deine eigene Kopie liegt in Listen.",
@@ -579,6 +587,15 @@
     "showSidebar": "Seitenleiste einblenden",
     "hideSidebar": "Seitenleiste ausblenden",
     "showLists": "Deine Listen einblenden",
-    "hideLists": "Deine Listen ausblenden"
+    "hideLists": "Deine Listen ausblenden",
+    "filter": {
+      "all": "Alle",
+      "links": "Links",
+      "notes": "Notizen",
+      "todos": "Aufgaben",
+      "things": "Dinge"
+    },
+    "listsSub": "{count, plural, one {# Liste} other {# Listen}}, {shared, plural, =0 {keine öffentlich} other {# öffentlich}}",
+    "listMeta": "{count, plural, one {# Eintrag} other {# Einträge}} · {ticked} von {count} erledigt"
   }
 }

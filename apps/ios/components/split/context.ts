@@ -26,3 +26,8 @@ export const SplitContext = createContext<Split | null>(null);
 // null in the iPhone layout, so a caller pushes the route as it always has.
 export const useSplit = () => useContext(SplitContext);
 
+
+// True inside the detail column: the Item and the List draw their iPad bars instead of the iPhone's back button
+// and bottom toolbar.
+export const InDetail = createContext(false);
+export const useInDetail = () => useContext(InDetail);

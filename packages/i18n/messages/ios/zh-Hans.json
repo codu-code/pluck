@@ -260,31 +260,39 @@
         "label": "已读",
         "progress": "已读 {ticked}/{count}",
         "a11y": "将“{title}”标为已读",
-        "bulk": "标为已读"
+        "bulk": "标为已读",
+        "folded": "已读 {count}"
       },
       "watched": {
         "label": "已观看",
         "progress": "已观看 {ticked}/{count}",
         "a11y": "将“{title}”标为已观看",
-        "bulk": "标为已观看"
+        "bulk": "标为已观看",
+        "folded": "已观看 {count}"
       },
       "seen": {
         "label": "已看过",
         "progress": "已看过 {ticked}/{count}",
         "a11y": "将“{title}”标为已看过",
-        "bulk": "标为已看过"
+        "bulk": "标为已看过",
+        "folded": "已看过 {count}"
       },
       "done": {
         "label": "已完成",
         "progress": "已完成 {ticked}/{count}",
         "a11y": "将“{title}”标为已完成",
-        "bulk": "标为已完成"
+        "bulk": "标为已完成",
+        "folded": "已完成 {count}"
       }
     },
     "unmark": "取消标记",
     "toTop": "移到顶部",
     "takeOut": "移出",
-    "takenOut": "已移出 {count, plural, other {# 条}}。仍在你的资料库里。"
+    "takenOut": "已移出 {count, plural, other {# 条}}。仍在你的资料库里。",
+    "show": "显示",
+    "hide": "隐藏",
+    "private": "私密",
+    "public": "公开"
   },
   "shared": {
     "copied": "已摘下。你自己的副本在“清单”里。",
@@ -579,6 +587,15 @@
     "showSidebar": "显示边栏",
     "hideSidebar": "隐藏边栏",
     "showLists": "显示你的清单",
-    "hideLists": "隐藏你的清单"
+    "hideLists": "隐藏你的清单",
+    "filter": {
+      "all": "全部",
+      "links": "链接",
+      "notes": "笔记",
+      "todos": "待办",
+      "things": "物品"
+    },
+    "listsSub": "{count} 个清单，{shared} 个公开",
+    "listMeta": "{count} 项 · 已完成 {ticked}/{count}"
   }
 }

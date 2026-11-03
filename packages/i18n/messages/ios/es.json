@@ -260,31 +260,39 @@
         "label": "Leído",
         "progress": "{ticked} de {count} leídos",
         "a11y": "Marcar {title} como leído",
-        "bulk": "Marcar como leído"
+        "bulk": "Marcar como leído",
+        "folded": "{count} leídos"
       },
       "watched": {
         "label": "Visto",
         "progress": "{ticked} de {count} vistos",
         "a11y": "Marcar {title} como visto",
-        "bulk": "Marcar como visto"
+        "bulk": "Marcar como visto",
+        "folded": "{count} vistos"
       },
       "seen": {
         "label": "Visto",
         "progress": "{ticked} de {count} vistos",
         "a11y": "Marcar {title} como visto",
-        "bulk": "Marcar como visto"
+        "bulk": "Marcar como visto",
+        "folded": "{count} vistos"
       },
       "done": {
         "label": "Hecho",
         "progress": "{ticked} de {count} hechos",
         "a11y": "Marcar {title} como hecho",
-        "bulk": "Marcar como hecho"
+        "bulk": "Marcar como hecho",
+        "folded": "{count} hechos"
       }
     },
     "unmark": "Desmarcar",
     "toTop": "Al principio",
     "takeOut": "Quitar",
-    "takenOut": "{count, plural, one {# elemento quitado. Sigue} other {# elementos quitados. Siguen}} en tu biblioteca."
+    "takenOut": "{count, plural, one {# elemento quitado. Sigue} other {# elementos quitados. Siguen}} en tu biblioteca.",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "private": "Privada",
+    "public": "Pública"
   },
   "shared": {
     "copied": "Recogido. Tu propia copia está en Listas.",
@@ -579,6 +587,15 @@
     "showSidebar": "Mostrar barra lateral",
     "hideSidebar": "Ocultar barra lateral",
     "showLists": "Mostrar tus listas",
-    "hideLists": "Ocultar tus listas"
+    "hideLists": "Ocultar tus listas",
+    "filter": {
+      "all": "Todo",
+      "links": "Enlaces",
+      "notes": "Notas",
+      "todos": "Tareas",
+      "things": "Cosas"
+    },
+    "listsSub": "{count, plural, one {# lista} other {# listas}}, {shared, plural, =0 {ninguna pública} one {# pública} other {# públicas}}",
+    "listMeta": "{count, plural, one {# elemento} other {# elementos}} · {ticked} de {count} hechos"
   }
 }

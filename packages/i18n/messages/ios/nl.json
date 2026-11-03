@@ -260,31 +260,39 @@
         "label": "Gelezen",
         "progress": "{ticked} van {count} gelezen",
         "a11y": "{title} markeren als gelezen",
-        "bulk": "Markeren als gelezen"
+        "bulk": "Markeren als gelezen",
+        "folded": "{count} gelezen"
       },
       "watched": {
         "label": "Bekeken",
         "progress": "{ticked} van {count} bekeken",
         "a11y": "{title} markeren als bekeken",
-        "bulk": "Markeren als bekeken"
+        "bulk": "Markeren als bekeken",
+        "folded": "{count} bekeken"
       },
       "seen": {
         "label": "Gezien",
         "progress": "{ticked} van {count} gezien",
         "a11y": "{title} markeren als gezien",
-        "bulk": "Markeren als gezien"
+        "bulk": "Markeren als gezien",
+        "folded": "{count} gezien"
       },
       "done": {
         "label": "Klaar",
         "progress": "{ticked} van {count} klaar",
         "a11y": "{title} markeren als klaar",
-        "bulk": "Markeren als klaar"
+        "bulk": "Markeren als klaar",
+        "folded": "{count} klaar"
       }
     },
     "unmark": "Vinkje weghalen",
     "toTop": "Naar boven",
     "takeOut": "Eruit halen",
-    "takenOut": "{count, plural, one {# item} other {# items}} eruit gehaald. Nog steeds in je bibliotheek."
+    "takenOut": "{count, plural, one {# item} other {# items}} eruit gehaald. Nog steeds in je bibliotheek.",
+    "show": "Tonen",
+    "hide": "Verbergen",
+    "private": "Privé",
+    "public": "Openbaar"
   },
   "shared": {
     "copied": "Geplukt. Je eigen kopie staat in Lijsten.",
@@ -579,6 +587,15 @@
     "showSidebar": "Navigatiekolom tonen",
     "hideSidebar": "Navigatiekolom verbergen",
     "showLists": "Je lijsten tonen",
-    "hideLists": "Je lijsten verbergen"
+    "hideLists": "Je lijsten verbergen",
+    "filter": {
+      "all": "Alles",
+      "links": "Links",
+      "notes": "Notities",
+      "todos": "Taken",
+      "things": "Dingen"
+    },
+    "listsSub": "{count, plural, one {# lijst} other {# lijsten}}, {shared, plural, =0 {geen openbaar} other {# openbaar}}",
+    "listMeta": "{count, plural, one {# item} other {# items}} · {ticked} van {count} klaar"
   }
 }

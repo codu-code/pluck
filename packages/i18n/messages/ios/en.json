@@ -260,31 +260,39 @@
         "label": "Read",
         "progress": "{ticked} of {count} read",
         "a11y": "Mark {title} as read",
-        "bulk": "Mark read"
+        "bulk": "Mark read",
+        "folded": "{count} read"
       },
       "watched": {
         "label": "Watched",
         "progress": "{ticked} of {count} watched",
         "a11y": "Mark {title} as watched",
-        "bulk": "Mark watched"
+        "bulk": "Mark watched",
+        "folded": "{count} watched"
       },
       "seen": {
         "label": "Seen",
         "progress": "{ticked} of {count} seen",
         "a11y": "Mark {title} as seen",
-        "bulk": "Mark seen"
+        "bulk": "Mark seen",
+        "folded": "{count} seen"
       },
       "done": {
         "label": "Done",
         "progress": "{ticked} of {count} done",
         "a11y": "Mark {title} as done",
-        "bulk": "Mark done"
+        "bulk": "Mark done",
+        "folded": "{count} done"
       }
     },
     "unmark": "Unmark",
     "toTop": "To top",
     "takeOut": "Take out",
-    "takenOut": "{count, plural, one {# Item} other {# Items}} taken out. Still in your library."
+    "takenOut": "{count, plural, one {# Item} other {# Items}} taken out. Still in your library.",
+    "show": "Show",
+    "hide": "Hide",
+    "private": "Private",
+    "public": "Public"
   },
   "shared": {
     "copied": "Plucked. Your own copy is in Lists.",
@@ -579,6 +587,15 @@
     "showSidebar": "Show sidebar",
     "hideSidebar": "Hide sidebar",
     "showLists": "Show your Lists",
-    "hideLists": "Hide your Lists"
+    "hideLists": "Hide your Lists",
+    "filter": {
+      "all": "All",
+      "links": "Links",
+      "notes": "Notes",
+      "todos": "Todos",
+      "things": "Things"
+    },
+    "listsSub": "{count, plural, one {# List} other {# Lists}}, {shared, plural, =0 {none public} other {# public}}",
+    "listMeta": "{count, plural, one {# Item} other {# Items}} · {ticked} of {count} done"
   }
 }

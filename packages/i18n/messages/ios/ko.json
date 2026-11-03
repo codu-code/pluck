@@ -260,31 +260,39 @@
         "label": "읽음",
         "progress": "{count}개 중 {ticked}개 읽음",
         "a11y": "{title} 읽음으로 표시",
-        "bulk": "읽음으로 표시"
+        "bulk": "읽음으로 표시",
+        "folded": "{count}개 읽음"
       },
       "watched": {
         "label": "시청함",
         "progress": "{count}개 중 {ticked}개 시청함",
         "a11y": "{title} 시청함으로 표시",
-        "bulk": "시청함으로 표시"
+        "bulk": "시청함으로 표시",
+        "folded": "{count}개 시청함"
       },
       "seen": {
         "label": "봄",
         "progress": "{count}개 중 {ticked}개 봄",
         "a11y": "{title} 봄으로 표시",
-        "bulk": "봄으로 표시"
+        "bulk": "봄으로 표시",
+        "folded": "{count}개 봄"
       },
       "done": {
         "label": "완료",
         "progress": "{count}개 중 {ticked}개 완료",
         "a11y": "{title} 완료로 표시",
-        "bulk": "완료로 표시"
+        "bulk": "완료로 표시",
+        "folded": "{count}개 완료"
       }
     },
     "unmark": "표시 해제",
     "toTop": "맨 위로",
     "takeOut": "빼기",
-    "takenOut": "{count, plural, other {항목 #개}}를 뺐어요. 라이브러리에는 그대로 있어요."
+    "takenOut": "{count, plural, other {항목 #개}}를 뺐어요. 라이브러리에는 그대로 있어요.",
+    "show": "보기",
+    "hide": "숨기기",
+    "private": "비공개",
+    "public": "공개"
   },
   "shared": {
     "copied": "담았어요. 내 사본은 리스트에 있어요.",
@@ -579,6 +587,15 @@
     "showSidebar": "사이드바 보기",
     "hideSidebar": "사이드바 숨기기",
     "showLists": "내 리스트 보기",
-    "hideLists": "내 리스트 숨기기"
+    "hideLists": "내 리스트 숨기기",
+    "filter": {
+      "all": "전체",
+      "links": "링크",
+      "notes": "노트",
+      "todos": "할 일",
+      "things": "물건"
+    },
+    "listsSub": "리스트 {count}개, 공개 {shared}개",
+    "listMeta": "{count}개 · {count}개 중 {ticked}개 완료"
   }
 }

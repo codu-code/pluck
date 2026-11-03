@@ -34,7 +34,7 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 |---|---|---|---|
 | 1 | done | Turn on iPad: `supportsTablet: true`, every orientation on iPad (the iPhone stays portrait), the share extension on iPad too (`TARGETED_DEVICE_FAMILY` 1,2 and iPad sizes in its icon set via `scripts/icons.mjs`), `useWide()` (600 and up) and the layout switch, with the split shell holding the current screens | Builds; 13" in both orientations and mini open on the shell; under 600 (Split View) and iPhone show the tabs |
 | 2 | done | The sidebar (iPad-Inbox, iPad-Spec): Inbox, Later, Lists with the person's Lists nested under it, Search, Archive, Bin, and Settings at the bottom; `--rail`, 300 wide in 13" landscape; in portrait and on mini it hides behind its button and slides over the list from the left, including from an edge swipe; the Pluck logo and + at the top | Board match, light and dark |
-| 3 | todo | List column and detail column: Inbox, Later and Archive in the middle (380, 360 portrait, 320 mini); the Item reader or the List in detail (640 text column, ticked entries folded, Undo toast); selected and hover states (`onHoverIn`), and hover swaps the time for Later, Archive and Tag | iPad-Inbox, iPad-List, iPad-Mini |
+| 3 | done | List column and detail column: Inbox, Later and Archive in the middle (380, 360 portrait, 320 mini); the Item reader or the List in detail (640 text column, ticked entries folded, Undo toast); selected and hover states (`onHoverIn`), and hover swaps the time for Later, Archive and Tag | iPad-Inbox, iPad-List, iPad-Mini |
 | 4 | todo | Search, Settings (sections in the middle, the open section in detail), Sign in and the empty Inbox | iPad-Search, iPad-Settings, iPad-SignIn, iPad-Empty |
 | 5 | todo | Add and Note as a 580-wide form sheet | iPad-Add |
 | 6 | todo | Hardware keyboard: the iPad-Shortcuts set through `UIKeyCommand` so they show in the hold-⌘ overlay; a small Expo module (`modules/key-commands`) next to `modules/app-icon` | Simulator with a hardware keyboard, hold ⌘ |
@@ -48,6 +48,10 @@ So `app/(tabs)/_layout.tsx` checks the window width. Under 600 wide it returns t
 - **Simulator builds need `PLUCK_SERVER` at `xcodebuild` time** as well as at prebuild, because the app's config is embedded when it builds. Without it the demo key goes to getpluck.io and is refused. Ad-hoc signing (`CODE_SIGN_IDENTITY=-`, without `CODE_SIGNING_REQUIRED=NO`) keeps the Keychain group, so the session sticks.
 - **Archive, Bin and Settings** open in the list column on iPad, with the tabs kept mounted underneath. Their back and Done buttons become the sidebar button there. Settings gets its iPad layout in slice 4.
 - **The sidebar button** hides the sidebar in landscape too, as the board's button does. Turning the iPad puts it back the way that orientation has it.
+
+- **Slice 3, where it differs from the board, and why.** The detail bar keeps Note (for a link) and the keep-offline mark beside the board's six tools, because both exist on iPhone and dropping them would lose features on iPad. The board's ⋯ in the list column starts selecting (the iPhone's long press). The List's ⋯ is left out: there's nothing on iPhone to put behind it yet. The List's share icon shares the public page, or opens who can see it for a private List.
+- **Demo launch arguments for iPad** (demo builds only): `-demoDetail item:<id>` or `list:<id>`, `-demoSection archive|bin|settings`, `-demoSidebar 1`. They drive the Simulator checks and will drive the slice 7 screenshots.
+- **The usage question is a 580-wide card on iPad,** not a sheet across the whole width.
 
 ## Helps the iPhone too (proposals, not done without a yes)
 

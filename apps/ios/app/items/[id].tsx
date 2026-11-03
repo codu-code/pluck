@@ -12,9 +12,10 @@ import { WebView } from "react-native-webview";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
+import { useInDetail, useSplit } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, type FullItem } from "@/lib/data";
+import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { api } from "@/lib/session";
@@ -24,6 +25,11 @@ const BACK = { inbox: "tabs.inbox", later: "tabs.later", archived: "item.backArc
 
 export default function ItemScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  return <ItemView id={id} />;
+}
+
+// The Item, as its own screen on iPhone and in the iPad split view's detail column (useInDetail).
+export function ItemView({ id }: { id: string }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const data = useItem(id);
@@ -58,10 +64,12 @@ export default function ItemScreen() {
   return isTextKind(data.data.item.kind) ? <NoteEditor data={data.data} /> : <Reader data={data.data} />;
 }
 
-function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
+function TopBar({ label, right, left }: { label: string; right?: React.ReactNode; left?: React.ReactNode }) {
   const t = useTheme();
   const tr = useTranslations("ios.common");
   const top = useSafeAreaInsets().top;
+  // On iPad the detail column has no back: the list beside it is where you came from (iPad-Inbox, the 52 bar).
+  if (useInDetail()) return <View style={[styles.detailBar, { paddingTop: top }]}>{left ?? <View />}{right}</View>;
   return (
     <View style={[styles.top, { paddingTop: top + 8 }]}>
       <Pressable accessibilityRole="button" accessibilityLabel={tr("backTo", { label })} onPress={() => router.back()} hitSlop={{ left: 8 }} style={styles.back}>
@@ -77,11 +85,14 @@ function TopBar({ label, right }: { label: string; right?: React.ReactNode }) {
 function Toolbar({ item }: { item: Item }) {
   const tr = useTranslations("ios");
   const patch = usePatchItem();
+  const split = useSplit();
+  const inDetail = useInDetail();
   const move = (status: "inbox" | "later" | "archived") => {
     patch.mutate({ id: item.id, patch: { status } });
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toast(tr(`moved.${status}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
-    router.back();
+    if (inDetail) split?.show(null);
+    else router.back();
   };
   const tools: Tool[] = [
     // From the Archive the one move is back to the Inbox.
@@ -95,7 +106,9 @@ function Toolbar({ item }: { item: Item }) {
   ];
   // A link gets a Note between the moves and the sorting; notes, todos and things are their own text.
   if (!isTextKind(item.kind)) tools.splice(tools.findIndex((x) => x.icon === ICONS.tag), 0, { label: tr("actions.note"), icon: ICONS.compose, onPress: () => router.push({ pathname: "/note", params: { id: item.id } }) });
-  return <ToolBar tools={tools} />;
+  // iPad: the board's six in the detail bar (Later, Archive, Tag, List, Share, Original), with Note for a link as on iPhone.
+  if (inDetail && item.url) tools.push({ label: tr("item.openOriginal"), icon: ICONS.original, onPress: () => void WebBrowser.openBrowserAsync(withReferral(item.url!)) });
+  return <ToolBar tools={tools} edge={inDetail ? "detail" : "bottom"} />;
 }
 
 function Reader({ data }: { data: FullItem }) {
@@ -151,13 +164,21 @@ function Reader({ data }: { data: FullItem }) {
   );
 
   const minutes = item.wordCount ? Math.max(1, Math.round((item.wordCount * (1 - progress)) / 230)) : null;
+  const where = reading ? (minutes ? tr("item.minutesLeft", { percent: format.number(progress, { style: "percent" }), minutes }) : format.number(progress, { style: "percent" })) : null;
+  const inDetail = useInDetail();
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
         label={tr(BACK[item.status])}
-        right={
+        left={where ? <Text numberOfLines={1} maxFontSizeMultiplier={scale.title} style={[font.regular, { flexShrink: 1, color: t.ink2, fontSize: 13 }]}>{where}</Text> : undefined}
+        right={inDetail ? (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4, flexShrink: 0 }}>
+            <KeepButton item={item} />
+            <Toolbar item={item} />
+          </View>
+        ) : 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {reading && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{minutes ? tr("item.minutesLeft", { percent: format.number(progress, { style: "percent" }), minutes }) : format.number(progress, { style: "percent" })}</Text>}
+            {where && <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 13, paddingHorizontal: 4 }]}>{where}</Text>}
             <KeepButton item={item} />
             {item.url && !card && (
               <Pressable accessibilityRole="button" accessibilityLabel={tr("item.openOriginal")} onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.url!))} style={styles.iconButton}>
@@ -168,9 +189,9 @@ function Reader({ data }: { data: FullItem }) {
         }
       />
       {pdf ? <><View style={styles.pdfBar}>{switcher}</View><PdfFile item={item} /></> : <>
-      <View style={[styles.track, { backgroundColor: t.line }]}>{reading && <View style={{ width: `${Math.round(progress * 100)}%`, height: 2, backgroundColor: t.accent }} />}</View>
+      {!inDetail && <View style={[styles.track, { backgroundColor: t.line }]}>{reading && <View style={{ width: `${Math.round(progress * 100)}%`, height: 2, backgroundColor: t.accent }} />}</View>}
       <ScrollView
-        contentContainerStyle={styles.article}
+        contentContainerStyle={inDetail ? styles.wideArticle : styles.article}
         scrollEventThrottle={250}
         onScroll={({ nativeEvent: e }) => {
           const room = e.contentSize.height - e.layoutMeasurement.height;
@@ -178,8 +199,9 @@ function Reader({ data }: { data: FullItem }) {
         }}
       >
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{row(item).siteMeta}</Text>
-        <Text accessibilityRole="header" style={[font.readerTitle, styles.h1, { color: t.ink }]}>{item.title}</Text>
+        <Text accessibilityRole="header" style={[font.readerTitle, inDetail ? styles.wideH1 : styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
+        {inDetail && <Tags item={item} />}
         <Facts item={item} />
         {card && item.preview === "player" && item.facts.player ? <Player facts={item.facts} title={item.title} site={site} cover={cover} /> : card && cover && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail, maxHeight: 520 }]} resizeMode="cover" accessibilityIgnoresInvertColors
@@ -239,10 +261,23 @@ function Reader({ data }: { data: FullItem }) {
             </View>
           </View>
         )}
-        {!card && blocks.map((b, i) => <BlockView key={i} block={b} quotes={quotes} t={t} />)}
+        {!card && blocks.map((b, i) => <BlockView key={i} block={b} quotes={quotes} t={t} wide={inDetail} />)}
       </ScrollView>
       </>}
-      <Toolbar item={item} />
+      {!inDetail && <Toolbar item={item} />}
+    </View>
+  );
+}
+
+// The Item's tags under the byline, as on the iPad-Inbox board: 22 tall chips on --chip.
+function Tags({ item }: { item: Item }) {
+  const t = useTheme();
+  const tags = useTags().data ?? [];
+  const names = item.tagIds.map((id) => tags.find((x) => x.id === id)?.name).filter(Boolean) as string[];
+  if (!names.length) return null;
+  return (
+    <View style={styles.tags}>
+      {names.map((n) => <Text key={n} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.tag, { backgroundColor: t.chip, color: t.ink }]}>{n}</Text>)}
     </View>
   );
 }
@@ -280,14 +315,15 @@ function KeepButton({ item }: { item: Item }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const kept = useKeptByHand(item.id);
+  const inDetail = useInDetail();
   return (
-    <Pressable accessibilityRole="switch" accessibilityState={{ checked: kept }} accessibilityLabel={tr("preview.keep")} style={styles.iconButton}
+    <Pressable accessibilityRole="switch" accessibilityState={{ checked: kept }} accessibilityLabel={tr("preview.keep")} style={inDetail ? styles.detailIcon : styles.iconButton}
       onPress={() => {
         void Haptics.selectionAsync();
         toast(tr(kept ? "preview.letGo" : "preview.kept"));
         void keepByHand(item, !kept).catch(() => toast(tr("common.failed.title")));
       }}>
-      <View style={kept ? [styles.kept, { backgroundColor: t.highlightWash }] : styles.kept}><Icon d={ICONS.keep} size={18} color={kept ? t.ink : t.ink2} width={1.6} /></View>
+      <View style={kept ? [styles.kept, { backgroundColor: t.highlightWash }] : styles.kept}><Icon d={ICONS.keep} size={inDetail ? 20 : 18} color={inDetail ? t.actionInk : kept ? t.ink : t.ink2} width={inDetail ? 1.4 : 1.6} /></View>
     </Pressable>
   );
 }
@@ -308,7 +344,8 @@ function Facts({ item }: { item: Item }) {
   return <Text style={item.preview === "product" ? [font.semibold, { color: t.ink, fontSize: 20 }] : [font.regular, { color: t.ink2, fontSize: 13 }]}>{bits.join(" · ")}</Text>;
 }
 
-function BlockView({ block, quotes, t }: { block: Block; quotes: string[]; t: Palette }) {
+function BlockView({ block, quotes, t, wide = false }: { block: Block; quotes: string[]; t: Palette; wide?: boolean }) {
+  const body = wide ? styles.wideBody : styles.body;
   const runs = marks(block.text, quotes).map((r, i) =>
     r.mark ? <Text key={i} style={{ backgroundColor: t.highlightWash, color: t.ink }}>{r.text}</Text> : r.text,
   );
@@ -316,13 +353,13 @@ function BlockView({ block, quotes, t }: { block: Block; quotes: string[]; t: Pa
     case "heading":
       return <Text style={[font.readerTitle, { color: t.ink, fontSize: block.level <= 2 ? 23 : 20, lineHeight: block.level <= 2 ? 30 : 27, marginTop: 8 }]}>{runs}</Text>;
     case "item":
-      return <Text style={[font.reader, styles.body, { color: t.ink, paddingLeft: 16 }]}>{block.ordered ? "" : "• "}{runs}</Text>;
+      return <Text style={[font.reader, body, { color: t.ink, paddingLeft: 16 }]}>{block.ordered ? "" : "• "}{runs}</Text>;
     case "quote":
-      return <Text style={[font.reader, styles.body, { color: t.ink2, fontStyle: "italic", paddingLeft: 16 }]}>{runs}</Text>;
+      return <Text style={[font.reader, body, { color: t.ink2, fontStyle: "italic", paddingLeft: 16 }]}>{runs}</Text>;
     case "code":
       return <Text style={[styles.code, { color: t.ink, backgroundColor: t.rail }]}>{block.text}</Text>;
     default:
-      return <Text style={[font.reader, styles.body, { color: t.ink }]}>{runs}</Text>;
+      return <Text style={[font.reader, body, { color: t.ink }]}>{runs}</Text>;
   }
 }
 
@@ -347,10 +384,12 @@ function NoteEditor({ data }: { data: FullItem }) {
   }, [text, title]); // only when the words change
 
   const done = item.status === "done";
+  const inDetail = useInDetail();
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
         label={tr(BACK[item.status])}
+        left={inDetail ? <Toolbar item={item} /> : undefined}
         right={item.kind !== "note" ? (
           <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: done }} onPress={() => patch.mutate({ id: item.id, patch: { status: done ? "inbox" : "done" } })} style={styles.doneButton}>
             <View style={[styles.ring, done ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.ringOff }]}>
@@ -360,20 +399,27 @@ function NoteEditor({ data }: { data: FullItem }) {
           </Pressable>
         ) : null}
       />
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 12 }} keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets>
+      <ScrollView contentContainerStyle={inDetail ? [styles.wideArticle, { gap: 12 }] : { padding: 20, gap: 12 }} keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets>
         <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
         <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
           placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
       </ScrollView>
-      <Toolbar item={item} />
+      {!inDetail && <Toolbar item={item} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   top: { paddingHorizontal: 8, flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+  // iPad's detail column (iPad-Inbox, iPad-Spec): the 52 bar, and the reader in a 640 column, centred.
+  detailBar: { minHeight: 52, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12 },
+  wideArticle: { width: "100%", maxWidth: 640, alignSelf: "center", paddingVertical: 20, paddingHorizontal: 32, paddingBottom: 48, gap: 18 },
+  wideH1: { fontSize: 34, lineHeight: 40 },
+  wideBody: { fontSize: 19, lineHeight: 31 },
+  tags: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  tag: { height: 22, lineHeight: 22, paddingHorizontal: 8, borderRadius: 11, overflow: "hidden", fontSize: 12 },
   back: { flexDirection: "row", alignItems: "center", gap: 4, height: 44, paddingHorizontal: 8 },
   track: { height: 2, marginHorizontal: 16 },
   article: { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 40, gap: 16 },
@@ -388,6 +434,7 @@ const styles = StyleSheet.create({
   primary: { minHeight: 44, paddingHorizontal: 16, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   quietButton: { minHeight: 44, minWidth: 96, paddingHorizontal: 16, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center" },
   iconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+  detailIcon: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   ways: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   kept: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   switch: { alignSelf: "flex-start", minHeight: 44, justifyContent: "center" },

@@ -260,31 +260,39 @@
         "label": "Lido",
         "progress": "{ticked} de {count} lidos",
         "a11y": "Marcar {title} como lido",
-        "bulk": "Marcar como lido"
+        "bulk": "Marcar como lido",
+        "folded": "{count} lidos"
       },
       "watched": {
         "label": "Assistido",
         "progress": "{ticked} de {count} assistidos",
         "a11y": "Marcar {title} como assistido",
-        "bulk": "Marcar como assistido"
+        "bulk": "Marcar como assistido",
+        "folded": "{count} assistidos"
       },
       "seen": {
         "label": "Visto",
         "progress": "{ticked} de {count} vistos",
         "a11y": "Marcar {title} como visto",
-        "bulk": "Marcar como visto"
+        "bulk": "Marcar como visto",
+        "folded": "{count} vistos"
       },
       "done": {
         "label": "Concluído",
         "progress": "{ticked} de {count} concluídos",
         "a11y": "Marcar {title} como concluído",
-        "bulk": "Marcar como concluído"
+        "bulk": "Marcar como concluído",
+        "folded": "{count} concluídos"
       }
     },
     "unmark": "Desmarcar",
     "toTop": "Para o topo",
     "takeOut": "Tirar da lista",
-    "takenOut": "{count, plural, one {# Item tirado da lista. Continua} other {# Itens tirados da lista. Continuam}} na sua biblioteca."
+    "takenOut": "{count, plural, one {# Item tirado da lista. Continua} other {# Itens tirados da lista. Continuam}} na sua biblioteca.",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "private": "Privada",
+    "public": "Pública"
   },
   "shared": {
     "copied": "Colhido. Sua própria cópia está em Listas.",
@@ -579,6 +587,15 @@
     "showSidebar": "Mostrar barra lateral",
     "hideSidebar": "Ocultar barra lateral",
     "showLists": "Mostrar suas listas",
-    "hideLists": "Ocultar suas listas"
+    "hideLists": "Ocultar suas listas",
+    "filter": {
+      "all": "Tudo",
+      "links": "Links",
+      "notes": "Notas",
+      "todos": "Tarefas",
+      "things": "Coisas"
+    },
+    "listsSub": "{count, plural, one {# lista} other {# listas}}, {shared, plural, =0 {nenhuma pública} one {# pública} other {# públicas}}",
+    "listMeta": "{count, plural, one {# Item} other {# Itens}} · {ticked} de {count} concluídos"
   }
 }
