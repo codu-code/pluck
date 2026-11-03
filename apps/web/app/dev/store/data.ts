@@ -100,7 +100,7 @@ export function issues(store: Store, device: "iphone" | "ipad", english: Store):
   }
   const mine = device === "ipad" ? store.ipad.length : store.iphone.length;
   const theirs = device === "ipad" ? english.ipad.length : english.iphone.length;
-  if (store.locale !== "en" && mine < theirs && !out.some((i) => i.title.startsWith("The older set"))) {
+  if (store.locale !== "en" && mine < theirs && !out.some((i) => i.title.startsWith("Five frames"))) {
     out.push({ level: "polish", title: `${mine} screenshots where English has ${theirs}`, detail: "The set is shorter than English's.", todo: "Make the missing frames in this language.", frames: [] });
   }
   return out;
