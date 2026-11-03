@@ -26,5 +26,13 @@
   "kindImage": "Image",
   "kindTodo": "Tâche",
   "kindNote": "Note",
-  "kindThing": "Objet"
+  "kindThing": "Objet",
+  "intentLinkTitle": "Cueillir un lien",
+  "intentLinkDescription": "Met la page dans votre boîte de réception, comme le menu Partager.",
+  "intentLink": "Lien",
+  "intentNoteTitle": "Cueillir une note",
+  "intentNoteDescription": "Met quelques mots dans votre boîte de réception en Note. Les liens qu’ils contiennent deviennent des éléments à part.",
+  "intentNoteText": "Texte",
+  "phraseLink": "Cueillir un lien avec {app}",
+  "phraseNote": "Cueillir une note avec {app}"
 }

@@ -26,5 +26,13 @@
   "kindImage": "Immagine",
   "kindTodo": "Da fare",
   "kindNote": "Nota",
-  "kindThing": "Oggetto"
+  "kindThing": "Oggetto",
+  "intentLinkTitle": "Prendi un link",
+  "intentLinkDescription": "Mette la pagina nella tua Inbox, come il menu Condividi.",
+  "intentLink": "Link",
+  "intentNoteTitle": "Prendi una nota",
+  "intentNoteDescription": "Mette qualche parola nella tua Inbox come Nota. I link che contiene diventano elementi a sé.",
+  "intentNoteText": "Testo",
+  "phraseLink": "Prendi un link con {app}",
+  "phraseNote": "Prendi una nota con {app}"
 }

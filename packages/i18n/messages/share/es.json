@@ -26,5 +26,13 @@
   "kindImage": "Imagen",
   "kindTodo": "Tarea",
   "kindNote": "Nota",
-  "kindThing": "Cosa"
+  "kindThing": "Cosa",
+  "intentLinkTitle": "Recoger un enlace",
+  "intentLinkDescription": "Pone la página en tu Bandeja de entrada, como el menú Compartir.",
+  "intentLink": "Enlace",
+  "intentNoteTitle": "Recoger una nota",
+  "intentNoteDescription": "Pone unas palabras en tu Bandeja de entrada como Nota. Los enlaces que lleve se vuelven elementos aparte.",
+  "intentNoteText": "Texto",
+  "phraseLink": "Recoger un enlace con {app}",
+  "phraseNote": "Recoger una nota con {app}"
 }

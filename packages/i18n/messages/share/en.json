@@ -26,5 +26,13 @@
   "kindImage": "Image",
   "kindTodo": "Todo",
   "kindNote": "Note",
-  "kindThing": "Thing"
+  "kindThing": "Thing",
+  "intentLinkTitle": "Pluck a link",
+  "intentLinkDescription": "Puts the page in your Inbox, as the share sheet does.",
+  "intentLink": "Link",
+  "intentNoteTitle": "Pluck a note",
+  "intentNoteDescription": "Puts a few words in your Inbox as a Note. Links in it become their own Items.",
+  "intentNoteText": "Words",
+  "phraseLink": "Pluck a link with {app}",
+  "phraseNote": "Pluck a note with {app}"
 }
