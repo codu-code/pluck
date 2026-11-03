@@ -1,7 +1,7 @@
 {
   "language": {
     "label": "Idioma",
-    "hint": "Pluck usa el idioma de tu iPhone. Cámbialo en Ajustes (o Configuración) de iOS, Pluck, Idioma."
+    "hint": "{device, select, ipad {Pluck usa el idioma de tu iPad. Cámbialo en Ajustes (o Configuración) de iOS, Pluck, Idioma.} other {Pluck usa el idioma de tu iPhone. Cámbialo en Ajustes (o Configuración) de iOS, Pluck, Idioma.}}"
   },
   "common": {
     "cancel": "Cancelar",
@@ -260,31 +260,39 @@
         "label": "Leído",
         "progress": "{ticked} de {count} leídos",
         "a11y": "Marcar {title} como leído",
-        "bulk": "Marcar como leído"
+        "bulk": "Marcar como leído",
+        "folded": "{count} leídos"
       },
       "watched": {
         "label": "Visto",
         "progress": "{ticked} de {count} vistos",
         "a11y": "Marcar {title} como visto",
-        "bulk": "Marcar como visto"
+        "bulk": "Marcar como visto",
+        "folded": "{count} vistos"
       },
       "seen": {
         "label": "Visto",
         "progress": "{ticked} de {count} vistos",
         "a11y": "Marcar {title} como visto",
-        "bulk": "Marcar como visto"
+        "bulk": "Marcar como visto",
+        "folded": "{count} vistos"
       },
       "done": {
         "label": "Hecho",
         "progress": "{ticked} de {count} hechos",
         "a11y": "Marcar {title} como hecho",
-        "bulk": "Marcar como hecho"
+        "bulk": "Marcar como hecho",
+        "folded": "{count} hechos"
       }
     },
     "unmark": "Desmarcar",
     "toTop": "Al principio",
     "takeOut": "Quitar",
-    "takenOut": "{count, plural, one {# elemento quitado. Sigue} other {# elementos quitados. Siguen}} en tu biblioteca."
+    "takenOut": "{count, plural, one {# elemento quitado. Sigue} other {# elementos quitados. Siguen}} en tu biblioteca.",
+    "show": "Mostrar",
+    "hide": "Ocultar",
+    "private": "Privada",
+    "public": "Pública"
   },
   "shared": {
     "copied": "Recogido. Tu propia copia está en Listas.",
@@ -425,7 +433,7 @@
     "backArchive": "Archivo",
     "didntLoad": "No se pudo cargar.",
     "didntLoadBody": "Puede que ya no exista, o que falle la conexión. Vuelve a intentarlo en un rato.",
-    "notKept": "Todavía no está en este iPhone.",
+    "notKept": "{device, select, ipad {Todavía no está en este iPad.} other {Todavía no está en este iPhone.}}",
     "notKeptBody": "Se abre cuando vuelvas a tener conexión. Con wifi, Pluck conserva aquí tus elementos más recientes para leerlos sin conexión.",
     "minutesLeft": "{percent} · quedan {minutes} min",
     "openOriginal": "Abrir el original",
@@ -460,7 +468,7 @@
     "handle": "Alias",
     "signOut": "Cerrar sesión",
     "signOutTitle": "¿Cerrar sesión?",
-    "signOutBody": "Lo que tengas en cola en este teléfono se queda aquí hasta que vuelvas a iniciar sesión.",
+    "signOutBody": "{device, select, ipad {Lo que tengas en cola en este iPad se queda aquí hasta que vuelvas a iniciar sesión.} other {Lo que tengas en cola en este teléfono se queda aquí hasta que vuelvas a iniciar sesión.}}",
     "accountFootnote": "Tu nombre y tu alias aparecen en las Listas que hagas públicas, y en ningún otro sitio.",
     "connectorCopied": "Copiado. Pégalo en tu IA.",
     "copied": "Copiado",
@@ -507,13 +515,13 @@
     "clearTitle": "¿Borrar la copia sin conexión?",
     "clearBody": "Tu biblioteca sigue en el servidor. La app la vuelve a descargar a medida que la usas.",
     "clear": "Borrar",
-    "keepFootnote": "Con wifi, Pluck conserva en este iPhone tus {count} elementos más recientes de Entrada, Más tarde y Listas, con sus imágenes, para leerlos sin conexión. Toca la marca de descarga en cualquier otro elemento para guardarlo aquí hasta que lo quites.",
+    "keepFootnote": "{device, select, ipad {Con wifi, Pluck conserva en este iPad tus {count} elementos más recientes de Entrada, Más tarde y Listas, con sus imágenes, para leerlos sin conexión. Toca la marca de descarga en cualquier otro elemento para guardarlo aquí hasta que lo quites.} other {Con wifi, Pluck conserva en este iPhone tus {count} elementos más recientes de Entrada, Más tarde y Listas, con sus imágenes, para leerlos sin conexión. Toca la marca de descarga en cualquier otro elemento para guardarlo aquí hasta que lo quites.}}",
     "server": "Servidor",
-    "serverBody": "Este teléfono usa {host}. Para usar otro servidor, cierra sesión y elige \"Usar tu propio servidor\".",
+    "serverBody": "{device, select, ipad {Este iPad usa {host}. Para usar otro servidor, cierra sesión y elige \"Usar tu propio servidor\".} other {Este teléfono usa {host}. Para usar otro servidor, cierra sesión y elige \"Usar tu propio servidor\".}}",
     "iconLight": "Claro",
     "iconDark": "Oscuro",
     "iconA11y": "Icono {name}",
-    "iconFootnote": "Solo el icono. La app en sí sigue el modo de tu teléfono.",
+    "iconFootnote": "{device, select, ipad {Solo el icono. La app en sí sigue el modo de tu iPad.} other {Solo el icono. La app en sí sigue el modo de tu teléfono.}}",
     "usage": "Compartir cómo uso Pluck",
     "usageFootnote": "Qué pantallas usas, asociadas a tu cuenta. Nunca lo que recoges. Los informes de fallos se envían en cualquier caso, sin tu nombre.",
     "tipTitle": "Pon Pluck primero en Compartir",
@@ -569,9 +577,47 @@
     "stars": "{count, plural, one {# estrella} other {# estrellas}}",
     "pages": "{count, plural, one {# página} other {# páginas}}",
     "offline": "Se reproduce cuando vuelvas a tener conexión.",
-    "keep": "Guardar en este iPhone",
-    "kept": "Guardado en este iPhone",
-    "letGo": "Ya no se guarda en este iPhone.",
+    "keep": "{device, select, ipad {Guardar en este iPad} other {Guardar en este iPhone}}",
+    "kept": "{device, select, ipad {Guardado en este iPad} other {Guardado en este iPhone}}",
+    "letGo": "{device, select, ipad {Ya no se guarda en este iPad.} other {Ya no se guarda en este iPhone.}}",
     "saveFile": "Guardar en Archivos"
+  },
+  "ipad": {
+    "pickSomething": "Elige algo para leer, cuando haya algo.",
+    "showSidebar": "Mostrar barra lateral",
+    "hideSidebar": "Ocultar barra lateral",
+    "showLists": "Mostrar tus listas",
+    "hideLists": "Ocultar tus listas",
+    "filter": {
+      "all": "Todo",
+      "links": "Enlaces",
+      "notes": "Notas",
+      "todos": "Tareas",
+      "things": "Cosas"
+    },
+    "listsSub": "{count, plural, one {# lista} other {# listas}}, {shared, plural, =0 {ninguna pública} one {# pública} other {# públicas}}",
+    "listMeta": "{count, plural, one {# elemento} other {# elementos}} · {ticked} de {count} hechos",
+    "results": "{count, plural, one {# resultado} other {# resultados}} para «{q}»",
+    "empty": {
+      "sub": "Nada que revisar",
+      "title": "No hay nada en tu Entrada.",
+      "body": "Recoge algo desde el menú Compartir de cualquier app, o pulsa <key>⌘</key> <key>N</key> para escribir una nota.",
+      "messages": "Mensajes",
+      "mail": "Mail",
+      "notes": "Notas"
+    },
+    "add": {
+      "new": "{kind, select, note {Nueva nota} todo {Nueva tarea} other {Nueva cosa}}",
+      "link": "Enlace",
+      "pluck": "Recoger",
+      "titlePlaceholder": "Título",
+      "keys": "<key>⌘</key> <key>↩</key> para recoger   <key>esc</key> para cancelar"
+    },
+    "keys": {
+      "paste": "Pegar y recoger",
+      "sidebar": "Mostrar u ocultar la barra lateral",
+      "next": "Siguiente",
+      "previous": "Anterior"
+    }
   }
 }

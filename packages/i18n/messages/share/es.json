@@ -6,6 +6,7 @@
   "openToSignIn": "Abre Pluck para iniciar sesión",
   "queuedTitle": "Recogido. Se sincronizará.",
   "queuedBody": "Está en tu teléfono. Se sube cuando vuelvas a tener conexión.",
+  "queuedBodyPad": "Está en tu iPad. Se sube cuando vuelvas a tener conexión.",
   "done": "Listo",
   "failedTitle": "No se pudo recoger.",
   "nothingToKeep": "Aquí no hay nada que Pluck pueda conservar.",

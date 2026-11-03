@@ -1431,6 +1431,71 @@
         }
       }
     },
+    "queuedBodyPad": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's on your iPad. It goes up when you're back online."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Está en tu iPad. Se sube cuando vuelvas a tener conexión."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Está no seu iPad. Sobe quando você estiver online de novo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Il est sur votre iPad. Il part dès que vous êtes de nouveau en ligne."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Es ist auf deinem iPad und wird hochgeladen, sobald du wieder online bist."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このiPadに残してあります。オンラインに戻ると送られます。"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "È sul tuo iPad. Parte appena torni online."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Het staat op je iPad en wordt verstuurd zodra je weer online bent."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지금은 iPad에 있어요. 다시 온라인이 되면 올라가요."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "它先留在你的 iPad 上，联网后就会上传。"
+          }
+        }
+      }
+    },
     "queuedTitle": {
       "extractionState": "manual",
       "localizations": {

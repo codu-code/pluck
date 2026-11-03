@@ -1,10 +1,12 @@
 import type { Status } from "@pluck/shared-schemas";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ActionSheetIOS, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS, KINDS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
+import { shown, useSplit } from "@/components/split/context";
+import { SplitRow } from "@/components/split/SplitRow";
 import { Empty, TitledList } from "@/components/Screen";
 import { useLists, useSearch, useTags, type SearchFilters } from "@/lib/data";
 import { useRowText } from "@/lib/format";
@@ -34,6 +36,7 @@ export default function Search() {
   const lists = useLists();
   const results = useSearch(q, f);
   const rowText = useRowText();
+  const split = useSplit();
 
   useEffect(() => {
     const id = setTimeout(() => setQ(text.trim()), 250);
@@ -43,26 +46,37 @@ export default function Search() {
   const found = (s: { pre: string; hit: string; post: string }) => (
     <>{s.pre}<Text style={{ backgroundColor: t.highlightWash, color: t.ink }}>{s.hit}</Text>{s.post}</>
   );
-  const chip = (label: string, on: boolean, onPress: () => void) => (
+  const chip = (label: string, on: boolean, onPress: () => void) => split ? (
+    // iPad (iPad-Search): 28 tall, 13, with the fold mark, as filters that open a choice.
+    <Pressable key={label} accessibilityRole="button" accessibilityState={{ selected: on }} onPress={onPress}
+      style={[styles.wideChip, on ? { backgroundColor: t.brand, borderColor: t.brand } : { borderColor: t.lineStrong }]}>
+      <Text maxFontSizeMultiplier={1.4} style={[font.regular, { fontSize: 13, color: on ? t.onBrand : t.ink }]}>{label}</Text>
+      <Icon d={ICONS.fold} size={12} color={on ? t.onBrand : t.ink2} />
+    </Pressable>
+  ) : (
     <Pressable key={label} accessibilityRole="button" accessibilityState={{ selected: on }} onPress={onPress}
       style={[styles.chip, on ? { backgroundColor: t.brand, borderColor: t.brand } : { borderColor: t.lineStrong }]}>
       <Text style={[font.regular, { fontSize: 14, color: on ? t.onBrand : t.ink }]}>{label}</Text>
     </Pressable>
   );
+  const count = q && results.data ? results.data.results.length : null;
+  const ids = q ? (results.data?.results ?? []).map((r) => r.item.id).join(",") : "";
+  useFocusEffect(useCallback(() => void (shown.rows = ids ? ids.split(",") : []), [ids]));
 
   return (
     <TitledList
       title={tr("tabs.search")}
       bold
+      sub={split ? (count !== null ? tr("ipad.results", { count, q }) : " ") : undefined}
       head={
-        <View style={{ paddingHorizontal: 16, paddingBottom: 12, gap: 12 }}>
-          <View style={[styles.field, { backgroundColor: t.surface, borderColor: t.ink }]}>
+        <View style={split ? styles.wideHead : { paddingHorizontal: 16, paddingBottom: 12, gap: 12 }}>
+          <View style={split ? [styles.wideField, { backgroundColor: t.field }] : [styles.field, { backgroundColor: t.surface, borderColor: t.ink }]}>
             <Icon d={ICONS.search} size={16} color={t.ink} width={1.5} />
             <TextInput value={text} onChangeText={setText} placeholder={tr("search.placeholder")} placeholderTextColor={t.ink2} returnKeyType="search" autoCorrect={false}
               clearButtonMode="while-editing" accessibilityLabel={tr("search.placeholder")} style={[font.regular, { flex: 1, color: t.ink, fontSize: 15, paddingVertical: 10 }]} />
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-            {chip(f.kindName ?? tr("search.anyKind"), Boolean(f.kinds), () =>
+            {chip(f.kindName ?? tr(split ? "search.kind" : "search.anyKind"), Boolean(f.kinds), () =>
               pick(tr("search.kind"), KINDS.map((k) => tr(`kinds.${k}`)), tr("search.anyKind"), cancel, (i) => setF((x) => ({ ...x, kinds: i === null ? undefined : [KINDS[i]!], kindName: i === null ? undefined : tr(`kinds.${KINDS[i]!}`) }))))}
             {chip(f.tagName ?? tr("search.tag"), Boolean(f.tagIds), () =>
               pick(tr("search.tag"), (tags.data ?? []).map((x) => x.name), tr("search.anyTag"), cancel, (i) => setF((x) => ({ ...x, tagIds: i === null ? undefined : [tags.data![i]!.id], tagName: i === null ? undefined : tags.data![i]!.name }))))}
@@ -82,7 +96,15 @@ export default function Search() {
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets // the last results scroll up above the keyboard
-      renderItem={({ item: { item, snippet } }) => (
+      renderItem={({ item: { item, snippet } }) => split ? (
+        <SplitRow item={item} open={split.detail?.kind === "item" && split.detail.id === item.id} onOpen={() => split.show({ kind: "item", id: item.id })}
+          when={tr(`status.${item.status}`)} mark={q}
+          below={snippet ? (
+            <Text style={[font.regular, { color: t.ink2, fontSize: 13, lineHeight: 18 }]} numberOfLines={2}>
+              {snippet.source === "note" ? tr.rich("search.yourNote", { snippet: () => found(snippet) }) : found(snippet)}
+            </Text>
+          ) : undefined} />
+      ) : (
         // The Inbox row, saying where the item is now, with the words that matched under it.
         <ItemRow
           item={item}
@@ -108,4 +130,8 @@ const styles = StyleSheet.create({
   field: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44, paddingHorizontal: 12, borderRadius: 10, borderWidth: 1.5 },
   chip: { minHeight: 36, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
   footer: { padding: 24, textAlign: "center", fontSize: 14 },
+  // iPad (iPad-Search): the field 40 tall on --field, radius 10; filters 28 tall.
+  wideHead: { paddingTop: 4, paddingHorizontal: 22, paddingBottom: 12, gap: 10 },
+  wideField: { flexDirection: "row", alignItems: "center", gap: 10, height: 40, paddingHorizontal: 12, borderRadius: 10 },
+  wideChip: { height: 28, paddingHorizontal: 11, borderRadius: 14, borderWidth: 1, flexDirection: "row", alignItems: "center", gap: 4 },
 });

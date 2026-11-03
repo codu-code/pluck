@@ -49,7 +49,8 @@ const config: ExpoConfig = {
     ...(process.env.APPLE_TEAM_ID ? { appleTeamId: process.env.APPLE_TEAM_ID } : {}),
     // Set by scripts/testflight.sh to one more than App Store Connect's highest; never committed. Local builds say 1.
     buildNumber: process.env.PLUCK_BUILD_NUMBER ?? "1",
-    supportsTablet: false,
+    // iPad gets the split view at 600 wide and up (app/(tabs)/_layout.tsx); under that, in Split View or Stage Manager, the iPhone layout.
+    supportsTablet: true,
     entitlements: {
       "com.apple.security.application-groups": [GROUP],
       "keychain-access-groups": ["$(AppIdentifierPrefix)io.getpluck.shared"],
@@ -76,6 +77,8 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
+      // The iPhone stays portrait (`orientation` above); iPad turns every way, which Split View and Stage Manager need.
+      "UISupportedInterfaceOrientations~ipad": ["UIInterfaceOrientationPortrait", "UIInterfaceOrientationPortraitUpsideDown", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight"],
       // The languages in packages/i18n (LOCALES). Listing them gives Pluck a Language choice in iOS Settings.
       CFBundleLocalizations: ["en", "es", "pt-BR", "fr", "de", "ja", "it", "nl", "ko", "zh-Hans"],
       // Local servers are plain http.
@@ -113,12 +116,12 @@ const config: ExpoConfig = {
 };
 
 // apple-targets builds a share extension's Release like its Debug. Optimise it, keep a dSYM so crash reports
-// symbolicate, and make it iPhone only like the app. Its targets are written in its own pass, so the change goes there.
+// symbolicate, and build it for iPhone and iPad like the app. Its targets are written in its own pass, so the change goes there.
 const withShareRelease: ConfigPlugin = (c) =>
   withXcodeProjectBeta(c, (m) => {
     for (const { props: p } of m.modResults.values() as Iterable<{ props: { isa?: string; name?: string; buildSettings?: Record<string, unknown> } }>) {
       if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings?.PRODUCT_BUNDLE_IDENTIFIER === "io.getpluck.app.share")
-        Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1" });
+        Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1,2" });
     }
     return m;
   });

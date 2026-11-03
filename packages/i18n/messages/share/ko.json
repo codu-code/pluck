@@ -6,6 +6,7 @@
   "openToSignIn": "Pluck을 열어 로그인하기",
   "queuedTitle": "담았어요. 곧 동기화돼요.",
   "queuedBody": "지금은 휴대폰에 있어요. 다시 온라인이 되면 올라가요.",
+  "queuedBodyPad": "지금은 iPad에 있어요. 다시 온라인이 되면 올라가요.",
   "done": "완료",
   "failedTitle": "담지 못했어요.",
   "nothingToKeep": "여기에는 Pluck이 담을 수 있는 게 없어요.",

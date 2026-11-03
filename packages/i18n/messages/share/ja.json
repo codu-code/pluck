@@ -6,6 +6,7 @@
   "openToSignIn": "Pluckを開いてサインイン",
   "queuedTitle": "Pluckしました。あとで同期します。",
   "queuedBody": "このiPhoneに残してあります。オンラインに戻ると送られます。",
+  "queuedBodyPad": "このiPadに残してあります。オンラインに戻ると送られます。",
   "done": "完了",
   "failedTitle": "Pluckできませんでした。",
   "nothingToKeep": "ここにはPluckが残せるものがありません。",

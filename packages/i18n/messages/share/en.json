@@ -6,6 +6,7 @@
   "openToSignIn": "Open Pluck to sign in",
   "queuedTitle": "Plucked. Will sync.",
   "queuedBody": "It's on your phone. It goes up when you're back online.",
+  "queuedBodyPad": "It's on your iPad. It goes up when you're back online.",
   "done": "Done",
   "failedTitle": "Couldn't pluck that.",
   "nothingToKeep": "Nothing Pluck can keep here.",

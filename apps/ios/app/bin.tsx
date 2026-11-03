@@ -8,6 +8,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
+import { SidebarButton } from "@/components/split/Sidebar";
+import { useSplit } from "@/components/split/context";
 import { Empty, usePull } from "@/components/Screen";
 import { toast } from "@/components/Toast";
 import { keys, library, useBin } from "@/lib/data";
@@ -23,6 +25,7 @@ export default function Bin() {
   const t = useTheme();
   const tr = useTranslations("ios");
   const insets = useSafeAreaInsets();
+  const split = useSplit();
   const qc = useQueryClient();
   const data = useBin();
   const pull = usePull(() => data.refetch());
@@ -58,10 +61,13 @@ export default function Bin() {
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
-        <Pressable accessibilityRole="button" accessibilityLabel={tr("archive.title")} onPress={() => router.back()} style={styles.back}>
-          <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("archive.title")}</Text>
-        </Pressable>
+        {/* On iPad the Bin is a place in the sidebar. */}
+        {split ? <SidebarButton /> : (
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("archive.title")} onPress={() => router.back()} style={styles.back}>
+            <Icon d={ICONS.back} size={18} color={t.ink} width={1.6} />
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("archive.title")}</Text>
+          </Pressable>
+        )}
       </View>
       <View style={styles.head}>
         <Text accessibilityRole="header" style={[font.bold, styles.title, { color: t.ink }]}>{tr("archive.bin")}</Text>

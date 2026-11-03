@@ -5,6 +5,7 @@ import Animated, { Easing, FadeIn, FadeOut, useAnimatedStyle, useReducedMotion, 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { useTranslations } from "use-intl";
+import { useColumns } from "@/components/split/context";
 import { Wordmark } from "@/components/Wordmark";
 import { defaultServer, sendSignInCode, showServerChoice, signInWithCode, signInWithKey } from "@/lib/session";
 import { font, scale, useTheme, type Palette } from "@/lib/theme";
@@ -118,6 +119,9 @@ export default function SignIn() {
   const field = [styles.field, font.regular, { borderColor: status === "invalid" ? t.danger : t.lineStrong, backgroundColor: t.surface, color: t.ink }];
   const useKey = advanced && key.trim().length > 0;
   const heading = step === "email" ? "title" : step === "code" ? "sent.title" : "password.title";
+  // iPad (iPad-SignIn): one 440 column in the middle of the screen, words centred, no drawing.
+  const { wide } = useColumns();
+  const centre = wide ? { textAlign: "center" as const } : null;
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
       <ScrollView
@@ -125,19 +129,19 @@ export default function SignIn() {
         alwaysBounceVertical={false} // still when it fits, as a sign-in screen should be
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
-        contentContainerStyle={[styles.page, { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 24 }]}
+        contentContainerStyle={[styles.page, { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 24 }, wide && styles.wide]}
       >
-        <Wordmark size={34} />
+        <View style={wide && { alignSelf: "center" }}><Wordmark size={wide ? 56 : 34} /></View>
         <View style={{ gap: 12 }} accessibilityLiveRegion="polite">
-          <Text accessibilityRole="header" maxFontSizeMultiplier={scale.display} style={[font.display, styles.h1, { color: t.ink }]}>
+          <Text accessibilityRole="header" maxFontSizeMultiplier={scale.display} style={[font.display, styles.h1, { color: t.ink }, centre]}>
             {tr.rich(heading, { accent: (c) => <Text style={{ color: t.accent }}>{c}</Text> })}
           </Text>
-          <Text style={[font.regular, styles.lede, { color: t.ink2 }]}>
+          <Text style={[font.regular, styles.lede, { color: t.ink2 }, centre]}>
             {step === "email" ? tr("lede") : tr.rich(step === "code" ? "sent.lede" : "password.lede", { email: email.trim(), b: (c) => <Text style={[font.semibold, { color: t.ink }]}>{c}</Text> })}
           </Text>
         </View>
 
-        {!advanced && step !== "password" && !typing && (
+        {!wide && !advanced && step !== "password" && !typing && (
           <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)}>
             <Story t={t} sent={step === "code"} sending={busy && step === "email"} />
           </Animated.View>
@@ -155,7 +159,7 @@ export default function SignIn() {
         )}
 
         {/* Everything to type and tap sits together at the bottom, in reach of a thumb and riding up with the keyboard. */}
-        <View style={{ marginTop: "auto", gap: 12 }}>
+        <View style={{ marginTop: wide ? 0 : "auto", gap: 12 }}>
           {step === "email" && (
             <View style={{ gap: 8 }}>
               <Text nativeID="email-label" style={[font.medium, { color: t.ink, fontSize: 14 }]}>{tr("email")}</Text>
@@ -363,6 +367,7 @@ function Tile({ t, index, clock, still }: { t: Palette; index: number; clock: Sh
 
 const styles = StyleSheet.create({
   page: { flexGrow: 1, paddingHorizontal: 24, gap: 24 },
+  wide: { width: "100%", maxWidth: 440 + 48, alignSelf: "center", justifyContent: "center" },
   slot: { height: 168, borderRadius: 16, borderWidth: 1.5, borderStyle: "dashed", alignItems: "center", justifyContent: "center" },
   panel: { borderRadius: 16, borderWidth: StyleSheet.hairlineWidth * 2, shadowColor: "#151A13", shadowOpacity: 0.1, shadowRadius: 28, shadowOffset: { width: 0, height: 14 } },
   panelHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },

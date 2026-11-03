@@ -6,6 +6,7 @@ import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native"
 import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty, TitledList, usePull } from "@/components/Screen";
+import { useSplit } from "@/components/split/context";
 import { useLists } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { api } from "@/lib/session";
@@ -22,10 +23,19 @@ export default function Lists() {
   const pull = usePull(() => Promise.all([lists.refetch(), shared.refetch()]));
   const [folded, setFolded] = useState(false);
   useEffect(() => void kv.get(FOLD, false).then(setFolded), []);
+  const split = useSplit();
+  const all = lists.data ?? [];
   return (
     <TitledList
       title={tr("tabs.lists")}
-      head={
+      sub={split && lists.data ? tr("ipad.listsSub", { count: all.length, shared: all.filter((l) => l.visibility === "public").length }) : undefined}
+      bar={split && (
+        <Pressable accessibilityRole="button" accessibilityLabel={tr("tabs.search")} onPress={() => router.navigate("/search")} hitSlop={8}>
+          <Icon d={ICONS.search} size={20} color={t.actionInk} />
+        </Pressable>
+      )}
+      // On iPad the Archive is in the sidebar.
+      head={split ? undefined : 
         // The Archive sits above the Lists, like a mail app's Archive above its folders.
         <Pressable onPress={() => router.push("/archive")} accessibilityRole="button" accessibilityLabel={tr("archive.title")}
           style={({ pressed }) => [styles.archive, { backgroundColor: pressed ? t.selected : t.ground }]}>
@@ -60,7 +70,22 @@ export default function Lists() {
           ))}
         </View>
       ) : undefined}
-      renderItem={({ item: l }) => (
+      renderItem={({ item: l }) => split ? (
+        // iPad (iPad-List): a row like the Inbox's, the List open in the detail column.
+        <Pressable
+          onPress={() => split.show({ kind: "list", id: l.id })}
+          accessibilityRole="button"
+          accessibilityState={{ selected: split.detail?.id === l.id }}
+          accessibilityLabel={tr("lists.a11y", { name: l.name, visibility: l.visibility, ticked: l.tickedCount, count: l.itemCount })}
+          style={({ pressed }) => [styles.splitRow, { backgroundColor: split.detail?.id === l.id || pressed ? t.selected : "transparent" }]}
+        >
+          <View style={[styles.tile, { borderColor: t.lineDashed }]}><Icon d={ICONS.listsTab} size={16} color={t.ink} /></View>
+          <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
+            <Text numberOfLines={2} style={[font.semibold, { color: t.ink, fontSize: 15, lineHeight: 20 }]}>{l.name}</Text>
+            <Text numberOfLines={1} style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("ipad.listMeta", { count: l.itemCount, ticked: l.tickedCount })}</Text>
+          </View>
+        </Pressable>
+      ) : (
         <Pressable
           onPress={() => router.push(`/lists/${l.id}`)}
           accessibilityRole="button"
@@ -83,6 +108,8 @@ export default function Lists() {
 }
 
 const styles = StyleSheet.create({
+  splitRow: { flexDirection: "row", gap: 12, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, marginHorizontal: 8 },
+  tile: { width: 40, height: 40, borderRadius: 8, borderWidth: 1, borderStyle: "dashed", alignItems: "center", justifyContent: "center" },
   archive: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 52, paddingHorizontal: 16 },
   section: { flexDirection: "row", alignItems: "center", gap: 8, minHeight: 44, marginTop: 16, paddingHorizontal: 16 },
   row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 68, paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth * 2 },
