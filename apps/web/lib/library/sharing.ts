@@ -2,15 +2,16 @@ import { signedUrl } from "@pluck/blob";
 import {
   createList, createReport, createTextItem, getListMeta, getMe, hitRateLimit, leaveSharedList, listOwnedBy, listsSharedWith, pluckLink, publicCoverKey,
   publicList, publicListById, recordView, setHandle, setName, setVisibility, sharedCoverKey, sharedList, shareList, sharesOf, unshareList,
-  updateSettings, MAX_PEOPLE,
+  setHeardFrom, updateSettings, MAX_PEOPLE,
 } from "@pluck/db";
-import { normalizeUrl, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
+import { normalizeUrl, type HeardFrom, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
 import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
 import { keepLater } from "./keeping";
 import { ORIGIN } from "../origin";
+import { track, trackSignUp } from "../telemetry";
 
 type Defer = (task: () => Promise<void>) => void;
 
@@ -27,18 +28,28 @@ const HANDLE_ERRORS = {
   too_soon: new ApiError("conflict", "You can change your handle once a month.", 409),
 };
 
-export async function updateMe(userId: string, patch: { name?: string; handle?: string; settings?: Partial<Settings> }): Promise<Me> {
+export async function updateMe(userId: string, patch: { name?: string; handle?: string; settings?: Partial<Settings>; heardFrom?: HeardFrom }): Promise<Me> {
+  const was = await me(userId);
   if (patch.name !== undefined) await setName(userId, patch.name);
+  if (patch.heardFrom && (await setHeardFrom(userId, patch.heardFrom))) track(userId, "$set", {}, { person: { heard_from: patch.heardFrom } });
   if (patch.settings) await updateSettings(userId, patch.settings);
   if (patch.handle !== undefined) {
     const res = await setHandle(userId, patch.handle);
     if (!res.ok) throw HANDLE_ERRORS[res.reason];
   }
-  return me(userId);
+  const now = await me(userId);
+  // The first yes brings the sign-up with it, dated when the account began.
+  const firstYes = now.settings.analytics === "yes" && was.settings.analytics !== "yes";
+  if (firstYes) await trackSignUp(userId);
+  if (now.handle !== was.handle) track(userId, "handle_picked");
+  if (firstYes || patch.settings?.digestDay !== undefined || patch.settings?.locale !== undefined)
+    track(userId, "$set", {}, { person: { digest_on: now.settings.digestDay !== null, locale: now.settings.locale } });
+  return now;
 }
 
 export async function setListVisibility(userId: string, listId: string, visibility: "private" | "public"): Promise<List> {
   const res = await setVisibility(userId, listId, visibility);
+  if (res.ok && visibility === "public") track(userId, "list_made_public", {}, { person: { has_public_list: true } });
   if (res.ok) return res.list;
   if (res.reason === "handle_required") throw new ApiError("handle_required", "Pick a handle first. It goes in the link.", 409);
   if (res.reason === "closed") throw new ApiError("forbidden", "Public lists are closed for this account.", 403);
@@ -132,6 +143,7 @@ export async function shareWith(userId: string, listId: string, email: string): 
   if (res.created) {
     const [owner, list] = await Promise.all([me(userId), getListMeta(userId, listId)]);
     await sendEmail(sharedListEmail(res.share.email, { name: owner.name || null, handle: owner.handle ?? "" }, list?.name ?? null, `${ORIGIN}/shared/${listId}`, res.recipientLocale ?? owner.settings.locale ?? "en"));
+    track(userId, "list_shared", async () => ({ people_count: (await sharesOf(userId, listId))?.length ?? null }));
   }
   return res.share;
 }

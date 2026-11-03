@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { aiConnections, disconnectAi, isAiConnected, narrowAiGrants } from "./ai-tools.ts";
+import { aiClientName, aiConnections, disconnectAi, isAiConnected, narrowAiGrants } from "./ai-tools.ts";
 import { db, oid } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -22,6 +22,8 @@ test("connections are per person, and disconnecting removes the consent and the 
     ["Test AI", ["library:read", "library:write"]],
   ]);
   expect(await isAiConnected(a, "client-1")).toBe(true);
+  expect(await aiClientName("client-1")).toBe("Test AI");
+  expect(await aiClientName("https://tool.example.test/meta.json")).toBe("tool.example.test");
 
   expect(await disconnectAi(a, "client-1")).toBe(true);
   expect(await isAiConnected(a, "client-1")).toBe(false);

@@ -18,6 +18,10 @@
 .no:active, .yes:active { transform: translateY(1px); }
 .no:focus-visible, .yes:focus-visible, .more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .more { align-self: flex-start; font-size: 13px; color: var(--ink2); }
+button.more { padding: 0; border: 0; background: none; font-family: inherit; cursor: pointer; }
+/* "How did you find Pluck?": the same board, its answers two to a row on every screen. */
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.choices .no { height: auto; min-height: 44px; padding: 8px 10px; font-size: 15px; line-height: 20px; text-align: center; }
 .more:hover { color: var(--ink); }
 
 /* Phones: a bottom sheet, buttons stacked with the yes on top. */

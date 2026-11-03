@@ -196,7 +196,8 @@
     "list": "List · Pluck",
     "settings": "Settings · Pluck",
     "admin": "Admin · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "Removed · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "Plucks the page you are on.",
     "selection": "Plucks what you selected, kept as a highlight."
   },
+  "extensionBye": {
+    "title": "Removed",
+    "lede": "Everything you plucked is still in your library, on the web, on the iPhone and in your AI. Nothing is deleted.",
+    "question": "If you have a second: what made you remove it?",
+    "why": {
+      "unused": "I did not use it",
+      "in-the-way": "It got in the way",
+      "missing": "Something was missing",
+      "other": "Something else"
+    },
+    "thanks": "Thanks",
+    "open": "Open Pluck"
+  },
   "shell": {
     "main": "Main",
     "offline": "Offline",
@@ -473,6 +487,24 @@
     },
     "more": "What's in each one",
     "link": "Cookies"
+  },
+  "heardFrom": {
+    "title": "How did you find Pluck",
+    "body": "One tap tells us what is working. That is the only question.",
+    "choices": {
+      "search": "A search",
+      "friend": "A friend or colleague",
+      "social": "Social media",
+      "public-list": "Someone's List",
+      "ai-tool": "An AI tool",
+      "newsletter": "A newsletter or blog",
+      "other": "Somewhere else"
+    },
+    "skip": "Rather not say",
+    "thanks": {
+      "title": "Thanks.",
+      "note": "That helps."
+    }
   },
   "connectLoop": {
     "label": "Someone pastes Pluck's link into their AI tool, allows it on Pluck's screen, then asks what they plucked about MCP auth and gets three of their plucks back.",

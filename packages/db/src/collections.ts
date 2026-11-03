@@ -1,5 +1,5 @@
 import type { Locale } from "@pluck/i18n";
-import type { ArchivedReason, ExtractionState, Facts, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
+import type { ArchivedReason, ExtractionState, Facts, HeardFrom, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
 import { getDb } from "./client.ts";
@@ -108,7 +108,11 @@ export type UserDoc = {
   expiryRanOn?: string; // local date of the last nightly expiry, the claim that makes it run once a day
   digestSentOn?: string; // local date of the last Monday digest
   lastMcpCallAt?: Date; // the connector's last call, for Settings, written at most once a minute
+  via?: SignUpVia; // where the account was made, set once at sign-up
+  heardFrom?: HeardFrom; // "How did you find Pluck?", answered once
 };
+
+export type SignUpVia = "try" | "mcp" | "public-page" | "shared-list" | "ios" | "extension" | "direct";
 
 export type UserSettings = {
   expiryDays: 14 | 30 | 60 | 90 | null; // null: never
@@ -116,8 +120,10 @@ export type UserSettings = {
   digestDay: number | null; // 0 Sunday … 6 Saturday; 1 (Monday) by default; null: no email
   timezone: string; // IANA
   locale: Locale | null; // null: follow the browser or phone; set from the sign-up request
+  analytics: "yes" | "no" | null; // the cookie question for the account; usage is sent only on "yes"
+  analyticsAt: number | null; // when that answer was given (ms); a write with an older one is ignored
 };
-export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC", locale: null };
+export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC", locale: null, analytics: null, analyticsAt: null };
 
 export type ReportDoc = {
   _id: ObjectId;
@@ -273,7 +279,7 @@ export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
   return (await db()).collection<EmailAliasDoc>("emailAliases");
 }
 // One-off claims (claimOnce) and the place a long-running pass (the Preview backfill) keeps its cursor.
-export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean };
+export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean; n?: number; key?: string };
 export async function meta(): Promise<Collection<MetaDoc>> {
   return (await db()).collection<MetaDoc>("meta");
 }

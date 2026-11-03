@@ -1,6 +1,6 @@
 import { LOCALES } from "@pluck/i18n";
 import { z } from "zod";
-import { Kind, Visibility } from "./enums.ts";
+import { HeardFrom, Kind, Visibility } from "./enums.ts";
 import { Item, ObjectIdString } from "./items.ts";
 import { Facts, Preview } from "./preview.ts";
 
@@ -68,8 +68,16 @@ export const Settings = z.object({
   digestDay: z.number().int().min(0).max(6).nullable(), // null: no weekly email
   timezone: z.string().min(1).max(64),
   locale: z.enum(LOCALES).nullable(), // null: follow the browser or phone
+  analytics: z.enum(["yes", "no"]).nullable(), // the cookie question, for the whole account; null: not asked yet
+  analyticsAt: z.number().int().nonnegative().nullable(), // when that answer was given (ms): the newest answer on any device wins
 });
 export type Settings = z.infer<typeof Settings>;
+
+// The cookie answer holds for a year, then it is asked again: on every device, and the server stops counting meanwhile.
+export const ANSWER_LASTS_MS = 365 * 86_400_000;
+export type ConsentAnswer = { answer: "yes" | "no"; at: number };
+export const freshAnswer = (s: Pick<Settings, "analytics" | "analyticsAt">, now = Date.now()): ConsentAnswer | null =>
+  s.analytics && s.analyticsAt !== null && now - s.analyticsAt < ANSWER_LASTS_MS ? { answer: s.analytics, at: s.analyticsAt } : null;
 
 export const Me = z.object({
   id: ObjectIdString,
@@ -80,10 +88,11 @@ export const Me = z.object({
   createdAt: z.string(),
   settings: Settings,
   lastMcpCallAt: z.string().nullable(), // when an AI tool last used the connector
+  heardFrom: HeardFrom.nullable(), // "How did you find Pluck?", null until answered
 });
 export type Me = z.infer<typeof Me>;
 export const UpdateMeBody = z
-  .object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional(), settings: Settings.partial().optional() })
+  .object({ name: z.string().max(80).optional(), handle: z.string().max(40).optional(), settings: Settings.partial().optional(), heardFrom: HeardFrom.optional() })
   .strict();
 export const ArchiveStaleBody = z.object({ olderThanDays: z.number().int().min(1).max(3650).optional(), dryRun: z.boolean().default(false) });
 

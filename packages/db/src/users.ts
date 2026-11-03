@@ -1,5 +1,5 @@
-import { funHandle, HANDLE, type Me } from "@pluck/shared-schemas";
-import { DEFAULT_SETTINGS, oid, users, type UserDoc, type UserSettings } from "./collections.ts";
+import { freshAnswer, funHandle, HANDLE, type HeardFrom, type Me } from "@pluck/shared-schemas";
+import { DEFAULT_SETTINGS, oid, users, type SignUpVia, type UserDoc, type UserSettings } from "./collections.ts";
 
 const RESERVED = new Set(
   "admin api app settings inbox later lists archive search signin signup login logout p copy help support pluck getpluck www mail root about terms privacy open-source connect offline items u mcp oauth".split(" "),
@@ -12,7 +12,13 @@ const toMe = (d: UserDoc): Me => ({
   createdAt: d.createdAt.toISOString(),
   settings: { ...DEFAULT_SETTINGS, ...d.settings },
   lastMcpCallAt: d.lastMcpCallAt?.toISOString() ?? null,
+  heardFrom: d.heardFrom ?? null,
 });
+
+// "How did you find Pluck?": the first answer stays.
+export async function setHeardFrom(userId: string, heardFrom: HeardFrom): Promise<boolean> {
+  return (await (await users()).updateOne({ _id: oid(userId), heardFrom: { $exists: false } }, { $set: { heardFrom } })).modifiedCount > 0;
+}
 
 // Settings shows "Connected · last call"; one write a minute at most, however busy the AI tool is.
 export async function markMcpCall(userId: string, now = new Date()): Promise<void> {
@@ -22,9 +28,34 @@ export async function markMcpCall(userId: string, now = new Date()): Promise<voi
   );
 }
 
+// Where the account was made. Written once, by the sign-up hook.
+export async function setVia(userId: string, via: SignUpVia): Promise<void> {
+  await (await users()).updateOne({ _id: oid(userId), via: { $exists: false } }, { $set: { via } });
+}
+
+// What usage analytics may know of an account: its answer to the cookie question, and (for signed_up) when and how it began.
+export async function analyticsOf(userId: string): Promise<{ consent: "yes" | "no" | null; createdAt: Date; via: SignUpVia | null } | null> {
+  const d = await (await users()).findOne({ _id: oid(userId) }, { projection: { "settings.analytics": 1, "settings.analyticsAt": 1, createdAt: 1, via: 1 } });
+  const answer = freshAnswer({ analytics: d?.settings?.analytics ?? null, analyticsAt: d?.settings?.analyticsAt ?? null });
+  return d && { consent: answer?.answer ?? null, createdAt: d.createdAt, via: d.via ?? null };
+}
+
 export async function updateSettings(userId: string, patch: Partial<UserSettings>): Promise<Me | null> {
-  const set = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined).map(([k, v]) => [`settings.${k}`, v]));
-  const doc = await (await users()).findOneAndUpdate({ _id: oid(userId) }, { $set: set }, { returnDocument: "after" });
+  const { analytics, analyticsAt, ...rest } = patch;
+  const col = await users();
+  // The cookie answer replaces only an older one, so a device that was offline cannot undo a newer answer from another.
+  // Never dated ahead of now, or no later answer could replace it.
+  if (analytics !== undefined) {
+    const at = Math.min(analyticsAt ?? Date.now(), Date.now());
+    await col.updateOne(
+      { _id: oid(userId), $or: [{ "settings.analyticsAt": { $in: [null] } }, { "settings.analyticsAt": { $lt: at } }] },
+      { $set: { "settings.analytics": analytics, "settings.analyticsAt": at } },
+    );
+  }
+  const set = Object.fromEntries(Object.entries(rest).filter(([, v]) => v !== undefined).map(([k, v]) => [`settings.${k}`, v]));
+  const doc = Object.keys(set).length
+    ? await col.findOneAndUpdate({ _id: oid(userId) }, { $set: set }, { returnDocument: "after" })
+    : await col.findOne({ _id: oid(userId) });
   return doc && toMe(doc);
 }
 

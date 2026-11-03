@@ -196,7 +196,8 @@
     "list": "リスト · Pluck",
     "settings": "設定 · Pluck",
     "admin": "管理 · Pluck",
-    "item": "{title} · Pluck"
+    "item": "{title} · Pluck",
+    "extensionBye": "削除しました · Pluck"
   },
   "signin": {
     "preview": {
@@ -369,6 +370,19 @@
     "page": "開いているページをPluckします。",
     "selection": "選択した部分をハイライトとしてPluckします。"
   },
+  "extensionBye": {
+    "title": "削除しました",
+    "lede": "Pluckしたものは、ウェブ、iPhone、お使いのAIから、これまでどおりライブラリで使えます。何も削除されません。",
+    "question": "よろしければ教えてください：削除した理由は何ですか？",
+    "why": {
+      "unused": "使っていなかった",
+      "in-the-way": "邪魔だった",
+      "missing": "足りない機能があった",
+      "other": "その他"
+    },
+    "thanks": "ありがとうございます",
+    "open": "Pluckを開く"
+  },
   "shell": {
     "main": "メイン",
     "offline": "オフライン",
@@ -473,6 +487,24 @@
     },
     "more": "それぞれの中身",
     "link": "クッキー"
+  },
+  "heardFrom": {
+    "title": "Pluckをどこで知りましたか",
+    "body": "ワンタップで、何が役立っているかがわかります。質問はこれだけです。",
+    "choices": {
+      "search": "検索",
+      "friend": "友人や同僚",
+      "social": "SNS",
+      "public-list": "誰かのリスト",
+      "ai-tool": "AIツール",
+      "newsletter": "ニュースレターやブログ",
+      "other": "その他"
+    },
+    "skip": "答えない",
+    "thanks": {
+      "title": "ありがとうございます。",
+      "note": "助かります。"
+    }
   },
   "connectLoop": {
     "label": "PluckのリンクをAIツールに貼り付け、Pluckの画面で許可し、MCPの認証についてPluckしたものを聞くと、Pluckしたものが3件返ってくる様子。",

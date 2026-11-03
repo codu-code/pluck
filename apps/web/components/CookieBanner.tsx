@@ -3,7 +3,8 @@
 import { useTranslations } from "next-intl";
 import Link from "@/components/SiteLink";
 import { useEffect, useState } from "react";
-import { analyticsOn, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
+import { saveAnswer } from "@/components/AnalyticsUser";
+import { analyticsOn, CONSENT_EVENT, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
 import styles from "./cookie-banner.module.css";
 
 // The Cookies board: asked once a year, two buttons of the same size, nothing pre-ticked. Shown only when this copy
@@ -18,8 +19,13 @@ export function CookieBanner() {
     startAnalytics();
     if (readConsent() === null) setAsking(true);
     const open = () => setAsking(true);
+    const answered = () => readConsent() !== null && setAsking(false); // e.g. the account's answer, from another device
     window.addEventListener(OPEN_COOKIES_EVENT, open);
-    return () => window.removeEventListener(OPEN_COOKIES_EVENT, open);
+    window.addEventListener(CONSENT_EVENT, answered);
+    return () => {
+      window.removeEventListener(OPEN_COOKIES_EVENT, open);
+      window.removeEventListener(CONSENT_EVENT, answered);
+    };
   }, []);
 
   useEffect(() => {
@@ -29,7 +35,9 @@ export function CookieBanner() {
   }, [said]);
 
   const answer = (a: Consent) => {
-    setConsent(a);
+    const at = Date.now();
+    setConsent(a, at);
+    saveAnswer({ answer: a, at }); // on any page, so the server stops (or starts) at once, not at the next signed-in page
     setAsking(false);
     setSaid(a);
   };

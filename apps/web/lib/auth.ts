@@ -1,4 +1,4 @@
-import { authAdapter, hitRateLimit, updateSettings } from "@pluck/db";
+import { authAdapter, hitRateLimit, setVia, updateSettings, type SignUpVia } from "@pluck/db";
 import { cimd } from "@better-auth/cimd";
 import { fetchClientMetadataResource } from "@better-auth/cimd/node";
 import { mcp } from "@better-auth/mcp";
@@ -42,7 +42,31 @@ export const REVIEW = process.env.REVIEW_EMAIL && process.env.REVIEW_PASSWORD
   ? { email: process.env.REVIEW_EMAIL.trim().toLowerCase(), password: process.env.REVIEW_PASSWORD }
   : null;
 
+// The home page paste box holds a visitor's links against this cookie until they sign up.
+export const TRY_COOKIE = "pluck_try";
+
 const firstParty = (uris: unknown) => Array.isArray(uris) && uris.length > 0 && uris.every((u) => FIRST_PARTY_REDIRECTS.includes(u));
+
+// Where a new account came from, read off the request that made it: the magic link's callbackURL, or for a code typed
+// on the web, the sign-in page it was typed on. Coarse on purpose: anything unclear is "direct".
+export function viaOf(ctx: { query?: Record<string, unknown>; headers?: Headers | null } | null | undefined): SignUpVia {
+  const h = ctx?.headers;
+  if (h?.get(APP_GRANT.header) === APP_GRANT.value) return "ios";
+  if (h?.get("cookie")?.includes(`${TRY_COOKIE}=`)) return "try";
+  let ref: URL | null = null;
+  try {
+    ref = new URL(h?.get("referer") ?? "");
+  } catch {}
+  const next = String(ctx?.query?.callbackURL ?? ref?.searchParams.get("callbackURL") ?? ref?.searchParams.get("next") ?? "");
+  if (next === "/try/claim") return "try";
+  if (next.startsWith("/api/auth/oauth2/authorize") || ref?.searchParams.has("client_id")) {
+    const redirect = new URL(next || "/", ORIGIN).searchParams.get("redirect_uri") ?? ref?.searchParams.get("redirect_uri");
+    return firstParty([redirect]) ? "extension" : "mcp";
+  }
+  if (next.startsWith("/@") || next.startsWith("/copy/")) return "public-page";
+  if (next.startsWith("/shared/")) return "shared-list";
+  return "direct";
+}
 
 // Sending a sign-in email, by link (the web) or by code (the iPhone app): one a minute per address (the apps count the
 // minute down on Send again), a few an hour per address and per network. Each is an email we pay for and a mailbox
@@ -105,6 +129,14 @@ const guard = createAuthMiddleware(async (ctx) => {
   }
 });
 
+// The consent screen's yes to an AI tool (our own apps' consent is not one).
+const connected = createAuthMiddleware(async (ctx) => {
+  const userId = ctx.context.session?.user.id;
+  if (ctx.path !== "/oauth2/consent" || !userId || !(ctx.body as { accept?: unknown } | undefined)?.accept || firstParty([redirectOf(ctx)])) return;
+  const clientId = new URLSearchParams(String((ctx.body as { oauth_query?: unknown }).oauth_query ?? "")).get("client_id");
+  if (clientId) (await import("./library")).trackAiTool(userId, "ai_tool_connected", clientId);
+});
+
 export const auth = betterAuth({
   database: authAdapter(),
   baseURL: process.env.BETTER_AUTH_URL,
@@ -114,6 +146,7 @@ export const auth = betterAuth({
   // A new account starts in the language of the browser it signed up in, so its emails do too.
   databaseHooks: { user: { create: { after: async (user, ctx) => {
     await updateSettings(user.id, { locale: localeFrom(ctx?.headers) });
+    await setVia(user.id, viaOf(ctx));
     await (await import("./library")).queueWelcome(user.id);
   } } } },
   session: { modelName: "auth_sessions", expiresIn: 30 * DAY, updateAge: DAY },
@@ -136,7 +169,7 @@ export const auth = betterAuth({
     "/email-otp/send-verification-otp", "/email-otp/check-verification-otp", "/email-otp/verify-email", "/email-otp/request-password-reset",
     "/forget-password/email-otp", "/email-otp/reset-password", "/email-otp/request-email-change", "/email-otp/change-email",
   ],
-  hooks: { before: guard },
+  hooks: { before: guard, after: connected },
   onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so
   plugins: [
     magicLink({

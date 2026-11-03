@@ -9,6 +9,17 @@ export type ServerOptions = {
   scopes: string[]; // library:read, library:write, library:delete; a tool is only offered when its scope was granted
   version?: string;
   onError?: (error: unknown, tool: string) => void;
+  onCall?: (call: ToolCall) => void; // every tool call's outcome, for usage counts; never its arguments or results
+  onPrompt?: (name: string) => void;
+};
+
+export type ToolCall = { tool: string; ok: boolean; errorCode: string | null; resultCount: number | null; ms: number };
+
+// How many things a tool handed back, when it handed back a page of them (null for one item, a tag, a list).
+const PAGES = ["items", "tags", "lists", "entries", "saved"];
+const countOf = (data: unknown): number | null => {
+  const rows = data && typeof data === "object" ? PAGES.map((k) => (data as Record<string, unknown>)[k]).find(Array.isArray) : undefined;
+  return rows ? rows.length : null;
 };
 
 const READ = { readOnlyHint: true, openWorldHint: false } as const;
@@ -24,7 +35,7 @@ function failed(e: unknown): CallToolResult | null {
   return { isError: true, content: [{ type: "text", text: JSON.stringify({ error: { code, message, ...(details === undefined ? {} : { details }) } }) }] };
 }
 
-export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0", onError }: ServerOptions): McpServer {
+export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0", onError, onCall, onPrompt }: ServerOptions): McpServer {
   const server = new McpServer(
     { name: "pluck", title: "Pluck", version },
     { instructions: "Pluck is the person's own library of saved links, notes and lists. Organise only with their yes: propose first, then apply. Use their existing tags; make a new tag only when they agree to it." },
@@ -37,10 +48,16 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     run: (args: z.infer<S>) => Promise<unknown>,
   ) {
     server.registerTool(name, config, (async (args: z.infer<S>) => {
+      const started = Date.now();
+      const done = (errorCode: string | null, resultCount: number | null = null) =>
+        onCall?.({ tool: name, ok: errorCode === null, errorCode, resultCount, ms: Date.now() - started });
       try {
-        return ok(await run(args));
+        const data = await run(args);
+        done(null, countOf(data));
+        return ok(data);
       } catch (e) {
         const result = failed(e);
+        done(result ? (e as { code: string }).code : "internal");
         if (result) return result;
         onError?.(e, name);
         return { isError: true, content: [{ type: "text", text: JSON.stringify({ error: { code: "internal", message: "Something went wrong on Pluck's side." } }) }] };
@@ -310,7 +327,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
       { description: "One list as Markdown, in order, with each item's note.", mimeType: "text/markdown" },
       async (uri, { id }) => ({ contents: [{ uri: uri.href, mimeType: "text/markdown", text: await listMarkdown(lib, String(id)) }] }),
     );
-    registerPrompts(server, { canWrite: can("library:write") });
+    registerPrompts(server, { canWrite: can("library:write"), onPrompt });
   }
 
   return server;

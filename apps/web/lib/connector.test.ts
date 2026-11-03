@@ -219,3 +219,22 @@ test("get_digest, delete_item to the bin, the two resources and the four prompts
   expect(await call("delete_item", { id: item.id })).toEqual({ binned: item.id });
   expect((await call("get_item", { id: item.id })).error.code).toBe("not_found");
 });
+
+test("each tool call and prompt is reported by name and outcome, never with its arguments", async () => {
+  const { a } = await twoUsers();
+  const calls: unknown[] = [];
+  const prompts: string[] = [];
+  const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+  await createPluckServer(connectorFor(a), { scopes: ALL, onCall: (c) => calls.push(c), onPrompt: (p) => prompts.push(p) }).connect(serverSide);
+  const client = new Client({ name: "test-ai", version: "1.0.0" });
+  await client.connect(clientSide);
+  await note(a, "secret words");
+  await client.callTool({ name: "list_items", arguments: {} });
+  await client.callTool({ name: "get_item", arguments: { id: "000000000000000000000000" } });
+  await client.getPrompt({ name: "tidy_inbox" });
+  expect(calls).toEqual([
+    { tool: "list_items", ok: true, errorCode: null, resultCount: 1, ms: expect.any(Number) },
+    { tool: "get_item", ok: false, errorCode: "not_found", resultCount: null, ms: expect.any(Number) },
+  ]);
+  expect(prompts).toEqual(["tidy_inbox"]);
+});

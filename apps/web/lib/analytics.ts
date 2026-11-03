@@ -1,3 +1,4 @@
+import { ANSWER_LASTS_MS, type ConsentAnswer } from "@pluck/shared-schemas";
 import posthog, { type CaptureResult } from "posthog-js";
 
 // Product analytics and error tracking in the browser (PostHog, EU). Off entirely when NEXT_PUBLIC_POSTHOG_KEY is
@@ -11,21 +12,22 @@ export const analyticsOn = Boolean(KEY);
 
 export type Consent = "yes" | "no";
 const STORE = "pluck:consent";
-const YEAR = 365 * 24 * 60 * 60 * 1000; // asked again after a year
 export const CONSENT_EVENT = "pluck:consent"; // fired on window when the answer changes
 export const OPEN_COOKIES_EVENT = "pluck:cookies"; // fired by the "Cookies" links to ask again
 
 let consent: Consent | null = null;
 let started = false;
 
-export function readConsent(): Consent | null {
+// This browser's answer and when it was given; asked again after a year.
+export function readAnswer(): ConsentAnswer | null {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORE) ?? "null") as { answer: Consent; at: number } | null;
-    return saved && Date.now() - saved.at < YEAR ? saved.answer : null;
+    const saved = JSON.parse(localStorage.getItem(STORE) ?? "null") as ConsentAnswer | null;
+    return saved && Date.now() - saved.at < ANSWER_LASTS_MS ? saved : null;
   } catch {
     return null; // storage blocked: ask, and keep nothing
   }
 }
+export const readConsent = (): Consent | null => readAnswer()?.answer ?? null;
 
 export function startAnalytics(): void {
   if (!KEY || started) return;
@@ -38,6 +40,7 @@ export function startAnalytics(): void {
     persistence: consent === "yes" ? "localStorage+cookie" : "memory",
     person_profiles: "identified_only",
     capture_exceptions: true,
+    capture_performance: { web_vitals: true, network_timing: false }, // how fast pages are; never the requests they made
     disable_session_recording: true,
     disable_surveys: true,
     advanced_disable_flags: true, // no feature flags, so no flags call carrying an id before anyone said yes
@@ -47,9 +50,10 @@ export function startAnalytics(): void {
   });
 }
 
-export function setConsent(answer: Consent): void {
+// at: when it was given, here or (taking the account's) on another device.
+export function setConsent(answer: Consent, at = Date.now()): void {
   try {
-    localStorage.setItem(STORE, JSON.stringify({ answer, at: Date.now() }));
+    localStorage.setItem(STORE, JSON.stringify({ answer, at }));
   } catch {
     // storage blocked: the answer holds for this page only
   }
@@ -99,6 +103,13 @@ export function scrub(event: CaptureResult | null, given: Consent | null): Captu
   delete p.title; // item pages are titled with the item
   delete p.$title;
   for (const k of ["$current_url", "$referrer", "$initial_current_url", "$initial_referrer"]) if (typeof p[k] === "string") p[k] = keepUtm(p[k]);
+  // Each web vital carries its own copy of the page's URL, and its attribution can name a cover's address.
+  for (const [k, v] of Object.entries(p)) {
+    if (!k.startsWith("$web_vitals_") || !v || typeof v !== "object") continue;
+    delete (v as Record<string, unknown>).attribution;
+    const url = (v as Record<string, unknown>).$current_url;
+    if (typeof url === "string") (v as Record<string, unknown>).$current_url = keepUtm(url);
+  }
   if (event.$set_once) for (const k of ["$initial_current_url", "$initial_referrer"]) if (typeof event.$set_once[k] === "string") event.$set_once[k] = keepUtm(event.$set_once[k]);
   return event;
 }

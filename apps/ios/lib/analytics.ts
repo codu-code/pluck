@@ -1,3 +1,4 @@
+import { ANSWER_LASTS_MS, type ConsentAnswer } from "@pluck/shared-schemas";
 import PostHog from "posthog-react-native";
 import { kv } from "./kv";
 
@@ -5,11 +6,12 @@ import { kv } from "./kv";
 // self-hosted builds without it send nothing.
 //
 // Crashes and errors are sent either way, under a random id that is never tied to the account. Screens and the
-// account are sent only after "Pluck it, I'm in", the same question the website asks, asked once.
+// account are sent only after "Pluck it, I'm in", the same question the website asks, asked again after a year.
 const KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY;
 export type Consent = "yes" | "no";
 
 let consent: Consent | null = null;
+let answered: ConsentAnswer | null = null;
 const listeners = new Set<(c: Consent | null) => void>();
 
 export const posthog = KEY
@@ -23,22 +25,28 @@ export const posthog = KEY
 
 export const analyticsOn = posthog !== null;
 
-export async function loadConsent(): Promise<Consent | null> {
-  consent = await kv.get<Consent | null>("consent", null);
+// This phone's answer and when it was given.
+export async function loadConsent(): Promise<ConsentAnswer | null> {
+  const saved = await kv.get<ConsentAnswer | null>("answer", null);
+  answered = saved && Date.now() - saved.at < ANSWER_LASTS_MS ? saved : null;
+  consent = answered?.answer ?? null;
   listeners.forEach((fn) => fn(consent));
-  return consent;
+  return answered;
 }
 
-export async function setConsent(answer: Consent): Promise<void> {
+// at: when it was given, here or (taking the account's) on another device.
+export async function setConsent(answer: Consent, at = Date.now()): Promise<void> {
   const was = consent;
   consent = answer;
-  await kv.set("consent", answer);
+  answered = { answer, at };
+  await kv.set("answer", answered);
   if (answer === "no" && was === "yes") posthog?.reset(); // a fresh random id, not tied to the account
   listeners.forEach((fn) => fn(answer));
 }
 
 export const onConsent = (fn: (c: Consent | null) => void) => (listeners.add(fn), () => void listeners.delete(fn));
 export const currentConsent = () => consent;
+export const currentAnswer = () => answered;
 
 export function identify(userId: string): void {
   if (consent === "yes") posthog?.identify(userId);

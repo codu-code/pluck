@@ -68,7 +68,7 @@ export default function Settings({ part }: { part?: Part }) {
     void measure();
     void keepSetting().then(setKeep);
     if (appIcons.supported) void appIcons.get().then(setIcon);
-    void loadConsent().then(setUsage);
+    void loadConsent().then((a) => setUsage(a?.answer ?? null));
     return onConsent(setUsage);
   }, []);
 

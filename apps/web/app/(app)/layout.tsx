@@ -1,8 +1,10 @@
+import { freshAnswer } from "@pluck/shared-schemas";
 import { NextIntlClientProvider } from "next-intl";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { AnalyticsUser } from "@/components/AnalyticsUser";
 import { AppShell } from "@/components/AppShell";
+import { HeardFromPrompt } from "@/components/HeardFrom";
 import { currentUser } from "@/lib/auth";
 import { count, listsOf, me } from "@/lib/library";
 
@@ -14,7 +16,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     // The whole catalog for the app's client components (the root layout sends only the site's).
     <NextIntlClientProvider>
       <AppShell user={user} counts={{ inbox, later, lists: lists.length }} timezone={profile.settings.timezone}>
-        <AnalyticsUser id={user.id} />
+        <AnalyticsUser id={user.id} answer={freshAnswer(profile.settings)} />
+        <HeardFromPrompt ask={profile.heardFrom === null && inbox + later > 0} />
         {children}
       </AppShell>
     </NextIntlClientProvider>
