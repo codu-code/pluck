@@ -121,8 +121,9 @@ export type UserSettings = {
   timezone: string; // IANA
   locale: Locale | null; // null: follow the browser or phone; set from the sign-up request
   analytics: "yes" | "no" | null; // the cookie question for the account; usage is sent only on "yes"
+  analyticsAt: number | null; // when that answer was given (ms); a write with an older one is ignored
 };
-export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC", locale: null, analytics: null };
+export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "inbox_later", digestDay: 1, timezone: "UTC", locale: null, analytics: null, analyticsAt: null };
 
 export type ReportDoc = {
   _id: ObjectId;

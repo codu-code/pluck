@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import Link from "@/components/SiteLink";
 import { useEffect, useState } from "react";
+import { saveAnswer } from "@/components/AnalyticsUser";
 import { analyticsOn, CONSENT_EVENT, OPEN_COOKIES_EVENT, readConsent, setConsent, startAnalytics, type Consent } from "@/lib/analytics";
 import styles from "./cookie-banner.module.css";
 
@@ -34,7 +35,9 @@ export function CookieBanner() {
   }, [said]);
 
   const answer = (a: Consent) => {
-    setConsent(a);
+    const at = Date.now();
+    setConsent(a, at);
+    saveAnswer({ answer: a, at }); // on any page, so the server stops (or starts) at once, not at the next signed-in page
     setAsking(false);
     setSaid(a);
   };
