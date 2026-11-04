@@ -133,6 +133,10 @@ final class PluckClient {
     _ = try await call("POST", "/api/v1/lists/\(listId)/items", ["itemId": itemId])
   }
 
+  func removeFromList(_ listId: String, _ itemId: String) async throws {
+    _ = try await call("DELETE", "/api/v1/lists/\(listId)/items/\(itemId)", nil)
+  }
+
   // A file: the item now, the bytes by a background upload that carries on after the sheet closes.
   func pluckFile(_ file: URL, name: String, contentType: String) async throws -> PluckedItem? {
     let size = (try? FileManager.default.attributesOfItem(atPath: file.path)[.size] as? Int) ?? 1
