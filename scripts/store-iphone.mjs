@@ -1,6 +1,7 @@
 // The App Store iPhone set in another language: boards AppStore1 to 5 (docs/handover/design) drawn with that
 // language's words (docs/store/screenshots/strings.<lang>.json) and, where there is one, a real capture of the app in
-// that language in the phone, in place of the drawn screen. Frame 1 keeps its drawn share sheet.
+// that language in the phone, in place of the drawn screen. Frame 1's drawn share sheet takes that language's words
+// from docs/store/frame1.json.
 // Usage: node scripts/store-iphone.mjs <lang> [captures dir with 2.png … 5.png, iPhone, 1206 × 2622 or 1320 × 2868]
 // Writes docs/store/screenshots/<lang>/1.png … 5.png at 1320 × 2868, PNG with no alpha.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -10,6 +11,7 @@ const root = join(import.meta.dirname, "..");
 const [lang, captures] = process.argv.slice(2);
 if (!lang) throw new Error("Usage: node scripts/store-iphone.mjs <lang> [captures dir]");
 const { iphoneScreenshots } = JSON.parse(readFileSync(join(root, `docs/store/screenshots/strings.${lang}.json`), "utf8"));
+const words1 = JSON.parse(readFileSync(join(root, "docs/store/frame1.json"), "utf8"))[lang] ?? {};
 const out = join(root, "docs/store/screenshots", lang);
 mkdirSync(out, { recursive: true });
 
@@ -20,8 +22,13 @@ for (const [i, words] of iphoneScreenshots.entries()) {
   const n = i + 1;
   await page.setContent(readFileSync(join(root, `docs/handover/design/AppStore${n}.dc.html`), "utf8"), { waitUntil: "networkidle" });
   const shot = captures && existsSync(join(captures, `${n}.png`)) ? `data:image/png;base64,${readFileSync(join(captures, `${n}.png`)).toString("base64")}` : null;
-  await page.evaluate(({ title, subtitle, shot, lang }) => {
+  await page.evaluate(({ title, subtitle, shot, lang, map }) => {
     document.documentElement.lang = lang; // the CJK fonts follow the language, as on the site
+    const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let t; (t = walk.nextNode()); ) {
+      const k = t.nodeValue.trim();
+      if (map[k]) t.nodeValue = t.nodeValue.replace(k, map[k]);
+    }
     // The headline keeps the board's accent full stop (or 。); the line under it is the 48 px paragraph.
     const h1 = document.querySelector("h1");
     const accent = h1.querySelector("span")?.style.color ?? "#34A07C";
@@ -37,7 +44,7 @@ for (const [i, words] of iphoneScreenshots.entries()) {
       const screen = [...document.querySelectorAll("div")].find((d) => d.style.width === "1080px" && d.style.height === "2337px");
       screen.innerHTML = `<img src="${shot}" style="display:block;width:100%;height:100%;object-fit:cover;object-position:top">`;
     }
-  }, { title: words.title, subtitle: words.subtitle, shot, lang });
+  }, { title: words.title, subtitle: words.subtitle, shot, lang, map: words1 });
   await page.evaluate(() => document.fonts.ready);
   writeFileSync(join(out, `${n}.png`), await page.screenshot({ type: "png" }));
 }

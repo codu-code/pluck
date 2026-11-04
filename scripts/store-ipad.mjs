@@ -29,6 +29,7 @@ const page = await browser.newPage({ viewport: { width: 2064, height: 2752 } });
 let done = 0;
 if (lang) {
   const { ipadScreenshots, chips } = JSON.parse(readFileSync(join(root, `docs/store/ipad/strings.${lang}.json`), "utf8"));
+  const words1 = JSON.parse(readFileSync(join(root, "docs/store/frame1.json"), "utf8"))[lang] ?? {};
   const out = join(root, "docs/store/ipad", lang);
   mkdirSync(out, { recursive: true });
   for (const [i, words] of ipadScreenshots.entries()) {
@@ -46,6 +47,23 @@ if (lang) {
     let c = 0;
     html = html.replace(/(<span style="height: 66px[^>]*>)[^<]*(<\/span>)/g, (_, a, b) => `${a}${esc(chips[c++] ?? "")}${b}`);
     const shot = langShots && existsSync(join(langShots, `${n}.png`)) ? screen(join(langShots, `${n}.png`)) : "";
+    if (n === 1 && !shot) {
+      // Frame 1's share sheet is drawn, so the whole board is drawn again in this language (docs/store/frame1.json),
+      // not laid over the English art.
+      await page.setContent(board.replace(/<div data-layer="text"[\s\S]*?<\/p>(?:<div style="display: flex; gap: 16px[\s\S]*?<\/div>)?\s*<\/div>/, html), { waitUntil: "networkidle" });
+      await page.evaluate(({ map, lang }) => {
+        document.documentElement.lang = lang;
+        const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        for (let t; (t = walk.nextNode()); ) {
+          const k = t.nodeValue.trim();
+          if (map[k]) t.nodeValue = t.nodeValue.replace(k, map[k]);
+        }
+      }, { map: words1, lang });
+      await page.evaluate(() => document.fonts.ready);
+      writeFileSync(join(out, `${n}.png`), await page.screenshot({ type: "png" }));
+      done++;
+      continue;
+    }
     await page.setContent(`<html><head>${fonts}</head><body style="margin:0;width:2064px;height:2752px;overflow:hidden;position:relative;font-family:'Geist',sans-serif;background:url('${dataUrl(join(root, "docs/store/ipad/art-only", `${n}.png`))}')">${shot}${html}</body></html>`);
     await page.evaluate(() => document.fonts.ready);
     writeFileSync(join(out, `${n}.png`), await page.screenshot({ type: "png" }));

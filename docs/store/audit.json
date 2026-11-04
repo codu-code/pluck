@@ -4,56 +4,13 @@
     {
       "device": "iphone",
       "locales": [
-        "en"
-      ],
-      "frames": [
-        6,
-        7
-      ],
-      "level": "review",
-      "title": "Shows Settings the app doesn't have",
-      "detail": "\"What it changed this week\", \"Remove all of it\", \"Your server, Change\", \"Export everything, JSON and Markdown\" (the app exports by email) and \"Ads, None. Ever.\" Guideline 2.3.3 asks for the app as it is.",
-      "todo": "Redraw to match the app (Claude Design, ask 2 in the featuring brief), then upload over these two."
-    },
-    {
-      "device": "iphone",
-      "locales": [
-        "es",
-        "pt-BR",
-        "fr",
-        "de",
-        "ja",
-        "it",
-        "nl",
-        "ko",
-        "zh-Hans"
-      ],
-      "frames": [
-        1
-      ],
-      "level": "polish",
-      "title": "The share sheet in frame 1 is drawn, in English",
-      "detail": "\"Plucked.\", \"Tags and list\", \"Add a note\" and \"Done\" are the board's drawing. Frames 2 to 5 are real captures in this language.",
-      "todo": "Capture the share sheet on a phone set to this language (Safari, Share, Pluck), then node scripts/store-iphone.mjs <lang> with that 1.png."
-    },
-    {
-      "device": "iphone",
-      "locales": [
-        "es",
-        "pt-BR",
-        "fr",
-        "de",
-        "ja",
-        "it",
-        "nl",
-        "ko",
-        "zh-Hans"
+        "*"
       ],
       "frames": [],
       "level": "polish",
-      "title": "Five frames, where English has seven",
-      "detail": "Frames 6 and 7 aren't made in other languages: in English they show Settings the app doesn't have.",
-      "todo": "Once the redraws land (Claude Design, ask 2), make them in every language with node scripts/store-iphone.mjs."
+      "title": "Five frames",
+      "detail": "The old frames 6 and 7 showed Settings the app doesn't have, so they came down on 4 November. Five is enough to submit.",
+      "todo": "New 6 and 7 (AI tools, Siri) are ask 1 in the Claude Design page; once they land, node scripts/store-iphone.mjs in every language."
     },
     {
       "device": "ipad",
@@ -65,7 +22,7 @@
       ],
       "level": "polish",
       "title": "Drawn, not captured",
-      "detail": "The share sheet over Safari is the board's drawing. It matches the app, but the other frames are real captures.",
+      "detail": "The share sheet over Safari is the board's drawing, in each language's words (docs/store/frame1.json). It matches the app, but the other frames are real captures.",
       "todo": "Capture it on an iPad: Safari, Share, Pluck. Then node scripts/store-ipad.mjs with that 1.png."
     },
     {
@@ -75,9 +32,9 @@
       ],
       "frames": [],
       "level": "polish",
-      "title": "Five frames, where iPhone English has seven",
-      "detail": "Frames 6 and 7 aren't uploaded: the boards show Settings the app doesn't have.",
-      "todo": "Redraw both to match the app (Claude Design, ask 2), then upload."
+      "title": "Five frames",
+      "detail": "Frames 6 and 7 aren't uploaded: the old boards showed Settings the app doesn't have.",
+      "todo": "New 6 and 7 (AI tools, the hold-⌘ keys) are ask 1 in the Claude Design page; once they land, node scripts/store-ipad.mjs in every language."
     }
   ]
 }
