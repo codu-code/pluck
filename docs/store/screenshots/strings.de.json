@@ -19,6 +19,14 @@
     {
       "title": "Weg. Na ja, archiviert.",
       "subtitle": "30 Tage unberührt? Ins Archiv. Nichts wird gelöscht."
+    },
+    {
+      "title": "In Pluck steckt keine KI.",
+      "subtitle": "Bring deine eigene mit. Deine KI-Tools können lesen und sortieren, aber nie löschen."
+    },
+    {
+      "title": "Siri pflückt auch.",
+      "subtitle": "Sag „Mit Pluck einen Link pflücken“. Auch in Kurzbefehle und Spotlight."
     }
   ]
 }

@@ -19,6 +19,14 @@
     {
       "title": "Parti. Enfin, archivé.",
       "subtitle": "Pas touché depuis 30 jours ? Direction les Archives. Rien n’est supprimé."
+    },
+    {
+      "title": "Il n’y a pas d’IA dans Pluck.",
+      "subtitle": "Branchez la vôtre. Vos outils d’IA lisent et rangent, sans jamais rien supprimer."
+    },
+    {
+      "title": "Un raccourci pour chaque geste.",
+      "subtitle": "Maintenez ⌘ pour tous les voir."
     }
   ],
   "chips": [

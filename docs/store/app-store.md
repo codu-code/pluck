@@ -18,7 +18,7 @@ Support URL https://getpluck.io/support, marketing URL https://getpluck.io, priv
 
 ## Screenshots
 
-`screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore7`, with an everyday sample library rather than developer reading. Frame 5 is dark mode.
+`screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore5`, with an everyday sample library rather than developer reading. Frame 5 is dark mode. The first `AppStore6` and `7` came down on 4 November 2026: they showed Settings the app doesn't have (guideline 2.3.3). The new 6 (AI tools) and 7 (Siri on iPhone, the hold-⌘ keys on iPad) are boards `AppStore6`, `AppStore7`, `AppStore-iPad-6` and `AppStore-iPad-7`. They draw the app's screens, so in other languages the scripts draw them again with the app's own words from the iOS catalog (`scripts/store-words.mjs`); iPad frame 7 puts that language's frame 2 capture under the keys.
 
 Before launch, swap each drawn phone screen for a real Simulator capture of the same library (`scripts/demo-seed.mjs` with the sample Items in the table below), so the listing shows the app exactly as it ships.
 
@@ -72,7 +72,7 @@ No app preview video for launch. A preview must be a screen recording of the app
 
 Every page opens with what is still to do for that language and device, and marks the screenshots it covers: the known issues in `audit.json` (remove an entry once it is fixed), and what the page checks for itself (a field over Apple's limit, a line voice.md rules out, a set shorter than English's). Red is an App Review risk, orange is polish.
 
-`screenshots/<lang>/` is each other language's iPhone set as uploaded, at 1320 × 2868; English is `screenshots/6.9in`. They're boards `AppStore1` to `5` drawn with that language's words (`screenshots/strings.<lang>.json`) and, in frames 2 to 5, real captures of the app in that language (iPhone 17 Simulator, `-AppleLanguages "(de)"`, the store library):
+`screenshots/<lang>/` is each other language's iPhone set as uploaded, at 1320 × 2868; English is `screenshots/6.9in`. They're boards `AppStore1` to `5` drawn with that language's words (`screenshots/strings.<lang>.json`) and, in frames 2 to 5, real captures of the app in that language (iPhone 17 Simulator, `-AppleLanguages "(de)"`, the store library). Frame 1's drawn share sheet, and the recipe page behind it, take each language's words from `frame1.json`, as iPad frame 1 does:
 
 ```sh
 node scripts/store-iphone.mjs de <dir with that language's 2.png … 5.png>

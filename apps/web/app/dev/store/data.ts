@@ -51,9 +51,9 @@ export function load(locale: Locale): Store {
   const listing = (JSON.parse(readFileSync(join(root, `${locale}.json`), "utf8")) as { appStore: Listing }).appStore;
   const strings = join(root, `ipad/strings.${locale}.json`);
   const ipadCaptions = existsSync(strings) ? (JSON.parse(readFileSync(strings, "utf8")) as { ipadScreenshots: Store["ipadCaptions"] }).ipadScreenshots : [];
-  // English: the 6.9 in iPhone set and frames 1 to 5 of the iPad set (6 and 7 are drawn, and not uploaded).
+  // English: the 6.9 in iPhone set and the iPad with-text set, all seven frames.
   const iphone = locale === "en" ? files(root, "screenshots/6.9in") : files(root, `screenshots/${locale}`);
-  const ipad = locale === "en" ? files(root, "ipad/with-text", 5) : files(root, `ipad/${locale}`);
+  const ipad = locale === "en" ? files(root, "ipad/with-text") : files(root, `ipad/${locale}`);
 
   const flags: Flag[] = [];
   const check = (field: Flag["field"], text: string, rules: [string, RegExp][]) => {
