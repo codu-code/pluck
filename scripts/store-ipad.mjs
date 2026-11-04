@@ -10,6 +10,7 @@
 // Needs the Playwright Chromium (pnpm exec playwright install chromium).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { words } from "./store-words.mjs";
 
 const root = join(import.meta.dirname, "..");
 const lang = process.argv[2] === "--lang" ? process.argv[3] : null;
@@ -29,7 +30,7 @@ const page = await browser.newPage({ viewport: { width: 2064, height: 2752 } });
 let done = 0;
 if (lang) {
   const { ipadScreenshots, chips } = JSON.parse(readFileSync(join(root, `docs/store/ipad/strings.${lang}.json`), "utf8"));
-  const words1 = JSON.parse(readFileSync(join(root, "docs/store/frame1.json"), "utf8"))[lang] ?? {};
+  const words1 = words(lang);
   const out = join(root, "docs/store/ipad", lang);
   mkdirSync(out, { recursive: true });
   for (const [i, words] of ipadScreenshots.entries()) {
@@ -47,9 +48,10 @@ if (lang) {
     let c = 0;
     html = html.replace(/(<span style="height: 66px[^>]*>)[^<]*(<\/span>)/g, (_, a, b) => `${a}${esc(chips[c++] ?? "")}${b}`);
     const shot = langShots && existsSync(join(langShots, `${n}.png`)) ? screen(join(langShots, `${n}.png`)) : "";
-    if (n === 1 && !shot) {
-      // Frame 1's share sheet is drawn, so the whole board is drawn again in this language (docs/store/frame1.json),
-      // not laid over the English art.
+    if (!shot && n >= 2 && n <= 5 && existsSync(join(out, `${n}.png`))) continue; // keep the captured frames as they are
+    if ((n === 1 || n >= 6) && !shot) {
+      // Frames 1, 6 and 7 draw their screens, so the whole board is drawn again in this language (store-words.mjs),
+      // not laid over the English art. Frame 7's split view under the keys is this language's frame 2 capture.
       await page.setContent(board.replace(/<div data-layer="text"[\s\S]*?<\/p>(?:<div style="display: flex; gap: 16px[\s\S]*?<\/div>)?\s*<\/div>/, html), { waitUntil: "networkidle" });
       await page.evaluate(({ map, lang }) => {
         document.documentElement.lang = lang;
@@ -59,6 +61,20 @@ if (lang) {
           if (map[k]) t.nodeValue = t.nodeValue.replace(k, map[k]);
         }
       }, { map: words1, lang });
+      // A long shortcut name wraps onto two lines inside its row, rather than pushing its keys out of the panel.
+      if (n === 7) await page.addStyleTag({ content: '[data-layer="art"] span[style*="white-space: nowrap"] { white-space: normal !important; line-height: 17px }' });
+      const two = join(out, "2.png");
+      if (n === 7 && existsSync(two)) {
+        await page.evaluate(async ({ src, s }) => {
+          const img = new Image();
+          img.src = src;
+          await img.decode();
+          const c = Object.assign(document.createElement("canvas"), { width: s.width, height: s.height });
+          c.getContext("2d").drawImage(img, s.left, s.top, s.width, s.height, 0, 0, s.width, s.height);
+          document.querySelector('[data-layer="art"] img').src = c.toDataURL("image/png");
+        }, { src: dataUrl(two), s: SCREEN });
+        await page.evaluate(() => document.querySelector('[data-layer="art"] img').decode());
+      }
       await page.evaluate(() => document.fonts.ready);
       writeFileSync(join(out, `${n}.png`), await page.screenshot({ type: "png" }));
       done++;

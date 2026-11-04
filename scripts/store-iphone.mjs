@@ -6,12 +6,13 @@
 // Writes docs/store/screenshots/<lang>/1.png … 5.png at 1320 × 2868, PNG with no alpha.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { words } from "./store-words.mjs";
 
 const root = join(import.meta.dirname, "..");
 const [lang, captures] = process.argv.slice(2);
 if (!lang) throw new Error("Usage: node scripts/store-iphone.mjs <lang> [captures dir]");
 const { iphoneScreenshots } = JSON.parse(readFileSync(join(root, `docs/store/screenshots/strings.${lang}.json`), "utf8"));
-const words1 = JSON.parse(readFileSync(join(root, "docs/store/frame1.json"), "utf8"))[lang] ?? {};
+const words1 = words(lang);
 const out = join(root, "docs/store/screenshots", lang);
 mkdirSync(out, { recursive: true });
 
