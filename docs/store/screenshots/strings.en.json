@@ -19,6 +19,14 @@
     {
       "title": "Gone. Well, archived.",
       "subtitle": "Untouched for 30 days? To the Archive. Nothing is deleted."
+    },
+    {
+      "title": "There’s no AI in here.",
+      "subtitle": "Bring your own. Your AI tools can read and sort, and never delete."
+    },
+    {
+      "title": "Siri can pluck it too.",
+      "subtitle": "Say “Pluck a link with Pluck”. It’s in Shortcuts and Spotlight as well."
     }
   ]
 }
