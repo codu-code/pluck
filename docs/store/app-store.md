@@ -18,7 +18,7 @@ Support URL https://getpluck.io/support, marketing URL https://getpluck.io, priv
 
 ## Screenshots
 
-`screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore5`, with an everyday sample library rather than developer reading. Frame 5 is dark mode. `AppStore6` and `7` came down on 4 November 2026: they showed Settings the app doesn't have (guideline 2.3.3). Their replacements are with Claude Design.
+`screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore5`, with an everyday sample library rather than developer reading. Frame 5 is dark mode. The first `AppStore6` and `7` came down on 4 November 2026: they showed Settings the app doesn't have (guideline 2.3.3). The new 6 (AI tools) and 7 (Siri) came from Claude Design as PNGs, with text and art only (`screenshots/art-only/`); there are no boards for them yet. They're English only until the app is captured in each language.
 
 Before launch, swap each drawn phone screen for a real Simulator capture of the same library (`scripts/demo-seed.mjs` with the sample Items in the table below), so the listing shows the app exactly as it ships.
 

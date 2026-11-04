@@ -2,17 +2,6 @@
   "about": "What the store listing still needs, shown as warnings in the dev preview (/dev/store). Remove an entry once it's fixed. device: iphone, ipad or listing. locales: the languages it covers, or [\"*\"] for all. frames: the screenshots it marks, counted from 1. level: review (App Review may turn it down) or polish.",
   "issues": [
     {
-      "device": "iphone",
-      "locales": [
-        "*"
-      ],
-      "frames": [],
-      "level": "polish",
-      "title": "Five frames",
-      "detail": "The old frames 6 and 7 showed Settings the app doesn't have, so they came down on 4 November. Five is enough to submit.",
-      "todo": "New 6 and 7 (AI tools, Siri) are ask 1 in the Claude Design page; once they land, node scripts/store-iphone.mjs in every language."
-    },
-    {
       "device": "ipad",
       "locales": [
         "*"
@@ -26,15 +15,81 @@
       "todo": "Capture it on an iPad: Safari, Share, Pluck. Then node scripts/store-ipad.mjs with that 1.png."
     },
     {
-      "device": "ipad",
+      "device": "iphone",
       "locales": [
-        "*"
+        "es",
+        "pt-BR",
+        "fr",
+        "de",
+        "ja",
+        "it",
+        "nl",
+        "ko",
+        "zh-Hans"
       ],
       "frames": [],
       "level": "polish",
-      "title": "Five frames",
-      "detail": "Frames 6 and 7 aren't uploaded: the old boards showed Settings the app doesn't have.",
-      "todo": "New 6 and 7 (AI tools, the hold-⌘ keys) are ask 1 in the Claude Design page; once they land, node scripts/store-ipad.mjs in every language."
+      "title": "Five frames, where English has seven",
+      "detail": "New frames 6 (AI tools) and 7 (Siri) are in English only. Their screens show the app in English, so they wait for captures in each language rather than going up with translated captions over English UI.",
+      "todo": "Capture Settings, AI tools and the Siri card in each language, then lay the captions (Claude Design page, ask 1) over docs/store/screenshots/art-only/6.png and 7.png."
+    },
+    {
+      "device": "ipad",
+      "locales": [
+        "es",
+        "pt-BR",
+        "fr",
+        "de",
+        "ja",
+        "it",
+        "nl",
+        "ko",
+        "zh-Hans"
+      ],
+      "frames": [],
+      "level": "polish",
+      "title": "Five frames, where English has seven",
+      "detail": "New frames 6 (AI tools) and 7 (the hold-⌘ keys) are in English only, for the same reason as iPhone.",
+      "todo": "Capture both in each language (-demoDetail settings:aiTools, and hold ⌘ in the split view), then node scripts/store-ipad.mjs with the captions from the Claude Design page."
+    },
+    {
+      "device": "iphone",
+      "locales": [
+        "en"
+      ],
+      "frames": [
+        6
+      ],
+      "level": "polish",
+      "title": "The AI tools screen is drawn, and half empty",
+      "detail": "It shows the connector address with Copy; the app has one button, \"Copy the connector address\". The bottom half of the screen is blank, where frames 2 to 5 are full.",
+      "todo": "Swap in a real capture of Settings, AI tools on a phone with two tools connected."
+    },
+    {
+      "device": "ipad",
+      "locales": [
+        "en"
+      ],
+      "frames": [
+        6
+      ],
+      "level": "polish",
+      "title": "A test email in the sidebar",
+      "detail": "\"store@example.test\" under Settings reads as test data. The date says Tue 3 Nov where frame 1 says Thu 14 Jan.",
+      "todo": "Use a plausible address (or none) and the launch date, Thu 14 Jan."
+    },
+    {
+      "device": "ipad",
+      "locales": [
+        "en"
+      ],
+      "frames": [
+        7
+      ],
+      "level": "polish",
+      "title": "Status bar doesn't match the others",
+      "detail": "\"09:41\" and a charging battery, where every other frame has 9:41 and 100%.",
+      "todo": "Redraw the status bar as in frames 1 to 6."
     }
   ]
 }
