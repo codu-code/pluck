@@ -128,10 +128,12 @@ final class ShareModel: ObservableObject {
     save { [client] in _ = try? await client.patch(id, ["tagIds": ids]) }
   }
 
-  func addToList() {
-    guard let id = item?.id, let list = lastList, !addedToList else { return }
-    addedToList = true
-    save { [client] in try? await client.addToList(list.id, id) }
+  // On and off again, like a tag: a list picked by mistake can be taken back before Done.
+  func toggleList() {
+    guard let id = item?.id, let list = lastList else { return }
+    addedToList.toggle()
+    let add = addedToList
+    save { [client] in try? await (add ? client.addToList(list.id, id) : client.removeFromList(list.id, id)) }
   }
 
   func setKind(_ kind: String) {
@@ -167,6 +169,7 @@ final class ShareModel: ObservableObject {
 struct ShareView: View {
   @ObservedObject var model: ShareModel
   @Environment(\.colorScheme) private var scheme
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
   @State private var formHeight: CGFloat = 0 // the form's own height: it scrolls only when the keyboard leaves less room
   private var dark: Bool { scheme == .dark }
 
@@ -230,14 +233,18 @@ struct ShareView: View {
           HStack(spacing: 8) {
             ForEach(model.tags) { tag in chip(tag.name, on: model.tagIds.contains(tag.id)) { model.toggle(tag) } }
             if let list = model.lastList {
-              Button { model.addToList() } label: {
-                HStack(spacing: 6) { glyph("M8 3v10M3 8h10", size: 14, color: Palette.ink(dark), width: 1.6); Text(list.name).lineLimit(1) }
+              Button { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { model.toggleList() } } label: {
+                HStack(spacing: 6) {
+                  glyph("M8 3v10M3 8h10", size: 14, color: Palette.ink(dark), width: 1.6).rotationEffect(.degrees(model.addedToList ? 45 : 0)) // the plus turns into an x
+                  Text(list.name).lineLimit(1)
+                }
                   .font(Typeface.chip)
                   .padding(.horizontal, 14).frame(height: 44)
                   .background(model.addedToList ? Palette.chip(dark) : .clear, in: Capsule())
                   .overlay(Capsule().strokeBorder(Palette.dashed, style: StrokeStyle(lineWidth: 1.5, dash: model.addedToList ? [] : [4, 3])))
               }
               .accessibilityLabel(String(format: model.addedToList ? String(localized: "addedToList") : String(localized: "addToList"), list.name))
+              .accessibilityAddTraits(model.addedToList ? .isSelected : [])
             }
           }
         }
