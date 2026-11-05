@@ -15,19 +15,6 @@
       "todo": "Capture it on an iPad: Safari, Share, Pluck. Then node scripts/store-ipad.mjs with that 1.png."
     },
     {
-      "device": "ipad",
-      "locales": [
-        "*"
-      ],
-      "frames": [
-        6
-      ],
-      "level": "polish",
-      "title": "The AI tools page shows a Copy row the app doesn't",
-      "detail": "It shows the connector address with a Copy button; the app has one button, \"Copy the connector address\", as iPhone frame 6 draws it.",
-      "todo": "Redraw the right-hand page as iPhone frame 6's AI tools group (Claude Design), then node scripts/store-ipad.mjs --lang <code> for each language."
-    },
-    {
       "device": "iphone",
       "locales": [
         "*"
