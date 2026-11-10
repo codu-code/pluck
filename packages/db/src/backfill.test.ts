@@ -22,6 +22,8 @@ test("the Preview backfill walks every link read before Previews once, then stop
   expect(seen).not.toContain(note.id);
   expect(seen.filter((id) => id === old.id)).toHaveLength(1);
   expect(await nextUnsorted()).toBeNull(); // done stays done
+  // A finished pass's marker has no date, so the week-long expiry on meta never takes it and starts the pass again.
+  expect(await (await meta()).find({ _id: /^backfill:/ }).project({ _id: 0, done: 1, at: 1 }).toArray()).toEqual([{ done: true }, { done: true }, { done: true }]);
 });
 
 test("then posts and players are read once more, and nothing else", async () => {
@@ -49,7 +51,7 @@ test("then Instagram and TikTok links once more, keeping the title a device gave
   await applyExtraction(a, short.id, { ...read, title: null, kind: "video", preview: "player", facts: {} });
   const post = (await pluckLink(a, { url: "https://x.com/someone/status/187", source: "web" })).item;
   await applyExtraction(a, post.id, { ...read, kind: "link", preview: "post", facts: {} });
-  for (const done of ["backfill:previews", "backfill:posts-2026-10"]) await (await meta()).updateOne({ _id: done }, { $set: { done: true } }, { upsert: true });
+  for (const done of ["backfill:previews", "backfill:posts-2026-10"]) await (await meta()).updateOne({ _id: done }, { $set: { done: true, at: new Date() } }, { upsert: true }); // dated, as they once were
   await (await meta()).deleteMany({ _id: "backfill:app-links-2026-10" });
 
   const seen: Unsorted[] = [];
@@ -58,4 +60,5 @@ test("then Instagram and TikTok links once more, keeping the title a device gave
   expect(seen.find((u) => u.itemId === bare.id)?.title).toBeNull(); // its title is its address
   expect(seen.map((u) => u.itemId)).toContain(short.id);
   expect(seen.map((u) => u.itemId)).not.toContain(post.id);
+  expect(await (await meta()).countDocuments({ _id: /^backfill:/, at: { $exists: true } })).toBe(0); // the dated markers are kept too
 });

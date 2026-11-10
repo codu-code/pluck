@@ -164,7 +164,10 @@ export async function sortBackfill(limit = 10): Promise<number> {
   for (const u of page) {
     try {
       const html = u.htmlKey ? (await getObject(u.htmlKey)).toString("utf8") : null;
-      await applyExtraction(u.userId, u.itemId, toResult(await extract({ url: u.url, html, title: u.title }, { signal: AbortSignal.timeout(10_000) })));
+      const x = await extract({ url: u.url, html, title: u.title }, { signal: AbortSignal.timeout(10_000) });
+      // A second read only ever adds: one with less text than is kept (a transcript the extension sent, a page that now reads empty) is dropped.
+      if (x.wordCount < u.wordCount) continue;
+      await applyExtraction(u.userId, u.itemId, toResult(x));
     } catch (e) {
       log("warn", "preview backfill skipped an item", { userId: u.userId, itemId: u.itemId, error: errorText(e) }); // it keeps its old look
     }

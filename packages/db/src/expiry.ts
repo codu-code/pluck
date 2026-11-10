@@ -85,9 +85,11 @@ export async function runDueExpiry(now = new Date()): Promise<{ users: number; a
   return { users: perUser.length, archived: perUser.reduce((n, p) => n + p.archived, 0), perUser };
 }
 
-// Once per key, across every instance (bin purge once a UTC day, and the like). Keys expire after a week.
-export async function claimOnce(key: string): Promise<boolean> {
+// Once per key, across every instance (bin purge once a UTC day, and the like). Keys expire after a week, unless the
+// claim is `forever`: meta's expiry skips a claim with no `at`, and a claim made before this one loses its `at` here.
+export async function claimOnce(key: string, { forever = false } = {}): Promise<boolean> {
   try {
+    if (forever) return (await (await meta()).updateOne({ _id: key }, { $unset: { at: "" } }, { upsert: true })).upsertedCount > 0;
     await (await meta()).insertOne({ _id: key, at: new Date() });
     return true;
   } catch (e) {
