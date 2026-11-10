@@ -29,6 +29,10 @@ export function getDb(): Db {
 }
 
 export async function ping(): Promise<boolean> {
-  const res = await getDb().command({ ping: 1 });
+  const c = getClient();
+  // Nothing to do once connected. Left to the command, a ping that races the failed warm-up above hears only
+  // "Topology is closed"; connect() throws the reason (refused, not found, bad password) for the health route to log.
+  await c.connect();
+  const res = await c.db().command({ ping: 1 });
   return res.ok === 1;
 }
