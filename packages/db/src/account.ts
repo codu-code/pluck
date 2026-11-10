@@ -97,21 +97,28 @@ export async function sweepTransfers(now: Date, remove: (blobKey: string) => Pro
   return oldImports.length + oldExports.length;
 }
 
-// Everything a person has, for the export zip. Items in the bin are left out.
-export async function exportData(userId: string) {
+// Everything a person has, for the export zip. Items in the bin are left out. `items` comes a page at a time, each
+// Item with its kept text, so a big library is never all in memory.
+export async function exportData(userId: string, pageSize = 500) {
   const uid = oid(userId);
-  const [itemDocs, contentDocs, tagDocs, listDocs, rowDocs, highlightDocs] = await Promise.all([
-    (await items()).find({ userId: uid, deletedAt: null }, { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } }).toArray(),
-    (await contents()).find({ userId: uid }).toArray(),
+  const [tagDocs, listDocs, rowDocs, highlightDocs] = await Promise.all([
     (await tags()).find({ userId: uid }).toArray(),
     (await lists()).find({ userId: uid }).toArray(),
     (await listRows()).find({ userId: uid }).sort({ position: 1 }).toArray(),
     (await highlights()).find({ userId: uid }).toArray(),
   ]);
-  const text = new Map(contentDocs.map((c) => [c.itemId.toHexString(), c.textMarkdown]));
   const tagName = new Map(tagDocs.map((t) => [t._id.toHexString(), t.name]));
+  async function* pages() {
+    const cursor = (await items()).find({ userId: uid, deletedAt: null }, { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } }).batchSize(pageSize);
+    while (await cursor.hasNext()) {
+      const docs = cursor.readBufferedDocuments(pageSize);
+      const contentDocs = await (await contents()).find({ userId: uid, itemId: { $in: docs.map((d) => d._id) } }).toArray();
+      const text = new Map(contentDocs.map((c) => [c.itemId.toHexString(), c.textMarkdown]));
+      yield docs.map((d) => ({ ...toItem(d), tags: d.tagIds.map((t) => tagName.get(t.toHexString())).filter(Boolean) as string[], text: text.get(d._id.toHexString()) ?? null }));
+    }
+  }
   return {
-    items: itemDocs.map((d) => ({ ...toItem(d), tags: d.tagIds.map((t) => tagName.get(t.toHexString())).filter(Boolean) as string[], text: text.get(d._id.toHexString()) ?? null })),
+    items: pages(),
     tags: tagDocs.map((t) => ({ id: t._id.toHexString(), name: t.name })),
     lists: listDocs.map((l) => ({
       id: l._id.toHexString(), name: l.name, slug: l.slug, purpose: l.purpose, visibility: l.visibility,

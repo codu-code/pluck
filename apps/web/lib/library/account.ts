@@ -5,7 +5,7 @@ import {
 } from "@pluck/db";
 import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
 import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
-import { strToU8, zipSync } from "fflate";
+import { Zip, ZipDeflate, strToU8 } from "fflate";
 import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
@@ -167,17 +167,40 @@ export async function exportState(userId: string): Promise<{ state: string; url:
 
 
 // The job: one zip with everything as JSON, a Markdown file per list and one for every item, emailed as a
-// signed link that works for 7 days.
+// signed link that works for 7 days. Items are read a page at a time and go into the zip as they come, so what is
+// held is one page and the compressed zip, never the whole library.
 export async function runExport(userId: string, exportId: string): Promise<void> {
   const me = await getMe(userId);
   if (!me) return;
-  const data = await exportData(userId);
-  const byId = new Map(data.items.map((i) => [i.id, i]));
-  const files: Record<string, Uint8Array> = {
-    "pluck.json": strToU8(JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle }, ...data }, null, 2)),
-    "README.txt": strToU8("Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n"),
+  const { items, ...rest } = await exportData(userId);
+  const chunks: Uint8Array[] = [];
+  const zip = new Zip((err, chunk) => {
+    if (err) throw err;
+    chunks.push(chunk);
+  });
+  const entry = (name: string) => {
+    const file = new ZipDeflate(name, { level: 6 });
+    zip.add(file);
+    return file;
   };
-  for (const l of data.lists) {
+  const add = (name: string, text: string) => entry(name).push(strToU8(text), true);
+  // pluck.json, a piece at a time, reads exactly as JSON.stringify({ exportedAt, account, items, ...rest }, null, 2).
+  const json = entry("pluck.json");
+  json.push(strToU8(`${JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle } }, null, 2).slice(0, -2)},\n  "items": [`));
+  add("README.txt", "Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n");
+  const listed = new Set(rest.lists.flatMap((l) => l.items.map((r) => r.itemId)));
+  const byId = new Map<string, { title: string; url: string | null }>(); // what the lists' files need, no more
+  let count = 0;
+  for await (const page of items) {
+    for (const it of page) {
+      json.push(strToU8(`${count++ ? "," : ""}\n    ${JSON.stringify(it, null, 2).replaceAll("\n", "\n    ")}`));
+      const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
+      add(`items/${it.id}.md`, `${head.join("\n")}\n\n${it.text ?? ""}\n`);
+      if (listed.has(it.id)) byId.set(it.id, { title: it.title, url: it.url });
+    }
+  }
+  json.push(strToU8(`${count ? "\n  ]" : "]"},${JSON.stringify(rest, null, 2).slice(1)}`), true);
+  for (const l of rest.lists) {
     const lines = [`# ${l.name}`, ...(l.purpose ? ["", l.purpose] : []), ""];
     l.items.forEach((r, i) => {
       const it = byId.get(r.itemId);
@@ -185,14 +208,12 @@ export async function runExport(userId: string, exportId: string): Promise<void>
       lines.push(`${i + 1}. ${r.ticked ? "[x] " : ""}${it.url ? `[${it.title}](${it.url})` : it.title}`);
       if (r.note) lines.push(`   ${r.note}`);
     });
-    files[`lists/${l.slug}.md`] = strToU8(`${lines.join("\n")}\n`); // slugs are unique per person; names need not be
+    add(`lists/${l.slug}.md`, `${lines.join("\n")}\n`); // slugs are unique per person; names need not be
   }
-  for (const it of data.items) {
-    const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
-    files[`items/${it.id}.md`] = strToU8(`${head.join("\n")}\n\n${it.text ?? ""}\n`);
-  }
+  zip.end();
   const key = `u/${userId}/exports/${new Date().toISOString().slice(0, 10)}-${exportId}.zip`;
-  await putObject(key, Buffer.from(zipSync(files, { level: 6 })), "application/zip");
+  // shortcut: the compressed zip is held in memory for one putObject, a multipart upload is the upgrade.
+  await putObject(key, Buffer.concat(chunks), "application/zip");
   await finishExport(exportId, key);
   const url = await signedUrl(key, 7 * 86_400);
   await sendEmail(exportEmail(me.email, url, me.settings.locale ?? "en"));

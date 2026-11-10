@@ -85,9 +85,11 @@ test("export gathers everything; delete removes one person entirely and leaves t
   await aliasOf(a);
   const { item: theirs } = await createTextItem(b, { kind: "note", text: "Theirs", source: "web" });
 
-  const data = await exportData(a);
-  expect(data.items).toHaveLength(2);
-  expect(data.items.find((i) => i.kind === "note")?.text).toBe("Note body");
+  const data = await exportData(a, 1); // a page of one: the two Items come as two pages, and none of B's
+  const pages = [];
+  for await (const page of data.items) pages.push(page);
+  expect(pages.map((p) => p.length)).toEqual([1, 1]);
+  expect(pages.flat().find((i) => i.kind === "note")?.text).toBe("Note body");
   expect(data.lists[0]!.items).toEqual([{ itemId: link.id, note: "first", ticked: false }]);
   expect(data.highlights).toHaveLength(1);
 
