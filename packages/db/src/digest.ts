@@ -56,20 +56,28 @@ export async function digestFor(userId: string, settings: UserSettings, now = ne
 
 export const isEmptyDigest = (d: Digest) => !d.expiring.length && !d.due.length && !d.oldest.length && !d.quietLists.length;
 
-// People whose digest day it is, at or after 06:00 their time, not yet sent today. Claimed atomically.
-export async function claimDueDigests(now = new Date()): Promise<{ userId: string; email: string; name: string; settings: UserSettings; localDate: string }[]> {
+type DueDigest = { userId: string; email: string; name: string; settings: UserSettings; localDate: string };
+
+// People whose digest day it is, at or after 06:00 their time, not yet sent today. Claimed atomically, one person at a
+// time: `each` (queueing their email) runs before the next person is claimed, so a failure or a killed tick part-way
+// leaves everyone after it unclaimed for the next tick.
+// shortcut: the one person claimed when `each` fails gets no email that week; claim and queue in one transaction if that shows up.
+export async function claimDueDigests(now = new Date(), each?: (u: DueDigest) => Promise<unknown>): Promise<DueDigest[]> {
   const col = await users();
   // Missing settings mean the defaults (expiry and the email on), and `$ne: null` would skip a missing field.
   // shortcut: reads every person each minute; fine to tens of thousands, then keep a next-due time per person.
   const candidates = await col.find({ "settings.digestDay": { $not: { $type: "null" } } }, { projection: { email: 1, name: 1, settings: 1, digestSentOn: 1 } }).toArray();
-  const due = [];
+  const due: DueDigest[] = [];
   for (const u of candidates) {
     const settings = { ...DEFAULT_SETTINGS, ...u.settings };
     if (settings.digestDay === null) continue;
     const local = localNow(now, settings.timezone);
     if (local.weekday !== settings.digestDay || local.hour < 6 || u.digestSentOn === local.date) continue;
     const claimed = await col.updateOne({ _id: u._id, digestSentOn: { $ne: local.date } }, { $set: { digestSentOn: local.date } });
-    if (claimed.modifiedCount) due.push({ userId: u._id.toHexString(), email: u.email, name: u.name ?? "", settings, localDate: local.date });
+    if (!claimed.modifiedCount) continue;
+    const one = { userId: u._id.toHexString(), email: u.email, name: u.name ?? "", settings, localDate: local.date };
+    await each?.(one);
+    due.push(one);
   }
   return due;
 }
