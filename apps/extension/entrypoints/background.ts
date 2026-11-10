@@ -1,5 +1,5 @@
 import { finishSignIn } from "@/lib/auth";
-import { drain, pluckTab, pluckUrl, refreshBadge, resume, type PluckOutcome } from "@/lib/pluck";
+import { drain, pluckForPopup, pluckTab, pluckUrl, refreshBadge, resume, type PluckOutcome } from "@/lib/pluck";
 import { settings } from "@/lib/store";
 import { t } from "@/lib/t";
 
@@ -21,6 +21,7 @@ export default defineBackground(() => {
   });
 
   browser.contextMenus.onClicked.addListener((info, tab) => void onMenu(info, tab));
+  browser.runtime.onMessage.addListener(pluckForPopup);
   browser.commands.onCommand.addListener(async (command) => {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     if (command === "highlight" && tab) await pluckTab(tab, { asHighlight: true });

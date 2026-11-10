@@ -19,7 +19,7 @@ export function createLibrary(call: Client) {
     restore: async (items: Pick<Item, "id" | "status">[]) => {
       const by = new Map<Status, string[]>();
       for (const it of items) by.set(it.status, [...(by.get(it.status) ?? []), it.id]);
-      await Promise.all([...by].map(([status, ids]) => move(ids, status)));
+      for (const [status, ids] of by) await move(ids, status); // in turn, as in setInList: each recounts the Lists its Items are in
     },
     edit: async (id: string, patch: UpdateItemBody) => (await call<{ item: Item }>(`/api/v1/items/${id}`, { method: "PATCH", json: patch })).item,
     remove: (id: string) => call(`/api/v1/items/${id}`, { method: "DELETE" }), // to the bin
@@ -49,9 +49,13 @@ export function createLibrary(call: Client) {
     // In or out of a List, for one Item or many. Out of one it is not in counts as done.
     setInList: async (ids: string[], listId: string, on: boolean) => {
       if (on) return void (await call(`/api/v1/lists/${listId}/items`, { json: { itemIds: ids } }));
-      await Promise.all(ids.map((id) => call(`/api/v1/lists/${listId}/items/${id}`, { method: "DELETE" }).catch((e: unknown) => {
-        if (!(e instanceof Refused && e.status === 404)) throw e;
-      })));
+      // One after another: the server recounts the List after each (a read, then a write), and two at once can leave
+      // the count from before the other landed.
+      // shortcut: one request a row, so taking many out takes that many round trips; a batch DELETE route when that is slow.
+      for (const id of ids)
+        await call(`/api/v1/lists/${listId}/items/${id}`, { method: "DELETE" }).catch((e: unknown) => {
+          if (!(e instanceof Refused && e.status === 404)) throw e;
+        });
     },
     // Marks one row or many. A Todo or Thing is Done when marked (the server keeps the two in step).
     mark,
