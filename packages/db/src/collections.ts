@@ -197,7 +197,8 @@ const RETIRED_ITEM_INDEXES = [
   "userId_1_status_1_statusChangedAt_-1",
 ];
 
-// Indexes are created once per process, before the first query.
+// Indexes are created once per process, before the first query. A try that fails (a blip as the process starts) is
+// forgotten, so the next query tries again: a kept rejection would fail every query until the process restarts.
 export function db(): Promise<Db> {
   return (ready ??= (async () => {
     const d = getDb();
@@ -261,7 +262,10 @@ export function db(): Promise<Db> {
       d.collection("tries").createIndexes([{ key: { expireAt: 1 }, expireAfterSeconds: 0 }]),
     ]);
     return d;
-  })());
+  })().catch((e: unknown) => {
+    ready = undefined;
+    throw e;
+  }));
 }
 
 // Never read back the search copies on list and item queries.
