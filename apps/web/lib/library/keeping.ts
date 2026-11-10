@@ -123,12 +123,18 @@ export async function keepQueued(userId: string, itemId: string): Promise<void> 
   await keepNow(userId, item, { timeoutMs: QUEUED_TIMEOUT_MS });
 }
 
+// The job itself failed for the last time (killed five times mid-read, or the database was down each time), which no
+// try above ever recorded: the Item stops waiting, and reads as one that could not be kept, with its Retry.
+export async function keepGaveUp(userId: string, itemId: string, error: string): Promise<void> {
+  if ((await getItem(userId, itemId))?.extraction.state === "pending") await recordExtractionFailure(userId, itemId, error, true);
+}
+
 // Many pages are read by the job queue, so a function cut off at 60 s leaves none of them behind;
 // `defer` starts on them as soon as the response is out, and the cron tick carries on with the rest.
 export async function keepLater(userId: string, items: Item[], { defer }: { defer?: Defer } = {}): Promise<void> {
   for (const item of items) await enqueue("extract", { userId, itemId: item.id });
   if (!items.length) return;
-  const work = async () => void (await runQueue({ extract: (p) => keepQueued(String(p.userId), String(p.itemId)) }, { queue: "extract", budgetMs: 40_000 }));
+  const work = async () => void (await runQueue({ extract: (p) => keepQueued(String(p.userId), String(p.itemId)) }, { queue: "extract", budgetMs: 40_000, gaveUp: { extract: (p, error) => keepGaveUp(String(p.userId), String(p.itemId), error) } }));
   if (defer) defer(work);
   else await work();
 }
