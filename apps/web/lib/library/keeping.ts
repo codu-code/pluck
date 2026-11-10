@@ -152,7 +152,7 @@ export async function keepFile(userId: string, itemId: string, key: string, cont
   if (!item || item.extraction.state !== "pending") return;
   const started = Date.now();
   try {
-    const x = await extractFile({ body: await getObject(key, { maxBytes: MAX_FILE_BYTES }), contentType, fileName: name });
+    const x = await extractFile({ body: await getObject(key, { maxBytes: MAX_FILE_BYTES }), contentType, fileName: name }, { signal: AbortSignal.timeout(QUEUED_TIMEOUT_MS) });
     if (x.kind === "image") await setBlobKeys(userId, itemId, { coverKey: key });
     await applyExtraction(userId, itemId, toResult({ ...x, canonicalUrl: null }));
   } catch (e) {
