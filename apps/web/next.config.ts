@@ -36,6 +36,7 @@ const config: NextConfig = {
   async rewrites() {
     return [
       { source: "/@:handle/:slug", destination: "/p/:handle/:slug" },
+      { source: "/@:handle/:slug/feed.xml", destination: "/p/:handle/:slug/feed.xml" }, // the same List as an Atom feed
       // PostHog, first-party (lib/analytics.ts): blockers that drop third-party analytics would also drop error reports.
       { source: "/ingest/static/:path*", destination: `${posthog.replace(/^https:\/\/(\w+)\.i\./, "https://$1-assets.i.")}/static/:path*` },
       { source: "/ingest/:path*", destination: `${posthog}/:path*` },

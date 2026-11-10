@@ -22,7 +22,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 | Path | What it is |
 |---|---|
-| `apps/web/app` | Routes. `(site)` is the marketing site, `(app)` the signed-in app, `api/v1` the REST API, `mcp` the connector, `p/[handle]/[slug]` public Lists (served at `/@handle/slug`). |
+| `apps/web/app` | Routes. `(site)` is the marketing site, `(app)` the signed-in app, `api/v1` the REST API, `mcp` the connector, `p/[handle]/[slug]` public Lists (served at `/@handle/slug`, and as an Atom feed of the same page at `/@handle/slug/feed.xml`). |
 | `apps/web/lib/api.ts` | `route()` and `publicRoute()`: auth, scope, rate limits, body parsing and the error shape for every REST route. Most route files are a few lines. |
 | `apps/web/lib/library/*` | The library: the product rules over `packages/db` (URL normalisation, the hourly pluck budget, the Kind and text rules, unknown tags refused with the nearest ones, kicking extraction). REST routes and the connector both call it. |
 | `apps/web/lib/connector.ts` | Binds `PluckLibrary` (the interface in `packages/mcp/src/library.ts`) to the library for one person, with every write marked as made by AI. |
@@ -46,6 +46,8 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 ## How a pluck travels
 
 **From the web, the extension or the iPhone app.** `POST /api/v1/items` goes through `route()` (`lib/api.ts`), then `pluckAny` (`lib/library/items.ts`), then `pluckLink` in `packages/db`, which upserts on the person and the URL's hash. A Re-pluck finds the existing Item, moves it to the Inbox, takes it out of the bin and touches it; it never makes a second Item. The page is then read inline with a 5-second cap (`keepNow` in `lib/library/keeping.ts`); covers and the kept HTML go to blob storage after the response. A block of many links makes the rows at once and queues an `extract` job for each (`keepLater`). A page gets four tries, counted on the Item: now, then 30 s, 2 min and 10 min after each failure; a 4xx is final at once.
+
+**From Android's Share.** The manifest's `share_target` posts what was shared to `/share` (`app/(app)/share/route.ts`), which plucks it through `pluckAny`. Only the installed app's share sheet can do that signed in: the session cookie is SameSite=Lax, and a request the browser says came from another site is turned away. A link to `/share` (a GET) never plucks; it, and the way back from sign-in, land on `/share/add`, the box holding what was shared.
 
 **From your AI.** `app/mcp/route.ts` checks the OAuth token or API key, that the tool is still connected and the rate limits, then serves `createPluckServer` (`packages/mcp/src/server.ts`), which lists only the tools the token's scopes allow. Tools call `connectorFor(userId)`, which reaches the same library, with `by: "mcp"` so Tags, notes, Lists and saves show "by AI".
 

@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { currentUser } from "@/lib/auth";
 import { ItemRow, RowLead, RowNote } from "@/components/ItemRow";
 import { publicPage } from "@/lib/library";
+import { listAddress } from "./address";
 import { ReportLink } from "./ReportLink";
 import styles from "./public.module.css";
 
@@ -25,6 +26,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description: page.list.purpose || t("description", { count: page.list.itemCount, by }),
     robots: page.list.noindex ? { index: false, follow: false } : undefined,
     openGraph: { title: page.list.name, description: page.list.purpose, type: "article" },
+    // The same List as an Atom feed (feed.xml/route.ts), for a feed reader pointed at this page.
+    alternates: { types: { "application/atom+xml": [{ url: `${listAddress(page.author.handle, slug)}/feed.xml`, title: page.list.name }] } },
   };
 }
 
