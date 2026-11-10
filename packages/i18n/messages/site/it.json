@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "Cosa conserviamo",
-        "body": "La tua email e il tuo nome. Ogni elemento che prendi: il link, il testo e le immagini della pagina che abbiamo scaricato, il tuo titolo, la nota, i tag, il tipo, lo stato, le liste, le evidenziazioni e il punto di lettura. Il momento in cui l'hai preso e quello in cui l'hai aperto l'ultima volta, che servono alla regola di scadenza e all'email del lunedì. Gli elementi che importi da Pocket, Omnivore, Raindrop o da un file di segnalibri."
+        "body": "La tua email e il tuo nome. Ogni elemento che prendi: il link, il testo e le immagini della pagina che abbiamo scaricato, il tuo titolo, la nota, i tag, il tipo, lo stato, le liste, le evidenziazioni e il punto di lettura. Il momento in cui l'hai preso e quello in cui l'hai aperto l'ultima volta, che servono alla regola di scadenza e all'email del lunedì. Gli elementi che importi da Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep o da un file di segnalibri."
       },
       "dont": {
         "title": "Cosa non facciamo",

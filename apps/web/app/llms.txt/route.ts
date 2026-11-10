@@ -22,7 +22,7 @@ Key facts:
 - Kinds of item: Read, Watch, PDF, Image, Note, Todo, Thing. Status: Inbox, Later, Archived, Done.
 - Items you never touch move to the Archive after 30 days (you pick the number, or turn it off). Nothing is deleted.
 - Lists: ordered, with a note and a tick per item. Private by default, public at /@handle/slug with one switch.
-- Imports from Pocket (CSV), Omnivore (export zip), Raindrop (CSV) and any browser's bookmarks HTML. Export everything as JSON and Markdown.
+- Imports from Pocket (CSV), Omnivore (export zip), Raindrop (CSV), Instapaper (CSV), Readwise Reader (CSV), Wallabag (JSON), Linkwarden (JSON), Karakeep (JSON) and any browser's bookmarks HTML. Export everything as JSON and Markdown.
 - Made by Codú Limited, Ireland.
 - The site and the blog are in ${LOCALES.map((l) => `${LOCALE_NAMES[l]} (${base}${localePath(l, "/")})`).join(", ")}.
 

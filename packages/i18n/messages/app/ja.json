@@ -1015,7 +1015,7 @@
         "html": "ブラウザのブックマーク（HTML）"
       },
       "drop": "ファイルをドロップするか、選んでください",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · ブックマークHTML",
+      "formats": "CSV · JSON · zip · ブックマークHTML",
       "file": "インポートするファイル",
       "job": "{source}のインポート",
       "progress": "{done, number}件完了",

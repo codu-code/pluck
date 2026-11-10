@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "Wat we bewaren",
-        "body": "Je e-mailadres en naam. Elk item dat je plukt: de link, de paginatekst en afbeeldingen die we ophaalden, je titel, notitie, tags, soort, status, lijsten, markeringen en leespositie. Het tijdstip waarop je het plukte en waarop je het voor het laatst opende, die de verloopregel en de maandagmail gebruiken. Items die je importeert uit Pocket, Omnivore, Raindrop of een bladwijzerbestand."
+        "body": "Je e-mailadres en naam. Elk item dat je plukt: de link, de paginatekst en afbeeldingen die we ophaalden, je titel, notitie, tags, soort, status, lijsten, markeringen en leespositie. Het tijdstip waarop je het plukte en waarop je het voor het laatst opende, die de verloopregel en de maandagmail gebruiken. Items die je importeert uit Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep of een bladwijzerbestand."
       },
       "dont": {
         "title": "Wat we niet doen",

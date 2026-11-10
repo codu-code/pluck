@@ -1015,7 +1015,7 @@
         "html": "Marcadores del navegador (HTML)"
       },
       "drop": "Suelta un archivo, o elige uno",
-      "formats": "CSV de Pocket · zip de Omnivore · CSV de Raindrop · HTML de marcadores",
+      "formats": "CSV · JSON · zip · HTML de marcadores",
       "file": "Archivo para importar",
       "job": "Importación de {source}",
       "progress": "{done, plural, one {# importado} other {# importados}}",

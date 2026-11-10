@@ -1015,7 +1015,7 @@
         "html": "Bladwijzers uit je browser (HTML)"
       },
       "drop": "Sleep een bestand hierheen, of kies er een",
-      "formats": "Pocket-CSV · Omnivore-zip · Raindrop-CSV · bladwijzers-HTML",
+      "formats": "CSV · JSON · zip · bladwijzers-HTML",
       "file": "Importbestand",
       "job": "Import uit {source}",
       "progress": "{done, number} klaar",

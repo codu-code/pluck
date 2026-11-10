@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "Ce que nous conservons",
-        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son type, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop ou un fichier de favoris."
+        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son type, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep ou un fichier de favoris."
       },
       "dont": {
         "title": "Ce que nous ne faisons pas",

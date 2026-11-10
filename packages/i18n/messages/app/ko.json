@@ -1015,7 +1015,7 @@
         "html": "브라우저 북마크 (HTML)"
       },
       "drop": "파일을 끌어다 놓거나 선택하세요",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · 북마크 HTML",
+      "formats": "CSV · JSON · zip · 북마크 HTML",
       "file": "가져올 파일",
       "job": "{source} 가져오기",
       "progress": "{done, number}개 완료",

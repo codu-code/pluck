@@ -1015,7 +1015,7 @@
         "html": "Browser-Lesezeichen (HTML)"
       },
       "drop": "Datei hier ablegen oder auswählen",
-      "formats": "Pocket-CSV · Omnivore-ZIP · Raindrop-CSV · Lesezeichen-HTML",
+      "formats": "CSV · JSON · ZIP · Lesezeichen-HTML",
       "file": "Importdatei",
       "job": "Import aus {source}",
       "progress": "{done, number} fertig",

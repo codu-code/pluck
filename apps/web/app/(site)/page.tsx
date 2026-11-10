@@ -41,7 +41,7 @@ const structured = (description: string) => ({
         "Keeps the page text, not just the link",
         "Lists with a note and a tick per item, private or public",
         "MCP connector for Claude, ChatGPT, Cursor and any AI tool that speaks MCP",
-        "Imports from Pocket, Omnivore, Raindrop and browser bookmark files",
+        "Imports from Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep and browser bookmark files",
         "Export everything as JSON and Markdown",
         "Self-host with Docker",
       ],

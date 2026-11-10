@@ -1015,7 +1015,7 @@
         "html": "Browser bookmarks (HTML)"
       },
       "drop": "Drop a file, or choose one",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · bookmarks HTML",
+      "formats": "CSV · JSON · zip · bookmarks HTML",
       "file": "Import file",
       "job": "{source} import",
       "progress": "{done, number} done",

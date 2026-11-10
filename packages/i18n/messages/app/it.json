@@ -1015,7 +1015,7 @@
         "html": "Segnalibri del browser (HTML)"
       },
       "drop": "Trascina qui un file, o sceglilo",
-      "formats": "CSV di Pocket · zip di Omnivore · CSV di Raindrop · HTML dei segnalibri",
+      "formats": "CSV · JSON · zip · HTML dei segnalibri",
       "file": "File da importare",
       "job": "Importazione da {source}",
       "progress": "{done, number} completati",

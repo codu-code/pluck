@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "What we store",
-        "body": "Your email and name. Every item you pluck: the link, the page text and images we fetched, your title, note, tags, kind, status, lists, highlights and reading position. The time you plucked it and the time you last opened it, which the expiry rule and the Monday email use. Items you import from Pocket, Omnivore, Raindrop or a bookmarks file."
+        "body": "Your email and name. Every item you pluck: the link, the page text and images we fetched, your title, note, tags, kind, status, lists, highlights and reading position. The time you plucked it and the time you last opened it, which the expiry rule and the Monday email use. Items you import from Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep or a bookmarks file."
       },
       "dont": {
         "title": "What we don't do",

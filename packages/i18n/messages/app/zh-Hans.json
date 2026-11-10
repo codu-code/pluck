@@ -1015,7 +1015,7 @@
         "html": "浏览器书签（HTML）"
       },
       "drop": "拖入文件，或选择一个文件",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · 书签 HTML",
+      "formats": "CSV · JSON · zip · 书签 HTML",
       "file": "导入文件",
       "job": "{source} 导入",
       "progress": "已完成 {done, number} 条",

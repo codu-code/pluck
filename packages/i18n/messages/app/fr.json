@@ -1015,7 +1015,7 @@
         "html": "Favoris du navigateur (HTML)"
       },
       "drop": "Déposez un fichier, ou choisissez-en un",
-      "formats": "CSV Pocket · zip Omnivore · CSV Raindrop · favoris HTML",
+      "formats": "CSV · JSON · zip · favoris HTML",
       "file": "Fichier à importer",
       "job": "Import {source}",
       "progress": "{done, number} traités",
