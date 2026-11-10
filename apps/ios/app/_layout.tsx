@@ -42,7 +42,11 @@ export default function Root() {
       if (demoKey && !(await getSession())?.apiKey) await signInWithKey(defaultServer, demoKey);
       // …and answer the usage question no, so screenshots never show it.
       if (demoKey && (await loadConsent()) === null) await setConsent("no");
-      setSignedIn(await isSignedIn());
+      const signedInNow = await isSignedIn(); // the session, read from the Keychain
+      // Signed out, yet a copy may still be on disk: a token refused before the app cleaned up after that, or a
+      // sign-out cut short. It goes before the first screen, so the next person never opens on the last one's Inbox.
+      if (!signedInNow) await Promise.all([persister.removeClient(), clearKept()]).catch(() => {});
+      setSignedIn(signedInNow);
       // Demo builds take a screen to open as a launch argument (simctl launch … -demoRoute /lists/…), for screenshots.
       const route = demoKey ? (Settings.get("demoRoute") as string | undefined) : undefined;
       if (route) setTimeout(() => router.push(route as never), 300);
@@ -52,10 +56,15 @@ export default function Root() {
       // …and no connection (-demoOffline 1), for the Offline pill: the Simulator shares the Mac's network.
       if (demoKey && Settings.get("demoOffline")) onlineManager.setOnline(false);
     })();
+    // Fires when the session is written, never on a cold start (which only reads it). Signed out by hand, or by the
+    // server refusing the token (which leaves a session with a server and no tokens): either way nothing of this
+    // person's library stays on the phone for the next one to see, in memory or on disk.
     const off = onSession((s) => {
-      setSignedIn(Boolean(s?.access || s?.apiKey));
-      if (!s) {
+      const usable = Boolean(s?.access || s?.apiKey);
+      setSignedIn(usable);
+      if (!usable) {
         queryClient.clear();
+        void persister.removeClient();
         void clearKept();
         forgetUser();
       }
