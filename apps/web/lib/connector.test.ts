@@ -3,7 +3,7 @@ import { createPluckServer } from "@pluck/mcp-server";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { connectorFor } from "./connector";
-import { addTag, newList, pluckAny, readItem, readList, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
+import { addHighlight, addTag, deleteItem, newList, pluckAny, readItem, readList, removeHighlight, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
 
 const FIX = "http://127.0.0.1:4180";
 const ALL = ["library:read", "library:write"];
@@ -29,7 +29,7 @@ test("every tool is offered by scope; delete only with library:delete", async ()
   const { a } = await twoUsers();
   const names = async (scopes: string[]) => (await (await connect(a, scopes)).client.listTools()).tools.map((t) => t.name).sort();
   expect(await names(ALL)).toEqual(
-    ["batch_update", "create_list", "create_tag", "get_digest", "get_item", "get_list", "list_items", "list_lists", "list_tags", "save_item", "search_items", "update_list"],
+    ["batch_update", "create_list", "create_tag", "get_digest", "get_item", "get_list", "list_highlights", "list_items", "list_lists", "list_tags", "save_item", "search_items", "update_list"],
   );
   expect(await names(["library:read"])).not.toContain("save_item");
   expect(await names([...ALL, "library:delete"])).toContain("delete_item");
@@ -111,6 +111,64 @@ test("search, browse and read: cards, full text paged, highlights and lists, and
 
   const theirs = (await pluckAny(b, { text: "private", kind: "note" })).results[0]!.item.id;
   expect((await call("get_item", { id: theirs })).error.code).toBe("not_found");
+});
+
+test("list_highlights: what the person marked across the library with the Item to cite, by words, paged; never another person's or the bin's", async () => {
+  const { a, b } = await twoUsers();
+  const { call } = await connect(a);
+  const link = async (userId: string, page: string) => (await pluckAny(userId, { url: `${FIX}/${page}.html` })).results[0]!.item;
+  const mark = (userId: string, itemId: string, quote: string, note?: string) =>
+    addHighlight(userId, { itemId, quote, note, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  const one = await link(a, "news-1");
+  const two = await link(a, "news-2");
+  const binned = await link(a, "blog-1");
+  await mark(a, one.id, "a quokka never frowns", "for the essay");
+  const second = await mark(a, two.id, "short lists get finished");
+  await mark(a, binned.id, "a quokka in the bin");
+  await deleteItem(a, binned.id);
+  await mark(b, (await link(b, "news-1")).id, "a quokka, but theirs");
+
+  const all = await call("list_highlights");
+  expect(all).toEqual({
+    highlights: [
+      { quote: "short lists get finished", note: null, highlightedAt: second.createdAt, item: { id: two.id, title: two.title, url: two.url, siteName: two.siteName } },
+      { quote: "a quokka never frowns", note: "for the essay", highlightedAt: expect.any(String), item: { id: one.id, title: one.title, url: one.url, siteName: one.siteName } },
+    ],
+    nextCursor: null,
+  });
+  expect((await call("list_highlights", { query: "QUOKKA" })).highlights.map((h: { quote: string }) => h.quote)).toEqual(["a quokka never frowns"]);
+  expect((await call("list_highlights", { query: "essay" })).highlights).toHaveLength(1); // the person's note counts
+  expect((await call("list_highlights", { itemId: two.id })).highlights).toHaveLength(1);
+  expect((await call("list_highlights", { since: second.createdAt })).highlights).toHaveLength(1);
+
+  const first = await call("list_highlights", { limit: 1 });
+  expect(first.highlights).toHaveLength(1);
+  const rest = await call("list_highlights", { limit: 1, cursor: first.nextCursor });
+  expect(rest.highlights[0].quote).toBe("a quokka never frowns");
+  expect(rest.nextCursor).toBeNull();
+  expect((await call("list_highlights", { cursor: "made-up" })).error.code).toBe("bad_request");
+
+  // Long quotes: a page stops at the response cap, and its cursor carries on from the row it stopped at.
+  for (let i = 0; i < 8; i++) await mark(a, one.id, `long ${i} ${"word ".repeat(990)}`);
+  const capped = await call("list_highlights");
+  expect(JSON.stringify(capped).length).toBeLessThan(33_000);
+  expect(capped.highlights.length).toBeLessThan(8);
+  const after = await call("list_highlights", { cursor: capped.nextCursor });
+  expect([...capped.highlights, ...after.highlights].map((h: { quote: string }) => h.quote.slice(0, 6))).toEqual(["long 7", "long 6", "long 5", "long 4", "long 3", "long 2", "long 1", "long 0", "short ", "a quok"]);
+  expect(after.nextCursor).toBeNull();
+});
+
+test("search_items finds an Item by what was highlighted in it, until the highlight is removed", async () => {
+  const { a, b } = await twoUsers();
+  const { call } = await connect(a);
+  const id = (await pluckAny(a, { url: `${FIX}/news-1.html` })).results[0]!.item.id;
+  await pluckAny(b, { url: `${FIX}/news-1.html` });
+  const quote = "an axolotl of a sentence";
+  const h = await addHighlight(a, { itemId: id, quote, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  expect((await call("search_items", { query: "axolotl" })).items.map((c: { id: string }) => c.id)).toEqual([id]);
+  expect((await (await connect(b)).call("search_items", { query: "axolotl" })).items).toEqual([]);
+  await removeHighlight(a, h.id);
+  expect((await call("search_items", { query: "axolotl" })).items).toEqual([]);
 });
 
 test("get_item pages long text with an opaque cursor", async () => {
@@ -215,6 +273,7 @@ test("get_digest, delete_item to the bin, the two resources and the four prompts
   for (const name of prompts) {
     const p = await client.getPrompt({ name, arguments: name === "content_ideas" ? { topic: "small teams" } : {} });
     expect((p.messages[0]!.content as { text: string }).text.length).toBeGreaterThan(100);
+    if (name === "content_ideas") expect((p.messages[0]!.content as { text: string }).text).toContain("list_highlights");
   }
 
   expect(await call("delete_item", { id: item.id })).toEqual({ binned: item.id });

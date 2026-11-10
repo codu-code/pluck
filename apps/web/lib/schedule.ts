@@ -1,4 +1,4 @@
-import { claimOnce, narrowAiGrants, runDueExpiry } from "@pluck/db";
+import { claimOnce, foldAllHighlights, narrowAiGrants, runDueExpiry } from "@pluck/db";
 import { FIRST_PARTY_REDIRECTS } from "./auth";
 import { announceNewPosts } from "./indexnow";
 import { pollInbound, purgeBinNow, queueDueDigests, sortBackfill, sweepTransfersNow } from "./library";
@@ -8,6 +8,7 @@ import { log } from "./log";
 // database, so however many instances call this, it happens once.
 export async function runScheduled(now = new Date()): Promise<{ purged: number; expired: number; digests: number; inbound: number; sorted: number }> {
   if (await claimOnce("narrow-ai-grants-2026-10", { forever: true })) log("info", "old AI tool grants narrowed", { grants: await narrowAiGrants(FIRST_PARTY_REDIRECTS) });
+  if (await claimOnce("fold-highlights-2026-11", { forever: true })) log("info", "highlights folded into search", { items: await foldAllHighlights() });
   let purged = 0;
   if (await claimOnce(`purge-bin:${now.toISOString().slice(0, 10)}`)) {
     purged = await purgeBinNow();

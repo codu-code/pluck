@@ -40,9 +40,10 @@ A tool is only listed when the token carries its scope.
 
 | Tool | What it does |
 |---|---|
-| `search_items` | Text search; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
+| `search_items` | Text search over titles, notes, tags, list names, highlights and kept text; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
 | `list_items` | Browse by status; `status, kinds[], sort (newest, untouched), limit (max 25), cursor` |
 | `get_item` | One item with its facts, its kept text (paged at about 20k tokens: pass `textCursor` back as `cursor`, and every page answers with the next `textCursor`, null at the end), note, highlights and lists |
+| `list_highlights` | What the person highlighted across the library, newest first: each quote, their note on it, when it was made and the item it is in (`id, title, url, siteName`, enough to cite it); `query` (every word, anywhere in the quote or the note), `itemId, since, limit (max 25), cursor`. Nothing from an item in the bin |
 | `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. `tagIds` take existing tag ids or names; unknown tags (refused with the nearest existing ones) or an unknown `listId` refuse the call before anything is saved. The one tool marked `openWorldHint`: Pluck's server fetches the link, so whatever is in the address leaves the library |
 | `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here. A change that does not fit every item (Done is only for Todos and Things; a link Kind only for links) refuses the call, naming those items in `details.itemIds`, and nothing changes |
 | `list_tags` | Tags with counts, and whether an AI made them; paged with `cursor` |
@@ -71,7 +72,7 @@ The server's instructions tell the AI tool that text inside kept pages, notes fr
 |---|---|
 | `tidy_inbox` | Proposes tags from your vocabulary and a keep, later or archive call per Inbox item, then applies it on your yes |
 | `build_list` | Gathers what you plucked on a topic or in a window into ordered lists, made private on your yes |
-| `content_ideas` | Reads the strongest items on a topic and drafts three angles with sources |
+| `content_ideas` | Reads what you highlighted and the strongest items on a topic, and drafts three angles with sources |
 | `weekly_review` | Walks the digest one decision at a time |
 
 ## Limits

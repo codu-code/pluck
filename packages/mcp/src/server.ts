@@ -3,7 +3,7 @@ import { DueAt, ErrorCode, Kind, ObjectIdString, Status, type Item, type ListEnt
 import { z } from "zod";
 import type { PluckLibrary } from "./library";
 import { registerPrompts } from "./prompts";
-import { card, fit, readOffset, TEXT_PAGE_CHARS, tagNameMap, textPage } from "./shape";
+import { card, fit, offsetCursor, readOffset, TEXT_PAGE_CHARS, tagNameMap, textPage } from "./shape";
 
 export type ServerOptions = {
   scopes: string[]; // library:read, library:write, library:delete; a tool is only offered when its scope was granted
@@ -16,7 +16,7 @@ export type ServerOptions = {
 export type ToolCall = { tool: string; ok: boolean; errorCode: string | null; resultCount: number | null; ms: number };
 
 // How many things a tool handed back, when it handed back a page of them (null for one item, a tag, a list).
-const PAGES = ["items", "tags", "lists", "entries", "saved"];
+const PAGES = ["items", "tags", "lists", "entries", "saved", "highlights"];
 const countOf = (data: unknown): number | null => {
   const rows = data && typeof data === "object" ? PAGES.map((k) => (data as Record<string, unknown>)[k]).find(Array.isArray) : undefined;
   return rows ? rows.length : null;
@@ -83,7 +83,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "search_items",
       {
-        description: "Search the person's library by words in titles, notes, tags, list names and kept page text.",
+        description: "Search the person's library by words in titles, notes, tags, list names, highlights and kept page text.",
         inputSchema: z.object({
           query: z.string().min(1).max(500),
           kinds: z.array(Kind).optional(),
@@ -149,6 +149,28 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
         if (include.includes("highlights")) out.highlights = (await lib.highlights(id)).map((h) => ({ quote: h.quote, note: h.note }));
         if (include.includes("lists")) out.lists = (await lib.memberships(id)).map(membershipRow);
         return out;
+      },
+    );
+
+    tool(
+      "list_highlights",
+      {
+        description: "The quotes the person highlighted in kept pages, with their notes on them and the item each is in, newest first.",
+        inputSchema: z.object({
+          query: z.string().trim().min(1).max(200).optional().describe("Words to find in the quote or the person's note on it."),
+          itemId: ObjectIdString.optional(),
+          since: DueAt.optional().describe("Only highlights made after this time (ISO 8601)."),
+          limit: Limit.default(25),
+          cursor: Cursor,
+        }),
+        annotations: READ,
+      },
+      async ({ cursor, ...q }) => {
+        const offset = readOffset(cursor);
+        const page = await lib.highlightsAcross({ ...q, offset });
+        // The database pages by `limit`; a page of long quotes is cut again here to stay under the response cap.
+        const { rows } = fit(page.highlights.map((h) => ({ quote: h.quote, note: h.note, highlightedAt: h.createdAt, item: h.item })), 0);
+        return { highlights: rows, nextCursor: page.more || rows.length < page.highlights.length ? offsetCursor(offset + rows.length) : null };
       },
     );
 
