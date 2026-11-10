@@ -217,8 +217,9 @@ async function uploadShared(file: { name: string; contentType: string; path: str
   if (!container) return;
   const local = new File(container, file.path);
   if (!local.exists) return;
-  const { uploadUrl } = await api<{ uploadUrl: string }>("/api/v1/items/files", { json: { name: file.name, contentType: file.contentType, size: local.size ?? 1, source: "ios" } });
-  const res = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.contentType }, body: await local.bytes() }).catch(() => null);
+  const bytes = await local.bytes(); // read first: the upload URL takes exactly the size and type declared here
+  const { uploadUrl } = await api<{ uploadUrl: string }>("/api/v1/items/files", { json: { name: file.name, contentType: file.contentType, size: bytes.length, source: "ios" } });
+  const res = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.contentType }, body: bytes }).catch(() => null);
   if (!res?.ok) throw new Unreachable("upload failed"); // a dropped connection too: keep the share and try again
   local.delete();
 }

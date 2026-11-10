@@ -208,8 +208,8 @@ test("import: upload through the signed URL, the job runs in batches, items land
   const { makeJobsVisible } = await import("@pluck/db/testing");
   const lib = await import("./index");
   const { a } = await twoUsers();
-  const begin = await lib.beginImport(a, "pocket");
   const csv = readFileSync(join(import.meta.dirname, "../../../../packages/extract/fixtures/imports/pocket.csv"));
+  const begin = await lib.beginImport(a, "pocket", csv.length);
   expect((await fetch(begin.uploadUrl, { method: "PUT", headers: { "content-type": begin.contentType }, body: csv })).ok).toBe(true);
   await lib.startImport(a, begin.import.id);
   for (let i = 0; i < 3; i++) {

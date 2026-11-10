@@ -46,8 +46,11 @@ export async function getObject(key: string, { maxBytes = Infinity } = {}): Prom
 }
 
 // A short-lived URL a browser can PUT a file to directly (imports can be bigger than a request body allows).
-export function signedPutUrl(key: string, contentType: string, expiresIn = 900): Promise<string> {
-  return getSignedUrl(s3Public(), new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }), { expiresIn });
+// The type and the exact size are signed: the store refuses a PUT whose Content-Type or Content-Length differs.
+// (The presigner leaves content-type unsigned unless it is named here.)
+export function signedPutUrl(key: string, contentType: string, size: number, expiresIn = 900): Promise<string> {
+  const put = new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType, ContentLength: size });
+  return getSignedUrl(s3Public(), put, { expiresIn, signableHeaders: new Set(["content-type", "content-length"]) });
 }
 
 // `disposition` tells the browser to show the file ("inline") or save it ("attachment; filename*=…").
