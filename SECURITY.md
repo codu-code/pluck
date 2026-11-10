@@ -17,6 +17,10 @@ Tell us what you found, how to see it, and what someone could do with it. A proo
 - We fix it, tell you when the fix is live, and credit you in the advisory if you would like.
 - We ask that you keep it private until the fix is out, and we will not take legal action over research done in good faith within these lines.
 
+## What we defend against
+
+[docs/threat-model.md](docs/threat-model.md) says who Pluck defends against, what each can and cannot do, and where in the code each rule lives, including what a hostile page can and cannot make your AI tool do.
+
 ## What is in scope
 
 The hosted service at getpluck.io, the code in this repository (web app, API, MCP connector, browser extension, iPhone app and share extension, the Docker image), and the published [`@getpluck/mcp`](https://www.npmjs.com/package/@getpluck/mcp) package.
