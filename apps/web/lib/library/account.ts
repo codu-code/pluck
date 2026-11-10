@@ -1,7 +1,7 @@
 import { TooLarge, deleteObject, deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
-  latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
+  aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, hitRateLimit, importLink,
+  latestExport, recountTags, listApiKeys, revokeApiKey, startExport, sweepTransfers, updateImport,
 } from "@pluck/db";
 import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
 import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
@@ -108,9 +108,8 @@ export async function runImport(userId: string, importId: string): Promise<void>
     log("warn", "import unreadable", { userId, importId, error: String(e) });
   }
   if (!entries) {
-    if (!file) await deleteObject(record.blobKey);
     await updateImport(importId, { state: "failed", error: file ? "That file could not be read. Check it is the export from the right service." : "That file is over 500 MB." });
-    return;
+    return deleteObject(record.blobKey);
   }
   if (record.total === 0) await updateImport(importId, { total: entries.length });
   let { done, failed } = record;
@@ -137,11 +136,23 @@ export async function runImport(userId: string, importId: string): Promise<void>
   if (!finished) return void (await enqueue("import", { userId, importId }));
   await updateImport(importId, { state: "done" });
   track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
+  await deleteObject(record.blobKey); // the file has done its job; if this fails the daily sweep takes it
+}
+
+// Daily (lib/schedule.ts): the files and records of imports that are over or were never started, and of exports
+// whose emailed link has run out.
+export async function sweepTransfersNow(now = new Date()): Promise<number> {
+  const swept = await sweepTransfers(now, deleteObject);
+  if (swept) log("info", "old imports and exports swept", { swept });
+  return swept;
 }
 
 // ---- Export ---------------------------------------------------------------------------------------
 
+// Five a day: each is a whole-library zip, a job and an email we pay for.
 export async function requestExport(userId: string): Promise<{ id: string }> {
+  const limit = await hitRateLimit(`export:${userId}`, 5, 86_400);
+  if (!limit.ok) throw new ApiError("rate_limited", "That is five exports today. Try again tomorrow.", 429, { retryAfter: limit.retryAfter });
   const id = await startExport(userId);
   await enqueue("export", { userId, exportId: id });
   track(userId, "export_requested");

@@ -11,6 +11,7 @@ export async function runScheduled(now = new Date()): Promise<{ purged: number; 
   let purged = 0;
   if (await claimOnce(`purge-bin:${now.toISOString().slice(0, 10)}`)) {
     purged = await purgeBinNow();
+    await (await import("./library")).sweepTransfersNow();
     log("info", "bin purged", { purged });
   }
   const expiry = await runDueExpiry(now);

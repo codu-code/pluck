@@ -2,8 +2,8 @@ import { ObjectId } from "mongodb";
 import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
-  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, listApiKeys, recountTags,
-  listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setHeardFrom, setVia, updateSettings,
+  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, updateImport, listApiKeys, recountTags,
+  listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setHeardFrom, setVia, updateSettings, finishExport, latestExport, startExport, sweepTransfers,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -44,6 +44,35 @@ test("an import starts once, and only for its owner", async () => {
   expect(await claimImportStart(b, imp.id)).toBe(false);
   expect(await Promise.all([claimImportStart(a, imp.id), claimImportStart(a, imp.id)])).toEqual(expect.arrayContaining([true, false]));
   expect((await getImport(a, imp.id))?.state).toBe("running");
+});
+
+test("the daily sweep takes old imports that are not running and exports past their link, and nothing newer", async () => {
+  const { a, b } = await twoUsers();
+  const d = getDb();
+  const aged = async (collection: string, id: string, days: number) =>
+    void (await d.collection(collection).updateOne({ _id: ObjectId.createFromHexString(id) }, { $set: { createdAt: new Date(Date.now() - days * 86_400_000) } }));
+  const neverStarted = await createImport(a, "pocket", "imports/never-started");
+  const finished = await createImport(b, "pocket", "imports/finished");
+  await claimImportStart(b, finished.id);
+  await updateImport(finished.id, { state: "done" });
+  const running = await createImport(a, "pocket", "imports/running");
+  await claimImportStart(a, running.id);
+  for (const i of [neverStarted, finished, running]) await aged("imports", i.id, 2);
+  const fresh = await createImport(b, "pocket", "imports/fresh"); // uploaded a moment ago, not started yet
+  const oldExport = await startExport(a);
+  await finishExport(oldExport, "exports/old");
+  await aged("exports", oldExport, 9);
+  const liveExport = await startExport(b);
+  await finishExport(liveExport, "exports/live");
+  await aged("exports", liveExport, 6); // its emailed link still works
+
+  const removed: string[] = [];
+  expect(await sweepTransfers(new Date(), async (key) => void removed.push(key))).toBe(3);
+  expect(removed.sort()).toEqual(["exports/old", "imports/finished", "imports/never-started"]);
+  expect([await getImport(a, neverStarted.id), await getImport(b, finished.id), await latestExport(a)]).toEqual([null, null, null]);
+  expect((await getImport(a, running.id))?.state).toBe("running");
+  expect((await getImport(b, fresh.id))?.state).toBe("waiting");
+  expect((await latestExport(b))?.blobKey).toBe("exports/live");
 });
 
 test("export gathers everything; delete removes one person entirely and leaves the other", async () => {

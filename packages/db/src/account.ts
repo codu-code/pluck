@@ -83,6 +83,20 @@ export async function latestExport(userId: string): Promise<{ id: string; state:
   return d && { id: d._id.toHexString(), state: d.state, blobKey: d.blobKey, createdAt: d.createdAt.toISOString() };
 }
 
+// The daily sweep, across everyone: imports over a day old that are not running (finished, failed or never started),
+// and exports past the 7 days their email promises the link for (a day's slack, since the link is signed after the
+// zip is made). `remove` deletes each file before its record goes. Returns how many records went.
+// shortcut: reads both collections whole once a day (no index on createdAt), add one if they grow past thousands.
+export async function sweepTransfers(now: Date, remove: (blobKey: string) => Promise<void>): Promise<number> {
+  const before = (days: number) => ({ $lt: new Date(now.getTime() - days * 86_400_000) });
+  const oldImports = await (await imports()).find({ state: { $ne: "running" }, createdAt: before(1) }, { projection: { blobKey: 1 } }).toArray();
+  const oldExports = await (await exportsCol()).find({ createdAt: before(8) }, { projection: { blobKey: 1 } }).toArray();
+  for (const d of [...oldImports, ...oldExports]) if (d.blobKey) await remove(d.blobKey);
+  await (await imports()).deleteMany({ _id: { $in: oldImports.map((d) => d._id) } });
+  await (await exportsCol()).deleteMany({ _id: { $in: oldExports.map((d) => d._id) } });
+  return oldImports.length + oldExports.length;
+}
+
 // Everything a person has, for the export zip. Items in the bin are left out.
 export async function exportData(userId: string) {
   const uid = oid(userId);

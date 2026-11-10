@@ -33,3 +33,13 @@ test("a storage hiccup reading the file does not fail the import: the job is tri
   await run();
   expect(await importStatus(a, id)).toMatchObject({ state: "done", total: 2, done: 2 });
 });
+
+test("the uploaded file goes once the import is done, or has failed for good", async () => {
+  const { a } = await twoUsers();
+  const done = await uploaded(a, "pocket", CSV);
+  const failed = await uploaded(a, "omnivore", "not a zip");
+  expect(await blob.listKeys(`u/${a}/imports/`)).toHaveLength(2);
+  await run();
+  expect([(await importStatus(a, done)).state, (await importStatus(a, failed)).state]).toEqual(["done", "failed"]);
+  expect(await blob.listKeys(`u/${a}/imports/`)).toEqual([]);
+});
