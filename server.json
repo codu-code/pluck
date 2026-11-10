@@ -3,7 +3,7 @@
   "name": "io.github.codu-code/pluck",
   "title": "Pluck",
   "description": "Read and organise your Pluck library of links, notes and lists from the AI tool you already use.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "websiteUrl": "https://getpluck.io/connect",
   "repository": { "url": "https://github.com/codu-code/pluck", "source": "github" },
   "remotes": [{ "type": "streamable-http", "url": "https://getpluck.io/mcp" }],
@@ -11,7 +11,7 @@
     {
       "registryType": "npm",
       "identifier": "@getpluck/mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "runtimeHint": "npx",
       "transport": { "type": "stdio" },
       "packageArguments": [
