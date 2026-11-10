@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { items } from "./collections.ts";
+import { items, meta } from "./collections.ts";
 import {
   addToList, archiveStale, claimOnce, countExpiringSoon, createList, createTextItem, DEFAULT_SETTINGS, getItem, localNow, pluckLink,
   runDueExpiry, updateSettings,
@@ -73,5 +73,16 @@ describe("expiry", () => {
     const key = `test:${Date.now()}`;
     const results = await Promise.all([claimOnce(key), claimOnce(key), claimOnce(key)]);
     expect(results.filter(Boolean)).toHaveLength(1);
+  });
+
+  test("a claim made forever has no date for the expiry to find, and one made before it is kept, not claimed again", async () => {
+    const key = `test:forever:${Date.now()}`;
+    expect(await claimOnce(key, { forever: true })).toBe(true);
+    expect(await (await meta()).findOne({ _id: key })).toEqual({ _id: key });
+    expect(await claimOnce(key, { forever: true })).toBe(false);
+
+    expect(await claimOnce(`${key}:dated`)).toBe(true); // as every claim was made before
+    expect(await claimOnce(`${key}:dated`, { forever: true })).toBe(false);
+    expect(await (await meta()).findOne({ _id: `${key}:dated` })).toEqual({ _id: `${key}:dated` });
   });
 });

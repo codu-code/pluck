@@ -1,10 +1,10 @@
-import { getContent, pendingJobCount, pluckLink } from "@pluck/db";
+import { applyExtraction, getContent, pendingJobCount, pluckLink } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
 import { FetchError } from "@pluck/extract";
 import { TooLarge } from "@pluck/blob";
-import { failureReason, keepLater, keepNow, readItem } from "./index";
+import { failureReason, keepLater, keepNow, readItem, sortBackfill } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 const link = async (userId: string, url: string) => (await pluckLink(userId, { url, source: "web" })).item;
@@ -64,4 +64,15 @@ test("a failure is reported as one of a few words, never its address or text", (
   expect(failureReason(Object.assign(new Error("slow"), { name: "TimeoutError" }))).toBe("timeout");
   expect(failureReason(new TooLarge())).toBe("too_large");
   expect(failureReason("weird")).toBe("other");
+});
+
+test("the backfill's second read never replaces kept text with less of it", async () => {
+  const { a } = await twoUsers();
+  const item = await link(a, `${FIX}/news-1.html`);
+  // As the extension kept it: a post with the transcript it read, far more words than the page gives a second read.
+  const kept = { kind: "link" as const, preview: "post" as const, facts: {}, title: "t", siteName: null, author: null, excerpt: null, canonicalUrl: null, lang: null, wordCount: 100_000, markdown: "said in the video", extractor: "defuddle" };
+  await applyExtraction(a, item.id, kept);
+  for (let i = 0; i < 8; i++) await sortBackfill(); // every pass, to its end
+  expect((await getContent(a, item.id))?.textMarkdown).toBe("said in the video");
+  expect((await readItem(a, item.id)).wordCount).toBe(100_000);
 });

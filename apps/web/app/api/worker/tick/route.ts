@@ -15,6 +15,7 @@ export async function GET(req: Request) {
   const started = Date.now();
   // A failure in the schedule (an S3 hiccup polling email-in) must not stop this minute's jobs.
   const scheduled = await runScheduled().catch((e) => (log("error", "scheduled run failed", { error: e }), {}));
-  // Jobs get what is left of the 60 s, with room to answer.
-  return Response.json({ ...scheduled, ...(await runJobs({ budgetMs: Math.max(0, 50_000 - (Date.now() - started)) })) });
+  // Jobs start in what is left of the first 35 s: the four running when it ends get up to 20 s each to read a slow
+  // page (keeping.ts), and all of it has to be done inside the 60.
+  return Response.json({ ...scheduled, ...(await runJobs({ budgetMs: Math.max(0, 35_000 - (Date.now() - started)) })) });
 }

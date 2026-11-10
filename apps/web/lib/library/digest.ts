@@ -39,9 +39,7 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
 // Monday 06:00 local (or the person's chosen day), once. Each email is its own job, so thousands due at the
 // same hour go out at the shared send rate across ticks, and a failed send is retried rather than lost.
 export async function queueDueDigests(now = new Date()): Promise<number> {
-  const due = await claimDueDigests(now);
-  for (const u of due) await enqueue("digest", { userId: u.userId });
-  return due.length;
+  return (await claimDueDigests(now, (u) => enqueue("digest", { userId: u.userId }))).length; // queued as each is claimed
 }
 
 export type TapResult = { action: Tap["a"]; ok: boolean; undo?: string; count?: number };

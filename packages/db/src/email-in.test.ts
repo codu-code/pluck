@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
-import { aliasOf, createEmailItem, createTag, getContent, listTags, moveToBin, regenerateAlias, searchItems, setItemTags, userForAlias } from "./index.ts";
+import { contents, oid } from "./collections.ts";
+import { aliasOf, createEmailItem, createTag, getContent, listTags, moveToBin, regenerateAlias, searchItems, setItemTags, setRawEmailKey, userForAlias } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
 const mail = { subject: "Writing for engineers who skim", fromName: "Field Notes", fromAddress: "hi@fieldnotes.example", messageId: "<x@y>", markdown: "Lead with the decision.", excerpt: "Lead with the decision.", wordCount: 4 };
@@ -37,4 +38,21 @@ test("the same message after the Bin comes back and its Tags count it again", as
   expect((await listTags(a))[0]?.count).toBe(0);
   await createEmailItem(a, { ...mail, messageId: "<bin@y>" });
   expect((await listTags(a))[0]?.count).toBe(1);
+});
+
+test("a message whose first try died before its text was written gets the text on the retry, and only its own person's", async () => {
+  const { a, b } = await twoUsers();
+  const m = { ...mail, messageId: "<half@y>" };
+  const { item } = await createEmailItem(a, m);
+  const theirs = (await createEmailItem(b, { ...m, markdown: "Theirs." })).item;
+  await (await contents()).deleteOne({ itemId: oid(item.id) }); // as the first try left it
+
+  expect(await createEmailItem(a, m)).toMatchObject({ created: false, rawKey: null, item: { id: item.id } });
+  expect((await getContent(a, item.id))?.textMarkdown).toBe("Lead with the decision.");
+  expect((await getContent(b, theirs.id))?.textMarkdown).toBe("Theirs.");
+
+  // Once the raw message is kept, the same message again says so, and text already kept is never written over.
+  await setRawEmailKey(a, item.id, "u/a/file.eml");
+  expect((await createEmailItem(a, { ...m, markdown: "Changed." })).rawKey).toBe("u/a/file.eml");
+  expect((await getContent(a, item.id))?.textMarkdown).toBe("Lead with the decision.");
 });

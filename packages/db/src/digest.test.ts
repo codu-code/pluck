@@ -50,3 +50,22 @@ test("someone who never opened Settings gets the Monday email", async () => {
   const { a } = await twoUsers(); // no settings stored: the defaults, Monday in UTC
   expect((await claimDueDigests(new Date("2026-10-26T06:30:00Z"))).map((u) => u.userId)).toContain(a);
 });
+
+test("a failure while queueing one person's email leaves the people after them unclaimed, for the next tick", async () => {
+  const { a, b } = await twoUsers();
+  const c = (await twoUsers()).a; // at least three people due, in the order they signed up
+  const monday = new Date("2026-11-02T06:30:00Z");
+  const queued: string[] = [];
+  let lost = "";
+  await expect(claimDueDigests(monday, async (u) => {
+    if (queued.length === 1) throw new Error(`queue down for ${(lost = u.userId)}`);
+    queued.push(u.userId);
+  })).rejects.toThrow("queue down");
+  expect(queued).toHaveLength(1);
+
+  const next = (await claimDueDigests(monday)).map((u) => u.userId);
+  expect(next.length).toBeGreaterThanOrEqual(1);
+  expect(next).not.toContain(queued[0]); // claimed once
+  expect(next).not.toContain(lost); // the one person in the window
+  expect([...queued, lost, ...next]).toEqual(expect.arrayContaining([a, b, c]));
+});

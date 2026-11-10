@@ -279,7 +279,7 @@ export async function emailAliases(): Promise<Collection<EmailAliasDoc>> {
   return (await db()).collection<EmailAliasDoc>("emailAliases");
 }
 // One-off claims (claimOnce) and the place a long-running pass (the Preview backfill) keeps its cursor.
-export type MetaDoc = { _id: string; at: Date; after?: ObjectId; done?: boolean; n?: number; key?: string };
+export type MetaDoc = { _id: string; at?: Date; after?: ObjectId; done?: boolean; n?: number; key?: string };
 export async function meta(): Promise<Collection<MetaDoc>> {
   return (await db()).collection<MetaDoc>("meta");
 }
