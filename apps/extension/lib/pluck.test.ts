@@ -17,7 +17,7 @@ const b = vi.hoisted(() => {
   return b;
 });
 import type { CreateItemBody } from "@pluck/shared-schemas";
-import { pluckTab, resume } from "./pluck";
+import { pluckForPopup, pluckTab, resume } from "./pluck";
 
 beforeEach(() => Object.assign(b, { local: {}, alarms: new Set(), made: 0, badge: "", html: "" }));
 
@@ -54,4 +54,18 @@ test("with nothing waiting, starting sets no alarm and shows no dot", async () =
   await resume();
   expect(b.made).toBe(0);
   expect(b.badge).toBe("");
+});
+
+test("the background plucks for the popup, so a popup closed mid-pluck loses nothing: the pluck lands, or waits in the queue", async () => {
+  const sent = server();
+  const answers: unknown[] = [];
+  expect(pluckForPopup({ pluck: { url: "https://a.test/page", title: "A page" } }, null, (o) => void answers.push(o))).toBe(true); // true: the answer comes later
+  await vi.waitFor(() => expect(answers).toMatchObject([{ state: "plucked", created: true }]));
+  expect(sent).toMatchObject([{ url: "https://a.test/page", title: "A page", source: "extension" }]);
+
+  b.fetch = (async () => { throw new TypeError("offline"); }) as typeof fetch;
+  pluckForPopup({ pluck: { url: "https://b.test/page" } }, null, () => {}); // the popup has closed: nobody hears the answer
+  await vi.waitFor(() => expect(b.local.queue).toMatchObject([{ body: { url: "https://b.test/page", source: "extension" } }]));
+  await vi.waitFor(() => expect(b.badge).toBe("•"));
+  expect(pluckForPopup({ somethingElse: true }, null, () => {})).toBeUndefined(); // not a pluck: left to any other listener
 });

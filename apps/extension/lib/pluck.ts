@@ -41,6 +41,17 @@ export async function pluckTab(tab: { id?: number; url?: string; title?: string;
   return outcome;
 }
 
+// The popup asks the background to pluck (runtime.sendMessage) rather than sending itself: a popup closed mid-upload
+// takes its own requests with it, unsent and unqueued. Here the pluck lands or is queued either way; the API's
+// 15-second limit keeps that inside the time a worker with nothing else to do is left running.
+// Null is "it failed some other way". Returns true (the answer comes later) only for a message that is a pluck.
+export function pluckForPopup(message: unknown, _sender: unknown, respond: (outcome: PluckOutcome | null) => void): true | undefined {
+  const tab = (message as { pluck?: Parameters<typeof pluckTab>[0] } | null)?.pluck;
+  if (!tab) return;
+  void pluckTab(tab).catch(() => null).then(respond);
+  return true;
+}
+
 // A link, an image or a URL: no page to read, the server fetches it.
 export const pluckUrl = (url: string) => send({ url, source: "extension" });
 
