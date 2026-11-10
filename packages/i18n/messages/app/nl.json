@@ -234,6 +234,7 @@
     "wrong": "Dat wachtwoord werkte niet.",
     "limitedTries": "Dat zijn veel pogingen. Probeer het over een uur opnieuw.",
     "limitedLinks": "Dat zijn veel links. Gebruik de nieuwste die we stuurden, of probeer het over een uur opnieuw.",
+    "closed": "Deze server neemt geen nieuwe accounts aan. Vraag degene die hem beheert om je adres toe te voegen.",
     "code": {
       "label": "Of typ de 6-cijferige code",
       "checking": "Code controleren",

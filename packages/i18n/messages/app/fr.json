@@ -234,6 +234,7 @@
     "wrong": "Ce mot de passe ne fonctionne pas.",
     "limitedTries": "Ça fait beaucoup d’essais. Réessayez dans une heure.",
     "limitedLinks": "Ça fait beaucoup de liens. Utilisez le plus récent, ou réessayez dans une heure.",
+    "closed": "Ce serveur n’accepte pas de nouveaux comptes. Demandez à la personne qui le gère d’ajouter votre adresse.",
     "code": {
       "label": "Ou saisissez le code à 6 chiffres",
       "checking": "Vérification du code",

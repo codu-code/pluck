@@ -68,14 +68,25 @@ export function viaOf(ctx: { query?: Record<string, unknown>; headers?: Headers 
   return "direct";
 }
 
+// SIGNUP_EMAILS closes sign-up on a server of one's own: full addresses or @domains, comma separated. Unset, anyone may start an account.
+const maySignUp = (email: string) => {
+  const allowed = (process.env.SIGNUP_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+  return !allowed.length || allowed.some((e) => (e.startsWith("@") ? email.endsWith(e) : email === e));
+};
+
 // Sending a sign-in email, by link (the web) or by code (the iPhone app): one a minute per address (the apps count the
 // minute down on Send again), a few an hour per address and per network. Each is an email we pay for and a mailbox
-// someone else owns.
+// someone else owns. With sign-up closed, an address that has no account and is not on the list gets no email, and
+// so no account: every way in starts with one.
 export async function limitSignInEmails(email: string, ip: string): Promise<void> {
-  if (!LIMITS_ON) return;
-  if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another." });
-  for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${ip}`, 30]] as const)
-    if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in emails. Try again in an hour." });
+  if (LIMITS_ON) {
+    if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another." });
+    for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${ip}`, 30]] as const)
+      if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in emails. Try again in an hour." });
+  }
+  // After the limits, so asking which addresses have an account here is as slow as asking for emails.
+  if (!maySignUp(email) && !(await (await auth.$context).internalAdapter.findUserByEmail(email)))
+    throw new APIError("FORBIDDEN", { code: "SIGNUP_CLOSED", message: "This server is not taking new accounts. Ask the person who runs it to add your address." });
 }
 
 const redirectOf = (ctx: { path: string; query?: Record<string, unknown>; body?: unknown }) =>
@@ -122,9 +133,12 @@ const guard = createAuthMiddleware(async (ctx) => {
     else await c.linkAccount({ userId: user.id, providerId: "credential", accountId: user.id, password: hash });
   }
   if (ctx.path === "/sign-in/magic-link") await limitSignInEmails(email, clientIp({ headers: ctx.headers ?? new Headers() }));
-  // Each code allows 5 tries; these cap guessing across codes.
+  // Each code allows 5 tries and six codes an hour go to an address: that bounds guessing. These cap it across codes,
+  // per address and caller together, so a stranger's wrong guesses do not spend the owner's tries.
+  // shortcut: five wrong tries from anyone still spend the live code, bind a code to the device that asked for it if that is abused.
   if (ctx.path === "/sign-in/email-otp" && LIMITS_ON) {
-    for (const [key, max] of [[`code:email:${email}`, 15], [`code:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 60]] as const)
+    const ip = clientIp({ headers: ctx.headers ?? new Headers() });
+    for (const [key, max] of [[`code:email:${email}:${ip}`, 15], [`code:email:${email}`, 60], [`code:ip:${ip}`, 60]] as const)
       if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many tries. Try again in an hour." });
   }
 });
@@ -168,6 +182,11 @@ export const auth = betterAuth({
     "/sign-up/email", "/request-password-reset", "/reset-password", "/change-password",
     "/email-otp/send-verification-otp", "/email-otp/check-verification-otp", "/email-otp/verify-email", "/email-otp/request-password-reset",
     "/forget-password/email-otp", "/email-otp/reset-password", "/email-otp/request-email-change", "/email-otp/change-email",
+    // A client is made once, by /oauth2/register (the guard), and a grant by the consent screen. Nothing edits either
+    // afterwards: a signed-in person could otherwise make a client that passes for ours, then point its redirect at
+    // their own site once someone had agreed to it.
+    "/oauth2/create-client", "/oauth2/update-client", "/oauth2/delete-client", "/oauth2/client/rotate-secret", "/oauth2/client/rotate-keys",
+    "/oauth2/update-consent", "/oauth2/delete-consent",
   ],
   hooks: { before: guard, after: connected },
   onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so

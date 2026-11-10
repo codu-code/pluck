@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
-import { auth, FIRST_PARTY_REDIRECTS } from "./auth";
+import { auth, FIRST_PARTY_REDIRECTS, signInCode } from "./auth";
 import { clientIp } from "./ip";
+import { sendAppCode } from "./signin-code";
 
 const BASE = process.env.BETTER_AUTH_URL;
 let ip = 0;
@@ -31,6 +32,22 @@ test("only our own apps can ask for the account scope", async () => {
   expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [`${BASE}/api/v1`], "offline_access library:read library:write account")).status).toBe(201);
 });
 
+test("nobody edits a client or a grant after the fact, signed in or not: those routes are off", async () => {
+  const email = `owner-${Date.now()}@example.test`;
+  const signedIn = await post("/sign-in/email-otp", { email, otp: await signInCode(email) });
+  expect(signedIn.status).toBe(200);
+  const cookie = signedIn.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
+  const paths = ["/oauth2/create-client", "/oauth2/update-client", "/oauth2/delete-client", "/oauth2/client/rotate-secret", "/oauth2/client/rotate-keys", "/oauth2/update-consent", "/oauth2/delete-consent"];
+  for (const path of paths) {
+    const res = await auth.handler(new Request(`${BASE}/api/auth${path}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: BASE!, cookie, "x-forwarded-for": `198.51.100.${++ip}` },
+      body: JSON.stringify({ client_id: "x", redirect_uris: ["https://evil.example.test/cb"], update: { redirect_uris: ["https://evil.example.test/cb"] } }),
+    }));
+    expect(res.status, path).toBe(404);
+  }
+});
+
 test("an AI tool that names no scope gets read and write, never delete or the account", async () => {
   const { client_id } = (await (await register("Example AI", "https://ai.example.test/cb")).json()) as { client_id: string };
   const authorize = (scope?: string) =>
@@ -58,6 +75,45 @@ test("sign-in links are limited per address, whatever network asks: one a minute
     }
     vi.setSystemTime(new Date(Date.parse("2030-01-01T10:00:01Z") + 6 * 61_000));
     expect((await post("/sign-in/magic-link", { email })).status).toBe(429); // the seventh in the hour
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+test("with SIGNUP_EMAILS set, only those addresses start an account, by link or by code; accounts that exist still sign in", async () => {
+  const n = Date.now();
+  const member = `member-${n}@outside.test`;
+  expect((await post("/sign-in/email-otp", { email: member, otp: await signInCode(member) })).status).toBe(200); // an account from before
+  process.env.SIGNUP_EMAILS = `Friend-${n}@Elsewhere.test, @example.test`;
+  try {
+    const refused = await post("/sign-in/magic-link", { email: `stranger-${n}@outside.test` });
+    expect(refused.status).toBe(403);
+    expect(await refused.json()).toMatchObject({ code: "SIGNUP_CLOSED" });
+    await expect(sendAppCode(`stranger2-${n}@outside.test`, "198.51.100.250", "en")).rejects.toMatchObject({ code: "forbidden", status: 403 });
+    expect((await post("/sign-in/magic-link", { email: `stranger-${n}@notexample.test` })).status).toBe(403); // a domain is matched whole
+    expect((await post("/sign-in/magic-link", { email: `new-${n}@example.test` })).status).toBe(200);
+    expect(await sendAppCode(`friend-${n}@elsewhere.test`, "198.51.100.251", "en")).toEqual({ sent: true });
+    expect((await post("/sign-in/magic-link", { email: member })).status).toBe(200);
+  } finally {
+    delete process.env.SIGNUP_EMAILS;
+  }
+});
+
+test("wrong codes from one network do not lock the address out for everyone else", async () => {
+  const email = `locked-${Date.now()}@example.test`;
+  const guess = (from: string) =>
+    auth.handler(new Request(`${BASE}/api/auth/sign-in/email-otp`, {
+      method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": from }, body: JSON.stringify({ email, otp: "000000" }),
+    }));
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    for (let i = 0; i < 15; i++) {
+      vi.setSystemTime(new Date(Date.parse("2031-01-01T10:00:00Z") + i * 61_000)); // spaced past Better Auth's own 3 tries a minute per network
+      expect((await guess("203.0.113.66")).status).toBe(400);
+    }
+    vi.setSystemTime(new Date("2031-01-01T10:20:00Z"));
+    expect((await guess("203.0.113.66")).status).toBe(429); // the stranger is out of tries
+    expect((await guess("203.0.113.77")).status).toBe(400); // the owner, from their own network, is not
   } finally {
     vi.useRealTimers();
   }

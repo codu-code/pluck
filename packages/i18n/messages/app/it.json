@@ -234,6 +234,7 @@
     "wrong": "Questa password non ha funzionato.",
     "limitedTries": "Sono tanti tentativi. Riprova tra un'ora.",
     "limitedLinks": "Sono tanti link. Usa il più recente che ti abbiamo mandato, o riprova tra un'ora.",
+    "closed": "Questo server non accetta nuovi account. Chiedi a chi lo gestisce di aggiungere il tuo indirizzo.",
     "code": {
       "label": "Oppure scrivi il codice di 6 cifre",
       "checking": "Controllo del codice",
