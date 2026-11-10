@@ -18,7 +18,7 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 - [x] Settings → Branches: protect `main` (pull request required; the DCO, unit and end-to-end checks required; linear history; no force pushes or deletion). Admins can still bypass in an emergency.
 - [x] Description and topics (`read-it-later`, `mcp`, `self-hosted`, `nextjs`, `bookmarks`).
 - [ ] The social preview image (Settings → General; it can only be uploaded in the browser).
-- [ ] Tag `v0.1.0` and write its release notes.
+- [ ] Tag `v0.1.0`. Its release notes are the 0.1.0 section of `CHANGELOG.md`, and the tag publishes the Docker image: `docs/deploy.md`, "Cutting a release" (set the date, tag, push, and once, make the `pluck` package public).
 
 ## Hosted service
 
