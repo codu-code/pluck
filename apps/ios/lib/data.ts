@@ -265,9 +265,18 @@ export async function keepByHand(item: Item, on: boolean): Promise<void> {
   handWatchers.forEach((fn) => fn());
   if (!on) return; // let go: it leaves with the next keep, unless it is among the newest
   // Asked for by hand, so kept now, on any connection.
-  const kept = await kv.get<Kept>("kept", {});
-  kept[item.id] = await keepOne(item, true);
-  await kv.set("kept", kept);
+  const run = clears;
+  const one = await keepOne(item, true);
+  if (run !== clears) return forget([item.id]); // cleared or signed out meanwhile
+  await kv.set("kept", { ...(await kv.get<Kept>("kept", {})), [item.id]: one });
+}
+
+// What a keep wrote for these Items, taken away again: their texts, pictures and files.
+async function forget(ids: string[]): Promise<void> {
+  for (const id of ids) {
+    await kv.remove(keptKey(id));
+    for (const ext of ["img", "pdf"] as const) if (keptMedia(id, ext).exists) keptMedia(id, ext).delete();
+  }
 }
 
 const keptKey = (id: string) => `kept:${id}`;
@@ -279,8 +288,11 @@ export async function keptSize(): Promise<{ ids: string[]; bytes: number }> {
   return { ids: Object.keys(kept), bytes: Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0) };
 }
 
-// Clear the offline copy: everything, the Items kept by hand too.
+// Clear the offline copy: everything, the Items kept by hand too. `clears` counts them, so a keep that was already
+// running (signing out mid-run) knows, stops, and takes away what it wrote after the clear.
+let clears = 0;
 export async function clearKept(): Promise<void> {
+  clears++;
   const kept = await kv.get<Kept>("kept", {});
   for (const id of Object.keys(kept)) await kv.remove(keptKey(id));
   await kv.remove("kept");
@@ -338,6 +350,7 @@ const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function keep(force: boolean) {
   if ((!force && Date.now() - keptAt < 15 * 60_000) || !(await keepSetting()) || !(await wifi())) return;
+  const run = clears; // a clear after this (signing out, Clear the offline copy) ends the run, with nothing written after it
   const items: Item[] = [];
   for (const status of ["inbox", "later"] as const) {
     let cursor: string | null = null;
@@ -350,9 +363,11 @@ async function keep(force: boolean) {
     } while (cursor && got < KEEP);
   }
   const lists = (await api<{ lists: List[] }>("/api/v1/lists")).lists;
+  if (run !== clears) return;
   queryClient.setQueryData(keys.lists, lists);
   for (const l of lists) {
     const one = await api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${l.id}`);
+    if (run !== clears) return;
     queryClient.setQueryData(keys.list(l.id), one); // the List itself opens offline too
     items.push(...one.entries.map((e) => e.item));
   }
@@ -362,16 +377,16 @@ async function keep(force: boolean) {
   for (const id of hand) if (!seen.has(id)) items.push((await api<{ item: Item }>(`/api/v1/items/${id}`).catch(() => null))?.item ?? ({ id } as Item));
   const keep = toKeep(items.filter((i) => i.createdAt), hand);
   const kept = await kv.get<Kept>("kept", {});
+  if (run !== clears) return;
   const { fetch, drop } = plan(keep, kept, hand);
   try {
     for (const id of drop) {
-      await kv.remove(keptKey(id));
-      for (const ext of ["img", "pdf"] as const) if (keptMedia(id, ext).exists) keptMedia(id, ext).delete();
+      await forget([id]);
       delete kept[id];
     }
     const total = () => Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0);
     for (const item of fetch) {
-      if (!(await wifi()) || !(await keepSetting())) break; // off the Wi-Fi, or turned off: stop here
+      if (run !== clears || !(await wifi()) || !(await keepSetting())) break; // cleared, off the Wi-Fi, or turned off: stop here
       kept[item.id] = await keepOne(item, hand.has(item.id) || total() < MAX_BYTES);
       await pause(250); // gently: well under the API's 600 reads a minute, with room for the app itself
     }
@@ -381,7 +396,7 @@ async function keep(force: boolean) {
     }
     keptAt = Date.now();
   } finally {
-    if (await keepSetting()) await kv.set("kept", kept);
-    else for (const id of Object.keys(kept)) await kv.remove(keptKey(id)); // turned off meanwhile: leave nothing behind
+    if (run === clears && (await keepSetting())) await kv.set("kept", kept);
+    else await forget(Object.keys(kept)); // cleared, signed out or turned off meanwhile: leave nothing behind
   }
 }
