@@ -4,7 +4,7 @@ import manifest from "@/app/manifest";
 import { auth, signInCode } from "@/lib/auth";
 import { browse } from "@/lib/library";
 import { samePath } from "@/lib/same-site";
-import { GET } from "./route";
+import { GET, POST } from "./route";
 
 // after() only works inside a request Next is serving; here the work it would put off is simply not done.
 vi.mock("next/server", async (real) => ({ ...(await real<typeof import("next/server")>()), after: () => {} }));
@@ -21,14 +21,18 @@ beforeAll(async () => {
   me = { id: ((await res.json()) as { user: { id: string } }).user.id, cookie: res.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ") };
 });
 
-// A share as the browser sends it: `site` is Sec-Fetch-Site, "none" when the browser itself started the navigation.
+// A share as the installed app sends it: a form POST. `site` is Sec-Fetch-Site, "none" when the browser itself started it.
+const headers = (site: string | null, cookie: string | null) => ({ ...(site ? { "sec-fetch-site": site } : {}), ...(cookie ? { cookie } : {}) });
 const share = (shared: Record<string, string>, site: string | null, cookie: string | null = me.cookie) =>
-  GET(new Request(`${BASE}/share?${new URLSearchParams(shared)}`, { headers: { ...(site ? { "sec-fetch-site": site } : {}), ...(cookie ? { cookie } : {}) } }), { params: Promise.resolve({}) });
+  POST(new Request(`${BASE}/share`, { method: "POST", headers: { ...headers(site, cookie), "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(shared).toString() }), { params: Promise.resolve({}) });
+// A link to /share, from anywhere: a GET.
+const link = (shared: Record<string, string>, site: string | null, cookie: string | null = me.cookie) =>
+  GET(new Request(`${BASE}/share?${new URLSearchParams(shared)}`, { headers: headers(site, cookie) }), { params: Promise.resolve({}) });
 const inbox = async () => (await browse(me.id, { status: "inbox", sort: "newest", limit: 50 })).items;
 const add = (text: string) => `${BASE}/share/add?${new URLSearchParams({ text })}`;
 
 test("the manifest offers Pluck to Android's Share, with the title, text and link", () => {
-  expect(manifest().share_target).toEqual({ action: "/share", method: "GET", params: { title: "title", text: "text", url: "url" } });
+  expect(manifest().share_target).toEqual({ action: "/share", method: "POST", enctype: "application/x-www-form-urlencoded", params: { title: "title", text: "text", url: "url" } });
 });
 
 test("signed in, a share the browser started is plucked like a paste, then lands on the Inbox", async () => {
@@ -50,13 +54,23 @@ test("signed in, a share the browser started is plucked like a paste, then lands
   expect(await inbox()).toHaveLength(3);
 });
 
-test("a link to /share from a page, or from anything that is not the browser itself, plucks nothing: it lands on the box holding the link", async () => {
+test("a link to /share never plucks, whoever opens it and however: it lands on the box holding the link", async () => {
   const before = (await inbox()).length;
   const text = `${FIX}/news-2.html`;
-  for (const site of ["cross-site", "same-site", "same-origin", null]) {
-    const res = await share({ text }, site);
+  for (const site of ["none", "cross-site", "same-site", "same-origin", null]) {
+    const res = await link({ text }, site);
     expect([site, res.status, res.headers.get("location")]).toEqual([site, 303, add(text)]);
   }
+  expect(await inbox()).toHaveLength(before);
+});
+
+test("a form on another site that posts to /share plucks nothing either", async () => {
+  const before = (await inbox()).length;
+  const text = `${FIX}/blog-2.html`;
+  // Another port of this host is the same site, so the cookie comes along: the browser's own word stops it.
+  for (const site of ["cross-site", "same-site"]) expect([site, (await share({ text }, site)).headers.get("location")]).toEqual([site, add(text)]);
+  // From anywhere further off the cookie is not sent at all (SameSite=Lax): signed out, so to sign-in.
+  expect(new URL((await share({ text }, "cross-site", null)).headers.get("location")!).pathname).toBe("/signin");
   expect(await inbox()).toHaveLength(before);
 });
 
