@@ -85,6 +85,24 @@ Store reviewers (Apple's App Review, Google Play's, the Chrome Web Store's) need
 - Sign in as the account once before submitting and pluck a few real links, a Note and a Todo, tag two and make a List, so the reviewer sees a library and not an empty Inbox. `scripts/demo-seed.mjs` cannot do this: it needs Mailpit and the local fixture pages, so it only fills a local server.
 - Unset both to turn it off. The account and its library stay; nothing is deleted.
 
+## Publishing @getpluck/mcp
+
+The stdio bridge (`packages/mcp-stdio`) goes to npm from `.github/workflows/publish-mcp.yml`, never from a laptop. People hand it their `pk_live_` key, and a release built by the workflow carries npm provenance: its npm page links the exact commit and workflow run it was built from. The workflow holds no npm token. npm trusts it by name (trusted publishing), and with `publishConfig.provenance` in the package, npm refuses a publish from anywhere that cannot sign one.
+
+Once, on npmjs.com, as an owner of the `@getpluck` scope:
+
+1. Open the `@getpluck/mcp` package, Settings, Trusted Publisher, GitHub Actions. Organization or user `codu-code`, repository `pluck`, workflow filename `publish-mcp.yml`, environment left empty. Save.
+2. On the same page, Publishing access: choose "Require two-factor authentication and disallow tokens".
+3. In your account's Access Tokens, revoke any token that could publish. The repo needs no `NPM_TOKEN` secret; do not add one.
+
+Each release:
+
+1. Raise `version` in `packages/mcp-stdio/package.json` in a pull request and merge it. 0.1.0 went up by hand, so the first release from the workflow is the next version.
+2. Tag that commit on `main` and push the tag: `git tag mcp-v<version> && git push origin mcp-v<version>`. The workflow stops if the tag and the version differ.
+3. Watch the run in Actions, then `npm view @getpluck/mcp version`, and look for the provenance on the package's npm page.
+
+Anyone who can push a tag named `mcp-v*` can publish. A tag ruleset (Settings, Rules) keeps that to maintainers.
+
 ## Later
 
 Move the worker off Vercel cron (one Fargate task running `pnpm --filter @pluck/web worker` from the same `Dockerfile`) if long imports or extraction start hitting the 60-second function limit.

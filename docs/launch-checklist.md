@@ -44,7 +44,8 @@ Everything between the code in this repo and Pluck being live, in order. Each li
 
 ## AI tools
 
-- [x] Publish the stdio bridge under the `@getpluck` scope: `npm login`, then `pnpm publish --access public` from `packages/mcp-stdio` (it builds first). Use pnpm, not npm: only pnpm applies `publishConfig.exports`, so the package points at `dist`, not `src`.
+- [x] Publish the stdio bridge under the `@getpluck` scope. 0.1.0 went up by hand; from now on a tag `mcp-v<version>` publishes it from `.github/workflows/publish-mcp.yml`, with npm provenance and no token. The workflow uses pnpm, not npm: only pnpm applies `publishConfig.exports`, so the package points at `dist`, not `src`.
+- [ ] Once, on npmjs.com: make that workflow the package's trusted publisher and turn tokens off (`docs/deploy.md`, "Publishing @getpluck/mcp").
 - [ ] Add `https://getpluck.io/mcp` in Claude (web and desktop), ChatGPT, Claude Code and Cursor, and run each of the four prompts once.
 
 ## Day one

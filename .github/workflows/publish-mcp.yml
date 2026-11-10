@@ -1,0 +1,44 @@
+# Publishes packages/mcp-stdio to npm as @getpluck/mcp when a tag mcp-v<version> is pushed. People hand this package
+# their pk_live_ key, so it is built here from the tagged commit and carries npm provenance: no laptop, and no
+# long-lived token (npm trusts this workflow by its OIDC identity). The one-time setup on npmjs.com is in
+# docs/deploy.md, "Publishing @getpluck/mcp".
+name: Publish @getpluck/mcp
+
+on:
+  push:
+    tags: ["mcp-v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write # the OIDC token npm trades for a one-off publish right, and signs the provenance with
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      # No dependency cache: a release takes nothing another run could have written.
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+      - name: The tag matches the package version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version=$(node -p "require('./packages/mcp-stdio/package.json').version")
+          if [ "$TAG" != "mcp-v$version" ]; then
+            echo "::error::packages/mcp-stdio/package.json says $version, so the tag must be mcp-v$version."
+            exit 1
+          fi
+      # pnpm packs the tarball (only pnpm applies publishConfig.exports) and hands it to the npm on the PATH.
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 comes with npm 10.
+      - run: npm install -g "npm@^11.5.1"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @getpluck/mcp build
+      - run: pnpm publish --access public --no-git-checks
+        working-directory: packages/mcp-stdio
