@@ -103,6 +103,39 @@ Each release:
 
 Anyone who can push a tag named `mcp-v*` can publish. A tag ruleset (Settings, Rules) keeps that to maintainers.
 
+## Cutting a release
+
+A release is for people who run their own Pluck. A tag `v<version>` on `main` runs `.github/workflows/release.yml`, which builds the Docker image for amd64 and arm64, pushes it to `ghcr.io/codu-code/pluck` as `<version>`, `<major>.<minor>` and `latest`, signs a record of the commit and run it was built from, and creates the GitHub release with that version's section of `CHANGELOG.md` as its notes. `docker compose up -d` pulls that image (`docs/self-host.md`). It is built with no build arguments, so it holds no analytics key and no address. A release changes nothing on getpluck.io, which deploys from `main`.
+
+Each release (0.1.0 here):
+
+1. In a pull request, give the version its dated section in `CHANGELOG.md` and merge it. For 0.1.0 the section is written: change `## [0.1.0] - Unreleased` to `## [0.1.0] - <today, as YYYY-MM-DD>` and move anything under `## [Unreleased]` into it. For later versions, add `## [X.Y.Z] - YYYY-MM-DD` under `## [Unreleased]` and move its lines down. `## [Unreleased]` stays on top, empty.
+2. Tag that commit on `main` and push the tag:
+
+   ```sh
+   git switch main && git pull
+   git tag v0.1.0 && git push origin v0.1.0
+   ```
+
+3. Watch the run in Actions, or `gh run watch` and pick Release. It reads the changelog before it builds anything: with no dated section for the version it stops there and nothing is published. Fix the changelog on `main`, then move the tag (`git push origin :refs/tags/v0.1.0`, `git tag -f v0.1.0`, push it again). The arm64 half is built under emulation and is the slow part.
+4. Check what came out:
+
+   ```sh
+   gh release view v0.1.0
+   docker buildx imagetools inspect ghcr.io/codu-code/pluck:0.1.0     # linux/amd64 and linux/arm64
+   gh attestation verify oci://ghcr.io/codu-code/pluck:0.1.0 --repo codu-code/pluck
+   ```
+
+Once, after the first release: a package pushed by a workflow starts private, and until it is public nobody else can pull it (their `docker compose up -d` builds from the checkout instead). On GitHub, open the `codu-code` organisation, Packages, `pluck`, Package settings:
+
+1. Danger Zone, Change visibility, Public. This cannot be undone. If Public is not offered, allow public container packages first (the organisation's Settings, Packages).
+2. The package should already name `codu-code/pluck` as its repository, since the workflow's token and the image's source label link it. If it does not, use Connect repository on the package's page.
+3. Signed out, from any machine: `docker logout ghcr.io && docker pull ghcr.io/codu-code/pluck:latest`.
+
+To try the build without publishing anything, once the workflow is on `main`: `gh workflow run release.yml -f push=false` builds both architectures and pushes nothing. With `push=true` it publishes, and only when run from a tag (`--ref v0.1.0`).
+
+Anyone who can push a tag named `v*.*.*` can publish. A tag ruleset (Settings, Rules) keeps that to maintainers.
+
 ## Rotating the storage key
 
 The app reaches S3 and SES as the IAM user `pluck-app` with one long-lived access key: the `AppUserKey` resource in `infra/cdk/lib/data-stack.ts`, kept in Secrets Manager as `pluck/app-user`. Rotate it once a year, when someone who could read it leaves, and straight away if it may have leaked.
