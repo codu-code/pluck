@@ -94,6 +94,71 @@ test("an error that is not one of ours stays on our side: logged, and the AI too
   expect(seen).toEqual(["list_tags"]);
 });
 
+test("every tool declares the shape of its result and answers with it, beside the same JSON as text; an error stays as it was", async () => {
+  const { a } = await twoUsers();
+  const { client, call } = await connect(a, [...ALL, "library:delete"]);
+  const item = (await pluckAny(a, { url: `${FIX}/news-1.html` })).results[0]!.item;
+  await addHighlight(a, { itemId: item.id, quote: "marked", note: "mine", selector: { textQuote: { exact: "marked", prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  const { tag } = await addTag(a, "Reading");
+  const list = await newList(a, { name: "Sources", purpose: "kept", items: [{ itemId: item.id, note: "why" }] });
+  const long = await note(a, Array.from({ length: 2000 }, (_, i) => `Line ${i} ${"word ".repeat(10)}`).join("\n"));
+  const { textCursor } = await call("get_item", { id: long.id, include: ["text"] });
+  const todo = (await pluckAny(a, { text: "Ring the printer", kind: "todo", dueAt: new Date(Date.now() + 86_400_000).toISOString() })).results[0]!.item;
+
+  // Every tool, with a call that fills its result (and get_item's two answers: the Item, and a later page of its text).
+  const calls: Record<string, Record<string, unknown>[]> = {
+    search_items: [{ query: "finishing problem" }],
+    list_items: [{}],
+    get_item: [{ id: item.id }, { id: long.id, cursor: textCursor }, { id: todo.id, include: [] }],
+    list_highlights: [{}],
+    list_tags: [{}],
+    list_lists: [{}],
+    get_list: [{ id: list.id }],
+    get_digest: [{}],
+    save_item: [{ url: `${FIX}/news-2.html`, tagIds: [tag.id] }, { text: "A note", kind: "note" }],
+    batch_update: [{ itemIds: [item.id], patch: { addTagIds: [tag.id] } }],
+    create_tag: [{ name: "Essays" }],
+    create_list: [{ name: "Made here", items: [{ itemId: item.id }] }],
+    update_list: [{ id: list.id, name: "Renamed" }],
+    delete_item: [{ id: todo.id }],
+  };
+  const { tools } = await client.listTools();
+  expect(tools.map((t) => t.name).sort()).toEqual(Object.keys(calls).sort()); // a new tool joins this table
+  for (const tool of tools) {
+    expect(tool.outputSchema, tool.name).toMatchObject({ type: "object", properties: expect.any(Object) });
+    for (const args of calls[tool.name]!) {
+      // Given the tool's definition, the client checks structuredContent against its outputSchema and throws when it does not fit.
+      const res = await client.callTool({ name: tool.name, arguments: args }, { toolDefinition: tool });
+      const text = (res.content as { text: string }[])[0]!.text;
+      expect(res.isError, `${tool.name}: ${text}`).toBeFalsy();
+      expect(res.structuredContent, tool.name).toEqual(JSON.parse(text));
+      expect(Object.keys(res.structuredContent as object).length, tool.name).toBeGreaterThan(0);
+    }
+  }
+
+  const getItem = tools.find((t) => t.name === "get_item")!;
+  const missing = await client.callTool({ name: "get_item", arguments: { id: todo.id } }, { toolDefinition: getItem }); // now in the bin
+  expect(missing).toMatchObject({ isError: true, content: [{ type: "text", text: JSON.stringify({ error: { code: "not_found", message: "No such item." } }) }] });
+  expect(missing.structuredContent).toBeUndefined();
+  const badInput = await client.callTool({ name: "get_item", arguments: { id: "nope" } }, { toolDefinition: getItem });
+  expect(badInput.isError).toBe(true);
+  expect(badInput.structuredContent).toBeUndefined();
+});
+
+test("a result goes out as its declared shape and nothing more; one that does not fit is our error, logged, and the AI tool gets a plain internal error", async () => {
+  const { a } = await twoUsers();
+  const seen: string[] = [];
+  const answers: unknown[] = [{ matched: 1, updated: 1, internal: "not for the AI tool" }, { matched: "two" }];
+  const lib = { ...connectorFor(a), batch: async () => answers.shift() as never };
+  const { client, call } = await connect(a, ALL, lib, (_e, tool) => seen.push(tool));
+  const args = { itemIds: ["000000000000000000000000"], patch: { status: "later" } };
+  const extra = await client.callTool({ name: "batch_update", arguments: args });
+  expect(extra.structuredContent).toEqual({ matched: 1, updated: 1 });
+  expect((extra.content as { text: string }[])[0]!.text).toBe('{"matched":1,"updated":1}');
+  expect((await call("batch_update", args)).error).toEqual({ code: "internal", message: "Something went wrong on Pluck's side." });
+  expect(seen).toEqual(["batch_update"]);
+});
+
 test("search, browse and read: cards, full text paged, highlights and lists, and nothing from another person", async () => {
   const { a, b } = await twoUsers();
   const { call } = await connect(a);
