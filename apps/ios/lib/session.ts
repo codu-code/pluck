@@ -61,14 +61,19 @@ function refused(s: Session) {
 
 // What one person left waiting never goes up as another: the queue, what the share sheet could not send (pending/ in
 // the App Group), and the Tags and List the sheet remembers.
+// Each part on its own, and none of them throws: this runs in the middle of a sign-in, which must still finish.
 async function clearWaiting(): Promise<void> {
-  await kv.remove("queue");
-  const container = Paths.appleSharedContainers[GROUP];
-  const pending = container ? new Directory(container, "pending") : null;
-  if (pending?.exists) pending.delete();
-  const shared = new ExtensionStorage(GROUP);
-  shared.set("tags", undefined);
-  shared.set("lastList", undefined);
+  const parts = [
+    () => kv.remove("queue"),
+    () => {
+      const container = Paths.appleSharedContainers[GROUP];
+      const pending = container ? new Directory(container, "pending") : null;
+      if (pending?.exists) pending.delete();
+    },
+    () => new ExtensionStorage(GROUP).set("tags", undefined),
+    () => new ExtensionStorage(GROUP).set("lastList", undefined),
+  ];
+  for (const part of parts) await Promise.resolve().then(part).catch(() => {});
 }
 
 // A sign-in, before its session is written (so nothing is sent in between): the same person back on the same server
