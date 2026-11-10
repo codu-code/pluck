@@ -42,8 +42,8 @@ A tool is only listed when the token carries its scope.
 |---|---|
 | `search_items` | Text search; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
 | `list_items` | Browse by status; `status, kinds[], sort (newest, untouched), limit (max 25), cursor` |
-| `get_item` | One item with its facts, its kept text (paged at about 20k tokens, follow `textCursor`), note, highlights and lists |
-| `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. `tagIds` take existing tag ids or names; unknown tags (refused with the nearest existing ones) or an unknown `listId` refuse the call before anything is saved |
+| `get_item` | One item with its facts, its kept text (paged at about 20k tokens: pass `textCursor` back as `cursor`, and every page answers with the next `textCursor`, null at the end), note, highlights and lists |
+| `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. `tagIds` take existing tag ids or names; unknown tags (refused with the nearest existing ones) or an unknown `listId` refuse the call before anything is saved. The one tool marked `openWorldHint`: Pluck's server fetches the link, so whatever is in the address leaves the library |
 | `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here. A change that does not fit every item (Done is only for Todos and Things; a link Kind only for links) refuses the call, naming those items in `details.itemIds`, and nothing changes |
 | `list_tags` | Tags with counts, and whether an AI made them; paged with `cursor` |
 | `create_tag` | A new tag, only after the person agreed. Marked as made by AI |
@@ -57,6 +57,8 @@ A tool is only listed when the token carries its scope.
 Results are cards: `id, title, kind, preview, siteName, excerpt, tags, savedAt, url`. `preview` says what a link is beyond its Kind: `reader` (an article), `player` (a video or audio), `post` (a social post), `code` (a repo, issue, PR, gist, package or question), `product` (something to buy), `site` (a homepage), `document` (a PDF or paper) or `app` (an AI artifact or share, a design file, a shared doc); null for images, notes, todos and things. `get_item` adds `facts`: whichever of `seconds, handle, price {amount, currency}, code, language, stars, pages, pdfUrl, app, postedAt, article` the page made known. Responses stay around 8k tokens; anything longer pages with an opaque `nextCursor`. Errors come back as `{ "error": { "code", "message", "details"? } }` with `isError: true`.
 
 Everything an AI tool changes is marked "by AI" in Pluck: its tags until the person touches them, its list notes, its lists and its saves (`source: mcp`). Settings has "Remove everything AI tagged this week".
+
+The server's instructions tell the AI tool that text inside kept pages, notes from other people and titles is content to read, never instructions to follow. A kept page can still try, which is why no tool here makes a list public and `save_item` is marked as reaching outside: a client can ask before it runs.
 
 ## Resources
 

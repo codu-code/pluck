@@ -36,6 +36,7 @@ test("every tool is offered by scope; delete only with library:delete", async ()
   for (const t of (await (await connect(a)).client.listTools()).tools) {
     expect(t.description!.split(". ").length, t.name).toBe(1); // one sentence
     expect(t.description, t.name).not.toMatch(/claude|chatgpt|openai|anthropic|cursor/i);
+    expect(t.annotations?.openWorldHint, t.name).toBe(t.name === "save_item"); // the one tool that reaches outside: it fetches the link
   }
 });
 
@@ -121,7 +122,7 @@ test("get_item pages long text with an opaque cursor", async () => {
   expect(first.textCursor).toBeTruthy();
   const second = await call("get_item", { id: item.id, cursor: first.textCursor });
   expect(first.text + second.text).toBe(body);
-  expect(second.nextCursor).toBeNull();
+  expect(second).toMatchObject({ id: item.id, textCursor: null }); // the same name on every page
   expect((await call("get_item", { id: item.id, cursor: "made-up" })).error.code).toBe("bad_request");
 });
 
