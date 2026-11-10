@@ -1,5 +1,5 @@
 import { finishSignIn } from "@/lib/auth";
-import { drain, pluckTab, pluckUrl, refreshBadge, type PluckOutcome } from "@/lib/pluck";
+import { drain, pluckTab, pluckUrl, refreshBadge, resume, type PluckOutcome } from "@/lib/pluck";
 import { settings } from "@/lib/store";
 import { t } from "@/lib/t";
 
@@ -32,6 +32,9 @@ export default defineBackground(() => {
   });
   browser.tabs.onActivated.addListener(async ({ tabId }) => refreshBadge(tabId, (await browser.tabs.get(tabId)).url));
   browser.alarms.onAlarm.addListener((alarm) => void (alarm.name === "drain" && drain()));
+  // Every start of the worker: a browser start and an install or update are among them (onStartup and onInstalled
+  // above wake it), and those are when the alarm is lost.
+  void resume();
 
   // For the e2e suite, which cannot click a native context menu or wait out an alarm.
   (globalThis as unknown as { pluckTest: object }).pluckTest = { menu: onMenu, drain };
