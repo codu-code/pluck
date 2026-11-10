@@ -51,7 +51,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 **From email.** SES writes the message to the bucket under `inbound/`; the schedule polls it and queues an `email-in` job, which becomes an Item through `ingestInbound` (`lib/library/email-in.ts`).
 
-**Jobs.** The queue is the `jobs` collection (`packages/db/src/jobs.ts`: claim with a lease, retry, fail). The handlers are in `apps/web/lib/jobs.ts`; the loop that claims and retries them is `lib/job-runner.ts`. They run:
+**Jobs.** The queue is the `jobs` collection (`packages/db/src/jobs.ts`: claim with a lease, retry, fail). The handlers are in `apps/web/lib/jobs.ts`; the loop that claims and retries them is `lib/job-runner.ts`. Each pass takes the quick queues first (email-in, files, exports, welcomes, the Monday email, imports), then reads pages four at a time, so a big import never holds up everyone's email. A job that fails for the last time tells what it was for (the export, the import or the Item), so nothing reads as running for ever. They run:
 
 - locally: `pnpm --filter @pluck/web worker`;
 - self-hosted: the `worker` service in `docker-compose.yml`, the same image as `web`;
@@ -69,6 +69,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 - **iPhone:** the TanStack Query cache is persisted, plucks made offline queue on the phone, the share extension leaves what it could not send in the App Group for the app to send, and on Wi-Fi the text of the newest 300 Items is kept for reading.
 - **Extension:** plucks queue in storage; an alarm drains them every minute and the toolbar badge shows a dot while they wait.
 - **Web:** the service worker (`public/sw.js`) keeps the app shell and an offline page in your language; plucks made offline wait in `localStorage`.
+- **Whose they are:** what waits to go up belongs to the person who left it. Signing out by hand, or switching server, clears it; a token the server refused keeps it (the library on the device goes, the queue stays) and the same person signing back in sends it. A sign-in by anyone else clears it first. Notes, Todos and Things carry a `clientKey` from their first send, so a resend never makes a second one.
 
 ## Rules worth knowing before you change anything
 

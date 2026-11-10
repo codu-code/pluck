@@ -95,7 +95,10 @@ final class ShareModel: ObservableObject {
           if let plucked, plucked.hasCover != true, let jpeg = preview?.jpeg { covers.append((plucked.id, jpeg)) }
         case let .text(text):
           if item == nil { self.title = String(text.prefix(80)) }
-          do { plucked = try await client.pluck(["text": text]) } catch PluckError.offline { client.queue(body: ["text": text]); queued = true; continue }
+          // The key is made before the first send and goes with the queued copy: a Note that landed while its answer
+          // was lost (the sheet waits 5 seconds) is not made again when the app sends what waited.
+          let body: [String: Any] = ["text": text, "clientKey": UUID().uuidString]
+          do { plucked = try await client.pluck(body) } catch PluckError.offline { client.queue(body: body); queued = true; continue }
         case let .file(url, name, contentType):
           if item == nil { self.title = name }
           do { plucked = try await client.pluckFile(url, name: name, contentType: contentType) } catch PluckError.offline {

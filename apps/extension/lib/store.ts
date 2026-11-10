@@ -9,13 +9,14 @@ export type Settings = {
   transcripts: boolean;
 };
 
-type Local = {
+export type Local = {
   settings: Settings;
   clientIds: Record<string, string>; // "<server origin> <scopes>" → client_id this extension registered there
   tokens: Tokens | null;
   apiKey: string | null; // self-hosters can paste a pk_live_ key instead of signing in
   email: string | null;
   queue: Queued[];
+  owner: string | null; // whose plucks the queue holds, when no token says so: a key's person, or the one whose token was refused
   lastListId: string | null;
   seenTips: boolean;
 };
@@ -27,6 +28,7 @@ const DEFAULTS: Local = {
   apiKey: null,
   email: null,
   queue: [],
+  owner: null,
   lastListId: null,
   seenTips: false,
 };

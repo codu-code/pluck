@@ -1,7 +1,9 @@
+import { ExtensionStorage } from "@bacons/apple-targets";
 import Constants from "expo-constants";
 import * as Crypto from "expo-crypto";
+import { Directory, Paths } from "expo-file-system";
 import * as SecureStore from "expo-secure-store";
-import { codeFrom, createClient, createSession, pkcePair, register, tokenRequest } from "@pluck/client";
+import { codeFrom, createClient, createSession, pkcePair, register, sameOwner, tokenRequest, whoIs } from "@pluck/client";
 import { locale } from "./i18n";
 import { kv } from "./kv";
 
@@ -15,6 +17,7 @@ export type Session = {
   expiresAt?: number;
   apiKey?: string;
   email?: string;
+  userId?: string; // who this is where no token says so: a key's session, and what is left of one the server refused
 };
 
 const STORE = { keychainService: "pluck", keychainAccessible: SecureStore.AFTER_FIRST_UNLOCK };
@@ -24,6 +27,8 @@ export const REDIRECT = "io.getpluck.app:/oauth";
 // "library:delete": Delete in the Archive and Delete forever in the Bin.
 const SCOPE = "offline_access library:read library:write library:delete account";
 export const defaultServer: string = (Constants.expoConfig?.extra as { server?: string } | undefined)?.server ?? "https://getpluck.io";
+// The App Group the share extension shares: the Tags and List its sheet shows, and what it could not send.
+export const GROUP: string = (Constants.expoConfig?.extra as { appGroup?: string } | undefined)?.appGroup ?? "group.io.getpluck.app";
 export const showServerChoice = Boolean((Constants.expoConfig?.extra as { showServer?: boolean } | undefined)?.showServer);
 
 let current: Session | null | undefined;
@@ -44,6 +49,40 @@ async function setSession(s: Session | null) {
   listeners.forEach((fn) => fn(s));
 }
 
+const who = (s: Session | null) => s?.userId ?? whoIs(s?.access);
+
+// The server refused the token: show sign-in rather than screens where every request fails. The library on the phone
+// goes (app/_layout.tsx), but what waits to go up stays, with the id of whose it is: the same person will most likely
+// sign straight back in.
+function refused(s: Session) {
+  const userId = who(s);
+  return setSession({ server: s.server, ...(userId ? { userId } : {}) });
+}
+
+// What one person left waiting never goes up as another: the queue, what the share sheet could not send (pending/ in
+// the App Group), and the Tags and List the sheet remembers.
+// Each part on its own, and none of them throws: this runs in the middle of a sign-in, which must still finish.
+async function clearWaiting(): Promise<void> {
+  const parts = [
+    () => kv.remove("queue"),
+    () => {
+      const container = Paths.appleSharedContainers[GROUP];
+      const pending = container ? new Directory(container, "pending") : null;
+      if (pending?.exists) pending.delete();
+    },
+    () => new ExtensionStorage(GROUP).set("tags", undefined),
+    () => new ExtensionStorage(GROUP).set("lastList", undefined),
+  ];
+  for (const part of parts) await Promise.resolve().then(part).catch(() => {});
+}
+
+// A sign-in, before its session is written (so nothing is sent in between): the same person back on the same server
+// keeps what waits, anyone else starts with nothing waiting.
+async function arrive(server: string, userId: string | null): Promise<void> {
+  const was = await getSession();
+  if (was?.server !== server || !sameOwner(who(was), userId)) await clearWaiting();
+}
+
 // The share extension (Swift) refreshes from the same Keychain item and cannot share a lock with the app, so the
 // session re-reads the Keychain before refreshing and keeps the extension's tokens when it got there first.
 const session = createSession({
@@ -54,7 +93,7 @@ const session = createSession({
   },
   write: async (t) => {
     const s = await getSession();
-    if (s) await setSession(t ? { ...s, ...t } : { server: s.server }); // refused: show sign-in rather than screens where every request fails
+    if (s) await (t ? setSession({ ...s, ...t }) : refused(s));
   },
 });
 
@@ -133,6 +172,7 @@ async function finishSignIn(p: Pending, url: string): Promise<boolean> {
   }).catch(() => null); // offline at this step: try the code again
   if (!tokens) return false;
   await SecureStore.deleteItemAsync("pending", STORE);
+  await arrive(p.server, whoIs(tokens.access));
   await setSession({ server: p.server, clientId: p.clientId, ...tokens });
   await rememberEmail();
   return true;
@@ -141,8 +181,9 @@ async function finishSignIn(p: Pending, url: string): Promise<boolean> {
 export async function signInWithKey(server: string, key: string): Promise<boolean> {
   const res = await fetch(`${server}/api/v1/me`, { headers: { authorization: `Bearer ${key.trim()}` } }).catch(() => null);
   if (!res?.ok) return false;
-  const { me } = (await res.json()) as { me: { email: string } };
-  await setSession({ server, apiKey: key.trim(), email: me.email });
+  const { me } = (await res.json()) as { me: { id: string; email: string } };
+  await arrive(server, me.id);
+  await setSession({ server, apiKey: key.trim(), email: me.email, userId: me.id });
   return true;
 }
 
@@ -154,6 +195,7 @@ async function rememberEmail() {
 
 export async function signOut(): Promise<void> {
   await session.revoke();
+  await clearWaiting().catch(() => {}); // signed out by hand: nothing waits for anyone. A leftover goes at the next sign-in.
   await setSession(null);
 }
 
@@ -162,6 +204,6 @@ export const api = createClient({
   auth: authHeader,
   onSignedOut: async () => {
     const s = await getSession();
-    if (s) await setSession({ server: s.server });
+    if (s) await refused(s);
   },
 });

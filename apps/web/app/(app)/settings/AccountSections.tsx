@@ -16,10 +16,22 @@ const send = (url: string, method: string, body?: unknown) =>
 export function SignOut() {
   const router = useRouter();
   const t = useTranslations("app.settings");
+  const app = useTranslations("app.common");
+  const [toast, showToast] = useToast();
   return (
-    <button type="button" className={styles.linkButton} onClick={async () => { await signOutHere(); router.push("/signin"); }}>
-      {t("signOut")}
-    </button>
+    <>
+      <button
+        type="button"
+        className={styles.linkButton}
+        onClick={async () => {
+          if (await signOutHere()) router.push("/signin");
+          else showToast({ message: app("didNotGoThrough") });
+        }}
+      >
+        {t("signOut")}
+      </button>
+      {toast}
+    </>
   );
 }
 

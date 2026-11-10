@@ -72,6 +72,16 @@ export async function drain(): Promise<number> {
   return left;
 }
 
+// The browser forgets alarms when it restarts (Firefox) or the extension updates (Chrome), and the badge with them.
+// So each time the background starts, plucks still waiting get their alarm and their dot back. An alarm that is still
+// set is left alone: making it again starts its minute over, and a worker that restarts often would never reach it.
+export async function resume(): Promise<void> {
+  const count = await queue.count();
+  if (!count) return;
+  if (!(await browser.alarms.get("drain"))) await browser.alarms.create("drain", { periodInMinutes: 1 });
+  await showQueued(count);
+}
+
 // ---- The toolbar: a dot while plucks are queued; the icon fills in on pages already in the library -------
 
 async function showQueued(count: number) {

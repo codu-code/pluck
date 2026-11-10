@@ -1,17 +1,14 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
 import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
 import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AppState } from "react-native";
-import { createDrain, createLibrary, createQueue, Unreachable } from "@pluck/client";
+import { createDrain, createLibrary, createQueue, newKey, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
-import { api, authHeader, getSession } from "./session";
-
-const GROUP: string = (Constants.expoConfig?.extra as { appGroup?: string } | undefined)?.appGroup ?? "group.io.getpluck.app";
+import { api, authHeader, getSession, GROUP } from "./session";
 
 // The cache survives restarts (persisted in lib/kv), so the app opens on what it last saw, offline too.
 export const queryClient = new QueryClient({
@@ -153,13 +150,14 @@ export function usePatchItem() {
 const queue = createQueue({ read: () => kv.get("queue", []), write: (q) => kv.set("queue", q) });
 
 export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; queued: boolean }> {
+  const clientKey = newKey(); // the same key on the first send and on the queued copy: a lost answer makes no second Note
   try {
-    const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", ...body } });
+    const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", clientKey, ...body } });
     void queryClient.invalidateQueries({ queryKey: ["items"] });
     return { item: res.results[0]?.item ?? null, queued: false };
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
-    await queue.add({ source: "ios", ...body });
+    await queue.add({ source: "ios", ...body }, clientKey);
     void queryClient.invalidateQueries({ queryKey: keys.pending });
     return { item: null, queued: true };
   }
@@ -203,8 +201,9 @@ export async function syncPending(): Promise<number> {
   await queue.drain((body) => api("/api/v1/items", { json: body }));
   await shares(async ({ f, record }) => {
     if (!record) return; // unreadable: nothing to send, so it goes
-    // The file's name is the key: if the upload below fails, sending the body again makes no second Note.
-    if (record.body) await api("/api/v1/items", { json: { ...record.body, clientKey: f.name } });
+    // The key the share sheet first sent it with (the file's name for one left by an older build): if its answer was
+    // lost, or the upload below fails, sending the body again makes no second Note.
+    if (record.body) await api("/api/v1/items", { json: { clientKey: f.name, ...record.body } });
     if (record.file) await uploadShared(record.file);
   });
   void queryClient.invalidateQueries({ queryKey: ["items"] });
@@ -212,14 +211,21 @@ export async function syncPending(): Promise<number> {
   return toSync();
 }
 
+// The upload link a share's file was given, by its path in the App Group: a failed upload tries again into the same
+// Item, where asking again made another Item each time, each left on "The file has not arrived".
+// shortcut: the link is kept in memory only and one the bucket refuses (it lasts 15 minutes) cannot be renewed, so a retry after that or after the app restarts still makes a new Item; upgrade when the API can give a new link for an Item it already made.
+const uploadLinks = new Map<string, { uploadUrl: string }>();
+
 async function uploadShared(file: { name: string; contentType: string; path: string }) {
   const container = Paths.appleSharedContainers[GROUP];
   if (!container) return;
   const local = new File(container, file.path);
   if (!local.exists) return;
   const bytes = await local.bytes(); // read first: the upload URL takes exactly the size and type declared here
-  const { uploadUrl } = await api<{ uploadUrl: string }>("/api/v1/items/files", { json: { name: file.name, contentType: file.contentType, size: bytes.length, source: "ios" } });
+  const { uploadUrl } = uploadLinks.get(file.path) ?? (await api<{ uploadUrl: string }>("/api/v1/items/files", { json: { name: file.name, contentType: file.contentType, size: bytes.length, source: "ios" } }));
+  uploadLinks.set(file.path, { uploadUrl });
   const res = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.contentType }, body: bytes }).catch(() => null);
+  if (res && res.status < 500) uploadLinks.delete(file.path); // sent, or the link is refused: the next try asks for a new one
   if (!res?.ok) throw new Unreachable("upload failed"); // a dropped connection too: keep the share and try again
   local.delete();
 }

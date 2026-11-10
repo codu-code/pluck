@@ -1,5 +1,5 @@
-import { createSession, pkcePair, register, tokenRequest } from "@pluck/client";
-import { get, set, settings } from "./store";
+import { createSession, pkcePair, register, sameOwner, tokenRequest, whoIs } from "@pluck/client";
+import { get, set, settings, type Local } from "./store";
 
 // Sign-in is OAuth 2.1 with PKCE against the person's Pluck server. The authorisation runs in an ordinary tab,
 // not a web-auth window, because the email link that signs you in opens in its own tab; wherever it ends,
@@ -48,10 +48,22 @@ export async function finishSignIn(url: string): Promise<boolean> {
     code_verifier: pending.verifier, resource: `${pending.server}/api/v1`,
   }).catch(() => null); // offline at this step: sign in again
   if (!tokens) return false;
-  await set({ tokens, apiKey: null });
+  await signInAs(whoIs(tokens.access), { tokens, apiKey: null });
   await rememberEmail();
   return true;
 }
+
+// Whose plucks the queue holds: the person signed in, or the last one the server signed out.
+const queueOwner = async () => whoIs((await get("tokens"))?.access) ?? (await get("owner"));
+
+// A sign-in, in one write (so no drain runs in between): the same person back after a refused token keeps the queue,
+// anyone else starts with it empty. A queued pluck can hold a whole page, and it goes up as whoever is signed in.
+async function signInAs(id: string | null, credentials: Partial<Local>): Promise<void> {
+  await set({ ...credentials, owner: id, ...(sameOwner(await queueOwner(), id) ? {} : { queue: [] }) });
+}
+
+// The server refused the token: sign-in shows again, and the queue waits for the same person.
+export const refused = async () => set({ tokens: null, email: null, owner: await queueOwner() });
 
 // The popup, the options page and the service worker each load this, so the refresh is guarded by a Web Lock,
 // which all of them share, not by memory, which they do not.
@@ -60,17 +72,20 @@ const session = createSession({
     const { server } = await settings();
     return { server, clientId: (await get("clientIds"))[clientKey(server)], apiKey: await get("apiKey"), tokens: await get("tokens") };
   },
-  write: (tokens) => set({ tokens }),
+  write: (tokens) => (tokens ? set({ tokens }) : refused()),
   lock: async (fn) => await navigator.locks.request("pluck-refresh", fn),
 });
 
 export const { authHeader, isSignedIn } = session;
 
+// The key is asked who it is before it is kept, so the queue is known to be theirs (or emptied) first.
 export async function useApiKey(key: string): Promise<boolean> {
-  await set({ apiKey: key.trim(), tokens: null });
-  if (await rememberEmail()) return true;
-  await set({ apiKey: null });
-  return false;
+  const { server } = await settings();
+  const res = await fetch(`${server}/api/v1/me`, { credentials: "omit", headers: { authorization: `Bearer ${key.trim()}` } }).catch(() => null);
+  if (!res?.ok) return false;
+  const { me } = (await res.json()) as { me: { id: string; email: string } };
+  await signInAs(me.id, { apiKey: key.trim(), tokens: null, email: me.email });
+  return true;
 }
 
 async function rememberEmail(): Promise<boolean> {
@@ -85,5 +100,5 @@ async function rememberEmail(): Promise<boolean> {
 
 export async function signOut(): Promise<void> {
   await session.revoke();
-  await set({ tokens: null, apiKey: null, email: null });
+  await set({ tokens: null, apiKey: null, email: null, owner: null, queue: [] }); // signed out by hand (or a new server): nothing waits
 }
