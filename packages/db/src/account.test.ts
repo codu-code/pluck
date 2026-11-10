@@ -38,6 +38,15 @@ test("imports land in the Archive as imported, keep tags, and never disturb what
   expect(await getItem(a, mine.id)).toMatchObject({ status: "inbox", title: "https://example.com/already", tagIds: [] });
 });
 
+test("an imported link is kept as the old app had it, and is the same Item as that link plucked another way round", async () => {
+  const { a } = await twoUsers();
+  const forum = await importLink(a, "https://forum.example.com/index.php?/topic/123-title/", { title: "A topic", tags: [], note: null, createdAt: null });
+  expect(forum.item.url).toBe("https://forum.example.com/index.php?/topic/123-title/");
+  const mine = (await pluckLink(a, { url: "https://example.com/a?a=2&b=1", source: "web" })).item;
+  const again = await importLink(a, "https://example.com/a?b=1&a=2", { title: "Other", tags: [], note: null, createdAt: null });
+  expect(again).toMatchObject({ created: false, item: { id: mine.id, url: "https://example.com/a?a=2&b=1" } });
+});
+
 test("an import starts once, and only for its owner", async () => {
   const { a, b } = await twoUsers();
   const imp = await createImport(a, "pocket", "u/x/imports/y.csv");
