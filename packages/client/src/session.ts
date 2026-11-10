@@ -62,6 +62,21 @@ export function createSession(store: SessionStore, f: typeof fetch = fetch) {
   };
 }
 
+// The person an access token speaks for: the `sub` of the JWT the server issues for the API. Null for anything else
+// (a personal key, no token), which is nobody we can name.
+export function whoIs(access?: string | null): string | null {
+  try {
+    const part = access!.split(".")[1]!.replace(/-/g, "+").replace(/_/g, "/");
+    return (JSON.parse(atob(part.padEnd(Math.ceil(part.length / 4) * 4, "="))) as { sub?: string }).sub ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// What waits on a device to go up belongs to whoever left it there. The same person signing back in (their token was
+// refused) keeps it; a sign-in by anyone else, or by someone we cannot name, clears it first.
+export const sameOwner = (was: string | null | undefined, now: string | null | undefined): boolean => Boolean(now) && was === now;
+
 // Dynamic client registration: each app registers once per server and remembers the client_id itself.
 export async function register(server: string, app: { name: string; redirect: string; scope: string }): Promise<string> {
   const res = await fetch(`${server}/api/auth/oauth2/register`, {

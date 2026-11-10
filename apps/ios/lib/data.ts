@@ -1,7 +1,6 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
 import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
 import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
-import Constants from "expo-constants";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
 import { useEffect, useState, useSyncExternalStore } from "react";
@@ -9,9 +8,7 @@ import { AppState } from "react-native";
 import { createDrain, createLibrary, createQueue, Unreachable } from "@pluck/client";
 import { KEEP, MAX_BYTES, onWifi, overCap, plan, toKeep, type Kept } from "./keep";
 import { kv } from "./kv";
-import { api, authHeader, getSession } from "./session";
-
-const GROUP: string = (Constants.expoConfig?.extra as { appGroup?: string } | undefined)?.appGroup ?? "group.io.getpluck.app";
+import { api, authHeader, getSession, GROUP } from "./session";
 
 // The cache survives restarts (persisted in lib/kv), so the app opens on what it last saw, offline too.
 export const queryClient = new QueryClient({
