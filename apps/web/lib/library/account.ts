@@ -65,7 +65,10 @@ export function trackAiTool(userId: string, event: "ai_tool_connected" | "ai_too
 // ---- Import ---------------------------------------------------------------------------------------
 
 const BATCH = 200;
-const TYPES: Record<ImportSource, string> = { pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip" };
+const TYPES: Record<ImportSource, string> = {
+  pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip",
+  instapaper: "text/csv",
+};
 
 // Step 1: a record and a URL the browser uploads the file to directly. The URL takes exactly `size` bytes.
 export async function beginImport(userId: string, source: ImportSource, size: number): Promise<{ import: ImportStatus; uploadUrl: string; contentType: string }> {

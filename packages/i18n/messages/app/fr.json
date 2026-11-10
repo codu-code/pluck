@@ -1007,6 +1007,7 @@
         "pocket": "Pocket (CSV)",
         "omnivore": "Omnivore (zip)",
         "raindrop": "Raindrop (CSV)",
+        "instapaper": "Instapaper (CSV)",
         "html": "Favoris du navigateur (HTML)"
       },
       "drop": "Déposez un fichier, ou choisissez-en un",

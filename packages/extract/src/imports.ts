@@ -1,8 +1,9 @@
+import type { ImportSource } from "@pluck/shared-schemas";
 import { unzipSync, strFromU8 } from "fflate";
 import { parseHTML } from "linkedom";
 
 // Parsers for the files people bring from elsewhere. Pure: a file in, a list of entries out.
-export type ImportSource = "pocket" | "omnivore" | "raindrop" | "html";
+export type { ImportSource };
 export type ImportEntry = {
   url: string;
   title: string | null;
@@ -49,7 +50,7 @@ export function parseCsv(text: string): Record<string, string>[] {
   return body.map((r) => Object.fromEntries(keys.map((k, i) => [k, (r[i] ?? "").trim()])));
 }
 
-const date = (v: string | undefined): Date | null => {
+const date = (v: string | number | null | undefined): Date | null => {
   if (!v) return null;
   const n = Number(v);
   const d = Number.isFinite(n) && n > 0 ? new Date(n < 1e12 ? n * 1000 : n) : new Date(v);
@@ -68,6 +69,23 @@ function pocket(text: string): ImportEntry[] {
 function raindrop(text: string): ImportEntry[] {
   return parseCsv(text).map((r) => ({
     url: r.url ?? "", title: r.title || null, tags: tagList(r.tags, /,\s*/), note: r.note || null, createdAt: date(r.created), html: null,
+  }));
+}
+
+// Instapaper: URL,Title,Selection,Folder,Timestamp and, since late 2025, Tags (a JSON array in one cell). A folder
+// becomes a tag; Unread, Archive and Starred say where it sat, and that and the star are dropped.
+function instapaper(text: string): ImportEntry[] {
+  const jsonTags = (v: string | undefined): string[] => {
+    try {
+      const list: unknown = JSON.parse(v || "[]");
+      return Array.isArray(list) ? list.filter((t) => typeof t === "string") : [];
+    } catch {
+      return [];
+    }
+  };
+  return parseCsv(text).map((r) => ({
+    url: r.url ?? "", title: r.title || null, note: r.selection || null, createdAt: date(r.timestamp), html: null,
+    tags: [...(r.folder && !/^(unread|archive|starred)$/i.test(r.folder) ? [r.folder] : []), ...jsonTags(r.tags)],
   }));
 }
 
@@ -114,8 +132,13 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
   return out;
 }
 
+const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
+const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
+  pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), omnivore,
+  html: text(bookmarksHtml),
+};
+
+// Throws on a file that is not what the source writes; the import then says it could not be read.
 export function parseImport(source: ImportSource, file: Uint8Array): ImportEntry[] {
-  const text = () => strFromU8(file);
-  const entries = source === "omnivore" ? omnivore(file) : source === "pocket" ? pocket(text()) : source === "raindrop" ? raindrop(text()) : bookmarksHtml(text());
-  return entries.filter((e) => /^https?:\/\//i.test(e.url));
+  return PARSERS[source](file).filter((e) => /^https?:\/\//i.test(e.url));
 }

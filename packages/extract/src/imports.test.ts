@@ -46,3 +46,16 @@ test("Omnivore: a zip that unpacks too large is refused before it is unpacked", 
   const many = Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`metadata_${i}.json`, big.subarray(0, 19_000_000)]));
   expect(() => parseImport("omnivore", zipSync(many))).toThrow(/too large/);
 });
+
+test("Instapaper: a folder becomes a tag, where it sat does not; JSON tags, the selection as the note, Unix dates", () => {
+  const e = parseImport("instapaper", file("instapaper.csv"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/small-teams", "https://example.com/window-functions", "https://example.com/kyoto", "https://example.com/small-teams"]);
+  expect(e[0]).toMatchObject({ title: 'Small teams ship, when the "list" is short', note: 'The part about "one list", quoted', tags: ["work", "teams"] });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.000Z");
+  expect(e[1]).toMatchObject({ title: null, note: null, tags: [] }); // Archive is not a folder
+  expect(e[2]).toMatchObject({ title: "京都の路地を歩く", tags: ["Travel", "japan"] });
+  expect(e[3]!.tags).toEqual([]); // nor is Starred
+  // An export from before the Timestamp and Tags columns, and a Tags cell that is not a list.
+  expect(parseImport("instapaper", strToU8("URL,Title,Selection,Folder\nhttps://example.com/old,Old,,Unread\n"))[0]).toMatchObject({ title: "Old", tags: [], createdAt: null });
+  expect(parseImport("instapaper", strToU8('URL,Title,Selection,Folder,Timestamp,Tags\nhttps://example.com/odd,Odd,,Unread,1700000000,"{""a"": 1"\n'))[0]!.tags).toEqual([]);
+});

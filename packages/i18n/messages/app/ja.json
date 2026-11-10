@@ -1007,6 +1007,7 @@
         "pocket": "Pocket（CSV）",
         "omnivore": "Omnivore（zip）",
         "raindrop": "Raindrop（CSV）",
+        "instapaper": "Instapaper（CSV）",
         "html": "ブラウザのブックマーク（HTML）"
       },
       "drop": "ファイルをドロップするか、選んでください",
