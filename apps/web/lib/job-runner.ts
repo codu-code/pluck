@@ -12,7 +12,7 @@ const MAX_ATTEMPTS = 5;
 async function runOne(handlers: Handlers, job: Job, gaveUp?: GaveUp): Promise<void> {
   const started = Date.now();
   const fail = async (error: string) => {
-    await failJob(job.id, error);
+    if (!(await failJob(job, error))) return; // another runner holds it now: what it was for is still being worked on
     await gaveUp?.[job.queue]?.(job.payload, error).catch((e: unknown) => log("error", "a failed job's record was not updated", { jobId: job.id, queue: job.queue, error: e }));
   };
   const handler = handlers[job.queue];
@@ -21,12 +21,12 @@ async function runOne(handlers: Handlers, job: Job, gaveUp?: GaveUp): Promise<vo
   if (job.attempts > MAX_ATTEMPTS) return fail("did not finish in time");
   try {
     await handler(job.payload);
-    await completeJob(job.id);
-    log("info", "job done", { jobId: job.id, queue: job.queue, durationMs: Date.now() - started });
+    const mine = await completeJob(job);
+    log(mine ? "info" : "warn", mine ? "job done" : "job ran past its lease and another runner took it", { jobId: job.id, queue: job.queue, durationMs: Date.now() - started });
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
     if (job.attempts >= MAX_ATTEMPTS) await fail(error);
-    else await retryJob(job.id, error, 30_000 * 2 ** (job.attempts - 1));
+    else await retryJob(job, error, 30_000 * 2 ** (job.attempts - 1));
     log("warn", "job failed", { jobId: job.id, queue: job.queue, attempts: job.attempts, error });
   }
 }

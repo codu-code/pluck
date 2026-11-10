@@ -76,6 +76,10 @@ describe("fromPage", () => {
     expect(fromPage(page('<meta name="citation_pdf_url" content="/pdf/2401.00001">'), "https://arxiv.org/abs/2401.00001", 150))
       .toEqual({ preview: "document", facts: { pdfUrl: "https://arxiv.org/pdf/2401.00001" } });
   });
+  test("a PDF address that is not http or https is left out", () => {
+    for (const pdf of ["javascript:alert(document.domain)", "data:text/html,<script>alert(1)</script>", "file:///etc/passwd", "pluck://items"])
+      expect(fromPage(page(`<meta name="citation_pdf_url" content="${pdf}">`), "https://papers.test/abs/1", 150)).toEqual({ preview: "reader", facts: {} });
+  });
   test("an article says so, even at a site's root", () => {
     expect(fromPage(page(ld({ "@type": "BlogPosting", headline: "Hi" })), "https://blog.test/", 400).preview).toBe("reader");
   });

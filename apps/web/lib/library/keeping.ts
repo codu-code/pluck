@@ -57,23 +57,29 @@ async function failed(userId: string, item: Item, e: unknown, retry: { queue: st
   return updated;
 }
 
-// Pictures only: an SVG can carry script, and a self-host may serve its blob store from its own domain.
-const picture = (contentType: string) => /^image\/(jpeg|png|webp|gif|avif)\b/i.test(contentType);
+// Pictures only: an SVG can carry script, and a self-host may serve its blob store from its own domain. The type kept
+// is the one matched (image/png), never the header as the other server wrote it, which the blob store would serve back.
+const picture = (contentType: string) => {
+  const subtype = /^image\/(jpeg|png|webp|gif|avif)\b/i.exec(contentType)?.[1];
+  return subtype ? `image/${subtype.toLowerCase()}` : null;
+};
 
 // Raw page, file and cover to the blob store. Covers go through the same guarded fetch as pages.
 async function storeBlobs(userId: string, itemId: string, x: Pick<Extracted, "kind" | "raw" | "coverUrl">): Promise<void> {
   const update: { coverKey?: string; htmlKey?: string } = {};
-  if (x.raw && (x.kind !== "image" || picture(x.raw.contentType))) {
+  const rawType = x.raw && (x.kind === "image" ? picture(x.raw.contentType) : x.raw.contentType);
+  if (x.raw && rawType) {
     const key = x.kind === "pdf" ? keys.file(userId, itemId, "pdf") : x.kind === "image" ? keys.cover(userId, itemId) : keys.html(userId, itemId);
-    await putObject(key, x.raw.body, x.raw.contentType);
+    await putObject(key, x.raw.body, rawType);
     if (x.kind === "image") update.coverKey = key;
     else if (x.kind !== "pdf") update.htmlKey = key;
   }
   if (x.coverUrl && !update.coverKey) {
     try {
       const img = await guardedFetch(x.coverUrl, { maxBytes: 5_000_000, accept: "image/*", signal: AbortSignal.timeout(8000) });
-      if (picture(img.contentType)) {
-        await putObject(keys.cover(userId, itemId), img.body, img.contentType);
+      const type = picture(img.contentType);
+      if (type) {
+        await putObject(keys.cover(userId, itemId), img.body, type);
         update.coverKey = keys.cover(userId, itemId);
       }
     } catch (e) {
@@ -146,7 +152,7 @@ export async function keepFile(userId: string, itemId: string, key: string, cont
   if (!item || item.extraction.state !== "pending") return;
   const started = Date.now();
   try {
-    const x = await extractFile({ body: await getObject(key, { maxBytes: MAX_FILE_BYTES }), contentType, fileName: name });
+    const x = await extractFile({ body: await getObject(key, { maxBytes: MAX_FILE_BYTES }), contentType, fileName: name }, { signal: AbortSignal.timeout(QUEUED_TIMEOUT_MS) });
     if (x.kind === "image") await setBlobKeys(userId, itemId, { coverKey: key });
     await applyExtraction(userId, itemId, toResult({ ...x, canonicalUrl: null }));
   } catch (e) {

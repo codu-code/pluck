@@ -1,7 +1,7 @@
 import { Readability } from "@mozilla/readability";
 import { Defuddle } from "defuddle/node";
 import { parseHTML } from "linkedom";
-import { extractText, getDocumentProxy } from "unpdf";
+import { getDocumentProxy } from "unpdf";
 import type { Facts, Preview } from "@pluck/shared-schemas";
 import { fromAddress, fromPage, isoSeconds } from "./classify.ts";
 import { guardedFetch } from "./fetch.ts";
@@ -143,9 +143,23 @@ function decodeHtml(body: Buffer, contentType: string): string {
   }
 }
 
-async function extractPdf(url: string, body: Buffer): Promise<Extracted> {
+// A book reads whole; a file built to have no end does not.
+const PDF_PAGES = 300;
+type PdfLimits = { signal?: AbortSignal; maxPages?: number };
+
+// The first `maxPages` pages, one at a time, so the caller's time limit stops the read between two pages. The page
+// count kept is still the file's own.
+// shortcut: opening the file and reading one page cannot be stopped part-way, so a single enormous page runs to its end; read PDFs in a worker thread if one ever holds a function up.
+async function extractPdf(url: string, body: Buffer, { signal, maxPages = PDF_PAGES }: PdfLimits = {}): Promise<Extracted> {
   const pdf = await getDocumentProxy(new Uint8Array(body));
-  const { text } = await extractText(pdf, { mergePages: true });
+  const pages: string[] = [];
+  for (let n = 1; n <= Math.min(pdf.numPages, maxPages); n++) {
+    signal?.throwIfAborted();
+    const { items } = await (await pdf.getPage(n)).getTextContent();
+    pages.push(items.map((i) => ("str" in i ? i.str + (i.hasEOL ? "\n" : "") : "")).join(""));
+  }
+  // Joined as unpdf's extractText({ mergePages }) joins them: line breaks kept, runs of spaces and blank lines closed up.
+  const text = pages.join("\n").replace(/[^\S\n]+/g, " ").replace(/ ?\n ?/g, "\n").replace(/\n{3,}/g, "\n\n");
   const info = (await pdf.getMetadata().catch(() => null))?.info as { Title?: string; Author?: string } | undefined;
   const fileName = fileNameOf(url);
   return {
@@ -156,9 +170,9 @@ async function extractPdf(url: string, body: Buffer): Promise<Extracted> {
 }
 
 // A file shared from a phone (no URL): a PDF's text, or an image kept as it is.
-export async function extractFile({ body, contentType, fileName }: { body: Buffer; contentType: string; fileName: string }): Promise<Extracted> {
+export async function extractFile({ body, contentType, fileName }: { body: Buffer; contentType: string; fileName: string }, limits?: PdfLimits): Promise<Extracted> {
   if (contentType === "application/pdf") {
-    const x = await extractPdf(`file:///${encodeURIComponent(fileName)}`, body);
+    const x = await extractPdf(`file:///${encodeURIComponent(fileName)}`, body, limits);
     return { ...x, url: "", siteName: null, title: x.title === fileName ? fileName.replace(/\.pdf$/i, "") : x.title };
   }
   return {
@@ -230,7 +244,7 @@ async function fetchAndRead(url: string, signal?: AbortSignal, asArticle?: boole
   const res = await guardedFetch(url, { signal });
   const type = res.contentType.toLowerCase();
   // Some hosts (Google Drive among them) send a PDF as plain bytes; its first bytes say what it is.
-  if (type.includes("application/pdf") || res.body.subarray(0, 5).toString("latin1") === "%PDF-") return extractPdf(res.url, res.body);
+  if (type.includes("application/pdf") || res.body.subarray(0, 5).toString("latin1") === "%PDF-") return extractPdf(res.url, res.body, { signal });
   if (type.startsWith("image/")) {
     const name = fileNameOf(res.url);
     return {
