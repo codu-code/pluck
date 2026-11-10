@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Pressable, Settings, StyleSheet, Text, useColorScheme, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -38,7 +39,16 @@ export function Split({ children }: { children: ReactNode }) {
   const [sidebar, setSidebar] = useState(pinned || Boolean(demo("demoSidebar")));
   useEffect(() => setSidebar(pinned || Boolean(demo("demoSidebar"))), [pinned]); // turning the iPad puts it back the way that orientation has it
   const value = useMemo(() => ({ detail, show, section, go, pinned, sidebar, setSidebar }), [detail, section, pinned, sidebar]);
-  const middle = section === "archive" ? <Archive /> : section === "bin" ? <Bin /> : section === "settings" ? <SettingsScreen /> : null;
+  // Narrowed under 600 (Split View, Slide Over) with Archive, Bin or Settings in the list column: the tabs come back
+  // and the place opens as the iPhone has it, a screen over them with its own Back or Done. Left in the column it
+  // would hide the tabs behind a screen whose Back has nothing to go back to.
+  useEffect(() => {
+    if (wide || section === "tabs") return;
+    go("tabs");
+    show((d) => (d?.kind === "settings" ? null : d)); // a Settings group does not stay beside another place (useGo)
+    router.push(`/${section}`);
+  }, [wide, section]);
+  const middle = !wide ? null : section === "archive" ? <Archive /> : section === "bin" ? <Bin /> : section === "settings" ? <SettingsScreen /> : null;
   return (
     <SplitContext.Provider value={wide ? value : null}>
       <View style={[styles.row, { backgroundColor: t.ground }]}>
