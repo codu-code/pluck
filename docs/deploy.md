@@ -103,6 +103,20 @@ Each release:
 
 Anyone who can push a tag named `mcp-v*` can publish. A tag ruleset (Settings, Rules) keeps that to maintainers.
 
+## Rotating the storage key
+
+The app reaches S3 and SES as the IAM user `pluck-app` with one long-lived access key: the `AppUserKey` resource in `infra/cdk/lib/data-stack.ts`, kept in Secrets Manager as `pluck/app-user`. Rotate it once a year, when someone who could read it leaves, and straight away if it may have leaked.
+
+The stack owns exactly one key, and CloudFormation deletes the old one at the end of the deploy that makes the new one. From then until step 4 is done, uploads, covers, exports and every email (sign-in links too) fail. That is a few minutes: pick a quiet hour and have Vercel open first.
+
+1. In `data-stack.ts`, give the key a serial, or raise the one it has by one: `new iam.AccessKey(this, "AppUserKey", { user, serial: 1 })`. The number only goes up. Merge it as its own pull request; merging changes nothing in AWS.
+2. From `infra/cdk`: `pnpm exec cdk diff PluckData -c alertEmail=<you>` should show the access key replaced and the secret changed, and nothing else. Then `pnpm exec cdk deploy PluckData -c alertEmail=<you>`.
+3. `aws secretsmanager get-secret-value --secret-id pluck/app-user --region eu-west-1` gives the new pair. In Vercel (Project, Settings, Environment Variables) replace `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` for Production, and anywhere else you set them.
+4. Redeploy production (Deployments, the current one, Redeploy): a deployment keeps the values it started with.
+5. Check: sign in on getpluck.io (SES) and upload a file (S3). `aws iam list-access-keys --user-name pluck-app` shows one key, created today. The old key is already gone; there is nothing to delete by hand.
+
+Do not make a second key by hand with `aws iam create-access-key` to avoid the gap: CloudFormation does not know about it, and with two keys on the user (IAM's limit) the next rotation by the stack fails.
+
 ## Later
 
 Move the worker off Vercel cron (one Fargate task running `pnpm --filter @pluck/web worker` from the same `Dockerfile`) if long imports or extraction start hitting the 60-second function limit.
