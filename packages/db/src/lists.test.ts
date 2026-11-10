@@ -39,6 +39,28 @@ describe("lists", () => {
     expect((await listsForItem(a, two.id))[0]).toMatchObject({ place: 2, note: "Demo 3", ticked: true });
   });
 
+  test("a list with an item in the bin reorders, and the item comes back beside the one it followed", async () => {
+    const { a, b } = await twoUsers();
+    const [one, two, three, four] = [await note(a, "One"), await note(a, "Two"), await note(a, "Three"), await note(a, "Four")];
+    const list = await createList(a, { name: "Order", createdBy: "user", items: [one, two, three, four].map((i) => ({ itemId: i.id })) });
+    const titles = async () => (await getList(a, list.id))!.entries.map((e) => e.item.title);
+    await moveToBin(a, three.id); // it followed Two
+
+    expect(await reorderList(a, list.id, [four.id, two.id, one.id])).toBe(true); // what the list shows
+    expect(await titles()).toEqual(["Four", "Two", "One"]);
+    expect(await reorderList(a, list.id, [four.id, two.id, one.id, three.id])).toBe(false); // the binned one is not in it
+    expect(await reorderList(a, list.id, [four.id, two.id, (await note(a, "Stray")).id])).toBe(false); // ids must match
+    expect(await reorderList(b, list.id, [four.id, two.id, one.id])).toBe(false);
+    expect(await titles()).toEqual(["Four", "Two", "One"]);
+
+    await restoreFromBin(a, three.id);
+    expect(await titles()).toEqual(["Four", "Two", "Three", "One"]);
+
+    const empty = await createList(a, { name: "Empty", createdBy: "user" });
+    expect(await reorderList(a, empty.id, [])).toBe(true);
+    expect(await reorderList(a, empty.id, [one.id])).toBe(false);
+  });
+
   test("crowded positions renumber; names stay unique; delete keeps the items", async () => {
     const { a } = await twoUsers();
     const [x, y] = [await note(a, "X"), await note(a, "Y")];

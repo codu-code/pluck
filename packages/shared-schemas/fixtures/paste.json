@@ -113,10 +113,10 @@
     ]
   },
   {
-    "name": "query strings kept and sorted",
+    "name": "query strings kept as written",
     "text": "https://example.com/s?q=mcp&page=2",
     "urls": [
-      "https://example.com/s?page=2&q=mcp"
+      "https://example.com/s?q=mcp&page=2"
     ]
   },
   {

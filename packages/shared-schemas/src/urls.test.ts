@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { normalizeUrl, textRuns, withReferral } from "./urls.ts";
+import { cleanUrl, extractUrls, normalizeUrl, textRuns, withReferral } from "./urls.ts";
 
 test.each([
   ["https://Example.com/a?utm_source=x&b=2&a=1#top", "https://example.com/a?a=1&b=2"],
@@ -47,4 +47,55 @@ test("a post's words as text and links", () => {
   ]);
   expect(textRuns("No links here")).toEqual([{ text: "No links here" }]);
   expect(textRuns("[https://t.co/abc](https://t.co/abc)")).toEqual([{ text: "t.co/abc", href: "https://t.co/abc" }]);
+});
+
+describe("cleanUrl: the link as it is kept", () => {
+  test.each([
+    ["https://forum.example.com/index.php?/topic/123-title/", "https://forum.example.com/index.php?/topic/123-title/"],
+    ["https://example.com/s?flag&q=a%20b&utm_source=x&a=1", "https://example.com/s?flag&q=a%20b&a=1"],
+    ["https://example.com/a?b=2&a=1#section", "https://example.com/a?b=2&a=1#section"],
+    ["https://app.example.com/#/doc/1", "https://app.example.com/#/doc/1"],
+    ["https://Example.com/a?utm_source=x&UTM_medium=y#top", "https://example.com/a#top"],
+    ["https://x.com/niall/status/1?s=20&t=abc", "https://x.com/niall/status/1"],
+    ["https://example.com/p?s=20&t=abc", "https://example.com/p?s=20&t=abc"], // s and t are only X's
+    ["  https://example.com/x?  ", "https://example.com/x?"],
+  ])("%s → %s", (input, expected) => {
+    expect(cleanUrl(input)).toBe(expected);
+  });
+
+  test.each(["ftp://example.com", "javascript:alert(1)", "not a url", "https://nodot/"])("%s is rejected", (input) => {
+    expect(cleanUrl(input)).toBeNull();
+  });
+
+  test("the kept link has the key of the link given, and cleaning it again changes nothing", () => {
+    for (const x of [
+      "https://forum.example.com/index.php?/topic/123-title/",
+      "https://example.com/s?flag&q=a%20b&utm_source=x&a=1",
+      "https://example.com/a?b=2&a=1&&#section",
+      "https://app.example.com/?utm_campaign=c#/doc/1",
+      "https://app.example.com/#!/doc/1",
+      "http://EXAMPLE.com:80/a/../b?x=%E6%9D%B1&x=1&fbclid=2",
+      "https://www.youtube.com/watch?v=abc&si=xyz&feature=share#t=30",
+      "https://example.com/?utm_source=x",
+    ]) {
+      expect(normalizeUrl(cleanUrl(x)!), x).toBe(normalizeUrl(x));
+      expect(cleanUrl(cleanUrl(x)!), x).toBe(cleanUrl(x));
+      expect(normalizeUrl(normalizeUrl(x)!), x).toBe(normalizeUrl(x));
+    }
+  });
+});
+
+test("the key keeps a fragment only when it is a route", () => {
+  expect(normalizeUrl("https://app.example.com/#/doc/1")).toBe("https://app.example.com/#/doc/1");
+  expect(normalizeUrl("https://app.example.com/#/doc/1")).not.toBe(normalizeUrl("https://app.example.com/#/doc/2"));
+  expect(normalizeUrl("https://app.example.com/#!/doc/1")).toBe("https://app.example.com/#!/doc/1");
+  expect(normalizeUrl("https://example.com/a#section")).toBe("https://example.com/a");
+});
+
+test("links in a block of text come back as they are kept, one for each key", () => {
+  expect(extractUrls("https://example.com/a?b=2&a=1&utm_source=x#part https://example.com/a?a=1&b=2 https://app.example.com/#/doc/1 https://app.example.com/#/doc/2")).toEqual([
+    "https://example.com/a?b=2&a=1#part",
+    "https://app.example.com/#/doc/1",
+    "https://app.example.com/#/doc/2",
+  ]);
 });

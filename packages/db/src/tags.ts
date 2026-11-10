@@ -36,7 +36,8 @@ export async function listTags(userId: string): Promise<Tag[]> {
     (await tags()).find({ userId: uid }).sort({ count: -1, name: 1 }).toArray(),
     (await items())
       .aggregate<{ _id: ObjectId; n: number }>([
-        { $match: { userId: uid, deletedAt: null, "aiTags.0": { $exists: true } } },
+        // "Has an AI tag", said so the { userId, aiTags.at } index bounds it: only those Items are read, not the library.
+        { $match: { userId: uid, deletedAt: null, "aiTags.at": { $type: "date" } } },
         { $unwind: "$aiTags" },
         { $group: { _id: "$aiTags.tagId", n: { $sum: 1 } } },
       ])
@@ -202,18 +203,18 @@ export async function purgeAiTags(userId: string, days: number): Promise<{ assig
   const uid = oid(userId);
   const since = new Date(Date.now() - days * 86_400_000);
   const col = await items();
-  const affected = await col.find({ userId: uid, aiTags: { $elemMatch: { at: { $gte: since } } } }).toArray();
+  const affected = await col.find({ userId: uid, aiTags: { $elemMatch: { at: { $gte: since } } } }, { projection: { aiTags: 1 } }).toArray();
   let assignments = 0;
   const touched = new Set<string>();
-  for (const it of affected) {
+  const pulls = affected.map((it) => {
     const recent = (it.aiTags ?? []).filter((a) => a.at >= since);
     assignments += recent.length;
     recent.forEach((a) => touched.add(a.tagId.toHexString()));
     // why: as above, $pull with $in is valid Mongo the driver types reject.
-    await col.updateOne({ _id: it._id }, {
-      $pull: { tagIds: { $in: recent.map((a) => a.tagId) }, aiTags: { at: { $gte: since } } },
-    } as unknown as UpdateFilter<ItemDoc>);
-  }
+    const update = { $pull: { tagIds: { $in: recent.map((a) => a.tagId) }, aiTags: { at: { $gte: since } } } } as unknown as UpdateFilter<ItemDoc>;
+    return { updateOne: { filter: { _id: it._id, userId: uid }, update } };
+  });
+  if (pulls.length) await col.bulkWrite(pulls); // an empty batch throws
   const ids = [...touched].map(oid);
   await recount(uid, ids);
   await syncTagNames(uid, { _id: { $in: affected.map((it) => it._id) } });

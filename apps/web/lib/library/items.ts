@@ -5,7 +5,7 @@ import {
   updateHighlight,
 } from "@pluck/db";
 import {
-  extractUrls, isTextKind, normalizeUrl, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
+  cleanUrl, extractUrls, isTextKind, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
   type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
@@ -60,7 +60,7 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
   const rejected: PluckResponse["rejected"] = [];
   const toExtract: Item[] = [];
   for (const input of inputs) {
-    const url = normalizeUrl(input);
+    const url = cleanUrl(input);
     if (!url) {
       rejected.push({ input, message: "That is not a link Pluck can open." });
       continue;
@@ -74,7 +74,7 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
 }
 
 export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
-  const url = normalizeUrl(body.url);
+  const url = cleanUrl(body.url); // kept as given; pluckLink dedupes on its key
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
   const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
   const kept = needsExtraction || body.html || body.transcript
@@ -88,8 +88,8 @@ export async function pluck(userId: string, body: CreateItemBody & { url: string
 
 // The item a URL is already in, if any (the bin does not count): the extension's badge and "already plucked".
 export async function lookup(userId: string, rawUrl: string): Promise<Item | null> {
-  const url = normalizeUrl(rawUrl);
-  return url ? findByUrl(userId, url) : null;
+  const url = cleanUrl(rawUrl);
+  return url ? findByUrl(userId, url) : null; // found by its key, not by the string kept
 }
 
 // A cover from the app (the extension's screenshot of the tab) for an item that has none.

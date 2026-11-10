@@ -1,10 +1,9 @@
-import { createHash } from "node:crypto";
 import type { ImportEntry } from "@pluck/extract";
 import type { ImportStatus, Item } from "@pluck/shared-schemas";
 import { ObjectId } from "mongodb";
 import { apiKeys, contents, db, emailAliases, exportsCol, highlights, imports, items, listRows, lists, listShares, oid, reports, tags, users, type ImportDoc } from "./collections.ts";
 import { newItem } from "./item-doc.ts";
-import { toItem } from "./items.ts";
+import { toItem, urlHash as hashOf } from "./items.ts";
 import { textForSearch } from "./search.ts";
 import { createTag } from "./tags.ts";
 
@@ -40,7 +39,7 @@ export async function updateImport(id: string, set: Partial<Pick<ImportDoc, "tot
 export async function importLink(userId: string, url: string, e: Pick<ImportEntry, "title" | "tags" | "note" | "createdAt">): Promise<{ item: Item; created: boolean; tagIds: string[] }> {
   const uid = oid(userId);
   const now = new Date();
-  const urlHash = createHash("sha256").update(url).digest("hex");
+  const urlHash = hashOf(url); // the Re-pluck key, so an imported link and a plucked one are the same Item
   const res = await (await items()).findOneAndUpdate(
     { userId: uid, urlHash },
     {

@@ -271,15 +271,26 @@ async function renumberIfCrowded(listId: ObjectId): Promise<void> {
   await (await listRows()).bulkWrite(rows.map((r, i) => ({ updateOne: { filter: { _id: r._id }, update: { $set: { position: (i + 1) * GAP } } } })));
 }
 
-// The full order in one call. The ids must be exactly the list's items.
+// The full order in one call. The ids must be exactly the items the list shows: one in the bin keeps its row but is
+// hidden (getList), so it is not sent. It stays just after the item it followed, and a Restore puts it back beside it.
 export async function reorderList(userId: string, listId: string, itemIds: string[]): Promise<boolean> {
   const uid = oid(userId);
   const _id = oid(listId);
   const col = await listRows();
-  const rows = await col.find({ listId: _id, userId: uid }, { projection: { itemId: 1 } }).toArray();
-  const have = new Set(rows.map((r) => r.itemId.toHexString()));
+  const rows = await col.find({ listId: _id, userId: uid }, { projection: { itemId: 1 } }).sort({ position: 1 }).toArray();
+  const live = await (await items()).find({ _id: { $in: rows.map((r) => r.itemId) }, userId: uid, deletedAt: null }, { projection: { _id: 1 } }).toArray();
+  const have = new Set(live.map((d) => d._id.toHexString()));
   if (have.size !== itemIds.length || itemIds.some((id) => !have.has(id))) return false;
-  await col.bulkWrite(itemIds.map((id, i) => ({ updateOne: { filter: { listId: _id, userId: uid, itemId: oid(id) }, update: { $set: { position: (i + 1) * GAP } } } })));
+  if (!rows.length) return true; // an empty list: nothing to write, and bulkWrite refuses an empty batch
+  const place = new Map(itemIds.map((id, i) => [id, (i + 1) * GAP]));
+  let after = 0; // the new position of the last shown item passed; 0 before the first
+  let binned = 0;
+  // shortcut: binned rows sit 1 apart after their neighbour, so more than GAP - 1 of them in one list could tie with the next item, renumber them if a list ever holds that many.
+  await col.bulkWrite(rows.map((r) => {
+    const at = place.get(r.itemId.toHexString());
+    if (at !== undefined) after = at;
+    return { updateOne: { filter: { _id: r._id, userId: uid }, update: { $set: { position: at ?? after + ++binned } } } };
+  }));
   await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: new Date(), updatedAt: new Date() } });
   return true;
 }

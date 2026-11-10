@@ -7,9 +7,8 @@ const PER_HOST: [RegExp, RegExp][] = [
   [/(^|\.)instagram\.com$/, /^(igsh|dlrf|srtk)$/],
 ];
 
-// The form a URL is deduped on: lowercase scheme and host, no default port, no fragment,
-// no tracking parameters, the rest sorted. Returns null for anything that is not http(s).
-export function normalizeUrl(input: string): string | null {
+// Null for anything that is not an http(s) link to a real host.
+function parse(input: string): URL | null {
   let url: URL;
   try {
     url = new URL(input.trim());
@@ -18,12 +17,39 @@ export function normalizeUrl(input: string): string | null {
   }
   if (url.protocol !== "http:" && url.protocol !== "https:") return null;
   if (!url.hostname.includes(".") && url.hostname !== "localhost" && !url.hostname.startsWith("[")) return null;
-  url.hash = "";
+  return url;
+}
+
+const tracks = (url: URL) => {
   const hostRule = PER_HOST.find(([host]) => host.test(url.hostname))?.[1];
+  return (key: string) => TRACKING.test(key) || Boolean(hostRule?.test(key));
+};
+
+// The form a URL is deduped on, never the one kept (that is cleanUrl): lowercase scheme and host, no default port,
+// no tracking parameters, the rest sorted, and no fragment unless it is a route ("#/doc/1", "#!/doc/1"), which is
+// another page. Returns null for anything that is not http(s).
+export function normalizeUrl(input: string): string | null {
+  const url = parse(input);
+  if (!url) return null;
+  if (!/^#[/!]/.test(url.hash)) url.hash = "";
+  const tracking = tracks(url);
   for (const key of [...url.searchParams.keys()]) {
-    if (TRACKING.test(key) || hostRule?.test(key)) url.searchParams.delete(key);
+    if (tracking(key)) url.searchParams.delete(key);
   }
   url.searchParams.sort();
+  return url.toString();
+}
+
+// The link as it is kept, fetched and opened: the one given, less its tracking parameters. They are cut out of the
+// query as written, so the other parameters keep their order and encoding ("?/topic/1/", "?flag", "%20"), and the
+// fragment stays. normalizeUrl(cleanUrl(x)) is normalizeUrl(x). Returns null for anything that is not http(s).
+export function cleanUrl(input: string): string | null {
+  const url = parse(input);
+  if (!url) return null;
+  const tracking = tracks(url);
+  const parts = url.search.slice(1).split("&");
+  const kept = parts.filter((part) => !tracking(new URLSearchParams(part).keys().next().value ?? ""));
+  if (kept.length < parts.length) url.search = kept.join("&");
   return url.toString();
 }
 
@@ -48,7 +74,7 @@ function trimEnd(candidate: string): string {
   }
 }
 
-// Every link in a block of text, normalised and deduped in order, at most 50.
+// Every link in a block of text, as it is kept (cleanUrl), in order, at most 50. A link given twice counts once.
 // Shared by the web paste box, the iOS share extension, email-in and MCP save_item.
 export function extractUrls(text: string): string[] {
   const out: string[] = [];
@@ -57,10 +83,11 @@ export function extractUrls(text: string): string[] {
     const raw = trimEnd(m[0]);
     // Skip an address like name@www.example.com: the match must not follow "@".
     if (text[m.index - 1] === "@") continue;
-    const url = normalizeUrl(raw.toLowerCase().startsWith("www.") ? `https://${raw}` : raw);
-    if (!url || seen.has(url)) continue;
-    seen.add(url);
-    out.push(url);
+    const given = raw.toLowerCase().startsWith("www.") ? `https://${raw}` : raw;
+    const key = normalizeUrl(given);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(cleanUrl(given)!);
     if (out.length === MAX_URLS_PER_PLUCK) break;
   }
   return out;

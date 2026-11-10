@@ -67,6 +67,40 @@ describe("search", () => {
     expect(pinned.results[0]!.item.id).toBe(link.id);
   });
 
+  test("Japanese, Chinese and Korean are found inside a sentence, for their owner only", async () => {
+    const { a, b } = await twoUsers();
+    const note = async (who: string, text: string) => (await createTextItem(who, { kind: "note", text, source: "web" })).item.id;
+    const tokyo = await note(a, "東京の天気は今日も晴れです");
+    const beijing = await note(a, "北京的天气很好");
+    const seoul = await note(a, "서울에서 맛있는 식당 찾기");
+    const page = (await pluckLink(a, { url: "https://example.com/ja", source: "web" })).item;
+    await applyExtraction(a, page.id, extracted(`${"前置きの文章が長く続きます。".repeat(30)}京都の紅葉は十一月が見頃です。${"あとがきも長く続きます。".repeat(30)}`, "Autumn"));
+    await note(b, "東京の天気は今日も晴れです");
+
+    const ids = async (who: string, text: string, extra = {}) => (await searchItems(who, q(text, extra))).results.map((r) => r.item.id);
+    expect(await ids(a, "東京")).toEqual([tokyo]);
+    expect(await ids(a, "天气")).toEqual([beijing]);
+    expect(await ids(a, "서울")).toEqual([seoul]);
+    expect(await ids(a, "天気 晴れ")).toEqual([tokyo]); // every term
+    expect(await ids(a, "東京 天气")).toEqual([]);
+    expect(await ids(a, "東京", { kinds: ["link"] })).toEqual([]);
+    expect(await ids(b, "天气")).toEqual([]);
+    expect((await searchItems(b, q("東京"))).total).toBe(1);
+
+    const hit = (await searchItems(a, q("紅葉"))).results[0]!;
+    expect(hit.item.id).toBe(page.id);
+    expect(hit.snippet).toMatchObject({ source: "body", hit: "紅葉" });
+    expect(hit.snippet!.pre.endsWith("京都の")).toBe(true);
+    expect(hit.snippet!.pre.length + hit.snippet!.post.length).toBeLessThan(300); // a sentence with no spaces is still cut
+
+    // Newest first, paged like any search.
+    for (let i = 0; i < 3; i++) await note(a, `読書メモ ${i}`);
+    const first = await searchItems(a, q("読書", { limit: 2 }));
+    expect(first.total).toBe(3);
+    expect(first.results.map((r) => r.item.title)).toEqual(["読書メモ 2", "読書メモ 1"]);
+    expect((await searchItems(a, q("読書", { limit: 2, cursor: first.nextCursor! }))).results.map((r) => r.item.title)).toEqual(["読書メモ 0"]);
+  });
+
   test("pages with an opaque cursor", async () => {
     const { a } = await twoUsers();
     for (let i = 0; i < 5; i++) await createTextItem(a, { kind: "note", text: `ledger entry ${i}`, source: "web" });

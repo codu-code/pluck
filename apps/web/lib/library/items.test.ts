@@ -266,3 +266,25 @@ test("the extension's extras: a selection becomes a highlight, a transcript join
   expect((await setCoverFromApp(a, item.id, png, "image/png")).hasCover).toBe(true);
   await expect(setCoverFromApp(b, item.id, png, "image/png")).rejects.toMatchObject({ code: "not_found" });
 });
+
+test("a link is kept as it was given, and found again by its key", async () => {
+  const { a, b } = await twoUsers();
+  // The query as written: a path in it, a bare flag, %20, the order. Only the tracking parameter goes.
+  const forum = await pluck(a, { url: `${FIX}/news-2.html?/topic/123-title/` });
+  expect(forum.item.url).toBe(`${FIX}/news-2.html?/topic/123-title/`);
+  const first = await pluck(a, { url: `${FIX}/docs-1.html?flag&q=a%20b&utm_source=x&a=1#section` });
+  expect(first.item.url).toBe(`${FIX}/docs-1.html?flag&q=a%20b&a=1#section`);
+
+  // The same link in another order, with tracking, or at another heading is a Re-pluck, and the first URL stays.
+  for (const again of [`${FIX}/docs-1.html?a=1&q=a+b&flag=`, `${FIX}/docs-1.html?flag&q=a%20b&a=1&utm_medium=email#other`]) {
+    const res = await pluck(a, { url: again });
+    expect([res.created, res.item.id, res.item.url]).toEqual([false, first.item.id, first.item.url]);
+    expect((await lookup(a, again))?.id).toBe(first.item.id);
+  }
+  expect(await lookup(b, first.item.url!)).toBeNull();
+
+  // A route in the fragment is another page: two Items.
+  const { results } = await pluckAny(a, { text: `${FIX}/app.html#/doc/1 and ${FIX}/app.html#/doc/2 and ${FIX}/app.html#/doc/1` });
+  expect(results.map((r) => [r.item.url, r.created])).toEqual([[`${FIX}/app.html#/doc/1`, true], [`${FIX}/app.html#/doc/2`, true]]);
+  expect((await lookup(a, `${FIX}/app.html#/doc/2`))?.id).toBe(results[1]!.item.id);
+});

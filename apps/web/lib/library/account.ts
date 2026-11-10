@@ -4,7 +4,7 @@ import {
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, sweepTransfers, updateImport,
 } from "@pluck/db";
 import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
-import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
+import { MAX_IMPORT_BYTES, cleanUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { Zip, ZipDeflate, strToU8 } from "fflate";
 import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
@@ -118,7 +118,7 @@ export async function runImport(userId: string, importId: string): Promise<void>
   while (done + failed < entries.length && Date.now() < until) {
     const touchedTags: string[] = [];
     for (const e of entries.slice(done + failed, done + failed + BATCH)) {
-      const url = normalizeUrl(e.url);
+      const url = cleanUrl(e.url); // kept as the old app had it; importLink dedupes on its key
       if (!url) {
         failed++;
         continue;
