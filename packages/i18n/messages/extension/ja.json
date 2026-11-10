@@ -92,6 +92,7 @@
     "title": "Pluckの設定",
     "shortcut": "ショートカット：{keys} · ブラウザのショートカット設定で変更できます",
     "server": "サーバー",
+    "useServer": "このサーバーを使う",
     "defaultKind": "標準の種類",
     "guess": "ページから判断",
     "account": "アカウント",
@@ -107,7 +108,9 @@
     "transcriptsHint": "検索やお使いのAIが、話された内容を読めるようになります。",
     "messages": {
       "notAddress": "Webアドレスではありません。",
-      "ownServerOnly": "この拡張機能は、ビルド時に決めたサーバーにだけ接続します。ご自身のサーバーを使うには、リポジトリから拡張機能をビルドしてください（docs/self-host.mdを参照）。",
+      "needsHttps": "サーバーのアドレスはhttps://で始まる必要があります（このコンピューター上のサーバーを除く）。",
+      "notAllowed": "変更していません。Pluckが{origin}に接続するには、許可が必要です。",
+      "notPluck": "{origin}でPluckサーバーが応答しませんでした。変更していません。",
       "using": "{origin}を使用中です。Pluckするには、そちらでサインインしてください。",
       "keySignedIn": "APIキーでサインインしました。",
       "keyFailed": "このキーはこのサーバーで使えませんでした。",

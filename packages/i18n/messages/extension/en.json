@@ -92,6 +92,7 @@
     "title": "Pluck options",
     "shortcut": "Shortcut: {keys} · change it in your browser's shortcuts page",
     "server": "Server",
+    "useServer": "Use this server",
     "defaultKind": "Default kind",
     "guess": "Guess from the page",
     "account": "Account",
@@ -107,7 +108,9 @@
     "transcriptsHint": "So search and your AI can read what was said.",
     "messages": {
       "notAddress": "That is not a web address.",
-      "ownServerOnly": "This copy of Pluck only reaches its own server. To use yours, build the extension from the repo: see docs/self-host.md.",
+      "needsHttps": "A server's address starts with https://, unless it runs on this computer.",
+      "notAllowed": "Nothing changed. Pluck can reach {origin} only once you allow it.",
+      "notPluck": "No Pluck server answered at {origin}. Nothing changed.",
       "using": "Using {origin}. Sign in there to pluck.",
       "keySignedIn": "Signed in with your API key.",
       "keyFailed": "That key did not work on this server.",

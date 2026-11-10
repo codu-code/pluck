@@ -92,6 +92,7 @@
     "title": "Opzioni di Pluck",
     "shortcut": "Scorciatoia: {keys} · puoi cambiarla nella pagina delle scorciatoie del browser",
     "server": "Server",
+    "useServer": "Usa questo server",
     "defaultKind": "Tipo predefinito",
     "guess": "Deducilo dalla pagina",
     "account": "Account",
@@ -107,7 +108,9 @@
     "transcriptsHint": "Così la ricerca e la tua IA possono leggere cosa è stato detto.",
     "messages": {
       "notAddress": "Questo non è un indirizzo web.",
-      "ownServerOnly": "Questa copia di Pluck raggiunge solo il proprio server. Per usare il tuo, compila l'estensione dal repository: vedi docs/self-host.md.",
+      "needsHttps": "L'indirizzo di un server inizia con https://, a meno che non sia su questo computer.",
+      "notAllowed": "Non è cambiato nulla. Pluck può raggiungere {origin} solo se lo consenti.",
+      "notPluck": "Nessun server Pluck ha risposto a {origin}. Non è cambiato nulla.",
       "using": "Usi {origin}. Accedi lì per iniziare a prendere.",
       "keySignedIn": "Accesso effettuato con la tua chiave API.",
       "keyFailed": "Questa chiave non funziona su questo server.",

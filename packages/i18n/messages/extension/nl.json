@@ -92,6 +92,7 @@
     "title": "Pluck-opties",
     "shortcut": "Sneltoets: {keys} · wijzig hem op de sneltoetsenpagina van je browser",
     "server": "Server",
+    "useServer": "Deze server gebruiken",
     "defaultKind": "Standaardsoort",
     "guess": "Afleiden uit de pagina",
     "account": "Account",
@@ -107,7 +108,9 @@
     "transcriptsHint": "Zodat zoeken en je AI kunnen lezen wat er gezegd werd.",
     "messages": {
       "notAddress": "Dat is geen webadres.",
-      "ownServerOnly": "Deze versie van Pluck bereikt alleen zijn eigen server. Wil je die van jou gebruiken, bouw de extensie dan uit de repo: zie docs/self-host.md.",
+      "needsHttps": "Het adres van een server begint met https://, tenzij hij op deze computer draait.",
+      "notAllowed": "Er is niets veranderd. Pluck kan {origin} alleen bereiken als je dat toestaat.",
+      "notPluck": "Op {origin} antwoordde geen Pluck-server. Er is niets veranderd.",
       "using": "Je gebruikt {origin}. Log daar in om te plukken.",
       "keySignedIn": "Ingelogd met je API-sleutel.",
       "keyFailed": "Die sleutel werkte niet op deze server.",

@@ -68,7 +68,10 @@ Pluck saves the web page, link, image or text selection you choose into your own
 | `storage` | Keeps your sign-in, your settings and any plucks waiting for a connection on your computer. |
 | `unlimitedStorage` | Lets plucks made offline keep the page they captured (up to 4 MB each) until they are sent; without it Chrome stops the extension's storage at 10 MB. |
 | `alarms` | Retries plucks that were made offline, once a minute, until they are sent. |
-| Host permission `https://getpluck.io/*` | The Pluck server the extension sends your plucks to and signs in with. |
+| Host permission `https://getpluck.io/*` | The Pluck server the extension signs in with and sends your plucks to. The only host it can reach when installed. |
+| Optional host permissions `https://*/*`, `http://localhost/*`, `http://127.0.0.1/*` | Pluck is open source, and some people run their own Pluck server. These let such a person connect the extension to their server in place of getpluck.io. Nothing is granted at install. Access is requested for one host only, the address the person types in Options under Server, when they click "Use this server"; Chrome asks them, and a no changes nothing. The pattern is wide because that address is theirs and cannot be known in advance; plain `http` is for a server on the same computer only. The access is used for the extension's own requests to that Pluck server (sign-in and plucks) and nothing else: no page on these hosts is read or changed, and nothing is sent anywhere else. It is removed again when the person switches back to getpluck.io or to another server. |
+
+The dashboard has one "Host permission justification" field: paste both rows' text into it, the optional one second.
 
 **Remote code:** No, I am not using remote code. (Everything runs from the package; the extension only sends and receives JSON.)
 
@@ -77,6 +80,8 @@ Pluck saves the web page, link, image or text selection you choose into your own
 - **Authentication information:** the sign-in token for your Pluck account, kept on your computer.
 - **Web history:** the addresses of pages you pluck, and, while you are signed in, the address of the page you are on, checked against your library so the icon can fill in.
 - **Website content:** the text, title and images of pages you pluck, and YouTube transcripts when that setting is on.
+
+All of it goes to one place: the Pluck server you are signed in to, which is getpluck.io unless you named your own in Options.
 
 Leave the rest unticked (no personally identifiable information, health, financial, personal communications, location or user activity is collected by the extension).
 
@@ -88,4 +93,4 @@ Tick all three certifications: not sold to third parties, not used for purposes 
 
 - **Visibility:** Public.
 - **Regions:** all.
-- **Test instructions** (for the reviewer, under Account or Test instructions): "Sign in with the email link at https://getpluck.io using the test account below, then click the Pluck toolbar button on any article." Give a test account whose inbox the reviewer can read, or an API key: Options → "Use an API key instead" with a `pk_live_…` key made in Settings, API keys.
+- **Test instructions** (for the reviewer, under Account or Test instructions): "Sign in with the email link at https://getpluck.io using the test account below, then click the Pluck toolbar button on any article." Give a test account whose inbox the reviewer can read, or an API key: Options → "Use an API key instead" with a `pk_live_…` key made in Settings, API keys. Add: "The optional host permission is only asked for from Options: type another address under Server and click 'Use this server'. Chrome then asks for that one host. If no Pluck server answers there, the extension says so, keeps getpluck.io and removes the permission again."
