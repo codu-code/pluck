@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  applyExtraction, createTextItem, editItem, findByUrl, getContent, getItem, getItemBlobKeys, listItems, moveToBin, pluckLink, purgeFromBin, recordExtractionFailure, restoreFromBin, resetExtraction, setBlobKeys,
+  applyExtraction, batchUpdate, createTextItem, editItem, findByUrl, getContent, getItem, getItemBlobKeys, listItems, moveToBin, pluckLink, purgeFromBin, recordExtractionFailure, restoreFromBin, resetExtraction, setBlobKeys,
 } from "./index.ts";
 import { items, oid } from "./collections.ts";
 import { twoUsers } from "./testing.ts";
@@ -94,6 +94,20 @@ test("a title the user typed survives extraction, and only its owner's extractio
   expect((await applyExtraction(a, item.id, { ...extraction, title: "Read" }))?.title).toBe("Read");
   await (await items()).updateOne({ _id: oid(item.id) }, { $set: { title: "Mine", titleIsDerived: false } });
   expect((await applyExtraction(a, item.id, extraction))?.title).toBe("Mine");
+});
+
+test("a Kind the person chose survives a later read; an untouched Item takes the read's Kind", async () => {
+  const { a, b } = await twoUsers();
+  const { item: chosen } = await pluckLink(a, { url: "https://example.com/k1", source: "web" });
+  const { item: batched } = await pluckLink(a, { url: "https://example.com/k2", source: "web" });
+  const { item: untouched } = await pluckLink(a, { url: "https://example.com/k3", source: "web" });
+  await editItem(a, chosen.id, { kind: "video" });
+  await batchUpdate(a, [batched.id], { kind: "video" });
+  await batchUpdate(b, [untouched.id], { kind: "video" }); // not theirs: nothing is chosen
+  expect((await applyExtraction(a, chosen.id, { ...extraction, kind: "pdf" }))?.kind).toBe("video");
+  expect((await applyExtraction(a, batched.id, { ...extraction, kind: "pdf" }))?.kind).toBe("video");
+  expect((await applyExtraction(a, untouched.id, { ...extraction, kind: "pdf" }))?.kind).toBe("pdf");
+  expect((await applyExtraction(a, untouched.id, extraction))?.kind).toBe("link"); // and the next read's again
 });
 
 test("listItems pages newest first with opaque cursors", async () => {

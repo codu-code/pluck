@@ -8,6 +8,7 @@ export type ItemDoc = {
   _id: ObjectId;
   userId: ObjectId;
   kind: Kind;
+  kindChosen?: true; // the person (or their AI tool) set the Kind: a later read of the page leaves it alone
   url: string | null;
   urlHash?: string; // absent for notes, todos and things
   clientKey?: string; // a note, todo or thing sent from a queue: its id there, so a resend finds this one
