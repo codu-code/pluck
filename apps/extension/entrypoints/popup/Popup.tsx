@@ -2,7 +2,7 @@ import type { Item, Kind, List, PluckResponse, Status, Tag } from "@pluck/shared
 import { KindGlyph, Logo } from "@pluck/ui";
 import { useEffect, useState, type ReactNode } from "react";
 import { useFormatter, useTranslations } from "use-intl";
-import { api, openInPluck, Refused, Unreachable } from "@/lib/api";
+import { api, openInPluck, Refused, SignedOut, Unreachable } from "@/lib/api";
 import { isSignedIn, startSignIn } from "@/lib/auth";
 import { markTab, pluckTab, type PluckOutcome } from "@/lib/pluck";
 import { pageShortcut } from "@/lib/shortcut";
@@ -55,7 +55,10 @@ export function Popup() {
           return setView({ k: "item", item, fresh: false, tips: false });
         }
       } catch (e) {
-        if (!(e instanceof Unreachable)) return setView({ k: "signedOut" });
+        if (e instanceof SignedOut) return setView({ k: "signedOut" });
+        // Unreachable: the pluck will queue. Refused (an address too long to look up, say): not plucked as far as we
+        // know, so pluck it and show the server's own answer if it refuses that too.
+        if (!(e instanceof Unreachable || e instanceof Refused)) throw e;
       }
       await show(await pluckTab(tab));
     })().catch(() => setView({ k: "message", text: t("errors.tryAgain") }));
