@@ -38,16 +38,27 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const split = useSplit();
   // iPad's kind chips (iPad-Inbox): All, Links, Notes, Todos, Things.
   const [only, setOnly] = useState<Filter>("all");
-  const rows = (items.data?.items ?? []).filter((i) => only === "all" || !split || FILTERS[only].includes(i.kind)); // narrower than 600 the chips are gone, and so is their filter
+  const match = (i: Item) => only === "all" || !split || FILTERS[only].includes(i.kind); // narrower than 600 the chips are gone, and so is their filter
+  const rows = (items.data?.pages.flatMap((p) => p.items) ?? []).filter(match);
+  // 50 at a time, as the Archive: the next page when the list is scrolled to its end.
+  const { hasNextPage, isFetchingNextPage, fetchNextPage } = items;
+  const next = () => { if (hasNextPage && !isFetchingNextPage) void fetchNextPage(); };
+  // A chip can leave a whole page with nothing to show, and a list that did not grow never reaches its end again, so
+  // a page that added no row asks for the next one itself.
+  const last = items.data?.pages.at(-1);
+  useEffect(() => {
+    if (last && !last.items.some(match)) next();
+  }, [last, only]);
   // ↓ and ↑ on iPad's keyboard walk the rows of the column you are looking at.
   const rowIds = rows.map((r) => r.id).join(",");
   useFocusEffect(useCallback(() => void (shown.rows = rowIds ? rowIds.split(",") : []), [rowIds]));
 
-  // Rows that were not here last time slide in (a pluck arriving); the first paint and rows scrolled into view do not.
+  // Rows that were not here last time slide in (a pluck arriving); the first paint, rows scrolled into view and the
+  // pages after the first do not.
   const seen = useRef<Set<string> | null>(null);
-  const fresh = new Set(seen.current ? rows.filter((r) => !seen.current!.has(r.id)).map((r) => r.id) : []);
+  const fresh = new Set(seen.current ? (items.data?.pages[0]?.items ?? []).filter((r) => !seen.current!.has(r.id)).map((r) => r.id) : []);
   useEffect(() => {
-    if (items.data) seen.current = new Set(items.data.items.map((r) => r.id));
+    if (items.data) seen.current = new Set(items.data.pages.flatMap((p) => p.items.map((r) => r.id)));
   }, [items.data]);
 
   useEffect(() => void waiting.refetch(), [items.dataUpdatedAt]);
@@ -66,9 +77,13 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     toast(tr("items.moveFailed"));
   };
 
+  // Off the screen at once, from whichever page they are on.
+  const take = (ids: string[]) =>
+    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, pages: old.pages.map((p) => ({ ...p, items: p.items.filter((i) => !ids.includes(i.id)) })) } : old));
+
   const move = (item: Item, to: Status) => {
     const before = items.data;
-    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => i.id !== item.id) } : old));
+    take([item.id]);
     seen.current?.delete(item.id);
     void patch.mutateAsync({ id: item.id, patch: { status: to } }).catch(() => failed(before));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -95,7 +110,7 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     const ids = moved.map((i) => i.id);
     const before = items.data;
     setPicked(null);
-    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => !ids.includes(i.id)) } : old));
+    take(ids);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     try {
       await library.move(ids, to);
@@ -207,6 +222,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
       data={rows}
       extraData={picked} // rows redraw when the selection changes, not only when the data does
       keyExtractor={(i) => i.id}
+      onEndReached={next}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={isFetchingNextPage ? <ActivityIndicator color={t.ink2} style={{ padding: 24 }} /> : undefined}
       renderItem={({ item }) => (
         // No exit animation: inside a FlatList on the new architecture, a row leaving with one can stay drawn after it
         // has gone from the list (an archived row that would not move). Arriving rows still slide in.

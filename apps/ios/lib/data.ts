@@ -32,7 +32,8 @@ const subscribe = (fn: () => void) => onlineManager.subscribe(fn);
 export const useOnline = () => useSyncExternalStore(subscribe, () => onlineManager.isOnline());
 
 export const keys = {
-  items: (status: Status) => ["items", status] as const,
+  // "pages": Inbox and Later page now, and a cache kept by an older build has one unpaged page under ["items", status].
+  items: (status: Status) => ["items", status, "pages"] as const,
   archive: ["items", "archive"] as const, // under "items", so every move refreshes it
   bin: ["items", "bin"] as const,
   item: (id: string) => ["item", id] as const,
@@ -63,24 +64,21 @@ export const library = {
 
 export type FullItem ={ item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
 
-export const useItems = (status: Status) =>
-  useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`), refetchOnWindowFocus: "always" });
-// The Archive: archived and done together, newest move first, 50 at a time.
-export const useArchive = () =>
+// Every list of Items comes 50 at a time, the next page when the list is scrolled to its end.
+const usePaged = (queryKey: QueryKey, status: Status | "archive" | "bin", onFocus?: "always") =>
   useInfiniteQuery({
-    queryKey: keys.archive,
-    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=archive&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
+    queryKey,
+    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=${status}&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.nextCursor,
+    refetchOnWindowFocus: onFocus ?? true,
   });
-// The bin: deleted Items, newest delete first, 50 at a time. Each goes for good 30 days after it was deleted.
-export const useBin = () =>
-  useInfiniteQuery({
-    queryKey: keys.bin,
-    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=bin&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
-    initialPageParam: null as string | null,
-    getNextPageParam: (last) => last.nextCursor,
-  });
+// Inbox and Later, newest first. Coming back to the app always refetches them: a pluck from the browser is there.
+export const useItems = (status: Status) => usePaged(keys.items(status), status, "always");
+// The Archive: archived and done together, newest move first.
+export const useArchive = () => usePaged(keys.archive, "archive");
+// The bin: deleted Items, newest delete first. Each goes for good 30 days after it was deleted.
+export const useBin = () => usePaged(keys.bin, "bin");
 // While the page is still being plucked, ask again every few seconds so it shows up without leaving the screen.
 // An Item kept for offline reading opens on its kept copy, and the server's copy replaces it once it can be fetched.
 export const useItem = (id: string) =>
