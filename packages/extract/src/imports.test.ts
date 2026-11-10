@@ -69,3 +69,13 @@ test("Readwise Reader: tags from the Python list in one cell, ISO dates, feed ro
   expect(e[2]).toMatchObject({ title: "Привет из архива", tags: ["it's long", "reading"] });
   expect(e[2]!.createdAt?.toISOString()).toBe("2022-12-07T07:43:11.000Z");
 });
+
+test("Wallabag: tags as strings or objects, the kept page unless it is Wallabag's own failed-fetch notice", () => {
+  const e = parseImport("wallabag", file("wallabag.json"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/albums", "https://example.com/gone", "https://example.com/anagnosi", "https://example.com/albums"]);
+  expect(e[0]).toMatchObject({ title: "Albums of ordinary days", tags: ["family", "photos"], note: null });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.000Z"); // +0100, with no colon, as Wallabag writes it
+  expect(e[0]!.html?.()).toContain("Every printed photograph");
+  expect(e[1]).toMatchObject({ title: null, tags: [], html: null });
+  expect(e[2]).toMatchObject({ title: "Η τέχνη της ανάγνωσης", tags: ["ανάγνωση"], html: null });
+});

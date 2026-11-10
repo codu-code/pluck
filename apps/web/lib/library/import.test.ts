@@ -61,6 +61,11 @@ const FROM: [ImportSource, string, number, [title: string, tags: string[], note:
     ['Indexes, queries and "plans"', ["postgres", "db"], null, "2023-11-14T22:13:20.043Z"],
     [link("rates"), [], null, "2023-11-14T22:15:00.000Z"],
   ]],
+  ["wallabag", "wallabag.json", 4, [
+    ["Albums of ordinary days", ["family", "photos"], null, "2023-11-14T22:13:20.000Z"],
+    [link("gone"), [], null, "2023-11-15T09:00:00.000Z"],
+    ["Η τέχνη της ανάγνωσης", ["ανάγνωση"], null, "2024-03-01T10:00:00.000Z"],
+  ]],
 ];
 
 test.each(FROM)("an import from %s makes its links Items in the Archive, with their Tags, notes and dates; a link in the file twice is one Item", async (source, name, total, expected) => {
@@ -73,5 +78,7 @@ test.each(FROM)("an import from %s makes its links Items in the Archive, with th
   made.sort((x, y) => x.createdAt.localeCompare(y.createdAt));
   expect(made.map((i) => [i.title, i.tags, i.note, i.createdAt])).toEqual(expected);
   expect(made.every((i) => i.status === "archived" && i.archivedReason === "import" && i.source === "import")).toBe(true);
+  // Wallabag's export carries the page, which is kept as it comes; where Wallabag had only its failed-fetch notice, the page is fetched.
+  if (source === "wallabag") expect(made.map((i) => i.text?.includes("Every printed photograph") ?? false)).toEqual([true, false, false]);
   for await (const page of (await exportData(b)).items) expect(page).toEqual([]); // nobody else's library
 });

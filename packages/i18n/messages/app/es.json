@@ -1009,6 +1009,7 @@
         "raindrop": "Raindrop (CSV)",
         "instapaper": "Instapaper (CSV)",
         "readwise": "Readwise Reader (CSV)",
+        "wallabag": "Wallabag (JSON)",
         "html": "Marcadores del navegador (HTML)"
       },
       "drop": "Suelta un archivo, o elige uno",

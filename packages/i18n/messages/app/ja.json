@@ -1009,6 +1009,7 @@
         "raindrop": "Raindrop（CSV）",
         "instapaper": "Instapaper（CSV）",
         "readwise": "Readwise Reader（CSV）",
+        "wallabag": "Wallabag（JSON）",
         "html": "ブラウザのブックマーク（HTML）"
       },
       "drop": "ファイルをドロップするか、選んでください",

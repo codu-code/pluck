@@ -107,6 +107,7 @@ const FILE_OF: Record<ImportSource, RegExp> = {
   raindrop: /\.csv$/,
   instapaper: /\.csv$/,
   readwise: /\.csv$/,
+  wallabag: /\.json$/,
   html: /\.html?$/,
 };
 const SOURCES = Object.keys(FILE_OF) as ImportSource[];
@@ -175,7 +176,7 @@ export function ImportExport({ initialImport }: { initialImport: ImportStatus | 
         >
           <span className={styles.dropTitle}>{t("drop")}</span>
           <span className={styles.meta} style={{ fontSize: 13 }}>{t("formats")}</span>
-          <input ref={input} type="file" className={styles.visuallyHidden} aria-label={t("file")} accept=".csv,.zip,.html,.htm" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+          <input ref={input} type="file" className={styles.visuallyHidden} aria-label={t("file")} accept=".csv,.zip,.json,.html,.htm" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
         </label>
         {error && <span role="alert" className={styles.error}>{error}</span>}
         {job && (

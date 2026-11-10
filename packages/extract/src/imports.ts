@@ -1,4 +1,4 @@
-import type { ImportSource } from "@pluck/shared-schemas";
+import { WallabagExport, type ImportSource } from "@pluck/shared-schemas";
 import { unzipSync, strFromU8 } from "fflate";
 import { parseHTML } from "linkedom";
 
@@ -102,6 +102,26 @@ function readwise(text: string): ImportEntry[] {
   }));
 }
 
+// The JSON exports: the fields Pluck keeps, as their schemas in shared-schemas say. Anything else is not that app's export.
+function readJson<T>(schema: { safeParse: (data: unknown) => { success: true; data: T } | { success: false } }, text: string): T {
+  const read = schema.safeParse(JSON.parse(text.replace(/^\uFEFF/, "")));
+  if (!read.success) throw new Error("not the export this app writes"); // not the schema's own error: it names every entry
+  return read.data;
+}
+
+// Wallabag: an array of entries, each with the page as Wallabag kept it: the article's HTML with no document round
+// it, so one is put round it for the reader. Where its own fetch failed it keeps a notice in the page's place, so
+// that one is fetched afresh. Dropped: archived, starred, annotations.
+function wallabag(text: string): ImportEntry[] {
+  return readJson(WallabagExport, text).map((e) => {
+    const page = e.content && !e.content.includes("wallabag can't retrieve contents") ? e.content : null;
+    return {
+      url: e.url ?? "", title: e.title || null, tags: (e.tags ?? []).map((t) => (typeof t === "string" ? t : t.label)), note: null,
+      createdAt: date(e.created_at), html: page ? () => `<html><body><article>${page}</article></body></html>` : null,
+    };
+  });
+}
+
 // Netscape bookmark HTML, as every browser exports it. A real HTML parser, so every entity (Chrome writes &#39;) decodes once.
 function bookmarksHtml(text: string): ImportEntry[] {
   const { document } = parseHTML(text);
@@ -148,7 +168,7 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
 const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
 const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
   pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), readwise: text(readwise), omnivore,
-  html: text(bookmarksHtml),
+  wallabag: text(wallabag), html: text(bookmarksHtml),
 };
 
 // Throws on a file that is not what the source writes; the import then says it could not be read.
