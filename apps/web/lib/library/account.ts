@@ -104,7 +104,11 @@ export async function runImport(userId: string, importId: string): Promise<void>
   if (!record || record.state !== "running") return;
   // Only a file that is too large or cannot be parsed is final. Anything else reading it (a storage hiccup) throws,
   // and the job is tried again.
-  const file = await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES }).catch((e: unknown) => {
+  // A CSV, JSON or bookmarks file is read into memory whole, and again each run: 100 MB of one is hundreds of thousands
+  // of links. Only Omnivore's zip, whose pages are inflated one at a time, gets the full size.
+  // shortcut: a larger text export (a Wallabag library with thousands of kept pages) reads as "could not be read"; stream the parse when someone has one.
+  const maxBytes = record.source === "omnivore" ? MAX_IMPORT_BYTES : 100_000_000;
+  const file = await getObject(record.blobKey, { maxBytes }).catch((e: unknown) => {
     if (e instanceof TooLarge) return null;
     throw e;
   });
