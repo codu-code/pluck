@@ -15,8 +15,10 @@ test("a PDF shared from the phone: the item at once, the bytes by signed upload,
   await keepFile(a, item.id, key, "application/pdf", "Estimates.pdf"); // not uploaded yet: a failed try, the next one queued
   expect((await readItem(a, item.id)).extraction).toEqual({ state: "pending", attempts: 1, lastError: "The file has not arrived." });
   expect(await pendingJobCount("file")).toBe(2); // beginFile's, and the retry
-  const put = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": "application/pdf" }, body: PDF });
-  expect(put.ok).toBe(true);
+  const put = (body: typeof PDF, type: string) => fetch(uploadUrl, { method: "PUT", headers: { "content-type": type }, body });
+  expect((await put(Buffer.concat([PDF, PDF]), "application/pdf")).status).toBe(403); // more than was declared
+  expect((await put(PDF, "text/html")).status).toBe(403); // not the type that was declared
+  expect((await put(PDF, "application/pdf")).ok).toBe(true);
 
   await keepFile(b, item.id, key, "application/pdf", "Estimates.pdf"); // someone else's item: nothing happens
   expect((await readItem(a, item.id)).extraction.state).toBe("pending");

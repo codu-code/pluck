@@ -1,11 +1,11 @@
 import { TooLarge, deleteObject, deletePrefix, getObject, putObject, signedPutUrl, signedUrl } from "@pluck/blob";
 import {
-  aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
-  latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
+  aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, hitRateLimit, importLink,
+  latestExport, recountTags, listApiKeys, revokeApiKey, startExport, sweepTransfers, updateImport,
 } from "@pluck/db";
-import { parseImport, type ImportSource } from "@pluck/extract";
+import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
 import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
-import { strToU8, zipSync } from "fflate";
+import { Zip, ZipDeflate, strToU8 } from "fflate";
 import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
 import { ApiError } from "../errors";
@@ -67,11 +67,11 @@ export function trackAiTool(userId: string, event: "ai_tool_connected" | "ai_too
 const BATCH = 200;
 const TYPES: Record<ImportSource, string> = { pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip" };
 
-// Step 1: a record and a URL the browser uploads the file to directly.
-export async function beginImport(userId: string, source: ImportSource): Promise<{ import: ImportStatus; uploadUrl: string; contentType: string }> {
+// Step 1: a record and a URL the browser uploads the file to directly. The URL takes exactly `size` bytes.
+export async function beginImport(userId: string, source: ImportSource, size: number): Promise<{ import: ImportStatus; uploadUrl: string; contentType: string }> {
   const key = `u/${userId}/imports/${Date.now()}-${source}`;
   const record = await createImport(userId, source, key);
-  return { import: record, uploadUrl: await signedPutUrl(key, TYPES[source]), contentType: TYPES[source] };
+  return { import: record, uploadUrl: await signedPutUrl(key, TYPES[source], size), contentType: TYPES[source] };
 }
 
 // Step 2: once uploaded, the worker takes it from here.
@@ -90,49 +90,69 @@ export async function importStatus(userId: string, id: string): Promise<ImportSt
   return status;
 }
 
-// The job: parse once, then 200 entries per run until done (it re-queues itself, so a big file never hits
+// The job: 200 entries at a time for five seconds a run, until done (it re-queues itself, so a big file never hits
 // a time limit). Omnivore's kept pages are read offline; the rest are fetched slowly by the extract queue.
 export async function runImport(userId: string, importId: string): Promise<void> {
   const record = await getImport(userId, importId);
   if (!record || record.state !== "running") return;
-  let entries;
+  // Only a file that is too large or cannot be parsed is final. Anything else reading it (a storage hiccup) throws,
+  // and the job is tried again.
+  const file = await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES }).catch((e: unknown) => {
+    if (e instanceof TooLarge) return null;
+    throw e;
+  });
+  let entries: ImportEntry[] | null = null;
   try {
-    entries = parseImport(record.source, new Uint8Array(await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES })));
+    if (file) entries = parseImport(record.source, new Uint8Array(file));
   } catch (e) {
-    const tooLarge = e instanceof TooLarge;
-    if (tooLarge) await deleteObject(record.blobKey);
-    await updateImport(importId, {
-      state: "failed",
-      error: tooLarge ? "That file is over 500 MB." : "That file could not be read. Check it is the export from the right service.",
-    });
     log("warn", "import unreadable", { userId, importId, error: String(e) });
-    return;
+  }
+  if (!entries) {
+    await updateImport(importId, { state: "failed", error: file ? "That file could not be read. Check it is the export from the right service." : "That file is over 500 MB." });
+    return deleteObject(record.blobKey);
   }
   if (record.total === 0) await updateImport(importId, { total: entries.length });
   let { done, failed } = record;
-  const touchedTags: string[] = [];
-  for (const e of entries.slice(done + failed, done + failed + BATCH)) {
-    const url = normalizeUrl(e.url);
-    if (!url) {
-      failed++;
-      continue;
+  // shortcut: each run downloads and parses the file again, keep the parsed entries beside it if imports get slow.
+  const until = Date.now() + 5000;
+  while (done + failed < entries.length && Date.now() < until) {
+    const touchedTags: string[] = [];
+    for (const e of entries.slice(done + failed, done + failed + BATCH)) {
+      const url = normalizeUrl(e.url);
+      if (!url) {
+        failed++;
+        continue;
+      }
+      const { item, created, tagIds } = await importLink(userId, url, e);
+      touchedTags.push(...tagIds);
+      // Spread the fetching out: a thousand imports should not hit the network at once.
+      if (created) await keepImported(userId, item, { html: e.html, title: e.title, delayMs: (done % 1000) * 3000 });
+      done++;
     }
-    const { item, created, tagIds } = await importLink(userId, url, e);
-    touchedTags.push(...tagIds);
-    // Spread the fetching out: a thousand imports should not hit the network at once.
-    if (created) await keepImported(userId, item, { html: e.html, title: e.title, delayMs: (done % 1000) * 3000 });
-    done++;
+    await recountTags(userId, touchedTags);
+    await updateImport(importId, { done, failed });
   }
-  await recountTags(userId, touchedTags);
   const finished = done + failed >= entries.length;
-  await updateImport(importId, { done, failed, state: finished ? "done" : "running" });
-  if (!finished) await enqueue("import", { userId, importId });
-  else track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
+  if (!finished) return void (await enqueue("import", { userId, importId }));
+  await updateImport(importId, { state: "done" });
+  track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
+  await deleteObject(record.blobKey); // the file has done its job; if this fails the daily sweep takes it
+}
+
+// Daily (lib/schedule.ts): the files and records of imports that are over or were never started, and of exports
+// whose emailed link has run out.
+export async function sweepTransfersNow(now = new Date()): Promise<number> {
+  const swept = await sweepTransfers(now, deleteObject);
+  if (swept) log("info", "old imports and exports swept", { swept });
+  return swept;
 }
 
 // ---- Export ---------------------------------------------------------------------------------------
 
+// Five a day: each is a whole-library zip, a job and an email we pay for.
 export async function requestExport(userId: string): Promise<{ id: string }> {
+  const limit = await hitRateLimit(`export:${userId}`, 5, 86_400);
+  if (!limit.ok) throw new ApiError("rate_limited", "That is five exports today. Try again tomorrow.", 429, { retryAfter: limit.retryAfter });
   const id = await startExport(userId);
   await enqueue("export", { userId, exportId: id });
   track(userId, "export_requested");
@@ -147,17 +167,40 @@ export async function exportState(userId: string): Promise<{ state: string; url:
 
 
 // The job: one zip with everything as JSON, a Markdown file per list and one for every item, emailed as a
-// signed link that works for 7 days.
+// signed link that works for 7 days. Items are read a page at a time and go into the zip as they come, so what is
+// held is one page and the compressed zip, never the whole library.
 export async function runExport(userId: string, exportId: string): Promise<void> {
   const me = await getMe(userId);
   if (!me) return;
-  const data = await exportData(userId);
-  const byId = new Map(data.items.map((i) => [i.id, i]));
-  const files: Record<string, Uint8Array> = {
-    "pluck.json": strToU8(JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle }, ...data }, null, 2)),
-    "README.txt": strToU8("Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n"),
+  const { items, ...rest } = await exportData(userId);
+  const chunks: Uint8Array[] = [];
+  const zip = new Zip((err, chunk) => {
+    if (err) throw err;
+    chunks.push(chunk);
+  });
+  const entry = (name: string) => {
+    const file = new ZipDeflate(name, { level: 6 });
+    zip.add(file);
+    return file;
   };
-  for (const l of data.lists) {
+  const add = (name: string, text: string) => entry(name).push(strToU8(text), true);
+  // pluck.json, a piece at a time, reads exactly as JSON.stringify({ exportedAt, account, items, ...rest }, null, 2).
+  const json = entry("pluck.json");
+  json.push(strToU8(`${JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle } }, null, 2).slice(0, -2)},\n  "items": [`));
+  add("README.txt", "Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n");
+  const listed = new Set(rest.lists.flatMap((l) => l.items.map((r) => r.itemId)));
+  const byId = new Map<string, { title: string; url: string | null }>(); // what the lists' files need, no more
+  let count = 0;
+  for await (const page of items) {
+    for (const it of page) {
+      json.push(strToU8(`${count++ ? "," : ""}\n    ${JSON.stringify(it, null, 2).replaceAll("\n", "\n    ")}`));
+      const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
+      add(`items/${it.id}.md`, `${head.join("\n")}\n\n${it.text ?? ""}\n`);
+      if (listed.has(it.id)) byId.set(it.id, { title: it.title, url: it.url });
+    }
+  }
+  json.push(strToU8(`${count ? "\n  ]" : "]"},${JSON.stringify(rest, null, 2).slice(1)}`), true);
+  for (const l of rest.lists) {
     const lines = [`# ${l.name}`, ...(l.purpose ? ["", l.purpose] : []), ""];
     l.items.forEach((r, i) => {
       const it = byId.get(r.itemId);
@@ -165,14 +208,12 @@ export async function runExport(userId: string, exportId: string): Promise<void>
       lines.push(`${i + 1}. ${r.ticked ? "[x] " : ""}${it.url ? `[${it.title}](${it.url})` : it.title}`);
       if (r.note) lines.push(`   ${r.note}`);
     });
-    files[`lists/${l.slug}.md`] = strToU8(`${lines.join("\n")}\n`); // slugs are unique per person; names need not be
+    add(`lists/${l.slug}.md`, `${lines.join("\n")}\n`); // slugs are unique per person; names need not be
   }
-  for (const it of data.items) {
-    const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
-    files[`items/${it.id}.md`] = strToU8(`${head.join("\n")}\n\n${it.text ?? ""}\n`);
-  }
+  zip.end();
   const key = `u/${userId}/exports/${new Date().toISOString().slice(0, 10)}-${exportId}.zip`;
-  await putObject(key, Buffer.from(zipSync(files, { level: 6 })), "application/zip");
+  // shortcut: the compressed zip is held in memory for one putObject, a multipart upload is the upgrade.
+  await putObject(key, Buffer.concat(chunks), "application/zip");
   await finishExport(exportId, key);
   const url = await signedUrl(key, 7 * 86_400);
   await sendEmail(exportEmail(me.email, url, me.settings.locale ?? "en"));

@@ -83,21 +83,42 @@ export async function latestExport(userId: string): Promise<{ id: string; state:
   return d && { id: d._id.toHexString(), state: d.state, blobKey: d.blobKey, createdAt: d.createdAt.toISOString() };
 }
 
-// Everything a person has, for the export zip. Items in the bin are left out.
-export async function exportData(userId: string) {
+// The daily sweep, across everyone: imports over a day old that are not running (finished, failed or never started),
+// and exports past the 7 days their email promises the link for (a day's slack, since the link is signed after the
+// zip is made). `remove` deletes each file before its record goes. Returns how many records went.
+// shortcut: reads both collections whole once a day (no index on createdAt), add one if they grow past thousands.
+export async function sweepTransfers(now: Date, remove: (blobKey: string) => Promise<void>): Promise<number> {
+  const before = (days: number) => ({ $lt: new Date(now.getTime() - days * 86_400_000) });
+  const oldImports = await (await imports()).find({ state: { $ne: "running" }, createdAt: before(1) }, { projection: { blobKey: 1 } }).toArray();
+  const oldExports = await (await exportsCol()).find({ createdAt: before(8) }, { projection: { blobKey: 1 } }).toArray();
+  for (const d of [...oldImports, ...oldExports]) if (d.blobKey) await remove(d.blobKey);
+  await (await imports()).deleteMany({ _id: { $in: oldImports.map((d) => d._id) } });
+  await (await exportsCol()).deleteMany({ _id: { $in: oldExports.map((d) => d._id) } });
+  return oldImports.length + oldExports.length;
+}
+
+// Everything a person has, for the export zip. Items in the bin are left out. `items` comes a page at a time, each
+// Item with its kept text, so a big library is never all in memory.
+export async function exportData(userId: string, pageSize = 500) {
   const uid = oid(userId);
-  const [itemDocs, contentDocs, tagDocs, listDocs, rowDocs, highlightDocs] = await Promise.all([
-    (await items()).find({ userId: uid, deletedAt: null }, { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } }).toArray(),
-    (await contents()).find({ userId: uid }).toArray(),
+  const [tagDocs, listDocs, rowDocs, highlightDocs] = await Promise.all([
     (await tags()).find({ userId: uid }).toArray(),
     (await lists()).find({ userId: uid }).toArray(),
     (await listRows()).find({ userId: uid }).sort({ position: 1 }).toArray(),
     (await highlights()).find({ userId: uid }).toArray(),
   ]);
-  const text = new Map(contentDocs.map((c) => [c.itemId.toHexString(), c.textMarkdown]));
   const tagName = new Map(tagDocs.map((t) => [t._id.toHexString(), t.name]));
+  async function* pages() {
+    const cursor = (await items()).find({ userId: uid, deletedAt: null }, { projection: { searchBody: 0, searchText: 0, tagNames: 0, listNames: 0 } }).batchSize(pageSize);
+    while (await cursor.hasNext()) {
+      const docs = cursor.readBufferedDocuments(pageSize);
+      const contentDocs = await (await contents()).find({ userId: uid, itemId: { $in: docs.map((d) => d._id) } }).toArray();
+      const text = new Map(contentDocs.map((c) => [c.itemId.toHexString(), c.textMarkdown]));
+      yield docs.map((d) => ({ ...toItem(d), tags: d.tagIds.map((t) => tagName.get(t.toHexString())).filter(Boolean) as string[], text: text.get(d._id.toHexString()) ?? null }));
+    }
+  }
   return {
-    items: itemDocs.map((d) => ({ ...toItem(d), tags: d.tagIds.map((t) => tagName.get(t.toHexString())).filter(Boolean) as string[], text: text.get(d._id.toHexString()) ?? null })),
+    items: pages(),
     tags: tagDocs.map((t) => ({ id: t._id.toHexString(), name: t.name })),
     lists: listDocs.map((l) => ({
       id: l._id.toHexString(), name: l.name, slug: l.slug, purpose: l.purpose, visibility: l.visibility,

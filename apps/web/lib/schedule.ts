@@ -1,7 +1,7 @@
 import { claimOnce, narrowAiGrants, runDueExpiry } from "@pluck/db";
 import { FIRST_PARTY_REDIRECTS } from "./auth";
 import { announceNewPosts } from "./indexnow";
-import { pollInbound, purgeBinNow, queueDueDigests, sortBackfill } from "./library";
+import { pollInbound, purgeBinNow, queueDueDigests, sortBackfill, sweepTransfersNow } from "./library";
 import { log } from "./log";
 
 // Time-based work, run from every cron tick and the worker loop. Each piece is claimed in the
@@ -11,6 +11,7 @@ export async function runScheduled(now = new Date()): Promise<{ purged: number; 
   let purged = 0;
   if (await claimOnce(`purge-bin:${now.toISOString().slice(0, 10)}`)) {
     purged = await purgeBinNow();
+    await sweepTransfersNow();
     log("info", "bin purged", { purged });
   }
   const expiry = await runDueExpiry(now);

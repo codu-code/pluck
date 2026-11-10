@@ -14,5 +14,5 @@ export async function beginFile(userId: string, body: CreateFileItemBody): Promi
   trackPlucked(userId, body.source ?? "ios", [{ item, created: true }]);
   const key = keyFor(userId, item.id, body.contentType);
   await enqueue("file", { userId, itemId: item.id, key, contentType: body.contentType, name: body.name }, { delayMs: 15_000 });
-  return { item, uploadUrl: await signedPutUrl(key, body.contentType) };
+  return { item, uploadUrl: await signedPutUrl(key, body.contentType, body.size) };
 }
