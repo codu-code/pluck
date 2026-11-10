@@ -29,7 +29,7 @@ Make an `.env` next to `docker-compose.yml` (Compose reads it), put a reverse pr
 | `DIGEST_FROM`, `EMAIL_REPLY_TO` | Optional: a separate From line for the Monday email (a subdomain keeps spam reports on it away from sign-in links), and where replies go if your From address takes no mail | `EMAIL_FROM`, none |
 | `S3_PUBLIC_ENDPOINT` | Where browsers and phones reach the blob store (uploads, covers, exports). Publish MinIO behind your proxy and put its public address here | `http://localhost:9000` |
 | `S3_ACCESS_KEY`, `S3_SECRET_KEY` | MinIO's credentials, used by the app too. Set the secret to a long random value (`openssl rand -hex 32`): the default is public, so Pluck will not start with it unless `PLUCK_URL` and `S3_PUBLIC_ENDPOINT` are both localhost | `pluck`, `pluck-change-me` |
-| `S3_ENDPOINT`, `S3_BUCKET`, `AWS_REGION` | To use real S3 (or R2, B2, …) instead of the bundled MinIO | MinIO |
+| `S3_ENDPOINT`, `S3_BUCKET`, `AWS_REGION` | To use real S3 (or R2, B2, …) instead of the bundled MinIO. `S3_BUCKET` on its own names the bundled MinIO's bucket; pick it before the first start, since files are not moved to a new one | MinIO, `pluck-content` |
 | `SIGNUP_EMAILS` | Who may start an account, comma separated: full addresses (`ana@example.com`) or whole domains (`@example.com`). Anyone else gets no sign-in email and no account; accounts that already exist keep signing in. Leave unset and anyone who can reach the server can sign up | open |
 | `ADMIN_EMAILS` | Who can open `/admin` (reports, take-downs), comma separated | none |
 | `ABUSE_EMAIL` | Where reports of public lists are emailed | none |
