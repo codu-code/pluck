@@ -92,6 +92,7 @@
     "title": "Opções do Pluck",
     "shortcut": "Atalho: {keys} · mude na página de atalhos do seu navegador",
     "server": "Servidor",
+    "useServer": "Usar este servidor",
     "defaultKind": "Tipo padrão",
     "guess": "Deduzir pela página",
     "account": "Conta",
@@ -107,7 +108,9 @@
     "transcriptsHint": "Assim a busca e a sua IA conseguem ler o que foi dito.",
     "messages": {
       "notAddress": "Isso não é um endereço da web.",
-      "ownServerOnly": "Esta cópia do Pluck só fala com o próprio servidor. Para usar o seu, compile a extensão a partir do repositório: veja docs/self-host.md.",
+      "needsHttps": "O endereço de um servidor começa com https://, a não ser que ele esteja neste computador.",
+      "notAllowed": "Nada mudou. O Pluck só fala com {origin} se você permitir.",
+      "notPluck": "Nenhum servidor do Pluck respondeu em {origin}. Nada mudou.",
       "using": "Usando {origin}. Entre lá para colher.",
       "keySignedIn": "Você entrou com sua chave de API.",
       "keyFailed": "Essa chave não funcionou neste servidor.",

@@ -92,6 +92,7 @@
     "title": "Pluck-Optionen",
     "shortcut": "Tastenkürzel: {keys} · ändern kannst du es auf der Seite für Tastenkürzel deines Browsers",
     "server": "Server",
+    "useServer": "Diesen Server nutzen",
     "defaultKind": "Standard-Art",
     "guess": "Aus der Seite erraten",
     "account": "Konto",
@@ -107,7 +108,9 @@
     "transcriptsHint": "Damit die Suche und deine KI lesen können, was gesagt wurde.",
     "messages": {
       "notAddress": "Das ist keine Webadresse.",
-      "ownServerOnly": "Diese Version von Pluck erreicht nur ihren eigenen Server. Für deinen eigenen baust du die Erweiterung aus dem Repo: siehe docs/self-host.md.",
+      "needsHttps": "Die Adresse eines Servers beginnt mit https://, außer er läuft auf diesem Computer.",
+      "notAllowed": "Nichts geändert. Pluck erreicht {origin} nur, wenn du es erlaubst.",
+      "notPluck": "Unter {origin} hat kein Pluck-Server geantwortet. Nichts geändert.",
       "using": "Verbunden mit {origin}. Melde dich dort an, um zu pflücken.",
       "keySignedIn": "Mit deinem API-Schlüssel angemeldet.",
       "keyFailed": "Dieser Schlüssel funktioniert auf diesem Server nicht.",

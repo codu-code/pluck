@@ -92,6 +92,7 @@
     "title": "Pluck 选项",
     "shortcut": "快捷键：{keys} · 可在浏览器的快捷键页面修改",
     "server": "服务器",
+    "useServer": "使用这个服务器",
     "defaultKind": "默认类别",
     "guess": "根据网页判断",
     "account": "账号",
@@ -107,7 +108,9 @@
     "transcriptsHint": "这样，搜索和你的 AI 都能读到视频里说了什么。",
     "messages": {
       "notAddress": "这不是网址。",
-      "ownServerOnly": "这份 Pluck 只能连接它自己的服务器。要用你的服务器，请从代码仓库构建扩展：见 docs/self-host.md。",
+      "needsHttps": "服务器地址要以 https:// 开头，除非它就在这台电脑上。",
+      "notAllowed": "没有任何更改。只有你允许，Pluck 才能连接 {origin}。",
+      "notPluck": "{origin} 上没有 Pluck 服务器应答。没有任何更改。",
       "using": "正在使用 {origin}。在那里登录后即可摘下。",
       "keySignedIn": "已用你的 API 密钥登录。",
       "keyFailed": "这个密钥在此服务器上无效。",

@@ -92,6 +92,7 @@
     "title": "Opciones de Pluck",
     "shortcut": "Atajo: {keys} · cámbialo en la página de atajos de tu navegador",
     "server": "Servidor",
+    "useServer": "Usar este servidor",
     "defaultKind": "Tipo predeterminado",
     "guess": "Deducirlo de la página",
     "account": "Cuenta",
@@ -107,7 +108,9 @@
     "transcriptsHint": "Así la búsqueda y tu IA pueden leer lo que se dijo.",
     "messages": {
       "notAddress": "Eso no es una dirección web.",
-      "ownServerOnly": "Esta copia de Pluck solo se conecta con su propio servidor. Para usar el tuyo, compila la extensión desde el repositorio: consulta docs/self-host.md.",
+      "needsHttps": "La dirección de un servidor empieza por https://, salvo que esté en este equipo.",
+      "notAllowed": "No cambió nada. Pluck solo puede conectarse con {origin} si lo permites.",
+      "notPluck": "Ningún servidor de Pluck respondió en {origin}. No cambió nada.",
       "using": "Usando {origin}. Inicia sesión allí para recoger.",
       "keySignedIn": "Sesión iniciada con tu clave de API.",
       "keyFailed": "Esa clave no funcionó en este servidor.",
