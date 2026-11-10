@@ -67,6 +67,23 @@ describe("the library actions", () => {
     await expect(createLibrary(sameOrigin((async () => { throw new TypeError("offline"); }) as typeof fetch)).move([A], "later")).rejects.toBeInstanceOf(Unreachable);
   });
 
+  // The server recounts a List after each change with a read and then a write, so two at once can leave a stale count.
+  test.each<[string, (l: Library) => Promise<unknown>]>([
+    ["taking rows out of a List", (l) => l.setInList([A, B, T], L, false)],
+    ["an Undo across several Statuses", (l) => l.restore([{ id: A, status: "inbox" }, { id: B, status: "later" }, { id: T, status: "done" }])],
+  ])("%s sends one request at a time", async (_, act) => {
+    let open = 0, most = 0, sent = 0;
+    const slow = (async () => {
+      most = Math.max(most, ++open);
+      sent++;
+      await new Promise((r) => setTimeout(r, 2));
+      open--;
+      return new Response(null, { status: 204 });
+    }) as typeof fetch;
+    await act(createLibrary(sameOrigin(slow)));
+    expect([sent, most]).toEqual([3, 1]);
+  });
+
   test("taking an Item out of a List it is not in counts as done; any other refusal does not", async () => {
     await expect(fake({ [`DELETE /api/v1/lists/${L}/items/${A}`]: [404, {}] }).library.setInList([A], L, false)).resolves.toBeUndefined();
     await expect(fake({ [`DELETE /api/v1/lists/${L}/items/${A}`]: [403, {}] }).library.setInList([A], L, false)).rejects.toBeInstanceOf(Refused);
