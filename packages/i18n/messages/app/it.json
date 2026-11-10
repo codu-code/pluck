@@ -1024,7 +1024,7 @@
       "running": "Procede in background. Puoi chiudere la pagina, se vuoi.",
       "export": {
         "title": "Esporta",
-        "lede": "pluck.json, più un file Markdown per ogni elemento con il suo testo e le note, e uno per ogni lista. Uno zip, via email. Ogni lista si può esportare anche dalla sua pagina.",
+        "lede": "pluck.json, più un file Markdown per ogni elemento con il suo testo e le note, uno per ogni lista, e bookmarks.html, che un browser o un'altra app può importare. Uno zip, via email. Ogni lista si può esportare anche dalla sua pagina.",
         "started": "Esportazione in corso. Il link arriva via email in un minuto o due.",
         "busy": "Esportazione in corso",
         "action": "Esporta tutto"

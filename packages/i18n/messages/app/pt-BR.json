@@ -1024,7 +1024,7 @@
       "running": "Roda em segundo plano. Pode fechar a página, se quiser.",
       "export": {
         "title": "Exportar",
-        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, e um por lista. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
+        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, um por lista, e bookmarks.html, que um navegador ou outro app consegue importar. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
         "started": "Exportando. O link chega por e-mail em um ou dois minutos.",
         "busy": "Exportando",
         "action": "Exportar tudo"

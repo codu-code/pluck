@@ -1024,7 +1024,7 @@
       "running": "Loopt op de achtergrond. Je kunt de pagina gerust sluiten.",
       "export": {
         "title": "Exporteren",
-        "lede": "pluck.json, plus één Markdown-bestand per item met de tekst en notities, en één per lijst. Een zip, per e-mail. Elke lijst kun je ook los exporteren vanaf zijn eigen pagina.",
+        "lede": "pluck.json, plus één Markdown-bestand per item met de tekst en notities, één per lijst, en bookmarks.html, dat een browser of een andere app kan importeren. Een zip, per e-mail. Elke lijst kun je ook los exporteren vanaf zijn eigen pagina.",
         "started": "Bezig met exporteren. De link komt binnen een paar minuten per e-mail.",
         "busy": "Bezig met exporteren",
         "action": "Alles exporteren"
