@@ -5,11 +5,11 @@ afterEach(() => {
   delete process.env.ALLOW_PRIVATE_FETCH;
 });
 
-test.each(["127.0.0.1", "10.1.2.3", "172.20.0.1", "192.168.1.1", "169.254.169.254", "192.0.0.8", "240.1.2.3", "::1", "fd00::1", "::ffff:127.0.0.1", "64:ff9b::7f00:1", "2002:7f00:1::"])("%s is private", (ip) => {
+test.each(["127.0.0.1", "10.1.2.3", "172.20.0.1", "192.168.1.1", "169.254.169.254", "192.0.0.8", "240.1.2.3", "::1", "fd00::1", "::ffff:127.0.0.1", "::ffff:7f00:1", "64:ff9b::7f00:1", "2002:7f00:1::", "::7f00:1", "::127.0.0.1", "::ffff:0:7f00:1", "64:ff9b:1::7f00:1", "2001:0:4136:e378:8000:63bf:f5ff:fffe"])("%s is private", (ip) => {
   expect(isPrivateAddress(ip)).toBe(true);
 });
 
-test.each(["1.1.1.1", "8.8.8.8", "2606:4700:4700::1111"])("%s is public", (ip) => {
+test.each(["1.1.1.1", "8.8.8.8", "2606:4700:4700::1111", "2001:4860:4860::8888", "64:ff9b:2::1"])("%s is public", (ip) => {
   expect(isPrivateAddress(ip)).toBe(false);
 });
 
@@ -17,6 +17,8 @@ test("refuses private hosts, localhost names and non-http schemes", async () => 
   await expect(guardedFetch("http://127.0.0.1:4180/health")).rejects.toThrow(/blocked/);
   await expect(guardedFetch("http://169.254.169.254/latest/meta-data")).rejects.toThrow(/blocked/);
   await expect(guardedFetch("http://localhost:4180/health")).rejects.toThrow(/blocked/);
+  await expect(guardedFetch("http://[::7f00:1]:4180/health")).rejects.toThrow(/blocked/);
+  await expect(guardedFetch("http://[::ffff:0:127.0.0.1]:4180/health")).rejects.toThrow(/blocked/);
   await expect(guardedFetch("file:///etc/passwd")).rejects.toThrow(/unsupported/);
 });
 
