@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "Was wir speichern",
-        "body": "Deine E-Mail-Adresse und deinen Namen. Jeden Eintrag, den du pflückst: den Link, den Seitentext und die Bilder, die wir abgerufen haben, deinen Titel, deine Notiz, Tags, Art, Status, Listen, Markierungen und deine Leseposition. Den Zeitpunkt, zu dem du ihn gepflückt hast, und den Zeitpunkt, zu dem du ihn zuletzt geöffnet hast; beides nutzen die Ablaufregel und die Montagsmail. Einträge, die du aus Pocket, Omnivore, Raindrop oder einer Lesezeichendatei importierst."
+        "body": "Deine E-Mail-Adresse und deinen Namen. Jeden Eintrag, den du pflückst: den Link, den Seitentext und die Bilder, die wir abgerufen haben, deinen Titel, deine Notiz, Tags, Art, Status, Listen, Markierungen und deine Leseposition. Den Zeitpunkt, zu dem du ihn gepflückt hast, und den Zeitpunkt, zu dem du ihn zuletzt geöffnet hast; beides nutzen die Ablaufregel und die Montagsmail. Einträge, die du aus Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep oder einer Lesezeichendatei importierst."
       },
       "dont": {
         "title": "Was wir nicht tun",

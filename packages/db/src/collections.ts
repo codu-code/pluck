@@ -1,5 +1,5 @@
 import type { Locale } from "@pluck/i18n";
-import type { ArchivedReason, ExtractionState, Facts, HeardFrom, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
+import type { ArchivedReason, ExtractionState, Facts, HeardFrom, ImportSource, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
 import { getDb } from "./client.ts";
@@ -141,7 +141,7 @@ export type ApiKeyDoc = { _id: ObjectId; userId: ObjectId; name: string; hash: s
 export type ImportDoc = {
   _id: ObjectId;
   userId: ObjectId;
-  source: "pocket" | "omnivore" | "raindrop" | "html";
+  source: ImportSource;
   blobKey: string;
   total: number;
   done: number;

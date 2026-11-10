@@ -4,7 +4,7 @@ import {
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, sweepTransfers, updateImport,
 } from "@pluck/db";
 import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
-import { MAX_IMPORT_BYTES, cleanUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
+import { MAX_IMPORT_BYTES, cleanUrl, type AiConnection, type ApiKey, type ImportStatus, type Status } from "@pluck/shared-schemas";
 import { Zip, ZipDeflate, strToU8 } from "fflate";
 import { sendEmail } from "../email";
 import { exportEmail, welcomeEmail } from "../emails";
@@ -65,7 +65,14 @@ export function trackAiTool(userId: string, event: "ai_tool_connected" | "ai_too
 // ---- Import ---------------------------------------------------------------------------------------
 
 const BATCH = 200;
-const TYPES: Record<ImportSource, string> = { pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip" };
+const TYPES: Record<ImportSource, string> = {
+  pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip",
+  instapaper: "text/csv",
+  readwise: "text/csv",
+  wallabag: "application/json",
+  linkwarden: "application/json",
+  karakeep: "application/json",
+};
 
 // Step 1: a record and a URL the browser uploads the file to directly. The URL takes exactly `size` bytes.
 export async function beginImport(userId: string, source: ImportSource, size: number): Promise<{ import: ImportStatus; uploadUrl: string; contentType: string }> {
@@ -97,7 +104,11 @@ export async function runImport(userId: string, importId: string): Promise<void>
   if (!record || record.state !== "running") return;
   // Only a file that is too large or cannot be parsed is final. Anything else reading it (a storage hiccup) throws,
   // and the job is tried again.
-  const file = await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES }).catch((e: unknown) => {
+  // A CSV, JSON or bookmarks file is read into memory whole, and again each run: 100 MB of one is hundreds of thousands
+  // of links. Only Omnivore's zip, whose pages are inflated one at a time, gets the full size.
+  // shortcut: a larger text export (a Wallabag library with thousands of kept pages) reads as "could not be read"; stream the parse when someone has one.
+  const maxBytes = record.source === "omnivore" ? MAX_IMPORT_BYTES : 100_000_000;
+  const file = await getObject(record.blobKey, { maxBytes }).catch((e: unknown) => {
     if (e instanceof TooLarge) return null;
     throw e;
   });
@@ -166,9 +177,13 @@ export async function exportState(userId: string): Promise<{ state: string; url:
 }
 
 
-// The job: one zip with everything as JSON, a Markdown file per list and one for every item, emailed as a
-// signed link that works for 7 days. Items are read a page at a time and go into the zip as they come, so what is
-// held is one page and the compressed zip, never the whole library.
+// The five entities a browser's own bookmarks file uses, so the simplest reader of one reads ours.
+const ENTITIES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ENTITIES[c]!);
+
+// The job: one zip with everything as JSON, a Markdown file per list and one for every item, and every link as a
+// bookmarks file, emailed as a signed link that works for 7 days. Items are read a page at a time and go into the
+// zip as they come, so what is held is one page and the compressed zip, never the whole library.
 export async function runExport(userId: string, exportId: string): Promise<void> {
   const me = await getMe(userId);
   if (!me) return;
@@ -187,9 +202,13 @@ export async function runExport(userId: string, exportId: string): Promise<void>
   // pluck.json, a piece at a time, reads exactly as JSON.stringify({ exportedAt, account, items, ...rest }, null, 2).
   const json = entry("pluck.json");
   json.push(strToU8(`${JSON.stringify({ exportedAt: new Date().toISOString(), account: { email: me.email, handle: me.handle } }, null, 2).slice(0, -2)},\n  "items": [`));
-  add("README.txt", "Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown.\n");
+  add("README.txt", "Your Pluck library. pluck.json has everything; lists/ and items/ are the same in Markdown; bookmarks.html is every link, for a browser or another app to import.\n");
   const listed = new Set(rest.lists.flatMap((l) => l.items.map((r) => r.itemId)));
   const byId = new Map<string, { title: string; url: string | null }>(); // what the lists' files need, no more
+  // bookmarks.html: every Item with a URL in the Netscape bookmark format, a folder for each Status that has any.
+  // shortcut: a folder's lines wait here until every Item has gone past (a line is one link's URL, title, tags and
+  // note: a few hundred bytes unless the note is long), read the Items a Status at a time if a library outgrows that.
+  const marks: Record<Status, string[]> = { inbox: [], later: [], archived: [], done: [] };
   let count = 0;
   for await (const page of items) {
     for (const it of page) {
@@ -197,6 +216,11 @@ export async function runExport(userId: string, exportId: string): Promise<void>
       const head = [`# ${it.title}`, "", it.url ? `${it.url}` : "", it.tags.length ? `Tags: ${it.tags.join(", ")}` : "", it.note ? `Note: ${it.note}` : ""].filter(Boolean);
       add(`items/${it.id}.md`, `${head.join("\n")}\n\n${it.text ?? ""}\n`);
       if (listed.has(it.id)) byId.set(it.id, { title: it.title, url: it.url });
+      if (it.url) {
+        const tags = it.tags.length ? ` TAGS="${escapeHtml(it.tags.join(","))}"` : "";
+        const added = Math.floor(Date.parse(it.createdAt) / 1000);
+        marks[it.status].push(`        <DT><A HREF="${escapeHtml(it.url)}" ADD_DATE="${added}"${tags}>${escapeHtml(it.title)}</A>\n${it.note ? `        <DD>${escapeHtml(it.note)}\n` : ""}`);
+      }
     }
   }
   json.push(strToU8(`${count ? "\n  ]" : "]"},${JSON.stringify(rest, null, 2).slice(1)}`), true);
@@ -210,6 +234,12 @@ export async function runExport(userId: string, exportId: string): Promise<void>
     });
     add(`lists/${l.slug}.md`, `${lines.join("\n")}\n`); // slugs are unique per person; names need not be
   }
+  const html = entry("bookmarks.html");
+  html.push(strToU8('<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\n<TITLE>Pluck</TITLE>\n<H1>Pluck</H1>\n<DL><p>\n'));
+  for (const [status, lines] of Object.entries(marks)) {
+    if (lines.length) html.push(strToU8(`    <DT><H3>${status[0]!.toUpperCase()}${status.slice(1)}</H3>\n    <DL><p>\n${lines.join("")}    </DL><p>\n`));
+  }
+  html.push(strToU8("</DL><p>\n"), true);
   zip.end();
   const key = `u/${userId}/exports/${new Date().toISOString().slice(0, 10)}-${exportId}.zip`;
   // shortcut: the compressed zip is held in memory for one putObject, a multipart upload is the upgrade.

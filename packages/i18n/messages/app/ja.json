@@ -1007,10 +1007,15 @@
         "pocket": "Pocket（CSV）",
         "omnivore": "Omnivore（zip）",
         "raindrop": "Raindrop（CSV）",
+        "instapaper": "Instapaper（CSV）",
+        "readwise": "Readwise Reader（CSV）",
+        "wallabag": "Wallabag（JSON）",
+        "linkwarden": "Linkwarden（JSON）",
+        "karakeep": "Karakeep（JSON）",
         "html": "ブラウザのブックマーク（HTML）"
       },
       "drop": "ファイルをドロップするか、選んでください",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · ブックマークHTML",
+      "formats": "CSV · JSON · zip · ブックマークHTML",
       "file": "インポートするファイル",
       "job": "{source}のインポート",
       "progress": "{done, number}件完了",
@@ -1019,7 +1024,7 @@
       "running": "バックグラウンドで進みます。このページは閉じてもかまいません。",
       "export": {
         "title": "エクスポート",
-        "lede": "pluck.jsonに加えて、アイテムごとに本文とメモを入れたMarkdownファイルと、リストごとのMarkdownファイル。zipにしてメールで送ります。リストはそれぞれのページから個別にエクスポートできます。",
+        "lede": "pluck.jsonに加えて、アイテムごとに本文とメモを入れたMarkdownファイル、リストごとのMarkdownファイル、ブラウザやほかのアプリでインポートできるbookmarks.html。zipにしてメールで送ります。リストはそれぞれのページから個別にエクスポートできます。",
         "started": "エクスポート中です。リンクは1、2分でメールに届きます。",
         "busy": "エクスポート中",
         "action": "すべてをエクスポート"

@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "O que armazenamos",
-        "body": "Seu e-mail e seu nome. Cada item que você colhe: o link, o texto e as imagens da página que buscamos, o seu título, nota, tags, tipo, status, listas, destaques e posição de leitura. A hora em que você colheu e a hora em que abriu pela última vez, que a regra de expiração e o e-mail de segunda-feira usam. Os itens que você importa do Pocket, do Omnivore, do Raindrop ou de um arquivo de favoritos."
+        "body": "Seu e-mail e seu nome. Cada item que você colhe: o link, o texto e as imagens da página que buscamos, o seu título, nota, tags, tipo, status, listas, destaques e posição de leitura. A hora em que você colheu e a hora em que abriu pela última vez, que a regra de expiração e o e-mail de segunda-feira usam. Os itens que você importa do Pocket, do Omnivore, do Raindrop, do Instapaper, do Readwise Reader, do Wallabag, do Linkwarden, do Karakeep ou de um arquivo de favoritos."
       },
       "dont": {
         "title": "O que não fazemos",

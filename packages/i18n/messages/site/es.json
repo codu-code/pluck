@@ -398,7 +398,7 @@
     "sections": {
       "store": {
         "title": "Qué almacenamos",
-        "body": "Tu correo y tu nombre. Cada elemento que recoges: el enlace, el texto y las imágenes de la página que obtuvimos, tu título, nota, etiquetas, tipo, estado, listas, destacados y posición de lectura. La hora en que lo recogiste y la última vez que lo abriste, que usan la regla de caducidad y el correo de los lunes. Los elementos que importas de Pocket, Omnivore, Raindrop o un archivo de marcadores."
+        "body": "Tu correo y tu nombre. Cada elemento que recoges: el enlace, el texto y las imágenes de la página que obtuvimos, tu título, nota, etiquetas, tipo, estado, listas, destacados y posición de lectura. La hora en que lo recogiste y la última vez que lo abriste, que usan la regla de caducidad y el correo de los lunes. Los elementos que importas de Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep o un archivo de marcadores."
       },
       "dont": {
         "title": "Qué no hacemos",

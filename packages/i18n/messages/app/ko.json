@@ -1007,10 +1007,15 @@
         "pocket": "Pocket (CSV)",
         "omnivore": "Omnivore (zip)",
         "raindrop": "Raindrop (CSV)",
+        "instapaper": "Instapaper (CSV)",
+        "readwise": "Readwise Reader (CSV)",
+        "wallabag": "Wallabag (JSON)",
+        "linkwarden": "Linkwarden (JSON)",
+        "karakeep": "Karakeep (JSON)",
         "html": "브라우저 북마크 (HTML)"
       },
       "drop": "파일을 끌어다 놓거나 선택하세요",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · 북마크 HTML",
+      "formats": "CSV · JSON · zip · 북마크 HTML",
       "file": "가져올 파일",
       "job": "{source} 가져오기",
       "progress": "{done, number}개 완료",
@@ -1019,7 +1024,7 @@
       "running": "백그라운드에서 진행돼요. 페이지를 닫아도 괜찮아요.",
       "export": {
         "title": "내보내기",
-        "lede": "pluck.json과 함께, 항목마다 본문과 메모가 담긴 Markdown 파일 하나, 리스트마다 하나씩. zip 파일로, 이메일로 보내요. 리스트 하나만 내보내려면 그 리스트 페이지에서 하세요.",
+        "lede": "pluck.json과 함께, 항목마다 본문과 메모가 담긴 Markdown 파일 하나, 리스트마다 하나씩, 그리고 브라우저나 다른 앱에서 가져올 수 있는 bookmarks.html. zip 파일로, 이메일로 보내요. 리스트 하나만 내보내려면 그 리스트 페이지에서 하세요.",
         "started": "내보내는 중이에요. 링크는 1~2분 안에 이메일로 도착해요.",
         "busy": "내보내는 중",
         "action": "전체 내보내기"

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ApiKey, ImportStatus } from "@pluck/shared-schemas";
+import type { ApiKey, ImportSource, ImportStatus } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -100,19 +100,33 @@ export function KeysSection({ initial }: { initial: ApiKey[] }) {
   );
 }
 
-const SOURCE_OF = (file: File): "pocket" | "omnivore" | "raindrop" | "html" | null => {
+// The kind of file each source exports, in the order the picker lists them.
+const FILE_OF: Record<ImportSource, RegExp> = {
+  pocket: /\.csv$/,
+  omnivore: /\.zip$/,
+  raindrop: /\.csv$/,
+  instapaper: /\.csv$/,
+  readwise: /\.csv$/,
+  wallabag: /\.json$/,
+  linkwarden: /\.json$/,
+  karakeep: /\.json$/,
+  html: /\.html?$/,
+};
+const SOURCES = Object.keys(FILE_OF) as ImportSource[];
+
+// Which source a file is from: the one its name says, else the one picked if this is its kind of file, else the first
+// that exports this kind of file (a zip dropped with Pocket picked is Omnivore's).
+const sourceFor = (file: File, picked: ImportSource): ImportSource => {
   const n = file.name.toLowerCase();
-  if (n.endsWith(".zip")) return "omnivore";
-  if (n.endsWith(".html") || n.endsWith(".htm")) return "html";
-  if (n.endsWith(".csv")) return n.includes("raindrop") ? "raindrop" : "pocket";
-  return null;
+  const fits = SOURCES.filter((s) => FILE_OF[s].test(n));
+  return fits.find((s) => n.includes(s)) ?? (fits.includes(picked) ? picked : fits[0]) ?? picked;
 };
 
 // Import and export (Settings board).
 export function ImportExport({ initialImport }: { initialImport: ImportStatus | null }) {
   const [job, setJob] = useState(initialImport);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [source, setSource] = useState<"pocket" | "omnivore" | "raindrop" | "html">("pocket");
+  const [source, setSource] = useState<ImportSource>("pocket");
   const [error, setError] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [toast, showToast] = useToast();
@@ -131,8 +145,7 @@ export function ImportExport({ initialImport }: { initialImport: ImportStatus | 
 
   async function upload(file: File) {
     setError(null);
-    const detected = SOURCE_OF(file);
-    const src = detected === "pocket" && source === "raindrop" ? "raindrop" : (detected ?? source);
+    const src = sourceFor(file, source);
     setFileName(file.name);
     const begin = await send("/api/v1/imports", "POST", { source: src, size: file.size });
     if (!begin.ok) return setError(app("didNotGoThrough"));
@@ -151,10 +164,7 @@ export function ImportExport({ initialImport }: { initialImport: ImportStatus | 
         <label className={styles.field}>
           <span className={styles.label}>{t("from")}</span>
           <select className={styles.selectField} value={source} onChange={(e) => setSource(e.target.value as typeof source)}>
-            <option value="pocket">{t("sources.pocket")}</option>
-            <option value="omnivore">{t("sources.omnivore")}</option>
-            <option value="raindrop">{t("sources.raindrop")}</option>
-            <option value="html">{t("sources.html")}</option>
+            {SOURCES.map((s) => <option key={s} value={s}>{t(`sources.${s}`)}</option>)}
           </select>
         </label>
         <label
@@ -168,7 +178,7 @@ export function ImportExport({ initialImport }: { initialImport: ImportStatus | 
         >
           <span className={styles.dropTitle}>{t("drop")}</span>
           <span className={styles.meta} style={{ fontSize: 13 }}>{t("formats")}</span>
-          <input ref={input} type="file" className={styles.visuallyHidden} aria-label={t("file")} accept=".csv,.zip,.html,.htm" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+          <input ref={input} type="file" className={styles.visuallyHidden} aria-label={t("file")} accept=".csv,.zip,.json,.html,.htm" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
         </label>
         {error && <span role="alert" className={styles.error}>{error}</span>}
         {job && (

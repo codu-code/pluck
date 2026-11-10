@@ -1007,10 +1007,15 @@
         "pocket": "Pocket (CSV)",
         "omnivore": "Omnivore (zip)",
         "raindrop": "Raindrop (CSV)",
+        "instapaper": "Instapaper (CSV)",
+        "readwise": "Readwise Reader (CSV)",
+        "wallabag": "Wallabag (JSON)",
+        "linkwarden": "Linkwarden (JSON)",
+        "karakeep": "Karakeep (JSON)",
         "html": "Favoritos do navegador (HTML)"
       },
       "drop": "Arraste um arquivo para cá, ou escolha um",
-      "formats": "CSV do Pocket · zip do Omnivore · CSV do Raindrop · HTML de favoritos",
+      "formats": "CSV · JSON · zip · HTML de favoritos",
       "file": "Arquivo para importar",
       "job": "Importação: {source}",
       "progress": "{done, number} prontos",
@@ -1019,7 +1024,7 @@
       "running": "Roda em segundo plano. Pode fechar a página, se quiser.",
       "export": {
         "title": "Exportar",
-        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, e um por lista. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
+        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, um por lista, e bookmarks.html, que um navegador ou outro app consegue importar. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
         "started": "Exportando. O link chega por e-mail em um ou dois minutos.",
         "busy": "Exportando",
         "action": "Exportar tudo"

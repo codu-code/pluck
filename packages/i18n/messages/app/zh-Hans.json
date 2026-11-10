@@ -1007,10 +1007,15 @@
         "pocket": "Pocket（CSV）",
         "omnivore": "Omnivore（zip）",
         "raindrop": "Raindrop（CSV）",
+        "instapaper": "Instapaper（CSV）",
+        "readwise": "Readwise Reader（CSV）",
+        "wallabag": "Wallabag（JSON）",
+        "linkwarden": "Linkwarden（JSON）",
+        "karakeep": "Karakeep（JSON）",
         "html": "浏览器书签（HTML）"
       },
       "drop": "拖入文件，或选择一个文件",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · 书签 HTML",
+      "formats": "CSV · JSON · zip · 书签 HTML",
       "file": "导入文件",
       "job": "{source} 导入",
       "progress": "已完成 {done, number} 条",
@@ -1019,7 +1024,7 @@
       "running": "在后台运行。你可以关掉这个页面。",
       "export": {
         "title": "导出",
-        "lede": "pluck.json，加上每个条目一个 Markdown 文件（含正文和笔记），每个清单也一个。打包成 zip，通过邮件发送。单个清单可以在它自己的页面上导出。",
+        "lede": "pluck.json，加上每个条目一个 Markdown 文件（含正文和笔记），每个清单也一个，还有浏览器和其他应用可以导入的 bookmarks.html。打包成 zip，通过邮件发送。单个清单可以在它自己的页面上导出。",
         "started": "正在导出。链接会在一两分钟内通过邮件送达。",
         "busy": "正在导出",
         "action": "全部导出"
