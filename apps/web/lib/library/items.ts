@@ -1,12 +1,12 @@
 import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
+  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, findHighlights, getContent, getItem, getItemBlobKeys,
   hitRateLimit, listHighlights, listItems, listsForItem, markOpened, misfit, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
 import {
   cleanUrl, extractUrls, isTextKind, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
-  type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
+  type Highlight, type HighlightPage, type HighlightsQuery, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
 import { itemsBucket, track } from "../telemetry";
@@ -197,6 +197,7 @@ export async function purgeBinNow(): Promise<number> {
 }
 
 export const highlightsOf = (userId: string, itemId: string): Promise<Highlight[]> => listHighlights(userId, itemId);
+export const highlightsAcross = (userId: string, q: HighlightsQuery): Promise<HighlightPage> => findHighlights(userId, q);
 
 export async function addHighlight(userId: string, body: CreateHighlightBody): Promise<Highlight> {
   const h = await createHighlight(userId, body);

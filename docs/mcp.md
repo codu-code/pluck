@@ -40,9 +40,10 @@ A tool is only listed when the token carries its scope.
 
 | Tool | What it does |
 |---|---|
-| `search_items` | Text search; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
+| `search_items` | Text search over titles, notes, tags, list names, highlights and kept text; `query, kinds[], tagIds[], listId, status, since, limit (max 25), cursor` |
 | `list_items` | Browse by status; `status, kinds[], sort (newest, untouched), limit (max 25), cursor` |
 | `get_item` | One item with its facts, its kept text (paged at about 20k tokens: pass `textCursor` back as `cursor`, and every page answers with the next `textCursor`, null at the end), note, highlights and lists |
+| `list_highlights` | What the person highlighted across the library, newest first: each quote, their note on it, when it was made and the item it is in (`id, title, url, siteName`, enough to cite it); `query` (every word, anywhere in the quote or the note), `itemId, since, limit (max 25), cursor`. Nothing from an item in the bin |
 | `save_item` | Pluck a URL, every URL in a block of text, or a note, todo or thing; `url or text, kind, title, note, tagIds[], listId, dueAt`. Saving a link twice brings it back to the Inbox. `tagIds` take existing tag ids or names; unknown tags (refused with the nearest existing ones) or an unknown `listId` refuse the call before anything is saved. The one tool marked `openWorldHint`: Pluck's server fetches the link, so whatever is in the address leaves the library |
 | `batch_update` | One change over up to 100 items: status, kind, due date, note, add or remove tags. Unknown tags are refused with the nearest existing ones; tags are never created here. A change that does not fit every item (Done is only for Todos and Things; a link Kind only for links) refuses the call, naming those items in `details.itemIds`, and nothing changes |
 | `list_tags` | Tags with counts, and whether an AI made them; paged with `cursor` |
@@ -55,6 +56,8 @@ A tool is only listed when the token carries its scope.
 | `delete_item` | Moves an item to the bin (30 days). Only with `library:delete` |
 
 Results are cards: `id, title, kind, preview, siteName, excerpt, tags, savedAt, url`. `preview` says what a link is beyond its Kind: `reader` (an article), `player` (a video or audio), `post` (a social post), `code` (a repo, issue, PR, gist, package or question), `product` (something to buy), `site` (a homepage), `document` (a PDF or paper) or `app` (an AI artifact or share, a design file, a shared doc); null for images, notes, todos and things. `get_item` adds `facts`: whichever of `seconds, handle, price {amount, currency}, code, language, stars, pages, pdfUrl, app, postedAt, article` the page made known. Responses stay around 8k tokens; anything longer pages with an opaque `nextCursor`. Errors come back as `{ "error": { "code", "message", "details"? } }` with `isError: true`.
+
+Results are typed. Every tool declares an `outputSchema` and answers with `structuredContent` beside the same JSON as text: a client can check and render the result, and one that reads only the text loses nothing. The shapes are Zod schemas, `Results` in `packages/mcp/src/shape.ts`, built from `packages/shared-schemas`; a result carries those fields and no others (`facts` is the one open object). An error has no `structuredContent`.
 
 Everything an AI tool changes is marked "by AI" in Pluck: its tags until the person touches them, its list notes, its lists and its saves (`source: mcp`). Settings has "Remove everything AI tagged this week".
 
@@ -71,12 +74,28 @@ The server's instructions tell the AI tool that text inside kept pages, notes fr
 |---|---|
 | `tidy_inbox` | Proposes tags from your vocabulary and a keep, later or archive call per Inbox item, then applies it on your yes |
 | `build_list` | Gathers what you plucked on a topic or in a window into ordered lists, made private on your yes |
-| `content_ideas` | Reads the strongest items on a topic and drafts three angles with sources |
+| `content_ideas` | Reads what you highlighted and the strongest items on a topic, and drafts three angles with sources |
 | `weekly_review` | Walks the digest one decision at a time |
 
 ## Limits
 
 300 requests a minute per IP and 600 a minute per person. Over that is a `429` with `Retry-After`.
+
+## The registry listing
+
+`server.json` at the repo root is Pluck's entry for the official MCP registry (`registry.modelcontextprotocol.io`), where clients and directories look servers up. It follows the registry's `2025-12-11` schema and lists two ways in under one name, `io.github.codu-code/pluck`: the hosted connector (`https://getpluck.io/mcp`, streamable HTTP; the schema has no field for sign-in, a client finds OAuth from the `401`) and the stdio bridge on npm (`@getpluck/mcp`, with `--server` and `PLUCK_API_KEY`). The registry proves the name twice: whoever publishes must be an Owner of the `codu-code` organisation on GitHub, and the npm package must carry the same name as `mcpName` in its `package.json`. `packages/mcp/src/registry.test.ts` keeps the name, the package version and the inputs in step with `packages/mcp-stdio`.
+
+Nothing here publishes it. A person does, after each release of `@getpluck/mcp`:
+
+1. Release the package with `mcpName` in it. 0.1.0 on npm has none, so the registry refuses it: the next version is 0.1.1. Raise `version` in `packages/mcp-stdio/package.json` and both `version` fields in `server.json` together, merge, and push the tag `mcp-v0.1.1` (`docs/deploy.md`, "Publishing @getpluck/mcp"). Then `npm view @getpluck/mcp mcpName` should print the name.
+2. Install the publisher, `brew install mcp-publisher`, and check the file from the repo root: `mcp-publisher validate`.
+3. Log in as an Owner of `codu-code` with a token: `mcp-publisher login github --token <token>`, where the token is a classic personal access token with only the `read:org` scope (or a fine-grained one made for the organisation with Members: read-only). The browser flow, `mcp-publisher login github` alone, cannot see organisations today (registry issue 1468) and gives only `io.github.<your username>/*`.
+4. Publish: `mcp-publisher publish`.
+5. Look it up: `curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.codu-code/pluck"`.
+
+A published version cannot be changed, so a change to the listing goes out under a new `version`.
+
+GitHub Actions can do steps 2 to 4 with no token: a job in this repository with `permissions: id-token: write` runs `mcp-publisher login github-oidc`, then `mcp-publisher publish`, and the registry reads the organisation from the workflow's own identity. It would sit after the npm publish in `.github/workflows/publish-mcp.yml`, with the publisher pinned to a release and its signature checked as the registry's guide shows. That step is not written yet. The registry is in preview: if a step here fails, read its publishing guide first.
 
 ## Developing
 

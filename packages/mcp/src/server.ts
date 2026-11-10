@@ -3,7 +3,7 @@ import { DueAt, ErrorCode, Kind, ObjectIdString, Status, type Item, type ListEnt
 import { z } from "zod";
 import type { PluckLibrary } from "./library";
 import { registerPrompts } from "./prompts";
-import { card, fit, readOffset, TEXT_PAGE_CHARS, tagNameMap, textPage } from "./shape";
+import { card, fit, offsetCursor, readOffset, Results, TEXT_PAGE_CHARS, tagNameMap, textPage } from "./shape";
 
 export type ServerOptions = {
   scopes: string[]; // library:read, library:write, library:delete; a tool is only offered when its scope was granted
@@ -16,7 +16,7 @@ export type ServerOptions = {
 export type ToolCall = { tool: string; ok: boolean; errorCode: string | null; resultCount: number | null; ms: number };
 
 // How many things a tool handed back, when it handed back a page of them (null for one item, a tag, a list).
-const PAGES = ["items", "tags", "lists", "entries", "saved"];
+const PAGES = ["items", "tags", "lists", "entries", "saved", "highlights"];
 const countOf = (data: unknown): number | null => {
   const rows = data && typeof data === "object" ? PAGES.map((k) => (data as Record<string, unknown>)[k]).find(Array.isArray) : undefined;
   return rows ? rows.length : null;
@@ -25,7 +25,8 @@ const countOf = (data: unknown): number | null => {
 const READ = { readOnlyHint: true, openWorldHint: false } as const;
 const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: false } as const;
 
-const ok = (data: unknown): CallToolResult => ({ content: [{ type: "text", text: JSON.stringify(data) }] });
+// The same object twice: as text for every client, and as structuredContent for the ones that read a tool's outputSchema.
+const ok = (data: Record<string, unknown>): CallToolResult => ({ content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data });
 
 // The library's errors ({ code, message, details }) go back to the AI tool as they are, so it can correct itself.
 // Only our own codes: a database or runtime error also has a code and a message, and those stay on our side, logged.
@@ -42,17 +43,20 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
   );
   const can = (scope: string) => scopes.includes(scope);
 
-  function tool<S extends z.ZodType>(
-    name: string,
+  // Each tool's result is typed by its entry in Results (shape.ts), which is also its outputSchema.
+  function tool<N extends keyof Results, S extends z.ZodType>(
+    name: N,
     config: { description: string; inputSchema: S; annotations: object },
-    run: (args: z.infer<S>) => Promise<unknown>,
+    run: (args: z.infer<S>) => Promise<Results[N]>,
   ) {
-    server.registerTool(name, config, (async (args: z.infer<S>) => {
+    server.registerTool(name, { ...config, outputSchema: Results[name] }, (async (args: z.infer<S>) => {
       const started = Date.now();
       const done = (errorCode: string | null, resultCount: number | null = null) =>
         onCall?.({ tool: name, ok: errorCode === null, errorCode, resultCount, ms: Date.now() - started });
       try {
-        const data = await run(args);
+        // Parsed, so what goes out is the declared shape and no other key (the schema a client checks against allows
+        // none), and a result that does not fit is our bug, logged as one here before the SDK refuses it in its own words.
+        const data = Results[name].parse(await run(args));
         done(null, countOf(data));
         return ok(data);
       } catch (e) {
@@ -70,7 +74,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     const n = await names();
     return items.map((i) => card(i, n));
   };
-  const entryRow = (e: ListEntry, n: Map<string, string>) => ({ ...card(e.item, n), note: e.note, noteBy: e.noteBy === "mcp" ? "ai" : e.noteBy, ticked: e.ticked });
+  const entryRow = (e: ListEntry, n: Map<string, string>) => ({ ...card(e.item, n), note: e.note, noteBy: e.noteBy === "mcp" ? ("ai" as const) : e.noteBy, ticked: e.ticked });
   const membershipRow = (m: ListMembership) => ({ listId: m.list.id, name: m.list.name, place: m.place, note: m.note, ticked: m.ticked });
   const listRow = (l: Awaited<ReturnType<PluckLibrary["lists"]>>[number]) => ({
     id: l.id, name: l.name, purpose: l.purpose, visibility: l.visibility, itemCount: l.itemCount, tickedCount: l.tickedCount, lastActivityAt: l.lastActivityAt,
@@ -83,7 +87,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "search_items",
       {
-        description: "Search the person's library by words in titles, notes, tags, list names and kept page text.",
+        description: "Search the person's library by words in titles, notes, tags, list names, highlights and kept page text.",
         inputSchema: z.object({
           query: z.string().min(1).max(500),
           kinds: z.array(Kind).optional(),
@@ -138,7 +142,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
           const page = textPage(await lib.text(id), readOffset(cursor));
           return { id, text: page.text, textCursor: page.nextCursor };
         }
-        const out: Record<string, unknown> = {
+        const out: Results["get_item"] = {
           item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, extraction: item.extraction.state, facts: item.facts },
         };
         if (include.includes("text")) {
@@ -149,6 +153,28 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
         if (include.includes("highlights")) out.highlights = (await lib.highlights(id)).map((h) => ({ quote: h.quote, note: h.note }));
         if (include.includes("lists")) out.lists = (await lib.memberships(id)).map(membershipRow);
         return out;
+      },
+    );
+
+    tool(
+      "list_highlights",
+      {
+        description: "The quotes the person highlighted in kept pages, with their notes on them and the item each is in, newest first.",
+        inputSchema: z.object({
+          query: z.string().trim().min(1).max(200).optional().describe("Words to find in the quote or the person's note on it."),
+          itemId: ObjectIdString.optional(),
+          since: DueAt.optional().describe("Only highlights made after this time (ISO 8601)."),
+          limit: Limit.default(25),
+          cursor: Cursor,
+        }),
+        annotations: READ,
+      },
+      async ({ cursor, ...q }) => {
+        const offset = readOffset(cursor);
+        const page = await lib.highlightsAcross({ ...q, offset });
+        // The database pages by `limit`; a page of long quotes is cut again here to stay under the response cap.
+        const { rows } = fit(page.highlights.map((h) => ({ quote: h.quote, note: h.note, highlightedAt: h.createdAt, item: h.item })), 0);
+        return { highlights: rows, nextCursor: page.more || rows.length < page.highlights.length ? offsetCursor(offset + rows.length) : null };
       },
     );
 

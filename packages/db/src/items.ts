@@ -5,7 +5,7 @@ import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "
 import { misfit, newItem, onInsert, replucked, statusFields } from "./item-doc.ts";
 import { markFollowsDone, recountList, recountListsOf } from "./lists.ts";
 import { recountTags } from "./tags.ts";
-import { bodyForSearch, textForSearch } from "./search.ts";
+import { bodyForSearch, highlightsForSearch, textForSearch } from "./search.ts";
 
 // What a link is deduped on: the hash of its key (normalizeUrl), whichever form of the link comes in. Never of the
 // stored url as written: that one keeps the order of its query and its fragment.
@@ -344,7 +344,7 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
         canonicalUrl: x.canonicalUrl,
         lang: x.lang,
         wordCount: x.wordCount,
-        searchText: textForSearch({ url: current.url, excerpt: x.excerpt, siteName: x.siteName ?? current.siteName, author: x.author }),
+        searchText: textForSearch({ url: current.url, excerpt: x.excerpt, siteName: x.siteName ?? current.siteName, author: x.author }) + (await highlightsForSearch(uid, _id)),
         searchBody: bodyForSearch(x.markdown),
         extraction: { state: "done", attempts: current.extraction.attempts + 1, lastError: null },
         updatedAt: new Date(),

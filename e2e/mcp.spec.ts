@@ -58,7 +58,7 @@ test("an AI tool connects over OAuth and calls the connector", async ({ page, re
   const client = new Client({ name: "test-ai", version: "1.0.0" });
   await client.connect(new StreamableHTTPClientTransport(new URL(resource.resource), { requestInit: { headers: { authorization: `Bearer ${access_token}` } } }));
   const { tools } = await client.listTools();
-  expect(tools).toHaveLength(12); // no delete_item: the consent did not grant library:delete
+  expect(tools).toHaveLength(13); // no delete_item: the consent did not grant library:delete
   const text = (r: Awaited<ReturnType<typeof client.callTool>>) => {
     expect(r.isError, JSON.stringify(r.content)).toBeFalsy();
     return JSON.parse((r.content as { text: string }[])[0]!.text);
@@ -74,6 +74,7 @@ test("an AI tool connects over OAuth and calls the connector", async ({ page, re
   expect((await call("search_items", { query: "finishing problem" })).items[0].tags).toEqual(["Teams"]);
   expect((await call("list_items", { status: "inbox" })).items).toHaveLength(1);
   expect((await call("get_item", { id })).text).toContain("finishing problem");
+  expect((await call("list_highlights")).highlights).toEqual([]);
   expect((await call("list_tags")).tags).toHaveLength(1);
   expect((await call("list_lists")).lists).toHaveLength(1);
   expect((await call("get_list", { id: list.id })).entries[0]).toMatchObject({ note: "start here", noteBy: "ai", ticked: true });
