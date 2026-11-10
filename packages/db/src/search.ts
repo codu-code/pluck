@@ -29,8 +29,13 @@ export async function syncTagNames(userId: ObjectId, filter: Filter<ItemDoc>): P
   );
 }
 
+// Japanese, Chinese and Korean: $text splits on spaces and punctuation, so it finds nothing inside their sentences.
+const CJK = /[\p{sc=Han}\p{sc=Hiragana}\p{sc=Katakana}\p{sc=Hangul}]/u;
+const SEARCHED = ["title", "note", "tagNames", "listNames", "searchText", "searchBody"] as const;
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const terms = (q: string) =>
-  q.toLowerCase().replace(/["'“”]/g, " ").split(/\s+/).filter((t) => t.length > 1 && !t.startsWith("-"));
+  q.toLowerCase().replace(/["'“”]/g, " ").split(/\s+/).filter((t) => (t.length > 1 || CJK.test(t)) && !t.startsWith("-"));
 
 // The kept text is markdown: a snippet shows its words, not the image links and marks around them.
 const plain = (md: string) =>
@@ -55,13 +60,14 @@ export function snippetFor(doc: Pick<ItemDoc, "note" | "searchBody" | "excerpt">
     if (phraseAt >= 0) best = { at: phraseAt, len: phrase.length };
     else
       for (const w of words) {
-        const at = lower.search(new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+        const at = CJK.test(w) ? lower.indexOf(w) : lower.search(new RegExp(`\\b${escape(w)}`)); // no \b inside a CJK sentence
         if (at >= 0 && (!best || at < best.at)) best = { at, len: w.length };
       }
     if (!best) continue;
-    const start = Math.max(0, text.lastIndexOf(" ", Math.max(0, best.at - 90)) + 1);
+    // Cut at a space, or at a fixed length where there is none near (Japanese and Chinese have no spaces).
+    const start = Math.max(0, best.at - 120, text.lastIndexOf(" ", Math.max(0, best.at - 90)) + 1);
     const endAt = text.indexOf(" ", Math.min(text.length, best.at + best.len + 110));
-    const end = endAt < 0 ? text.length : endAt;
+    const end = Math.min(endAt < 0 ? text.length : endAt, best.at + best.len + 140);
     const clip = (s: string) => s.replace(/\s+/g, " ");
     return {
       source,
@@ -91,20 +97,28 @@ export async function searchItems(userId: string, q: SearchQuery): Promise<{ res
   if (q.tagIds?.length) filter.tagIds = { $all: q.tagIds.map(oid) };
   if (q.listId) filter._id = { $in: await (await listRows()).distinct("itemId", { userId: uid, listId: oid(q.listId) }) };
   if (q.since || q.until) filter.createdAt = { ...(q.since ? { $gte: new Date(q.since) } : {}), ...(q.until ? { $lt: new Date(q.until) } : {}) };
-  const text = { ...filter, $text: { $search: q.q } };
+  // A query with Japanese, Chinese or Korean in it matches by substring instead: every term, anywhere in the six fields,
+  // newest first.
+  // shortcut: this reads the person's whole library for such a query (fine to tens of thousands of Items), a bigram field in the text index when it is not.
+  const cjk = CJK.test(q.q);
+  const text: Filter<ItemDoc> = cjk
+    ? { ...filter, $and: q.q.split(/\s+/).filter(Boolean).map((term) => ({ $or: SEARCHED.map((f) => ({ [f]: { $regex: escape(term), $options: "i" } })) })) }
+    : { ...filter, $text: { $search: q.q } };
   const offset = decode(q.cursor);
+  const lean = { searchText: 0, tagNames: 0, listNames: 0 } as const;
 
   const [docs, total, exact] = await Promise.all([
-    col
-      .find(text, { projection: { score: { $meta: "textScore" }, searchText: 0, tagNames: 0, listNames: 0 } })
-      .sort({ score: { $meta: "textScore" }, createdAt: -1 })
+    (cjk
+      ? col.find(text, { projection: lean }).sort({ createdAt: -1, _id: -1 })
+      : col.find(text, { projection: { score: { $meta: "textScore" }, ...lean } }).sort({ score: { $meta: "textScore" }, createdAt: -1 })
+    )
       .skip(offset)
       .limit(q.limit + 1)
       .toArray(),
     col.countDocuments(text),
     // A pasted URL finds its item first, even when the words in it match nothing.
     offset === 0 && normalizeUrl(q.q)
-      ? col.findOne({ ...filter, urlHash: createHash("sha256").update(normalizeUrl(q.q)!).digest("hex") }, { projection: { searchText: 0, tagNames: 0, listNames: 0 } })
+      ? col.findOne({ ...filter, urlHash: createHash("sha256").update(normalizeUrl(q.q)!).digest("hex") }, { projection: lean })
       : null,
   ]);
   const page = docs.slice(0, q.limit);
