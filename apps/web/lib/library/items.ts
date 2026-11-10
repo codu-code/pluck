@@ -18,6 +18,13 @@ const INLINE_TIMEOUT_MS = 5000;
 // (50 a pluck, 120 plucks a minute, would be 6,000). Import has its own path for whole libraries.
 const LINKS_PER_HOUR = 2000;
 
+// Spends `count` of the person's links for this hour: every path that plucks links for them calls it first, and one
+// that would go over is refused whole.
+export async function spendLinks(userId: string, count: number): Promise<void> {
+  const budget = await hitRateLimit(`links:${userId}`, LINKS_PER_HOUR, 3600, count);
+  if (!budget.ok) throw new ApiError("rate_limited", "That is a lot of links for one hour. Try again later, or use Import.", 429, { retryAfter: budget.retryAfter });
+}
+
 // Everything POST /items accepts: one URL, many URLs, text with links in it, or a note, todo or thing.
 export async function pluckAny(userId: string, body: CreateItemBody, opts: { defer?: Defer } = {}): Promise<PluckResponse> {
   const res = await pluckAll(userId, body, opts);
@@ -45,8 +52,7 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
     return { results: [result], rejected: [] };
   }
   const inputs = body.url !== undefined ? [body.url] : (body.urls ?? extractUrls(body.text!));
-  const budget = await hitRateLimit(`links:${userId}`, LINKS_PER_HOUR, 3600, inputs.length);
-  if (!budget.ok) throw new ApiError("rate_limited", "That is a lot of links for one hour. Try again later, or use Import.", 429, { retryAfter: budget.retryAfter });
+  await spendLinks(userId, inputs.length);
   if (inputs.length === 1) {
     try {
       return { results: [await pluck(userId, { ...body, url: inputs[0]! }, { defer })], rejected: [] };

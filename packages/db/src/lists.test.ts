@@ -58,6 +58,14 @@ describe("lists", () => {
 
     const empty = await createList(a, { name: "Empty", createdBy: "user" });
     expect(await reorderList(a, empty.id, [])).toBe(true);
+
+    // Made with its items in one go: an id sent twice is one entry with its first note, and the order sent is kept.
+    const twice = await createList(a, { name: "Twice", createdBy: "mcp", items: [{ itemId: two.id, note: "first" }, { itemId: one.id }, { itemId: two.id, note: "again" }, { itemId: four.id }] });
+    expect(twice.itemCount).toBe(3);
+    expect((await getList(a, twice.id))!.entries.map((e) => [e.item.title, e.note, e.noteBy])).toEqual([["Two", "first", "mcp"], ["One", null, null], ["Four", null, null]]);
+    // Added at a place, with one already there: the new one takes the place itself.
+    expect(await addToList(a, twice.id, [one.id, three.id], { position: 1, by: "user" })).toBe(1);
+    expect((await getList(a, twice.id))!.entries.map((e) => [e.item.title, e.position])[0]).toEqual(["Three", 1]);
     expect(await reorderList(a, empty.id, [one.id])).toBe(false);
   });
 
