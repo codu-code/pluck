@@ -64,6 +64,7 @@ Stop `pnpm dev` before `pnpm e2e`: both use `apps/web/.next`.
 - [docs/architecture.md](docs/architecture.md): how the pieces fit, for a newcomer.
 - [docs/self-host.md](docs/self-host.md): run your own, and every setting.
 - [docs/mcp.md](docs/mcp.md): the connector, its tools and how to connect an AI tool.
+- [docs/threat-model.md](docs/threat-model.md): what can go wrong, what stops it, and what a hostile page can and cannot make your AI do.
 - [docs/ios.md](docs/ios.md): the iPhone app, its share extension, offline and TestFlight (`apps/ios/scripts/testflight.sh`).
 - [docs/i18n.md](docs/i18n.md): the ten languages and how to add a string.
 - [docs/deploy.md](docs/deploy.md): how getpluck.io is deployed (a human step; nothing here deploys itself).
