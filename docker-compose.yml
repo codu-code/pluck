@@ -2,12 +2,17 @@
 # Everything is configured by environment variables (an .env file next to this one works); see docs/self-host.md.
 name: pluck
 x-app: &app
+  # The published image, for amd64 and arm64 (.github/workflows/release.yml). PLUCK_VERSION pins a release, e.g. 0.1.0.
+  image: ghcr.io/codu-code/pluck:${PLUCK_VERSION:-latest}
+  # Pulled when it is not on this machine, then left alone: `docker compose pull` fetches a newer one.
+  pull_policy: missing
+  # `docker compose up -d --build` builds this checkout instead, under the same name. Compose also builds when the pull
+  # fails (before the first release, or with no network); `--no-build` makes it stop there instead.
   build:
     context: .
     args:
       NEXT_PUBLIC_POSTHOG_KEY: ${NEXT_PUBLIC_POSTHOG_KEY:-}
       POSTHOG_HOST: ${POSTHOG_HOST:-}
-  image: pluck:local
   restart: unless-stopped
   volumes: [secrets:/data]
   environment:
