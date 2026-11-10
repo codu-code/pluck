@@ -147,12 +147,23 @@ final class PluckClient {
     req.setValue(contentType, forHTTPHeaderField: "content-type")
     let config = URLSessionConfiguration.background(withIdentifier: "io.getpluck.share.\(UUID().uuidString)")
     config.sharedContainerIdentifier = Shared.group
-    URLSession(configuration: config).uploadTask(with: req, fromFile: file).resume()
+    let session = URLSession(configuration: config, delegate: Uploaded(file), delegateQueue: nil)
+    session.uploadTask(with: req, fromFile: file).resume()
+    session.finishTasksAndInvalidate() // lets go of the delegate once the upload is done
     return item(from: json)
+  }
+
+  // The sheet's copy of a file goes once its upload ends, sent or not (nothing sends it again). If the sheet has
+  // closed by then nobody is told, and Shared.sweep takes the copy a day later.
+  private final class Uploaded: NSObject, URLSessionTaskDelegate {
+    let file: URL
+    init(_ file: URL) { self.file = file }
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) { try? FileManager.default.removeItem(at: file) }
   }
 
   // Offline: written to the App Group; the app sends it when it next opens. A body that was already sent once keeps
   // its clientKey (and is filed under it), so the app's send is the same Note to the server, not a second one.
+  // A file is moved, not copied, so the sheet's own copy is gone.
   func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil) {
     guard let dir = Shared.pending else { return }
     let id = (body?["clientKey"] as? String) ?? UUID().uuidString
@@ -160,10 +171,11 @@ final class PluckClient {
     if let body { record["body"] = body.merging(["source": "ios"]) { a, _ in a } }
     if let file {
       let kept = "pending/\(id).\(file.url.pathExtension)"
-      if let container = Shared.container { try? FileManager.default.copyItem(at: file.url, to: container.appendingPathComponent(kept)) }
+      if let container = Shared.container { try? FileManager.default.moveItem(at: file.url, to: container.appendingPathComponent(kept)) }
       record["file"] = ["name": file.name, "contentType": file.contentType, "path": kept]
     }
-    if let data = try? JSONSerialization.data(withJSONObject: record) { try? data.write(to: dir.appendingPathComponent("\(id).json")) }
+    // Atomic: the app takes away a record it cannot read, so it must never see one half written.
+    if let data = try? JSONSerialization.data(withJSONObject: record) { try? data.write(to: dir.appendingPathComponent("\(id).json"), options: .atomic) }
   }
 
   var tags: [TagRef] {
