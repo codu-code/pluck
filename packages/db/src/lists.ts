@@ -228,10 +228,12 @@ export async function markEntries(userId: string, listId: string, itemIds: strin
   if (!(await (await lists()).findOne({ _id, userId: uid }, { projection: { _id: 1 } }))) return null;
   const ids = itemIds.map(oid);
   const now = new Date();
-  const res = await (await listRows()).updateMany({ listId: _id, userId: uid, itemId: { $in: ids } }, { $set: { ticked, tickedAt: ticked ? now : null } });
+  const rows = { listId: _id, userId: uid, itemId: { $in: ids } };
+  const res = await (await listRows()).updateMany(rows, { $set: { ticked, tickedAt: ticked ? now : null } });
   await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: now } });
   await recountList(_id);
-  await doneFollowsMark(uid, ids, ticked);
+  // Only the Items with a row in this List follow: an id sent that is not in it marked nothing, so it changes nothing.
+  await doneFollowsMark(uid, await (await listRows()).distinct("itemId", rows), ticked);
   return res.matchedCount;
 }
 

@@ -127,6 +127,15 @@ describe("lists", () => {
     expect((await getItem(a, todo.id))!.status).toBe("inbox");
     expect(await ticks(trip.id)).toEqual([["Book the venue", false]]);
 
+    // Marked in bulk with an id that is not in the List: that Todo is not Done, and its own List is not marked.
+    const { item: stray } = await createTextItem(a, { kind: "todo", text: "Not in Talk", source: "web" });
+    const elsewhere = await createList(a, { name: "Elsewhere", createdBy: "user", items: [{ itemId: stray.id }] });
+    expect(await markEntries(a, talk.id, [todo.id, stray.id], true)).toBe(1);
+    expect((await getItem(a, todo.id))!.status).toBe("done");
+    expect((await getItem(a, stray.id))!.status).toBe("inbox");
+    expect(await ticks(elsewhere.id)).toEqual([["Not in Talk", false]]);
+    await markEntries(a, talk.id, [todo.id], false);
+
     // A Done Todo arrives marked in a new List.
     await editItem(a, todo.id, { status: "done" });
     const later = await createList(a, { name: "Later on", createdBy: "user", items: [{ itemId: todo.id }] });
