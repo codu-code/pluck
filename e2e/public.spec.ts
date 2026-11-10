@@ -34,6 +34,18 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   expect(html).not.toMatch(/ticked/i);
   await expect(visitor.getByRole("checkbox")).toHaveCount(0); // the owner's mark never shows
   await expect(visitor.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/); // a new list
+
+  // The page names its feed, and the feed lists what the page lists. Reading it is not a view (the count below stays 1).
+  const feedAt = new URL((await visitor.locator('link[rel="alternate"][type="application/atom+xml"]').getAttribute("href"))!).pathname;
+  expect(feedAt).toBe(`/@${handle}/best-mcp-reading/feed.xml`);
+  const feed = await visitor.request.get(feedAt);
+  expect(feed.headers()["content-type"]).toBe("application/atom+xml; charset=utf-8");
+  const xml = await feed.text();
+  expect(xml).toContain("<title>Best MCP reading</title>");
+  expect([...xml.matchAll(/<entry>.*?<title>(.*?)<\/title>/g)].map((m) => m[1])).toEqual(["Small teams ship when the list is short"]);
+  expect(xml).toContain(`href="${FIX}/news-1.html"`);
+  expect(xml).toContain("<summary>Read this first.</summary>");
+  expect(xml).not.toContain("Waiting has a shape");
   await owner.reload();
   await expect(owner.getByText(/1 view · only you see this/)).toBeVisible();
 
@@ -63,6 +75,7 @@ test("make a list public, share it, copy it, report it, take it down", async ({ 
   const gone = await anon.goto(`/@${handle}/best-mcp-reading`);
   expect(gone?.status()).toBe(404);
   await expect(anon.getByRole("heading", { name: "This List isn't public." })).toBeVisible();
+  expect((await anon.request.get(feedAt)).status()).toBe(404); // and so is its feed
 
   // Not an admin: /admin is a 404.
   expect((await visitor.goto("/admin"))?.status()).toBe(404);

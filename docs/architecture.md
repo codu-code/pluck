@@ -22,7 +22,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 | Path | What it is |
 |---|---|
-| `apps/web/app` | Routes. `(site)` is the marketing site, `(app)` the signed-in app, `api/v1` the REST API, `mcp` the connector, `p/[handle]/[slug]` public Lists (served at `/@handle/slug`). |
+| `apps/web/app` | Routes. `(site)` is the marketing site, `(app)` the signed-in app, `api/v1` the REST API, `mcp` the connector, `p/[handle]/[slug]` public Lists (served at `/@handle/slug`, and as an Atom feed of the same page at `/@handle/slug/feed.xml`). |
 | `apps/web/lib/api.ts` | `route()` and `publicRoute()`: auth, scope, rate limits, body parsing and the error shape for every REST route. Most route files are a few lines. |
 | `apps/web/lib/library/*` | The library: the product rules over `packages/db` (URL normalisation, the hourly pluck budget, the Kind and text rules, unknown tags refused with the nearest ones, kicking extraction). REST routes and the connector both call it. |
 | `apps/web/lib/connector.ts` | Binds `PluckLibrary` (the interface in `packages/mcp/src/library.ts`) to the library for one person, with every write marked as made by AI. |
