@@ -2,8 +2,6 @@
 // and a video's captions from the player data in your session.
 export type Captured = { title: string; html?: string; selection: string; transcript?: string };
 
-const MAX_HTML = 4_000_000; // request bodies on the hosted server stop at 4.5 MB
-
 export async function capture(tabId: number, { content, transcripts }: { content: boolean; transcripts: boolean }): Promise<Captured | null> {
   try {
     const [page] = await browser.scripting.executeScript({
@@ -16,7 +14,7 @@ export async function capture(tabId: number, { content, transcripts }: { content
     return {
       title: got.title,
       selection: got.selection.trim(),
-      ...(content && got.html.length <= MAX_HTML ? { html: got.html } : {}),
+      ...(content ? { html: got.html } : {}), // lib/pluck.ts leaves it out when the request would be too big
       ...(transcript ? { transcript } : {}),
     };
   } catch {

@@ -13,18 +13,25 @@ export type PluckOutcome =
 
 const isWeb = (url?: string) => Boolean(url && /^https?:\/\//.test(url));
 
+// Request bodies on the hosted server stop at 4.5 MB, counted in bytes as sent: Japanese or Chinese text is three
+// bytes a character, and JSON makes two of every quote and newline. So the whole body is measured, not the page's length.
+const MAX_BODY = 4_000_000;
+const tooBig = (body: CreateItemBody) => new TextEncoder().encode(JSON.stringify(body)).length > MAX_BODY;
+
 // The one way in from the popup, the shortcut and the right-click menu.
 export async function pluckTab(tab: { id?: number; url?: string; title?: string; windowId?: number }, { asHighlight = false } = {}): Promise<PluckOutcome> {
   if (!isWeb(tab.url)) return { state: "refused", message: t("errors.nothing") };
   const opts = await settings();
   const page = tab.id === undefined ? null : await capture(tab.id, { content: opts.sendContent, transcripts: opts.transcripts });
-  const outcome = await send({
+  const body: CreateItemBody = {
     url: tab.url!, source: "extension",
     ...(page?.title || tab.title ? { title: (page?.title || tab.title)!.slice(0, 500) } : {}),
     ...(page?.html ? { html: page.html } : {}),
     ...(page?.transcript ? { transcript: page.transcript } : {}),
     ...(asHighlight && page?.selection ? { selection: page.selection.slice(0, 20_000) } : {}),
-  });
+  };
+  if (body.html && tooBig(body)) delete body.html; // too big to send: the server reads the page itself
+  const outcome = await send(body);
   if (outcome.state === "plucked") {
     if (opts.defaultKind !== "guess" && outcome.created && outcome.item.kind !== opts.defaultKind)
       outcome.item = (await api<{ item: Item }>(`/api/v1/items/${outcome.item.id}`, { method: "PATCH", json: { kind: opts.defaultKind } })).item;
