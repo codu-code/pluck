@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { BIN_DAYS, defaultPreview, deriveExcerpt, deriveTitle, isTextKind, Kind, TASK_KINDS, type Item, type ItemPage, type Facts, type ListItemsQuery, type Preview, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
+import { BIN_DAYS, normalizeUrl, defaultPreview, deriveExcerpt, deriveTitle, isTextKind, Kind, TASK_KINDS, type Item, type ItemPage, type Facts, type ListItemsQuery, type Preview, type Source, type Status, type TextKind } from "@pluck/shared-schemas";
 import { ObjectId, type Filter } from "mongodb";
 import { contents, highlights, items, LEAN, listRows, oid, type ItemDoc } from "./collections.ts";
 import { misfit, newItem, onInsert, replucked, statusFields } from "./item-doc.ts";
@@ -7,7 +7,9 @@ import { markFollowsDone, recountList, recountListsOf } from "./lists.ts";
 import { recountTags } from "./tags.ts";
 import { bodyForSearch, textForSearch } from "./search.ts";
 
-export const urlHash = (normalizedUrl: string) => createHash("sha256").update(normalizedUrl).digest("hex");
+// What a link is deduped on: the hash of its key (normalizeUrl), whichever form of the link comes in. Never of the
+// stored url as written: that one keeps the order of its query and its fragment.
+export const urlHash = (url: string) => createHash("sha256").update(normalizeUrl(url) ?? url).digest("hex");
 
 const iso = (d: Date | null) => (d ? d.toISOString() : null);
 
@@ -48,8 +50,8 @@ export function toItem(d: ItemDoc): Item {
 
 export type PluckLinkInput = { url: string; title?: string | null; note?: string | null; source: Source };
 
-// Plucks a URL (already normalised). A URL already in the library is a re-pluck: the same item
-// moves back to the Inbox, comes out of the bin and is touched. Never a second item.
+// Plucks a URL (as it is kept: cleanUrl). A URL already in the library, by its key, is a re-pluck: the same item
+// moves back to the Inbox, comes out of the bin and is touched, and keeps the URL it has. Never a second item.
 export async function pluckLink(
   userId: string,
   input: PluckLinkInput,
@@ -381,9 +383,9 @@ export async function setBlobKeys(userId: string, itemId: string, keys: { coverK
   await (await items()).updateOne({ _id: oid(itemId), userId: oid(userId) }, { $set: { ...keys, updatedAt: new Date() } });
 }
 
-// The live item for a normalised URL; binned ones do not count.
-export async function findByUrl(userId: string, normalizedUrl: string): Promise<Item | null> {
-  const doc = await (await items()).findOne({ userId: oid(userId), urlHash: urlHash(normalizedUrl), deletedAt: null }, LEAN);
+// The live item for a URL, by its key; binned ones do not count.
+export async function findByUrl(userId: string, url: string): Promise<Item | null> {
+  const doc = await (await items()).findOne({ userId: oid(userId), urlHash: urlHash(url), deletedAt: null }, LEAN);
   return doc && toItem(doc);
 }
 

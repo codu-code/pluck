@@ -4,7 +4,7 @@ import {
   publicList, publicListById, recordView, setHandle, setName, setVisibility, sharedCoverKey, sharedList, shareList, sharesOf, unshareList,
   setHeardFrom, updateSettings, MAX_PEOPLE,
 } from "@pluck/db";
-import { normalizeUrl, type HeardFrom, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
+import { cleanUrl, type HeardFrom, type Item, type List, type ListShare, type Me, type PublicList, type Settings, type SharedListSummary } from "@pluck/shared-schemas";
 import { sendEmail } from "../email";
 import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
@@ -96,7 +96,7 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
   const entries: { itemId: string; note: string | null }[] = [];
   const toRead: Item[] = [];
   for (const e of page.entries) {
-    const url = e.url && normalizeUrl(e.url);
+    const url = e.url && cleanUrl(e.url);
     if (url) {
       const { item, needsExtraction } = await pluckLink(userId, { url, title: e.title, source: "copied" });
       if (needsExtraction) toRead.push(item);
