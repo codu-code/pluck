@@ -81,6 +81,22 @@ The server's instructions tell the AI tool that text inside kept pages, notes fr
 
 300 requests a minute per IP and 600 a minute per person. Over that is a `429` with `Retry-After`.
 
+## The registry listing
+
+`server.json` at the repo root is Pluck's entry for the official MCP registry (`registry.modelcontextprotocol.io`), where clients and directories look servers up. It follows the registry's `2025-12-11` schema and lists two ways in under one name, `io.github.codu-code/pluck`: the hosted connector (`https://getpluck.io/mcp`, streamable HTTP; the schema has no field for sign-in, a client finds OAuth from the `401`) and the stdio bridge on npm (`@getpluck/mcp`, with `--server` and `PLUCK_API_KEY`). The registry proves the name twice: whoever publishes must be an Owner of the `codu-code` organisation on GitHub, and the npm package must carry the same name as `mcpName` in its `package.json`. `packages/mcp/src/registry.test.ts` keeps the name, the package version and the inputs in step with `packages/mcp-stdio`.
+
+Nothing here publishes it. A person does, after each release of `@getpluck/mcp`:
+
+1. Release the package with `mcpName` in it. 0.1.0 on npm has none, so the registry refuses it: the next version is 0.1.1. Raise `version` in `packages/mcp-stdio/package.json` and both `version` fields in `server.json` together, merge, and push the tag `mcp-v0.1.1` (`docs/deploy.md`, "Publishing @getpluck/mcp"). Then `npm view @getpluck/mcp mcpName` should print the name.
+2. Install the publisher, `brew install mcp-publisher`, and check the file from the repo root: `mcp-publisher validate`.
+3. Log in as an Owner of `codu-code` with a token: `mcp-publisher login github --token <token>`, where the token is a classic personal access token with only the `read:org` scope (or a fine-grained one made for the organisation with Members: read-only). The browser flow, `mcp-publisher login github` alone, cannot see organisations today (registry issue 1468) and gives only `io.github.<your username>/*`.
+4. Publish: `mcp-publisher publish`.
+5. Look it up: `curl "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.codu-code/pluck"`.
+
+A published version cannot be changed, so a change to the listing goes out under a new `version`.
+
+GitHub Actions can do steps 2 to 4 with no token: a job in this repository with `permissions: id-token: write` runs `mcp-publisher login github-oidc`, then `mcp-publisher publish`, and the registry reads the organisation from the workflow's own identity. It would sit after the npm publish in `.github/workflows/publish-mcp.yml`, with the publisher pinned to a release and its signature checked as the registry's guide shows. That step is not written yet. The registry is in preview: if a step here fails, read its publishing guide first.
+
 ## Developing
 
 - `packages/mcp` holds the tools, resources and prompts. It sees the library only through `PluckLibrary` (`packages/mcp/src/library.ts`); `apps/web/lib/connector.ts` binds it to the in-process library for one person, with every write marked as made by AI.

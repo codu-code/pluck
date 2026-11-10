@@ -1,5 +1,6 @@
 {
   "name": "@getpluck/mcp",
+  "mcpName": "io.github.codu-code/pluck",
   "repository": { "type": "git", "url": "https://github.com/codu-code/pluck.git", "directory": "packages/mcp-stdio" },
   "homepage": "https://getpluck.io/connect",
   "bugs": "https://github.com/codu-code/pluck/issues",
