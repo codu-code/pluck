@@ -133,9 +133,12 @@ const guard = createAuthMiddleware(async (ctx) => {
     else await c.linkAccount({ userId: user.id, providerId: "credential", accountId: user.id, password: hash });
   }
   if (ctx.path === "/sign-in/magic-link") await limitSignInEmails(email, clientIp({ headers: ctx.headers ?? new Headers() }));
-  // Each code allows 5 tries; these cap guessing across codes.
+  // Each code allows 5 tries and six codes an hour go to an address: that bounds guessing. These cap it across codes,
+  // per address and caller together, so a stranger's wrong guesses do not spend the owner's tries.
+  // shortcut: five wrong tries from anyone still spend the live code, bind a code to the device that asked for it if that is abused.
   if (ctx.path === "/sign-in/email-otp" && LIMITS_ON) {
-    for (const [key, max] of [[`code:email:${email}`, 15], [`code:ip:${clientIp({ headers: ctx.headers ?? new Headers() })}`, 60]] as const)
+    const ip = clientIp({ headers: ctx.headers ?? new Headers() });
+    for (const [key, max] of [[`code:email:${email}:${ip}`, 15], [`code:email:${email}`, 60], [`code:ip:${ip}`, 60]] as const)
       if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many tries. Try again in an hour." });
   }
 });

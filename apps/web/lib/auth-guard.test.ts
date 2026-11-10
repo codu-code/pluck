@@ -99,6 +99,26 @@ test("with SIGNUP_EMAILS set, only those addresses start an account, by link or 
   }
 });
 
+test("wrong codes from one network do not lock the address out for everyone else", async () => {
+  const email = `locked-${Date.now()}@example.test`;
+  const guess = (from: string) =>
+    auth.handler(new Request(`${BASE}/api/auth/sign-in/email-otp`, {
+      method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": from }, body: JSON.stringify({ email, otp: "000000" }),
+    }));
+  vi.useFakeTimers({ toFake: ["Date"] });
+  try {
+    for (let i = 0; i < 15; i++) {
+      vi.setSystemTime(new Date(Date.parse("2031-01-01T10:00:00Z") + i * 61_000)); // spaced past Better Auth's own 3 tries a minute per network
+      expect((await guess("203.0.113.66")).status).toBe(400);
+    }
+    vi.setSystemTime(new Date("2031-01-01T10:20:00Z"));
+    expect((await guess("203.0.113.66")).status).toBe(429); // the stranger is out of tries
+    expect((await guess("203.0.113.77")).status).toBe(400); // the owner, from their own network, is not
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 test("with no review account set, nobody signs in with a password", async () => {
   expect((await post("/sign-in/email", { email: "apple-review@example.test", password: "anything at all" })).status).toBe(401);
 });
