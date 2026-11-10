@@ -30,7 +30,7 @@ struct PluckNote: AppIntent {
 
   // No links: a Note. Links in it: each its own Item, as pasting into Add does.
   func perform() async throws -> some IntentResult & ProvidesDialog {
-    try await pluck(["text": text])
+    try await pluck(["text": text, "clientKey": UUID().uuidString]) // sent and, with no answer, queued under one key: never two Notes
   }
 }
 

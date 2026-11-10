@@ -5,6 +5,10 @@ import { Refused } from "./api";
 export type Queued = { id?: string; body: CreateItemBody; at: number };
 export type QueueStore = { read(): Promise<Queued[]>; write(q: Queued[]): Promise<void> };
 
+// A pluck's own key (the body's clientKey). Made before the first send and used again for every resend and for the
+// queued copy, so a Note that landed while its answer was lost is not made a second time.
+export const newKey = () => `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+
 const keyOf = (q: Queued) => q.id ?? String(q.at); // entries queued before ids existed go by their time
 
 // The rules for everything waiting on a device, whatever holds it. Sends in order, one at a time. An entry leaves once
@@ -35,7 +39,7 @@ export function createQueue(store: QueueStore) {
   const drain = createDrain<Queued>({ read: store.read, remove: async (q) => store.write((await store.read()).filter((x) => keyOf(x) !== keyOf(q))) });
   return {
     count: async () => (await store.read()).length,
-    add: async (body: CreateItemBody, id = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`) => {
+    add: async (body: CreateItemBody, id = newKey()) => {
       const q = [...(await store.read()), { id, body, at: Date.now() }];
       await store.write(q);
       return q.length;

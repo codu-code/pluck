@@ -95,7 +95,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     let res: Response;
     try {
       if (!navigator.onLine) throw new TypeError("offline");
-      res = await post(body);
+      res = await post({ ...body, clientKey: draft.key }); // the key the queued copy goes with, so a lost answer makes no second Note
     } catch {
       await queue.add(body, draft.key); // the draft's row and the queued pluck share a key
       setNotice(t("queued"));

@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { describe, expect, test, vi } from "vitest";
-import { codeFrom, createClient, createQueue, createSession, pkcePair, Refused, sameOwner, SignedOut, tokenRequest, Unreachable, whoIs, type Queued, type SessionStore, type Stored } from "./index";
+import { CreateItemBody } from "@pluck/shared-schemas";
+import { codeFrom, createClient, createQueue, newKey, createSession, pkcePair, Refused, sameOwner, SignedOut, tokenRequest, Unreachable, whoIs, type Queued, type SessionStore, type Stored } from "./index";
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 
@@ -193,4 +194,15 @@ test("what waits on a device goes up only as the person who left it: a token nam
   expect(sameOwner("u1", "u2")).toBe(false); // someone else: cleared
   expect(sameOwner(null, "u2")).toBe(false);
   expect(sameOwner(null, null)).toBe(false); // nobody we can name on either side is not the same person
+});
+
+test("a pluck's key is made before its first send: the API takes it, and the queued copy goes up with the same one", async () => {
+  const key = newKey();
+  expect(CreateItemBody.safeParse({ text: "a note", clientKey: key }).success).toBe(true); // the first send
+  let saved: Queued[] = [];
+  const q = createQueue({ read: async () => saved, write: async (x) => { saved = x; } });
+  await q.add({ text: "a note" }, key); // its answer never came
+  const sent: (string | undefined)[] = [];
+  await q.drain(async (b) => void sent.push(b.clientKey));
+  expect(sent).toEqual([key]);
 });

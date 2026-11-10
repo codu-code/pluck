@@ -1,5 +1,5 @@
 export { answer, createClient, Refused, sameOrigin, SignedOut, tokenRequest, Unreachable, type Client, type ClientDeps, type Init, type Tokens } from "./api";
-export { createDrain, createQueue, type Queued, type QueueStore } from "./queue";
+export { createDrain, createQueue, newKey, type Queued, type QueueStore } from "./queue";
 export { b64url, codeFrom, pkcePair } from "./pkce";
 export { createSession, register, sameOwner, whoIs, type SessionStore, type Stored } from "./session";
 export { createLibrary, type Library } from "./library";

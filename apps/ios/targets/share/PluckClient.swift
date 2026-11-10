@@ -151,10 +151,11 @@ final class PluckClient {
     return item(from: json)
   }
 
-  // Offline: written to the App Group; the app sends it when it next opens.
+  // Offline: written to the App Group; the app sends it when it next opens. A body that was already sent once keeps
+  // its clientKey (and is filed under it), so the app's send is the same Note to the server, not a second one.
   func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil) {
     guard let dir = Shared.pending else { return }
-    let id = UUID().uuidString
+    let id = (body?["clientKey"] as? String) ?? UUID().uuidString
     var record: [String: Any] = [:]
     if let body { record["body"] = body.merging(["source": "ios"]) { a, _ in a } }
     if let file {
