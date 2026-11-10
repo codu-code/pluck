@@ -66,6 +66,12 @@ const FROM: [ImportSource, string, number, [title: string, tags: string[], note:
     [link("gone"), [], null, "2023-11-15T09:00:00.000Z"],
     ["Η τέχνη της ανάγνωσης", ["ανάγνωση"], null, "2024-03-01T10:00:00.000Z"],
   ]],
+  ["linkwarden", "linkwarden.json", 5, [
+    [link("untitled"), [], null, "2019-05-06T07:08:09.000Z"],
+    ['Estimating rates, "roughly"', [], null, "2024-02-01T10:00:00.000Z"],
+    ["Kitchen hob", ["Reno", "kitchen", "to buy"], "Check the width against the worktop", "2024-03-01T10:00:00.000Z"],
+    ["주방 조명 고르기", ["Reno"], null, "2024-03-02T10:00:00.000Z"],
+  ]],
 ];
 
 test.each(FROM)("an import from %s makes its links Items in the Archive, with their Tags, notes and dates; a link in the file twice is one Item", async (source, name, total, expected) => {

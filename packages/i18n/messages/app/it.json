@@ -1010,6 +1010,7 @@
         "instapaper": "Instapaper (CSV)",
         "readwise": "Readwise Reader (CSV)",
         "wallabag": "Wallabag (JSON)",
+        "linkwarden": "Linkwarden (JSON)",
         "html": "Segnalibri del browser (HTML)"
       },
       "drop": "Trascina qui un file, o sceglilo",

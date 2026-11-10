@@ -163,7 +163,7 @@ export const ApiKey = z.object({
 export type ApiKey = z.infer<typeof ApiKey>;
 export const CreateApiKeyBody = z.object({ name: z.string().trim().min(1).max(60), scopes: z.array(z.enum(API_SCOPES)).min(1).optional() });
 
-export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "readwise", "wallabag", "html"]);
+export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "readwise", "wallabag", "linkwarden", "html"]);
 export type ImportSource = z.infer<typeof ImportSourceEnum>;
 export const ImportStatus = z.object({
   id: ObjectIdString, source: ImportSourceEnum, total: z.number().int(), done: z.number().int(), failed: z.number().int(),
@@ -180,6 +180,12 @@ const maybeList = <T extends z.ZodType>(of: T) => z.array(of).nullish().catch(nu
 export const WallabagExport = z.array(
   z.object({ url: maybeText, title: maybeText, content: maybeText, created_at: maybeText, tags: maybeList(z.union([z.string(), z.object({ label: z.string() })])) }),
 );
+export const LinkwardenExport = z.object({
+  collections: z.array(z.object({
+    name: maybeText,
+    links: maybeList(z.object({ url: maybeText, name: maybeText, description: maybeText, importDate: maybeText, createdAt: maybeText, tags: maybeList(z.object({ name: z.string() })) })),
+  })),
+});
 
 // An AI tool the person connected over OAuth, shown in Settings with a Disconnect button.
 export const AiConnection = z.object({ clientId: z.string(), name: z.string(), scopes: z.array(z.string()), connectedAt: z.string() });

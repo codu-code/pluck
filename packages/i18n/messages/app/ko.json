@@ -1010,6 +1010,7 @@
         "instapaper": "Instapaper (CSV)",
         "readwise": "Readwise Reader (CSV)",
         "wallabag": "Wallabag (JSON)",
+        "linkwarden": "Linkwarden (JSON)",
         "html": "브라우저 북마크 (HTML)"
       },
       "drop": "파일을 끌어다 놓거나 선택하세요",

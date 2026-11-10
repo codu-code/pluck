@@ -79,3 +79,13 @@ test("Wallabag: tags as strings or objects, the kept page unless it is Wallabag'
   expect(e[1]).toMatchObject({ title: null, tags: [], html: null });
   expect(e[2]).toMatchObject({ title: "Η τέχνη της ανάγνωσης", tags: ["ανάγνωση"], html: null });
 });
+
+test("Linkwarden: the collection's name as a tag beside the link's own, the description as the note, the first date it has", () => {
+  const e = parseImport("linkwarden", file("linkwarden.json"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/rates", "https://example.com/untitled", "https://example.com/hob", "https://example.com/led", "https://example.com/rates"]); // the PDF has no URL
+  expect(e[0]).toMatchObject({ title: 'Estimating rates, "roughly"', tags: [], note: null }); // Unorganized is no collection
+  expect(e[0]!.createdAt?.toISOString()).toBe("2024-02-01T10:00:00.000Z");
+  expect(e[1]).toMatchObject({ title: null, createdAt: new Date("2019-05-06T07:08:09.000Z") }); // importDate over createdAt
+  expect(e[2]).toMatchObject({ title: "Kitchen hob", tags: ["Reno", "kitchen", "to buy"], note: "Check the width against the worktop" });
+  expect(e[3]).toMatchObject({ title: "주방 조명 고르기", tags: ["Reno"] });
+});

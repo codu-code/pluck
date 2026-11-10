@@ -1,4 +1,4 @@
-import { WallabagExport, type ImportSource } from "@pluck/shared-schemas";
+import { LinkwardenExport, WallabagExport, type ImportSource } from "@pluck/shared-schemas";
 import { unzipSync, strFromU8 } from "fflate";
 import { parseHTML } from "linkedom";
 
@@ -122,6 +122,18 @@ function wallabag(text: string): ImportEntry[] {
   });
 }
 
+// Linkwarden: collections, each holding its links. A collection's name becomes a tag, but for "Unorganized", where
+// links in no collection sit. importDate is when a link Linkwarden itself imported was first kept.
+// Dropped: pins, colours and icons, how collections nest, and its kept copies (the export has only their paths).
+function linkwarden(text: string): ImportEntry[] {
+  return readJson(LinkwardenExport, text).collections.flatMap((c) =>
+    (c.links ?? []).map((l) => ({
+      url: l.url ?? "", title: l.name || null, note: l.description || null, createdAt: date(l.importDate ?? l.createdAt), html: null,
+      tags: [...(c.name && c.name !== "Unorganized" ? [c.name] : []), ...(l.tags ?? []).map((t) => t.name)],
+    })),
+  );
+}
+
 // Netscape bookmark HTML, as every browser exports it. A real HTML parser, so every entity (Chrome writes &#39;) decodes once.
 function bookmarksHtml(text: string): ImportEntry[] {
   const { document } = parseHTML(text);
@@ -168,7 +180,7 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
 const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
 const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
   pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), readwise: text(readwise), omnivore,
-  wallabag: text(wallabag), html: text(bookmarksHtml),
+  wallabag: text(wallabag), linkwarden: text(linkwarden), html: text(bookmarksHtml),
 };
 
 // Throws on a file that is not what the source writes; the import then says it could not be read.

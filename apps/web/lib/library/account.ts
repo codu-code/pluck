@@ -70,6 +70,7 @@ const TYPES: Record<ImportSource, string> = {
   instapaper: "text/csv",
   readwise: "text/csv",
   wallabag: "application/json",
+  linkwarden: "application/json",
 };
 
 // Step 1: a record and a URL the browser uploads the file to directly. The URL takes exactly `size` bytes.
