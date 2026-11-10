@@ -1,5 +1,5 @@
 import type { Item, ItemPage } from "@pluck/shared-schemas";
-import { useQueryClient } from "@tanstack/react-query";
+import { type InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
 import { FlatList, type ListRenderItem, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -7,7 +7,7 @@ import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { ItemRow } from "@/components/ItemRow";
 import { Empty } from "@/components/Screen";
-import { library, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
+import { keys, library, useItem, useItems, useList, useLists, usePatchItem, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // One sheet for three picks (no board: built from the web pickers): an item's tags, an item's lists,
@@ -133,7 +133,7 @@ function TagsForMany({ ids }: { ids: string[] }) {
   const qc = useQueryClient();
   const tags = useTags();
   const [filter, setFilter] = useState("");
-  const loaded = qc.getQueriesData<ItemPage>({ queryKey: ["items"] }).flatMap(([, page]) => page?.items ?? []);
+  const loaded = (["inbox", "later"] as const).flatMap((s) => qc.getQueryData<InfiniteData<ItemPage>>(keys.items(s))?.pages.flatMap((p) => p.items) ?? []);
   const [all, setAll] = useState(() => {
     const picked = ids.map((id) => loaded.find((i) => i.id === id)?.tagIds ?? []);
     return new Set((tags.data ?? []).filter((x) => picked.every((tagIds) => tagIds.includes(x.id))).map((x) => x.id));
@@ -219,7 +219,8 @@ function AddTo({ listId }: { listId: string }) {
   const inbox = useItems("inbox");
   const later = useItems("later");
   const inList = new Set((list.data?.entries ?? []).map((e) => e.item.id));
-  const candidates: Item[] = [...(inbox.data?.items ?? []), ...(later.data?.items ?? [])];
+  // shortcut: only the rows of Inbox and Later already loaded (the first 50 of each, more once scrolled to); page this sheet when someone cannot find an Item to add.
+  const candidates: Item[] = [inbox, later].flatMap((q) => q.data?.pages.flatMap((p) => p.items) ?? []);
   const add = async (itemId: string) => {
     if (inList.has(itemId)) return;
     await library.setInList([itemId], listId, true).catch(() => {});

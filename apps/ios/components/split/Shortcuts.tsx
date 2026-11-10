@@ -53,8 +53,9 @@ export function Shortcuts() {
     const item = open();
     if (!item || (to === "done" && !isTask(item.kind))) return;
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    void library.move([item.id], to).then(() => queryClient.invalidateQueries({ queryKey: ["items"] }));
-    toast(tr(`moved.${to}`), () => void library.move([item.id], item.status).then(() => queryClient.invalidateQueries({ queryKey: ["items"] })));
+    const failed = () => toast(tr("items.moveFailed")); // in place of the toast that said it had moved
+    void library.move([item.id], to).then(() => queryClient.invalidateQueries({ queryKey: ["items"] })).catch(failed);
+    toast(tr(`moved.${to}`), () => void library.move([item.id], item.status).then(() => queryClient.invalidateQueries({ queryKey: ["items"] })).catch(failed));
     step(1);
   };
   const pick = (mode: "tags" | "lists") => {

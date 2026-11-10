@@ -117,10 +117,15 @@ const config: ExpoConfig = {
 
 // apple-targets builds an extension's Release like its Debug. Optimise the share extension and the App Intents
 // extension, keep a dSYM so crash reports symbolicate, and build them for iPhone and iPad like the app. Its targets are written in its own pass, so the change goes there.
+// Every extension also takes the app's build number and version, in Debug and Release: apple-targets gives an App
+// Intents extension build 1 whatever the app's is, and App Store Connect warns when the two differ (ITMS-90473).
 const withShareRelease: ConfigPlugin = (c) =>
   withXcodeProjectBeta(c, (m) => {
     for (const { props: p } of m.modResults.values() as Iterable<{ props: { isa?: string; name?: string; buildSettings?: Record<string, unknown> } }>) {
-      if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings && ["io.getpluck.app.share", "io.getpluck.app.intents"].includes(String(p.buildSettings.PRODUCT_BUNDLE_IDENTIFIER)))
+      if (p.isa !== "XCBuildConfiguration" || !p.buildSettings) continue;
+      const id = String(p.buildSettings.PRODUCT_BUNDLE_IDENTIFIER);
+      if (id.startsWith(`${c.ios?.bundleIdentifier}.`)) Object.assign(p.buildSettings, { CURRENT_PROJECT_VERSION: c.ios?.buildNumber, MARKETING_VERSION: c.version });
+      if (p.name === "Release" && ["io.getpluck.app.share", "io.getpluck.app.intents"].includes(id))
         Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1,2" });
     }
     return m;

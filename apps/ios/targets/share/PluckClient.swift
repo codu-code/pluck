@@ -67,11 +67,13 @@ final class PluckClient {
                        .init(name: "client_id", value: clientId), .init(name: "resource", value: "\(s.server)/api/v1")]
     req.httpBody = form.percentEncodedQuery?.data(using: .utf8)
     let (data, res) = try await send(req)
-    // Busy or down is not signed out: the pluck waits and goes later, as the app's client does.
     let status = (res as? HTTPURLResponse)?.statusCode ?? 0
-    if status >= 500 || status == 429 { throw PluckError.offline }
-    guard status == 200,
-          let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let access = json["access_token"] as? String else { throw PluckError.signedOut }
+    let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+    // Signed out only when the server says the refresh token is spent or revoked (400 or 401 with one of these errors),
+    // the rule the app's client has (packages/client). Any other answer (busy, down, an edge's 403, a 404 during a
+    // deploy, a proxy's page) is not signed out: the pluck waits and the app sends it later.
+    if status == 400 || status == 401, let error = json?["error"] as? String, ["invalid_grant", "invalid_client", "unauthorized_client"].contains(error) { throw PluckError.signedOut }
+    guard status == 200, let json, let access = json["access_token"] as? String else { throw PluckError.offline }
     s.access = access
     s.refresh = (json["refresh_token"] as? String) ?? s.refresh
     let expiresIn = (json["expires_in"] as? Double) ?? 3600
@@ -147,23 +149,40 @@ final class PluckClient {
     req.setValue(contentType, forHTTPHeaderField: "content-type")
     let config = URLSessionConfiguration.background(withIdentifier: "io.getpluck.share.\(UUID().uuidString)")
     config.sharedContainerIdentifier = Shared.group
-    URLSession(configuration: config).uploadTask(with: req, fromFile: file).resume()
+    let session = URLSession(configuration: config, delegate: Uploaded(file), delegateQueue: nil)
+    session.uploadTask(with: req, fromFile: file).resume()
+    session.finishTasksAndInvalidate() // lets go of the delegate once the upload is done
     return item(from: json)
+  }
+
+  // The sheet's copy of a file goes once its upload ends, sent or not (nothing sends it again). If the sheet has
+  // closed by then nobody is told, and Shared.sweep takes the copy a day later.
+  private final class Uploaded: NSObject, URLSessionTaskDelegate {
+    let file: URL
+    init(_ file: URL) { self.file = file }
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) { try? FileManager.default.removeItem(at: file) }
   }
 
   // Offline: written to the App Group; the app sends it when it next opens. A body that was already sent once keeps
   // its clientKey (and is filed under it), so the app's send is the same Note to the server, not a second one.
-  func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil) {
-    guard let dir = Shared.pending else { return }
+  // A file is moved, not copied, so the sheet's own copy is gone. An edit is a change to an Item already plucked
+  // (ShareModel.finish). Returns the record, for a caller that takes it away again once it has sent it itself.
+  @discardableResult
+  func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil, edit: (id: String, patch: [String: Any])? = nil) -> URL? {
+    guard let dir = Shared.pending else { return nil }
     let id = (body?["clientKey"] as? String) ?? UUID().uuidString
     var record: [String: Any] = [:]
     if let body { record["body"] = body.merging(["source": "ios"]) { a, _ in a } }
     if let file {
       let kept = "pending/\(id).\(file.url.pathExtension)"
-      if let container = Shared.container { try? FileManager.default.copyItem(at: file.url, to: container.appendingPathComponent(kept)) }
+      if let container = Shared.container { try? FileManager.default.moveItem(at: file.url, to: container.appendingPathComponent(kept)) }
       record["file"] = ["name": file.name, "contentType": file.contentType, "path": kept]
     }
-    if let data = try? JSONSerialization.data(withJSONObject: record) { try? data.write(to: dir.appendingPathComponent("\(id).json")) }
+    if let edit { record["edit"] = ["id": edit.id, "patch": edit.patch] }
+    // Atomic: the app takes away a record it cannot read, so it must never see one half written.
+    let to = dir.appendingPathComponent("\(id).json")
+    guard let data = try? JSONSerialization.data(withJSONObject: record), (try? data.write(to: to, options: .atomic)) != nil else { return nil }
+    return to
   }
 
   var tags: [TagRef] {

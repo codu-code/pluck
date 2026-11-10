@@ -89,9 +89,10 @@ function Toolbar({ item }: { item: Item }) {
   const split = useSplit();
   const inDetail = useInDetail();
   const move = (status: "inbox" | "later" | "archived") => {
-    patch.mutate({ id: item.id, patch: { status } });
+    const failed = () => toast(tr("items.moveFailed")); // in place of the toast that said it had moved
+    void patch.mutateAsync({ id: item.id, patch: { status } }).catch(failed);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(tr(`moved.${status}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${status}`), () => void patch.mutateAsync({ id: item.id, patch: { status: item.status } }).catch(failed));
     if (inDetail) split?.show(null);
     else router.back();
   };

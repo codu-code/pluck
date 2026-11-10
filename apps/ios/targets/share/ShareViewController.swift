@@ -43,6 +43,7 @@ enum ShareInput {
 extension Shared {
   // What was shared, in the spec's order: a URL (with Safari's page), else text, else images and a PDF.
   static func inputs(from context: NSExtensionContext?) async -> [ShareInput] {
+    sweep() // first, so it never meets a copy this share is still making
     let providers = (context?.inputItems as? [NSExtensionItem] ?? []).flatMap { $0.attachments ?? [] }
     var out: [ShareInput] = []
     for p in providers {
@@ -52,13 +53,16 @@ extension Shared {
         out.append(.page(url: url, title: page["title"] as? String, selection: (page["selection"] as? String).flatMap { $0.isEmpty ? nil : $0 },
                          html: (page["html"] as? String).flatMap { $0.isEmpty ? nil : $0 }))
       } else if p.hasItemConformingToTypeIdentifier(UTType.url.identifier), let url = try? await p.loadItem(forTypeIdentifier: UTType.url.identifier) as? URL {
-        if url.isFileURL, let kept = copy(url) { out.append(.file(kept, name: url.lastPathComponent, contentType: mime(url))) }
-        else { out.append(.page(url: url.absoluteString, title: nil, selection: nil, html: nil)) }
+        // A file from Files is plucked only when it is a PDF or an image the API takes; anything else (a .docx) is left.
+        if !url.isFileURL { out.append(.page(url: url.absoluteString, title: nil, selection: nil, html: nil)) }
+        else if let contentType = mime(url), let kept = copy(url) { out.append(.file(kept, name: url.lastPathComponent, contentType: contentType)) }
       } else if p.hasItemConformingToTypeIdentifier(UTType.plainText.identifier), let text = try? await p.loadItem(forTypeIdentifier: UTType.plainText.identifier) as? String {
         out.append(.text(text))
       } else if let type = [UTType.pdf, UTType.image].first(where: { p.hasItemConformingToTypeIdentifier($0.identifier) }),
                 let file = await fileRepresentation(p, type) {
-        out.append(.file(file, name: p.suggestedName.map { "\($0).\(file.pathExtension)" } ?? file.lastPathComponent, contentType: mime(file)))
+        // The provider says it is a PDF or an image, so one whose extension says nothing goes as it always has.
+        out.append(.file(file, name: p.suggestedName.map { "\($0).\(file.pathExtension)" } ?? file.lastPathComponent,
+                         contentType: mime(file) ?? (type == .pdf ? "application/pdf" : "image/jpeg")))
       }
     }
     if out.contains(where: { if case .page = $0 { return true } else { return false } }) { out.removeAll { if case .text = $0 { return true } else { return false } } }
@@ -76,7 +80,20 @@ extension Shared {
     guard let dir = container?.appendingPathComponent("outgoing", isDirectory: true) else { return nil }
     try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     let dest = dir.appendingPathComponent("\(UUID().uuidString).\(url.pathExtension.isEmpty ? "bin" : url.pathExtension)")
-    return (try? FileManager.default.copyItem(at: url, to: dest)) == nil ? nil : dest
+    guard (try? FileManager.default.copyItem(at: url, to: dest)) != nil else { return nil }
+    try? FileManager.default.setAttributes([.modificationDate: Date()], ofItemAtPath: dest.path) // a copy keeps the original's date; sweep goes by when it was copied
+    return dest
+  }
+
+  // A copy goes once its upload is done (PluckClient.pluckFile) or it is handed to the app's queue (PluckClient.queue).
+  // One whose upload outlived the sheet, or that was never sent, goes here, a day on, the next time the sheet opens.
+  static func sweep() {
+    guard let dir = container?.appendingPathComponent("outgoing", isDirectory: true),
+          let files = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.contentModificationDateKey]) else { return }
+    let dayAgo = Date().addingTimeInterval(-86_400)
+    for f in files where ((try? f.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? .distantPast) < dayAgo {
+      try? FileManager.default.removeItem(at: f)
+    }
   }
 
   // A link shared from an app comes with no page. iOS's own link preview (what Messages shows) reads it from this
@@ -105,14 +122,10 @@ extension Shared {
     return data.flatMap { $0.count <= 2_000_000 ? $0 : nil }
   }
 
-  private static func mime(_ url: URL) -> String {
-    switch url.pathExtension.lowercased() {
-    case "pdf": return "application/pdf"
-    case "png": return "image/png"
-    case "heic": return "image/heic"
-    case "gif": return "image/gif"
-    case "webp": return "image/webp"
-    default: return "image/jpeg"
-    }
+  // The types the API takes as a file (shared-schemas FILE_TYPES), by what the file is, not a guess: nil for any other.
+  private static func mime(_ url: URL) -> String? {
+    guard let type = (try? url.resourceValues(forKeys: [.contentTypeKey]))?.contentType ?? UTType(filenameExtension: url.pathExtension) else { return nil }
+    let taken: [(UTType, String)] = [(.pdf, "application/pdf"), (.jpeg, "image/jpeg"), (.png, "image/png"), (.heic, "image/heic"), (.webP, "image/webp"), (.gif, "image/gif")]
+    return taken.first { type.conforms(to: $0.0) }?.1
   }
 }

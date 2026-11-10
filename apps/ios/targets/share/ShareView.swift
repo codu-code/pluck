@@ -132,6 +132,7 @@ final class ShareModel: ObservableObject {
   }
 
   // On and off again, like a tag: a list picked by mistake can be taken back before Done.
+  // shortcut: a List or a Kind tapped with no connection is lost without a word (only finish's edit is kept for the app), upgrade when someone reports one missing.
   func toggleList() {
     guard let id = item?.id, let list = lastList else { return }
     addedToList.toggle()
@@ -155,7 +156,15 @@ final class ShareModel: ObservableObject {
     if !typedNote.isEmpty { edit["note"] = typedNote }
     if renameable, titleEdited, !typedTitle.isEmpty, typedTitle != item?.title { edit["title"] = typedTitle }
     if tagsEdited { edit["tagIds"] = Array(tagIds) } // the tags as the sheet shows them, last, whatever went before
-    if let id = item?.id, !edit.isEmpty { save { [client] in _ = try? await client.patch(id, edit) } }
+    if let id = item?.id, !edit.isEmpty {
+      // Written down before it is sent and taken away once the server has answered. With no connection, or if the
+      // sheet closes first (the wait below is capped), it stays and the app sends it when it next opens.
+      let waiting = client.queue(edit: (id, edit))
+      save { [client] in
+        do { _ = try await client.patch(id, edit) } catch PluckError.offline { return } catch {}
+        if let waiting { try? FileManager.default.removeItem(at: waiting) }
+      }
+    }
     let pending = [saves].compactMap { $0 } + uploads
     Task {
       await withTaskGroup(of: Void.self) { group in
