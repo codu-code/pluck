@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -36,9 +36,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -48,10 +48,35 @@ jobs:
       - run: pnpm e2e
       - run: pnpm design
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: playwright-report
           path: |
             playwright-report
             test-results
           retention-days: 7
+
+  # The README promises `docker compose up`; this builds the same Dockerfile, and never pushes it.
+  image:
+    name: Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      # shortcut: the Dockerfile copies the whole repo before it installs, so the cache only saves a change that is not in the image (docs, e2e, iPhone, extension); copy the lockfile first when this job gets slow.
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: . # the checkout, as docker compose builds it (.dockerignore applies)
+          push: false
+          load: true # into the runner's Docker, for the check below
+          tags: pluck:ci
+          cache-from: type=gha
+          # Only main writes the cache. A pull request reads main's; its own would only fill the repo's 10 GB.
+          cache-to: ${{ github.event_name == 'push' && 'type=gha,mode=max' || '' }}
+      - name: pnpm is in the image (a container starts with no network)
+        run: |
+          want=$(node -p "require('./package.json').packageManager.split('@')[1]")
+          got=$(docker run --rm --network none --entrypoint sh pluck:ci -c 'pnpm --version')
+          echo "pnpm in the image: $got; package.json pins $want"
+          test "$got" = "$want"

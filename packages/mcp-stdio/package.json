@@ -10,7 +10,7 @@
   "bin": { "pluck-mcp": "./dist/cli.js" },
   "files": ["dist"],
   "exports": { ".": "./src/bridge.ts" },
-  "publishConfig": { "exports": { ".": "./dist/bridge.js" } },
+  "publishConfig": { "exports": { ".": "./dist/bridge.js" }, "provenance": true },
   "engines": { "node": ">=22" },
   "scripts": {
     "typecheck": "tsc -p .",

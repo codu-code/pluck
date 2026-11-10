@@ -1,0 +1,11 @@
+# Keeps the commit pins in .github/workflows current: one pull request a month for every action that has moved.
+# Dependabot signs its commits off itself (Signed-off-by: dependabot[bot]), so they pass the DCO check as they are.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

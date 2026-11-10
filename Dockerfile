@@ -20,6 +20,9 @@ WORKDIR /app
 COPY --from=build --chown=pluck /app /app
 COPY --chmod=755 docker/entrypoint.sh /usr/local/bin/pluck-entrypoint
 USER pluck
+# Put the pinned pnpm (packageManager in package.json) in the image for this user. Without it every new container
+# fetches pnpm from the npm registry before it starts, and offline it never starts.
+RUN corepack install
 ENV NODE_ENV=production PORT=3000
 EXPOSE 3000
 HEALTHCHECK --interval=10s --timeout=5s --retries=12 CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"

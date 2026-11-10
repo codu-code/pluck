@@ -85,6 +85,38 @@ Store reviewers (Apple's App Review, Google Play's, the Chrome Web Store's) need
 - Sign in as the account once before submitting and pluck a few real links, a Note and a Todo, tag two and make a List, so the reviewer sees a library and not an empty Inbox. `scripts/demo-seed.mjs` cannot do this: it needs Mailpit and the local fixture pages, so it only fills a local server.
 - Unset both to turn it off. The account and its library stay; nothing is deleted.
 
+## Publishing @getpluck/mcp
+
+The stdio bridge (`packages/mcp-stdio`) goes to npm from `.github/workflows/publish-mcp.yml`, never from a laptop. People hand it their `pk_live_` key, and a release built by the workflow carries npm provenance: its npm page links the exact commit and workflow run it was built from. The workflow holds no npm token. npm trusts it by name (trusted publishing), and with `publishConfig.provenance` in the package, npm refuses a publish from anywhere that cannot sign one.
+
+Once, on npmjs.com, as an owner of the `@getpluck` scope:
+
+1. Open the `@getpluck/mcp` package, Settings, Trusted Publisher, GitHub Actions. Organization or user `codu-code`, repository `pluck`, workflow filename `publish-mcp.yml`, environment left empty. Save.
+2. On the same page, Publishing access: choose "Require two-factor authentication and disallow tokens".
+3. In your account's Access Tokens, revoke any token that could publish. The repo needs no `NPM_TOKEN` secret; do not add one.
+
+Each release:
+
+1. Raise `version` in `packages/mcp-stdio/package.json` in a pull request and merge it. 0.1.0 went up by hand, so the first release from the workflow is the next version.
+2. Tag that commit on `main` and push the tag: `git tag mcp-v<version> && git push origin mcp-v<version>`. The workflow stops if the tag and the version differ.
+3. Watch the run in Actions, then `npm view @getpluck/mcp version`, and look for the provenance on the package's npm page.
+
+Anyone who can push a tag named `mcp-v*` can publish. A tag ruleset (Settings, Rules) keeps that to maintainers.
+
+## Rotating the storage key
+
+The app reaches S3 and SES as the IAM user `pluck-app` with one long-lived access key: the `AppUserKey` resource in `infra/cdk/lib/data-stack.ts`, kept in Secrets Manager as `pluck/app-user`. Rotate it once a year, when someone who could read it leaves, and straight away if it may have leaked.
+
+The stack owns exactly one key, and CloudFormation deletes the old one at the end of the deploy that makes the new one. From then until step 4 is done, uploads, covers, exports and every email (sign-in links too) fail. That is a few minutes: pick a quiet hour and have Vercel open first.
+
+1. In `data-stack.ts`, give the key a serial, or raise the one it has by one: `new iam.AccessKey(this, "AppUserKey", { user, serial: 1 })`. The number only goes up. Merge it as its own pull request; merging changes nothing in AWS.
+2. From `infra/cdk`: `pnpm exec cdk diff PluckData -c alertEmail=<you>` should show the access key replaced and the secret changed, and nothing else. Then `pnpm exec cdk deploy PluckData -c alertEmail=<you>`.
+3. `aws secretsmanager get-secret-value --secret-id pluck/app-user --region eu-west-1` gives the new pair. In Vercel (Project, Settings, Environment Variables) replace `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` for Production, and anywhere else you set them.
+4. Redeploy production (Deployments, the current one, Redeploy): a deployment keeps the values it started with.
+5. Check: sign in on getpluck.io (SES) and upload a file (S3). `aws iam list-access-keys --user-name pluck-app` shows one key, created today. The old key is already gone; there is nothing to delete by hand.
+
+Do not make a second key by hand with `aws iam create-access-key` to avoid the gap: CloudFormation does not know about it, and with two keys on the user (IAM's limit) the next rotation by the stack fails.
+
 ## Later
 
 Move the worker off Vercel cron (one Fargate task running `pnpm --filter @pluck/web worker` from the same `Dockerfile`) if long imports or extraction start hitting the 60-second function limit.
