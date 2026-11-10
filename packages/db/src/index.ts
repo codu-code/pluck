@@ -25,7 +25,7 @@ export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collectio
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";
 export { shareList, sharesOf, unshareList, leaveSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
-export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
+export { digestFor, isEmptyDigest, claimDueDigests, sendDigestOnce } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";
 export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOPES } from "./api-keys.ts";
 export {

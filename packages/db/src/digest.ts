@@ -1,6 +1,6 @@
 import { TASK_KINDS, type Digest } from "@pluck/shared-schemas";
-import { DEFAULT_SETTINGS, items, lists, oid, users, type UserSettings } from "./collections.ts";
-import { localNow } from "./expiry.ts";
+import { DEFAULT_SETTINGS, items, lists, meta, oid, users, type UserSettings } from "./collections.ts";
+import { claimOnce, localNow } from "./expiry.ts";
 
 // The Monday digest, plain rules, no model: what expires within a week (not in a list), what is due this
 // week, the five oldest in the Inbox, and lists with no activity in 30 days. The same data is get_digest.
@@ -80,4 +80,20 @@ export async function claimDueDigests(now = new Date(), each?: (u: DueDigest) =>
     due.push(one);
   }
   return due;
+}
+
+// One Monday email per person and local date, however often its job runs (a job that died after the provider took the
+// email comes back). The claim is taken just before `send` and handed back if `send` throws, so a failed send is
+// still tried again. False: this one has gone already.
+// shortcut: a run killed between the claim and the provider's answer sends nothing that week, and a send that threw after the provider took it goes twice on the retry; give the provider an idempotency key if either shows up.
+export async function sendDigestOnce(userId: string, localDate: string, send: () => Promise<unknown>): Promise<boolean> {
+  const key = `digest-sent:${userId}:${localDate}`;
+  if (!(await claimOnce(key))) return false;
+  try {
+    await send();
+  } catch (e) {
+    await (await meta()).deleteOne({ _id: key });
+    throw e;
+  }
+  return true;
 }
