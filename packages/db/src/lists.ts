@@ -78,7 +78,7 @@ export async function createList(userId: string, input: NewList): Promise<List> 
     doc.slug = await uniqueSlug(uid, `${input.name} ${now.getTime().toString(36)}`);
     await (await lists()).insertOne(doc);
   }
-  for (const it of input.items ?? []) await addToList(userId, doc._id.toHexString(), [it.itemId], { note: it.note ?? null, by: input.createdBy });
+  if (input.items?.length) await addEntries(userId, doc._id.toHexString(), input.items, { by: input.createdBy });
   return toList((await (await lists()).findOne({ _id: doc._id }))!);
 }
 
@@ -140,46 +140,58 @@ export async function deleteList(userId: string, listId: string): Promise<boolea
 }
 
 // Adds items to the end (or at `position`). Already there is a no-op for that item. Adding is a touch.
-export async function addToList(
+export const addToList = (
   userId: string,
   listId: string,
   itemIds: string[],
   { note = null, position, by }: { note?: string | null; position?: number; by: Actor },
+): Promise<number | null> => addEntries(userId, listId, itemIds.map((itemId) => ({ itemId, note })), { position, by });
+
+// The same, each entry with its own note: one write for the rows and one recount, however many there are.
+async function addEntries(
+  userId: string,
+  listId: string,
+  entries: { itemId: string; note?: string | null }[],
+  { position, by }: { position?: number; by: Actor },
 ): Promise<number | null> {
   const uid = oid(userId);
   const _id = oid(listId);
   if (!(await (await lists()).findOne({ _id, userId: uid }))) return null;
-  const docs = await (await items()).find({ _id: { $in: itemIds.map(oid) }, userId: uid, deletedAt: null }, { projection: { _id: 1, kind: 1, status: 1 } }).toArray();
-  const ordered = itemIds.map(oid).filter((id) => docs.some((o) => o._id.equals(id)));
+  const sent = entries.map((e) => ({ itemId: oid(e.itemId), key: oid(e.itemId).toHexString(), note: e.note?.trim() || null }));
+  const docs = await (await items()).find({ _id: { $in: sent.map((e) => e.itemId) }, userId: uid, deletedAt: null }, { projection: { _id: 1, kind: 1, status: 1 } }).toArray();
+  const theirs = new Set(docs.map((d) => d._id.toHexString()));
+  const ordered = sent.filter((e) => theirs.has(e.key));
   // A Todo or Thing that is already Done arrives marked.
   const done = new Set(docs.filter((d) => isTask(d.kind) && d.status === "done").map((d) => d._id.toHexString()));
   if (!ordered.length) return 0;
+  const ids = ordered.map((e) => e.itemId);
   const col = await listRows();
+  // Only the ones not there yet get a place (one sent twice gets one), so the new rows sit GAP apart from `position`.
+  const there = new Set((await col.distinct("itemId", { userId: uid, listId: _id, itemId: { $in: ids } })).map((id) => id.toHexString()));
+  const fresh = ordered.filter((e) => !there.has(e.key) && there.add(e.key));
   const last = await col.find({ listId: _id }).sort({ position: -1 }).limit(1).next();
-  let pos = position ?? (last ? last.position + GAP : GAP);
+  const pos = position ?? (last ? last.position + GAP : GAP);
   const now = new Date();
-  let added = 0;
-  for (const itemId of ordered) {
-    const res = await col.updateOne(
-      { userId: uid, itemId, listId: _id },
-      {
-        $setOnInsert: {
-          position: pos, note: note?.trim() || null, noteBy: note?.trim() ? by : null, ticked: done.has(itemId.toHexString()),
-          tickedAt: done.has(itemId.toHexString()) ? now : null, addedBy: by, addedAt: now,
+  // Upserts, not inserts: a row another request added since the read above is left as it is.
+  const res = fresh.length
+    ? await col.bulkWrite(fresh.map((e, i) => ({
+      updateOne: {
+        filter: { userId: uid, itemId: e.itemId, listId: _id },
+        update: {
+          $setOnInsert: {
+            position: pos + i * GAP, note: e.note, noteBy: e.note ? by : null, ticked: done.has(e.key),
+            tickedAt: done.has(e.key) ? now : null, addedBy: by, addedAt: now,
+          },
         },
+        upsert: true,
       },
-      { upsert: true },
-    );
-    if (res.upsertedCount) {
-      added++;
-      pos += GAP;
-    }
-  }
-  await (await items()).updateMany({ _id: { $in: ordered }, userId: uid }, { $set: { lastTouchedAt: now } });
+    })))
+    : null;
+  await (await items()).updateMany({ _id: { $in: ids }, userId: uid }, { $set: { lastTouchedAt: now } });
   await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastAddedAt: now, lastActivityAt: now, updatedAt: now } });
   await recountList(_id);
-  await syncListNames(uid, ordered);
-  return added;
+  await syncListNames(uid, ids);
+  return res?.upsertedCount ?? 0;
 }
 
 export async function removeFromList(userId: string, listId: string, itemId: string): Promise<boolean> {
@@ -228,10 +240,12 @@ export async function markEntries(userId: string, listId: string, itemIds: strin
   if (!(await (await lists()).findOne({ _id, userId: uid }, { projection: { _id: 1 } }))) return null;
   const ids = itemIds.map(oid);
   const now = new Date();
-  const res = await (await listRows()).updateMany({ listId: _id, userId: uid, itemId: { $in: ids } }, { $set: { ticked, tickedAt: ticked ? now : null } });
+  const rows = { listId: _id, userId: uid, itemId: { $in: ids } };
+  const res = await (await listRows()).updateMany(rows, { $set: { ticked, tickedAt: ticked ? now : null } });
   await (await lists()).updateOne({ _id, userId: uid }, { $set: { lastActivityAt: now } });
   await recountList(_id);
-  await doneFollowsMark(uid, ids, ticked);
+  // Only the Items with a row in this List follow: an id sent that is not in it marked nothing, so it changes nothing.
+  await doneFollowsMark(uid, await (await listRows()).distinct("itemId", rows), ticked);
   return res.matchedCount;
 }
 

@@ -107,29 +107,26 @@ export async function searchItems(userId: string, q: SearchQuery): Promise<{ res
   const offset = decode(q.cursor);
   const lean = { searchText: 0, tagNames: 0, listNames: 0 } as const;
 
-  const [docs, total, exact] = await Promise.all([
+  // A pasted URL finds its item first, even when the words in it match nothing. It is kept out of the other hits on
+  // every page, so it is shown once (on the first) and counted once.
+  const key = normalizeUrl(q.q);
+  const exact = key ? await col.findOne({ ...filter, urlHash: createHash("sha256").update(key).digest("hex") }, { projection: lean }) : null;
+  const rest: Filter<ItemDoc> = exact ? { $and: [text, { _id: { $ne: exact._id } }] } : text;
+  const [docs, total] = await Promise.all([
     (cjk
-      ? col.find(text, { projection: lean }).sort({ createdAt: -1, _id: -1 })
-      : col.find(text, { projection: { score: { $meta: "textScore" }, ...lean } }).sort({ score: { $meta: "textScore" }, createdAt: -1 })
+      ? col.find(rest, { projection: lean }).sort({ createdAt: -1, _id: -1 })
+      : col.find(rest, { projection: { score: { $meta: "textScore" }, ...lean } }).sort({ score: { $meta: "textScore" }, createdAt: -1 })
     )
       .skip(offset)
       .limit(q.limit + 1)
       .toArray(),
-    col.countDocuments(text),
-    // A pasted URL finds its item first, even when the words in it match nothing.
-    offset === 0 && normalizeUrl(q.q)
-      ? col.findOne({ ...filter, urlHash: createHash("sha256").update(normalizeUrl(q.q)!).digest("hex") }, { projection: lean })
-      : null,
+    col.countDocuments(rest),
   ]);
-  const page = docs.slice(0, q.limit);
-  const hits: SearchHit[] = page.map((d) => ({ item: toItem(d) as Item, snippet: snippetFor(d, q.q) }));
-  if (exact) {
-    const others = hits.filter((h) => h.item.id !== exact._id.toHexString());
-    hits.splice(0, hits.length, { item: toItem(exact), snippet: null }, ...others);
-  }
+  const hits: SearchHit[] = docs.slice(0, q.limit).map((d) => ({ item: toItem(d) as Item, snippet: snippetFor(d, q.q) }));
+  if (exact && offset === 0) hits.unshift({ item: toItem(exact), snippet: null });
   return {
     results: hits,
-    total: total + (exact && !page.some((d) => d._id.equals(exact._id)) ? 1 : 0),
+    total: total + (exact ? 1 : 0),
     nextCursor: docs.length > q.limit ? encode(offset + q.limit) : null,
   };
 }

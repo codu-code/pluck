@@ -9,6 +9,7 @@ import { sendEmail } from "../email";
 import { sharedListEmail } from "../emails";
 import { ApiError } from "../errors";
 import { log } from "../log";
+import { spendLinks } from "./items";
 import { keepLater } from "./keeping";
 import { ORIGIN } from "../origin";
 import { track, trackSignUp } from "../telemetry";
@@ -93,6 +94,9 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
   // A public list, or one shared with them.
   const page = (await publicListById(listId)) ?? (await sharedList(listId, (await me(userId)).email));
   if (!page) throw new ApiError("not_found", "That list is not public or shared with you.", 404);
+  // Its links are pages read for this person too, so they come out of the same hourly budget as a paste.
+  const links = page.entries.filter((e) => e.url && cleanUrl(e.url)).length;
+  if (links) await spendLinks(userId, links);
   const entries: { itemId: string; note: string | null }[] = [];
   const toRead: Item[] = [];
   for (const e of page.entries) {
@@ -106,9 +110,9 @@ export async function copyList(userId: string, listId: string, { defer }: { defe
       entries.push({ itemId: note.id, note: e.note });
     }
   }
-  const list = await createList(userId, { name: page.list.name, purpose: page.list.purpose, createdBy: "user", items: entries });
+  // The reads are queued before the List is made: a request that dies in between leaves no Item waiting for ever.
   await keepLater(userId, toRead, { defer });
-  return list;
+  return createList(userId, { name: page.list.name, purpose: page.list.purpose, createdBy: "user", items: entries });
 }
 
 // A report from the public page: stored for the admin route and emailed to the abuse address.

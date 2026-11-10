@@ -58,6 +58,14 @@ describe("lists", () => {
 
     const empty = await createList(a, { name: "Empty", createdBy: "user" });
     expect(await reorderList(a, empty.id, [])).toBe(true);
+
+    // Made with its items in one go: an id sent twice is one entry with its first note, and the order sent is kept.
+    const twice = await createList(a, { name: "Twice", createdBy: "mcp", items: [{ itemId: two.id, note: "first" }, { itemId: one.id }, { itemId: two.id, note: "again" }, { itemId: four.id }] });
+    expect(twice.itemCount).toBe(3);
+    expect((await getList(a, twice.id))!.entries.map((e) => [e.item.title, e.note, e.noteBy])).toEqual([["Two", "first", "mcp"], ["One", null, null], ["Four", null, null]]);
+    // Added at a place, with one already there: the new one takes the place itself.
+    expect(await addToList(a, twice.id, [one.id, three.id], { position: 1, by: "user" })).toBe(1);
+    expect((await getList(a, twice.id))!.entries.map((e) => [e.item.title, e.position])[0]).toEqual(["Three", 1]);
     expect(await reorderList(a, empty.id, [one.id])).toBe(false);
   });
 
@@ -126,6 +134,15 @@ describe("lists", () => {
     expect(await markEntries(a, talk.id, [todo.id, read.id], false)).toBe(2);
     expect((await getItem(a, todo.id))!.status).toBe("inbox");
     expect(await ticks(trip.id)).toEqual([["Book the venue", false]]);
+
+    // Marked in bulk with an id that is not in the List: that Todo is not Done, and its own List is not marked.
+    const { item: stray } = await createTextItem(a, { kind: "todo", text: "Not in Talk", source: "web" });
+    const elsewhere = await createList(a, { name: "Elsewhere", createdBy: "user", items: [{ itemId: stray.id }] });
+    expect(await markEntries(a, talk.id, [todo.id, stray.id], true)).toBe(1);
+    expect((await getItem(a, todo.id))!.status).toBe("done");
+    expect((await getItem(a, stray.id))!.status).toBe("inbox");
+    expect(await ticks(elsewhere.id)).toEqual([["Not in Talk", false]]);
+    await markEntries(a, talk.id, [todo.id], false);
 
     // A Done Todo arrives marked in a new List.
     await editItem(a, todo.id, { status: "done" });

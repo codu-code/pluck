@@ -78,7 +78,9 @@ export async function pluckLink(
   let doc = res.value!;
   const created = !res.lastErrorObject?.updatedExisting;
   const note = input.note?.trim();
-  if (!created && note && doc.note !== note) {
+  // A note the Item's note already ends with is a resend (the queue's answer was lost), not a second thought.
+  // shortcut: read then written, so the same pluck twice at the same instant can still append twice, compare-and-set on `note` if a client ever sends in parallel.
+  if (!created && note && doc.note !== note && !doc.note?.endsWith(`\n\n${note}`)) {
     doc = (await col.findOneAndUpdate(
       { _id: doc._id, userId: uid },
       { $set: { note: doc.note ? `${doc.note}\n\n${note}` : note } },
@@ -178,7 +180,7 @@ export async function editItem(userId: string, itemId: string, edit: ItemEdit): 
     set.excerpt = deriveExcerpt(text, titleIsDerived);
     set.searchBody = bodyForSearch(text);
   }
-  if (edit.kind !== undefined) set.kind = edit.kind;
+  if (edit.kind !== undefined) Object.assign(set, { kind: edit.kind, kindChosen: true });
   if (edit.dueAt !== undefined) set.dueAt = edit.dueAt;
   if (edit.status !== undefined && edit.status !== current.status) Object.assign(set, statusFields(edit.status, now));
   if (edit.note !== undefined) set.note = edit.note?.trim() || null;
@@ -221,7 +223,7 @@ export async function batchUpdate(userId: string, itemIds: string[], patch: Batc
   if (patch.dueAt !== undefined) set.dueAt = patch.dueAt;
   if (patch.note !== undefined) set.note = patch.note?.trim() || null;
   if (patch.status) Object.assign(set, statusFields(patch.status, now));
-  if (patch.kind) set.kind = patch.kind;
+  if (patch.kind) Object.assign(set, { kind: patch.kind, kindChosen: true });
   // The Kind is checked again as it is written, so one changed since the read above is left alone.
   const res = await col.updateMany({ ...base, kind: { $in: fits } }, { $set: set });
   if (patch.status) {
@@ -334,7 +336,6 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
     { _id, userId: uid },
     {
       $set: {
-        kind: x.kind,
         previewGuess: x.preview,
         facts: x.facts,
         siteName: x.siteName ?? current.siteName,
@@ -351,9 +352,11 @@ export async function applyExtraction(userId: string, itemId: string, x: Extract
     },
     { returnDocument: "after" },
   );
-  // A title the user typed is never replaced, even one typed while this read was running: checked as it is written.
+  // A Kind the person chose or a title they typed is never replaced, even one set while this read was running: each
+  // is checked as it is written.
+  const kinded = x.kind !== current.kind ? await col.findOneAndUpdate({ _id, userId: uid, kindChosen: { $ne: true } }, { $set: { kind: x.kind } }, { returnDocument: "after" }) : null;
   const named = x.title ? await col.findOneAndUpdate({ _id, userId: uid, titleIsDerived: true }, { $set: { title: x.title } }, { returnDocument: "after" }) : null;
-  const out = named ?? doc;
+  const out = named ?? kinded ?? doc;
   return out && toItem(out);
 }
 
