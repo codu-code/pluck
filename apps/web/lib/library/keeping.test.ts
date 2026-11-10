@@ -1,10 +1,20 @@
+import { once } from "node:events";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { applyExtraction, getContent, pendingJobCount, pluckLink } from "@pluck/db";
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { runJobs } from "../jobs";
 import { FetchError } from "@pluck/extract";
-import { TooLarge } from "@pluck/blob";
+import { TooLarge, keys } from "@pluck/blob";
 import { failureReason, keepLater, keepNow, readItem, sortBackfill } from "./index";
+
+// The blob store as it is, with a note of each key and the type it was stored under.
+const stored = vi.hoisted(() => [] as [key: string, contentType: string][]);
+vi.mock("@pluck/blob", async (original) => {
+  const blob = await original<typeof import("@pluck/blob")>();
+  return { ...blob, putObject: (...args: Parameters<typeof blob.putObject>) => (stored.push([args[0], args[2]]), blob.putObject(...args)) };
+});
 
 const FIX = "http://127.0.0.1:4180";
 const link = async (userId: string, url: string) => (await pluckLink(userId, { url, source: "web" })).item;
@@ -75,4 +85,20 @@ test("the backfill's second read never replaces kept text with less of it", asyn
   for (let i = 0; i < 8; i++) await sortBackfill(); // every pass, to its end
   expect((await getContent(a, item.id))?.textMarkdown).toBe("said in the video");
   expect((await readItem(a, item.id)).wordCount).toBe(100_000);
+});
+
+test("a picture is stored under its own type, never the header the other server sent with it", async () => {
+  const server = createServer((_, res) => res.writeHead(200, { "content-type": "image/PNG, text/html; charset=utf-8" }).end(Buffer.from("89504e470d0a1a0a", "hex"))).listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const picture = `http://127.0.0.1:${(server.address() as AddressInfo).port}/${Date.now()}.png`;
+  try {
+    const { a } = await twoUsers();
+    const page = `<html><head><title>With a cover</title><meta property="og:image" content="${picture}"></head><body><p>Hello.</p></body></html>`;
+    const withCover = await keepNow(a, await link(a, `https://example.com/with-a-cover-${Date.now()}`), { html: page, timeoutMs: 5000 });
+    expect(stored).toContainEqual([keys.cover(a, withCover.id), "image/png"]);
+    const image = await keepNow(a, await link(a, picture), { timeoutMs: 5000 }); // the link is the picture itself
+    expect(stored).toContainEqual([keys.cover(a, image.id), "image/png"]);
+  } finally {
+    server.close();
+  }
 });
