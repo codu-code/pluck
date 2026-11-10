@@ -338,12 +338,13 @@
         "note": "The same tools and prompts, bridged to your own server."
       }
     },
-    "toolsTitle": "Twelve tools. Plain names.",
+    "toolsTitle": "Thirteen tools. Plain names.",
     "toolsBody": "Results come back as cards with titles first, so a question like “what did I pluck this week” is one call and one screen.",
     "toolList": {
       "search_items": "Text search over title, note, tags, list names and body.",
       "list_items": "Browse Inbox, Later, Archive or Done, newest or untouched first.",
       "get_item": "One item in full, including the stored page text.",
+      "list_highlights": "What you highlighted, with your notes on it.",
       "save_item": "Pluck a link, many links, a note, a todo or a thing. Marked as plucked by AI.",
       "batch_update": "Status, kind, tags and due dates on one or many items.",
       "list_tags": "Your tags, with counts.",

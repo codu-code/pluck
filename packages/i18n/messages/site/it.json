@@ -338,12 +338,13 @@
         "note": "Gli stessi strumenti e prompt, collegati al tuo server."
       }
     },
-    "toolsTitle": "Dodici strumenti. Nomi semplici.",
+    "toolsTitle": "Tredici strumenti. Nomi semplici.",
     "toolsBody": "I risultati tornano come schede con i titoli in primo piano, così una domanda come “cosa ho preso questa settimana” è una chiamata e una schermata.",
     "toolList": {
       "search_items": "Ricerca testuale su titolo, nota, tag, nomi delle liste e testo.",
       "list_items": "Sfoglia Inbox, Più tardi, Archivio o Fatto, prima i più recenti o prima i non toccati.",
       "get_item": "Un elemento completo, compreso il testo della pagina conservata.",
+      "list_highlights": "Quello che hai evidenziato, con le tue note.",
       "save_item": "Prende un link, più link, una nota, un Da fare o un Oggetto. Segnato come preso dall'IA.",
       "batch_update": "Stato, tipo, tag e scadenze su uno o più elementi.",
       "list_tags": "I tuoi tag, con i conteggi.",

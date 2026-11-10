@@ -338,12 +338,13 @@
         "note": "As mesmas ferramentas e os mesmos prompts, ligados ao seu próprio servidor."
       }
     },
-    "toolsTitle": "Doze ferramentas. Nomes simples.",
+    "toolsTitle": "Treze ferramentas. Nomes simples.",
     "toolsBody": "Os resultados voltam como cartões, com os títulos primeiro, então uma pergunta como “o que eu colhi esta semana” é uma chamada e uma tela.",
     "toolList": {
       "search_items": "Busca de texto em título, nota, tags, nomes de listas e conteúdo.",
       "list_items": "Navegar pela Entrada, por Depois, pelo Arquivo ou pelos Concluídos, mais novos ou sem mexer primeiro.",
       "get_item": "Um item completo, incluindo o texto guardado da página.",
+      "list_highlights": "O que você destacou, com suas notas.",
       "save_item": "Colher um link, vários links, uma nota, uma tarefa ou uma coisa. Marcado como colhido pela IA.",
       "batch_update": "Status, tipo, tags e prazos em um ou vários itens.",
       "list_tags": "Suas tags, com contagens.",

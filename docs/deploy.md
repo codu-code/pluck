@@ -97,7 +97,7 @@ Once, on npmjs.com, as an owner of the `@getpluck` scope:
 
 Each release:
 
-1. Raise `version` in `packages/mcp-stdio/package.json` in a pull request and merge it. 0.1.0 went up by hand, so the first release from the workflow is the next version.
+1. Raise `version` in `packages/mcp-stdio/package.json`, and the two `version` fields in `server.json` to match (a test fails if they differ), in a pull request and merge it. 0.1.0 went up by hand, so the first release from the workflow is the next version.
 2. Tag that commit on `main` and push the tag: `git tag mcp-v<version> && git push origin mcp-v<version>`. The workflow stops if the tag and the version differ.
 3. Watch the run in Actions, then `npm view @getpluck/mcp version`, and look for the provenance on the package's npm page.
 

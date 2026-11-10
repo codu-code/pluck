@@ -338,12 +338,13 @@
         "note": "Les mêmes outils et les mêmes prompts, reliés à votre propre serveur."
       }
     },
-    "toolsTitle": "Douze outils. Des noms simples.",
+    "toolsTitle": "Treize outils. Des noms simples.",
     "toolsBody": "Les résultats reviennent sous forme de cartes, titres en premier : une question comme « qu’est-ce que j’ai cueilli cette semaine » tient en un appel et un écran.",
     "toolList": {
       "search_items": "Recherche texte dans le titre, la note, les tags, les noms de listes et le texte.",
       "list_items": "Parcourir la boîte de réception, Plus tard, les Archives ou Terminé, les plus récents ou les délaissés d’abord.",
       "get_item": "Un élément en entier, avec le texte de la page gardée.",
+      "list_highlights": "Ce que vous avez surligné, avec vos notes.",
       "save_item": "Cueillir un lien, plusieurs liens, une note, une tâche ou un objet. Marqué comme cueilli par l’IA.",
       "batch_update": "Statut, type, tags et échéances sur un ou plusieurs éléments.",
       "list_tags": "Vos tags, avec leur nombre d’éléments.",

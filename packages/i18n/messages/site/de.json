@@ -338,12 +338,13 @@
         "note": "Dieselben Tools und Prompts, verbunden mit deinem eigenen Server."
       }
     },
-    "toolsTitle": "Zwölf Tools. Klare Namen.",
+    "toolsTitle": "Dreizehn Tools. Klare Namen.",
     "toolsBody": "Ergebnisse kommen als Karten zurück, Titel zuerst, also ist eine Frage wie „Was habe ich diese Woche gepflückt?“ ein Aufruf und ein Bildschirm.",
     "toolList": {
       "search_items": "Textsuche über Titel, Notiz, Tags, Listennamen und Text.",
       "list_items": "Eingang, Später, Archiv oder Erledigt durchsehen, neueste oder unberührte zuerst.",
       "get_item": "Ein Eintrag vollständig, samt gespeichertem Seitentext.",
+      "list_highlights": "Was du markiert hast, mit deinen Notizen dazu.",
       "save_item": "Einen Link, viele Links, eine Notiz, eine Aufgabe oder ein Ding pflücken. Markiert als von KI gepflückt.",
       "batch_update": "Status, Art, Tags und Fälligkeitsdaten für einen oder viele Einträge.",
       "list_tags": "Deine Tags, mit Anzahl.",
