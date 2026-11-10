@@ -43,7 +43,7 @@ Never set `ALLOW_PRIVATE_FETCH` or `AUTH_RATE_LIMIT` on a server: they exist for
 
 Rate limits key on the caller's address, which Pluck reads from `X-Forwarded-For`. Your proxy must set that header to the one address it saw, not pass on whatever the client sent. Caddy's `reverse_proxy` does this by default. In nginx, use `proxy_set_header X-Forwarded-For $remote_addr;`, not `$proxy_add_x_forwarded_for`.
 
-Update with `git pull && docker compose up -d --build`. Back up the `mongo` and `minio` volumes.
+Update with `git pull && docker compose up -d --build`. Back up the `mongo`, `minio` and `secrets` volumes (or set `BETTER_AUTH_SECRET` yourself and keep it somewhere safe). Without the secret a restored server signs everyone out: every session and every connected app and AI tool has to sign in again.
 
 ## Apps and AI tools against your server
 
@@ -54,7 +54,7 @@ Update with `git pull && docker compose up -d --build`. Back up the `mongo` and 
 ## What runs where
 
 - `web`: `next start` on port 3000. Health at `/api/health`.
-- `worker`: the job queue (reading pages, imports, exports, shared files, email-in, welcome notes and the Monday email, together at 8 a second) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
+- `worker`: starts once `web` is healthy, so the two never make a secret each on the first start. The job queue (reading pages, imports, exports, shared files, email-in, welcome notes and the Monday email, together at 8 a second) and the schedule (the nightly move to the Archive, the Monday email, emptying the bin). On Vercel a cron tick does the same; here it is a loop.
 - `mongo`: MongoDB 8.2, a single-node replica set.
 - `minio` and `minio-init`: the blob store and a one-off that makes the bucket.
 - `mailpit`: catches mail until `SMTP_URL` points elsewhere. Remove it once you do.
