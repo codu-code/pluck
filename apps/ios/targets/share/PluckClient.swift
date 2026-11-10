@@ -163,9 +163,11 @@ final class PluckClient {
 
   // Offline: written to the App Group; the app sends it when it next opens. A body that was already sent once keeps
   // its clientKey (and is filed under it), so the app's send is the same Note to the server, not a second one.
-  // A file is moved, not copied, so the sheet's own copy is gone.
-  func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil) {
-    guard let dir = Shared.pending else { return }
+  // A file is moved, not copied, so the sheet's own copy is gone. An edit is a change to an Item already plucked
+  // (ShareModel.finish). Returns the record, for a caller that takes it away again once it has sent it itself.
+  @discardableResult
+  func queue(body: [String: Any]? = nil, file: (url: URL, name: String, contentType: String)? = nil, edit: (id: String, patch: [String: Any])? = nil) -> URL? {
+    guard let dir = Shared.pending else { return nil }
     let id = (body?["clientKey"] as? String) ?? UUID().uuidString
     var record: [String: Any] = [:]
     if let body { record["body"] = body.merging(["source": "ios"]) { a, _ in a } }
@@ -174,8 +176,11 @@ final class PluckClient {
       if let container = Shared.container { try? FileManager.default.moveItem(at: file.url, to: container.appendingPathComponent(kept)) }
       record["file"] = ["name": file.name, "contentType": file.contentType, "path": kept]
     }
+    if let edit { record["edit"] = ["id": edit.id, "patch": edit.patch] }
     // Atomic: the app takes away a record it cannot read, so it must never see one half written.
-    if let data = try? JSONSerialization.data(withJSONObject: record) { try? data.write(to: dir.appendingPathComponent("\(id).json"), options: .atomic) }
+    let to = dir.appendingPathComponent("\(id).json")
+    guard let data = try? JSONSerialization.data(withJSONObject: record), (try? data.write(to: to, options: .atomic)) != nil else { return nil }
+    return to
   }
 
   var tags: [TagRef] {

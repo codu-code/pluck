@@ -176,7 +176,8 @@ export async function toSync(): Promise<number> {
   return (await queue.count()) + shared;
 }
 
-type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string } };
+// edit: a note, title or tags typed in the share sheet for an Item it had already plucked, not yet up when it closed.
+type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string }; edit?: { id: string; patch: UpdateItemBody } };
 type Share = { f: File; record: SharedRecord | null }; // null: unreadable
 
 // The share extension's leftovers go by the same rules as the phone's queue. The extension writes them and the app
@@ -203,6 +204,7 @@ export async function syncPending(): Promise<number> {
     // lost, or the upload below fails, sending the body again makes no second Note.
     if (record.body) await api("/api/v1/items", { json: { clientKey: f.name, ...record.body } });
     if (record.file) await uploadShared(record.file);
+    if (record.edit) await api(`/api/v1/items/${record.edit.id}`, { method: "PATCH", json: record.edit.patch });
   });
   void queryClient.invalidateQueries({ queryKey: ["items"] });
   void queryClient.invalidateQueries({ queryKey: keys.pending });
