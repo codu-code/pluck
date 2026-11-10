@@ -68,14 +68,25 @@ export function viaOf(ctx: { query?: Record<string, unknown>; headers?: Headers 
   return "direct";
 }
 
+// SIGNUP_EMAILS closes sign-up on a server of one's own: full addresses or @domains, comma separated. Unset, anyone may start an account.
+const maySignUp = (email: string) => {
+  const allowed = (process.env.SIGNUP_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+  return !allowed.length || allowed.some((e) => (e.startsWith("@") ? email.endsWith(e) : email === e));
+};
+
 // Sending a sign-in email, by link (the web) or by code (the iPhone app): one a minute per address (the apps count the
 // minute down on Send again), a few an hour per address and per network. Each is an email we pay for and a mailbox
-// someone else owns.
+// someone else owns. With sign-up closed, an address that has no account and is not on the list gets no email, and
+// so no account: every way in starts with one.
 export async function limitSignInEmails(email: string, ip: string): Promise<void> {
-  if (!LIMITS_ON) return;
-  if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another." });
-  for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${ip}`, 30]] as const)
-    if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in emails. Try again in an hour." });
+  if (LIMITS_ON) {
+    if (!(await hitRateLimit(`magic:email:minute:${email}`, 1, 60)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Wait a minute before sending another." });
+    for (const [key, max] of [[`magic:email:${email}`, 6], [`magic:ip:${ip}`, 30]] as const)
+      if (!(await hitRateLimit(key, max, 3600)).ok) throw new APIError("TOO_MANY_REQUESTS", { message: "Too many sign-in emails. Try again in an hour." });
+  }
+  // After the limits, so asking which addresses have an account here is as slow as asking for emails.
+  if (!maySignUp(email) && !(await (await auth.$context).internalAdapter.findUserByEmail(email)))
+    throw new APIError("FORBIDDEN", { code: "SIGNUP_CLOSED", message: "This server is not taking new accounts. Ask the person who runs it to add your address." });
 }
 
 const redirectOf = (ctx: { path: string; query?: Record<string, unknown>; body?: unknown }) =>

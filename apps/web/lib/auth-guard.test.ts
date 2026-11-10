@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { auth, FIRST_PARTY_REDIRECTS, signInCode } from "./auth";
 import { clientIp } from "./ip";
+import { sendAppCode } from "./signin-code";
 
 const BASE = process.env.BETTER_AUTH_URL;
 let ip = 0;
@@ -76,6 +77,25 @@ test("sign-in links are limited per address, whatever network asks: one a minute
     expect((await post("/sign-in/magic-link", { email })).status).toBe(429); // the seventh in the hour
   } finally {
     vi.useRealTimers();
+  }
+});
+
+test("with SIGNUP_EMAILS set, only those addresses start an account, by link or by code; accounts that exist still sign in", async () => {
+  const n = Date.now();
+  const member = `member-${n}@outside.test`;
+  expect((await post("/sign-in/email-otp", { email: member, otp: await signInCode(member) })).status).toBe(200); // an account from before
+  process.env.SIGNUP_EMAILS = `Friend-${n}@Elsewhere.test, @example.test`;
+  try {
+    const refused = await post("/sign-in/magic-link", { email: `stranger-${n}@outside.test` });
+    expect(refused.status).toBe(403);
+    expect(await refused.json()).toMatchObject({ code: "SIGNUP_CLOSED" });
+    await expect(sendAppCode(`stranger2-${n}@outside.test`, "198.51.100.250", "en")).rejects.toMatchObject({ code: "forbidden", status: 403 });
+    expect((await post("/sign-in/magic-link", { email: `stranger-${n}@notexample.test` })).status).toBe(403); // a domain is matched whole
+    expect((await post("/sign-in/magic-link", { email: `new-${n}@example.test` })).status).toBe(200);
+    expect(await sendAppCode(`friend-${n}@elsewhere.test`, "198.51.100.251", "en")).toEqual({ sent: true });
+    expect((await post("/sign-in/magic-link", { email: member })).status).toBe(200);
+  } finally {
+    delete process.env.SIGNUP_EMAILS;
   }
 });
 

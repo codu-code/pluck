@@ -234,6 +234,7 @@
     "wrong": "That password did not work.",
     "limitedTries": "That is a lot of tries. Try again in an hour.",
     "limitedLinks": "That is a lot of links. Use the newest one we sent, or try again in an hour.",
+    "closed": "This server is not taking new accounts. Ask the person who runs it to add your address.",
     "code": {
       "label": "Or type the 6-digit code",
       "checking": "Checking the code",

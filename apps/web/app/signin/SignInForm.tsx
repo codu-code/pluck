@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState, type FormEvent } from "react";
 import { Actions, Dot, Stamp, Standalone, standaloneStyles as s } from "@/components/Standalone";
 
-type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited" | "wrong";
+type State = "idle" | "sending" | "sent" | "resending" | "error" | "limited" | "wrong" | "closed";
 type CodeState = "idle" | "checking" | "bad" | "spent" | "limited" | "error";
 const RESEND_AFTER = 60_000; // the server allows one link a minute per address too
 
@@ -49,7 +49,8 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email, callbackURL: next }),
     }).catch(() => null);
-    if (res?.ok && ((await res.json().catch(() => null)) as { password?: boolean } | null)?.password) {
+    const body = (await res?.json().catch(() => null)) as { password?: boolean; code?: string } | null;
+    if (res?.ok && body?.password) {
       setPassword("");
       return setState("idle");
     }
@@ -59,7 +60,7 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
       setCode("");
       setCodeState("idle");
     }
-    setState(res?.ok ? "sent" : res?.status === 429 ? "limited" : "error");
+    setState(res?.ok ? "sent" : res?.status === 429 ? "limited" : body?.code === "SIGNUP_CLOSED" ? "closed" : "error");
   }
 
   async function tryCode(otp: string) {
@@ -181,6 +182,7 @@ export function SignInForm({ next = "/inbox", forAiTool = false }: { next?: stri
           <p className={s.error} role="alert">{t("error")}</p>
         )}
         {state === "wrong" && <p className={s.error} role="alert">{t("wrong")}</p>}
+        {state === "closed" && <p className={s.error} role="alert">{t("closed")}</p>}
         {state === "limited" && (
           <p className={s.error} role="alert">
             {password !== null ? t("limitedTries") : t("limitedLinks")}

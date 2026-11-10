@@ -1,4 +1,5 @@
 import type { Locale } from "@pluck/i18n";
+import { APIError } from "better-auth/api";
 import { ApiError } from "./api";
 import { APP_GRANT, APP_REDIRECT, auth, limitSignInEmails, REVIEW, signInCode } from "./auth";
 import { sendEmail } from "./email";
@@ -16,7 +17,8 @@ export async function sendAppCode(email: string, ip: string, locale: Locale): Pr
   if (address === REVIEW?.email) return { password: true };
   try {
     await limitSignInEmails(address, ip);
-  } catch {
+  } catch (e) {
+    if (e instanceof APIError && e.body?.code === "SIGNUP_CLOSED") throw new ApiError("forbidden", e.message, 403); // sign-up is closed (SIGNUP_EMAILS)
     throw new ApiError("rate_limited", "Wait a minute before sending another code.", 429);
   }
   await sendEmail(appCodeEmail(address, await signInCode(address), locale));

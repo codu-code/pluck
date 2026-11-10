@@ -234,6 +234,7 @@
     "wrong": "Essa senha não funcionou.",
     "limitedTries": "São muitas tentativas. Tente de novo daqui a uma hora.",
     "limitedLinks": "São muitos links. Use o mais recente que enviamos, ou tente de novo daqui a uma hora.",
+    "closed": "Este servidor não aceita contas novas. Peça a quem cuida dele para adicionar o seu endereço.",
     "code": {
       "label": "Ou digite o código de 6 dígitos",
       "checking": "Conferindo o código",
