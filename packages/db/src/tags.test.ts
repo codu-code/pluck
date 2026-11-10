@@ -81,12 +81,13 @@ describe("AI tagging", () => {
   });
 
   test("old AI tags are outside the window, and an emptied AI tag is deleted", async () => {
-    const { a } = await twoUsers();
+    const { a, b } = await twoUsers();
     const aiMade = (await createTag(a, "fresh", "mcp"))!.tag;
     const old = (await createTag(a, "old", "mcp"))!.tag;
     const it = await link(a, "w1");
     await setItemTags(a, it.id, [aiMade.id, old.id], "mcp");
     await (await items()).updateOne({ url: it.url }, { $set: { "aiTags.1.at": new Date(Date.now() - 30 * 86_400_000) } });
+    expect(await purgeAiTags(b, 7)).toEqual({ assignments: 0, tags: 0 }); // nothing of theirs to undo, and A's stay
     expect(await purgeAiTags(a, 7)).toEqual({ assignments: 1, tags: 1 });
     expect((await getItem(a, it.id))?.tagIds).toEqual([old.id]);
     expect((await listTags(a)).map((t) => t.name)).toEqual(["old"]);

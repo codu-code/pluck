@@ -218,6 +218,10 @@ export function db(): Promise<Db> {
           { key: { userId: 1, status: 1, statusChangedAt: -1, _id: -1 } },
           { key: { userId: 1, deletedAt: -1, _id: -1 } }, // the Bin
           { key: { deletedAt: 1 }, partialFilterExpression: { deletedAt: { $type: "date" } } },
+          // The count beside each Status comes off this index alone (MongoDB 8 answers deletedAt: null from the key);
+          // without it every Item in the Status was read, kept text and all, on each page.
+          { key: { userId: 1, status: 1, deletedAt: 1 } },
+          { key: { userId: 1, "aiTags.at": 1 } }, // the Items an AI tool tagged, and when: the "by AI" counts and their removal
           {
             // userId first: a search reads one person's matches, not everyone's. Every $text query filters on it.
             key: { userId: 1, title: "text", note: "text", tagNames: "text", listNames: "text", searchText: "text", searchBody: "text" },
@@ -247,8 +251,8 @@ export function db(): Promise<Db> {
       d.collection("meta").createIndexes([{ key: { at: 1 }, expireAfterSeconds: 7 * 86_400 }]),
       d.collection("reports").createIndexes([{ key: { state: 1, createdAt: -1 } }]),
       d.collection("tags").createIndexes([{ key: { userId: 1, slug: 1 }, unique: true }]),
-      d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }]),
-      d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }]),
+      d.collection("highlights").createIndexes([{ key: { userId: 1, itemId: 1, createdAt: 1 } }, { key: { itemId: 1 } }]), // itemId: the purge
+      d.collection("contents").createIndexes([{ key: { itemId: 1 }, unique: true }, { key: { userId: 1 } }]), // userId: export and account deletion
       d.collection("jobs").createIndexes([
         { key: { state: 1, visibleAt: 1 } },
         { key: { finishedAt: 1 }, expireAfterSeconds: 7 * 24 * 3600, partialFilterExpression: { state: "done" } },
