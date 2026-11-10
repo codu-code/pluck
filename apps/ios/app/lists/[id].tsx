@@ -88,7 +88,12 @@ export function ListView({ id }: { id: string }) {
     const gone = chosen;
     setPicked(null);
     edit((es) => es.filter((e) => !gone.includes(e)));
-    await library.setInList(gone.map((e) => e.item.id), id, false).catch(failed);
+    try {
+      await library.setInList(gone.map((e) => e.item.id), id, false);
+    } catch {
+      edit(() => entries); // back where they were; the refetch that follows has the truth if some did go
+      return failed();
+    }
     toast(tr("list.takenOut", { count: gone.length }), () => void library.putBack(id, gone).catch(failed));
   };
 

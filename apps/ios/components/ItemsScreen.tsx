@@ -59,12 +59,20 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     if (tags.data && lists.data) shareExtensionCache(tags.data, lists.data);
   }, [tags.data, lists.data]);
 
+  // A move that did not go through says so, in place of the toast that said it had, and its rows go back where they were.
+  // shortcut: puts back the list as it was before the move, so a second move still on its way shows again until the refetch every move ends with; put back only the failed rows if moves ever stop refetching.
+  const failed = (before: typeof items.data) => {
+    qc.setQueryData(keys.items(status), before);
+    toast(tr("items.moveFailed"));
+  };
+
   const move = (item: Item, to: Status) => {
+    const before = items.data;
     qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => i.id !== item.id) } : old));
     seen.current?.delete(item.id);
-    patch.mutate({ id: item.id, patch: { status: to } });
+    void patch.mutateAsync({ id: item.id, patch: { status: to } }).catch(() => failed(before));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(tr(`moved.${to}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${to}`), () => void patch.mutateAsync({ id: item.id, patch: { status: item.status } }).catch(() => toast(tr("items.moveFailed"))));
   };
 
   // Selecting: a long press picks the first row; the toolbar takes the tab bar's place until Done or the last
@@ -85,11 +93,16 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
 
   const moveMany = async (moved: Item[], to: Status) => {
     const ids = moved.map((i) => i.id);
+    const before = items.data;
     setPicked(null);
     qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => !ids.includes(i.id)) } : old));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await library.move(ids, to).catch(() => toast(tr("items.moveFailed")));
-    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void library.restore(moved));
+    try {
+      await library.move(ids, to);
+    } catch {
+      return failed(before);
+    }
+    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void library.restore(moved).catch(() => toast(tr("items.moveFailed"))));
   };
 
   const away: Status = status === "later" ? "inbox" : "later";
