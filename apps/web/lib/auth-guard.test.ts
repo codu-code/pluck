@@ -1,5 +1,5 @@
 import { expect, test, vi } from "vitest";
-import { auth, FIRST_PARTY_REDIRECTS } from "./auth";
+import { auth, FIRST_PARTY_REDIRECTS, signInCode } from "./auth";
 import { clientIp } from "./ip";
 
 const BASE = process.env.BETTER_AUTH_URL;
@@ -29,6 +29,22 @@ test("only our own apps can register for the REST API or go by Pluck's name", as
 test("only our own apps can ask for the account scope", async () => {
   expect((await register("Example AI", "https://ai.example.test/cb", undefined, "library:read account")).status).toBe(400);
   expect((await register("Pluck for iPhone", "io.getpluck.app:/oauth", [`${BASE}/api/v1`], "offline_access library:read library:write account")).status).toBe(201);
+});
+
+test("nobody edits a client or a grant after the fact, signed in or not: those routes are off", async () => {
+  const email = `owner-${Date.now()}@example.test`;
+  const signedIn = await post("/sign-in/email-otp", { email, otp: await signInCode(email) });
+  expect(signedIn.status).toBe(200);
+  const cookie = signedIn.headers.getSetCookie().map((c) => c.split(";")[0]).join("; ");
+  const paths = ["/oauth2/create-client", "/oauth2/update-client", "/oauth2/delete-client", "/oauth2/client/rotate-secret", "/oauth2/client/rotate-keys", "/oauth2/update-consent", "/oauth2/delete-consent"];
+  for (const path of paths) {
+    const res = await auth.handler(new Request(`${BASE}/api/auth${path}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: BASE!, cookie, "x-forwarded-for": `198.51.100.${++ip}` },
+      body: JSON.stringify({ client_id: "x", redirect_uris: ["https://evil.example.test/cb"], update: { redirect_uris: ["https://evil.example.test/cb"] } }),
+    }));
+    expect(res.status, path).toBe(404);
+  }
 });
 
 test("an AI tool that names no scope gets read and write, never delete or the account", async () => {

@@ -168,6 +168,11 @@ export const auth = betterAuth({
     "/sign-up/email", "/request-password-reset", "/reset-password", "/change-password",
     "/email-otp/send-verification-otp", "/email-otp/check-verification-otp", "/email-otp/verify-email", "/email-otp/request-password-reset",
     "/forget-password/email-otp", "/email-otp/reset-password", "/email-otp/request-email-change", "/email-otp/change-email",
+    // A client is made once, by /oauth2/register (the guard), and a grant by the consent screen. Nothing edits either
+    // afterwards: a signed-in person could otherwise make a client that passes for ours, then point its redirect at
+    // their own site once someone had agreed to it.
+    "/oauth2/create-client", "/oauth2/update-client", "/oauth2/delete-client", "/oauth2/client/rotate-secret", "/oauth2/client/rotate-keys",
+    "/oauth2/update-consent", "/oauth2/delete-consent",
   ],
   hooks: { before: guard, after: connected },
   onAPIError: { errorURL: "/oauth/error" }, // a failed OAuth request from an AI tool lands on a page that says so
