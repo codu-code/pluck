@@ -6,6 +6,6 @@ export const GET = route<{ id: string }>({ kind: "read" }, async ({ req, caller,
   const out = await exportList(caller.userId, params.id);
   if (new URL(req.url).searchParams.get("format") !== "md") return json(out);
   return new Response(out.markdown, {
-    headers: { "content-type": "text/markdown; charset=utf-8", "content-disposition": `attachment; filename="${out.list.slug}.md"` },
+    headers: { "content-type": "text/markdown; charset=utf-8", "content-disposition": `attachment; filename*=UTF-8''${encodeURIComponent(`${out.list.slug}.md`)}` }, // a slug keeps non-Latin letters, which a header cannot carry raw
   });
 });

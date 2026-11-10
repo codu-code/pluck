@@ -4,6 +4,7 @@ import { auth, signInCode } from "@/lib/auth";
 import { newKey, newList, readList, updateMe } from "@/lib/library";
 import { DELETE as deleteHighlight } from "../../highlights/[id]/route";
 import { DELETE as deleteTag } from "../../tags/[id]/route";
+import { GET as exportList } from "./export/route";
 import { POST as share } from "./people/route";
 import { DELETE as deleteList, PATCH as patchList } from "./route";
 
@@ -46,4 +47,14 @@ test("making a List public or sharing it with people takes the person, not an AP
   expect((await inBrowser.patch("public")).status).toBe(200);
   expect((await inBrowser.share()).status).toBe(201);
   expect((await withKey.patch("private")).status).toBe(200); // taking it back down is a plain write
+});
+
+test("a List with a non-Latin name downloads as Markdown under its own name", async () => {
+  const { a } = await twoUsers();
+  const { key } = await newKey(a, "script");
+  const list = await newList(a, { name: "東京" });
+  const res = await exportList(new Request(`http://x/api/v1/lists/${list.id}/export?format=md`, { headers: { authorization: `Bearer ${key}` } }), { params: Promise.resolve({ id: list.id }) });
+  expect(res.status).toBe(200);
+  expect(res.headers.get("content-disposition")).toBe(`attachment; filename*=UTF-8''${encodeURIComponent("東京.md")}`);
+  expect(await res.text()).toMatch(/^# 東京/);
 });
