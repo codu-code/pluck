@@ -50,3 +50,24 @@ test("a URL that is not a link is refused with a readable message", async ({ pag
   const anon = await page.context().request.fetch("/api/v1/items", { method: "POST", data: { url: "https://example.com" }, headers: { cookie: "" } });
   expect(anon.status()).toBe(401);
 });
+
+test("a share from Android is plucked on arrival; a link to /share on some page only fills the box", async ({ page, baseURL }) => {
+  await signIn(page);
+  // The browser itself opens a share, as it does this address: Sec-Fetch-Site is "none".
+  await page.goto(`/share?${new URLSearchParams({ title: "Worth a read", text: `Worth a read ${FIX}/news-2.html` })}`);
+  await expect(page).toHaveURL(/\/inbox$/);
+  const rows = page.getByRole("listitem");
+  await expect(rows.first().getByRole("link", { name: "Why the slowest releases are mostly waiting" })).toBeVisible();
+  await expect(rows).toHaveCount(1);
+
+  // Another site sends the signed-in person to /share: nothing is plucked until they press Pluck it.
+  await page.goto(`${FIX}/news-1.html`);
+  await page.evaluate((to) => { location.href = to; }, `${baseURL}/share?${new URLSearchParams({ text: `${FIX}/blog-3.html` })}`);
+  await expect(page).toHaveURL(/\/share\/add\?text=/);
+  await expect(page.getByRole("textbox", { name: "Pluck" })).toHaveValue(`${FIX}/blog-3.html`);
+  expect((await (await page.request.get("/api/v1/items?status=inbox")).json()).items).toHaveLength(1);
+  await page.getByRole("button", { name: "Pluck it" }).click();
+  await expect(page).toHaveURL(/\/inbox$/);
+  await expect(rows.first()).toContainText("Drop D, slowly");
+  await expect(rows).toHaveCount(2);
+});
