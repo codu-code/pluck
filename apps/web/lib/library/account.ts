@@ -68,6 +68,7 @@ const BATCH = 200;
 const TYPES: Record<ImportSource, string> = {
   pocket: "text/csv", raindrop: "text/csv", html: "text/html", omnivore: "application/zip",
   instapaper: "text/csv",
+  readwise: "text/csv",
 };
 
 // Step 1: a record and a URL the browser uploads the file to directly. The URL takes exactly `size` bytes.

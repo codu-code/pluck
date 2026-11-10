@@ -1008,6 +1008,7 @@
         "omnivore": "Omnivore（zip）",
         "raindrop": "Raindrop（CSV）",
         "instapaper": "Instapaper（CSV）",
+        "readwise": "Readwise Reader（CSV）",
         "html": "浏览器书签（HTML）"
       },
       "drop": "拖入文件，或选择一个文件",

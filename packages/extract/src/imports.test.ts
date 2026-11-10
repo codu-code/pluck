@@ -59,3 +59,13 @@ test("Instapaper: a folder becomes a tag, where it sat does not; JSON tags, the 
   expect(parseImport("instapaper", strToU8("URL,Title,Selection,Folder\nhttps://example.com/old,Old,,Unread\n"))[0]).toMatchObject({ title: "Old", tags: [], createdAt: null });
   expect(parseImport("instapaper", strToU8('URL,Title,Selection,Folder,Timestamp,Tags\nhttps://example.com/odd,Odd,,Unread,1700000000,"{""a"": 1"\n'))[0]!.tags).toEqual([]);
 });
+
+test("Readwise Reader: tags from the Python list in one cell, ISO dates, feed rows left out", () => {
+  const e = parseImport("readwise", file("readwise.csv"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/indexes", "https://example.com/rates", "https://example.com/privet", "https://example.com/indexes"]);
+  expect(e[0]).toMatchObject({ title: 'Indexes, queries and "plans"', tags: ["postgres", "db"], note: null });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.043Z");
+  expect(e[1]).toMatchObject({ title: null, tags: [] });
+  expect(e[2]).toMatchObject({ title: "Привет из архива", tags: ["it's long", "reading"] });
+  expect(e[2]!.createdAt?.toISOString()).toBe("2022-12-07T07:43:11.000Z");
+});

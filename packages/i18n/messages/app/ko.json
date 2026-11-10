@@ -1008,6 +1008,7 @@
         "omnivore": "Omnivore (zip)",
         "raindrop": "Raindrop (CSV)",
         "instapaper": "Instapaper (CSV)",
+        "readwise": "Readwise Reader (CSV)",
         "html": "브라우저 북마크 (HTML)"
       },
       "drop": "파일을 끌어다 놓거나 선택하세요",

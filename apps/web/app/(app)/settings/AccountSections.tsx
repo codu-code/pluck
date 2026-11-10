@@ -106,6 +106,7 @@ const FILE_OF: Record<ImportSource, RegExp> = {
   omnivore: /\.zip$/,
   raindrop: /\.csv$/,
   instapaper: /\.csv$/,
+  readwise: /\.csv$/,
   html: /\.html?$/,
 };
 const SOURCES = Object.keys(FILE_OF) as ImportSource[];

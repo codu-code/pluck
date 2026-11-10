@@ -163,7 +163,7 @@ export const ApiKey = z.object({
 export type ApiKey = z.infer<typeof ApiKey>;
 export const CreateApiKeyBody = z.object({ name: z.string().trim().min(1).max(60), scopes: z.array(z.enum(API_SCOPES)).min(1).optional() });
 
-export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "html"]);
+export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "readwise", "html"]);
 export type ImportSource = z.infer<typeof ImportSourceEnum>;
 export const ImportStatus = z.object({
   id: ObjectIdString, source: ImportSourceEnum, total: z.number().int(), done: z.number().int(), failed: z.number().int(),

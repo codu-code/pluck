@@ -56,6 +56,11 @@ const FROM: [ImportSource, string, number, [title: string, tags: string[], note:
     [link("window-functions"), [], null, "2023-11-14T22:15:00.000Z"],
     ["京都の路地を歩く", ["Travel", "japan"], null, "2023-11-14T22:16:40.000Z"],
   ]],
+  ["readwise", "readwise.csv", 4, [
+    ["Привет из архива", ["it's long", "reading"], null, "2022-12-07T07:43:11.000Z"],
+    ['Indexes, queries and "plans"', ["postgres", "db"], null, "2023-11-14T22:13:20.043Z"],
+    [link("rates"), [], null, "2023-11-14T22:15:00.000Z"],
+  ]],
 ];
 
 test.each(FROM)("an import from %s makes its links Items in the Archive, with their Tags, notes and dates; a link in the file twice is one Item", async (source, name, total, expected) => {

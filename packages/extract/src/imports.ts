@@ -89,6 +89,19 @@ function instapaper(text: string): ImportEntry[] {
   }));
 }
 
+// Readwise Reader: Title,URL,ID,Document tags,Saved date,Reading progress,Location,Seen. The tags are one cell written
+// as a Python list (['a', 'b']). Feed rows are what Reader fetched from a subscription, not what the person kept.
+// Dropped: reading progress, seen, and where it sat (new, later, shortlist, archive).
+function readwise(text: string): ImportEntry[] {
+  const listed = (v = "") => {
+    const quoted = [...v.matchAll(/'([^']*)'|"([^"]*)"/g)].map((m) => m[1] ?? m[2] ?? "");
+    return quoted.length ? quoted : tagList(v.replace(/[[\]]/g, ""), /,/);
+  };
+  return parseCsv(text).filter((r) => r.location?.toLowerCase() !== "feed").map((r) => ({
+    url: r.url ?? "", title: r.title || null, tags: listed(r["document tags"]), note: null, createdAt: date(r["saved date"]), html: null,
+  }));
+}
+
 // Netscape bookmark HTML, as every browser exports it. A real HTML parser, so every entity (Chrome writes &#39;) decodes once.
 function bookmarksHtml(text: string): ImportEntry[] {
   const { document } = parseHTML(text);
@@ -134,7 +147,7 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
 
 const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
 const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
-  pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), omnivore,
+  pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), readwise: text(readwise), omnivore,
   html: text(bookmarksHtml),
 };
 
