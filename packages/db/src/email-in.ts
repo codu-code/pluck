@@ -41,12 +41,14 @@ export type EmailItemInput = {
 };
 
 // A forwarded newsletter becomes a Read item with no URL and its text kept. The same message twice is a re-pluck.
-export async function createEmailItem(userId: string, m: EmailItemInput): Promise<{ item: Item; created: boolean }> {
+// `rawKey` is where its raw message is kept: null for a new Item, and for one whose first try died before it was moved.
+export async function createEmailItem(userId: string, m: EmailItemInput): Promise<{ item: Item; created: boolean; rawKey: string | null }> {
   const uid = oid(userId);
   const now = new Date();
   const siteName = m.fromName ?? m.fromAddress?.split("@")[1] ?? "email-in";
   const hash = m.messageId ? createHash("sha256").update(`email:${m.messageId}`).digest("hex") : undefined;
   const col = await items();
+  const text = { textMarkdown: m.markdown, extractor: "email", bytes: Buffer.byteLength(m.markdown) };
   if (hash) {
     const existing = await col.findOneAndUpdate(
       { userId: uid, urlHash: hash },
@@ -54,8 +56,10 @@ export async function createEmailItem(userId: string, m: EmailItemInput): Promis
       { returnDocument: "after" },
     );
     if (existing) {
+      // A first try that died between the Item and its text is finished here; text already kept is left alone.
+      await (await contents()).updateOne({ itemId: existing._id, userId: uid }, { $setOnInsert: { _id: new ObjectId(), ...text } }, { upsert: true });
       await recountAround(userId, existing); // it may have come back from the Bin
-      return { item: toItem(existing), created: false };
+      return { item: toItem(existing), created: false, rawKey: existing.htmlKey };
     }
   }
   const doc = newItem(userId, {
@@ -64,8 +68,8 @@ export async function createEmailItem(userId: string, m: EmailItemInput): Promis
     searchText: textForSearch({ excerpt: m.excerpt, siteName, author: m.fromAddress }), searchBody: bodyForSearch(m.markdown),
   }, now);
   await col.insertOne(doc);
-  await (await contents()).insertOne({ _id: new ObjectId(), itemId: doc._id, userId: uid, textMarkdown: m.markdown, extractor: "email", bytes: Buffer.byteLength(m.markdown) });
-  return { item: toItem((await col.findOne({ _id: doc._id }))!), created: true };
+  await (await contents()).insertOne({ _id: new ObjectId(), itemId: doc._id, userId: uid, ...text });
+  return { item: toItem((await col.findOne({ _id: doc._id }))!), created: true, rawKey: null };
 }
 
 export async function setRawEmailKey(userId: string, itemId: string, key: string): Promise<void> {

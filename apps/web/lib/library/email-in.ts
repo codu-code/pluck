@@ -54,15 +54,18 @@ export async function ingestInbound(key: string): Promise<"created" | "duplicate
   if (!userId) return drop("no active address");
   if (!(await hitRateLimit(`email-in:${userId}`, PER_DAY, 86_400)).ok) return drop("daily limit");
 
-  const { item, created } = await createEmailItem(userId, {
+  const { item, created, rawKey } = await createEmailItem(userId, {
     subject: mail.subject, fromName: mail.from.name, fromAddress: mail.from.address, messageId: mail.messageId,
     markdown: mail.markdown, excerpt: mail.excerpt, wordCount: mail.wordCount,
   });
-  if (!created) {
+  // The same message again, its raw copy already kept. Without one, this is the retry of a try that died after making
+  // the Item, and the object is the only copy of the message: it is kept below, never deleted.
+  if (rawKey) {
     await deleteObject(key);
     return "duplicate";
   }
   // The raw message stays with the item, like a kept page.
+  // shortcut: a try that dies between the move and the key leaves the message kept but not linked; set the key first once moveObject can be re-run.
   const kept = keys.file(userId, item.id, "eml");
   await moveObject(key, kept);
   await setRawEmailKey(userId, item.id, kept);
