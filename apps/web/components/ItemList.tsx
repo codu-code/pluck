@@ -140,14 +140,20 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
       const movedIds = moved.map((r) => r.id);
       setLeaving(new Set(movedIds));
       setSelected(new Set());
-      setTimeout(() => {
+      let gone = false;
+      const slide = setTimeout(() => {
+        gone = true;
         setRows((cur) => cur.filter((r) => !movedIds.includes(r.id)));
         setLeaving(new Set());
         setCursor((c) => Math.max(0, Math.min(c, rows.length - movedIds.length - 1)));
       }, SLIDE_MS);
       setTotal((t) => t - moved.length);
       if (!(await moveItems(movedIds, status))) {
-        setRows((cur) => [...moved, ...cur]);
+        // A failure faster than the slide (offline): the rows never left, so stop the slide rather than put back
+        // copies it would then take out along with the rows themselves.
+        clearTimeout(slide);
+        if (gone) setRows((cur) => [...moved, ...cur]);
+        else setLeaving(new Set());
         setTotal((t) => t + moved.length);
         return showToast({ message: t("moveFailed") });
       }
