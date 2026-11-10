@@ -338,12 +338,13 @@
         "note": "Dezelfde tools en prompts, doorgeschakeld naar je eigen server."
       }
     },
-    "toolsTitle": "Twaalf tools. Heldere namen.",
+    "toolsTitle": "Dertien tools. Heldere namen.",
     "toolsBody": "Resultaten komen terug als kaarten met de titel voorop, dus een vraag als “wat heb ik deze week geplukt” is één aanroep en één scherm.",
     "toolList": {
       "search_items": "Zoeken op tekst in titel, notitie, tags, lijstnamen en paginatekst.",
       "list_items": "Door Inbox, Later, Archief of Klaar bladeren, nieuwste of onaangeroerd eerst.",
       "get_item": "Eén item volledig, met de bewaarde paginatekst.",
+      "list_highlights": "Wat je hebt gemarkeerd, met je notities erbij.",
       "save_item": "Pluk een link, veel links, een notitie, een taak of een ding. Gemarkeerd als geplukt door AI.",
       "batch_update": "Status, soort, tags en deadlines van één of veel items.",
       "list_tags": "Je tags, met aantallen.",

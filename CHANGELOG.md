@@ -15,15 +15,15 @@ The first tagged release, and the first published image: `docker compose up -d` 
 - **Pluck anything in one tap:** a link, a Note, a Todo or a Thing, from the web (one link or a paste of many), the browser extension, the iPhone and iPad share sheet, Siri and Shortcuts, email-in, or a chat with your AI. A Re-pluck brings the Item back to the Inbox and never makes a second one.
 - **The page is kept, not just the link.** Each link opens as what it is: an article in the Reader, a video in a player, a post, a repo, a product, a PDF on its own pages.
 - **Kinds and Statuses:** Read, Watch, PDF, Image, Note, Todo, Thing; Inbox, Later, Archived, Done. Tags, Highlights, and search across your library, in Japanese, Chinese and Korean too.
-- **Lists:** ordered, with a note and a tick per Item. Private, Public at `/@handle/slug`, or shared with particular people by email, See only.
+- **Lists:** ordered, with a note and a tick per Item. Private, Public at `/@handle/slug`, or shared with particular people by email, See only. A public List has an Atom feed at `/@handle/slug/feed.xml`.
 - **Expiry:** Items you never touch move to the Archive after the number of days you pick. Nothing is deleted. A deleted Item waits 30 days in the Bin.
 - **The Digest:** a weekly email of what will expire, what is due and what is oldest, on Monday unless you pick another day.
-- **The connector:** your AI reads and organises your library over MCP at `/mcp`, with OAuth, or through `npx @getpluck/mcp` for tools that only speak stdio. There is no AI inside the app. Your AI cannot delete anything unless you grant it, cannot make a List public, and what it adds is marked "by AI".
-- **Import and export:** import from Pocket, Omnivore, Raindrop and browser bookmarks; export everything as JSON and Markdown; delete the account yourself.
-- **Apps:** the web app, Pluck for Chrome (and a Firefox build for your own server), and the iPhone and iPad app, which works offline from the last copy and keeps the newest Items for reading with no connection.
+- **The connector:** your AI reads and organises your library over MCP at `/mcp`, with OAuth, or through `npx @getpluck/mcp` for tools that only speak stdio. There is no AI inside the app. Your AI cannot delete anything unless you grant it, cannot make a List public, and what it adds is marked "by AI". It finds an Item by what you highlighted in it, lists your highlights across the library, and every tool declares the shape of its result.
+- **Import and export:** import from Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep and browser bookmarks; export everything as JSON and Markdown, with a `bookmarks.html` that a browser or another app can import; delete the account yourself.
+- **Apps:** the web app, Pluck for Chrome (from 0.2.4 its Options can point it at a server you run, once you allow it; there is a Firefox build too), Android's Share sheet through the installed web app, and the iPhone and iPad app, which works offline from the last copy and keeps the newest Items for reading with no connection.
 - **Sign-in by email only:** a link on the web, a 6-digit code on the iPhone. API keys for scripts and the stdio bridge.
 - **Ten languages:** English, Spanish, Portuguese (Brazil), French, German, Japanese, Italian, Dutch, Korean and Chinese (Simplified).
-- **Run your own:** one Docker image for the web app and the worker, with MongoDB and an S3-compatible blob store, under Apache-2.0. Analytics are off unless you build with your own PostHog key.
+- **Run your own:** one Docker image for the web app and the worker, with MongoDB and an S3-compatible blob store, under Apache-2.0. Analytics are off unless you build with your own PostHog key. What Pluck defends against, and where each rule lives, is in `docs/threat-model.md`.
 
 ### Since the repository went public (2026-10-27)
 

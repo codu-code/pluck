@@ -25,7 +25,7 @@ const TOOLS = [
   { key: "self", code: "npx @getpluck/mcp --server https://pluck.your.host --key pk_live_…" },
 ] as const;
 
-const TOOL_LIST = ["search_items", "list_items", "get_item", "save_item", "batch_update", "list_tags", "create_tag", "list_lists", "get_list", "create_list", "update_list", "get_digest"] as const;
+const TOOL_LIST = ["search_items", "list_items", "get_item", "list_highlights", "save_item", "batch_update", "list_tags", "create_tag", "list_lists", "get_list", "create_list", "update_list", "get_digest"] as const;
 const ASKS = ["tidy", "reading", "ideas", "review"] as const;
 const NEVER = ["delete", "makeTag", "renameTag", "purpose", "public"] as const;
 

@@ -43,7 +43,7 @@ export type ItemDoc = {
   tagNames?: string[];
   listNames?: string[];
   inList?: boolean; // in at least one list: exempt from expiry
-  searchText?: string; // excerpt, site, host, author
+  searchText?: string; // excerpt, site, host, author; then, after a mark, the Item's highlights (search.ts)
   searchBody?: string; // the kept text or the note body, capped
   deletedAt: Date | null; // in the bin; purged 30 days later
   purging?: true; // claimed by a purge (purgeDocs in items.ts): its files and rows are going, and it cannot come back

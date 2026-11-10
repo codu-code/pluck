@@ -338,12 +338,13 @@
         "note": "Las mismas herramientas y prompts, conectados a tu propio servidor."
       }
     },
-    "toolsTitle": "Doce herramientas. Nombres claros.",
+    "toolsTitle": "Trece herramientas. Nombres claros.",
     "toolsBody": "Los resultados llegan como tarjetas, con el título primero, así que una pregunta como “qué recogí esta semana” es una llamada y una pantalla.",
     "toolList": {
       "search_items": "Búsqueda de texto en título, nota, etiquetas, nombres de listas y texto.",
       "list_items": "Explora la Bandeja de entrada, Más tarde, el Archivo o Hecho, con lo más reciente o lo que lleva más tiempo sin tocar primero.",
       "get_item": "Un elemento completo, incluido el texto conservado de la página.",
+      "list_highlights": "Lo que resaltaste, con tus notas.",
       "save_item": "Recoge un enlace, varios enlaces, una nota, una tarea o una cosa. Marcado como recogido por IA.",
       "batch_update": "Estado, tipo, etiquetas y fechas de vencimiento de uno o varios elementos.",
       "list_tags": "Tus etiquetas, con recuentos.",
