@@ -109,6 +109,7 @@ const FILE_OF: Record<ImportSource, RegExp> = {
   readwise: /\.csv$/,
   wallabag: /\.json$/,
   linkwarden: /\.json$/,
+  karakeep: /\.json$/,
   html: /\.html?$/,
 };
 const SOURCES = Object.keys(FILE_OF) as ImportSource[];

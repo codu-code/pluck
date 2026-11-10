@@ -163,7 +163,7 @@ export const ApiKey = z.object({
 export type ApiKey = z.infer<typeof ApiKey>;
 export const CreateApiKeyBody = z.object({ name: z.string().trim().min(1).max(60), scopes: z.array(z.enum(API_SCOPES)).min(1).optional() });
 
-export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "readwise", "wallabag", "linkwarden", "html"]);
+export const ImportSourceEnum = z.enum(["pocket", "omnivore", "raindrop", "instapaper", "readwise", "wallabag", "linkwarden", "karakeep", "html"]);
 export type ImportSource = z.infer<typeof ImportSourceEnum>;
 export const ImportStatus = z.object({
   id: ObjectIdString, source: ImportSourceEnum, total: z.number().int(), done: z.number().int(), failed: z.number().int(),
@@ -185,6 +185,13 @@ export const LinkwardenExport = z.object({
     name: maybeText,
     links: maybeList(z.object({ url: maybeText, name: maybeText, description: maybeText, importDate: maybeText, createdAt: maybeText, tags: maybeList(z.object({ name: z.string() })) })),
   })),
+});
+export const KarakeepExport = z.object({
+  bookmarks: z.array(z.object({
+    createdAt: z.number().nullish().catch(null), title: maybeText, note: maybeText, tags: maybeList(z.string()), lists: maybeList(z.string()),
+    content: z.object({ url: maybeText }).nullish().catch(null), // a link has a url; a text has none
+  })),
+  lists: maybeList(z.object({ id: z.string(), name: z.string() })),
 });
 
 // An AI tool the person connected over OAuth, shown in Settings with a Disconnect button.

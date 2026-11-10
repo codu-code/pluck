@@ -1,0 +1,62 @@
+{
+  "bookmarks": [
+    {
+      "createdAt": 1700000000,
+      "title": "Drop D, slowly: \"the\" riff",
+      "tags": ["guitar", "practice"],
+      "lists": ["cm2music0000"],
+      "content": { "type": "link", "url": "https://example.com/drop-d" },
+      "note": "Bars 9 to 16 first",
+      "archived": false
+    },
+    {
+      "createdAt": 1700000100,
+      "title": null,
+      "tags": [],
+      "lists": [],
+      "content": { "type": "link", "url": "https://example.com/untitled" },
+      "note": null,
+      "archived": true
+    },
+    {
+      "createdAt": 1700000200,
+      "title": "Thought on the train",
+      "tags": ["ideas"],
+      "lists": [],
+      "content": { "type": "text", "text": "A list is a plan you can tick." },
+      "note": null,
+      "archived": false
+    },
+    {
+      "createdAt": 1700000300,
+      "title": "أوتار الجيتار",
+      "tags": [],
+      "lists": ["cm2music0000"],
+      "content": { "type": "link", "url": "https://example.com/awtar" },
+      "note": null,
+      "archived": false
+    },
+    {
+      "createdAt": 1700000400,
+      "title": "Drop D once more",
+      "tags": ["again"],
+      "lists": [],
+      "content": { "type": "link", "url": "https://example.com/drop-d" },
+      "note": null,
+      "archived": false
+    },
+    {
+      "createdAt": 1700000500,
+      "title": "A scanned receipt",
+      "tags": [],
+      "lists": [],
+      "content": null,
+      "note": null,
+      "archived": false
+    }
+  ],
+  "lists": [
+    { "id": "cm2music0000", "name": "Music", "description": null, "icon": "♪", "type": "manual", "query": null, "parentId": null },
+    { "id": "cm2smart00000", "name": "Untagged", "description": null, "icon": "#", "type": "smart", "query": "-is:tagged", "parentId": null }
+  ]
+}

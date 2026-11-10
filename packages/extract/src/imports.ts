@@ -1,4 +1,4 @@
-import { LinkwardenExport, WallabagExport, type ImportSource } from "@pluck/shared-schemas";
+import { KarakeepExport, LinkwardenExport, WallabagExport, type ImportSource } from "@pluck/shared-schemas";
 import { unzipSync, strFromU8 } from "fflate";
 import { parseHTML } from "linkedom";
 
@@ -134,6 +134,17 @@ function linkwarden(text: string): ImportEntry[] {
   );
 }
 
+// Karakeep (once Hoarder): bookmarks, each a link, a text or an uploaded file. Only a link has a URL, so only links
+// come across. A list a link sits in becomes a tag. Dropped: archived.
+function karakeep(text: string): ImportEntry[] {
+  const { bookmarks, lists } = readJson(KarakeepExport, text);
+  const listName = new Map((lists ?? []).map((l) => [l.id, l.name]));
+  return bookmarks.map((b) => ({
+    url: b.content?.url ?? "", title: b.title || null, note: b.note || null, createdAt: date(b.createdAt), html: null,
+    tags: [...(b.tags ?? []), ...(b.lists ?? []).flatMap((id) => listName.get(id) ?? [])],
+  }));
+}
+
 // Netscape bookmark HTML, as every browser exports it. A real HTML parser, so every entity (Chrome writes &#39;) decodes once.
 function bookmarksHtml(text: string): ImportEntry[] {
   const { document } = parseHTML(text);
@@ -180,7 +191,7 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
 const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
 const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
   pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), readwise: text(readwise), omnivore,
-  wallabag: text(wallabag), linkwarden: text(linkwarden), html: text(bookmarksHtml),
+  wallabag: text(wallabag), linkwarden: text(linkwarden), karakeep: text(karakeep), html: text(bookmarksHtml),
 };
 
 // Throws on a file that is not what the source writes; the import then says it could not be read.

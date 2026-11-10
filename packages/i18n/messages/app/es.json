@@ -1011,6 +1011,7 @@
         "readwise": "Readwise Reader (CSV)",
         "wallabag": "Wallabag (JSON)",
         "linkwarden": "Linkwarden (JSON)",
+        "karakeep": "Karakeep (JSON)",
         "html": "Marcadores del navegador (HTML)"
       },
       "drop": "Suelta un archivo, o elige uno",

@@ -72,6 +72,11 @@ const FROM: [ImportSource, string, number, [title: string, tags: string[], note:
     ["Kitchen hob", ["Reno", "kitchen", "to buy"], "Check the width against the worktop", "2024-03-01T10:00:00.000Z"],
     ["주방 조명 고르기", ["Reno"], null, "2024-03-02T10:00:00.000Z"],
   ]],
+  ["karakeep", "karakeep.json", 4, [
+    ['Drop D, slowly: "the" riff', ["guitar", "practice", "Music"], "Bars 9 to 16 first", "2023-11-14T22:13:20.000Z"],
+    [link("untitled"), [], null, "2023-11-14T22:15:00.000Z"],
+    ["أوتار الجيتار", ["Music"], null, "2023-11-14T22:18:20.000Z"],
+  ]],
 ];
 
 test.each(FROM)("an import from %s makes its links Items in the Archive, with their Tags, notes and dates; a link in the file twice is one Item", async (source, name, total, expected) => {
@@ -87,4 +92,12 @@ test.each(FROM)("an import from %s makes its links Items in the Archive, with th
   // Wallabag's export carries the page, which is kept as it comes; where Wallabag had only its failed-fetch notice, the page is fetched.
   if (source === "wallabag") expect(made.map((i) => i.text?.includes("Every printed photograph") ?? false)).toEqual([true, false, false]);
   for await (const page of (await exportData(b)).items) expect(page).toEqual([]); // nobody else's library
+});
+
+test("a file from another app than the one picked fails as unreadable, and makes nothing", async () => {
+  const { a } = await twoUsers();
+  const id = await uploaded(a, "karakeep", fixture("wallabag.json"));
+  await run();
+  expect(await importStatus(a, id)).toMatchObject({ state: "failed", error: "That file could not be read. Check it is the export from the right service.", total: 0 });
+  for await (const page of (await exportData(a)).items) expect(page).toEqual([]);
 });

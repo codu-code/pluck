@@ -1011,6 +1011,7 @@
         "readwise": "Readwise Reader（CSV）",
         "wallabag": "Wallabag（JSON）",
         "linkwarden": "Linkwarden（JSON）",
+        "karakeep": "Karakeep（JSON）",
         "html": "ブラウザのブックマーク（HTML）"
       },
       "drop": "ファイルをドロップするか、選んでください",
