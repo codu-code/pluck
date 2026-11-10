@@ -34,7 +34,7 @@ pnpm e2e        # Playwright against a production build (once: pnpm exec playwri
 pnpm design     # the impeccable detector on every page the e2e run saved
 ```
 
-Stop `pnpm dev` before `pnpm e2e`: both use `apps/web/.next`.
+Stop `pnpm dev` before `pnpm e2e`: both use `apps/web/.next`. CI also builds the Docker image (`docker build .`), so a change that breaks `docker compose up` shows on the pull request.
 
 ## House rules
 
