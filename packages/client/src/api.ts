@@ -58,16 +58,20 @@ export async function answer<T>(res: Response): Promise<T> {
 
 export type Tokens = { access: string; refresh: string | null; expiresAt: number };
 
-// The OAuth token endpoint. Null means the server said no (the code or refresh token is spent: sign in again).
-// No connection, a 5xx or a 429 is Unreachable, so a device that is offline keeps its sign-in and its queue.
+// The OAuth token endpoint. Null means the server itself said the grant is dead (the code or refresh token is spent,
+// or the client is gone: sign in again), which it says as a 400 or 401 with one of these in `error`.
+// Anything else is Unreachable, so the device keeps its sign-in and its queue: no connection, a 5xx, a 429, and an
+// answer that is not the token endpoint's (an edge's 403 page, a 404 during a deploy, a proxy's HTML).
 // It has the API's time limit too: every request waits on a refresh, so one that hung would hold every screen.
+// shortcut: a server that has moved for good keeps a device signed in and queueing, a manual sign-out is the way out; upgrade if self-hosters hit it.
+const DEAD = ["invalid_grant", "invalid_client", "unauthorized_client"];
 export async function tokenRequest(server: string, form: Record<string, string>, f: typeof fetch = fetch, timeoutMs = 15_000): Promise<Tokens | null> {
   const res = await f(`${server}/api/auth/oauth2/token`, {
     method: "POST", credentials: "omit", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(form).toString(),
     signal: AbortSignal.timeout(timeoutMs),
   }).catch(() => null);
-  if (!res || res.status >= 500 || res.status === 429) throw new Unreachable("Couldn't reach Pluck.");
-  if (!res.ok) return null;
-  const t = (await res.json()) as { access_token: string; refresh_token?: string; expires_in: number };
-  return { access: t.access_token, refresh: t.refresh_token ?? null, expiresAt: Date.now() + t.expires_in * 1000 };
+  const t = (await res?.json().catch(() => null)) as { access_token?: string; refresh_token?: string; expires_in?: number; error?: unknown } | null;
+  if (res?.ok && t?.access_token) return { access: t.access_token, refresh: t.refresh_token ?? null, expiresAt: Date.now() + (t.expires_in ?? 3600) * 1000 };
+  if ((res?.status === 400 || res?.status === 401) && DEAD.includes(t?.error as string)) return null;
+  throw new Unreachable("Couldn't reach Pluck.");
 }

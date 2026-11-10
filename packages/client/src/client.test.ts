@@ -108,12 +108,25 @@ test("a token request that hangs gives up as Unreachable, so screens waiting on 
   await expect(tokenRequest("https://pluck.test", {}, hangs, 50)).rejects.toBeInstanceOf(Unreachable);
 });
 
-test("token requests: offline or a 5xx is Unreachable, so nobody is signed out for being on a train", async () => {
+// What is not the token endpoint's own answer: something in front of the server, or the server mid-deploy.
+const page = (status: number, body = "<html><h1>Forbidden</h1></html>") => new Response(body, { status, headers: { "content-type": "text/html" } });
+const notTheServer: [string, () => Response][] = [
+  ["an edge's 403 page", () => page(403)],
+  ["a 404 during a deploy", () => page(404, "Not found")],
+  ["a 429 from the rate limiter", () => json(429, { message: "Too many requests." })],
+  ["a 500", () => json(500, {})],
+  ["a sign-in page where the answer should be", () => page(200)],
+];
+
+test("token requests: only the server saying the grant is dead is a refusal; anything else is Unreachable", async () => {
+  const ask = (answer: () => Response) => tokenRequest("https://pluck.test", {}, (async () => answer()) as typeof fetch);
   const offline = (async () => { throw new TypeError("offline"); }) as typeof fetch;
   await expect(tokenRequest("https://pluck.test", {}, offline)).rejects.toBeInstanceOf(Unreachable);
-  await expect(tokenRequest("https://pluck.test", {}, (async () => json(503, {})) as typeof fetch)).rejects.toBeInstanceOf(Unreachable);
-  expect(await tokenRequest("https://pluck.test", {}, (async () => json(400, { error: "invalid_grant" })) as typeof fetch)).toBeNull();
-  expect(await tokenRequest("https://pluck.test", {}, (async () => json(200, { access_token: "a", refresh_token: "r", expires_in: 3600 })) as typeof fetch)).toMatchObject({ access: "a", refresh: "r" });
+  for (const [, answer] of notTheServer) await expect(ask(answer)).rejects.toBeInstanceOf(Unreachable);
+  // Better Auth's answers, as its token endpoint gives them: a spent or revoked refresh token, and a client it no longer has.
+  expect(await ask(() => json(400, { error_description: "invalid refresh token", error: "invalid_grant" }))).toBeNull();
+  expect(await ask(() => json(400, { error_description: "client not found", error: "invalid_client" }))).toBeNull();
+  expect(await ask(() => json(200, { access_token: "a", refresh_token: "r", expires_in: 3600 }))).toMatchObject({ access: "a", refresh: "r" });
 });
 
 describe("the session", () => {
@@ -177,11 +190,21 @@ describe("the session", () => {
 
   test("a refresh token the server refuses signs out; offline keeps the tokens", async () => {
     const { box, store } = memory();
-    expect(await createSession(store, (async () => json(400, { error: "invalid_grant" })) as typeof fetch).authHeader()).toBeNull();
+    expect(await createSession(store, (async () => json(400, { error_description: "invalid refresh token", error: "invalid_grant" })) as typeof fetch).authHeader()).toBeNull();
     expect(box.s.tokens).toBeNull();
     box.s.tokens = expired;
     await expect(createSession(store, (async () => { throw new TypeError("offline"); }) as typeof fetch).authHeader()).rejects.toBeInstanceOf(Unreachable);
     expect(box.s.tokens).toEqual(expired);
+  });
+
+  test.each(notTheServer)("%s on the token endpoint keeps the sign-in, and the next refresh goes through", async (_, answer) => {
+    const server = tokenServer();
+    const { box, store } = memory();
+    server.f.mockImplementationOnce(async () => answer());
+    const session = createSession(store, server.fetch);
+    await expect(session.authHeader()).rejects.toBeInstanceOf(Unreachable);
+    expect(box.s.tokens).toEqual(expired);
+    expect(await session.authHeader()).toBe("Bearer a1");
   });
 });
 
