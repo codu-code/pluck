@@ -58,6 +58,16 @@ describe("re-pluck", () => {
     expect((await listItems(a, page)).items).toHaveLength(1);
   });
 
+  test("a re-pluck sent twice appends its note once; a different note still appends", async () => {
+    const { a } = await twoUsers();
+    const url = "https://example.com/resent";
+    await pluckLink(a, { url, source: "web", note: "first" });
+    await pluckLink(a, { url, source: "extension", note: "second" });
+    expect((await pluckLink(a, { url, source: "extension", note: "second" })).item.note).toBe("first\n\nsecond"); // the resend
+    expect((await pluckLink(a, { url, source: "extension", note: "third" })).item.note).toBe("first\n\nsecond\n\nthird");
+    expect((await pluckLink(a, { url, source: "extension", note: "ird" })).item.note).toBe("first\n\nsecond\n\nthird\n\nird"); // the end of a paragraph is not the paragraph
+  });
+
   test("a failed item is re-extracted on re-pluck; a done one is not", async () => {
     const { a } = await twoUsers();
     const { item } = await pluckLink(a, { url: "https://example.com/f", source: "web" });

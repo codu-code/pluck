@@ -78,7 +78,9 @@ export async function pluckLink(
   let doc = res.value!;
   const created = !res.lastErrorObject?.updatedExisting;
   const note = input.note?.trim();
-  if (!created && note && doc.note !== note) {
+  // A note the Item's note already ends with is a resend (the queue's answer was lost), not a second thought.
+  // shortcut: read then written, so the same pluck twice at the same instant can still append twice, compare-and-set on `note` if a client ever sends in parallel.
+  if (!created && note && doc.note !== note && !doc.note?.endsWith(`\n\n${note}`)) {
     doc = (await col.findOneAndUpdate(
       { _id: doc._id, userId: uid },
       { $set: { note: doc.note ? `${doc.note}\n\n${note}` : note } },
