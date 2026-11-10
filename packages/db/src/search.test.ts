@@ -101,6 +101,25 @@ describe("search", () => {
     expect((await searchItems(a, q("読書", { limit: 2, cursor: first.nextCursor! }))).results.map((r) => r.item.title)).toEqual(["読書メモ 0"]);
   });
 
+  test("a pasted URL's item is first, and shown and counted once however far down its own hit is", async () => {
+    const { a, b } = await twoUsers();
+    // Six links whose titles are their URLs outrank the one with a typed title, so its own hit is on the last page.
+    for (let i = 0; i < 6; i++) await pluckLink(a, { url: `https://example.com/paged/${i}`, source: "web" });
+    const mine = (await pluckLink(a, { url: "https://example.com/paged/mine", title: "Kitchen", source: "web" })).item;
+    await pluckLink(b, { url: "https://example.com/paged/mine", source: "web" });
+    const seen: string[] = [];
+    let cursor: string | undefined;
+    do {
+      const res = await searchItems(a, q("https://example.com/paged/mine", { limit: 3, cursor }));
+      expect(res.total).toBe(7);
+      seen.push(...res.results.map((r) => r.item.id));
+      cursor = res.nextCursor ?? undefined;
+    } while (cursor);
+    expect(seen[0]).toBe(mine.id);
+    expect(seen.filter((id) => id === mine.id)).toHaveLength(1);
+    expect(new Set(seen).size).toBe(7);
+  });
+
   test("pages with an opaque cursor", async () => {
     const { a } = await twoUsers();
     for (let i = 0; i < 5; i++) await createTextItem(a, { kind: "note", text: `ledger entry ${i}`, source: "web" });
