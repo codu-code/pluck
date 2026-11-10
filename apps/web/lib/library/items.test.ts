@@ -88,6 +88,7 @@ test("a person's links an hour are capped, counted per link", async () => {
   const urls = Array.from({ length: 20 }, (_, i) => `${FIX}/more-${i}.html`);
   await hitRateLimit(`links:${a}`, Infinity, 3600, 1990); // 1,990 of the hour's 2,000 spent
   await expect(pluckAny(a, { urls }, { defer: skip })).rejects.toMatchObject({ status: 429 });
+  expect((await pluckAny(a, { urls: urls.slice(0, 2) }, { defer: skip })).results).toHaveLength(2); // the refused 20 were given back
   expect((await pluckAny(b, { urls }, { defer: skip })).results).toHaveLength(20);
 });
 
