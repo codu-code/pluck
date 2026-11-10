@@ -23,3 +23,17 @@ test("each due digest is its own job, sent by the worker", async () => {
   await runJobs({ budgetMs: 10_000 });
   expect(await pendingJobCount("digest")).toBe(0);
 });
+
+test("an email goes before the page reads queued ahead of it, and the rest are read side by side", async () => {
+  const { a } = await twoUsers();
+  const reads = [];
+  for (let i = 0; i < 6; i++) reads.push(await enqueue("extract", { userId: a, itemId: "000000000000000000000000" }, { delayMs: -60_000 })); // queued a minute ago
+  const email = await enqueue("digest", { userId: a });
+  expect(await runJobs({ max: 1 })).toEqual({ ran: 1 });
+  expect((await jobState(email))?.state).toBe("done");
+  expect(await pendingJobCount("extract")).toBe(6);
+
+  expect(await runJobs({ max: 5 })).toEqual({ ran: 5 }); // four loops share what is left to run, and no job runs twice
+  expect(await runJobs()).toEqual({ ran: 1 });
+  for (const id of reads) expect((await jobState(id))?.state).toBe("done");
+});
