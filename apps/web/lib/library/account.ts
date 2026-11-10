@@ -3,7 +3,7 @@ import {
   aiClientName, aiConnections, claimOnce, countItems, createApiKey, disconnectAi, claimImportStart, createImport, deleteAccountData, enqueue, exportData, finishExport, getImport, getMe, importLink,
   latestExport, recountTags, listApiKeys, revokeApiKey, startExport, updateImport,
 } from "@pluck/db";
-import { parseImport, type ImportSource } from "@pluck/extract";
+import { parseImport, type ImportEntry, type ImportSource } from "@pluck/extract";
 import { MAX_IMPORT_BYTES, normalizeUrl, type AiConnection, type ApiKey, type ImportStatus } from "@pluck/shared-schemas";
 import { strToU8, zipSync } from "fflate";
 import { sendEmail } from "../email";
@@ -90,44 +90,53 @@ export async function importStatus(userId: string, id: string): Promise<ImportSt
   return status;
 }
 
-// The job: parse once, then 200 entries per run until done (it re-queues itself, so a big file never hits
+// The job: 200 entries at a time for five seconds a run, until done (it re-queues itself, so a big file never hits
 // a time limit). Omnivore's kept pages are read offline; the rest are fetched slowly by the extract queue.
 export async function runImport(userId: string, importId: string): Promise<void> {
   const record = await getImport(userId, importId);
   if (!record || record.state !== "running") return;
-  let entries;
+  // Only a file that is too large or cannot be parsed is final. Anything else reading it (a storage hiccup) throws,
+  // and the job is tried again.
+  const file = await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES }).catch((e: unknown) => {
+    if (e instanceof TooLarge) return null;
+    throw e;
+  });
+  let entries: ImportEntry[] | null = null;
   try {
-    entries = parseImport(record.source, new Uint8Array(await getObject(record.blobKey, { maxBytes: MAX_IMPORT_BYTES })));
+    if (file) entries = parseImport(record.source, new Uint8Array(file));
   } catch (e) {
-    const tooLarge = e instanceof TooLarge;
-    if (tooLarge) await deleteObject(record.blobKey);
-    await updateImport(importId, {
-      state: "failed",
-      error: tooLarge ? "That file is over 500 MB." : "That file could not be read. Check it is the export from the right service.",
-    });
     log("warn", "import unreadable", { userId, importId, error: String(e) });
+  }
+  if (!entries) {
+    if (!file) await deleteObject(record.blobKey);
+    await updateImport(importId, { state: "failed", error: file ? "That file could not be read. Check it is the export from the right service." : "That file is over 500 MB." });
     return;
   }
   if (record.total === 0) await updateImport(importId, { total: entries.length });
   let { done, failed } = record;
-  const touchedTags: string[] = [];
-  for (const e of entries.slice(done + failed, done + failed + BATCH)) {
-    const url = normalizeUrl(e.url);
-    if (!url) {
-      failed++;
-      continue;
+  // shortcut: each run downloads and parses the file again, keep the parsed entries beside it if imports get slow.
+  const until = Date.now() + 5000;
+  while (done + failed < entries.length && Date.now() < until) {
+    const touchedTags: string[] = [];
+    for (const e of entries.slice(done + failed, done + failed + BATCH)) {
+      const url = normalizeUrl(e.url);
+      if (!url) {
+        failed++;
+        continue;
+      }
+      const { item, created, tagIds } = await importLink(userId, url, e);
+      touchedTags.push(...tagIds);
+      // Spread the fetching out: a thousand imports should not hit the network at once.
+      if (created) await keepImported(userId, item, { html: e.html, title: e.title, delayMs: (done % 1000) * 3000 });
+      done++;
     }
-    const { item, created, tagIds } = await importLink(userId, url, e);
-    touchedTags.push(...tagIds);
-    // Spread the fetching out: a thousand imports should not hit the network at once.
-    if (created) await keepImported(userId, item, { html: e.html, title: e.title, delayMs: (done % 1000) * 3000 });
-    done++;
+    await recountTags(userId, touchedTags);
+    await updateImport(importId, { done, failed });
   }
-  await recountTags(userId, touchedTags);
   const finished = done + failed >= entries.length;
-  await updateImport(importId, { done, failed, state: finished ? "done" : "running" });
-  if (!finished) await enqueue("import", { userId, importId });
-  else track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
+  if (!finished) return void (await enqueue("import", { userId, importId }));
+  await updateImport(importId, { state: "done" });
+  track(userId, "import_finished", { import_source: record.source, total: entries.length, failed });
 }
 
 // ---- Export ---------------------------------------------------------------------------------------
