@@ -67,11 +67,13 @@ final class PluckClient {
                        .init(name: "client_id", value: clientId), .init(name: "resource", value: "\(s.server)/api/v1")]
     req.httpBody = form.percentEncodedQuery?.data(using: .utf8)
     let (data, res) = try await send(req)
-    // Busy or down is not signed out: the pluck waits and goes later, as the app's client does.
     let status = (res as? HTTPURLResponse)?.statusCode ?? 0
-    if status >= 500 || status == 429 { throw PluckError.offline }
-    guard status == 200,
-          let json = try JSONSerialization.jsonObject(with: data) as? [String: Any], let access = json["access_token"] as? String else { throw PluckError.signedOut }
+    let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+    // Signed out only when the server says the refresh token is spent or revoked (400 or 401 with one of these errors),
+    // the rule the app's client has (packages/client). Any other answer (busy, down, an edge's 403, a 404 during a
+    // deploy, a proxy's page) is not signed out: the pluck waits and the app sends it later.
+    if status == 400 || status == 401, let error = json?["error"] as? String, ["invalid_grant", "invalid_client", "unauthorized_client"].contains(error) { throw PluckError.signedOut }
+    guard status == 200, let json, let access = json["access_token"] as? String else { throw PluckError.offline }
     s.access = access
     s.refresh = (json["refresh_token"] as? String) ?? s.refresh
     let expiresIn = (json["expires_in"] as? Double) ?? 3600
