@@ -13,12 +13,20 @@ Plucking a URL that is already in your library. It brings the existing Item back
 _Avoid_: Duplicate, re-save
 
 **Item**:
-One plucked thing. Link Items have a URL and a kept page; Notes, Todos and Things are Items with no URL.
+One plucked thing. Link Items have a URL and a kept page, except an Image or PDF plucked as a file, which has neither; Notes, Todos and Things are Items with no URL.
 _Avoid_: Save, bookmark, entry, card
 
 **Kind**:
 What an Item is: Read, Watch, PDF, Image, Note, Todo or Thing. "Links" is the group of Read, Watch, PDF and Image.
 _Avoid_: Type, category
+
+**Note**:
+An Item of your own words, typed or dictated. Not the note on a link Item, a List entry or a Highlight, which is a short comment on something else.
+_Avoid_: Memo, doc, page
+
+**Found on**:
+The web page an Image was plucked from, kept with it as the way back.
+_Avoid_: Source, origin, referrer
 
 **Kept page**:
 What is worth keeping from a link Item's page, stored with it so it survives the original going away: an article's text and HTML, a post's words, a repo's README, a product's name and price. Never a login wall or an empty app shell.
