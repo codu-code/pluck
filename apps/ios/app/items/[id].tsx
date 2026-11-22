@@ -1,17 +1,18 @@
 import { Unreachable } from "@pluck/client";
-import { isCardPreview, isTextKind, showsFile, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
+import { isCardPreview, isTextKind, showsFile, siteOf, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import type { File } from "expo-file-system";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Image, Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, Linking, Pressable, ScrollView, Settings, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
+import { FormatBar, RichText, type Format, type RichTextHandle } from "@/components/RichText";
 import { useInDetail, useSplit } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
@@ -235,6 +236,12 @@ function Reader({ data }: { data: FullItem }) {
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
         )}
+        {item.kind === "image" && item.foundOn && (
+          // Found on: the page the picture was plucked from, its way back.
+          <Pressable accessibilityRole="link" onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.foundOn!))} hitSlop={8} style={{ alignSelf: "flex-start" }}>
+            <Text style={[font.regular, { color: t.actionInk, fontSize: 15, lineHeight: 21 }]}>{tr("item.foundOn", { site: siteOf(item.foundOn) })}</Text>
+          </Pressable>
+        )}
         {item.note ? (
           <Pressable accessibilityRole="button" accessibilityLabel={tr("item.noteA11y", { note: item.note })} onPress={() => router.push({ pathname: "/note", params: { id: item.id } })}>
             <Text style={[font.regular, styles.note, { color: t.ink, backgroundColor: t.rail }]}>{item.note}</Text>
@@ -388,8 +395,39 @@ function NoteEditor({ data }: { data: FullItem }) {
 
   const done = item.status === "done";
   const inDetail = useInDetail();
+
+  // The words are rich text (components/RichText.tsx); one it cannot keep exactly opens as plain text, as before.
+  const [plain, setPlain] = useState(false);
+  const rich = useRef<RichTextHandle>(null);
+  const [format, setFormat] = useState<Format | null>(null);
+  const [writing, setWriting] = useState(false); // the words have the keyboard: the format bar takes the toolbar's place
+  const [keyboard, setKeyboard] = useState(false);
+  // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY, never set for the store): -demoWrite 1 opens on the words, keyboard up.
+  useEffect(() => {
+    const id = process.env.EXPO_PUBLIC_DEMO_KEY && Settings.get("demoWrite") ? setTimeout(() => rich.current?.focus(), 700) : undefined;
+    return () => clearTimeout(id);
+  }, []);
+  useEffect(() => {
+    const subs = [Keyboard.addListener("keyboardWillShow", () => setKeyboard(true)), Keyboard.addListener("keyboardWillHide", () => setKeyboard(false))];
+    return () => subs.forEach((x) => x.remove());
+  }, []);
+
+  // The line being typed stays in view: over the keyboard and the bar, and under the top bar. The words do not scroll
+  // themselves (the title scrolls away with them), so the screen is moved to the caret as it goes.
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const at = useRef({ y: 0, height: 0, words: 0, caret: null as { y: number; height: number } | null });
+  const follow = () => {
+    const { y, height, words, caret } = at.current;
+    if (!caret || !height) return;
+    const top = words + caret.y;
+    const bottom = top + caret.height;
+    const MARGIN = 24;
+    if (bottom + MARGIN > y + height) scroll.current?.scrollTo({ y: bottom + MARGIN - height, animated: true });
+    else if (top - MARGIN < y) scroll.current?.scrollTo({ y: Math.max(0, top - MARGIN), animated: true });
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: t.ground }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
         label={tr(BACK[item.status])}
         left={inDetail ? <Toolbar item={item} /> : undefined}
@@ -402,15 +440,40 @@ function NoteEditor({ data }: { data: FullItem }) {
           </Pressable>
         ) : null}
       />
-      <ScrollView contentContainerStyle={inDetail ? [styles.wideArticle, { gap: 12 }] : { padding: 20, gap: 12 }} keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets>
+      <ScrollView
+        ref={scroll}
+        contentContainerStyle={inDetail ? [styles.wideArticle, { gap: 12 }] : { padding: 20, gap: 12 }}
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        scrollEventThrottle={32}
+        onScroll={(e) => void (at.current.y = e.nativeEvent.contentOffset.y)}
+        onLayout={(e) => { at.current.height = e.nativeEvent.layout.height; follow(); }} // the keyboard came or went
+      >
         <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
-        <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
-          placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
+        <View onLayout={(e) => void (at.current.words = e.nativeEvent.layout.y)}>
+          {plain ? (
+            <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
+              placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
+          ) : (
+            <RichText
+              ref={rich}
+              value={data.text}
+              onChange={setText}
+              onFormat={setFormat}
+              onFocus={() => setWriting(true)}
+              onBlur={() => setWriting(false)}
+              onCaret={(rect) => { at.current.caret = rect; follow(); }}
+              onUnfit={() => setPlain(true)}
+              placeholder={tr("item.textPlaceholder")}
+              a11y={tr("item.textA11y")}
+            />
+          )}
+        </View>
       </ScrollView>
-      {!inDetail && <Toolbar item={item} />}
-    </View>
+      {writing && !plain ? <FormatBar input={rich} format={format} keyboard={keyboard} /> : !inDetail && !keyboard && <Toolbar item={item} />}
+    </KeyboardAvoidingView>
   );
 }
 

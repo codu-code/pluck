@@ -446,7 +446,8 @@
     "titleA11y": "제목",
     "titleHint": "제목을 비워 두면 첫 줄이 제목이 돼요. 입력하는 대로 저장돼요.",
     "textA11y": "본문",
-    "textPlaceholder": "적어 보세요."
+    "textPlaceholder": "적어 보세요.",
+    "foundOn": "{site}에서 찾음"
   },
   "settings": {
     "title": "설정",
@@ -564,7 +565,10 @@
     "as": "담을 종류",
     "queued": "담았어요. 다시 온라인이 되면 동기화돼요.",
     "failed": "처리되지 않았어요.",
-    "plucked": "수신함에 담았어요."
+    "plucked": "수신함에 담았어요.",
+    "photo": "사진",
+    "camera": "카메라",
+    "cameraOff": "Pluck이 카메라를 사용할 수 없어요. 설정에서 바꿀 수 있어요."
   },
   "preview": {
     "open": "{site}에서 열기",
@@ -619,5 +623,13 @@
       "next": "다음",
       "previous": "이전"
     }
+  },
+  "format": {
+    "title": "서식",
+    "bold": "굵게",
+    "italic": "기울임꼴",
+    "heading": "제목",
+    "bullets": "글머리 기호 목록",
+    "numbers": "번호 매기기 목록"
   }
 }

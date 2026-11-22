@@ -1,20 +1,59 @@
 import { extractUrls, TEXT_KINDS, type TextKind } from "@pluck/shared-schemas";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
+import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { KindGlyph } from "@/components/Glyph";
+import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
-import { pluck } from "@/lib/data";
+import { pluck, pluckPhoto } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // The web's Pluck box as a sheet: one link, a block of links, or a sentence that becomes a Note, Todo or Thing.
 // A link on the clipboard goes in with iOS's own Paste button, which asks no "Allow Paste?" question.
 export default function Add() {
   return useColumns().wide ? <AddWide /> : <AddSheet />;
+}
+
+// A picture is plucked from where it is: out of the photo library (iOS's own picker, which needs no permission and
+// hands over only what is picked) or straight from the camera. Each becomes an Image, like one from the share sheet.
+// JPEGs at 0.6: a full-size photo then fits what an AI tool can be handed (the connector's 3 MB).
+function Photos({ busy, setBusy, setError }: { busy: boolean; setBusy: (b: boolean) => void; setError: (e: string | null) => void }) {
+  const t = useTheme();
+  const tr = useTranslations("ios");
+  const take = async (from: "library" | "camera") => {
+    if (busy) return;
+    setError(null);
+    if (from === "camera" && !(await ImagePicker.requestCameraPermissionsAsync()).granted) return setError(tr("add.cameraOff"));
+    const picked = from === "camera"
+      ? await ImagePicker.launchCameraAsync({ mediaTypes: ["images"], quality: 0.6 })
+      : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.6, allowsMultipleSelection: true, selectionLimit: 10 });
+    if (picked.canceled || !picked.assets.length) return;
+    setBusy(true);
+    try {
+      for (const a of picked.assets) await pluckPhoto(a.uri, a.fileName ?? "Photo", a.mimeType);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      router.back();
+      toast(tr("add.plucked"));
+    } catch {
+      setError(tr("add.failed"));
+      setBusy(false);
+    }
+  };
+  return (
+    <View style={styles.photos}>
+      {(["library", "camera"] as const).map((from) => (
+        <Pressable key={from} accessibilityRole="button" accessibilityState={{ disabled: busy }} disabled={busy} onPress={() => void take(from)}
+          style={({ pressed }) => [styles.photo, { borderColor: t.lineStrong, backgroundColor: pressed ? t.tint : "transparent", opacity: busy ? 0.6 : 1 }]}>
+          <Icon d={from === "library" ? ICONS.photo : ICONS.camera} size={18} color={t.ink} />
+          <Text maxFontSizeMultiplier={scale.title} style={[font.medium, { color: t.ink, fontSize: 15 }]}>{tr(from === "library" ? "add.photo" : "add.camera")}</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
 }
 
 function AddSheet() {
@@ -80,6 +119,7 @@ function AddSheet() {
             style={styles.paste}
           />
         )}
+        {!text && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
         {isText && (
           // Text with no link: which Kind it becomes, as the web box asks.
           <View style={styles.kinds} accessibilityRole="radiogroup" accessibilityLabel={tr("add.as")}>
@@ -186,6 +226,7 @@ function AddWide() {
           selectionColor={t.accent}
           style={[font.regular, wide.words, { color: t.ink }]}
         />
+        {mode === "link" && !text && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
           {tr.rich("ipad.add.keys", { key: (c) => <View style={[wide.key, { borderColor: t.lineStrong }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{c}</Text></View> })}
@@ -211,6 +252,8 @@ const styles = StyleSheet.create({
   body: { paddingHorizontal: 16, paddingTop: 8, gap: 12 },
   field: { minHeight: 96, maxHeight: 220, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingTop: 12, paddingBottom: 12, fontSize: 17, textAlignVertical: "top" },
   paste: { alignSelf: "flex-start", height: 40, width: 120 },
+  photos: { flexDirection: "row", gap: 8 },
+  photo: { flex: 1, minHeight: 44, borderWidth: 1, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
   kinds: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 8 },
   chip: { minHeight: 36, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
   primary: { minHeight: 52, borderRadius: 12, alignItems: "center", justifyContent: "center", paddingVertical: 12 },

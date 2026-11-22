@@ -1,5 +1,5 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
-import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
+import { isFileType, type CreateItemBody, type Highlight, type Item, type ItemPage, type List, type ListEntry, type ListMembership, type Me, type PluckResponse, type SearchResults, type Status, type Tag, type UpdateItemBody } from "@pluck/shared-schemas";
 import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
@@ -159,6 +159,21 @@ export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; 
     void queryClient.invalidateQueries({ queryKey: keys.pending });
     return { item: null, queued: true };
   }
+}
+
+// A photo from Add, out of the library or the camera: the Item first, the bytes straight to the bucket, then "it is
+// in", so the picture is there when the Inbox shows it.
+// shortcut: a photo needs a connection (it is not queued the way the share sheet queues a file), queue it when people take photos offline.
+export async function pluckPhoto(uri: string, name: string, type: string | undefined): Promise<Item> {
+  const bytes = await (await fetch(uri)).blob();
+  const contentType = type && isFileType(type) ? type : "image/jpeg"; // the picker hands over a JPEG unless it says otherwise
+  const file = { name, contentType };
+  const { item, uploadUrl } = await api<{ item: Item; uploadUrl: string }>("/api/v1/items/files", { json: { ...file, size: bytes.size, source: "ios" } });
+  const put = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType }, body: bytes });
+  if (!put.ok) throw new Error(`upload ${put.status}`);
+  const kept = await api<{ item: Item }>(`/api/v1/items/${item.id}/file`, { json: file }).catch(() => null); // the worker reads it if this does not
+  void queryClient.invalidateQueries({ queryKey: ["items"] });
+  return kept?.item ?? item;
 }
 
 // What the share extension could not send (no connection) waits as files in the App Group container.

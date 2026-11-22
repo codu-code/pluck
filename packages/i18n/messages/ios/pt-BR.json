@@ -446,7 +446,8 @@
     "titleA11y": "Título",
     "titleHint": "Deixe o título em branco e a primeira linha vira o título. Salva enquanto você digita.",
     "textA11y": "Texto",
-    "textPlaceholder": "Anote aqui."
+    "textPlaceholder": "Anote aqui.",
+    "foundOn": "Encontrado em {site}"
   },
   "settings": {
     "title": "Ajustes",
@@ -564,7 +565,10 @@
     "as": "Colher como",
     "queued": "Colhido. Vai sincronizar quando você estiver online de novo.",
     "failed": "Não deu certo.",
-    "plucked": "Colhido na Entrada."
+    "plucked": "Colhido na Entrada.",
+    "photo": "Foto",
+    "camera": "Câmera",
+    "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes."
   },
   "preview": {
     "open": "Abrir no {site}",
@@ -619,5 +623,13 @@
       "next": "Próximo",
       "previous": "Anterior"
     }
+  },
+  "format": {
+    "title": "Formatar",
+    "bold": "Negrito",
+    "italic": "Itálico",
+    "heading": "Título",
+    "bullets": "Lista com marcadores",
+    "numbers": "Lista numerada"
   }
 }

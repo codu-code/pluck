@@ -446,7 +446,8 @@
     "titleA11y": "Titel",
     "titleHint": "Lass den Titel leer, dann wird die erste Zeile zum Titel. Wird beim Tippen gespeichert.",
     "textA11y": "Text",
-    "textPlaceholder": "Schreib es auf."
+    "textPlaceholder": "Schreib es auf.",
+    "foundOn": "Gefunden auf {site}"
   },
   "settings": {
     "title": "Einstellungen",
@@ -564,7 +565,10 @@
     "as": "Pflücken als",
     "queued": "Gepflückt. Wird synchronisiert, sobald du wieder online bist.",
     "failed": "Das hat nicht geklappt.",
-    "plucked": "In den Eingang gepflückt."
+    "plucked": "In den Eingang gepflückt.",
+    "photo": "Foto",
+    "camera": "Kamera",
+    "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern."
   },
   "preview": {
     "open": "Auf {site} öffnen",
@@ -619,5 +623,13 @@
       "next": "Nächster",
       "previous": "Vorheriger"
     }
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "heading": "Überschrift",
+    "bullets": "Aufzählung",
+    "numbers": "Nummerierte Liste"
   }
 }

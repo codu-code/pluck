@@ -33,3 +33,16 @@ export function deriveExcerpt(text: string, titleIsDerived: boolean): string | n
   const body = (titleIsDerived && first >= 0 ? lines.slice(first + 1) : lines).join(" ").replace(/\s+/g, " ").trim();
   return body ? body.slice(0, 200) : null;
 }
+
+// Whether two spellings of a Note's text say the same thing. The rich editors each write Markdown their own way (the
+// web escapes a typed `*` or `_` and nests a list by two spaces, the iPhone by three and with no escapes), and each
+// reads the other's. An editor opens a Note only when what it read back is the same by this measure: anything else
+// (a table, a quote, code an AI tool wrote) it would rewrite, so that Note opens as plain text instead.
+const spelling = (text: string) =>
+  text
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .map((line) => line.replace(/^[ \t]+(?=([-*+]|\d+[.)])\s)/, "").replace(/[ \t]+$/, "").replace(/\\([\\`*_{}[\]()#+\-.!>~|])/g, "$1"))
+    .join("\n")
+    .trimEnd();
+export const sameNote = (a: string, b: string): boolean => spelling(a) === spelling(b);

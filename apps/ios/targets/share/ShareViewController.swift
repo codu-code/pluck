@@ -1,3 +1,4 @@
+import ImageIO
 import LinkPresentation
 import SwiftUI
 import UIKit
@@ -55,14 +56,14 @@ extension Shared {
       } else if p.hasItemConformingToTypeIdentifier(UTType.url.identifier), let url = try? await p.loadItem(forTypeIdentifier: UTType.url.identifier) as? URL {
         // A file from Files is plucked only when it is a PDF or an image the API takes; anything else (a .docx) is left.
         if !url.isFileURL { out.append(.page(url: url.absoluteString, title: nil, selection: nil, html: nil)) }
-        else if let contentType = mime(url), let kept = copy(url) { out.append(.file(kept, name: url.lastPathComponent, contentType: contentType)) }
+        else if let contentType = mime(url), let kept = copy(url) { out.append(file(kept, name: url.lastPathComponent, contentType: contentType)) }
       } else if p.hasItemConformingToTypeIdentifier(UTType.plainText.identifier), let text = try? await p.loadItem(forTypeIdentifier: UTType.plainText.identifier) as? String {
         out.append(.text(text))
       } else if let type = [UTType.pdf, UTType.image].first(where: { p.hasItemConformingToTypeIdentifier($0.identifier) }),
                 let file = await fileRepresentation(p, type) {
         // The provider says it is a PDF or an image, so one whose extension says nothing goes as it always has.
-        out.append(.file(file, name: p.suggestedName.map { "\($0).\(file.pathExtension)" } ?? file.lastPathComponent,
-                         contentType: mime(file) ?? (type == .pdf ? "application/pdf" : "image/jpeg")))
+        out.append(Shared.file(file, name: p.suggestedName.map { "\($0).\(file.pathExtension)" } ?? file.lastPathComponent,
+                               contentType: mime(file) ?? (type == .pdf ? "application/pdf" : "image/jpeg")))
       }
     }
     if out.contains(where: { if case .page = $0 { return true } else { return false } }) { out.removeAll { if case .text = $0 { return true } else { return false } } }
@@ -120,6 +121,22 @@ extension Shared {
     format.scale = 1
     let data = UIGraphicsImageRenderer(size: size, format: format).image { _ in image.draw(in: CGRect(origin: .zero, size: size)) }.jpegData(compressionQuality: 0.8)
     return data.flatMap { $0.count <= 2_000_000 ? $0 : nil }
+  }
+
+  // A file to pluck. A HEIC photo goes up as a JPEG, at most 3000 pixels on its long side: a browser and an AI tool
+  // can show a JPEG, and at that size it fits what the connector hands over (3 MB). ImageIO reads it down to size
+  // without ever holding the whole photo, which a share extension has no memory for. One it cannot read goes as it is.
+  private static func file(_ url: URL, name: String, contentType: String) -> ShareInput {
+    guard contentType == "image/heic" else { return .file(url, name: name, contentType: contentType) }
+    let jpeg = url.deletingPathExtension().appendingPathExtension("jpg")
+    let options: [CFString: Any] = [kCGImageSourceCreateThumbnailFromImageAlways: true, kCGImageSourceCreateThumbnailWithTransform: true, kCGImageSourceThumbnailMaxPixelSize: 3000]
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil),
+          let image = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary),
+          let out = CGImageDestinationCreateWithURL(jpeg as CFURL, UTType.jpeg.identifier as CFString, 1, nil) else { return .file(url, name: name, contentType: contentType) }
+    CGImageDestinationAddImage(out, image, [kCGImageDestinationLossyCompressionQuality: 0.8] as CFDictionary)
+    guard CGImageDestinationFinalize(out) else { return .file(url, name: name, contentType: contentType) }
+    try? FileManager.default.removeItem(at: url)
+    return .file(jpeg, name: (name as NSString).deletingPathExtension + ".jpg", contentType: "image/jpeg")
   }
 
   // The types the API takes as a file (shared-schemas FILE_TYPES), by what the file is, not a guess: nil for any other.

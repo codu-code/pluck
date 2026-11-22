@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { deriveExcerpt, deriveTitle, plainLine } from "./notes.ts";
+import { deriveExcerpt, deriveTitle, plainLine, sameNote } from "./notes.ts";
 
 test("title is the first non-empty line, trimmed and capped", () => {
   expect(deriveTitle("\n\n  An MCP server  \nbody")).toBe("An MCP server");
@@ -24,4 +24,14 @@ test("a formatted Note's title and row are plain words: the marks are dropped, w
   expect(plainLine("_whole line_")).toBe("whole line");
   expect(plainLine("10. tenth")).toBe("tenth");
   expect(plainLine("C# is a language")).toBe("C# is a language");
+});
+
+test("the two editors' spellings of one Note are the same Note; anything an editor dropped is not", () => {
+  // As the iPhone writes it, and as the web does: escapes, list nesting by three spaces or two, spaces at a line's end.
+  expect(sameNote("5 * 2 and snake_case\n- one\n   - nested\n      - deeper\nend  ", "5 \\* 2 and snake\\_case\n- one\n  - nested\n    - deeper\nend\n")).toBe(true);
+  expect(sameNote("line one\nline two\n\npara", "line one\nline two\n\npara")).toBe(true);
+  // What the web editor makes of a quote, a table, code and a task: words lost, so not the same.
+  expect(sameNote("> quote\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n- [ ] task", "quote\n\nab12\n\n- task")).toBe(false);
+  expect(sameNote("`code` and __under__", "code and _under_")).toBe(false);
+  expect(sameNote("two\n\nparas", "two\nparas")).toBe(false); // a blank line is a line
 });

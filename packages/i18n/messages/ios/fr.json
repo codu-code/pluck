@@ -446,7 +446,8 @@
     "titleA11y": "Titre",
     "titleHint": "Laissez le titre vide et la première ligne servira de titre. Enregistrement automatique pendant la saisie.",
     "textA11y": "Texte",
-    "textPlaceholder": "Notez-le."
+    "textPlaceholder": "Notez-le.",
+    "foundOn": "Trouvé sur {site}"
   },
   "settings": {
     "title": "Réglages",
@@ -564,7 +565,10 @@
     "as": "Cueillir comme",
     "queued": "Cueilli. Synchronisation dès votre retour en ligne.",
     "failed": "Ça n’est pas passé.",
-    "plucked": "Cueilli dans la boîte de réception."
+    "plucked": "Cueilli dans la boîte de réception.",
+    "photo": "Photo",
+    "camera": "Appareil photo",
+    "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages."
   },
   "preview": {
     "open": "Ouvrir sur {site}",
@@ -619,5 +623,13 @@
       "next": "Suivant",
       "previous": "Précédent"
     }
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Gras",
+    "italic": "Italique",
+    "heading": "Titre",
+    "bullets": "Liste à puces",
+    "numbers": "Liste numérotée"
   }
 }

@@ -446,7 +446,8 @@
     "titleA11y": "Titolo",
     "titleHint": "Lascia vuoto il titolo e la prima riga diventa il titolo. Si salva mentre scrivi.",
     "textA11y": "Testo",
-    "textPlaceholder": "Scrivilo qui."
+    "textPlaceholder": "Scrivilo qui.",
+    "foundOn": "Trovato su {site}"
   },
   "settings": {
     "title": "Impostazioni",
@@ -564,7 +565,10 @@
     "as": "Prendi come",
     "queued": "Preso. Si sincronizza quando torni online.",
     "failed": "Non è andato a buon fine.",
-    "plucked": "Preso, è nell'Inbox."
+    "plucked": "Preso, è nell'Inbox.",
+    "photo": "Foto",
+    "camera": "Fotocamera",
+    "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni."
   },
   "preview": {
     "open": "Apri su {site}",
@@ -619,5 +623,13 @@
       "next": "Successivo",
       "previous": "Precedente"
     }
+  },
+  "format": {
+    "title": "Formato",
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "heading": "Titolo",
+    "bullets": "Elenco puntato",
+    "numbers": "Elenco numerato"
   }
 }

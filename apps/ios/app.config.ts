@@ -32,6 +32,20 @@ const withDarkIcon: ConfigPlugin = (c) => {
   });
 };
 
+// What iOS shows when Add first opens the camera, in the app's ten languages (the glossaries in docs/i18n).
+const CAMERA = {
+  en: "Pluck opens the camera when you take a photo to pluck.",
+  es: "Pluck abre la cámara cuando haces una foto para recogerla.",
+  "pt-BR": "O Pluck abre a câmera quando você tira uma foto para colher.",
+  fr: "Pluck ouvre l’appareil photo quand vous prenez une photo à cueillir.",
+  de: "Pluck öffnet die Kamera, wenn du ein Foto zum Pflücken aufnimmst.",
+  ja: "Pluckする写真を撮るときにカメラを開きます。",
+  it: "Pluck apre la fotocamera quando scatti una foto da prendere.",
+  nl: "Pluck opent de camera als je een foto maakt om te plukken.",
+  ko: "담을 사진을 찍을 때 Pluck이 카메라를 엽니다.",
+  "zh-Hans": "拍照摘下时，Pluck 会打开相机。",
+};
+
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
@@ -95,7 +109,8 @@ const config: ExpoConfig = {
       "expo-font",
       {
         fonts: [
-          ...["Regular", "Medium", "SemiBold", "Bold"].map((w) => `./node_modules/geist/dist/fonts/geist-sans/Geist-${w}.ttf`),
+          // Italic and BoldItalic are for the words of a Note, which can be either (components/RichText.tsx).
+          ...["Regular", "Medium", "SemiBold", "Bold", "Italic", "BoldItalic"].map((w) => `./node_modules/geist/dist/fonts/geist-sans/Geist-${w}.ttf`),
           ...["400Regular", "400Regular_Italic", "600SemiBold"].map((w) => `./node_modules/@expo-google-fonts/source-serif-4/${w}/SourceSerif4_${w}.ttf`),
           "./node_modules/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.ttf", // the wordmark and first-run headlines
         ],
@@ -106,8 +121,13 @@ const config: ExpoConfig = {
       "expo-splash-screen",
       { image: "./assets/splash.png", imageWidth: 123, backgroundColor: "#F6F8F4", dark: { image: "./assets/splash-dark.png", backgroundColor: "#10130F" } },
     ],
+    // Add, Photo and Camera (app/add.tsx). The photo library needs no permission: iOS's own picker hands over only
+    // what the person picks. The camera asks, in the words below; nothing records sound.
+    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: false, microphonePermission: false }],
     "@bacons/apple-targets",
   ],
+  // The camera question in the other nine languages (iOS reads it from each InfoPlist.strings).
+  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text }])),
   // showServer: "Use your own server" on the sign-in screen. Off in store builds (it distracts everyone who is not
   // self-hosting); on for PLUCK_SHOW_SERVER=1 or a build pointed at another server. A server's own pluck://signin?server=
   // link opens it in any build.
