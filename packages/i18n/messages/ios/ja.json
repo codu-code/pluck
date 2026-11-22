@@ -569,7 +569,8 @@
     "photo": "写真",
     "camera": "カメラ",
     "cameraOff": "Pluckはカメラを使用できません。「設定」で変更できます。",
-    "removePhoto": "この写真を取り除く"
+    "removePhoto": "この写真を取り除く",
+    "untagged": "インボックスにPluckしました。タグは付けられませんでした。"
   },
   "preview": {
     "open": "{site}で開く",

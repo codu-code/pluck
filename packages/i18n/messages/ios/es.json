@@ -569,7 +569,8 @@
     "photo": "Foto",
     "camera": "Cámara",
     "cameraOff": "Pluck no tiene permiso para usar la cámara. Puedes cambiarlo en Ajustes.",
-    "removePhoto": "Quitar esta foto"
+    "removePhoto": "Quitar esta foto",
+    "untagged": "Recogido en la Bandeja de entrada. Las etiquetas no se pusieron."
   },
   "preview": {
     "open": "Abrir en {site}",

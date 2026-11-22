@@ -11,6 +11,7 @@ import { useRowText } from "@/lib/format";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS, KindGlyph } from "./Glyph";
 import { useSplit } from "./split/context";
+import { TagChips, useTagNames } from "./Tags";
 
 const COMMIT = 80; // how far a swipe goes before letting go moves the item
 const GAP = 8; // between the swipe's pill and the row
@@ -50,6 +51,7 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
   const site = meta ?? words.siteMeta;
   const when = hideWhen ? "" : words.when;
   const noteText = typeof below === "string" ? below : below === undefined && !text ? item.note : null;
+  const tagNames = useTagNames(item);
   const archived = item.status === "archived" || item.status === "done"; // in the Archive: the only move is back to the Inbox
   const away: Status = item.status === "inbox" ? "later" : "inbox";
   const pick = (mode: "tags" | "lists") => router.push({ pathname: "/pick", params: { mode, id: item.id } });
@@ -77,7 +79,7 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
       accessibilityRole={checked !== undefined ? "checkbox" : "button"}
       accessibilityValue={mark?.ticked ? { text: mark.label } : undefined} // "Read", "Done": the mark, said
       accessibilityState={selecting ? { selected } : mark ? { checked: mark.ticked } : checked !== undefined ? { checked } : undefined}
-      accessibilityLabel={tr(noteText ? "row.a11yWithNote" : "row.a11y", { title: item.title, kind: tr(`kinds.${item.kind}`), site, when, note: noteText ?? "" })}
+      accessibilityLabel={[tr(noteText ? "row.a11yWithNote" : "row.a11y", { title: item.title, kind: tr(`kinds.${item.kind}`), site, when, note: noteText ?? "" }), ...(tagNames.length ? [tr("actions.tags"), ...tagNames] : [])].join(", ")}
       // VoiceOver has no swipe or long press: the same actions from the rotor.
       accessibilityActions={[
         ...(onMove ? [{ name: "later", label: tr(away === "inbox" ? "actions.backToInbox" : "actions.later") }, ...(archived ? [] : [{ name: "archive", label: tr("actions.archive") }])] : []),
@@ -126,6 +128,8 @@ export function ItemRow({ item, onMove, onDelete, selecting = false, selected = 
             <Text numberOfLines={big ? 2 : 1} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.meta, { color: t.ink2 }]}>{site}</Text>
             {below !== undefined && typeof below !== "string" ? below
               : noteText ? <Text numberOfLines={2} style={[font.regular, styles.meta, { color: marked ? t.ink2 : t.ink }]}>{noteText}</Text> : null}
+            {/* Its tags, as the iPad row and the web show them: one line here, so a row keeps its height. */}
+            {tagNames.length > 0 && <View style={styles.tags}><TagChips item={item} line /></View>}
           </View>
           <View style={styles.right}>
             <KindGlyph kind={item.kind} color={marked ? t.ink2 : t.ink} />
@@ -219,6 +223,7 @@ const styles = StyleSheet.create({
   middle: { flex: 1, minWidth: 0, gap: 2 },
   title: { fontSize: 15, lineHeight: 20 },
   meta: { fontSize: 13, lineHeight: 18 },
+  tags: { marginTop: 3 },
   right: { alignItems: "flex-end", gap: 4 },
   when: { fontSize: 12 },
   whenRow: { flexDirection: "row", alignItems: "center", gap: 4 },

@@ -4,10 +4,10 @@ import { router } from "expo-router";
 import { useRef, useState, type ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { useTags } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS, KindGlyph } from "../Glyph";
+import { TagChips, useTagNames } from "../Tags";
 
 type Props = {
   item: Item;
@@ -44,8 +44,7 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
   const t = useTheme();
   const tr = useTranslations("ios");
   const words = useRowText()(item);
-  const tags = useTags().data ?? [];
-  const names = item.tagIds.map((id) => tags.find((x) => x.id === id)?.name).filter(Boolean) as string[];
+  const tagged = useTagNames(item).length > 0;
   const [hover, setHover] = useState(false);
   const held = useRef(false);
   const archived = item.status === "archived" || item.status === "done";
@@ -105,11 +104,7 @@ export function SplitRow({ item, open, onOpen, onMove, selecting = false, select
         </View>
         <Text numberOfLines={1} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.site, { color: t.ink2 }]}>{words.siteMeta}</Text>
         {below}
-        {names.length > 0 && (
-          <View style={styles.tags}>
-            {names.map((n) => <Text key={n} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.tag, { backgroundColor: t.chip, color: t.ink }]}>{n}</Text>)}
-          </View>
-        )}
+        {tagged && <View style={styles.tags}><TagChips item={item} /></View>}
       </View>
     </Pressable>
   );
@@ -133,8 +128,7 @@ const styles = StyleSheet.create({
   title: { flex: 1, fontSize: 15, lineHeight: 20 },
   when: { fontSize: 12 },
   site: { fontSize: 13 },
-  tags: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 3 },
-  tag: { height: 22, lineHeight: 22, paddingHorizontal: 8, borderRadius: 11, overflow: "hidden", fontSize: 12 },
+  tags: { marginTop: 3 },
   hoverTools: { flexDirection: "row", gap: 4 },
   hoverTool: { width: 30, height: 30, borderRadius: 8, borderWidth: 1, alignItems: "center", justifyContent: "center" },
 });

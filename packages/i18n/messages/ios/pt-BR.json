@@ -569,7 +569,8 @@
     "photo": "Foto",
     "camera": "Câmera",
     "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes.",
-    "removePhoto": "Remover esta foto"
+    "removePhoto": "Remover esta foto",
+    "untagged": "Colhido na Entrada. As tags não foram colocadas."
   },
   "preview": {
     "open": "Abrir no {site}",

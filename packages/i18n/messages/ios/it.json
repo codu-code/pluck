@@ -569,7 +569,8 @@
     "photo": "Foto",
     "camera": "Fotocamera",
     "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni.",
-    "removePhoto": "Rimuovi questa foto"
+    "removePhoto": "Rimuovi questa foto",
+    "untagged": "Preso, è nell'Inbox. I tag non sono stati aggiunti."
   },
   "preview": {
     "open": "Apri su {site}",

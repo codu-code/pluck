@@ -1,16 +1,16 @@
-import { extractUrls, TEXT_KINDS, type TextKind } from "@pluck/shared-schemas";
+import { extractUrls, TEXT_KINDS, type Item, type TextKind } from "@pluck/shared-schemas";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Image, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { Hearing, Mic, spoken, useSpeak } from "@/components/Speak";
 import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
-import { library, pluck, pluckPhoto } from "@/lib/data";
+import { library, pluck, pluckPhoto, useOnline, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // The web's Pluck box as a sheet: one link, a block of links, or a sentence that becomes a Note, Todo or Thing.
@@ -76,12 +76,45 @@ function Shots({ shots, busy, remove }: { shots: Shot[]; busy: boolean; remove: 
 // up leaves the box (`gone`), so trying again after a failure sends only the rest.
 // shortcut: the note is a second request (the file route takes none); if only that one fails, trying again plucks the picture twice. Let the route take a note if it happens.
 async function pluckShots(shots: Shot[], note: string, gone: (shot: Shot) => void) {
+  const items: Item[] = [];
   for (const a of shots) {
     const item = await pluckPhoto(a.uri, a.fileName ?? "Photo", a.mimeType);
     if (note) await library.edit(item.id, { note });
+    items.push(item);
     gone(a);
   }
+  return { items, queued: false };
 }
+
+// Your tags, most used first, to tap onto what is about to be plucked: the share sheet's chips, with room for more.
+// Hidden with no connection (see `tag`), and until there is a tag to show.
+function TagToggles({ on, toggle }: { on: string[]; toggle: (id: string) => void }) {
+  const t = useTheme();
+  const tr = useTranslations("ios.actions");
+  const tags = [...(useTags().data ?? [])].sort((a, b) => b.count - a.count).slice(0, 12);
+  if (!useOnline() || !tags.length) return null;
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" accessibilityLabel={tr("tags")} style={styles.toggles} contentContainerStyle={styles.togglesRow}>
+      <Icon d={ICONS.tag} size={16} color={t.ink2} />
+      {tags.map((x) => {
+        const sel = on.includes(x.id);
+        return (
+          <Pressable key={x.id} accessibilityRole="checkbox" accessibilityState={{ checked: sel }} hitSlop={{ top: 7, bottom: 7 }} onPress={() => { void Haptics.selectionAsync(); toggle(x.id); }}
+            style={[styles.toggle, { backgroundColor: sel ? t.ink : t.chip }]}>
+            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { fontSize: 14, color: sel ? t.ground : t.ink }]}>{x.name}</Text>
+          </Pressable>
+        );
+      })}
+    </ScrollView>
+  );
+}
+
+// The tags tapped in Add go on once the Item is there, beside any it had: a link plucked again keeps its own.
+// False when they did not go on; the pluck itself stands.
+// shortcut: a pluck that waits for a connection is made without tags (so the chips hide offline); let the pluck body take tags when people tag offline.
+const tag = (items: Item[], tagIds: string[]) =>
+  Promise.all(tagIds.length ? items.map((i) => library.edit(i.id, { tagIds: [...new Set([...i.tagIds, ...tagIds])] })) : []).then(() => true, () => false);
+const flip = (id: string) => (was: string[]) => (was.includes(id) ? was.filter((x) => x !== id) : [...was, id]);
 
 function AddSheet() {
   const t = useTheme();
@@ -94,6 +127,7 @@ function AddSheet() {
   useEffect(() => void Clipboard.hasUrlAsync().then(setCopied).catch(() => {}), []);
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
   const [shots, setShots] = useState<Shot[]>([]); // pictures picked: what is typed is then their note
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
 
   const text = value.trim();
@@ -106,10 +140,11 @@ function AddSheet() {
     setBusy(true);
     setError(null);
     try {
-      const { queued } = shots.length ? (await pluckShots(shots, text, drop), { queued: false }) : await pluck(isText ? { text, kind } : { text }); // offline, it waits in the queue
+      const { items, queued } = shots.length ? await pluckShots(shots, text, drop) : await pluck(isText ? { text, kind } : { text }); // offline, it waits in the queue
+      const tagged = await tag(items, tagIds);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
-      toast(tr(queued ? "add.queued" : "add.plucked"));
+      toast(tr(queued ? "add.queued" : tagged ? "add.plucked" : "add.untagged"));
     } catch {
       setError(tr("add.failed"));
       setBusy(false);
@@ -152,6 +187,7 @@ function AddSheet() {
           />
         )}
         {!ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} note />}
+        {ready && <TagToggles on={tagIds} toggle={(id) => setTagIds(flip(id))} />}
         {isText && !shots.length && (
           // Text with no link: which Kind it becomes, as the web box asks.
           <View style={styles.kinds} accessibilityRole="radiogroup" accessibilityLabel={tr("add.as")}>
@@ -175,8 +211,7 @@ function AddSheet() {
 }
 
 // iPad (iPad-Add): the form sheet with Link, Note, Todo and Thing on top, a title and the words for a Note, Todo
-// or Thing, and the keys that pluck and cancel. Tags, a List and a Status are set after, from the Item: a pluck made
-// with no connection waits in a queue that only knows how to make the Item.
+// or Thing, your tags to tap on, and the keys that pluck and cancel. A List and a Status are set after, from the Item.
 type Mode = "link" | TextKind;
 const MODES: Mode[] = ["link", ...TEXT_KINDS];
 
@@ -191,6 +226,7 @@ function AddWide() {
   const [error, setError] = useState<string | null>(null);
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
   const [picked, setShots] = useState<Shot[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const shots = mode === "link" ? picked : []; // pictures go in from Link, where Photo and Camera are
   const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
   const text = value.trim();
@@ -202,10 +238,11 @@ function AddWide() {
     setError(null);
     try {
       const body = mode === "link" ? { text } : { text: text || title.trim(), kind: mode, ...(title.trim() && text ? { title: title.trim() } : {}) };
-      const { queued } = shots.length ? (await pluckShots(shots, text, drop), { queued: false }) : await pluck(body);
+      const { items, queued } = shots.length ? await pluckShots(shots, text, drop) : await pluck(body);
+      const tagged = await tag(items, tagIds);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
-      toast(tr(queued ? "add.queued" : "add.plucked"));
+      toast(tr(queued ? "add.queued" : tagged ? "add.plucked" : "add.untagged"));
     } catch {
       setError(tr("add.failed"));
       setBusy(false);
@@ -265,6 +302,7 @@ function AddWide() {
         />
         <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
         {mode === "link" && !ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} />}
+        {ready && <TagToggles on={tagIds} toggle={(id) => setTagIds(flip(id))} />}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
           {tr.rich("ipad.add.keys", { key: (c) => <View style={[wide.key, { borderColor: t.lineStrong }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{c}</Text></View> })}
@@ -293,6 +331,9 @@ const styles = StyleSheet.create({
   shots: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   shot: { width: 72, height: 72, borderRadius: 10 },
   out: { position: "absolute", top: -6, right: -6, width: 20, height: 20, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  toggles: { flexGrow: 0, marginHorizontal: -16 }, // the chips run to the sheet's edges as they scroll
+  togglesRow: { alignItems: "center", gap: 8, paddingHorizontal: 16 },
+  toggle: { height: 30, paddingHorizontal: 12, borderRadius: 15, justifyContent: "center" },
   paste: { alignSelf: "flex-start", height: 40, width: 120 },
   photos: { flexDirection: "row", gap: 8 },
   photo: { flex: 1, minHeight: 44, paddingHorizontal: 6, borderWidth: 1, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }, // three across: "Appareil photo" has to fit

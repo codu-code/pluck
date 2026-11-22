@@ -569,7 +569,8 @@
     "photo": "Photo",
     "camera": "Camera",
     "cameraOff": "Pluck is not allowed to use the camera. You can change that in Settings.",
-    "removePhoto": "Remove this photo"
+    "removePhoto": "Remove this photo",
+    "untagged": "Plucked to the Inbox. The tags did not go on."
   },
   "preview": {
     "open": "Open on {site}",

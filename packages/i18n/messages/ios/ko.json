@@ -569,7 +569,8 @@
     "photo": "사진",
     "camera": "카메라",
     "cameraOff": "Pluck이 카메라를 사용할 수 없어요. 설정에서 바꿀 수 있어요.",
-    "removePhoto": "이 사진 빼기"
+    "removePhoto": "이 사진 빼기",
+    "untagged": "수신함에 담았어요. 태그는 붙이지 못했어요."
   },
   "preview": {
     "open": "{site}에서 열기",

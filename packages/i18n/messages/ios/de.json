@@ -569,7 +569,8 @@
     "photo": "Foto",
     "camera": "Kamera",
     "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern.",
-    "removePhoto": "Dieses Foto entfernen"
+    "removePhoto": "Dieses Foto entfernen",
+    "untagged": "In den Eingang gepflückt. Die Tags wurden nicht gesetzt."
   },
   "preview": {
     "open": "Auf {site} öffnen",

@@ -569,7 +569,8 @@
     "photo": "Foto",
     "camera": "Camera",
     "cameraOff": "Pluck mag de camera niet gebruiken. Je kunt dat wijzigen in Instellingen.",
-    "removePhoto": "Deze foto verwijderen"
+    "removePhoto": "Deze foto verwijderen",
+    "untagged": "Geplukt naar de Inbox. De tags zijn er niet op gezet."
   },
   "preview": {
     "open": "Openen op {site}",

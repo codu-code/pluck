@@ -1,6 +1,6 @@
 import { Unreachable } from "@pluck/client";
 import { isCardPreview, isTextKind, showsFile, siteOf, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
-import { useQueryClient } from "@tanstack/react-query";
+import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import type { File } from "expo-file-system";
@@ -15,9 +15,10 @@ import { Player } from "@/components/Player";
 import { FormatBar, RichText, type Format, type RichTextHandle } from "@/components/RichText";
 import { spoken, useSpeak } from "@/components/Speak";
 import { useInDetail, useSplit } from "@/components/split/context";
+import { TagChips } from "@/components/Tags";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { fileOf, keepByHand, keys, library, pluck, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
+import { fileOf, keepByHand, keys, library, pluck, useCover, useItem, useKeptByHand, useOnline, usePatchItem, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { device } from "@/lib/i18n";
@@ -207,7 +208,7 @@ function Reader({ data }: { data: FullItem }) {
         {/* The title stops growing at the titles' ceiling, so a long word stays whole at the largest text sizes; the body grows on. */}
         <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.readerTitle, inDetail ? styles.wideH1 : styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
-        {inDetail && <Tags item={item} />}
+        <TagChips item={item} edit />
         <Facts item={item} />
         {card && item.preview === "player" && item.facts.player ? <Player facts={item.facts} title={item.title} site={site} cover={cover} /> : card && cover && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail, maxHeight: 520 }]} resizeMode="cover" accessibilityIgnoresInvertColors
@@ -277,19 +278,6 @@ function Reader({ data }: { data: FullItem }) {
       </ScrollView>
       </>}
       {!inDetail && <Toolbar item={item} />}
-    </View>
-  );
-}
-
-// The Item's tags under the byline, as on the iPad-Inbox board: 22 tall chips on --chip.
-function Tags({ item }: { item: Item }) {
-  const t = useTheme();
-  const tags = useTags().data ?? [];
-  const names = item.tagIds.map((id) => tags.find((x) => x.id === id)?.name).filter(Boolean) as string[];
-  if (!names.length) return null;
-  return (
-    <View style={styles.tags}>
-      {names.map((n) => <Text key={n} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.tag, { backgroundColor: t.chip, color: t.ink }]}>{n}</Text>)}
     </View>
   );
 }
@@ -382,7 +370,9 @@ function NoteEditor({ data }: { data: FullItem | null }) {
   const tr = useTranslations("ios");
   const qc = useQueryClient();
   const [made, setMade] = useState<Item | null>(null);
-  const item = data?.item ?? made;
+  // A Note made here is not this screen's query, so what changes it from elsewhere (its tags, from the picker) is read from the cache.
+  const live = useQuery<FullItem>({ queryKey: keys.item(made?.id ?? ""), queryFn: skipToken }).data?.item;
+  const item = data?.item ?? live ?? made;
   const patch = usePatchItem();
   const [title, setTitle] = useState(item && !item.titleIsDerived ? item.title : "");
   const [text, setText] = useState(data?.text ?? "");
@@ -483,6 +473,7 @@ function NoteEditor({ data }: { data: FullItem | null }) {
         <TextInput value={title} onChangeText={setTitle} placeholder={item?.title ?? tr("ipad.add.titlePlaceholder")} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
+        {item && <TagChips item={item} edit add />}
         <View onLayout={(e) => void (at.current.words = e.nativeEvent.layout.y)}>
           {plain ? (
             <TextInput value={text} onChangeText={setText} onFocus={() => setWriting(true)} onBlur={() => setWriting(false)} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
@@ -516,8 +507,6 @@ const styles = StyleSheet.create({
   wideArticle: { width: "100%", maxWidth: 640, alignSelf: "center", paddingVertical: 20, paddingHorizontal: 32, paddingBottom: 48, gap: 18 },
   wideH1: { fontSize: 34, lineHeight: 40 },
   wideBody: { fontSize: 19, lineHeight: 31 },
-  tags: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  tag: { height: 22, lineHeight: 22, paddingHorizontal: 8, borderRadius: 11, overflow: "hidden", fontSize: 12 },
   back: { flexDirection: "row", alignItems: "center", gap: 4, height: 44, paddingHorizontal: 8 },
   track: { height: 2, marginHorizontal: 16 },
   article: { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 40, gap: 16 },

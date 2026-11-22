@@ -147,17 +147,17 @@ export function usePatchItem() {
 
 const queue = createQueue({ read: () => kv.get("queue", []), write: (q) => kv.set("queue", q) });
 
-export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; queued: boolean }> {
+export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; items: Item[]; queued: boolean }> {
   const clientKey = newKey(); // the same key on the first send and on the queued copy: a lost answer makes no second Note
   try {
     const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", clientKey, ...body } });
     void queryClient.invalidateQueries({ queryKey: ["items"] });
-    return { item: res.results[0]?.item ?? null, queued: false };
+    return { item: res.results[0]?.item ?? null, items: res.results.map((r) => r.item), queued: false };
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
     await queue.add({ source: "ios", ...body }, clientKey);
     void queryClient.invalidateQueries({ queryKey: keys.pending });
-    return { item: null, queued: true };
+    return { item: null, items: [], queued: true };
   }
 }
 

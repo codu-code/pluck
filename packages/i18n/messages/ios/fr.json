@@ -569,7 +569,8 @@
     "photo": "Photo",
     "camera": "Appareil photo",
     "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages.",
-    "removePhoto": "Retirer cette photo"
+    "removePhoto": "Retirer cette photo",
+    "untagged": "Cueilli dans la boîte de réception. Les tags n’ont pas été ajoutés."
   },
   "preview": {
     "open": "Ouvrir sur {site}",
