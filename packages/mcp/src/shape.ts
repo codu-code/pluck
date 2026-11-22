@@ -24,6 +24,9 @@ export const Results = {
       // facts is an open object here: Facts is checked by types where pages are read, not on write, and a stored fact
       // past one of its limits must not make the whole Item unreadable.
       .extend({ extraction: Item.shape.extraction.shape.state, facts: z.record(z.string(), z.unknown()) })
+      // An Image: `attached` when the picture itself comes with this answer, as image content after the JSON;
+      // otherwise why it does not (over the size one answer carries, or a format AI tools do not read, like HEIC).
+      .extend({ picture: z.enum(["attached", "too_large", "unsupported"]).optional() })
       .optional(),
     id: ObjectIdString.optional(),
     text: z.string().optional(),

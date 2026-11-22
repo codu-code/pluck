@@ -1,6 +1,6 @@
 import type { PluckLibrary } from "@pluck/mcp-server";
 import {
-  addItems, addTag, batch, browse, deleteItem, digest, editEntry, editList, highlightsAcross, highlightsOf, membershipsOf, newList, pluckAny, readItem, readList,
+  addItems, addTag, batch, browse, deleteItem, digest, editEntry, editList, highlightsAcross, highlightsOf, membershipsOf, newList, pictureOf, pluckAny, readItem, readList,
   readText, removeItem, reorder, search, setListVisibility, tagIdsFor, tagsOf, listsOf,
 } from "./library";
 
@@ -14,6 +14,7 @@ export function connectorFor(userId: string, { defer }: { defer?: Defer } = {}):
     browse: (q) => browse(userId, q),
     item: (id) => readItem(userId, id),
     text: (id) => readText(userId, id),
+    picture: (id) => pictureOf(userId, id),
     highlights: (id) => highlightsOf(userId, id),
     highlightsAcross: (q) => highlightsAcross(userId, q),
     memberships: (id) => membershipsOf(userId, id),

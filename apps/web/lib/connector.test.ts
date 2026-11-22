@@ -3,7 +3,7 @@ import { createPluckServer } from "@pluck/mcp-server";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { connectorFor } from "./connector";
-import { addHighlight, addTag, deleteItem, newList, pluckAny, readItem, readList, removeHighlight, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
+import { addHighlight, addTag, beginFile, deleteItem, keepFile, newList, pluckAny, readItem, readList, removeHighlight, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
 
 const FIX = "http://127.0.0.1:4180";
 const ALL = ["library:read", "library:write"];
@@ -362,4 +362,45 @@ test("each tool call and prompt is reported by name and outcome, never with its 
     { tool: "get_item", ok: false, errorCode: "not_found", resultCount: null, ms: expect.any(Number) },
   ]);
   expect(prompts).toEqual(["tidy_inbox"]);
+});
+
+const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "base64");
+
+// A file Image as the phone makes one: the Item, the bytes by signed upload, then the worker's read.
+async function picture(userId: string, body: Buffer, contentType: "image/png" | "image/heic") {
+  const { item, uploadUrl } = await beginFile(userId, { name: "Page 41", contentType, size: body.length });
+  expect((await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType }, body: new Uint8Array(body) })).ok).toBe(true);
+  await keepFile(userId, item.id, new URL(uploadUrl).pathname.split("/").slice(2).join("/"), contentType, "Page 41");
+  return item.id;
+}
+
+test("get_item hands an Image's picture to the AI tool, says why when it cannot, and never another person's", async () => {
+  const { a, b } = await twoUsers();
+  const { client } = await connect(a);
+  const get = async (id: string, as = client) => {
+    const res = await as.callTool({ name: "get_item", arguments: { id } });
+    const [text, ...rest] = res.content as { type: string; text?: string; data?: string; mimeType?: string }[];
+    return { isError: res.isError, json: JSON.parse(text!.text!), rest, structured: res.structuredContent as { item?: { picture?: string } } };
+  };
+
+  const id = await picture(a, PNG, "image/png");
+  const seen = await get(id);
+  expect(seen.json.item).toMatchObject({ kind: "image", picture: "attached" });
+  expect(seen.structured.item?.picture).toBe("attached");
+  expect(seen.rest).toEqual([{ type: "image", data: PNG.toString("base64"), mimeType: "image/png" }]);
+
+  // Bytes that are not a picture AI tools read (a HEIC from the phone), whatever type they were sent as.
+  const heic = await get(await picture(a, Buffer.from("\0\0\0\x18ftypheic not really"), "image/heic"));
+  expect(heic.json.item.picture).toBe("unsupported");
+  expect(heic.rest).toEqual([]);
+
+  // A link, a Note: no picture key at all, and nothing after the JSON.
+  const plain = await get((await note(a, "No picture here")).id);
+  expect(plain.json.item).not.toHaveProperty("picture");
+  expect(plain.rest).toEqual([]);
+
+  const other = await get(id, (await connect(b)).client);
+  expect(other.isError).toBe(true);
+  expect(other.json.error.code).toBe("not_found");
+  expect(other.rest).toEqual([]);
 });

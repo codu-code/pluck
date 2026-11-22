@@ -1,4 +1,4 @@
-import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
+import { deletePrefix, getObject, keys as blobKeys, putObject, signedUrl, TooLarge } from "@pluck/blob";
 import {
   batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, findHighlights, getContent, getItem, getItemBlobKeys,
   hitRateLimit, listHighlights, listItems, listsForItem, markOpened, misfit, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
@@ -221,6 +221,31 @@ export async function coverLocation(userId: string, itemId: string): Promise<str
   const keys = await getItemBlobKeys(userId, itemId);
   if (!keys?.coverKey) throw new ApiError("not_found", "No cover.", 404);
   return signedUrl(keys.coverKey, 600);
+}
+
+// The picture of an Image Item, for the person's AI tool to look at (the connector's get_item). Only the formats AI
+// tools read, told from the bytes (a file's stored type is whatever its sender said), and only up to a size one tool
+// answer can carry: a bigger one, or a HEIC, is named as such so the AI tool can say why it cannot see it.
+export const PICTURE_MAX_BYTES = 3_000_000;
+export type Picture = { data: string; mimeType: string } | "too_large" | "unsupported" | null;
+const pictureType = (b: Buffer): string | null =>
+  b[0] === 0xff && b[1] === 0xd8 ? "image/jpeg"
+  : b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ? "image/png"
+  : b.subarray(0, 4).toString("latin1") === "GIF8" ? "image/gif"
+  : b.subarray(0, 4).toString("latin1") === "RIFF" && b.subarray(8, 12).toString("latin1") === "WEBP" ? "image/webp"
+  : null;
+export async function pictureOf(userId: string, itemId: string): Promise<Picture> {
+  const item = await readItem(userId, itemId);
+  const keys = item.kind === "image" ? await getItemBlobKeys(userId, itemId) : null;
+  if (!keys?.coverKey) return null;
+  try {
+    const body = await getObject(keys.coverKey, { maxBytes: PICTURE_MAX_BYTES });
+    const mimeType = pictureType(body);
+    return mimeType ? { data: body.toString("base64"), mimeType } : "unsupported";
+  } catch (e) {
+    if (e instanceof TooLarge) return "too_large";
+    throw e;
+  }
 }
 
 // A PDF's own file, kept when it was plucked: the web's viewer and Download, and Save to Files on the iPhone once the
