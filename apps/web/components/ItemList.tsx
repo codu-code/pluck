@@ -35,7 +35,7 @@ function placeholders(d: PluckDraft): Row[] {
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };
   if (d.text !== null)
-    return [{ ...base, id: `draft-${d.key}`, kind: d.kind ?? "note", url: null, preview: null, previewGuess: null, title: d.text.split("\n")[0]!, extraction: { state: "none", attempts: 0, lastError: null } }];
+    return [{ ...base, id: `draft-${d.key}`, kind: d.file ?? d.kind ?? "note", url: null, preview: null, previewGuess: null, title: d.text.split("\n")[0]!, extraction: { state: d.file ? "pending" : "none", attempts: 0, lastError: null } }];
   return d.urls.map((url, i) => ({ ...base, id: `draft-${d.key}-${i}`, kind: "link" as const, url, preview: "reader" as const, previewGuess: "reader" as const, title: url, extraction: { state: "pending" as const, attempts: 0, lastError: null } }));
 }
 

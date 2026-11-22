@@ -1,6 +1,6 @@
 "use client";
 
-import { isRenameable, LINK_KINDS, showsFile, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
+import { isRenameable, LINK_KINDS, showsFile, siteOf, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -145,6 +145,10 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
             </span>
             <h1 className={styles.title}>{title}</h1>
             {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
+            {item.kind === "image" && item.foundOn && (
+              // Found on: the page the picture was plucked from, its way back.
+              <a className={styles.meta} href={withReferral(item.foundOn)} target="_blank" rel="noopener">{app("item.foundOn", { site: siteOf(item.foundOn) })}</a>
+            )}
             <PreviewFacts item={item} />
           </div>
           {card ? <PreviewCard item={item} text={text} /> : pdf ? <PdfView item={item} /> : <>

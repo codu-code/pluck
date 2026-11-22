@@ -585,7 +585,9 @@
     "links": "링크 {count}개. Enter를 누르면 전부 담겨요.",
     "as": "담을 종류",
     "due": "마감",
-    "enterAs": "Enter를 누르면 {kind, select, note {메모로} todo {할 일로} other {물건으로}} 담겨요."
+    "enterAs": "Enter를 누르면 {kind, select, note {메모로} todo {할 일로} other {물건으로}} 담겨요.",
+    "drop": "이미지나 PDF를 놓으면 담아요",
+    "fileRefused": "이미지와 PDF만 담을 수 있고, 하나에 50MB까지예요."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +843,8 @@
       "extension": "확장 프로그램 받기",
       "keptTitle": "그래도 내 거예요",
       "keptBody": "링크, 메모, 태그는 그대로 있어요. 제목과 메모로 검색할 수 있어요."
-    }
+    },
+    "foundOn": "{site}에서 찾음"
   },
   "note": {
     "untitled": "제목 없는 메모",
@@ -853,7 +856,7 @@
     "meta": "{kind} · {plucked} · {edited} 수정",
     "title": "제목",
     "body": "본문",
-    "help": "첫 줄이 제목이에요. 일반 텍스트. 입력하는 대로 저장돼요.",
+    "help": "첫 줄이 제목이에요. 입력하는 대로 저장돼요.",
     "about": "이 {kind, select, note {메모} todo {할 일} other {물건}} 정보",
     "kind": "종류",
     "kindHint": {
@@ -864,7 +867,16 @@
     "due": "마감",
     "source": "출처: {via}",
     "pasteBox": "웹 붙여넣기 상자",
-    "noHighlights": "메모에는 하이라이트가 없어요. 글자를 선택하면 복사할 수 있어요."
+    "noHighlights": "메모에는 하이라이트가 없어요. 글자를 선택하면 복사할 수 있어요.",
+    "helpPlain": "첫 줄이 제목이에요. 일반 텍스트. 입력하는 대로 저장돼요.",
+    "format": {
+      "title": "서식",
+      "bold": "굵게",
+      "italic": "기울임꼴",
+      "heading": "제목",
+      "bullets": "글머리 기호 목록",
+      "numbers": "번호 매기기 목록"
+    }
   },
   "reader": {
     "progress": "읽기 진행률",

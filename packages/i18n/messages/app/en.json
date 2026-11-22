@@ -585,7 +585,9 @@
     "links": "{count} links. Enter plucks them all.",
     "as": "Pluck as",
     "due": "Due",
-    "enterAs": "Enter plucks it as a {kind, select, note {Note} todo {Todo} other {Thing}}."
+    "enterAs": "Enter plucks it as a {kind, select, note {Note} todo {Todo} other {Thing}}.",
+    "drop": "Drop a picture or a PDF to pluck it",
+    "fileRefused": "Pluck takes pictures and PDFs, up to 50 MB each."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +843,8 @@
       "extension": "Get the extension",
       "keptTitle": "Still yours",
       "keptBody": "The link, your note and your tags are kept. Search finds it by title and note."
-    }
+    },
+    "foundOn": "Found on {site}"
   },
   "note": {
     "untitled": "Untitled note",
@@ -853,7 +856,7 @@
     "meta": "{kind} · {plucked} · edited {edited}",
     "title": "Title",
     "body": "Body",
-    "help": "The first line is the title. Plain text. Saves as you type.",
+    "help": "The first line is the title. Saves as you type.",
     "about": "About this {kind, select, note {note} todo {todo} other {thing}}",
     "kind": "Kind",
     "kindHint": {
@@ -864,7 +867,16 @@
     "due": "Due",
     "source": "Source: {via}",
     "pasteBox": "web paste box",
-    "noHighlights": "Notes have no highlights. Select text to copy it."
+    "noHighlights": "Notes have no highlights. Select text to copy it.",
+    "helpPlain": "The first line is the title. Plain text. Saves as you type.",
+    "format": {
+      "title": "Format",
+      "bold": "Bold",
+      "italic": "Italic",
+      "heading": "Heading",
+      "bullets": "Bulleted list",
+      "numbers": "Numbered list"
+    }
   },
   "reader": {
     "progress": "Reading progress",

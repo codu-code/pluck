@@ -1,7 +1,8 @@
 "use client";
 
-import type { Item, ListMembership, Tag, TextKind } from "@pluck/shared-schemas";
+import { plainLine, type Item, type ListMembership, type Tag, type TextKind } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
 import { ItemLists } from "@/components/ItemLists";
@@ -10,15 +11,21 @@ import { useFormat } from "@/components/useFormat";
 import { library } from "@/lib/actions";
 import styles from "./note.module.css";
 
+// The rich editor reads the page's own selection and parses with WebAssembly: it is made in the browser only, and
+// its code comes with the first Note opened, not with the Inbox.
+const RichBody = dynamic(() => import("./RichBody"), { ssr: false, loading: () => <div className={styles.rich} aria-busy="true" /> });
+
 type Patch = { title?: string; text?: string; kind?: TextKind; dueAt?: string | null };
 
-// The Note, Todo and Thing editor (ItemNote board). Plain text, saved as you type. Esc goes back.
+// The Note, Todo and Thing editor (ItemNote board). Rich text kept as Markdown, saved as you type; a Note the rich
+// editor cannot keep exactly (RichBody) is edited as plain text. Esc goes back.
 export function NoteEditor({ item, text, tags, lists }: { item: Item; text: string; tags: Tag[]; lists: ListMembership[] }) {
   const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
   const [body, setBody] = useState(text);
   const [kind, setKind] = useState(item.kind as TextKind);
   const [due, setDue] = useState(item.dueAt ? item.dueAt.slice(0, 10) : "");
   const [state, setState] = useState<"saved" | "saving" | "error">("saved");
+  const [plain, setPlain] = useState(false);
   const [edited, setEdited] = useState(item.updatedAt);
   const pending = useRef<Patch>({});
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -63,7 +70,7 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
     };
   }, [item.id]);
 
-  const derived = body.split("\n").map((l) => l.trim()).find(Boolean) ?? t("untitled");
+  const derived = body.split("\n").map(plainLine).find(Boolean) ?? t("untitled");
 
   return (
     <>
@@ -90,20 +97,32 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
               }}
             />
           </label>
-          <label className={styles.field}>
-            <span className={styles.visuallyHidden}>{t("body")}</span>
-            <textarea
-              className={styles.body}
-              rows={16}
-              value={body}
+          {plain ? (
+            <label className={styles.field}>
+              <span className={styles.visuallyHidden}>{t("body")}</span>
+              <textarea
+                className={styles.body}
+                rows={16}
+                value={body}
+                onChange={(e) => {
+                  setBody(e.target.value);
+                  save({ text: e.target.value });
+                }}
+              />
+            </label>
+          ) : (
+            <RichBody
+              text={text}
+              label={t("body")}
               autoFocus={!text}
-              onChange={(e) => {
-                setBody(e.target.value);
-                save({ text: e.target.value });
+              onChange={(md) => {
+                setBody(md);
+                save({ text: md });
               }}
+              onUnfit={() => setPlain(true)}
             />
-          </label>
-          <span className={styles.meta}>{t("help")}</span>
+          )}
+          <span className={styles.meta}>{t(plain ? "helpPlain" : "help")}</span>
         </article>
         <aside aria-label={t("about", { kind })} className={styles.aside}>
           <ItemTags item={item} vocabulary={tags} />

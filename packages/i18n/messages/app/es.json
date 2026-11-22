@@ -585,7 +585,9 @@
     "links": "{count} enlaces. Enter los recoge todos.",
     "as": "Recoger como",
     "due": "Vence",
-    "enterAs": "Enter lo recoge como {kind, select, note {Nota} todo {Tarea} other {Cosa}}."
+    "enterAs": "Enter lo recoge como {kind, select, note {Nota} todo {Tarea} other {Cosa}}.",
+    "drop": "Suelta una imagen o un PDF para recogerlo",
+    "fileRefused": "Pluck acepta imágenes y PDF, de hasta 50 MB cada uno."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +843,8 @@
       "extension": "Instalar la extensión",
       "keptTitle": "Sigue siendo tuyo",
       "keptBody": "El enlace, tu nota y tus etiquetas se conservan. La búsqueda lo encuentra por título y nota."
-    }
+    },
+    "foundOn": "Encontrado en {site}"
   },
   "note": {
     "untitled": "Nota sin título",
@@ -853,7 +856,7 @@
     "meta": "{kind} · {plucked} · editado {edited}",
     "title": "Título",
     "body": "Texto",
-    "help": "La primera línea es el título. Texto sin formato. Se guarda mientras escribes.",
+    "help": "La primera línea es el título. Se guarda mientras escribes.",
     "about": "Sobre esta {kind, select, note {nota} todo {tarea} other {cosa}}",
     "kind": "Tipo",
     "kindHint": {
@@ -864,7 +867,16 @@
     "due": "Vence",
     "source": "Origen: {via}",
     "pasteBox": "campo para pegar de la web",
-    "noHighlights": "Las notas no tienen destacados. Selecciona texto para copiarlo."
+    "noHighlights": "Las notas no tienen destacados. Selecciona texto para copiarlo.",
+    "helpPlain": "La primera línea es el título. Texto sin formato. Se guarda mientras escribes.",
+    "format": {
+      "title": "Formato",
+      "bold": "Negrita",
+      "italic": "Cursiva",
+      "heading": "Título",
+      "bullets": "Lista con viñetas",
+      "numbers": "Lista numerada"
+    }
   },
   "reader": {
     "progress": "Progreso de lectura",

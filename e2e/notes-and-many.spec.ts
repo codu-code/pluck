@@ -24,12 +24,19 @@ test("a sentence becomes a Note you can open and keep writing", async ({ page })
   await expect(row).toContainText("Note · by you");
   await row.getByRole("link", { name: "An MCP server for estimates" }).click();
 
+  // The words are rich text: what is typed shows as it is, with no marks.
   const body = page.getByRole("textbox", { name: "Body" });
-  await expect(body).toHaveValue("An MCP server for estimates");
-  await body.fill("Estimates over MCP\nRead-only tools first.\nThen one write tool behind a confirm.");
+  await expect(body).toHaveText("An MCP server for estimates");
+  await body.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await page.keyboard.type("Estimates over MCP");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Read-only tools first.");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Then one write tool behind a confirm.");
   await expect(page.getByText("Saved", { exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("textbox", { name: "Body" })).toHaveValue(/Then one write tool/);
+  await expect(page.getByRole("textbox", { name: "Body" })).toContainText("Then one write tool");
   await expect(page.getByRole("textbox", { name: "Title" })).toHaveAttribute("placeholder", "Estimates over MCP");
 
   await page.getByRole("combobox", { name: "Kind" }).selectOption("todo");
@@ -39,6 +46,70 @@ test("a sentence becomes a Note you can open and keep writing", async ({ page })
   await expect(page).toHaveURL(/\/inbox$/);
   await expect(rows(page).first()).toContainText("Estimates over MCP");
   await expect(rows(page).first()).toContainText(/Todo · (due|overdue)/);
+});
+
+const textOf = async (page: Page) => {
+  const id = page.url().split("/").pop()!;
+  return ((await (await page.request.get(`/api/v1/items/${id}?include=text`)).json()) as { text: string; item: { title: string; excerpt: string | null } });
+};
+
+test("a Note takes a heading, a list, bold and italic, kept as Markdown and shown with no marks", async ({ page }) => {
+  await signIn(page);
+  await box(page).fill("Blog idea");
+  await box(page).press("Enter");
+  await rows(page).first().getByRole("link", { name: "Blog idea" }).click();
+
+  const body = page.getByRole("textbox", { name: "Body" });
+  const tool = (name: string) => page.getByRole("toolbar", { name: "Format" }).getByRole("button", { name });
+  await body.click();
+  await page.keyboard.press("ControlOrMeta+a");
+  await tool("Heading").click();
+  await expect(tool("Heading")).toHaveAttribute("aria-pressed", "true");
+  await page.keyboard.type("Why inboxes beat notebooks");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("An ");
+  await tool("Bold").click();
+  await page.keyboard.type("opening");
+  await tool("Bold").click();
+  await page.keyboard.type(" line with ");
+  await page.keyboard.press("ControlOrMeta+i");
+  await page.keyboard.type("stress");
+  await page.keyboard.press("ControlOrMeta+i");
+  await page.keyboard.type(" and snake_case.");
+  await page.keyboard.press("Enter");
+  await tool("Bulleted list").click();
+  await page.keyboard.type("Capture in one step");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Triage like a link");
+  await expect(page.getByText("Saved", { exact: true })).toBeVisible();
+
+  // Kept as Markdown, for the iPhone and an AI tool to read; the title and the row are plain words.
+  const kept = await textOf(page);
+  expect(kept.text).toBe("# Why inboxes beat notebooks\nAn **opening** line with *stress* and snake\\_case.\n- Capture in one step\n- Triage like a link");
+  expect(kept.item.title).toBe("Why inboxes beat notebooks");
+  expect(kept.item.excerpt).toBe("An opening line with stress and snake_case. Capture in one step Triage like a link");
+
+  await page.reload();
+  const again = page.getByRole("textbox", { name: "Body" });
+  await expect(again).toContainText("Why inboxes beat notebooks");
+  await expect(again).not.toContainText("#");
+  await expect(again).not.toContainText("**");
+  await expect(again).not.toContainText("\\");
+  await expect(page.getByRole("textbox", { name: "Title" })).toHaveAttribute("placeholder", "Why inboxes beat notebooks");
+  expect((await textOf(page)).text).toBe(kept.text); // opening a Note writes nothing
+});
+
+test("a Note the rich editor cannot keep exactly opens as plain text, every character as it was", async ({ page }) => {
+  await signIn(page);
+  const text = "From my AI\n\n> a quote\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n- [ ] a task";
+  const made = (await (await page.request.post("/api/v1/items", { data: { text, kind: "note" } })).json()) as { results: { item: { id: string } }[] };
+  await page.goto(`/items/${made.results[0]!.item.id}`);
+  const body = page.getByRole("textbox", { name: "Body" });
+  await expect(body).toHaveValue(text); // the plain editor: a textarea
+  await expect(page.getByRole("toolbar", { name: "Format" })).toHaveCount(0);
+  await expect(page.getByText("Plain text.")).toBeVisible();
+  await body.press("End");
+  expect((await textOf(page)).text).toBe(text);
 });
 
 test("pick Todo with a due date in the paste box, and filter by kind", async ({ page }) => {
