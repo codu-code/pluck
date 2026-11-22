@@ -568,7 +568,8 @@
     "plucked": "In den Eingang gepflückt.",
     "photo": "Foto",
     "camera": "Kamera",
-    "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern."
+    "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern.",
+    "removePhoto": "Dieses Foto entfernen"
   },
   "preview": {
     "open": "Auf {site} öffnen",

@@ -568,7 +568,8 @@
     "plucked": "Geplukt naar de Inbox.",
     "photo": "Foto",
     "camera": "Camera",
-    "cameraOff": "Pluck mag de camera niet gebruiken. Je kunt dat wijzigen in Instellingen."
+    "cameraOff": "Pluck mag de camera niet gebruiken. Je kunt dat wijzigen in Instellingen.",
+    "removePhoto": "Deze foto verwijderen"
   },
   "preview": {
     "open": "Openen op {site}",

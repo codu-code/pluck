@@ -568,7 +568,8 @@
     "plucked": "Recogido en la Bandeja de entrada.",
     "photo": "Foto",
     "camera": "Cámara",
-    "cameraOff": "Pluck no tiene permiso para usar la cámara. Puedes cambiarlo en Ajustes."
+    "cameraOff": "Pluck no tiene permiso para usar la cámara. Puedes cambiarlo en Ajustes.",
+    "removePhoto": "Quitar esta foto"
   },
   "preview": {
     "open": "Abrir en {site}",

@@ -48,28 +48,28 @@ const CAMERA = {
 // What iOS shows the first time the microphone is tapped (components/Speak.tsx): two questions, one for the
 // microphone and one for turning speech into text.
 const MIC: Record<string, string> = {
-  en: "Pluck listens while you speak a note. The words are written on this device and no sound is kept.",
-  es: "Pluck escucha mientras dices una nota. Las palabras se escriben en este dispositivo y no se guarda ningún sonido.",
-  "pt-BR": "O Pluck ouve enquanto você fala uma nota. As palavras são escritas neste dispositivo e nenhum som é guardado.",
-  fr: "Pluck écoute pendant que vous dites une note. Les mots sont écrits sur cet appareil et aucun son n’est conservé.",
-  de: "Pluck hört zu, während du eine Notiz sprichst. Die Wörter werden auf diesem Gerät geschrieben, und kein Ton wird behalten.",
-  ja: "メモを話している間、Pluckが聞き取ります。言葉はこのデバイス上で文字になり、音声は残りません。",
-  it: "Pluck ascolta mentre dici una nota. Le parole vengono scritte su questo dispositivo e nessun suono viene conservato.",
-  nl: "Pluck luistert terwijl je een notitie inspreekt. De woorden worden op dit apparaat geschreven en er wordt geen geluid bewaard.",
-  ko: "메모를 말하는 동안 Pluck이 들어요. 말은 이 기기에서 글로 바뀌고 소리는 남지 않아요.",
-  "zh-Hans": "你说出笔记时，Pluck 会聆听。文字在此设备上写出，不保留任何声音。",
+  en: "Pluck listens while you speak a note. It keeps the words and no sound.",
+  es: "Pluck escucha mientras dices una nota. Guarda las palabras y ningún sonido.",
+  "pt-BR": "O Pluck ouve enquanto você fala uma nota. Ele guarda as palavras e nenhum som.",
+  fr: "Pluck écoute pendant que vous dites une note. Il garde les mots et aucun son.",
+  de: "Pluck hört zu, während du eine Notiz sprichst. Es behält die Wörter und keinen Ton.",
+  ja: "メモを話している間、Pluckが聞き取ります。残るのは言葉だけで、音声は残りません。",
+  it: "Pluck ascolta mentre dici una nota. Conserva le parole e nessun suono.",
+  nl: "Pluck luistert terwijl je een notitie inspreekt. Het bewaart de woorden en geen geluid.",
+  ko: "메모를 말하는 동안 Pluck이 들어요. 말은 글로 남고 소리는 남지 않아요.",
+  "zh-Hans": "你说出笔记时，Pluck 会聆听。只保留文字，不保留任何声音。",
 };
 const SPEECH: Record<string, string> = {
-  en: "Pluck turns what you say into text on this device.",
-  es: "Pluck convierte lo que dices en texto en este dispositivo.",
-  "pt-BR": "O Pluck transforma o que você diz em texto neste dispositivo.",
-  fr: "Pluck transforme ce que vous dites en texte sur cet appareil.",
-  de: "Pluck wandelt auf diesem Gerät in Text um, was du sagst.",
-  ja: "話した内容を、このデバイス上で文字にします。",
-  it: "Pluck trasforma in testo quello che dici, su questo dispositivo.",
-  nl: "Pluck zet op dit apparaat om in tekst wat je zegt.",
-  ko: "말한 내용을 이 기기에서 글로 바꿔요.",
-  "zh-Hans": "Pluck 在此设备上把你说的话转成文字。",
+  en: "Pluck turns what you say into text. This device does it when it can. Otherwise Apple does, as it does for the keyboard’s dictation.",
+  es: "Pluck convierte lo que dices en texto. Lo hace este dispositivo cuando puede. Si no, lo hace Apple, como con el dictado del teclado.",
+  "pt-BR": "O Pluck transforma o que você diz em texto. Este dispositivo faz isso quando pode. Senão, a Apple faz, como no ditado do teclado.",
+  fr: "Pluck transforme ce que vous dites en texte. Cet appareil le fait quand il le peut. Sinon, Apple s’en charge, comme pour la dictée du clavier.",
+  de: "Pluck wandelt in Text um, was du sagst. Das macht dieses Gerät, wenn es kann. Sonst macht es Apple, wie bei der Diktierfunktion der Tastatur.",
+  ja: "話した内容を文字にします。できる場合はこのデバイス上で、できない場合はキーボードの音声入力と同じくAppleが行います。",
+  it: "Pluck trasforma in testo quello che dici. Lo fa questo dispositivo quando può. Altrimenti lo fa Apple, come per la dettatura della tastiera.",
+  nl: "Pluck zet wat je zegt om in tekst. Dit apparaat doet dat als het kan. Anders doet Apple het, zoals bij het dicteren van het toetsenbord.",
+  ko: "말한 내용을 글로 바꿔요. 이 기기가 할 수 있으면 기기에서 하고, 아니면 키보드 받아쓰기처럼 Apple이 해요.",
+  "zh-Hans": "Pluck 把你说的话转成文字。此设备能做到时在设备上完成，否则由 Apple 完成，与键盘听写相同。",
 };
 
 const config: ExpoConfig = {
@@ -149,7 +149,9 @@ const config: ExpoConfig = {
     ],
     // Add, Photo and Camera (app/add.tsx). The photo library needs no permission: iOS's own picker hands over only
     // what the person picks. The camera asks, in the words below; nothing records sound.
-    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: false, microphonePermission: false }],
+    // The microphone text is given here too: `false` would take the question's words out again, after the speech
+    // plugin had put them in, and iOS closes an app that asks for the microphone without them.
+    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: false, microphonePermission: MIC.en }],
     ["expo-speech-recognition", { microphonePermission: MIC.en, speechRecognitionPermission: SPEECH.en }],
     "@bacons/apple-targets",
   ],

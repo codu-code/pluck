@@ -568,7 +568,8 @@
     "plucked": "Cueilli dans la boîte de réception.",
     "photo": "Photo",
     "camera": "Appareil photo",
-    "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages."
+    "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages.",
+    "removePhoto": "Retirer cette photo"
   },
   "preview": {
     "open": "Ouvrir sur {site}",

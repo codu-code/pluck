@@ -4,13 +4,13 @@ import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { Hearing, Mic, spoken, useSpeak } from "@/components/Speak";
 import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
-import { pluck, pluckPhoto } from "@/lib/data";
+import { library, pluck, pluckPhoto } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // The web's Pluck box as a sheet: one link, a block of links, or a sentence that becomes a Note, Todo or Thing.
@@ -19,11 +19,14 @@ export default function Add() {
   return useColumns().wide ? <AddWide /> : <AddSheet />;
 }
 
-// A picture is plucked from where it is: out of the photo library (iOS's own picker, which needs no permission and
-// hands over only what is picked) or straight from the camera. Each becomes an Image, like one from the share sheet.
+type Shot = ImagePicker.ImagePickerAsset;
+
+// A picture comes from where it is: out of the photo library (iOS's own picker, which needs no permission and hands
+// over only what is picked) or straight from the camera. It goes into the box first (Shots), as in Messages: there
+// to be seen, and to have a note written or spoken under it, before it is plucked.
 // JPEGs at 0.6: a full-size photo then fits what an AI tool can be handed (the connector's 3 MB).
 // `note` (iPhone): a Note button beside them, which leaves the sheet for a new Note's own editor.
-function Photos({ busy, setBusy, setError, note = false }: { busy: boolean; setBusy: (b: boolean) => void; setError: (e: string | null) => void; note?: boolean }) {
+function Photos({ busy, onPick, setError, note = false }: { busy: boolean; onPick: (shots: Shot[]) => void; setError: (e: string | null) => void; note?: boolean }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const take = async (from: "library" | "camera") => {
@@ -33,17 +36,7 @@ function Photos({ busy, setBusy, setError, note = false }: { busy: boolean; setB
     const picked = from === "camera"
       ? await ImagePicker.launchCameraAsync({ mediaTypes: ["images"], quality: 0.6 })
       : await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 0.6, allowsMultipleSelection: true, selectionLimit: 10 });
-    if (picked.canceled || !picked.assets.length) return;
-    setBusy(true);
-    try {
-      for (const a of picked.assets) await pluckPhoto(a.uri, a.fileName ?? "Photo", a.mimeType);
-      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      router.back();
-      toast(tr("add.plucked"));
-    } catch {
-      setError(tr("add.failed"));
-      setBusy(false);
-    }
+    if (!picked.canceled && picked.assets.length) onPick(picked.assets);
   };
   return (
     <View style={styles.photos}>
@@ -59,6 +52,37 @@ function Photos({ busy, setBusy, setError, note = false }: { busy: boolean; setB
   );
 }
 
+// The pictures waiting in the box: each as it is, with a way to take it out again.
+function Shots({ shots, busy, remove }: { shots: Shot[]; busy: boolean; remove: (shot: Shot) => void }) {
+  const t = useTheme();
+  const tr = useTranslations("ios.add");
+  return (
+    <View style={styles.shots}>
+      {shots.map((a) => (
+        <View key={a.uri}>
+          <Image source={{ uri: a.uri }} accessible accessibilityRole="image" accessibilityLabel={tr("photo")} accessibilityIgnoresInvertColors style={[styles.shot, { backgroundColor: t.rail }]} />
+          {!busy && (
+            <Pressable accessibilityRole="button" accessibilityLabel={tr("removePhoto")} onPress={() => remove(a)} hitSlop={12} style={[styles.out, { backgroundColor: t.ink }]}>
+              <Icon d={ICONS.close} size={10} color={t.ground} width={2} />
+            </Pressable>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+// Each picture becomes an Image, like one from the share sheet, and what was written is the note on each. One that is
+// up leaves the box (`gone`), so trying again after a failure sends only the rest.
+// shortcut: the note is a second request (the file route takes none); if only that one fails, trying again plucks the picture twice. Let the route take a note if it happens.
+async function pluckShots(shots: Shot[], note: string, gone: (shot: Shot) => void) {
+  for (const a of shots) {
+    const item = await pluckPhoto(a.uri, a.fileName ?? "Photo", a.mimeType);
+    if (note) await library.edit(item.id, { note });
+    gone(a);
+  }
+}
+
 function AddSheet() {
   const t = useTheme();
   const tr = useTranslations("ios");
@@ -69,16 +93,20 @@ function AddSheet() {
   const [copied, setCopied] = useState(false); // a link is on the clipboard (asking does not read it)
   useEffect(() => void Clipboard.hasUrlAsync().then(setCopied).catch(() => {}), []);
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
+  const [shots, setShots] = useState<Shot[]>([]); // pictures picked: what is typed is then their note
+  const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
 
   const text = value.trim();
   const isText = Boolean(text) && extractUrls(text).length === 0;
+  const words = isText || shots.length > 0; // a sentence, not a link: the keyboard for writing
+  const ready = Boolean(text) || shots.length > 0;
 
   const submit = async () => {
-    if (!text || busy) return;
+    if (!ready || busy) return;
     setBusy(true);
     setError(null);
     try {
-      const { queued } = await pluck(isText ? { text, kind } : { text }); // offline, it waits in the queue
+      const { queued } = shots.length ? (await pluckShots(shots, text, drop), { queued: false }) : await pluck(isText ? { text, kind } : { text }); // offline, it waits in the queue
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
       toast(tr(queued ? "add.queued" : "add.plucked"));
@@ -89,33 +117,30 @@ function AddSheet() {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
-      {/* No title: the sheet is Pluck's own. Cancel sits on the right, clear of what iOS floats over the caret. */}
-      <View style={styles.head}>
-        <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.button}>
-          <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 16 }]}>{tr("common.cancel")}</Text>
-        </Pressable>
-      </View>
+    // No title and no Cancel: the sheet is Pluck's own, and it goes away as iOS sheets do, pulled down by its grabber
+    // or by a tap outside it. VoiceOver's scrub does the same.
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }} onAccessibilityEscape={() => router.back()}>
       <View style={styles.body}>
         <View style={[styles.field, { borderColor: t.lineStrong, backgroundColor: t.surface }]}>
+          {shots.length > 0 && <View style={styles.inBox}><Shots shots={shots} busy={busy} remove={drop} /></View>}
           <TextInput
             value={value}
             onChangeText={(v) => { setValue(v); setError(null); }}
-            placeholder={tr("add.placeholder")}
+            placeholder={shots.length ? tr("note.placeholder") : tr("add.placeholder")}
             placeholderTextColor={t.ink2}
-            accessibilityLabel={tr("add.placeholder")}
+            accessibilityLabel={shots.length ? tr("note.title") : tr("add.placeholder")}
             multiline
             autoFocus
-            autoCapitalize="none"
-            autoCorrect={isText}
-            keyboardType={isText ? "default" : "url"}
+            autoCapitalize={shots.length ? "sentences" : "none"}
+            autoCorrect={words}
+            keyboardType={words ? "default" : "url"}
             textContentType="none"
             selectionColor={t.accent}
             style={[font.regular, styles.words, { color: t.ink }]}
           />
           <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
         </View>
-        {copied && !text && (
+        {copied && !ready && (
           <Clipboard.ClipboardPasteButton
             acceptedContentTypes={["url", "plain-text"]}
             onPress={(data) => { if (data.type === "text") setValue(data.text); }}
@@ -126,8 +151,8 @@ function AddSheet() {
             style={styles.paste}
           />
         )}
-        {!text && !speak.on && <Photos busy={busy} setBusy={setBusy} setError={setError} note />}
-        {isText && (
+        {!ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} note />}
+        {isText && !shots.length && (
           // Text with no link: which Kind it becomes, as the web box asks.
           <View style={styles.kinds} accessibilityRole="radiogroup" accessibilityLabel={tr("add.as")}>
             <Text style={[font.regular, { color: t.ink2, fontSize: 14 }]}>{tr("add.as")}</Text>
@@ -140,8 +165,8 @@ function AddSheet() {
           </View>
         )}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
-        <Pressable accessibilityRole="button" accessibilityState={{ disabled: !text || busy, busy }} disabled={!text || busy} onPress={() => void submit()}
-          style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: !text || busy ? 0.6 : pressed ? 0.85 : 1 }]}>
+        <Pressable accessibilityRole="button" accessibilityState={{ disabled: !ready || busy, busy }} disabled={!ready || busy} onPress={() => void submit()}
+          style={({ pressed }) => [styles.primary, { backgroundColor: t.brand, opacity: !ready || busy ? 0.6 : pressed ? 0.85 : 1 }]}>
           {busy ? <ActivityIndicator color={t.onBrand} /> : <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.onBrand, fontSize: 16 }]}>{tr("add.submit")}</Text>}
         </Pressable>
       </View>
@@ -165,8 +190,11 @@ function AddWide() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
+  const [picked, setShots] = useState<Shot[]>([]);
+  const shots = mode === "link" ? picked : []; // pictures go in from Link, where Photo and Camera are
+  const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
   const text = value.trim();
-  const ready = Boolean(text || (mode !== "link" && title.trim()));
+  const ready = Boolean(text || shots.length || (mode !== "link" && title.trim()));
 
   const submit = async () => {
     if (!ready || busy) return;
@@ -174,7 +202,7 @@ function AddWide() {
     setError(null);
     try {
       const body = mode === "link" ? { text } : { text: text || title.trim(), kind: mode, ...(title.trim() && text ? { title: title.trim() } : {}) };
-      const { queued } = await pluck(body);
+      const { queued } = shots.length ? (await pluckShots(shots, text, drop), { queued: false }) : await pluck(body);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
       toast(tr(queued ? "add.queued" : "add.plucked"));
@@ -220,22 +248,23 @@ function AddWide() {
           <TextInput value={title} onChangeText={setTitle} placeholder={tr("ipad.add.titlePlaceholder")} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
             selectionColor={t.accent} style={[font.bold, { color: t.ink, fontSize: 24, letterSpacing: -0.24 }]} />
         )}
+        {shots.length > 0 && <Shots shots={shots} busy={busy} remove={drop} />}
         <TextInput
           value={value}
           onChangeText={(v) => { setValue(v); setError(null); }}
-          placeholder={mode === "link" ? tr("add.placeholder") : tr("item.textPlaceholder")}
+          placeholder={shots.length ? tr("note.placeholder") : mode === "link" ? tr("add.placeholder") : tr("item.textPlaceholder")}
           placeholderTextColor={t.ink2}
-          accessibilityLabel={mode === "link" ? tr("add.placeholder") : tr("item.textA11y")}
+          accessibilityLabel={shots.length ? tr("note.title") : mode === "link" ? tr("add.placeholder") : tr("item.textA11y")}
           multiline
           autoFocus
-          autoCapitalize={mode === "link" ? "none" : "sentences"}
-          autoCorrect={mode !== "link"}
-          keyboardType={mode === "link" ? "url" : "default"}
+          autoCapitalize={mode === "link" && !shots.length ? "none" : "sentences"}
+          autoCorrect={mode !== "link" || shots.length > 0}
+          keyboardType={mode === "link" && !shots.length ? "url" : "default"}
           selectionColor={t.accent}
           style={[font.regular, wide.words, { color: t.ink }]}
         />
         <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
-        {mode === "link" && !text && !speak.on && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
+        {mode === "link" && !ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} />}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
           {tr.rich("ipad.add.keys", { key: (c) => <View style={[wide.key, { borderColor: t.lineStrong }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{c}</Text></View> })}
@@ -256,12 +285,14 @@ const wide = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  head: { flexDirection: "row", alignItems: "center", justifyContent: "flex-end", paddingHorizontal: 8, paddingTop: 8, minHeight: 52 },
-  button: { minHeight: 44, paddingHorizontal: 12, justifyContent: "center" },
-  body: { paddingHorizontal: 16, paddingTop: 8, gap: 12 },
+  body: { paddingHorizontal: 16, paddingTop: 28, gap: 12 }, // under the grabber
   field: { borderWidth: 1, borderRadius: 12 },
   words: { minHeight: 64, maxHeight: 180, paddingHorizontal: 14, paddingTop: 12, fontSize: 17, textAlignVertical: "top" },
   foot: { flexDirection: "row", alignItems: "center", gap: 8, paddingLeft: 14, paddingRight: 2, minHeight: 44 }, // what is being heard, and the microphone
+  inBox: { paddingHorizontal: 14, paddingTop: 14 },
+  shots: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  shot: { width: 72, height: 72, borderRadius: 10 },
+  out: { position: "absolute", top: -6, right: -6, width: 20, height: 20, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   paste: { alignSelf: "flex-start", height: 40, width: 120 },
   photos: { flexDirection: "row", gap: 8 },
   photo: { flex: 1, minHeight: 44, paddingHorizontal: 6, borderWidth: 1, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }, // three across: "Appareil photo" has to fit

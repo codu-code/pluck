@@ -568,7 +568,8 @@
     "plucked": "インボックスにPluckしました。",
     "photo": "写真",
     "camera": "カメラ",
-    "cameraOff": "Pluckはカメラを使用できません。「設定」で変更できます。"
+    "cameraOff": "Pluckはカメラを使用できません。「設定」で変更できます。",
+    "removePhoto": "この写真を取り除く"
   },
   "preview": {
     "open": "{site}で開く",

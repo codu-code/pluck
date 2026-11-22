@@ -568,7 +568,8 @@
     "plucked": "Preso, è nell'Inbox.",
     "photo": "Foto",
     "camera": "Fotocamera",
-    "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni."
+    "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni.",
+    "removePhoto": "Rimuovi questa foto"
   },
   "preview": {
     "open": "Apri su {site}",

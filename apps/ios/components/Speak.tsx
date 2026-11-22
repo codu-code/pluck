@@ -11,9 +11,10 @@ import { toast } from "./Toast";
 export type Speaking = { on: boolean; hearing: string; toggle: () => void };
 
 // Speaking in place of typing, wherever words are written: the Add box, a Note, the note on a link. It is the
-// iPhone's own speech recognition, kept to the phone (requiresOnDeviceRecognition), so no sound leaves it and none is
-// kept: what comes out is text. Each stretch of speech is handed over when it has settled; `hearing` is the stretch
-// still being heard. `refuse` says why it would not start, where the screen can show it (a sheet covers the toast).
+// iPhone's own speech recognition: on the phone where the phone can do the language itself, else through Apple, where
+// the keyboard's dictation already sends it. Pluck keeps no sound: what comes out is text. Each stretch of speech is
+// handed over when it has settled; `hearing` is the stretch still being heard. `refuse` says why it would not start,
+// where the screen can show it (a sheet covers the toast).
 export function useSpeak(insert: (words: string) => void, refuse: (why: string) => void = toast): Speaking {
   const tr = useTranslations("ios.speak");
   const [on, setOn] = useState(false);
@@ -56,7 +57,6 @@ export function useSpeak(insert: (words: string) => void, refuse: (why: string) 
       void Haptics.selectionAsync();
       return ExpoSpeechRecognitionModule.stop();
     }
-    if (!ExpoSpeechRecognitionModule.supportsOnDeviceRecognition()) return refuse(tr("off"));
     if (!(await ExpoSpeechRecognitionModule.requestPermissionsAsync()).granted) return refuse(tr("denied"));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     mine.current = true;
@@ -65,7 +65,7 @@ export function useSpeak(insert: (words: string) => void, refuse: (why: string) 
       lang: getLocales()[0]?.languageTag ?? "en-US",
       interimResults: true,
       continuous: true, // until Stop: a pause to think does not end it
-      requiresOnDeviceRecognition: true,
+      requiresOnDeviceRecognition: ExpoSpeechRecognitionModule.supportsOnDeviceRecognition(), // off the phone only where it cannot
       addsPunctuation: true,
     });
   };

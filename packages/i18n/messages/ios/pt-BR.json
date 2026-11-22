@@ -568,7 +568,8 @@
     "plucked": "Colhido na Entrada.",
     "photo": "Foto",
     "camera": "Câmera",
-    "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes."
+    "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes.",
+    "removePhoto": "Remover esta foto"
   },
   "preview": {
     "open": "Abrir no {site}",

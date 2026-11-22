@@ -568,7 +568,8 @@
     "plucked": "已摘进收件箱。",
     "photo": "照片",
     "camera": "相机",
-    "cameraOff": "Pluck 无权使用相机。你可以在“设置”中更改。"
+    "cameraOff": "Pluck 无权使用相机。你可以在“设置”中更改。",
+    "removePhoto": "移除这张照片"
   },
   "preview": {
     "open": "在 {site} 打开",

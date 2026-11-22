@@ -568,7 +568,8 @@
     "plucked": "Plucked to the Inbox.",
     "photo": "Photo",
     "camera": "Camera",
-    "cameraOff": "Pluck is not allowed to use the camera. You can change that in Settings."
+    "cameraOff": "Pluck is not allowed to use the camera. You can change that in Settings.",
+    "removePhoto": "Remove this photo"
   },
   "preview": {
     "open": "Open on {site}",
