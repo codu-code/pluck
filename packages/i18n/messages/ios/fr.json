@@ -631,5 +631,12 @@
     "heading": "Titre",
     "bullets": "Liste à puces",
     "numbers": "Liste numérotée"
+  },
+  "speak": {
+    "start": "Parler",
+    "stop": "Arrêter l’écoute",
+    "listening": "Écoute en cours",
+    "off": "Parler n’est pas disponible ici dans cette langue. Le micro du clavier fonctionne toujours.",
+    "denied": "Pluck n’est pas autorisé à utiliser le micro et la reconnaissance vocale. Vous pouvez changer cela dans Réglages."
   }
 }

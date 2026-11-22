@@ -631,5 +631,12 @@
     "heading": "Titolo",
     "bullets": "Elenco puntato",
     "numbers": "Elenco numerato"
+  },
+  "speak": {
+    "start": "Parla",
+    "stop": "Interrompi l’ascolto",
+    "listening": "In ascolto",
+    "off": "Parlare non è disponibile qui in questa lingua. Il microfono della tastiera funziona comunque.",
+    "denied": "Pluck non ha il permesso di usare il microfono e il riconoscimento vocale. Puoi cambiarlo in Impostazioni."
   }
 }

@@ -631,5 +631,12 @@
     "heading": "Heading",
     "bullets": "Bulleted list",
     "numbers": "Numbered list"
+  },
+  "speak": {
+    "start": "Speak",
+    "stop": "Stop listening",
+    "listening": "Listening",
+    "off": "Speaking is not available here in this language. The microphone on the keyboard still works.",
+    "denied": "Pluck is not allowed to use the microphone and Speech Recognition. You can change that in Settings."
   }
 }

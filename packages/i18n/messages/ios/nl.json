@@ -631,5 +631,12 @@
     "heading": "Kop",
     "bullets": "Opsomming",
     "numbers": "Genummerde lijst"
+  },
+  "speak": {
+    "start": "Spreken",
+    "stop": "Stop met luisteren",
+    "listening": "Luistert",
+    "off": "Spreken is hier in deze taal niet beschikbaar. De microfoon op het toetsenbord werkt nog wel.",
+    "denied": "Pluck mag de microfoon en spraakherkenning niet gebruiken. Je kunt dat wijzigen in Instellingen."
   }
 }

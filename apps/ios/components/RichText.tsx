@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
 import { EnrichedMarkdownTextInput, type CaretRect, type EnrichedMarkdownTextInputInstance, type HeadingLevel, type StyleState } from "react-native-enriched-markdown";
@@ -6,9 +7,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 import { font, scale, useTheme } from "@/lib/theme";
 import { Icon, ICONS } from "./Glyph";
+import { Hearing, Mic, type Speaking } from "./Speak";
 
 export type Format = Pick<StyleState, "bold" | "italic" | "heading" | "unorderedList" | "orderedList">;
-export type RichTextHandle = Pick<EnrichedMarkdownTextInputInstance, "toggleBold" | "toggleItalic" | "toggleUnorderedList" | "toggleOrderedList" | "focus"> & {
+export type RichTextHandle = Pick<EnrichedMarkdownTextInputInstance, "toggleBold" | "toggleItalic" | "toggleUnorderedList" | "toggleOrderedList" | "focus" | "insertText"> & {
   heading: () => void; // body, then a heading, then a smaller one, then body again
 };
 
@@ -23,12 +25,13 @@ type Props = {
   onUnfit: () => void;
   placeholder: string;
   a11y: string;
+  autoFocus?: boolean; // a new Note opens on its words, keyboard up
 };
 
 // The words of a Note, Todo or Thing as rich text: bold, italic, two heading sizes, bullets and numbers, with no marks
 // showing. What it keeps is Markdown, a line a block, exactly as a plain Note was always kept, so an old Note opens
 // unchanged. It never writes until it has read the text back the same, and so never rewrites one it cannot keep.
-export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ value, onChange, onFormat, onFocus, onBlur, onCaret, onUnfit, placeholder, a11y }, handle) {
+export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ value, onChange, onFormat, onFocus, onBlur, onCaret, onUnfit, placeholder, a11y, autoFocus }, handle) {
   const t = useTheme();
   const tr = useTranslations("ios.format");
   const input = useRef<EnrichedMarkdownTextInputInstance>(null);
@@ -52,6 +55,7 @@ export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ va
     toggleUnorderedList: () => input.current?.toggleUnorderedList(),
     toggleOrderedList: () => input.current?.toggleOrderedList(),
     focus: () => input.current?.focus(),
+    insertText: (words) => input.current?.insertText(words), // spoken words, where the caret is
     // Toggling the level a line already has takes the heading off, so each step names the level it goes to.
     heading: () => input.current?.toggleHeading(level.current === 0 ? 1 : level.current === 1 ? 2 : level.current),
   }), []);
@@ -62,6 +66,7 @@ export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ va
       defaultValue={first.current} // as it opened: each save hands a new `value` down, and the words being typed are not replaced by it
       scrollEnabled={false} // the screen scrolls, the title with it; onCaret keeps the line being typed in view
       markdownShortcuts
+      autoFocus={autoFocus}
       placeholder={placeholder}
       placeholderTextColor={t.ink2}
       accessibilityLabel={a11y}
@@ -94,9 +99,10 @@ export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ va
   );
 });
 
-// The bar over the keyboard while the words are being written: Bold, Italic, Heading, Bullets, Numbers, and Done,
-// which puts the keyboard away. On the rail, like the reader's toolbar it stands in for.
-export function FormatBar({ input, format, keyboard }: { input: React.RefObject<RichTextHandle | null>; format: Format | null; keyboard: boolean }) {
+// The bar over the keyboard while the words are being written: Bold, Italic, Heading, Bullets, Numbers, the
+// microphone, and Done, which puts the keyboard away. On the rail, like the reader's toolbar it stands in for.
+// While the microphone listens, what it hears takes the tools' place. `plain`: the plain editor, which has no tools.
+export function FormatBar({ input, format, keyboard, speak, plain = false }: { input: React.RefObject<RichTextHandle | null>; format: Format | null; keyboard: boolean; speak: Speaking; plain?: boolean }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const bottom = useSafeAreaInsets().bottom;
@@ -111,14 +117,15 @@ export function FormatBar({ input, format, keyboard }: { input: React.RefObject<
   return (
     // With no keyboard on screen (a hardware one, on iPad) the bar sits at the foot of the column, over the home bar.
     <View style={[styles.bar, { backgroundColor: t.rail, borderTopColor: t.line, paddingBottom: keyboard ? 6 : Math.max(bottom, 6) }]} accessibilityRole="toolbar">
-      {tools.map((x) => (
-        <Pressable key={x.key} accessibilityRole="button" accessibilityLabel={tr(`format.${x.key}`)} accessibilityState={{ selected: Boolean(x.on) }} onPress={x.press}
+      {speak.on ? <Hearing speak={speak} /> : !plain && tools.map((x) => (
+        <Pressable key={x.key} accessibilityRole="button" accessibilityLabel={tr(`format.${x.key}`)} accessibilityState={{ selected: Boolean(x.on) }} onPress={() => { void Haptics.selectionAsync(); x.press(); }}
           style={({ pressed }) => [styles.tool, (x.on || pressed) && { backgroundColor: t.railActive }]}>
           {x.mark}
         </Pressable>
       ))}
-      <View style={{ flex: 1 }} />
-      <Pressable accessibilityRole="button" onPress={() => Keyboard.dismiss()} style={styles.done} hitSlop={4}>
+      {!speak.on && <View style={{ flex: 1 }} />}
+      <Mic speak={speak} />
+      <Pressable accessibilityRole="button" onPress={() => { if (speak.on) speak.toggle(); Keyboard.dismiss(); }} style={styles.done} hitSlop={4}>
         <Text maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.actionInk, fontSize: 16 }]}>{tr("common.done")}</Text>
       </Pressable>
     </View>
@@ -126,7 +133,7 @@ export function FormatBar({ input, format, keyboard }: { input: React.RefObject<
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: "row", alignItems: "center", gap: 4, paddingTop: 6, paddingHorizontal: 8, borderTopWidth: StyleSheet.hairlineWidth * 2 },
+  bar: { flexDirection: "row", alignItems: "center", gap: 2, paddingTop: 6, paddingHorizontal: 8, borderTopWidth: StyleSheet.hairlineWidth * 2 },
   tool: { width: 44, height: 44, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   letter: { fontSize: 19, lineHeight: 24 },
   sub: { fontSize: 12 },

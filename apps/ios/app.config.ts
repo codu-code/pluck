@@ -45,6 +45,32 @@ const CAMERA = {
   ko: "담을 사진을 찍을 때 Pluck이 카메라를 엽니다.",
   "zh-Hans": "拍照摘下时，Pluck 会打开相机。",
 };
+// What iOS shows the first time the microphone is tapped (components/Speak.tsx): two questions, one for the
+// microphone and one for turning speech into text.
+const MIC: Record<string, string> = {
+  en: "Pluck listens while you speak a note. The words are written on this device and no sound is kept.",
+  es: "Pluck escucha mientras dices una nota. Las palabras se escriben en este dispositivo y no se guarda ningún sonido.",
+  "pt-BR": "O Pluck ouve enquanto você fala uma nota. As palavras são escritas neste dispositivo e nenhum som é guardado.",
+  fr: "Pluck écoute pendant que vous dites une note. Les mots sont écrits sur cet appareil et aucun son n’est conservé.",
+  de: "Pluck hört zu, während du eine Notiz sprichst. Die Wörter werden auf diesem Gerät geschrieben, und kein Ton wird behalten.",
+  ja: "メモを話している間、Pluckが聞き取ります。言葉はこのデバイス上で文字になり、音声は残りません。",
+  it: "Pluck ascolta mentre dici una nota. Le parole vengono scritte su questo dispositivo e nessun suono viene conservato.",
+  nl: "Pluck luistert terwijl je een notitie inspreekt. De woorden worden op dit apparaat geschreven en er wordt geen geluid bewaard.",
+  ko: "메모를 말하는 동안 Pluck이 들어요. 말은 이 기기에서 글로 바뀌고 소리는 남지 않아요.",
+  "zh-Hans": "你说出笔记时，Pluck 会聆听。文字在此设备上写出，不保留任何声音。",
+};
+const SPEECH: Record<string, string> = {
+  en: "Pluck turns what you say into text on this device.",
+  es: "Pluck convierte lo que dices en texto en este dispositivo.",
+  "pt-BR": "O Pluck transforma o que você diz em texto neste dispositivo.",
+  fr: "Pluck transforme ce que vous dites en texte sur cet appareil.",
+  de: "Pluck wandelt auf diesem Gerät in Text um, was du sagst.",
+  ja: "話した内容を、このデバイス上で文字にします。",
+  it: "Pluck trasforma in testo quello che dici, su questo dispositivo.",
+  nl: "Pluck zet op dit apparaat om in tekst wat je zegt.",
+  ko: "말한 내용을 이 기기에서 글로 바꿔요.",
+  "zh-Hans": "Pluck 在此设备上把你说的话转成文字。",
+};
 
 const config: ExpoConfig = {
   name: "Pluck",
@@ -124,10 +150,11 @@ const config: ExpoConfig = {
     // Add, Photo and Camera (app/add.tsx). The photo library needs no permission: iOS's own picker hands over only
     // what the person picks. The camera asks, in the words below; nothing records sound.
     ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: false, microphonePermission: false }],
+    ["expo-speech-recognition", { microphonePermission: MIC.en, speechRecognitionPermission: SPEECH.en }],
     "@bacons/apple-targets",
   ],
-  // The camera question in the other nine languages (iOS reads it from each InfoPlist.strings).
-  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text }])),
+  // The camera and microphone questions in the other nine languages (iOS reads them from each InfoPlist.strings).
+  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text, NSMicrophoneUsageDescription: MIC[l], NSSpeechRecognitionUsageDescription: SPEECH[l] }])),
   // showServer: "Use your own server" on the sign-in screen. Off in store builds (it distracts everyone who is not
   // self-hosting); on for PLUCK_SHOW_SERVER=1 or a build pointed at another server. A server's own pluck://signin?server=
   // link opens it in any build.

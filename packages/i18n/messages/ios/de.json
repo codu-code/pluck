@@ -631,5 +631,12 @@
     "heading": "Überschrift",
     "bullets": "Aufzählung",
     "numbers": "Nummerierte Liste"
+  },
+  "speak": {
+    "start": "Sprechen",
+    "stop": "Zuhören beenden",
+    "listening": "Hört zu",
+    "off": "Sprechen ist hier in dieser Sprache nicht verfügbar. Das Mikrofon der Tastatur funktioniert weiterhin.",
+    "denied": "Pluck darf das Mikrofon und die Spracherkennung nicht verwenden. Das lässt sich in den Einstellungen ändern."
   }
 }

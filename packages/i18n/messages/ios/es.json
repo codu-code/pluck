@@ -631,5 +631,12 @@
     "heading": "Título",
     "bullets": "Lista con viñetas",
     "numbers": "Lista numerada"
+  },
+  "speak": {
+    "start": "Hablar",
+    "stop": "Dejar de escuchar",
+    "listening": "Escuchando",
+    "off": "Hablar no está disponible aquí en este idioma. El micrófono del teclado sigue funcionando.",
+    "denied": "Pluck no tiene permiso para usar el micrófono y el reconocimiento de voz. Puedes cambiarlo en Ajustes."
   }
 }

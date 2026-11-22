@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
+import { Hearing, Mic, spoken, useSpeak } from "@/components/Speak";
 import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { pluck, pluckPhoto } from "@/lib/data";
@@ -21,7 +22,8 @@ export default function Add() {
 // A picture is plucked from where it is: out of the photo library (iOS's own picker, which needs no permission and
 // hands over only what is picked) or straight from the camera. Each becomes an Image, like one from the share sheet.
 // JPEGs at 0.6: a full-size photo then fits what an AI tool can be handed (the connector's 3 MB).
-function Photos({ busy, setBusy, setError }: { busy: boolean; setBusy: (b: boolean) => void; setError: (e: string | null) => void }) {
+// `note` (iPhone): a Note button beside them, which leaves the sheet for a new Note's own editor.
+function Photos({ busy, setBusy, setError, note = false }: { busy: boolean; setBusy: (b: boolean) => void; setError: (e: string | null) => void; note?: boolean }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const take = async (from: "library" | "camera") => {
@@ -45,11 +47,12 @@ function Photos({ busy, setBusy, setError }: { busy: boolean; setBusy: (b: boole
   };
   return (
     <View style={styles.photos}>
-      {(["library", "camera"] as const).map((from) => (
-        <Pressable key={from} accessibilityRole="button" accessibilityState={{ disabled: busy }} disabled={busy} onPress={() => void take(from)}
+      {([...(note ? ["note" as const] : []), "library", "camera"] as const).map((from) => (
+        <Pressable key={from} accessibilityRole="button" accessibilityState={{ disabled: busy }} disabled={busy}
+          onPress={() => (from === "note" ? router.replace("/items/new") : void take(from))}
           style={({ pressed }) => [styles.photo, { borderColor: t.lineStrong, backgroundColor: pressed ? t.tint : "transparent", opacity: busy ? 0.6 : 1 }]}>
-          <Icon d={from === "library" ? ICONS.photo : ICONS.camera} size={18} color={t.ink} />
-          <Text maxFontSizeMultiplier={scale.title} style={[font.medium, { color: t.ink, fontSize: 15 }]}>{tr(from === "library" ? "add.photo" : "add.camera")}</Text>
+          <Icon d={from === "note" ? ICONS.compose : from === "library" ? ICONS.photo : ICONS.camera} size={18} color={t.ink} />
+          <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} maxFontSizeMultiplier={scale.title} style={[font.medium, { flexShrink: 1, color: t.ink, fontSize: 15 }]}>{tr(from === "note" ? "kinds.note" : from === "library" ? "add.photo" : "add.camera")}</Text>
         </Pressable>
       ))}
     </View>
@@ -65,6 +68,7 @@ function AddSheet() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false); // a link is on the clipboard (asking does not read it)
   useEffect(() => void Clipboard.hasUrlAsync().then(setCopied).catch(() => {}), []);
+  const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
 
   const text = value.trim();
   const isText = Boolean(text) && extractUrls(text).length === 0;
@@ -86,28 +90,31 @@ function AddSheet() {
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
+      {/* No title: the sheet is Pluck's own. Cancel sits on the right, clear of what iOS floats over the caret. */}
       <View style={styles.head}>
         <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.button}>
           <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 16 }]}>{tr("common.cancel")}</Text>
         </Pressable>
-        <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.semibold, { color: t.ink, fontSize: 17 }]}>{tr("add.title")}</Text>
-        <View style={styles.button} />
       </View>
       <View style={styles.body}>
-        <TextInput
-          value={value}
-          onChangeText={(v) => { setValue(v); setError(null); }}
-          placeholder={tr("add.placeholder")}
-          placeholderTextColor={t.ink2}
-          accessibilityLabel={tr("add.placeholder")}
-          multiline
-          autoFocus
-          autoCapitalize="none"
-          autoCorrect={isText}
-          keyboardType={isText ? "default" : "url"}
-          selectionColor={t.accent}
-          style={[font.regular, styles.field, { color: t.ink, borderColor: t.lineStrong, backgroundColor: t.surface }]}
-        />
+        <View style={[styles.field, { borderColor: t.lineStrong, backgroundColor: t.surface }]}>
+          <TextInput
+            value={value}
+            onChangeText={(v) => { setValue(v); setError(null); }}
+            placeholder={tr("add.placeholder")}
+            placeholderTextColor={t.ink2}
+            accessibilityLabel={tr("add.placeholder")}
+            multiline
+            autoFocus
+            autoCapitalize="none"
+            autoCorrect={isText}
+            keyboardType={isText ? "default" : "url"}
+            textContentType="none"
+            selectionColor={t.accent}
+            style={[font.regular, styles.words, { color: t.ink }]}
+          />
+          <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
+        </View>
         {copied && !text && (
           <Clipboard.ClipboardPasteButton
             acceptedContentTypes={["url", "plain-text"]}
@@ -119,7 +126,7 @@ function AddSheet() {
             style={styles.paste}
           />
         )}
-        {!text && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
+        {!text && !speak.on && <Photos busy={busy} setBusy={setBusy} setError={setError} note />}
         {isText && (
           // Text with no link: which Kind it becomes, as the web box asks.
           <View style={styles.kinds} accessibilityRole="radiogroup" accessibilityLabel={tr("add.as")}>
@@ -157,6 +164,7 @@ function AddWide() {
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
   const text = value.trim();
   const ready = Boolean(text || (mode !== "link" && title.trim()));
 
@@ -226,7 +234,8 @@ function AddWide() {
           selectionColor={t.accent}
           style={[font.regular, wide.words, { color: t.ink }]}
         />
-        {mode === "link" && !text && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
+        <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
+        {mode === "link" && !text && !speak.on && <Photos busy={busy} setBusy={setBusy} setError={setError} />}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
           {tr.rich("ipad.add.keys", { key: (c) => <View style={[wide.key, { borderColor: t.lineStrong }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{c}</Text></View> })}
@@ -247,13 +256,15 @@ const wide = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  head: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 8, paddingTop: 8, minHeight: 52 },
-  button: { minWidth: 72, minHeight: 44, paddingHorizontal: 8, justifyContent: "center" },
+  head: { flexDirection: "row", alignItems: "center", justifyContent: "flex-end", paddingHorizontal: 8, paddingTop: 8, minHeight: 52 },
+  button: { minHeight: 44, paddingHorizontal: 12, justifyContent: "center" },
   body: { paddingHorizontal: 16, paddingTop: 8, gap: 12 },
-  field: { minHeight: 96, maxHeight: 220, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingTop: 12, paddingBottom: 12, fontSize: 17, textAlignVertical: "top" },
+  field: { borderWidth: 1, borderRadius: 12 },
+  words: { minHeight: 64, maxHeight: 180, paddingHorizontal: 14, paddingTop: 12, fontSize: 17, textAlignVertical: "top" },
+  foot: { flexDirection: "row", alignItems: "center", gap: 8, paddingLeft: 14, paddingRight: 2, minHeight: 44 }, // what is being heard, and the microphone
   paste: { alignSelf: "flex-start", height: 40, width: 120 },
   photos: { flexDirection: "row", gap: 8 },
-  photo: { flex: 1, minHeight: 44, borderWidth: 1, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
+  photo: { flex: 1, minHeight: 44, paddingHorizontal: 6, borderWidth: 1, borderRadius: 12, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }, // three across: "Appareil photo" has to fit
   kinds: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 8 },
   chip: { minHeight: 36, paddingVertical: 6, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, justifyContent: "center" },
   primary: { minHeight: 52, borderRadius: 12, alignItems: "center", justifyContent: "center", paddingVertical: 12 },

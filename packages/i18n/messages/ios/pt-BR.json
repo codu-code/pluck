@@ -631,5 +631,12 @@
     "heading": "Título",
     "bullets": "Lista com marcadores",
     "numbers": "Lista numerada"
+  },
+  "speak": {
+    "start": "Falar",
+    "stop": "Parar de ouvir",
+    "listening": "Ouvindo",
+    "off": "Falar não está disponível aqui neste idioma. O microfone do teclado continua funcionando.",
+    "denied": "O Pluck não tem permissão para usar o microfone e o reconhecimento de fala. Você pode mudar isso nos Ajustes."
   }
 }

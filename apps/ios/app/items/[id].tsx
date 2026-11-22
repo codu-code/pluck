@@ -13,10 +13,11 @@ import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
 import { FormatBar, RichText, type Format, type RichTextHandle } from "@/components/RichText";
+import { spoken, useSpeak } from "@/components/Speak";
 import { useInDetail, useSplit } from "@/components/split/context";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
+import { fileOf, keepByHand, keys, library, pluck, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { device } from "@/lib/i18n";
@@ -27,7 +28,8 @@ const BACK = { inbox: "tabs.inbox", later: "tabs.later", archived: "item.backArc
 
 export default function ItemScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  return <ItemView id={id} />;
+  // items/new: a Note not plucked yet, straight into its editor (Add's Note button). It is plucked with its first words.
+  return id === "new" ? <NoteEditor data={null} /> : <ItemView id={id} />;
 }
 
 // The Item, as its own screen on iPhone and in the iPad split view's detail column (useInDetail).
@@ -374,26 +376,53 @@ function BlockView({ block, quotes, t, wide = false }: { block: Block; quotes: s
 }
 
 // Notes, todos and things: the text is the item, typed and kept as you go.
-function NoteEditor({ data }: { data: FullItem }) {
+// `data` null: a new Note, which has no Item until its first words are plucked.
+function NoteEditor({ data }: { data: FullItem | null }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const qc = useQueryClient();
-  const { item } = data;
+  const [made, setMade] = useState<Item | null>(null);
+  const item = data?.item ?? made;
   const patch = usePatchItem();
-  const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
-  const [text, setText] = useState(data.text);
+  const [title, setTitle] = useState(item && !item.titleIsDerived ? item.title : "");
+  const [text, setText] = useState(data?.text ?? "");
   const first = useRef(true);
+  const unsaved = useRef(false);
+  const making = useRef(false);
+  const now = useRef({ text, title });
+  now.current = { text, title };
 
-  useEffect(() => {
-    if (first.current) return void (first.current = false);
-    const id = setTimeout(() => {
+  // Keeps the words as they are now: an edit to the Item, or the pluck that makes it. Leaving the screen mid-request
+  // loses nothing: the pluck's answer sends on whatever was typed after it left.
+  const keep = useRef(() => {});
+  keep.current = () => {
+    unsaved.current = false;
+    if (item) {
       patch.mutate({ id: item.id, patch: { text, title } });
       qc.setQueryData<FullItem>(keys.item(item.id), (old) => (old ? { ...old, text } : old));
-    }, 600);
+    } else if (text.trim() && !making.current) {
+      making.current = true;
+      const sent = { text, title };
+      // shortcut: with no connection the first words wait in the queue and later ones are not added to them; let the queue replace a waiting Note when people write offline.
+      pluck({ text, kind: "note", ...(title.trim() ? { title: title.trim() } : {}) }).then((res) => {
+        if (!res.item) return;
+        setMade(res.item);
+        if (now.current.text !== sent.text || now.current.title !== sent.title) void library.edit(res.item.id, now.current).catch(() => {});
+      }, () => {
+        making.current = false;
+        toast(tr("add.failed"));
+      });
+    }
+  };
+  useEffect(() => {
+    if (first.current) return void (first.current = false);
+    unsaved.current = true;
+    const id = setTimeout(() => keep.current(), 600);
     return () => clearTimeout(id);
   }, [text, title]); // only when the words change
+  useEffect(() => () => void (unsaved.current && keep.current()), []); // back before the pause was over: kept on the way out
 
-  const done = item.status === "done";
+  const done = item?.status === "done";
   const inDetail = useInDetail();
 
   // The words are rich text (components/RichText.tsx); one it cannot keep exactly opens as plain text, as before.
@@ -402,6 +431,8 @@ function NoteEditor({ data }: { data: FullItem }) {
   const [format, setFormat] = useState<Format | null>(null);
   const [writing, setWriting] = useState(false); // the words have the keyboard: the format bar takes the toolbar's place
   const [keyboard, setKeyboard] = useState(false);
+  // Spoken words go where the caret is; in the plain editor, after what is there.
+  const speak = useSpeak((words) => (plain ? setText((was) => spoken(was, words)) : rich.current?.insertText(`${words} `)));
   // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY, never set for the store): -demoWrite 1 opens on the words, keyboard up.
   useEffect(() => {
     const id = process.env.EXPO_PUBLIC_DEMO_KEY && Settings.get("demoWrite") ? setTimeout(() => rich.current?.focus(), 700) : undefined;
@@ -429,9 +460,9 @@ function NoteEditor({ data }: { data: FullItem }) {
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
-        label={tr(BACK[item.status])}
-        left={inDetail ? <Toolbar item={item} /> : undefined}
-        right={item.kind !== "note" ? (
+        label={tr(BACK[item?.status ?? "inbox"])}
+        left={inDetail && item ? <Toolbar item={item} /> : undefined}
+        right={item && item.kind !== "note" ? (
           <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: done }} onPress={() => patch.mutate({ id: item.id, patch: { status: done ? "inbox" : "done" } })} style={styles.doneButton}>
             <View style={[styles.ring, done ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.ringOff }]}>
               {done && <Icon d={ICONS.tick} size={12} color={t.onHighlight} width={2.4} />}
@@ -449,17 +480,18 @@ function NoteEditor({ data }: { data: FullItem }) {
         onScroll={(e) => void (at.current.y = e.nativeEvent.contentOffset.y)}
         onLayout={(e) => { at.current.height = e.nativeEvent.layout.height; follow(); }} // the keyboard came or went
       >
-        <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
+        <TextInput value={title} onChangeText={setTitle} placeholder={item?.title ?? tr("ipad.add.titlePlaceholder")} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
         <View onLayout={(e) => void (at.current.words = e.nativeEvent.layout.y)}>
           {plain ? (
-            <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
+            <TextInput value={text} onChangeText={setText} onFocus={() => setWriting(true)} onBlur={() => setWriting(false)} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
               placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
           ) : (
             <RichText
               ref={rich}
-              value={data.text}
+              value={data?.text ?? ""}
+              autoFocus={!data}
               onChange={setText}
               onFormat={setFormat}
               onFocus={() => setWriting(true)}
@@ -472,7 +504,7 @@ function NoteEditor({ data }: { data: FullItem }) {
           )}
         </View>
       </ScrollView>
-      {writing && !plain ? <FormatBar input={rich} format={format} keyboard={keyboard} /> : !inDetail && !keyboard && <Toolbar item={item} />}
+      {writing || speak.on ? <FormatBar input={rich} format={format} keyboard={keyboard} speak={speak} plain={plain} /> : !inDetail && !keyboard && item && <Toolbar item={item} />}
     </KeyboardAvoidingView>
   );
 }

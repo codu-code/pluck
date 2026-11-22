@@ -3,6 +3,7 @@ import { useState } from "react";
 import { KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { isRenameable } from "@pluck/shared-schemas";
 import { useTranslations } from "use-intl";
+import { Hearing, Mic, spoken, useSpeak } from "@/components/Speak";
 import { useItem, usePatchItem } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
@@ -21,6 +22,8 @@ export default function Note() {
   const named = item.data?.item.title ?? "";
   const title = titleDraft ?? named;
   const renameable = item.data ? isRenameable(item.data.item) : false;
+  const [why, setWhy] = useState<string | null>(null); // why the microphone would not start
+  const speak = useSpeak((words) => setDraft((was) => spoken(was ?? current, words)), setWhy);
 
   const done = () => {
     const typed = title.replace(/\s*\n\s*/g, " ").trim().slice(0, 500); // one line, the API's limit; empty keeps the old title
@@ -71,7 +74,10 @@ export default function Note() {
         selectionColor={t.accent}
         style={[font.regular, styles.field, { color: t.ink }]}
       />
-      <Text style={[font.regular, styles.hint, { color: t.ink2 }]}>{tr("note.hint")}</Text>
+      <View style={styles.foot}>
+        {speak.on ? <Hearing speak={speak} /> : <Text accessibilityRole={why ? "alert" : undefined} style={[font.regular, styles.hint, { color: why ? t.danger : t.ink2 }]}>{why ?? tr("note.hint")}</Text>}
+        <Mic speak={speak} />
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -82,5 +88,6 @@ const styles = StyleSheet.create({
   about: { paddingHorizontal: 20, paddingTop: 4, fontSize: 14, lineHeight: 19 },
   title: { marginHorizontal: 20, paddingTop: 8, paddingBottom: 12, fontSize: 20, lineHeight: 26, borderBottomWidth: StyleSheet.hairlineWidth },
   field: { flex: 1, paddingHorizontal: 20, paddingTop: 16, fontSize: 17, lineHeight: 25, textAlignVertical: "top" },
-  hint: { paddingHorizontal: 20, paddingVertical: 12, fontSize: 13 },
+  foot: { flexDirection: "row", alignItems: "center", gap: 8, paddingLeft: 20, paddingRight: 8, minHeight: 52 },
+  hint: { flex: 1, paddingVertical: 12, fontSize: 13 },
 });
