@@ -1,6 +1,6 @@
 import { deletePrefix, getObject, keys as blobKeys, putObject, signedUrl, TooLarge } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, findHighlights, getContent, getItem, getItemBlobKeys,
+  applyExtraction, batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, findHighlights, getContent, getItem, getItemBlobKeys,
   hitRateLimit, listHighlights, listItems, listsForItem, markOpened, misfit, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
   updateHighlight,
 } from "@pluck/db";
@@ -82,7 +82,8 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
 export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
   const url = cleanUrl(body.url); // kept as given; pluckLink dedupes on its key
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
-  const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
+  const foundOn = body.foundOn ? cleanUrl(body.foundOn) : null; // the page an image was on; one that is no link is left out
+  const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web", foundOn });
   const kept = needsExtraction || body.html || body.transcript
     ? await keepNow(userId, item, { html: body.html, transcript: body.transcript, timeoutMs: INLINE_TIMEOUT_MS, defer })
     : item;
@@ -104,6 +105,20 @@ export async function setCoverFromApp(userId: string, itemId: string, body: Uint
   if (item.hasCover) return item;
   await putObject(blobKeys.cover(userId, itemId), Buffer.from(body), contentType);
   await setBlobKeys(userId, itemId, { coverKey: blobKeys.cover(userId, itemId) });
+  return readItem(userId, itemId);
+}
+
+// The picture itself, from the extension, for an image the server could not fetch (it sits behind a sign-in): what the
+// tab showed becomes the Item's picture, and the Item an Image that reads as kept. One the server did read keeps its own.
+export async function setPictureFromApp(userId: string, itemId: string, body: Uint8Array, contentType: string): Promise<Item> {
+  const item = await readItem(userId, itemId);
+  if (isTextKind(item.kind)) throw new ApiError("bad_request", "Only a link can take a picture.", 400);
+  if (item.kind === "image" && item.extraction.state === "done") return item;
+  await putObject(blobKeys.cover(userId, itemId), Buffer.from(body), contentType);
+  await setBlobKeys(userId, itemId, { coverKey: blobKeys.cover(userId, itemId) });
+  await applyExtraction(userId, itemId, {
+    kind: "image", preview: null, facts: {}, title: null, siteName: null, author: null, excerpt: null, canonicalUrl: null, lang: null, wordCount: 0, markdown: "", extractor: "app",
+  });
   return readItem(userId, itemId);
 }
 

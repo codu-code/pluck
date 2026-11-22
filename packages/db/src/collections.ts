@@ -13,6 +13,7 @@ export type ItemDoc = {
   urlHash?: string; // absent for notes, todos and things
   clientKey?: string; // a note, todo or thing sent from a queue: its id there, so a resend finds this one
   canonicalUrl: string | null;
+  foundOn?: string | null; // the page an Image was plucked from; absent on Items made before Found on
   title: string;
   titleIsDerived: boolean;
   siteName: string | null;

@@ -30,7 +30,7 @@ const SLIDE_MS = 150; // motion token: archiveRow
 function placeholders(d: PluckDraft): Row[] {
   const now = new Date().toISOString();
   const base = {
-    canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, facts: {}, status: "inbox" as const,
+    canonicalUrl: null, foundOn: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, facts: {}, status: "inbox" as const,
     archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0, inList: false,
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };

@@ -153,7 +153,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
           return { id, text: page.text, textCursor: page.nextCursor };
         }
         const out: Results["get_item"] = {
-          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, extraction: item.extraction.state, facts: item.facts },
+          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, foundOn: item.foundOn, extraction: item.extraction.state, facts: item.facts },
         };
         if (include.includes("text")) {
           const page = textPage(await lib.text(id), 0);
@@ -381,6 +381,7 @@ async function itemMarkdown(lib: PluckLibrary, id: string): Promise<string> {
   const [item, text] = await Promise.all([lib.item(id), lib.text(id)]);
   const lines = [`# ${item.title}`, ""];
   if (item.url) lines.push(item.url);
+  if (item.foundOn) lines.push(`Found on ${item.foundOn}`);
   lines.push([item.siteName, item.kind, `saved ${item.createdAt.slice(0, 10)}`].filter(Boolean).join(" · "), "");
   if (item.note) lines.push(`Note: ${item.note}`, "");
   if (text) {

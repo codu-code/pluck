@@ -19,6 +19,7 @@ export function toItem(d: ItemDoc): Item {
     kind: d.kind,
     url: d.url,
     canonicalUrl: d.canonicalUrl,
+    foundOn: d.foundOn ?? null,
     title: d.title,
     titleIsDerived: d.titleIsDerived,
     siteName: d.siteName,
@@ -48,7 +49,7 @@ export function toItem(d: ItemDoc): Item {
   };
 }
 
-export type PluckLinkInput = { url: string; title?: string | null; note?: string | null; source: Source };
+export type PluckLinkInput = { url: string; title?: string | null; note?: string | null; source: Source; foundOn?: string | null };
 
 // Plucks a URL (as it is kept: cleanUrl). A URL already in the library, by its key, is a re-pluck: the same item
 // moves back to the Inbox, comes out of the bin and is touched, and keeps the URL it has. Never a second item.
@@ -64,6 +65,7 @@ export async function pluckLink(
   const fresh = newItem(userId, {
     kind: "link", url: input.url, urlHash: hash, title: input.title?.trim() || input.url, siteName: new URL(input.url).hostname.replace(/^www\./, ""),
     note: input.note?.trim() || null, source: input.source, searchText: textForSearch({ url: input.url }),
+    ...(input.foundOn ? { foundOn: input.foundOn } : {}),
   }, now);
   const run = () =>
     col.findOneAndUpdate({ userId: uid, urlHash: hash }, { $set: set, $setOnInsert: onInsert(fresh, set) }, { upsert: true, returnDocument: "after", includeResultMetadata: true });
@@ -86,6 +88,10 @@ export async function pluckLink(
       { $set: { note: doc.note ? `${doc.note}\n\n${note}` : note } },
       { returnDocument: "after" },
     ))!;
+  }
+  // Found on is where it was first seen; a re-pluck fills it in only when the Item has none.
+  if (!created && input.foundOn && !doc.foundOn) {
+    doc = (await col.findOneAndUpdate({ _id: doc._id, userId: uid }, { $set: { foundOn: input.foundOn } }, { returnDocument: "after" }))!;
   }
   // A page that failed before gets a fresh try, so the extract job does not skip it as settled.
   const retry = !created && doc.extraction.state === "failed";

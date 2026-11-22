@@ -39,7 +39,7 @@ const { key } = await call("/api/v1/api-keys", { name: "iPhone demo" });
 const bearer = { authorization: `Bearer ${key}` };
 const api = (path, body, method) => call(path, body, method, bearer);
 
-await api("/api/v1/me", { name: store ? "Aoife Byrne" : "Demo Person", handle: `${store ? "aoife" : "demo"}${Date.now().toString(36).slice(-4)}` }, "PATCH");
+await call("/api/v1/me", { name: store ? "Aoife Byrne" : "Demo Person", handle: `${store ? "aoife" : "demo"}${Date.now().toString(36).slice(-4)}` }, "PATCH");
 if (store) {
   console.log(JSON.stringify({ email, key, ...(await storeLibrary()) }));
   process.exit(0);
