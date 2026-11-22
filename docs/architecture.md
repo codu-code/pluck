@@ -47,6 +47,10 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 
 **From the web, the extension or the iPhone app.** `POST /api/v1/items` goes through `route()` (`lib/api.ts`), then `pluckAny` (`lib/library/items.ts`), then `pluckLink` in `packages/db`, which upserts on the person and the URL's hash. A Re-pluck finds the existing Item, moves it to the Inbox, takes it out of the bin and touches it; it never makes a second Item. The page is then read inline with a 5-second cap (`keepNow` in `lib/library/keeping.ts`); covers and the kept HTML go to blob storage after the response. A block of many links makes the rows at once and queues an `extract` job for each (`keepLater`). A page gets four tries, counted on the Item: now, then 30 s, 2 min and 10 min after each failure; a 4xx is final at once.
 
+**A picture or a PDF as a file** (dropped on the web or pasted into its box, picked or photographed in the iPhone app, or shared to it). `POST /api/v1/items/files` makes the Item and answers with a signed address the bytes go straight to; `POST /api/v1/items/<id>/file` then says the upload is in, and the file is read at once (`fileArrived` in `lib/library/files.ts`). The `file` job queued at the start still reads it for a client that never says so (the share sheet's background upload).
+
+**An image from a page** (the extension's "Pluck image"). It is plucked by its address with the page it was on, the Item's Found on. One the server cannot fetch, because it sits behind the person's sign-in, is sent by the extension instead, as the page fetched it or as the tab shows it (`PUT /api/v1/items/<id>/cover?as=picture`, `setPictureFromApp`).
+
 **From Android's Share.** The manifest's `share_target` posts what was shared to `/share` (`app/(app)/share/route.ts`), which plucks it through `pluckAny`. Only the installed app's share sheet can do that signed in: the session cookie is SameSite=Lax, and a request the browser says came from another site is turned away. A link to `/share` (a GET) never plucks; it, and the way back from sign-in, land on `/share/add`, the box holding what was shared.
 
 **From your AI.** `app/mcp/route.ts` checks the OAuth token or API key, that the tool is still connected and the rate limits, then serves `createPluckServer` (`packages/mcp/src/server.ts`), which lists only the tools the token's scopes allow. Tools call `connectorFor(userId)`, which reaches the same library, with `by: "mcp"` so Tags, notes, Lists and saves show "by AI".
@@ -79,6 +83,7 @@ One Next.js app (`apps/web`) is the website, the signed-in app, the REST API for
 - Expiry and "Archive it all" set the Status to Archived. Items in a List are never expired (the `inList` field). Nothing is deleted by expiry or by an AI tool.
 - Types start as Zod schemas in `packages/shared-schemas`.
 - The connector is the only public API; the REST API is for our own clients and may change.
+- A Note's text is Markdown, one line one block, and rich editing is a view over it ([ADR 0002](adr/0002-notes-are-markdown.md)). Both editors are `react-native-enriched-markdown` (the iPhone's native build, the web's DOM build), and each opens a Note only when it reads the text back the same (`sameNote`); otherwise the plain editor does. Titles, rows and excerpts are plain words (`plainLine`).
 - Usage analytics go through `track()` in `apps/web/lib/telemetry.ts`, which sends only for an account whose `settings.analytics` is yes and only the properties listed in [analytics.md](analytics.md). A new event or property goes in both, or `telemetry.test.ts` fails.
 
 ## Where it could be deeper

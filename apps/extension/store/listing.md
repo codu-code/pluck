@@ -62,7 +62,7 @@ Pluck saves the web page, link, image or text selection you choose into your own
 | Permission | Justification |
 |---|---|
 | `activeTab` | When you click Pluck or press its shortcut, it reads the address, title and text of the tab you are on, so the item is kept as you see it. |
-| `scripting` | Runs once in the tab you pluck, after you click, to read the rendered page, your selected text and, on YouTube, the transcript. |
+| `scripting` | Runs once in the tab you pluck, after you click, to read the rendered page, your selected text and, on YouTube, the transcript. For "Pluck image" on a picture Pluck's server cannot open (one behind your sign-in), it reads that picture from the page. |
 | `tabs` | Reads the address of your open tabs, so the Pluck icon fills in on pages already in your library and "Pluck all tabs" can list them. Only the address is read, never the page. |
 | `contextMenus` | Adds "Pluck link", "Pluck image", "Pluck page" and "Pluck selection as highlight" to the right-click menu. |
 | `storage` | Keeps your sign-in, your settings and any plucks waiting for a connection on your computer. |

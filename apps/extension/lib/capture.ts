@@ -55,3 +55,51 @@ export async function screenshot(windowId: number): Promise<Blob | null> {
     return null;
   }
 }
+
+// The picture from the tab, for an image the server cannot fetch (it sits behind your sign-in). First its own bytes,
+// fetched by the page with your session, which works where the image's server lets its page fetch it. Else what the
+// tab shows: where the image is on screen, a capture of the tab, and the one cut to the other. Null when neither
+// can be had: the image is out of view or in a frame, or the page may not be read.
+const COVER_TYPES = ["image/jpeg", "image/png", "image/webp"]; // what PUT /items/:id/cover takes, up to 2 MB
+export async function pictureInTab(tabId: number, windowId: number, src: string): Promise<Blob | null> {
+  try {
+    const [found] = await browser.scripting.executeScript({
+      target: { tabId },
+      args: [src, COVER_TYPES],
+      func: async (src: string, types: string[]) => {
+        try {
+          const res = await fetch(src, { credentials: "include" });
+          const bytes = res.ok ? await res.blob() : null;
+          if (bytes && types.includes(bytes.type) && bytes.size <= 2_000_000) {
+            const url = await new Promise<string>((done, failed) => {
+              const reader = new FileReader();
+              reader.onload = () => done(String(reader.result));
+              reader.onerror = () => failed(reader.error);
+              reader.readAsDataURL(bytes);
+            });
+            return { url };
+          }
+        } catch {
+          // not ours to fetch from here: the capture below
+        }
+        const img = [...document.images].find((i) => i.currentSrc === src || i.src === src);
+        if (!img) return null;
+        const r = img.getBoundingClientRect();
+        const x = Math.max(0, r.left);
+        const y = Math.max(0, r.top);
+        const w = Math.min(innerWidth, r.right) - x;
+        const h = Math.min(innerHeight, r.bottom) - y;
+        return w > 8 && h > 8 ? { x, y, w, h, scale: devicePixelRatio } : null;
+      },
+    });
+    const at = found?.result as { url: string } | { x: number; y: number; w: number; h: number; scale: number } | null | undefined;
+    if (!at) return null;
+    if ("url" in at) return await (await fetch(at.url)).blob();
+    const shot = await createImageBitmap(await (await fetch(await browser.tabs.captureVisibleTab(windowId, { format: "png" }))).blob());
+    const canvas = new OffscreenCanvas(Math.round(at.w * at.scale), Math.round(at.h * at.scale));
+    canvas.getContext("2d")!.drawImage(shot, Math.round(at.x * at.scale), Math.round(at.y * at.scale), canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+    return await canvas.convertToBlob({ type: "image/jpeg", quality: 0.9 });
+  } catch {
+    return null;
+  }
+}
