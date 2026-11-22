@@ -59,7 +59,7 @@ export const RichText = forwardRef<RichTextHandle, Props>(function RichText({ va
   return (
     <EnrichedMarkdownTextInput
       ref={input}
-      defaultValue={value}
+      defaultValue={first.current} // as it opened: each save hands a new `value` down, and the words being typed are not replaced by it
       scrollEnabled={false} // the screen scrolls, the title with it; onCaret keeps the line being typed in view
       markdownShortcuts
       placeholder={placeholder}
