@@ -27,10 +27,13 @@ async function all(path) {
   return rows;
 }
 
-// One more than the highest build number uploaded, for any version.
+// One more than the highest build number uploaded, for any version. An upload Apple refused while processing never
+// becomes a build, but its number is spent all the same, so those are counted too.
 export async function nextBuild() {
   const builds = await all(`/v1/builds?filter[app]=${ASC_APP_ID}&fields[builds]=version&limit=200`);
-  return Math.max(0, ...builds.map((b) => Number.parseInt(b.attributes.version, 10) || 0)) + 1;
+  const refused = await all(`/v1/apps/${ASC_APP_ID}/buildUploads?limit=200`).catch(() => []);
+  const numbers = [...builds.map((b) => b.attributes.version), ...refused.map((u) => u.attributes.cfBundleVersion)];
+  return Math.max(0, ...numbers.map((n) => Number.parseInt(n, 10) || 0)) + 1;
 }
 
 // Every version uploaded, to TestFlight or the App Store.
