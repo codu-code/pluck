@@ -1,6 +1,6 @@
 # Chrome Web Store listing
 
-What to paste into each field of the developer dashboard. The zip is `pnpm --filter @pluck/extension zip` (`.output/pluckextension-<version>-chrome.zip`); build it without `PLUCK_LOCAL`. Images are in this folder.
+What to paste into each field of the developer dashboard. The zip is `pnpm --filter @pluck/extension zip` (`.output/pluckextension-<version>-chrome.zip`); build it without `PLUCK_LOCAL`. Images are in this folder; the three screenshots are taken from the real extension and web app by `node scripts/store-chrome.mjs` (its header says what it needs), so make them again when either changes.
 
 ## Store listing
 

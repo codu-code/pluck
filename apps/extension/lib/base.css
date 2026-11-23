@@ -11,6 +11,14 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 20px; }
 button, input, select { font: inherit; color: inherit; }
+/* One select, as on the web (apps/web/app/globals.css): the native arrow sat flush with the right edge, so the
+   chevron is drawn, 12 in from it. Rules after this one set `background-color` and one side's padding, never the
+   shorthands, which would wipe it. */
+select {
+  appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5l3 3 3-3' stroke='%238A9284' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; background-size: 12px 12px;
+}
 button { cursor: pointer; }
 button:disabled { cursor: default; opacity: 0.45; }
 a { color: var(--ink); }
