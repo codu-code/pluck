@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} of {count}",
     "empty": {
       "title": "No lists yet.",
-      "body": "Make one on the web, or ask your AI to build one from what you plucked."
+      "body": "Start one with the + above, or ask your AI to build one from what you plucked."
+    },
+    "new": {
+      "title": "New List"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Camera",
     "cameraOff": "Pluck is not allowed to use the camera. You can change that in Settings.",
     "removePhoto": "Remove this photo",
-    "untagged": "Plucked to the Inbox. The tags did not go on."
+    "untagged": "Plucked to the Inbox. Its lists and tags did not go on."
   },
   "preview": {
     "open": "Open on {site}",

@@ -55,11 +55,11 @@ type Props = {
   expiry: Expiry;
   expiringThisWeek?: number;
   deletedId?: string; // set after a delete on the item page: offers Undo from the bin
-  sample?: string; // the paste box's example link while the list is empty (Inbox only)
+  started?: boolean; // the library has Items somewhere, so an empty Inbox is one cleared by triage (Inbox only)
 };
 
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
-export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId, sample }: Props) {
+export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId, started = false }: Props) {
   const t = useTranslations("app.itemList");
   const app = useTranslations("app");
   const title = app(`status.${view}`);
@@ -81,7 +81,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const mounted = useNow();
   const [ticked, setNow] = useState<Date | null>(null);
   const now = ticked ?? mounted;
-  const [everPlucked, setEverPlucked] = useState(initial.items.length > 0);
+  const [everPlucked, setEverPlucked] = useState(started || initial.items.length > 0);
   const [toast, showToast] = useToast();
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -297,6 +297,8 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const onPlucked = (key: string, { results }: PluckResponse) => {
     if (view !== "inbox") return;
     const ids = new Set(results.map((r) => r.item.id));
+    // A #tag in the words may have made a tag: read them again so its chip has a name.
+    if (results.some((r) => r.item.tagIds.some((id) => !vocab.some((t) => t.id === id)))) void library.tags().then(setVocab, () => {});
     setTotal((t) => t + results.filter((r) => r.created).length);
     setRows((cur) => [...results.map((r) => r.item), ...cur.filter((r) => r.draft !== key && !ids.has(r.id))]);
   };
@@ -309,7 +311,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
 
   return (
     <>
-      <TopBar sample={emptyNode ? sample : undefined} emphasis={Boolean(emptyNode) && view === "inbox"} onPluck={onPluck} onPlucked={onPlucked} onFailed={onFailed} />
+      <TopBar emphasis={Boolean(emptyNode) && view === "inbox"} onPluck={onPluck} onPlucked={onPlucked} onFailed={onFailed} />
       {emptyNode ?? (
         <div className={styles.page}>
           <div className={styles.head}>

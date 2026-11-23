@@ -412,8 +412,8 @@
     "title": "まだ何もPluckしていません。",
     "lede": "始め方は3つ。最初のひとつは1秒で終わります。",
     "one": {
-      "title": "上の「Pluckする」を押す",
-      "body": "サンプルのリンクがもう入っています。届くところを見てください。"
+      "title": "上にリンクを貼り付ける",
+      "body": "文章を入力してもかまいません。メモになります。"
     },
     "two": {
       "title": "拡張機能を追加",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "iPhoneからPluck",
-      "body": "iOSアプリで。公開までは、Pluckのショートカットで。",
-      "ios": "iOSアプリ",
-      "shortcut": "ショートカットを追加"
+      "body": "iOSアプリを入れると、共有シートにPluckが加わります。",
+      "ios": "iOSアプリ"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "プレビューとして表示",
     "stars": "スター{count}",
     "pages": "{count}ページ"
+  },
+  "starters": {
+    "favourites": "お気に入り",
+    "ideas": "アイデア"
   }
 }

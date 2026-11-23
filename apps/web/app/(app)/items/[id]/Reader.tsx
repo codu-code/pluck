@@ -28,6 +28,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [progress, setProgress] = useState(item.readingProgress);
   const [note, setNote] = useState(item.note ?? "");
+  const [kept, setKept] = useState(item); // as last saved: a #tag in the note is on it
   const [title, setTitle] = useState(item.title);
   const savedTitle = useRef(item.title);
   const [kind, setKind] = useState<Kind>(item.kind);
@@ -223,10 +224,10 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              onBlur={() => void went(library.edit(item.id, { note: note || null }))}
+              onBlur={() => void library.edit(item.id, { note: note || null }).then(setKept, () => {})}
             />
           </label>
-          <ItemTags item={item} vocabulary={tags} />
+          <ItemTags item={kept} vocabulary={tags} />
           <label className={styles.group}>
             <span className={styles.groupTitle}>{t("kind")}</span>
             <select

@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Aún no hay listas.",
-      "body": "Crea una en la web, o pide a tu IA que cree una con lo que recogiste."
+      "body": "Empieza una con el + de arriba, o pide a tu IA que cree una con lo que recogiste."
+    },
+    "new": {
+      "title": "Nueva Lista"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Cámara",
     "cameraOff": "Pluck no tiene permiso para usar la cámara. Puedes cambiarlo en Ajustes.",
     "removePhoto": "Quitar esta foto",
-    "untagged": "Recogido en la Bandeja de entrada. Las etiquetas no se pusieron."
+    "untagged": "Recogido en la Bandeja de entrada. Las listas y etiquetas no se pusieron."
   },
   "preview": {
     "open": "Abrir en {site}",

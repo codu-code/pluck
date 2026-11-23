@@ -412,8 +412,8 @@
     "title": "Non hai ancora preso niente.",
     "lede": "Tre modi per iniziare. Il primo richiede un secondo.",
     "one": {
-      "title": "Premi Prendilo qui sopra",
-      "body": "Il link di esempio è già lì. Guardalo arrivare."
+      "title": "Incolla un link qui sopra",
+      "body": "Oppure scrivi una frase. Diventa una Nota."
     },
     "two": {
       "title": "Aggiungi l'estensione",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Prendi dal telefono",
-      "body": "L'app per iOS, o il comando rapido di Pluck finché l'app non esce.",
-      "ios": "App per iOS",
-      "shortcut": "Aggiungi il comando rapido"
+      "body": "L'app per iOS aggiunge Pluck al menu di condivisione.",
+      "ios": "App per iOS"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "Mostra come anteprima",
     "stars": "{count, plural, one {# stella} other {# stelle}}",
     "pages": "{count, plural, one {# pagina} other {# pagine}}"
+  },
+  "starters": {
+    "favourites": "Preferiti",
+    "ideas": "Idee"
   }
 }

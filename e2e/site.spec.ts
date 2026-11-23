@@ -26,7 +26,7 @@ test("a visitor pastes links on the home page, signs up, and finds them in the I
   await openSignInLink(page, await linkFromEmail(email, sent));
   await expect(page).toHaveURL(/\/inbox$/);
   await expect(page.getByRole("link", { name: "Small teams ship when the list is short" }).first()).toBeVisible();
-  await expect.poll(async () => ((await (await page.request.get("/api/v1/items?status=inbox")).json()).items as unknown[]).length).toBe(3);
+  await expect.poll(async () => ((await (await page.request.get("/api/v1/items?status=inbox")).json()).items as unknown[]).length).toBe(4); // the three, and the post a new account starts with
   expect((await page.context().cookies()).some((c) => c.name === "pluck_try")).toBe(false);
 });
 

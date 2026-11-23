@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} van {count}",
     "empty": {
       "title": "Nog geen lijsten.",
-      "body": "Maak er een op het web, of vraag je AI er een te maken van wat je hebt geplukt."
+      "body": "Begin er een met de + hierboven, of vraag je AI er een te maken van wat je hebt geplukt."
+    },
+    "new": {
+      "title": "Nieuwe Lijst"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Camera",
     "cameraOff": "Pluck mag de camera niet gebruiken. Je kunt dat wijzigen in Instellingen.",
     "removePhoto": "Deze foto verwijderen",
-    "untagged": "Geplukt naar de Inbox. De tags zijn er niet op gezet."
+    "untagged": "Geplukt naar de Inbox. De lijsten en tags zijn er niet op gezet."
   },
   "preview": {
     "open": "Openen op {site}",

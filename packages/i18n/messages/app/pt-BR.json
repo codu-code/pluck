@@ -412,8 +412,8 @@
     "title": "Nada colhido ainda.",
     "lede": "Três jeitos de começar. O primeiro leva um segundo.",
     "one": {
-      "title": "Aperte Colha, ali em cima",
-      "body": "O link de exemplo já está lá. Veja o link chegar."
+      "title": "Cole um link ali em cima",
+      "body": "Ou escreva uma frase. Ela vira uma Nota."
     },
     "two": {
       "title": "Instale a extensão",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Colha pelo celular",
-      "body": "O app para iOS, ou o Atalho do Pluck até o app sair.",
-      "ios": "App para iOS",
-      "shortcut": "Adicionar o Atalho"
+      "body": "O app para iOS coloca o Pluck no menu de compartilhamento.",
+      "ios": "App para iOS"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "Ver como prévia",
     "stars": "{count, plural, one {# estrela} other {# estrelas}}",
     "pages": "{count, plural, one {# página} other {# páginas}}"
+  },
+  "starters": {
+    "favourites": "Favoritos",
+    "ideas": "Ideias"
   }
 }

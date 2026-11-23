@@ -47,11 +47,11 @@ Where an Item sits in triage: Inbox (untriaged), Later (kept on purpose), Archiv
 _Avoid_: State, folder
 
 **Tag**:
-A short label you made. A Tag your AI made carries a "by AI" mark until you touch it.
+A short label you made, from a picker or by writing `#word` in a Note or a note. A Tag your AI made carries a "by AI" mark until you touch it.
 _Avoid_: Label, category, smart tag
 
 **List**:
-A named, ordered group of Items with a purpose line. Each Item in a List has its own note and tick, which belong to the List, not the Item. Private or Public.
+A named, ordered group of Items with a purpose line. Each Item in a List has its own note and tick, which belong to the List, not the Item. Private or Public. The first place a pluck can be put, ahead of Tags; an account starts with two, Favourites and Ideas.
 _Avoid_: Collection, folder, board, playlist
 
 **Tick**:

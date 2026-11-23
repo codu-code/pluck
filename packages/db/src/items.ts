@@ -308,8 +308,9 @@ async function purgeDocs(docs: { _id: ObjectId; userId: ObjectId }[], still: Fil
   return claimed;
 }
 
-export async function countItems(userId: string, status?: Status): Promise<number> {
-  return (await items()).countDocuments({ userId: oid(userId), ...(status ? { status } : {}), deletedAt: null }); // no status: every Item
+// `own`: without the posts a new account is started with, for anything that asks "have they plucked yet".
+export async function countItems(userId: string, status?: Status, { own = false } = {}): Promise<number> {
+  return (await items()).countDocuments({ userId: oid(userId), ...(status ? { status } : {}), ...(own ? { starter: { $ne: true } } : {}), deletedAt: null }); // no status: every Item
 }
 
 export type ExtractionResult = {

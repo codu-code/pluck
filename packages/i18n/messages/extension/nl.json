@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Zoek in je tags",
       "newTag": "“{name}” toevoegen",
       "kind": "Soort",
-      "toList": "Naar lijst",
-      "noList": "Geen",
-      "lastUsed": "{name} (laatst gebruikt)",
       "note": "Notitie",
       "notePlaceholder": "Een notitie, als je wilt",
       "inbox": "Inbox",
       "later": "Later",
       "archive": "Archiveren",
-      "open": "Openen in Pluck"
+      "open": "Openen in Pluck",
+      "lists": "Lijsten",
+      "newList": "Nieuwe lijst",
+      "newListPlaceholder": "Geef de lijst een naam, dan Enter",
+      "moreLists": "Nog {count}"
     },
     "tabs": {
       "listName": "Tabbladen van {date}",

@@ -1,5 +1,6 @@
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createPluckServer } from "@pluck/mcp-server";
+import { claimStarters } from "@pluck/db";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { connectorFor } from "./connector";
@@ -272,6 +273,7 @@ test("tags: list with counts, and create_tag is marked as made by AI", async () 
 
 test("create_list is private with AI notes; update_list changes everything but the purpose, and public needs the person", async () => {
   const { a } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not in list_lists below
   const { call } = await connect(a);
   const [x, y, z] = [await note(a, "x"), await note(a, "y"), await note(a, "z")];
   const { list } = await call("create_list", { name: "Reading", purpose: "For the talk", items: [{ itemId: x.id, note: "start here" }, { itemId: y.id }] });
@@ -322,6 +324,7 @@ test("another person's list is not found, and nothing is changed", async () => {
 
 test("get_digest, delete_item to the bin, the two resources and the four prompts", async () => {
   const { a } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not among the resources below
   const item = await note(a, "the body of the note");
   const list = await newList(a, { name: "Notes", purpose: "kept", items: [{ itemId: item.id, note: "why" }] });
   const { client, call } = await connect(a, [...ALL, "library:delete"]);

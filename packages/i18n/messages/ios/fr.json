@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} sur {count}",
     "empty": {
       "title": "Pas encore de liste.",
-      "body": "Créez-en une sur le web, ou demandez à votre IA d’en construire une à partir de ce que vous avez cueilli."
+      "body": "Créez-en une avec le + en haut, ou demandez à votre IA d’en construire une à partir de ce que vous avez cueilli."
+    },
+    "new": {
+      "title": "Nouvelle liste"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Appareil photo",
     "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages.",
     "removePhoto": "Retirer cette photo",
-    "untagged": "Cueilli dans la boîte de réception. Les tags n’ont pas été ajoutés."
+    "untagged": "Cueilli dans la boîte de réception. Les listes et les tags n’ont pas été ajoutés."
   },
   "preview": {
     "open": "Ouvrir sur {site}",

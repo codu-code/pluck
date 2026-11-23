@@ -25,7 +25,7 @@ struct Session: Codable {
 }
 
 struct TagRef: Codable, Identifiable, Hashable { let id: String; let name: String }
-struct ListRef: Codable { let id: String; let name: String }
+struct ListRef: Codable, Identifiable, Hashable { let id: String; let name: String }
 struct PluckedItem: Codable { let id: String; let title: String; let kind: String; let tagIds: [String]; let hasCover: Bool?; let siteName: String?; let preview: String?; let url: String?; let titleIsDerived: Bool? }
 
 enum PluckError: Error { case signedOut, offline, refused(String) }
@@ -188,6 +188,13 @@ final class PluckClient {
   var tags: [TagRef] {
     guard let raw = Shared.defaults?.string(forKey: "tags"), let data = raw.data(using: .utf8) else { return [] }
     return (try? JSONDecoder().decode([TagRef].self, from: data)) ?? []
+  }
+
+  // The Lists to offer, last added to first. An app from before these were kept wrote only the last one.
+  var lists: [ListRef] {
+    guard let raw = Shared.defaults?.string(forKey: "lists"), let data = raw.data(using: .utf8),
+      let lists = try? JSONDecoder().decode([ListRef].self, from: data) else { return [lastList].compactMap { $0 } }
+    return lists
   }
 
   var lastList: ListRef? {

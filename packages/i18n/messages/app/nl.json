@@ -412,8 +412,8 @@
     "title": "Nog niets geplukt.",
     "lede": "Drie manieren om te beginnen. De eerste duurt een seconde.",
     "one": {
-      "title": "Druk hierboven op Pluk het",
-      "body": "De voorbeeldlink staat er al. Kijk hoe hij binnenkomt."
+      "title": "Plak hierboven een link",
+      "body": "Of typ een zin. Die wordt een Notitie."
     },
     "two": {
       "title": "Voeg de extensie toe",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Pluk vanaf je telefoon",
-      "body": "De iOS-app, of de Pluck-opdracht zolang de app er nog niet is.",
-      "ios": "iOS-app",
-      "shortcut": "Voeg de opdracht toe"
+      "body": "De iOS-app zet Pluck in het deelmenu.",
+      "ios": "iOS-app"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "Toon als voorbeeld",
     "stars": "{count, plural, one {# ster} other {# sterren}}",
     "pages": "{count, plural, one {# pagina} other {# pagina's}}"
+  },
+  "starters": {
+    "favourites": "Favorieten",
+    "ideas": "Ideeën"
   }
 }

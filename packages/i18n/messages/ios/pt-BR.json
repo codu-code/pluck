@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Nenhuma lista ainda.",
-      "body": "Crie uma na web, ou peça à sua IA para montar uma com o que você colheu."
+      "body": "Comece uma com o + ali em cima, ou peça à sua IA para montar uma com o que você colheu."
+    },
+    "new": {
+      "title": "Nova Lista"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Câmera",
     "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes.",
     "removePhoto": "Remover esta foto",
-    "untagged": "Colhido na Entrada. As tags não foram colocadas."
+    "untagged": "Colhido na Entrada. As listas e tags não foram colocadas."
   },
   "preview": {
     "open": "Abrir no {site}",

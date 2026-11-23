@@ -10,7 +10,7 @@ import { Icon, ICONS, KindGlyph } from "@/components/Glyph";
 import { Hearing, Mic, spoken, useSpeak } from "@/components/Speak";
 import { shown, useColumns } from "@/components/split/context";
 import { toast } from "@/components/Toast";
-import { library, pluck, pluckPhoto, useOnline, useTags } from "@/lib/data";
+import { library, pluck, pluckPhoto, useLists, useOnline, useTags } from "@/lib/data";
 import { font, scale, useTheme } from "@/lib/theme";
 
 // The web's Pluck box as a sheet: one link, a block of links, or a sentence that becomes a Note, Todo or Thing.
@@ -79,29 +79,40 @@ async function pluckShots(shots: Shot[], note: string, gone: (shot: Shot) => voi
   const items: Item[] = [];
   for (const a of shots) {
     const item = await pluckPhoto(a.uri, a.fileName ?? "Photo", a.mimeType);
-    if (note) await library.edit(item.id, { note });
-    items.push(item);
+    items.push(note ? await library.edit(item.id, { note }) : item); // as the note left it: a #tag in it is on the Item, and the chips go on beside it
     gone(a);
   }
   return { items, queued: false };
 }
 
-// Your tags, most used first, to tap onto what is about to be plucked: the share sheet's chips, with room for more.
-// Hidden with no connection (see `tag`), and until there is a tag to show.
-function TagToggles({ on, toggle }: { on: string[]; toggle: (id: string) => void }) {
-  const t = useTheme();
-  const tr = useTranslations("ios.actions");
+// Where it goes, then what it is called: your Lists (last touched first) and under them your tags (most used first),
+// to tap onto what is about to be plucked, as the share sheet has them. Hidden with no connection (see `sort`); a row
+// with nothing to show is left out.
+function Sorting({ listIds, tagIds, setListIds, setTagIds }: { listIds: string[]; tagIds: string[]; setListIds: (to: (was: string[]) => string[]) => void; setTagIds: (to: (was: string[]) => string[]) => void }) {
+  const tr = useTranslations("ios");
+  const lists = (useLists().data ?? []).slice(0, 12);
   const tags = [...(useTags().data ?? [])].sort((a, b) => b.count - a.count).slice(0, 12);
-  if (!useOnline() || !tags.length) return null;
+  if (!useOnline()) return null;
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" accessibilityLabel={tr("tags")} style={styles.toggles} contentContainerStyle={styles.togglesRow}>
-      <Icon d={ICONS.tag} size={16} color={t.ink2} />
-      {tags.map((x) => {
+    <>
+      <Toggles label={tr("pick.lists")} icon={ICONS.listsTab} options={lists} on={listIds} toggle={(id) => setListIds(flip(id))} />
+      <Toggles label={tr("actions.tags")} icon={ICONS.tag} options={tags} on={tagIds} toggle={(id) => setTagIds(flip(id))} />
+    </>
+  );
+}
+
+function Toggles({ label, icon, options, on, toggle }: { label: string; icon: string; options: { id: string; name: string }[]; on: string[]; toggle: (id: string) => void }) {
+  const t = useTheme();
+  if (!options.length) return null;
+  return (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" accessibilityLabel={label} style={styles.toggles} contentContainerStyle={styles.togglesRow}>
+      <Icon d={icon} size={16} color={t.ink2} />
+      {options.map((x) => {
         const sel = on.includes(x.id);
         return (
-          <Pressable key={x.id} accessibilityRole="checkbox" accessibilityState={{ checked: sel }} hitSlop={{ top: 7, bottom: 7 }} onPress={() => { void Haptics.selectionAsync(); toggle(x.id); }}
+          <Pressable key={x.id} accessibilityRole="checkbox" accessibilityLabel={`${label}, ${x.name}`} accessibilityState={{ checked: sel }} hitSlop={{ top: 7, bottom: 7 }} onPress={() => { void Haptics.selectionAsync(); toggle(x.id); }}
             style={[styles.toggle, { backgroundColor: sel ? t.ink : t.chip }]}>
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { fontSize: 14, color: sel ? t.ground : t.ink }]}>{x.name}</Text>
+            <Text numberOfLines={1} maxFontSizeMultiplier={scale.title} style={[font.regular, { fontSize: 14, color: sel ? t.ground : t.ink, maxWidth: 220 }]}>{x.name}</Text>
           </Pressable>
         );
       })}
@@ -109,11 +120,14 @@ function TagToggles({ on, toggle }: { on: string[]; toggle: (id: string) => void
   );
 }
 
-// The tags tapped in Add go on once the Item is there, beside any it had: a link plucked again keeps its own.
-// False when they did not go on; the pluck itself stands.
-// shortcut: a pluck that waits for a connection is made without tags (so the chips hide offline); let the pluck body take tags when people tag offline.
-const tag = (items: Item[], tagIds: string[]) =>
-  Promise.all(tagIds.length ? items.map((i) => library.edit(i.id, { tagIds: [...new Set([...i.tagIds, ...tagIds])] })) : []).then(() => true, () => false);
+// The Lists and tags tapped in Add go on once the Item is there: the tags beside any it had (a link plucked again
+// keeps its own), and the Item into each List. False when any did not go on; the pluck itself stands.
+// shortcut: a pluck that waits for a connection is made without them (so the rows hide offline); let the pluck body take Lists and tags when people sort offline.
+const sort = (items: Item[], listIds: string[], tagIds: string[]) =>
+  Promise.all([
+    ...(tagIds.length ? items.map((i) => library.edit(i.id, { tagIds: [...new Set([...i.tagIds, ...tagIds])] })) : []),
+    ...(items.length ? listIds.map((listId) => library.setInList(items.map((i) => i.id), listId, true)) : []),
+  ]).then(() => true, () => false);
 const flip = (id: string) => (was: string[]) => (was.includes(id) ? was.filter((x) => x !== id) : [...was, id]);
 
 function AddSheet() {
@@ -128,6 +142,7 @@ function AddSheet() {
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
   const [shots, setShots] = useState<Shot[]>([]); // pictures picked: what is typed is then their note
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [listIds, setListIds] = useState<string[]>([]);
   const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
 
   const text = value.trim();
@@ -141,7 +156,7 @@ function AddSheet() {
     setError(null);
     try {
       const { items, queued } = shots.length ? await pluckShots(shots, text, drop) : await pluck(isText ? { text, kind } : { text }); // offline, it waits in the queue
-      const tagged = await tag(items, tagIds);
+      const tagged = await sort(items, listIds, tagIds);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
       toast(tr(queued ? "add.queued" : tagged ? "add.plucked" : "add.untagged"));
@@ -187,7 +202,7 @@ function AddSheet() {
           />
         )}
         {!ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} note />}
-        {ready && <TagToggles on={tagIds} toggle={(id) => setTagIds(flip(id))} />}
+        {ready && <Sorting listIds={listIds} tagIds={tagIds} setListIds={setListIds} setTagIds={setTagIds} />}
         {isText && !shots.length && (
           // Text with no link: which Kind it becomes, as the web box asks.
           <View style={styles.kinds} accessibilityRole="radiogroup" accessibilityLabel={tr("add.as")}>
@@ -227,6 +242,7 @@ function AddWide() {
   const speak = useSpeak((words) => setValue((was) => spoken(was, words)), setError);
   const [picked, setShots] = useState<Shot[]>([]);
   const [tagIds, setTagIds] = useState<string[]>([]);
+  const [listIds, setListIds] = useState<string[]>([]);
   const shots = mode === "link" ? picked : []; // pictures go in from Link, where Photo and Camera are
   const drop = (shot: Shot) => setShots((was) => was.filter((x) => x !== shot));
   const text = value.trim();
@@ -239,7 +255,7 @@ function AddWide() {
     try {
       const body = mode === "link" ? { text } : { text: text || title.trim(), kind: mode, ...(title.trim() && text ? { title: title.trim() } : {}) };
       const { items, queued } = shots.length ? await pluckShots(shots, text, drop) : await pluck(body);
-      const tagged = await tag(items, tagIds);
+      const tagged = await sort(items, listIds, tagIds);
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.back();
       toast(tr(queued ? "add.queued" : tagged ? "add.plucked" : "add.untagged"));
@@ -302,7 +318,7 @@ function AddWide() {
         />
         <View style={styles.foot}><Hearing speak={speak} /><Mic speak={speak} /></View>
         {mode === "link" && !ready && !speak.on && <Photos busy={busy} onPick={setShots} setError={setError} />}
-        {ready && <TagToggles on={tagIds} toggle={(id) => setTagIds(flip(id))} />}
+        {ready && <Sorting listIds={listIds} tagIds={tagIds} setListIds={setListIds} setTagIds={setTagIds} />}
         {error && <Text accessibilityRole="alert" style={[font.regular, { color: t.danger, fontSize: 15, lineHeight: 21 }]}>{error}</Text>}
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>
           {tr.rich("ipad.add.keys", { key: (c) => <View style={[wide.key, { borderColor: t.lineStrong }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.regular, { color: t.ink2, fontSize: 12 }]}>{c}</Text></View> })}

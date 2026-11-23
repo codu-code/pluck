@@ -179,7 +179,10 @@
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "リストはまだありません。",
-      "body": "Webで作るか、お使いのAIに、Pluckしたものからリストを作ってもらいましょう。"
+      "body": "上の＋で作るか、お使いのAIに、Pluckしたものからリストを作ってもらいましょう。"
+    },
+    "new": {
+      "title": "新しいリスト"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "カメラ",
     "cameraOff": "Pluckはカメラを使用できません。「設定」で変更できます。",
     "removePhoto": "この写真を取り除く",
-    "untagged": "インボックスにPluckしました。タグは付けられませんでした。"
+    "untagged": "インボックスにPluckしました。リストとタグは付けられませんでした。"
   },
   "preview": {
     "open": "{site}で開く",

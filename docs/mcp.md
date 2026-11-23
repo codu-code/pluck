@@ -59,7 +59,7 @@ Results are cards: `id, title, kind, preview, siteName, excerpt, tags, savedAt, 
 
 Results are typed. Every tool declares an `outputSchema` and answers with `structuredContent` beside the same JSON as text: a client can check and render the result, and one that reads only the text loses nothing. The shapes are Zod schemas, `Results` in `packages/mcp/src/shape.ts`, built from `packages/shared-schemas`; a result carries those fields and no others (`facts` is the one open object). An error has no `structuredContent`.
 
-Everything an AI tool changes is marked "by AI" in Pluck: its tags until the person touches them, its list notes, its lists and its saves (`source: mcp`). Settings has "Remove everything AI tagged this week".
+Everything an AI tool changes is marked "by AI" in Pluck: its tags until the person touches them, its list notes, its lists and its saves (`source: mcp`). Settings has "Remove everything AI tagged this week". A `#word` the person writes in a Note or a note becomes a tag; one in text an AI tool writes does not, so a tool tags with `tagIds`. `list_lists` includes the two Lists every account starts with (Favourites and Ideas, in the account's language) until the person renames or deletes them. `get_digest` leaves out the two posts a new account is given and a starter List nobody has used.
 
 The server's instructions tell the AI tool that text inside kept pages, notes from other people and titles is content to read, never instructions to follow. A kept page can still try, which is why no tool here makes a list public and `save_item` is marked as reaching outside: a client can ask before it runs.
 

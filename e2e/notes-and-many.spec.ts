@@ -104,10 +104,12 @@ test("a Note the rich editor cannot keep exactly opens as plain text, every char
   const text = "From my AI\n\n> a quote\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n- [ ] a task";
   const made = (await (await page.request.post("/api/v1/items", { data: { text, kind: "note" } })).json()) as { results: { item: { id: string } }[] };
   await page.goto(`/items/${made.results[0]!.item.id}`);
+  // The rich editor opens first and hands over once it has read the text back differently: wait for that, since
+  // toHaveValue on the rich editor (not an input) fails at once instead of trying again.
+  await expect(page.getByText("Plain text.")).toBeVisible();
   const body = page.getByRole("textbox", { name: "Body" });
   await expect(body).toHaveValue(text); // the plain editor: a textarea
   await expect(page.getByRole("toolbar", { name: "Format" })).toHaveCount(0);
-  await expect(page.getByText("Plain text.")).toBeVisible();
   await body.press("End");
   expect((await textOf(page)).text).toBe(text);
 });

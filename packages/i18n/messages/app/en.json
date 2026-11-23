@@ -412,8 +412,8 @@
     "title": "Nothing plucked yet.",
     "lede": "Three ways to start. The first one takes a second.",
     "one": {
-      "title": "Press Pluck it above",
-      "body": "The sample link is already there. Watch it land."
+      "title": "Paste a link above",
+      "body": "Or type a sentence. It becomes a Note."
     },
     "two": {
       "title": "Add the extension",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Pluck from your phone",
-      "body": "The iOS app, or the Pluck Shortcut until it ships.",
-      "ios": "iOS app",
-      "shortcut": "Add the Shortcut"
+      "body": "The iOS app adds Pluck to the share sheet.",
+      "ios": "iOS app"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "Show as preview",
     "stars": "{count, plural, one {# star} other {# stars}}",
     "pages": "{count, plural, one {# page} other {# pages}}"
+  },
+  "starters": {
+    "favourites": "Favourites",
+    "ideas": "Ideas"
   }
 }

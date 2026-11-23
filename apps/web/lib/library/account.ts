@@ -29,7 +29,7 @@ export async function sendWelcome(userId: string): Promise<boolean> {
   const me = from ? await getMe(userId) : null;
   // Claimed before sending: a second copy of a personal note reads worse than a lost one.
   if (!from || !me || !(await claimOnce(`welcome:${userId}`))) return false;
-  const counts = await Promise.all((["inbox", "later", "archived", "done"] as const).map((s) => countItems(userId, s)));
+  const counts = await Promise.all((["inbox", "later", "archived", "done"] as const).map((s) => countItems(userId, s, { own: true }))); // the posts we gave them are not theirs
   const connectUrl = `${ORIGIN}/connect`;
   await sendEmail({ ...welcomeEmail(me.email, { plucked: counts.some(Boolean), expiryDays: me.settings.expiryDays, connectUrl }, me.settings.locale ?? "en"), from, replyTo: from });
   return true;

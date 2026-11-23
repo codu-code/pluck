@@ -179,7 +179,10 @@
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "还没有清单。",
-      "body": "在网页版上建一个，或者让你的 AI 用你摘下的内容建一个。"
+      "body": "点上面的 + 建一个，或者让你的 AI 用你摘下的内容建一个。"
+    },
+    "new": {
+      "title": "新建清单"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "相机",
     "cameraOff": "Pluck 无权使用相机。你可以在“设置”中更改。",
     "removePhoto": "移除这张照片",
-    "untagged": "已摘进收件箱。标签没有加上。"
+    "untagged": "已摘进收件箱。清单和标签没有加上。"
   },
   "preview": {
     "open": "在 {site} 打开",

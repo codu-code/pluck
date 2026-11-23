@@ -412,8 +412,8 @@
     "title": "Noch nichts gepflückt.",
     "lede": "Drei Wege zum Start. Der erste dauert eine Sekunde.",
     "one": {
-      "title": "Oben auf Pflücken drücken",
-      "body": "Der Beispiellink steht schon da. Schau zu, wie er landet."
+      "title": "Oben einen Link einfügen",
+      "body": "Oder einen Satz tippen. Daraus wird eine Notiz."
     },
     "two": {
       "title": "Erweiterung hinzufügen",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Vom iPhone pflücken",
-      "body": "Die iOS-App, oder der Pluck-Kurzbefehl, bis sie erscheint.",
-      "ios": "iOS-App",
-      "shortcut": "Kurzbefehl hinzufügen"
+      "body": "Die iOS-App bringt Pluck ins Teilen-Menü.",
+      "ios": "iOS-App"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "Als Vorschau zeigen",
     "stars": "{count, plural, one {# Stern} other {# Sterne}}",
     "pages": "{count, plural, one {# Seite} other {# Seiten}}"
+  },
+  "starters": {
+    "favourites": "Favoriten",
+    "ideas": "Ideen"
   }
 }

@@ -412,8 +412,8 @@
     "title": "还没有摘下任何东西。",
     "lede": "三种开始方式。第一种只要一秒。",
     "one": {
-      "title": "点上面的“摘下来”",
-      "body": "示例链接已经填好了。看着它落进来。"
+      "title": "在上面粘贴一个链接",
+      "body": "或者写一句话，它会成为一条笔记。"
     },
     "two": {
       "title": "添加浏览器扩展",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "用手机摘下",
-      "body": "用 iOS App；App 上线之前，可以用 Pluck 快捷指令。",
-      "ios": "iOS App",
-      "shortcut": "添加快捷指令"
+      "body": "装上 iOS App，分享菜单里就有 Pluck。",
+      "ios": "iOS App"
     }
   },
   "shortcuts": {
@@ -1061,5 +1060,9 @@
     "asPreview": "以预览显示",
     "stars": "{count} 颗星",
     "pages": "{count} 页"
+  },
+  "starters": {
+    "favourites": "最爱",
+    "ideas": "想法"
   }
 }

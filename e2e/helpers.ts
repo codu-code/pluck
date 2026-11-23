@@ -47,8 +47,26 @@ export async function openSignInLink(page: Page, link: string): Promise<void> {
 
 export const uniqueEmail = (tag: string) => `${tag}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}@example.test`;
 
+// A new account starts with two Lists and two of our posts (apps/web/lib/library/starters.ts). Most tests are about
+// something else and count what they make, so signIn takes away a start nobody has touched, as the person could;
+// e2e/starters.spec.ts keeps it. An account already in use is left exactly as it is.
+async function clearStarters(page: Page): Promise<void> {
+  const get = async <T>(path: string) => (await (await page.request.get(path)).json()) as T;
+  const { lists } = await get<{ lists: { id: string }[] }>("/api/v1/lists");
+  const items = (await Promise.all(["inbox", "later", "archived"].map((s) => get<{ items: { id: string; url: string | null }[] }>(`/api/v1/items?status=${s}&limit=5`)))).flatMap((p) => p.items);
+  const posts = items.filter((i) => /\/blog\/(nothing-is-deleted|ask-your-ai-what-you-plucked)$/.test(i.url ?? ""));
+  if (lists.length !== 2 || items.length !== 2 || posts.length !== 2) return;
+  for (const l of lists) await page.request.delete(`/api/v1/lists/${l.id}`);
+  for (const i of posts) {
+    await page.request.delete(`/api/v1/items/${i.id}`);
+    await page.request.delete(`/api/v1/items/${i.id}/forever`);
+  }
+  await page.reload();
+}
+
 // Signs in through the real magic link. `lands` is where the link should take you (default: the Inbox).
-export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/inbox"): Promise<string> {
+// `starters`: keep what a new account starts with (see clearStarters).
+export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/inbox", { starters = false } = {}): Promise<string> {
   if (!page.url().includes("/signin")) await page.goto(lands === "/inbox" ? "/signin" : `/signin?next=${encodeURIComponent(lands)}`);
   const sent = Date.now();
   await page.getByLabel("Email").fill(email);
@@ -56,6 +74,7 @@ export async function signIn(page: Page, email = uniqueEmail("e2e"), lands = "/i
   await expect(page.getByRole("status").filter({ hasText: email })).toBeVisible();
   await openSignInLink(page, await linkFromEmail(email, sent));
   await expect(page).toHaveURL(new RegExp(`${lands.replace(/[/]/g, "\\/")}$`));
+  if (!starters) await clearStarters(page);
   return email;
 }
 

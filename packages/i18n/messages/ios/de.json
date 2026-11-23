@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} von {count}",
     "empty": {
       "title": "Noch keine Listen.",
-      "body": "Leg eine im Web an, oder bitte deine KI, eine aus deinem Gepflückten zu bauen."
+      "body": "Leg eine mit dem + oben an, oder bitte deine KI, eine aus deinem Gepflückten zu bauen."
+    },
+    "new": {
+      "title": "Neue Liste"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Kamera",
     "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern.",
     "removePhoto": "Dieses Foto entfernen",
-    "untagged": "In den Eingang gepflückt. Die Tags wurden nicht gesetzt."
+    "untagged": "In den Eingang gepflückt. Listen und Tags wurden nicht gesetzt."
   },
   "preview": {
     "open": "Auf {site} öffnen",

@@ -12,14 +12,14 @@ export { createHighlight, listHighlights, updateHighlight, deleteHighlight, find
 export { enqueue, claimJob, completeJob, retryJob, failJob, pendingJobCount, type Job } from "./jobs.ts";
 export { hitRateLimit } from "./rate-limit.ts";
 export {
-  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, recountTags, batchTags, purgeAiTags, countAiTagged,
+  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, recountTags, batchTags, purgeAiTags, countAiTagged, tagByWords,
 } from "./tags.ts";
 export { searchItems, snippetFor } from "./search.ts";
 export {
-  createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
+  createList, listLists, markStarters, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
-export { analyticsOf, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
+export { analyticsOf, claimStarters, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";

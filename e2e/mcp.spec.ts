@@ -72,11 +72,11 @@ test("an AI tool connects over OAuth and calls the connector", async ({ page, re
   const { list } = await call("create_list", { name: "Reading", purpose: "For the talk", items: [{ itemId: id, note: "start here" }] });
   await call("update_list", { id: list.id, entries: [{ itemId: id, ticked: true }] });
   expect((await call("search_items", { query: "finishing problem" })).items[0].tags).toEqual(["Teams"]);
-  expect((await call("list_items", { status: "inbox" })).items).toHaveLength(1);
+  expect((await call("list_items", { status: "inbox" })).items).toHaveLength(2); // the page, and the post a new account starts with
   expect((await call("get_item", { id })).text).toContain("finishing problem");
   expect((await call("list_highlights")).highlights).toEqual([]);
   expect((await call("list_tags")).tags).toHaveLength(1);
-  expect((await call("list_lists")).lists).toHaveLength(1);
+  expect((await call("list_lists")).lists.map((l: { name: string }) => l.name)).toEqual(["Reading", "Ideas", "Favourites"]); // its own, and the two an account starts with
   expect((await call("get_list", { id: list.id })).entries[0]).toMatchObject({ note: "start here", noteBy: "ai", ticked: true });
   expect(await call("get_digest")).toHaveProperty("expiring");
   expect(((await client.readResource({ uri: `item://${id}` })).contents[0] as { text: string }).text).toContain("finishing problem");

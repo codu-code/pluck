@@ -27,11 +27,12 @@ export default function RichBody({ text, label, autoFocus, onChange, onUnfit }: 
 
   useEffect(() => {
     let live = true;
+    // A read that fails is a text it cannot keep, too: without this the editor would sit there writing nothing.
     void input.current?.getMarkdown().then((read) => {
       if (!live) return;
       if (sameNote(read, first.current)) fits.current = true;
       else onUnfit();
-    });
+    }, () => live && onUnfit());
     return () => void (live = false);
   }, []); // once: the text as it opened
 

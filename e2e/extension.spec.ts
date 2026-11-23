@@ -66,10 +66,21 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   await expect(popup.getByRole("button", { name: "Note" })).toBeDisabled();
   await popup.getByPlaceholder("A note, if you like").fill("for the talk");
   await popup.getByPlaceholder("A note, if you like").press("Enter");
-  await popup.getByLabel("To list").selectOption({ label: "Reading for the talk" });
+  // Lists come first: a tap puts the page in one, a second tap takes it out, and a new List is made from here.
+  const listsOf = async () => Object.fromEntries(((await (await page.request.get("/api/v1/lists")).json()).lists as { name: string; itemCount: number }[]).map((l) => [l.name, l.itemCount]));
+  const inList = popup.getByRole("group", { name: "Lists" });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await expect(inList.getByRole("button", { name: "Reading for the talk" })).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 1 });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 0 });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await inList.getByRole("button", { name: "New list" }).click();
+  await inList.getByRole("textbox", { name: "New list" }).fill("Team notes");
+  await inList.getByRole("textbox", { name: "New list" }).press("Enter");
+  await expect(inList.getByRole("button", { name: "Team notes" })).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 1, "Team notes": 1 });
   await expect.poll(async () => (await itemsOf(page))[0]?.note).toBe("for the talk");
-  const lists = (await (await page.request.get("/api/v1/lists")).json()).lists as { itemCount: number }[];
-  expect(lists[0]!.itemCount).toBe(1);
   expect(await sw.evaluate(async (tabId) => chrome.action.getTitle({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("Plucked");
 
   // Later moves it. Opening it again shows the same tools on the Item instead of plucking a second one.
@@ -79,6 +90,7 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   const again = await popupFor(context, sw, extId, `${FIX}/news-1.html`);
   await expect(again.getByText(/^Plucked .* · Later$/)).toBeVisible();
   await expect(again.getByRole("button", { name: "teams" })).toHaveAttribute("aria-pressed", "true");
+  await expect(again.getByRole("group", { name: "Lists" }).getByRole("button", { pressed: true })).toHaveText(["Team notes", "Reading for the talk"]); // the Lists it is in, newest first
   await expect(again.getByPlaceholder("A note, if you like")).toHaveValue("for the talk");
   await expect(again.getByRole("button", { name: "Later" })).toHaveCount(0); // it is there already: Inbox and Archive instead
   await expect(again.getByRole("button", { name: "Inbox" })).toBeVisible();

@@ -50,12 +50,14 @@ export const keys = {
 const stale = (...ks: QueryKey[]) => { for (const queryKey of ks) void queryClient.invalidateQueries({ queryKey }); };
 const moved = () => stale(["items"], ["counts"], keys.lists); // the Item lists (Archive and bin too), their counts, Lists' rows
 const tagged = () => stale(keys.tags, ["items"]);
+// A #tag in someone's words is a tag on the Item, made by the server if it is new: the tags are read again so its chip has a name.
+const worded = (words?: string | null) => { if (words?.includes("#")) stale(keys.tags); };
 const listed = (listId?: string) => stale(keys.lists, ...(listId ? [keys.list(listId)] : []), ["items"], ["counts"]); // a Todo marked in a List is Done
 const after = <A extends unknown[], R>(act: (...a: A) => Promise<R>, then: (...a: A) => void) => (...a: A) => act(...a).finally(() => then(...a));
 const lib = createLibrary(api);
 export const library = {
   ...lib,
-  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, moved),
+  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, (_, patch) => { moved(); worded(`${patch.text ?? ""}${patch.note ?? ""}`); }),
   remove: after(lib.remove, moved), fromBin: after(lib.fromBin, moved), forever: after(lib.forever, moved),
   setTag: after(lib.setTag<Item>, tagged), newTag: after(lib.newTag, tagged), renameTag: after(lib.renameTag, tagged), deleteTag: after(lib.deleteTag, tagged),
   newList: after(lib.newList, () => listed()), setInList: after(lib.setInList, (_, listId) => listed(listId)),
@@ -152,6 +154,7 @@ export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; 
   try {
     const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", clientKey, ...body } });
     void queryClient.invalidateQueries({ queryKey: ["items"] });
+    worded(`${body.text ?? ""}${body.note ?? ""}`);
     return { item: res.results[0]?.item ?? null, items: res.results.map((r) => r.item), queued: false };
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
@@ -251,12 +254,13 @@ function removeShared(path: string) {
   if (local?.exists) local.delete();
 }
 
-// The share extension shows two of your tags and "Add to <last list>"; it reads them from the App Group.
+// The share extension shows your Lists (last added to first) and your most used tags; it reads them from the App Group.
 export function shareExtensionCache(tags: Tag[], lists: List[]) {
   const storage = new ExtensionStorage(GROUP);
-  const last = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? ""))[0];
+  const recent = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? "")).slice(0, 12).map((l) => ({ id: l.id, name: l.name }));
   storage.set("tags", JSON.stringify([...tags].sort((a, b) => b.count - a.count).slice(0, 12).map((t) => ({ id: t.id, name: t.name }))));
-  storage.set("lastList", last ? JSON.stringify({ id: last.id, name: last.name }) : undefined);
+  storage.set("lists", JSON.stringify(recent));
+  storage.set("lastList", recent[0] ? JSON.stringify(recent[0]) : undefined); // shortcut: read by a share sheet from before "lists"; drop once no such build is in use
 }
 
 // ---- Kept on this iPhone --------------------------------------------------------------------------------------

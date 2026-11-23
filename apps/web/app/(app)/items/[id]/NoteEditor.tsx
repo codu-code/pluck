@@ -27,6 +27,7 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
   const [state, setState] = useState<"saved" | "saving" | "error">("saved");
   const [plain, setPlain] = useState(false);
   const [edited, setEdited] = useState(item.updatedAt);
+  const [kept, setKept] = useState(item); // as last saved: a #tag in the words is on it
   const pending = useRef<Patch>({});
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const t = useTranslations("app.note");
@@ -44,6 +45,7 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
       return setState("error");
     }
     setEdited(saved.updatedAt);
+    setKept(saved);
     setState(Object.keys(pending.current).length ? "saving" : "saved");
   }
 
@@ -125,7 +127,7 @@ export function NoteEditor({ item, text, tags, lists }: { item: Item; text: stri
           <span className={styles.meta}>{t(plain ? "helpPlain" : "help")}</span>
         </article>
         <aside aria-label={t("about", { kind })} className={styles.aside}>
-          <ItemTags item={item} vocabulary={tags} />
+          <ItemTags item={kept} vocabulary={tags} />
           <label className={styles.group}>
             <span className={styles.groupTitle}>{t("kind")}</span>
             <select

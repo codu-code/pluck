@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} di {count}",
     "empty": {
       "title": "Ancora nessuna lista.",
-      "body": "Creane una sul web, o chiedi alla tua IA di costruirne una con quello che hai preso."
+      "body": "Iniziane una con il + qui sopra, o chiedi alla tua IA di costruirne una con quello che hai preso."
+    },
+    "new": {
+      "title": "Nuova lista"
     }
   },
   "search": {
@@ -570,7 +573,7 @@
     "camera": "Fotocamera",
     "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni.",
     "removePhoto": "Rimuovi questa foto",
-    "untagged": "Preso, è nell'Inbox. I tag non sono stati aggiunti."
+    "untagged": "Preso, è nell'Inbox. Liste e tag non sono stati aggiunti."
   },
   "preview": {
     "open": "Apri su {site}",
