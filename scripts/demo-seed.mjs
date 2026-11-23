@@ -128,5 +128,5 @@ async function storeLibrary() {
   for (const id of Object.values(places).slice(0, 2)) await api(`/api/v1/lists/${list.id}/items/${id}`, { ticked: true }, "PATCH");
   await api("/api/v1/items/batch", { itemIds: Object.values(places), patch: { status: "archived" } });
   await api(`/api/v1/lists/${list.id}/items`, { itemId: pdf, note: "Print it for the plane." });
-  return { listId: list.id, itemId: habits, noteId: dad, todoId: dentist, kitchenId: kitchen };
+  return { listId: list.id, itemId: habits, noteId: dad, todoId: dentist, kitchenId: kitchen, pasteisId: places["pasteis.html"] };
 }
