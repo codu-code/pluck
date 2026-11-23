@@ -1,13 +1,14 @@
 // The Chrome Web Store's three screenshots (1280 × 800), taken from the real extension and the real web app, so the
-// listing shows them as they ship: 1 the popup over a page it has just plucked, 2 the Inbox, 3 the reader.
+// listing shows them as they ship: 1 the popup over a page it has just plucked, 2 the Inbox, 3 the reader. And the
+// marquee promo tile (1400 × 560), whose right half is that same page and popup.
 //
 // Needs a local server running a production build (`next dev` draws its own badge on the page) with a demo library
 // (`node scripts/demo-seed.mjs <server> <email>`, which prints the key; a fresh one each time, since a page already
 // in the library is not plucked again), the fixture pages (`pnpm stack`), and the extension built for a local server:
 //   PLUCK_LOCAL=1 pnpm --filter @pluck/extension build
 // Usage: node scripts/store-chrome.mjs <server> <email> <api key>
-// Writes apps/extension/store/1-pluck-this-page.png, 2-your-inbox.png and 3-the-reader.png.
-import { writeFileSync } from "node:fs";
+// Writes apps/extension/store/1-pluck-this-page.png, 2-your-inbox.png, 3-the-reader.png and promo-marquee-1400x560.png.
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
 
@@ -66,6 +67,21 @@ await page.setContent(
   `<img src="${data(card)}" style="position:absolute;top:12px;right:16px;width:360px;border-radius:12px;border:1px solid #D3D9CE;box-shadow:0 12px 32px rgba(21,26,19,0.16)"></body>`,
 );
 writeFileSync(out("1-pluck-this-page.png"), await page.screenshot({ type: "png" }));
+
+// The marquee tile: the designer's left half (the mark, the headline) as it is, and beside it a browser's corner
+// with the page and the popup. The tile is its own base, so the new corner goes exactly over the old one.
+const tile = readFileSync(out("promo-marquee-1400x560.png"));
+await page.setViewportSize({ width: 1400, height: 560 });
+await page.setContent(
+  `<body style="margin:0;width:1400px;height:560px;position:relative;overflow:hidden;background:url(${data(tile)}) no-repeat">` +
+  `<div style="position:absolute;left:640px;top:72px;right:0;bottom:0;overflow:hidden;border-radius:16px 0 0 0;border-top:1px solid #7FD3AE;border-left:1px solid #7FD3AE;background:#FBFAF6">` +
+  `<img src="${data(behind)}" style="position:absolute;left:-500px;top:0;width:1280px">` +
+  // The popup a little smaller than life, so all of it shows in the tile's height.
+  `<img src="${data(card)}" style="position:absolute;top:14px;right:22px;width:318px;border-radius:12px;border:1px solid #D3D9CE;box-shadow:0 12px 32px rgba(21,26,19,0.16)">` +
+  `</div></body>`,
+);
+writeFileSync(out("promo-marquee-1400x560.png"), await page.screenshot({ type: "png" }));
+await page.setViewportSize(size);
 
 // 2. The Inbox, the pointer on the page just plucked so its row shows what can be done with it. Not at once: a row
 // plucked in the last few seconds is drawn as just landed, and the library was seeded a moment ago.

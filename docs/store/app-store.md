@@ -112,7 +112,7 @@ App Store Connect, Pluck, Featuring, Nominations, Create Nomination. Send it at 
 
 ## Promo video and posts
 
-`promo/pluck-promo-1080.mp4`: 20 s, 1080 × 1080, 30 fps, H.264. Upload it natively to LinkedIn and X (both autoplay muted, so the captions carry it). Source: `promo/promo.html`, pure CSS. Re-record with `node scripts/record-promo.mjs`.
+`promo/pluck-promo-1080.mp4`: 20 s, 1080 × 1080, 30 fps, H.264. Upload it natively to LinkedIn and X (both autoplay muted, so the captions carry it). Source: `promo/promo.html`, pure CSS. Re-record with `node scripts/record-promo.mjs` (and `--tall` for `pluck-promo-9x16.mp4`, the same square on a 1080 × 1920 ground).
 
 **X**
 
