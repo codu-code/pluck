@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Chercher dans vos tags",
       "newTag": "Ajouter « {name} »",
       "kind": "Type",
-      "toList": "Dans la liste",
-      "noList": "Aucune",
-      "lastUsed": "{name} (dernière utilisée)",
       "note": "Note",
       "notePlaceholder": "Une note, si vous voulez",
       "inbox": "Boîte de réception",
       "later": "Plus tard",
       "archive": "Archiver",
-      "open": "Ouvrir dans Pluck"
+      "open": "Ouvrir dans Pluck",
+      "lists": "Listes",
+      "newList": "Nouvelle liste",
+      "newListPlaceholder": "Nommez la liste, puis Entrée",
+      "moreLists": "{count} de plus"
     },
     "tabs": {
       "listName": "Onglets du {date}",

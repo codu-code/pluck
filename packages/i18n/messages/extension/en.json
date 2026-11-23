@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Search your tags",
       "newTag": "Add “{name}”",
       "kind": "Kind",
-      "toList": "To list",
-      "noList": "None",
-      "lastUsed": "{name} (last used)",
       "note": "Note",
       "notePlaceholder": "A note, if you like",
       "inbox": "Inbox",
       "later": "Later",
       "archive": "Archive",
-      "open": "Open in Pluck"
+      "open": "Open in Pluck",
+      "lists": "Lists",
+      "newList": "New list",
+      "newListPlaceholder": "Name the list, then Enter",
+      "moreLists": "{count} more"
     },
     "tabs": {
       "listName": "{date} tabs",

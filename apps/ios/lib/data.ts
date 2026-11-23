@@ -1,5 +1,5 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
-import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
+import { isFileType, type CreateItemBody, type Highlight, type Item, type ItemPage, type List, type ListEntry, type ListMembership, type Me, type PluckResponse, type SearchResults, type Status, type Tag, type UpdateItemBody } from "@pluck/shared-schemas";
 import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
@@ -50,12 +50,14 @@ export const keys = {
 const stale = (...ks: QueryKey[]) => { for (const queryKey of ks) void queryClient.invalidateQueries({ queryKey }); };
 const moved = () => stale(["items"], ["counts"], keys.lists); // the Item lists (Archive and bin too), their counts, Lists' rows
 const tagged = () => stale(keys.tags, ["items"]);
+// A #tag in someone's words is a tag on the Item, made by the server if it is new: the tags are read again so its chip has a name.
+const worded = (words?: string | null) => { if (words?.includes("#")) stale(keys.tags); };
 const listed = (listId?: string) => stale(keys.lists, ...(listId ? [keys.list(listId)] : []), ["items"], ["counts"]); // a Todo marked in a List is Done
 const after = <A extends unknown[], R>(act: (...a: A) => Promise<R>, then: (...a: A) => void) => (...a: A) => act(...a).finally(() => then(...a));
 const lib = createLibrary(api);
 export const library = {
   ...lib,
-  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, moved),
+  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, (_, patch) => { moved(); worded(`${patch.text ?? ""}${patch.note ?? ""}`); }),
   remove: after(lib.remove, moved), fromBin: after(lib.fromBin, moved), forever: after(lib.forever, moved),
   setTag: after(lib.setTag<Item>, tagged), newTag: after(lib.newTag, tagged), renameTag: after(lib.renameTag, tagged), deleteTag: after(lib.deleteTag, tagged),
   newList: after(lib.newList, () => listed()), setInList: after(lib.setInList, (_, listId) => listed(listId)),
@@ -147,18 +149,34 @@ export function usePatchItem() {
 
 const queue = createQueue({ read: () => kv.get("queue", []), write: (q) => kv.set("queue", q) });
 
-export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; queued: boolean }> {
+export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; items: Item[]; queued: boolean }> {
   const clientKey = newKey(); // the same key on the first send and on the queued copy: a lost answer makes no second Note
   try {
     const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", clientKey, ...body } });
     void queryClient.invalidateQueries({ queryKey: ["items"] });
-    return { item: res.results[0]?.item ?? null, queued: false };
+    worded(`${body.text ?? ""}${body.note ?? ""}`);
+    return { item: res.results[0]?.item ?? null, items: res.results.map((r) => r.item), queued: false };
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
     await queue.add({ source: "ios", ...body }, clientKey);
     void queryClient.invalidateQueries({ queryKey: keys.pending });
-    return { item: null, queued: true };
+    return { item: null, items: [], queued: true };
   }
+}
+
+// A photo from Add, out of the library or the camera: the Item first, the bytes straight to the bucket, then "it is
+// in", so the picture is there when the Inbox shows it.
+// shortcut: a photo needs a connection (it is not queued the way the share sheet queues a file), queue it when people take photos offline.
+export async function pluckPhoto(uri: string, name: string, type: string | undefined): Promise<Item> {
+  const bytes = await (await fetch(uri)).blob();
+  const contentType = type && isFileType(type) ? type : "image/jpeg"; // the picker hands over a JPEG unless it says otherwise
+  const file = { name, contentType };
+  const { item, uploadUrl } = await api<{ item: Item; uploadUrl: string }>("/api/v1/items/files", { json: { ...file, size: bytes.size, source: "ios" } });
+  const put = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType }, body: bytes });
+  if (!put.ok) throw new Error(`upload ${put.status}`);
+  const kept = await api<{ item: Item }>(`/api/v1/items/${item.id}/file`, { json: file }).catch(() => null); // the worker reads it if this does not
+  void queryClient.invalidateQueries({ queryKey: ["items"] });
+  return kept?.item ?? item;
 }
 
 // What the share extension could not send (no connection) waits as files in the App Group container.
@@ -236,12 +254,13 @@ function removeShared(path: string) {
   if (local?.exists) local.delete();
 }
 
-// The share extension shows two of your tags and "Add to <last list>"; it reads them from the App Group.
+// The share extension shows your Lists (last added to first) and your most used tags; it reads them from the App Group.
 export function shareExtensionCache(tags: Tag[], lists: List[]) {
   const storage = new ExtensionStorage(GROUP);
-  const last = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? ""))[0];
+  const recent = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? "")).slice(0, 12).map((l) => ({ id: l.id, name: l.name }));
   storage.set("tags", JSON.stringify([...tags].sort((a, b) => b.count - a.count).slice(0, 12).map((t) => ({ id: t.id, name: t.name }))));
-  storage.set("lastList", last ? JSON.stringify({ id: last.id, name: last.name }) : undefined);
+  storage.set("lists", JSON.stringify(recent));
+  storage.set("lastList", recent[0] ? JSON.stringify(recent[0]) : undefined); // shortcut: read by a share sheet from before "lists"; drop once no such build is in use
 }
 
 // ---- Kept on this iPhone --------------------------------------------------------------------------------------

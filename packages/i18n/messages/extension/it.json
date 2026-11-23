@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Cerca tra i tuoi tag",
       "newTag": "Aggiungi “{name}”",
       "kind": "Tipo",
-      "toList": "In una lista",
-      "noList": "Nessuna",
-      "lastUsed": "{name} (l'ultima usata)",
       "note": "Nota",
       "notePlaceholder": "Una nota, se vuoi",
       "inbox": "Inbox",
       "later": "Più tardi",
       "archive": "Archivia",
-      "open": "Apri in Pluck"
+      "open": "Apri in Pluck",
+      "lists": "Liste",
+      "newList": "Nuova lista",
+      "newListPlaceholder": "Dai un nome alla lista, poi Invio",
+      "moreLists": "Altre {count}"
     },
     "tabs": {
       "listName": "Schede del {date}",

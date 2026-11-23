@@ -46,6 +46,12 @@ export const ICONS = {
   binSide: "M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.7 9h5.6l.7-9",
   settings: "M8 10.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4zM8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M3.6 12.4l1.1-1.1M11.3 4.7l1.1-1.1",
   fold: "M4 6l4 4 4-4",
+  // Add: a photo from the library, and the camera.
+  photo: "M2.5 3h11v10h-11zM2.5 10.8l3.2-3.2 2.6 2.6 1.9-1.9 3.3 3.3M10.6 6h.01",
+  camera: "M2 5h2.6l1-1.6h4.8l1 1.6H14v8H2zM8 11.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4z",
+  numbered: "M6.5 4h7M6.5 8h7M6.5 12h7M2 3l1-.6v3.2M1.9 10.2c.3-.6 1.6-.7 1.6.2 0 .7-1.1 1.2-1.7 2.2h1.9", // the format bar: a numbered list, beside `lists` for bullets
+  mic: "M8 1.8a2 2 0 0 1 2 2v3.7a2 2 0 0 1-4 0V3.8a2 2 0 0 1 2-2zM3.8 7.5a4.2 4.2 0 0 0 8.4 0M8 11.7v2.5", // speaking in place of typing (components/Speak.tsx)
+  stop: "M5 5h6v6H5z",
 };
 
 export function Icon({ d, size = 22, color, width = 1.4 }: { d: string; size?: number; color: string; width?: number }) {

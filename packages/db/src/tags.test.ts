@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { items } from "./collections.ts";
 import {
-  batchTags, countAiTagged, createTag, deleteTag, getItem, listItems, listTags, nearestTags, pluckLink, purgeAiTags, renameTag,
+  batchTags, countAiTagged, createTag, deleteTag, moveToBin, tagByWords, getItem, listItems, listTags, nearestTags, pluckLink, purgeAiTags, renameTag,
   resolveTags, setItemTags, slugify,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -92,4 +92,57 @@ describe("AI tagging", () => {
     expect((await getItem(a, it.id))?.tagIds).toEqual([old.id]);
     expect((await listTags(a)).map((t) => t.name)).toEqual(["old"]);
   });
+});
+
+test("words tag an Item: a new #tag goes on, a slip comes off again, and nothing put on by hand is ever touched", async () => {
+  const { a, b } = await twoUsers();
+  const it = await link(a, "words");
+  const names = async () => {
+    const all = await listTags(a);
+    return (await getItem(a, it.id))!.tagIds.map((id) => all.find((t) => t.id === id)?.name).sort();
+  };
+  const t0 = new Date();
+  const at = (minutes: number) => new Date(t0.getTime() + minutes * 60_000);
+
+  expect(await tagByWords(b, it.id, ["theirs"], [])).toBe(false); // not b's Item: nothing made, nothing tagged
+  expect(await listTags(b)).toEqual([]);
+
+  // Kept as it is typed: "#rec", then "#recipes". The first comes off and, made by the slip and on nothing, is gone.
+  expect(await tagByWords(a, it.id, ["rec"], [], t0)).toBe(true);
+  expect(await tagByWords(a, it.id, ["recipes"], ["rec"], at(1))).toBe(true);
+  expect(await names()).toEqual(["recipes"]);
+  expect((await listTags(a)).map((t) => t.name)).toEqual(["recipes"]);
+
+  // A tag put on by hand is the person's: the same word typed, then typed further, takes nothing off and drops nothing.
+  const work = (await createTag(a, "work", "user"))!.tag;
+  await batchTags(a, [it.id], [work.id], [], "user");
+  await tagByWords(a, it.id, ["recipes", "work"], ["recipes"], at(2));
+  await tagByWords(a, it.id, ["recipes", "workout"], ["recipes", "work"], at(3));
+  expect(await names()).toEqual(["recipes", "work", "workout"]);
+
+  // The word taken out while it is still being written takes its tag with it; taken out later, the tag stays.
+  await tagByWords(a, it.id, ["recipes"], ["recipes", "workout"], at(4));
+  expect(await names()).toEqual(["recipes", "work"]);
+  expect(await tagByWords(a, it.id, [], ["recipes"], at(20))).toBe(false);
+  expect(await names()).toEqual(["recipes", "work"]);
+
+  // Taken off by hand, it is not put back while its word stays; and setting tags by hand makes them all the person's.
+  await setItemTags(a, it.id, [work.id], "user");
+  expect(await tagByWords(a, it.id, ["recipes"], ["recipes"], at(21))).toBe(false);
+  await tagByWords(a, it.id, ["recipes", "soon"], ["recipes"], at(22));
+  await setItemTags(a, it.id, (await getItem(a, it.id))!.tagIds, "user");
+  await tagByWords(a, it.id, ["recipes"], ["recipes", "soon"], at(23));
+  expect(await names()).toEqual(["soon", "work"]);
+
+  // A slip's tag another Item has, even one in the Bin, is not dropped. And an Item never goes past 50 tags.
+  const other = await link(a, "words-2");
+  await tagByWords(a, other.id, ["ba"], [], at(24));
+  await tagByWords(a, it.id, ["ba"], [], at(24));
+  await moveToBin(a, other.id);
+  await tagByWords(a, it.id, ["baking"], ["ba"], at(25));
+  expect((await listTags(a)).map((t) => t.name)).toContain("ba");
+  const many = await Promise.all(Array.from({ length: 48 }, (_, i) => createTag(a, `filler ${i}`, "user")));
+  await setItemTags(a, it.id, many.map((m) => m!.tag.id), "user");
+  await tagByWords(a, it.id, ["one", "two", "three"], [], at(26));
+  expect((await getItem(a, it.id))!.tagIds).toHaveLength(50);
 });

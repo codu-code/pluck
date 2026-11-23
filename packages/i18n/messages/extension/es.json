@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Busca en tus etiquetas",
       "newTag": "Añadir «{name}»",
       "kind": "Tipo",
-      "toList": "A una lista",
-      "noList": "Ninguna",
-      "lastUsed": "{name} (la última usada)",
       "note": "Nota",
       "notePlaceholder": "Una nota, si quieres",
       "inbox": "Entrada",
       "later": "Más tarde",
       "archive": "Archivar",
-      "open": "Abrir en Pluck"
+      "open": "Abrir en Pluck",
+      "lists": "Listas",
+      "newList": "Nueva lista",
+      "newListPlaceholder": "Ponle nombre y pulsa Intro",
+      "moreLists": "{count} más"
     },
     "tabs": {
       "listName": "Pestañas del {date}",

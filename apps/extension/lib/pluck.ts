@@ -1,7 +1,7 @@
 import type { CreateItemBody, Item, PluckResponse } from "@pluck/shared-schemas";
 import { api, Refused, Unreachable } from "./api";
 import { isSignedIn } from "./auth";
-import { capture, screenshot } from "./capture";
+import { capture, pictureInTab, screenshot } from "./capture";
 import { createQueue } from "@pluck/client";
 import { get, set, settings } from "./store";
 import { t } from "./t";
@@ -52,8 +52,23 @@ export function pluckForPopup(message: unknown, _sender: unknown, respond: (outc
   return true;
 }
 
-// A link, an image or a URL: no page to read, the server fetches it.
+// A link or a URL: no page to read, the server fetches it.
 export const pluckUrl = (url: string) => send({ url, source: "extension" });
+
+// An image from the right-click menu: by its address, with the page it was found on. One the server cannot fetch (a
+// feed behind your sign-in refuses it, or answers with its sign-in page) comes back unread, or as something that is
+// no Image: then the picture goes up from the tab (pictureInTab), and the Item is an Image all the same.
+// shortcut: up to 2 MB, and a capture is the size the picture is on screen; a bigger original stays unread, send it through the file upload when feeds serve such.
+export async function pluckImage(src: string, tab?: { id?: number; url?: string; windowId?: number }): Promise<PluckOutcome> {
+  const outcome = await send({ url: src, source: "extension", ...(isWeb(tab?.url) ? { foundOn: tab!.url } : {}) });
+  if (outcome.state !== "plucked" || tab?.id === undefined || tab.windowId === undefined) return outcome;
+  const { kind, extraction } = outcome.item;
+  if (!(extraction.state === "failed" || (extraction.state === "done" && kind !== "image"))) return outcome;
+  const picture = await pictureInTab(tab.id, tab.windowId, src);
+  if (!picture || picture.size > 2_000_000) return outcome;
+  const kept = await api<{ item: Item }>(`/api/v1/items/${outcome.item.id}/cover?as=picture`, { method: "PUT", body: picture, contentType: picture.type }).catch(() => null);
+  return kept ? { ...outcome, item: kept.item } : outcome;
+}
 
 export async function send(body: CreateItemBody): Promise<PluckOutcome> {
   try {

@@ -412,8 +412,8 @@
     "title": "Nog niets geplukt.",
     "lede": "Drie manieren om te beginnen. De eerste duurt een seconde.",
     "one": {
-      "title": "Druk hierboven op Pluk het",
-      "body": "De voorbeeldlink staat er al. Kijk hoe hij binnenkomt."
+      "title": "Plak hierboven een link",
+      "body": "Of typ een zin. Die wordt een Notitie."
     },
     "two": {
       "title": "Voeg de extensie toe",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Pluk vanaf je telefoon",
-      "body": "De iOS-app, of de Pluck-opdracht zolang de app er nog niet is.",
-      "ios": "iOS-app",
-      "shortcut": "Voeg de opdracht toe"
+      "body": "De iOS-app zet Pluck in het deelmenu.",
+      "ios": "iOS-app"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count} links. Enter plukt ze allemaal.",
     "as": "Pluk als",
     "due": "Deadline",
-    "enterAs": "Enter plukt het als {kind, select, note {Notitie} todo {Taak} other {Ding}}."
+    "enterAs": "Enter plukt het als {kind, select, note {Notitie} todo {Taak} other {Ding}}.",
+    "drop": "Zet een afbeelding of pdf hier neer om te plukken",
+    "fileRefused": "Pluck neemt afbeeldingen en pdf's, tot 50 MB per stuk."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "Download de extensie",
       "keptTitle": "Nog steeds van jou",
       "keptBody": "De link, je notitie en je tags zijn bewaard. Zoeken vindt het op titel en notitie."
-    }
+    },
+    "foundOn": "Gevonden op {site}"
   },
   "note": {
     "untitled": "Notitie zonder titel",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · bewerkt {edited}",
     "title": "Titel",
     "body": "Tekst",
-    "help": "De eerste regel is de titel. Platte tekst. Wordt opgeslagen terwijl je typt.",
+    "help": "De eerste regel is de titel. Wordt opgeslagen terwijl je typt.",
     "about": "Over {kind, select, note {deze notitie} todo {deze taak} other {dit ding}}",
     "kind": "Soort",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "Deadline",
     "source": "Bron: {via}",
     "pasteBox": "plakveld op het web",
-    "noHighlights": "Notities hebben geen markeringen. Selecteer tekst om die te kopiëren."
+    "noHighlights": "Notities hebben geen markeringen. Selecteer tekst om die te kopiëren.",
+    "helpPlain": "De eerste regel is de titel. Platte tekst. Wordt opgeslagen terwijl je typt.",
+    "format": {
+      "title": "Opmaak",
+      "bold": "Vet",
+      "italic": "Cursief",
+      "heading": "Kop",
+      "bullets": "Opsomming",
+      "numbers": "Genummerde lijst"
+    }
   },
   "reader": {
     "progress": "Leesvoortgang",
@@ -1049,5 +1060,9 @@
     "asPreview": "Toon als voorbeeld",
     "stars": "{count, plural, one {# ster} other {# sterren}}",
     "pages": "{count, plural, one {# pagina} other {# pagina's}}"
+  },
+  "starters": {
+    "favourites": "Favorieten",
+    "ideas": "Ideeën"
   }
 }

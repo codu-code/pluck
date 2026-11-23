@@ -8,10 +8,12 @@ import { APIError, createAuthMiddleware } from "better-auth/api";
 import { emailOTP, jwt, magicLink } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { cache } from "react";
 import { sendEmail } from "./email";
 import { magicLinkEmail } from "./emails";
 import { linkPageUrl } from "./signin-link";
+import { log } from "./log";
 import { localeFrom } from "../i18n/request";
 import { clientIp } from "./ip";
 import { HOST, ORIGIN } from "./origin";
@@ -161,7 +163,14 @@ export const auth = betterAuth({
   databaseHooks: { user: { create: { after: async (user, ctx) => {
     await updateSettings(user.id, { locale: localeFrom(ctx?.headers) });
     await setVia(user.id, viaOf(ctx));
-    await (await import("./library")).queueWelcome(user.id);
+    const library = await import("./library");
+    await library.queueWelcome(user.id);
+    // The starter Lists and posts. Signing up never waits on a picture or fails over them: the posts' pictures are
+    // fetched after the response (at once where there is no request to wait for), and an error is logged and left.
+    const defer = (task: () => Promise<void>) => {
+      try { after(task); } catch { void task().catch(() => {}); }
+    };
+    await library.giveStarters(user.id, { articles: true, locale: localeFrom(ctx?.headers), defer }).catch((e: unknown) => log("warn", "starters not made", { userId: user.id, error: String(e) }));
   } } } },
   session: { modelName: "auth_sessions", expiresIn: 30 * DAY, updateAge: DAY },
   account: { modelName: "auth_accounts" },

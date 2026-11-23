@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Buscar nas suas tags",
       "newTag": "Adicionar “{name}”",
       "kind": "Tipo",
-      "toList": "Para a lista",
-      "noList": "Nenhuma",
-      "lastUsed": "{name} (última usada)",
       "note": "Nota",
       "notePlaceholder": "Uma nota, se quiser",
       "inbox": "Entrada",
       "later": "Depois",
       "archive": "Arquivar",
-      "open": "Abrir no Pluck"
+      "open": "Abrir no Pluck",
+      "lists": "Listas",
+      "newList": "Nova lista",
+      "newListPlaceholder": "Dê um nome e aperte Enter",
+      "moreLists": "Mais {count}"
     },
     "tabs": {
       "listName": "Abas de {date}",

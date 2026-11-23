@@ -412,8 +412,8 @@
     "title": "Noch nichts gepflückt.",
     "lede": "Drei Wege zum Start. Der erste dauert eine Sekunde.",
     "one": {
-      "title": "Oben auf Pflücken drücken",
-      "body": "Der Beispiellink steht schon da. Schau zu, wie er landet."
+      "title": "Oben einen Link einfügen",
+      "body": "Oder einen Satz tippen. Daraus wird eine Notiz."
     },
     "two": {
       "title": "Erweiterung hinzufügen",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Vom iPhone pflücken",
-      "body": "Die iOS-App, oder der Pluck-Kurzbefehl, bis sie erscheint.",
-      "ios": "iOS-App",
-      "shortcut": "Kurzbefehl hinzufügen"
+      "body": "Die iOS-App bringt Pluck ins Teilen-Menü.",
+      "ios": "iOS-App"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count} Links. Enter pflückt sie alle.",
     "as": "Pflücken als",
     "due": "Fällig",
-    "enterAs": "Enter pflückt es als {kind, select, note {Notiz} todo {Aufgabe} other {Ding}}."
+    "enterAs": "Enter pflückt es als {kind, select, note {Notiz} todo {Aufgabe} other {Ding}}.",
+    "drop": "Bild oder PDF zum Pflücken hier ablegen",
+    "fileRefused": "Pluck nimmt Bilder und PDFs, jeweils bis 50 MB."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "Erweiterung holen",
       "keptTitle": "Gehört weiter dir",
       "keptBody": "Link, Notiz und Tags bleiben erhalten. Die Suche findet den Eintrag über Titel und Notiz."
-    }
+    },
+    "foundOn": "Gefunden auf {site}"
   },
   "note": {
     "untitled": "Notiz ohne Titel",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · bearbeitet {edited}",
     "title": "Titel",
     "body": "Text",
-    "help": "Die erste Zeile ist der Titel. Reiner Text. Wird beim Tippen gespeichert.",
+    "help": "Die erste Zeile ist der Titel. Wird beim Tippen gespeichert.",
     "about": "{kind, select, note {Zu dieser Notiz} todo {Zu dieser Aufgabe} other {Zu diesem Ding}}",
     "kind": "Art",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "Fällig",
     "source": "Quelle: {via}",
     "pasteBox": "Einfügefeld im Web",
-    "noHighlights": "Notizen haben keine Markierungen. Wähle Text aus, um ihn zu kopieren."
+    "noHighlights": "Notizen haben keine Markierungen. Wähle Text aus, um ihn zu kopieren.",
+    "helpPlain": "Die erste Zeile ist der Titel. Reiner Text. Wird beim Tippen gespeichert.",
+    "format": {
+      "title": "Format",
+      "bold": "Fett",
+      "italic": "Kursiv",
+      "heading": "Überschrift",
+      "bullets": "Aufzählung",
+      "numbers": "Nummerierte Liste"
+    }
   },
   "reader": {
     "progress": "Lesefortschritt",
@@ -1049,5 +1060,9 @@
     "asPreview": "Als Vorschau zeigen",
     "stars": "{count, plural, one {# Stern} other {# Sterne}}",
     "pages": "{count, plural, one {# Seite} other {# Seiten}}"
+  },
+  "starters": {
+    "favourites": "Favoriten",
+    "ideas": "Ideen"
   }
 }

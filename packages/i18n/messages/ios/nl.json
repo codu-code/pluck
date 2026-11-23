@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} van {count}",
     "empty": {
       "title": "Nog geen lijsten.",
-      "body": "Maak er een op het web, of vraag je AI er een te maken van wat je hebt geplukt."
+      "body": "Begin er een met de + hierboven, of vraag je AI er een te maken van wat je hebt geplukt."
+    },
+    "new": {
+      "title": "Nieuwe Lijst"
     }
   },
   "search": {
@@ -446,7 +449,8 @@
     "titleA11y": "Titel",
     "titleHint": "Laat de titel leeg en de eerste regel wordt de titel. Wordt bewaard terwijl je typt.",
     "textA11y": "Tekst",
-    "textPlaceholder": "Schrijf het op."
+    "textPlaceholder": "Schrijf het op.",
+    "foundOn": "Gevonden op {site}"
   },
   "settings": {
     "title": "Instellingen",
@@ -564,7 +568,12 @@
     "as": "Pluk als",
     "queued": "Geplukt. Wordt gesynchroniseerd als je weer online bent.",
     "failed": "Dat lukte niet.",
-    "plucked": "Geplukt naar de Inbox."
+    "plucked": "Geplukt naar de Inbox.",
+    "photo": "Foto",
+    "camera": "Camera",
+    "cameraOff": "Pluck mag de camera niet gebruiken. Je kunt dat wijzigen in Instellingen.",
+    "removePhoto": "Deze foto verwijderen",
+    "untagged": "Geplukt naar de Inbox. De lijsten en tags zijn er niet op gezet."
   },
   "preview": {
     "open": "Openen op {site}",
@@ -619,5 +628,20 @@
       "next": "Volgende",
       "previous": "Vorige"
     }
+  },
+  "format": {
+    "title": "Opmaak",
+    "bold": "Vet",
+    "italic": "Cursief",
+    "heading": "Kop",
+    "bullets": "Opsomming",
+    "numbers": "Genummerde lijst"
+  },
+  "speak": {
+    "start": "Spreken",
+    "stop": "Stop met luisteren",
+    "listening": "Luistert",
+    "off": "Spreken is hier in deze taal niet beschikbaar. De microfoon op het toetsenbord werkt nog wel.",
+    "denied": "Pluck mag de microfoon en spraakherkenning niet gebruiken. Je kunt dat wijzigen in Instellingen."
   }
 }

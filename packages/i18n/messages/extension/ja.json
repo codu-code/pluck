@@ -65,15 +65,16 @@
       "tagsPlaceholder": "タグを検索",
       "newTag": "「{name}」を追加",
       "kind": "種類",
-      "toList": "リストへ",
-      "noList": "なし",
-      "lastUsed": "{name}（前回使用）",
       "note": "メモ",
       "notePlaceholder": "メモがあればどうぞ",
       "inbox": "インボックス",
       "later": "あとで",
       "archive": "アーカイブ",
-      "open": "Pluckで開く"
+      "open": "Pluckで開く",
+      "lists": "リスト",
+      "newList": "新しいリスト",
+      "newListPlaceholder": "リスト名を入力してEnter",
+      "moreLists": "他{count}件"
     },
     "tabs": {
       "listName": "{date}のタブ",

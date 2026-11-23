@@ -1,4 +1,4 @@
-import type { Item, Kind, List, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
+import type { Item, Kind, List, ListMembership, PluckResponse, Status, Tag } from "@pluck/shared-schemas";
 import { KindGlyph, Logo } from "@pluck/ui";
 import { useEffect, useState, type ReactNode } from "react";
 import { useFormatter, useTranslations } from "use-intl";
@@ -173,7 +173,8 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-// One panel for a page in the library, plucked just now or weeks ago: tags, Kind, a List, a note, where it goes next.
+// One panel for a page in the library, plucked just now or weeks ago: its Lists first (the place it goes), then tags,
+// Kind, a note, where it goes next.
 function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boolean; tips: boolean; remove: (item: Item) => void }) {
   const t = useTranslations("extension");
   const format = useFormatter();
@@ -183,7 +184,9 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
   const [lastListId, setLastListId] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
   const [note, setNote] = useState(initial.note ?? "");
-  const [listId, setListId] = useState("");
+  const [inLists, setInLists] = useState<Set<string>>(new Set());
+  const [naming, setNaming] = useState<string | null>(null); // the name of a List being made; null: not making one
+  const [allLists, setAllLists] = useState(false);
   const [tabCount, setTabCount] = useState(0);
   const [footer, setFooter] = useState<string | null>(null);
   const [keys, setKeys] = useState("");
@@ -193,10 +196,17 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
     api<{ tags: Tag[] }>("/api/v1/tags").then((r) => setTags(r.tags)).catch(() => {});
     api<{ lists: List[] }>("/api/v1/lists").then((r) => setLists(r.lists)).catch(() => {});
     get("lastListId").then(setLastListId);
+    // A page plucked just now is in no List yet; one from before shows the Lists it is in.
+    if (!fresh) api<{ lists: ListMembership[] }>(`/api/v1/items/${initial.id}?include=lists`).then((r) => setInLists(new Set(r.lists.map((m) => m.list.id)))).catch(() => {});
     browser.tabs.query({ currentWindow: true }).then((t) => setTabCount(t.length));
   }, []);
 
-  const patch = async (body: Record<string, unknown>) => setItem((await api<{ item: Item }>(`/api/v1/items/${item.id}`, { method: "PATCH", json: body })).item);
+  const patch = async (body: Record<string, unknown>) => {
+    const { item: saved } = await api<{ item: Item }>(`/api/v1/items/${item.id}`, { method: "PATCH", json: body });
+    setItem(saved);
+    // A #tag in the note may have made a tag this popup has not heard of: read them again so its chip shows.
+    if (saved.tagIds.some((id) => !tags.some((t) => t.id === id))) api<{ tags: Tag[] }>("/api/v1/tags").then((r) => setTags(r.tags)).catch(() => {});
+  };
   const move = async (status: Status) => {
     await patch({ status });
     window.close();
@@ -220,14 +230,35 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
     ...tags.filter((t) => item.tagIds.includes(t.id)),
     ...tags.filter((t) => !item.tagIds.includes(t.id) && t.name.toLowerCase().includes(typed.toLowerCase())),
   ].slice(0, 8);
-  const orderedLists = [...lists].sort((a, b) => Number(b.id === lastListId) - Number(a.id === lastListId));
+  // The Lists it is in, then the one used last, then the rest as the server orders them (last touched first).
+  const rank = (l: List) => (inLists.has(l.id) ? 2 : l.id === lastListId ? 1 : 0);
+  // Every List it is in always shows (so it can be taken out); the rest fill up to six, and "More" shows them all.
+  const ranked = [...lists].sort((a, b) => rank(b) - rank(a));
+  const shownLists = allLists ? ranked : ranked.slice(0, Math.max(6, inLists.size));
   const listName = t("popup.tabs.listName", { date: format.dateTime(new Date(), DAY_MONTH) });
 
-  const addToList = async (id: string) => {
-    setListId(id);
-    if (!id) return;
-    await api(`/api/v1/lists/${id}/items`, { json: { itemId: item.id } });
-    await set({ lastListId: id });
+  // On and off again, like a tag. The chip changes at once and goes back if the server says no.
+  const toggleList = async (id: string) => {
+    const on = !inLists.has(id);
+    const flip = (to: boolean) => setInLists((cur) => { const next = new Set(cur); if (to) next.add(id); else next.delete(id); return next; });
+    flip(on);
+    try {
+      if (on) await api(`/api/v1/lists/${id}/items`, { json: { itemId: item.id } });
+      else await api(`/api/v1/lists/${id}/items/${item.id}`, { method: "DELETE" });
+      if (on) await set({ lastListId: id });
+    } catch {
+      flip(!on);
+    }
+  };
+  // Enter, or leaving the field: a name makes the List with this Item in it; no name goes back to the chips.
+  const makeList = async () => {
+    const name = naming?.trim();
+    setNaming(null);
+    if (!name) return;
+    const { list } = await api<{ list: List }>("/api/v1/lists", { json: { name, items: [{ itemId: item.id }] } });
+    setLists((all) => [list, ...all]);
+    setInLists((cur) => new Set(cur).add(list.id));
+    await set({ lastListId: list.id });
   };
 
   const pluckAllTabs = async () => {
@@ -277,6 +308,32 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
       ) : (
         <>
           <div className="body">
+            <div className="field" role="group" aria-label={t("popup.plucked.lists")}>
+              <span className="label">{t("popup.plucked.lists")}</span>
+              {naming === null ? (
+                <div className="chips">
+                  {shownLists.map((l) => (
+                    <button key={l.id} type="button" className="chip" aria-pressed={inLists.has(l.id)} onClick={() => void toggleList(l.id)}>{l.name}</button>
+                  ))}
+                  {ranked.length > shownLists.length && (
+                    <button type="button" className="chip new" onClick={() => setAllLists(true)}>{t("popup.plucked.moreLists", { count: ranked.length - shownLists.length })}</button>
+                  )}
+                  <button type="button" className="chip new" onClick={() => setNaming("")}>{t("popup.plucked.newList")}</button>
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  autoFocus
+                  aria-label={t("popup.plucked.newList")}
+                  placeholder={t("popup.plucked.newListPlaceholder")}
+                  value={naming}
+                  maxLength={120}
+                  onChange={(e) => setNaming(e.target.value)}
+                  onBlur={() => void makeList().catch(() => {})}
+                  onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLInputElement).blur()}
+                />
+              )}
+            </div>
             <label className="field">
               <span className="label">{t("popup.plucked.tags")}</span>
               <input
@@ -312,13 +369,6 @@ function ItemPanel({ initial, fresh, tips, remove }: { initial: Item; fresh: boo
                 </button>
               ))}
             </div>
-            <label className="inline-field">
-              <span className="label list-label">{t("popup.plucked.toList")}</span>
-              <select value={listId} onChange={(e) => void addToList(e.target.value)}>
-                <option value="">{t("popup.plucked.noList")}</option>
-                {orderedLists.map((l) => <option key={l.id} value={l.id}>{l.id === lastListId ? t("popup.plucked.lastUsed", { name: l.name }) : l.name}</option>)}
-              </select>
-            </label>
             <label className="note">
               <span className="visually-hidden">{t("popup.plucked.note")}</span>
               <input

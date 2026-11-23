@@ -412,8 +412,8 @@
     "title": "まだ何もPluckしていません。",
     "lede": "始め方は3つ。最初のひとつは1秒で終わります。",
     "one": {
-      "title": "上の「Pluckする」を押す",
-      "body": "サンプルのリンクがもう入っています。届くところを見てください。"
+      "title": "上にリンクを貼り付ける",
+      "body": "文章を入力してもかまいません。メモになります。"
     },
     "two": {
       "title": "拡張機能を追加",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "iPhoneからPluck",
-      "body": "iOSアプリで。公開までは、Pluckのショートカットで。",
-      "ios": "iOSアプリ",
-      "shortcut": "ショートカットを追加"
+      "body": "iOSアプリを入れると、共有シートにPluckが加わります。",
+      "ios": "iOSアプリ"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count}件のリンク。EnterですべてをまとめてPluckします。",
     "as": "種類",
     "due": "期限",
-    "enterAs": "Enterで{kind, select, note {メモ} todo {ToDo} other {モノ}}としてPluckします。"
+    "enterAs": "Enterで{kind, select, note {メモ} todo {ToDo} other {モノ}}としてPluckします。",
+    "drop": "画像やPDFをドロップしてPluckする",
+    "fileRefused": "Pluckできるのは画像とPDFで、1つ50 MBまでです。"
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "拡張機能を入手",
       "keptTitle": "ちゃんと残っています",
       "keptBody": "リンク、メモ、タグは残っています。タイトルとメモで検索できます。"
-    }
+    },
+    "foundOn": "{site}で見つけました"
   },
   "note": {
     "untitled": "無題のメモ",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · 編集：{edited}",
     "title": "タイトル",
     "body": "本文",
-    "help": "最初の行がタイトルになります。プレーンテキストで、入力すると自動で保存されます。",
+    "help": "最初の行がタイトルになります。入力すると自動で保存されます。",
     "about": "この{kind, select, note {メモ} todo {ToDo} other {モノ}}について",
     "kind": "種類",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "期限",
     "source": "追加元：{via}",
     "pasteBox": "Webの入力欄",
-    "noHighlights": "メモにはハイライトがありません。テキストを選択するとコピーできます。"
+    "noHighlights": "メモにはハイライトがありません。テキストを選択するとコピーできます。",
+    "helpPlain": "最初の行がタイトルになります。プレーンテキストで、入力すると自動で保存されます。",
+    "format": {
+      "title": "書式",
+      "bold": "太字",
+      "italic": "斜体",
+      "heading": "見出し",
+      "bullets": "箇条書き",
+      "numbers": "番号付きリスト"
+    }
   },
   "reader": {
     "progress": "読んだ割合",
@@ -1049,5 +1060,9 @@
     "asPreview": "プレビューとして表示",
     "stars": "スター{count}",
     "pages": "{count}ページ"
+  },
+  "starters": {
+    "favourites": "お気に入り",
+    "ideas": "アイデア"
   }
 }

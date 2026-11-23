@@ -13,6 +13,7 @@ export type ItemDoc = {
   urlHash?: string; // absent for notes, todos and things
   clientKey?: string; // a note, todo or thing sent from a queue: its id there, so a resend finds this one
   canonicalUrl: string | null;
+  foundOn?: string | null; // the page an Image was plucked from; absent on Items made before Found on
   title: string;
   titleIsDerived: boolean;
   siteName: string | null;
@@ -28,6 +29,8 @@ export type ItemDoc = {
   dueAt: Date | null;
   tagIds: ObjectId[];
   aiTags?: { tagId: ObjectId; at: Date }[]; // assignments made by an AI tool, until the person touches the item's tags
+  wordTags?: { tagId: ObjectId; at: Date }[]; // tags its own words put on ("#recipes"), lately: only these can come off when the word changes
+  starter?: true; // one of our posts, given to a new account: never in the weekly email, never counted as plucked
   note: string | null;
   source: Source;
   readingProgress: number;
@@ -58,6 +61,7 @@ export type TagDoc = {
   count: number;
   createdAt: Date;
   createdBy: "user" | "mcp";
+  fromWords?: true; // made by a #tag someone typed, not in a picker: only such a tag is dropped when the word was a slip
 };
 
 export type ListDoc = {
@@ -75,6 +79,7 @@ export type ListDoc = {
   createdBy: "user" | "mcp";
   createdAt: Date;
   updatedAt: Date;
+  starter?: Date; // a List the account started with, and its lastActivityAt then: while the two match nobody has used it, and the weekly email leaves it out
   publishedAt?: Date | null; // first made public: the slug is frozen from then on
   killed?: boolean; // taken down by an admin; never served publicly
 };
@@ -111,6 +116,7 @@ export type UserDoc = {
   lastMcpCallAt?: Date; // the connector's last call, for Settings, written at most once a minute
   via?: SignUpVia; // where the account was made, set once at sign-up
   heardFrom?: HeardFrom; // "How did you find Pluck?", answered once
+  startersAt?: Date; // the starter Lists were made for this account (once; deleting them does not bring them back)
 };
 
 export type SignUpVia = "try" | "mcp" | "public-page" | "shared-list" | "ios" | "extension" | "direct";

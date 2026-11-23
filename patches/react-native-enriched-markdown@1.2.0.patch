@@ -1,0 +1,32 @@
+diff --git a/ios/input/ENRMInputFormatterStyle.mm b/ios/input/ENRMInputFormatterStyle.mm
+index 0707f37b2ccc6d5fe849bc9e967da98fab9cb53e..b0916c739189b2025fe306357db8d91c78439e73 100644
+--- a/ios/input/ENRMInputFormatterStyle.mm
++++ b/ios/input/ENRMInputFormatterStyle.mm
+@@ -110,6 +110,15 @@ - (UIFont *)headingFontForLevel:(NSInteger)level
+     UIFontDescriptor *descriptor = [_baseFont.fontDescriptor
+         fontDescriptorByAddingAttributes:@{UIFontDescriptorTraitsAttribute : @{UIFontWeightTrait : @(weight)}}];
+     font = descriptor ? [UIFont fontWithDescriptor:descriptor size:size] : [UIFont systemFontOfSize:size weight:weight];
++    // Pluck: a font named by its face (a bundled one, like Geist) ignores a weight trait, so a heading came out as
++    // light as the text. Ask for its bold face the way bold text does.
++    if (weight >= UIFontWeightSemibold && [font.fontName isEqualToString:_baseFont.fontName]) {
++      UIFontDescriptor *bold = [_baseFont.fontDescriptor
++          fontDescriptorWithSymbolicTraits:_baseFont.fontDescriptor.symbolicTraits | UIFontDescriptorTraitBold];
++      if (bold) {
++        font = [UIFont fontWithDescriptor:bold size:size];
++      }
++    }
+   } else {
+     font = [_baseFont fontWithSize:size];
+   }
+diff --git a/lib/module/web/wasm/md4c.js b/lib/module/web/wasm/md4c.js
+--- a/lib/module/web/wasm/md4c.js
++++ b/lib/module/web/wasm/md4c.js
+@@ -372,4 +372,7 @@
+   module.exports = createMd4cModule;
+   module.exports.default = createMd4cModule;
+ } else if (typeof define === "function" && define["amd"]) define([], () => createMd4cModule);
++// Pluck: this folder is "type": "module", so a bundler that goes by that (Turbopack) sees no CommonJS export above
++// and the web editor's parser never loads. Say it the ES way too.
++export default createMd4cModule;
+ //# sourceMappingURL=md4c.js.map
+\ No newline at end of file

@@ -65,15 +65,16 @@
       "tagsPlaceholder": "Deine Tags durchsuchen",
       "newTag": "„{name}“ hinzufügen",
       "kind": "Art",
-      "toList": "In Liste",
-      "noList": "Keine",
-      "lastUsed": "{name} (zuletzt genutzt)",
       "note": "Notiz",
       "notePlaceholder": "Eine Notiz, wenn du magst",
       "inbox": "Eingang",
       "later": "Später",
       "archive": "Archiv",
-      "open": "In Pluck öffnen"
+      "open": "In Pluck öffnen",
+      "lists": "Listen",
+      "newList": "Neue Liste",
+      "newListPlaceholder": "Liste benennen, dann Enter",
+      "moreLists": "{count} weitere"
     },
     "tabs": {
       "listName": "Tabs vom {date}",

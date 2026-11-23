@@ -3,12 +3,20 @@ import {
 } from "@pluck/db";
 import type { List, ListEntry } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
+import { log } from "../log";
 import { track } from "../telemetry";
+import { giveStarters } from "./starters";
 import type { Actor } from "./tags";
 
 const missing = () => new ApiError("not_found", "No such list.", 404);
 
-export const listsOf = (userId: string): Promise<List[]> => listLists(userId);
+// An account from before the starter Lists gets them the first time its Lists are read; ever after this is one
+// read that changes nothing.
+// The Lists themselves never wait on that going well: a failure is logged and the page still gets its Lists.
+export async function listsOf(userId: string): Promise<List[]> {
+  await giveStarters(userId, { articles: false }).catch((e: unknown) => log("warn", "starters not made", { userId, error: String(e) }));
+  return listLists(userId);
+}
 
 export async function newList(
   userId: string,

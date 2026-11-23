@@ -106,6 +106,59 @@ export async function deleteTag(userId: string, id: string, opts: { reassignTo: 
   return true;
 }
 
+const WORDS_MS = 600_000; // how long a tag stays the words' own: a word changed or taken out in that time takes its tag with it
+const WORDS_MOST = 10; // new tags one piece of writing can make, so a pasted page of "#" cannot fill the tag list
+const ITEM_MOST = 50; // UpdateItemBody's limit: the words stop adding where a picker would be refused
+
+// The tags an Item's own words give it ("#recipes" in a Note or a note). `names` are the #tags in its words now, `was`
+// those in the words they replace.
+// - One that was not there before goes on (the tag is made if it is new), unless the Item is full.
+// - One the words put on in the last ten minutes, and no longer say, comes off: a Note saves as it is typed, so
+//   "#rec" was kept on the way to "#recipes", and a slip or a change of mind should leave nothing behind. A tag made
+//   by that slip, and now on nothing, is dropped.
+// - Nothing else is touched: a tag put on by hand, or by words longer ago, stays whatever the words say now, and a tag
+//   taken off by hand is not put back while its word stays.
+export async function tagByWords(userId: string, itemId: string, names: string[], was: string[], now = new Date()): Promise<boolean> {
+  const uid = oid(userId);
+  const col = await items();
+  const item = await col.findOne({ _id: oid(itemId), userId: uid, deletedAt: null }, { projection: { tagIds: 1, wordTags: 1 } });
+  if (!item) return false;
+  const t = await tags();
+  const since = new Date(now.getTime() - WORDS_MS);
+  const said = new Set(names.map(slugify));
+  const before = new Set(was.map(slugify));
+  const lately = (item.wordTags ?? []).filter((w) => w.at >= since && item.tagIds.some((x) => x.equals(w.tagId))).map((w) => w.tagId);
+  const off = lately.length ? (await t.find({ _id: { $in: lately }, userId: uid, slug: { $nin: [...said] } }, { projection: { _id: 1 } }).toArray()).map((d) => d._id) : [];
+
+  const on: ObjectId[] = [];
+  const room = Math.min(WORDS_MOST, ITEM_MOST - item.tagIds.length + off.length);
+  for (const name of names) {
+    if (on.length >= room) break;
+    if (!slugify(name) || before.has(slugify(name))) continue;
+    const made = await createTag(userId, name, "user");
+    if (!made) continue;
+    const id = oid(made.tag.id);
+    if (made.created) await t.updateOne({ _id: id, userId: uid }, { $set: { fromWords: true } });
+    if (!item.tagIds.some((x) => x.equals(id)) && !on.some((x) => x.equals(id))) on.push(id); // already on by hand: it stays the person's
+  }
+  if (!on.length && !off.length) return false;
+
+  const touched = { lastTouchedAt: now, updatedAt: now };
+  // The last twenty are plenty to remember: older ones have long stopped being the words' own.
+  if (on.length) await col.updateOne({ _id: item._id, userId: uid }, { $addToSet: { tagIds: { $each: on } }, $push: { wordTags: { $each: on.map((tagId) => ({ tagId, at: now })), $slice: -20 } }, $set: touched });
+  if (off.length) {
+    // why: the driver's types cannot express $pull with $in on an ObjectId array.
+    const update = { $pull: { tagIds: { $in: off }, aiTags: { tagId: { $in: off } }, wordTags: { tagId: { $in: off } } }, $set: touched } as unknown as UpdateFilter<ItemDoc>;
+    await col.updateOne({ _id: item._id, userId: uid }, update);
+  }
+  await recount(uid, [...on, ...off]);
+  await syncTagNames(uid, { _id: item._id });
+  // Dropped only if the words made it, just now, and no Item has it, the Bin's included (a count leaves those out).
+  for (const id of off)
+    if (!(await col.countDocuments({ userId: uid, tagIds: id }, { limit: 1 }))) await t.deleteOne({ _id: id, userId: uid, fromWords: true, createdAt: { $gte: since } });
+  return true;
+}
+
 // Turns what a caller sent (tag ids, or names for convenience) into the person's tag ids. Never creates.
 export async function resolveTags(userId: string, values: string[]): Promise<{ ids: string[]; unknown: string[] }> {
   const uid = oid(userId);
@@ -158,7 +211,8 @@ export async function setItemTags(userId: string, itemId: string, tagIds: string
     by === "user"
       ? []
       : [...(current.aiTags ?? []).filter((a) => next.some((t) => t.equals(a.tagId))), ...added.map((tagId) => ({ tagId, at: now }))];
-  await col.updateOne({ _id: current._id }, { $set: { tagIds: next, aiTags, lastTouchedAt: now, updatedAt: now } });
+  // Set by hand, every tag is the person's: none is the words' own any more, so none comes off with a word.
+  await col.updateOne({ _id: current._id }, { $set: { tagIds: next, aiTags, ...(by === "user" ? { wordTags: [] } : {}), lastTouchedAt: now, updatedAt: now } });
   await recount(uid, [...new Set([...current.tagIds, ...next].map((t) => t.toHexString()))].map(oid));
   await syncTagNames(uid, { _id: current._id });
   return true;

@@ -44,7 +44,6 @@ export function EmptyInbox() {
           </span>
           <span className={styles.actions}>
             <Link href="/iphone" className={styles.action}>{t("three.ios")}</Link>
-            <Link href="/settings#shortcut" className={styles.action}>{t("three.shortcut")}</Link>
           </span>
         </li>
       </ol>

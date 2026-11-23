@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} von {count}",
     "empty": {
       "title": "Noch keine Listen.",
-      "body": "Leg eine im Web an, oder bitte deine KI, eine aus deinem Gepflückten zu bauen."
+      "body": "Leg eine mit dem + oben an, oder bitte deine KI, eine aus deinem Gepflückten zu bauen."
+    },
+    "new": {
+      "title": "Neue Liste"
     }
   },
   "search": {
@@ -446,7 +449,8 @@
     "titleA11y": "Titel",
     "titleHint": "Lass den Titel leer, dann wird die erste Zeile zum Titel. Wird beim Tippen gespeichert.",
     "textA11y": "Text",
-    "textPlaceholder": "Schreib es auf."
+    "textPlaceholder": "Schreib es auf.",
+    "foundOn": "Gefunden auf {site}"
   },
   "settings": {
     "title": "Einstellungen",
@@ -564,7 +568,12 @@
     "as": "Pflücken als",
     "queued": "Gepflückt. Wird synchronisiert, sobald du wieder online bist.",
     "failed": "Das hat nicht geklappt.",
-    "plucked": "In den Eingang gepflückt."
+    "plucked": "In den Eingang gepflückt.",
+    "photo": "Foto",
+    "camera": "Kamera",
+    "cameraOff": "Pluck darf die Kamera nicht verwenden. Das lässt sich in den Einstellungen ändern.",
+    "removePhoto": "Dieses Foto entfernen",
+    "untagged": "In den Eingang gepflückt. Listen und Tags wurden nicht gesetzt."
   },
   "preview": {
     "open": "Auf {site} öffnen",
@@ -619,5 +628,20 @@
       "next": "Nächster",
       "previous": "Vorheriger"
     }
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "heading": "Überschrift",
+    "bullets": "Aufzählung",
+    "numbers": "Nummerierte Liste"
+  },
+  "speak": {
+    "start": "Sprechen",
+    "stop": "Zuhören beenden",
+    "listening": "Hört zu",
+    "off": "Sprechen ist hier in dieser Sprache nicht verfügbar. Das Mikrofon der Tastatur funktioniert weiterhin.",
+    "denied": "Pluck darf das Mikrofon und die Spracherkennung nicht verwenden. Das lässt sich in den Einstellungen ändern."
   }
 }

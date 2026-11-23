@@ -1,7 +1,8 @@
 import { keys, signedPutUrl } from "@pluck/blob";
 import { createFileItem, enqueue } from "@pluck/db";
 import { FILE_TYPES, type CreateFileItemBody, type Item } from "@pluck/shared-schemas";
-import { trackPlucked } from "./items";
+import { readItem, trackPlucked } from "./items";
+import { keepFile } from "./keeping";
 
 const keyFor = (userId: string, itemId: string, contentType: CreateFileItemBody["contentType"]) =>
   contentType === "application/pdf" ? keys.file(userId, itemId, "pdf") : keys.file(userId, itemId, FILE_TYPES[contentType]);
@@ -15,4 +16,11 @@ export async function beginFile(userId: string, body: CreateFileItemBody): Promi
   const key = keyFor(userId, item.id, body.contentType);
   await enqueue("file", { userId, itemId: item.id, key, contentType: body.contentType, name: body.name }, { delayMs: 15_000 });
   return { item, uploadUrl: await signedPutUrl(key, body.contentType, body.size) };
+}
+
+// The upload is in: read the file now, so the picture shows at once and not at the worker's next pass. The queued
+// job finds nothing left to do. A type that is not the one the upload was made with finds no file: a failed try.
+export async function fileArrived(userId: string, itemId: string, body: Pick<CreateFileItemBody, "name" | "contentType">): Promise<Item> {
+  await keepFile(userId, itemId, keyFor(userId, itemId, body.contentType), body.contentType, body.name);
+  return readItem(userId, itemId);
 }

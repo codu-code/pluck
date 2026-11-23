@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} of {count}",
     "empty": {
       "title": "No lists yet.",
-      "body": "Make one on the web, or ask your AI to build one from what you plucked."
+      "body": "Start one with the + above, or ask your AI to build one from what you plucked."
+    },
+    "new": {
+      "title": "New List"
     }
   },
   "search": {
@@ -446,7 +449,8 @@
     "titleA11y": "Title",
     "titleHint": "Leave the title empty and the first line is the title. Saves as you type.",
     "textA11y": "Text",
-    "textPlaceholder": "Write it down."
+    "textPlaceholder": "Write it down.",
+    "foundOn": "Found on {site}"
   },
   "settings": {
     "title": "Settings",
@@ -564,7 +568,12 @@
     "as": "Pluck as",
     "queued": "Plucked. Will sync when you are back online.",
     "failed": "That did not go through.",
-    "plucked": "Plucked to the Inbox."
+    "plucked": "Plucked to the Inbox.",
+    "photo": "Photo",
+    "camera": "Camera",
+    "cameraOff": "Pluck is not allowed to use the camera. You can change that in Settings.",
+    "removePhoto": "Remove this photo",
+    "untagged": "Plucked to the Inbox. Its lists and tags did not go on."
   },
   "preview": {
     "open": "Open on {site}",
@@ -619,5 +628,20 @@
       "next": "Next",
       "previous": "Previous"
     }
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Bold",
+    "italic": "Italic",
+    "heading": "Heading",
+    "bullets": "Bulleted list",
+    "numbers": "Numbered list"
+  },
+  "speak": {
+    "start": "Speak",
+    "stop": "Stop listening",
+    "listening": "Listening",
+    "off": "Speaking is not available here in this language. The microphone on the keyboard still works.",
+    "denied": "Pluck is not allowed to use the microphone and Speech Recognition. You can change that in Settings."
   }
 }

@@ -179,7 +179,10 @@
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "リストはまだありません。",
-      "body": "Webで作るか、お使いのAIに、Pluckしたものからリストを作ってもらいましょう。"
+      "body": "上の＋で作るか、お使いのAIに、Pluckしたものからリストを作ってもらいましょう。"
+    },
+    "new": {
+      "title": "新しいリスト"
     }
   },
   "search": {
@@ -446,7 +449,8 @@
     "titleA11y": "タイトル",
     "titleHint": "タイトルを空欄にすると、最初の行がタイトルになります。入力すると自動で保存されます。",
     "textA11y": "本文",
-    "textPlaceholder": "書き留めましょう。"
+    "textPlaceholder": "書き留めましょう。",
+    "foundOn": "{site}で見つけました"
   },
   "settings": {
     "title": "設定",
@@ -564,7 +568,12 @@
     "as": "種類",
     "queued": "Pluckしました。オンラインに戻ると同期します。",
     "failed": "うまくいきませんでした。",
-    "plucked": "インボックスにPluckしました。"
+    "plucked": "インボックスにPluckしました。",
+    "photo": "写真",
+    "camera": "カメラ",
+    "cameraOff": "Pluckはカメラを使用できません。「設定」で変更できます。",
+    "removePhoto": "この写真を取り除く",
+    "untagged": "インボックスにPluckしました。リストとタグは付けられませんでした。"
   },
   "preview": {
     "open": "{site}で開く",
@@ -619,5 +628,20 @@
       "next": "次へ",
       "previous": "前へ"
     }
+  },
+  "format": {
+    "title": "書式",
+    "bold": "太字",
+    "italic": "斜体",
+    "heading": "見出し",
+    "bullets": "箇条書き",
+    "numbers": "番号付きリスト"
+  },
+  "speak": {
+    "start": "話す",
+    "stop": "聞き取りを止める",
+    "listening": "聞き取り中",
+    "off": "この言語では、ここで話して入力できません。キーボードのマイクは使えます。",
+    "denied": "Pluckはマイクと音声認識を使用できません。「設定」で変更できます。"
   }
 }

@@ -100,6 +100,15 @@ export const REFERRAL = "utm_source=getpluck.io";
 // Signed and one-time links (S3, GCS, CloudFront, HMAC tokens) put every other parameter under the signature.
 const SIGNED = /^(x-amz-.+|x-goog-.+|signature|sig|key-pair-id|expires|token|hmac|hash)$/i;
 
+// The site an address is on, as people say it: "example.com". For Found on, and wherever a link is named by its site.
+export function siteOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 export function withReferral(url: string): string {
   let u: URL;
   try {

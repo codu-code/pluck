@@ -4,13 +4,14 @@ import { claimOnce, localNow } from "./expiry.ts";
 
 // The Monday digest, plain rules, no model: what expires within a week (not in a list), what is due this
 // week, the five oldest in the Inbox, and lists with no activity in 30 days. The same data is get_digest.
+// What an account was started with is never in it: our own posts, and a starter List nobody has used.
 
 const DAY = 86_400_000;
 
 export async function digestFor(userId: string, settings: UserSettings, now = new Date(), limit = 5): Promise<Digest> {
   const uid = oid(userId);
   const col = await items();
-  const base = { userId: uid, deletedAt: null };
+  const base = { userId: uid, deletedAt: null, starter: { $ne: true as const } };
   const scope = settings.expiryScope === "inbox" ? ["inbox"] : ["inbox", "later"];
   const days = settings.expiryDays;
   const lean = { projection: { title: 1, siteName: 1, url: 1, kind: 1, lastTouchedAt: 1, dueAt: 1, createdAt: 1 } };
@@ -35,7 +36,7 @@ export async function digestFor(userId: string, settings: UserSettings, now = ne
       .limit(limit)
       .toArray(),
     col.find({ ...base, status: "inbox" }, lean).sort({ createdAt: 1 }).limit(limit).toArray(),
-    (await lists()).find({ userId: uid, lastActivityAt: { $lt: new Date(now.getTime() - 30 * DAY) } }).sort({ lastActivityAt: 1 }).limit(limit).toArray(),
+    (await lists()).find({ userId: uid, lastActivityAt: { $lt: new Date(now.getTime() - 30 * DAY) }, $expr: { $ne: ["$starter", "$lastActivityAt"] } }).sort({ lastActivityAt: 1 }).limit(limit).toArray(),
   ]);
 
   const site = (d: { siteName: string | null; url: string | null; kind: string }) =>

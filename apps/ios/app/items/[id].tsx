@@ -1,21 +1,24 @@
 import { Unreachable } from "@pluck/client";
-import { isCardPreview, isTextKind, showsFile, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
-import { useQueryClient } from "@tanstack/react-query";
+import { isCardPreview, isTextKind, showsFile, siteOf, textRuns, withReferral, type Item } from "@pluck/shared-schemas";
+import { skipToken, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import type { File } from "expo-file-system";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Image, Linking, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, Linking, Pressable, ScrollView, Settings, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { useFormatter, useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Player } from "@/components/Player";
+import { FormatBar, RichText, type Format, type RichTextHandle } from "@/components/RichText";
+import { spoken, useSpeak } from "@/components/Speak";
 import { useInDetail, useSplit } from "@/components/split/context";
+import { TagChips } from "@/components/Tags";
 import { toast } from "@/components/Toast";
 import { ToolBar, type Tool } from "@/components/ToolBar";
-import { fileOf, keepByHand, keys, useCover, useItem, useKeptByHand, useOnline, usePatchItem, useTags, type FullItem } from "@/lib/data";
+import { fileOf, keepByHand, keys, library, pluck, useCover, useItem, useKeptByHand, useOnline, usePatchItem, type FullItem } from "@/lib/data";
 import { useRowText } from "@/lib/format";
 import { marks, parseMarkdown, type Block } from "@/lib/markdown";
 import { device } from "@/lib/i18n";
@@ -26,7 +29,8 @@ const BACK = { inbox: "tabs.inbox", later: "tabs.later", archived: "item.backArc
 
 export default function ItemScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  return <ItemView id={id} />;
+  // items/new: a Note not plucked yet, straight into its editor (Add's Note button). It is plucked with its first words.
+  return id === "new" ? <NoteEditor data={null} /> : <ItemView id={id} />;
 }
 
 // The Item, as its own screen on iPhone and in the iPad split view's detail column (useInDetail).
@@ -204,7 +208,7 @@ function Reader({ data }: { data: FullItem }) {
         {/* The title stops growing at the titles' ceiling, so a long word stays whole at the largest text sizes; the body grows on. */}
         <Text accessibilityRole="header" maxFontSizeMultiplier={scale.title} style={[font.readerTitle, inDetail ? styles.wideH1 : styles.h1, { color: t.ink }]}>{item.title}</Text>
         {item.author ? <Text style={[font.reader, { color: t.ink2, fontStyle: "italic", fontSize: 16 }]}>{tr("item.by", { author: item.author })}</Text> : null}
-        {inDetail && <Tags item={item} />}
+        <TagChips item={item} edit />
         <Facts item={item} />
         {card && item.preview === "player" && item.facts.player ? <Player facts={item.facts} title={item.title} site={site} cover={cover} /> : card && cover && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail, maxHeight: 520 }]} resizeMode="cover" accessibilityIgnoresInvertColors
@@ -234,6 +238,12 @@ function Reader({ data }: { data: FullItem }) {
         {cover && item.kind === "image" && (
           <Image source={cover} style={[styles.image, { aspectRatio: ratio, backgroundColor: t.rail }]} resizeMode="contain" accessibilityLabel={item.title}
             onLoad={(e) => e.nativeEvent.source.height && setRatio(Math.max(0.5, e.nativeEvent.source.width / e.nativeEvent.source.height))} />
+        )}
+        {item.kind === "image" && item.foundOn && (
+          // Found on: the page the picture was plucked from, its way back.
+          <Pressable accessibilityRole="link" onPress={() => void WebBrowser.openBrowserAsync(withReferral(item.foundOn!))} hitSlop={8} style={{ alignSelf: "flex-start" }}>
+            <Text style={[font.regular, { color: t.actionInk, fontSize: 15, lineHeight: 21 }]}>{tr("item.foundOn", { site: siteOf(item.foundOn) })}</Text>
+          </Pressable>
         )}
         {item.note ? (
           <Pressable accessibilityRole="button" accessibilityLabel={tr("item.noteA11y", { note: item.note })} onPress={() => router.push({ pathname: "/note", params: { id: item.id } })}>
@@ -268,19 +278,6 @@ function Reader({ data }: { data: FullItem }) {
       </ScrollView>
       </>}
       {!inDetail && <Toolbar item={item} />}
-    </View>
-  );
-}
-
-// The Item's tags under the byline, as on the iPad-Inbox board: 22 tall chips on --chip.
-function Tags({ item }: { item: Item }) {
-  const t = useTheme();
-  const tags = useTags().data ?? [];
-  const names = item.tagIds.map((id) => tags.find((x) => x.id === id)?.name).filter(Boolean) as string[];
-  if (!names.length) return null;
-  return (
-    <View style={styles.tags}>
-      {names.map((n) => <Text key={n} maxFontSizeMultiplier={scale.title} style={[font.regular, styles.tag, { backgroundColor: t.chip, color: t.ink }]}>{n}</Text>)}
     </View>
   );
 }
@@ -367,33 +364,95 @@ function BlockView({ block, quotes, t, wide = false }: { block: Block; quotes: s
 }
 
 // Notes, todos and things: the text is the item, typed and kept as you go.
-function NoteEditor({ data }: { data: FullItem }) {
+// `data` null: a new Note, which has no Item until its first words are plucked.
+function NoteEditor({ data }: { data: FullItem | null }) {
   const t = useTheme();
   const tr = useTranslations("ios");
   const qc = useQueryClient();
-  const { item } = data;
+  const [made, setMade] = useState<Item | null>(null);
+  // A Note made here is not this screen's query, so what changes it from elsewhere (its tags, from the picker) is read from the cache.
+  const live = useQuery<FullItem>({ queryKey: keys.item(made?.id ?? ""), queryFn: skipToken }).data?.item;
+  const item = data?.item ?? live ?? made;
   const patch = usePatchItem();
-  const [title, setTitle] = useState(item.titleIsDerived ? "" : item.title);
-  const [text, setText] = useState(data.text);
+  const [title, setTitle] = useState(item && !item.titleIsDerived ? item.title : "");
+  const [text, setText] = useState(data?.text ?? "");
   const first = useRef(true);
+  const unsaved = useRef(false);
+  const making = useRef(false);
+  const now = useRef({ text, title });
+  now.current = { text, title };
 
-  useEffect(() => {
-    if (first.current) return void (first.current = false);
-    const id = setTimeout(() => {
+  // Keeps the words as they are now: an edit to the Item, or the pluck that makes it. Leaving the screen mid-request
+  // loses nothing: the pluck's answer sends on whatever was typed after it left.
+  const keep = useRef(() => {});
+  keep.current = () => {
+    unsaved.current = false;
+    if (item) {
       patch.mutate({ id: item.id, patch: { text, title } });
       qc.setQueryData<FullItem>(keys.item(item.id), (old) => (old ? { ...old, text } : old));
-    }, 600);
+    } else if (text.trim() && !making.current) {
+      making.current = true;
+      const sent = { text, title };
+      // shortcut: with no connection the first words wait in the queue and later ones are not added to them; let the queue replace a waiting Note when people write offline.
+      pluck({ text, kind: "note", ...(title.trim() ? { title: title.trim() } : {}) }).then((res) => {
+        if (!res.item) return;
+        setMade(res.item);
+        if (now.current.text !== sent.text || now.current.title !== sent.title) void library.edit(res.item.id, now.current).catch(() => {});
+      }, () => {
+        making.current = false;
+        toast(tr("add.failed"));
+      });
+    }
+  };
+  useEffect(() => {
+    if (first.current) return void (first.current = false);
+    unsaved.current = true;
+    const id = setTimeout(() => keep.current(), 600);
     return () => clearTimeout(id);
   }, [text, title]); // only when the words change
+  useEffect(() => () => void (unsaved.current && keep.current()), []); // back before the pause was over: kept on the way out
 
-  const done = item.status === "done";
+  const done = item?.status === "done";
   const inDetail = useInDetail();
+
+  // The words are rich text (components/RichText.tsx); one it cannot keep exactly opens as plain text, as before.
+  const [plain, setPlain] = useState(false);
+  const rich = useRef<RichTextHandle>(null);
+  const [format, setFormat] = useState<Format | null>(null);
+  const [writing, setWriting] = useState(false); // the words have the keyboard: the format bar takes the toolbar's place
+  const [keyboard, setKeyboard] = useState(false);
+  // Spoken words go where the caret is; in the plain editor, after what is there.
+  const speak = useSpeak((words) => (plain ? setText((was) => spoken(was, words)) : rich.current?.insertText(`${words} `)));
+  // Screenshot and demo builds only (EXPO_PUBLIC_DEMO_KEY, never set for the store): -demoWrite 1 opens on the words, keyboard up.
+  useEffect(() => {
+    const id = process.env.EXPO_PUBLIC_DEMO_KEY && Settings.get("demoWrite") ? setTimeout(() => rich.current?.focus(), 700) : undefined;
+    return () => clearTimeout(id);
+  }, []);
+  useEffect(() => {
+    const subs = [Keyboard.addListener("keyboardWillShow", () => setKeyboard(true)), Keyboard.addListener("keyboardWillHide", () => setKeyboard(false))];
+    return () => subs.forEach((x) => x.remove());
+  }, []);
+
+  // The line being typed stays in view: over the keyboard and the bar, and under the top bar. The words do not scroll
+  // themselves (the title scrolls away with them), so the screen is moved to the caret as it goes.
+  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const at = useRef({ y: 0, height: 0, words: 0, caret: null as { y: number; height: number } | null });
+  const follow = () => {
+    const { y, height, words, caret } = at.current;
+    if (!caret || !height) return;
+    const top = words + caret.y;
+    const bottom = top + caret.height;
+    const MARGIN = 24;
+    if (bottom + MARGIN > y + height) scroll.current?.scrollTo({ y: bottom + MARGIN - height, animated: true });
+    else if (top - MARGIN < y) scroll.current?.scrollTo({ y: Math.max(0, top - MARGIN), animated: true });
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: t.ground }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: t.ground }}>
       <TopBar
-        label={tr(BACK[item.status])}
-        left={inDetail ? <Toolbar item={item} /> : undefined}
-        right={item.kind !== "note" ? (
+        label={tr(BACK[item?.status ?? "inbox"])}
+        left={inDetail && item ? <Toolbar item={item} /> : undefined}
+        right={item && item.kind !== "note" ? (
           <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: done }} onPress={() => patch.mutate({ id: item.id, patch: { status: done ? "inbox" : "done" } })} style={styles.doneButton}>
             <View style={[styles.ring, done ? { borderColor: t.ink, backgroundColor: t.highlight } : { borderColor: t.ringOff }]}>
               {done && <Icon d={ICONS.tick} size={12} color={t.onHighlight} width={2.4} />}
@@ -402,15 +461,42 @@ function NoteEditor({ data }: { data: FullItem }) {
           </Pressable>
         ) : null}
       />
-      <ScrollView contentContainerStyle={inDetail ? [styles.wideArticle, { gap: 12 }] : { padding: 20, gap: 12 }} keyboardDismissMode="interactive" automaticallyAdjustKeyboardInsets>
-        <TextInput value={title} onChangeText={setTitle} placeholder={item.title} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
+      <ScrollView
+        ref={scroll}
+        contentContainerStyle={inDetail ? [styles.wideArticle, { gap: 12 }] : { padding: 20, gap: 12 }}
+        keyboardDismissMode="interactive"
+        keyboardShouldPersistTaps="handled"
+        scrollEventThrottle={32}
+        onScroll={(e) => void (at.current.y = e.nativeEvent.contentOffset.y)}
+        onLayout={(e) => { at.current.height = e.nativeEvent.layout.height; follow(); }} // the keyboard came or went
+      >
+        <TextInput value={title} onChangeText={setTitle} placeholder={item?.title ?? tr("ipad.add.titlePlaceholder")} placeholderTextColor={t.ink2} accessibilityLabel={tr("item.titleA11y")}
           style={[font.semibold, { color: t.ink, fontSize: 24, lineHeight: 30 }]} />
         <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{tr("item.titleHint")}</Text>
-        <TextInput value={text} onChangeText={setText} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
-          placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
+        {item && <TagChips item={item} edit add />}
+        <View onLayout={(e) => void (at.current.words = e.nativeEvent.layout.y)}>
+          {plain ? (
+            <TextInput value={text} onChangeText={setText} onFocus={() => setWriting(true)} onBlur={() => setWriting(false)} multiline scrollEnabled={false} accessibilityLabel={tr("item.textA11y")} placeholder={tr("item.textPlaceholder")}
+              placeholderTextColor={t.ink2} style={[font.regular, { color: t.ink, fontSize: 17, lineHeight: 25, minHeight: 300, textAlignVertical: "top" }]} />
+          ) : (
+            <RichText
+              ref={rich}
+              value={data?.text ?? ""}
+              autoFocus={!data}
+              onChange={setText}
+              onFormat={setFormat}
+              onFocus={() => setWriting(true)}
+              onBlur={() => setWriting(false)}
+              onCaret={(rect) => { at.current.caret = rect; follow(); }}
+              onUnfit={() => setPlain(true)}
+              placeholder={tr("item.textPlaceholder")}
+              a11y={tr("item.textA11y")}
+            />
+          )}
+        </View>
       </ScrollView>
-      {!inDetail && <Toolbar item={item} />}
-    </View>
+      {writing || speak.on ? <FormatBar input={rich} format={format} keyboard={keyboard} speak={speak} plain={plain} /> : !inDetail && !keyboard && item && <Toolbar item={item} />}
+    </KeyboardAvoidingView>
   );
 }
 
@@ -421,8 +507,6 @@ const styles = StyleSheet.create({
   wideArticle: { width: "100%", maxWidth: 640, alignSelf: "center", paddingVertical: 20, paddingHorizontal: 32, paddingBottom: 48, gap: 18 },
   wideH1: { fontSize: 34, lineHeight: 40 },
   wideBody: { fontSize: 19, lineHeight: 31 },
-  tags: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  tag: { height: 22, lineHeight: 22, paddingHorizontal: 8, borderRadius: 11, overflow: "hidden", fontSize: 12 },
   back: { flexDirection: "row", alignItems: "center", gap: 4, height: 44, paddingHorizontal: 8 },
   track: { height: 2, marginHorizontal: 16 },
   article: { paddingTop: 20, paddingHorizontal: 20, paddingBottom: 40, gap: 16 },

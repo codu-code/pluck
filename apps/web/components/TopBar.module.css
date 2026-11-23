@@ -3,7 +3,7 @@
   flex: 999 1 320px; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px;
   border-radius: 8px; background: var(--surface); border: 1px solid var(--line-strong);
 }
-.pluck:focus-within, .emphasis { border: 1.5px solid var(--ink); }
+.pluck:focus-within, .emphasis, .pluck[data-dropping] { border: 1.5px solid var(--ink); }
 .emphasis { padding-right: 6px; }
 .pluckLabel { font-weight: 600; }
 .input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; color: var(--ink); }

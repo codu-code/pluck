@@ -11,3 +11,8 @@ overrides:
   "node-forge@<1.4.1": 1.4.2
   "glob@>=9 <14.0.2": 14.0.3
   "minimatch@<11.0.1": 11.0.4
+
+# The Note editor's headings in the bundled font's bold face (docs/ios.md, Rich Notes). Drop it once the library
+# does that itself.
+patchedDependencies:
+  react-native-enriched-markdown@1.2.0: patches/react-native-enriched-markdown@1.2.0.patch

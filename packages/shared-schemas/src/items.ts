@@ -9,6 +9,7 @@ export const Item = z.object({
   kind: Kind,
   url: z.string().nullable(),
   canonicalUrl: z.string().nullable(),
+  foundOn: z.string().nullable(), // Found on: the web page an Image was plucked from, its way back
   title: z.string(),
   titleIsDerived: z.boolean(),
   siteName: z.string().nullable(),
@@ -45,6 +46,7 @@ const Optional = {
   selection: z.string().max(20_000).optional(), // kept as a highlight on the item (the extension's "Pluck selection")
   transcript: z.string().max(500_000).optional(), // a video's captions, read in the browser; kept with the page text
   source: Source.optional(),
+  foundOn: z.string().max(4096).optional(), // the page an image was plucked from (the extension's "Pluck image")
 };
 
 export const DueAt = z.iso.datetime({ offset: true });
@@ -211,4 +213,7 @@ export const CreateFileItemBody = z.object({
   size: z.number().int().min(1).max(MAX_FILE_BYTES),
   source: Source.optional(),
 });
+export const isFileType = (type: string): type is keyof typeof FILE_TYPES => type in FILE_TYPES;
+// "The upload is in": the same name and type the file Item was begun with.
+export const FileArrivedBody = CreateFileItemBody.pick({ name: true, contentType: true });
 export type CreateFileItemBody = z.infer<typeof CreateFileItemBody>;

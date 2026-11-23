@@ -65,15 +65,16 @@
       "tagsPlaceholder": "搜索你的标签",
       "newTag": "添加“{name}”",
       "kind": "类别",
-      "toList": "加入清单",
-      "noList": "无",
-      "lastUsed": "{name}（上次使用）",
       "note": "笔记",
       "notePlaceholder": "想写就写一句",
       "inbox": "收件箱",
       "later": "稍后",
       "archive": "归档",
-      "open": "在 Pluck 中打开"
+      "open": "在 Pluck 中打开",
+      "lists": "清单",
+      "newList": "新建清单",
+      "newListPlaceholder": "给清单起个名字，然后按回车",
+      "moreLists": "还有 {count} 个"
     },
     "tabs": {
       "listName": "{date}的标签页",

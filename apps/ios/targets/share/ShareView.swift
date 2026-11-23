@@ -1,6 +1,6 @@
 import SwiftUI
 
-// The sheet from the IOSShare board: "Plucked." at once, the title, two tags and the last list, the kind, a note, Done.
+// The sheet from the IOSShare board: "Plucked." at once, the title, a note, the Lists it can go in, tags, the kind, Done.
 // It stays until Done or a tap outside (the board closed it after two seconds, too soon to write anything).
 
 private extension Color {
@@ -48,7 +48,7 @@ final class ShareModel: ObservableObject {
   @Published var title = ""
   @Published var item: PluckedItem?
   @Published var tagIds: Set<String> = []
-  @Published var addedToList = false
+  @Published var listIds: Set<String> = []
   @Published var note = ""
   @Published private(set) var finishing = false
   private var titleEdited = false // only a title the person typed goes up, never the one shown
@@ -60,8 +60,8 @@ final class ShareModel: ObservableObject {
   var close: () -> Void = {}
   var openApp: () -> Void = {}
   let client = PluckClient()
-  lazy var tags = Array(client.tags.prefix(2))
-  lazy var lastList = client.lastList
+  lazy var tags = client.tags
+  lazy var lists = client.lists
 
   // shared-schemas isRenameable, the same rule: a reel, a post or a picture often comes with no title of its own, and
   // nor does a link whose title is still its address, so it can be named here. An article keeps its page's.
@@ -133,10 +133,10 @@ final class ShareModel: ObservableObject {
 
   // On and off again, like a tag: a list picked by mistake can be taken back before Done.
   // shortcut: a List or a Kind tapped with no connection is lost without a word (only finish's edit is kept for the app), upgrade when someone reports one missing.
-  func toggleList() {
-    guard let id = item?.id, let list = lastList else { return }
-    addedToList.toggle()
-    let add = addedToList
+  func toggle(_ list: ListRef) {
+    guard let id = item?.id else { return }
+    let add = !listIds.contains(list.id)
+    if add { listIds.insert(list.id) } else { listIds.remove(list.id) }
     save { [client] in try? await (add ? client.addToList(list.id, id) : client.removeFromList(list.id, id)) }
   }
 
@@ -240,25 +240,32 @@ struct ShareView: View {
       group("note") {
         TextField("notePlaceholder", text: $model.note, axis: .vertical).lineLimit(2...6).boxed(dark)
       }
-      if !model.tags.isEmpty || model.lastList != nil {
-        group("tagsAndList") {
-          HStack(spacing: 8) {
-            ForEach(model.tags) { tag in chip(tag.name, on: model.tagIds.contains(tag.id)) { model.toggle(tag) } }
-            if let list = model.lastList {
-              Button { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { model.toggleList() } } label: {
+      // Where it goes comes before what it is called: the Lists, last added to first, then the tags. Each row scrolls
+      // sideways within the form, so a long name or a long row never squeezes the rest.
+      if !model.lists.isEmpty {
+        group("lists") {
+          row {
+            ForEach(model.lists) { list in
+              let on = model.listIds.contains(list.id)
+              Button { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { model.toggle(list) } } label: {
                 HStack(spacing: 6) {
-                  glyph("M8 3v10M3 8h10", size: 14, color: Palette.ink(dark), width: 1.6).rotationEffect(.degrees(model.addedToList ? 45 : 0)) // the plus turns into an x
+                  glyph("M8 3v10M3 8h10", size: 14, color: Palette.ink(dark), width: 1.6).rotationEffect(.degrees(on ? 45 : 0)) // the plus turns into an x
                   Text(list.name).lineLimit(1)
                 }
                   .font(Typeface.chip)
                   .padding(.horizontal, 14).frame(height: 44)
-                  .background(model.addedToList ? Palette.chip(dark) : .clear, in: Capsule())
-                  .overlay(Capsule().strokeBorder(Palette.dashed, style: StrokeStyle(lineWidth: 1.5, dash: model.addedToList ? [] : [4, 3])))
+                  .background(on ? Palette.chip(dark) : .clear, in: Capsule())
+                  .overlay(Capsule().strokeBorder(Palette.dashed, style: StrokeStyle(lineWidth: 1.5, dash: on ? [] : [4, 3])))
               }
-              .accessibilityLabel(String(format: model.addedToList ? String(localized: "addedToList") : String(localized: "addToList"), list.name))
-              .accessibilityAddTraits(model.addedToList ? .isSelected : [])
+              .accessibilityLabel(String(format: on ? String(localized: "addedToList") : String(localized: "addToList"), list.name))
+              .accessibilityAddTraits(on ? .isSelected : [])
             }
           }
+        }
+      }
+      if !model.tags.isEmpty {
+        group("tags") {
+          row { ForEach(model.tags) { tag in chip(tag.name, on: model.tagIds.contains(tag.id)) { model.toggle(tag) } } }
         }
       }
       group("kind") {
@@ -286,6 +293,11 @@ struct ShareView: View {
       Text(name).font(Typeface.label).foregroundStyle(Palette.ink2(dark))
       body()
     }
+  }
+
+  // Chips in one line that scrolls sideways.
+  private func row(@ViewBuilder _ chips: () -> some View) -> some View {
+    ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: 8) { chips() } }
   }
 
   private func header(_ title: String, subtitle: String?) -> some View {

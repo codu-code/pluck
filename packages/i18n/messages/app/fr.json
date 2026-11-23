@@ -412,8 +412,8 @@
     "title": "Rien de cueilli pour l’instant.",
     "lede": "Trois façons de commencer. La première prend une seconde.",
     "one": {
-      "title": "Appuyez sur Cueillir, en haut",
-      "body": "Le lien d’exemple est déjà là. Regardez-le arriver."
+      "title": "Collez un lien en haut",
+      "body": "Ou écrivez une phrase. Elle devient une Note."
     },
     "two": {
       "title": "Ajoutez l’extension",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Cueillez depuis votre téléphone",
-      "body": "L’app iOS, ou le raccourci Pluck en attendant sa sortie.",
-      "ios": "App iOS",
-      "shortcut": "Ajouter le raccourci"
+      "body": "L’app iOS ajoute Pluck à la feuille de partage.",
+      "ios": "App iOS"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count} liens. Entrée les cueille tous.",
     "as": "Cueillir comme",
     "due": "Échéance",
-    "enterAs": "Entrée le cueille comme {kind, select, note {note} todo {tâche} other {objet}}."
+    "enterAs": "Entrée le cueille comme {kind, select, note {note} todo {tâche} other {objet}}.",
+    "drop": "Déposez une image ou un PDF pour le cueillir",
+    "fileRefused": "Pluck prend les images et les PDF, jusqu’à 50 Mo chacun."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "Obtenir l’extension",
       "keptTitle": "Toujours à vous",
       "keptBody": "Le lien, votre note et vos tags sont gardés. La recherche le retrouve par son titre et sa note."
-    }
+    },
+    "foundOn": "Trouvé sur {site}"
   },
   "note": {
     "untitled": "Note sans titre",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · modifié {edited}",
     "title": "Titre",
     "body": "Texte",
-    "help": "La première ligne est le titre. Texte brut. Enregistrement automatique pendant la saisie.",
+    "help": "La première ligne est le titre. Enregistrement automatique pendant la saisie.",
     "about": "À propos de {kind, select, note {cette note} todo {cette tâche} other {cet objet}}",
     "kind": "Type",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "Échéance",
     "source": "Source : {via}",
     "pasteBox": "champ de collage web",
-    "noHighlights": "Les notes n’ont pas de surlignages. Sélectionnez du texte pour le copier."
+    "noHighlights": "Les notes n’ont pas de surlignages. Sélectionnez du texte pour le copier.",
+    "helpPlain": "La première ligne est le titre. Texte brut. Enregistrement automatique pendant la saisie.",
+    "format": {
+      "title": "Format",
+      "bold": "Gras",
+      "italic": "Italique",
+      "heading": "Titre",
+      "bullets": "Liste à puces",
+      "numbers": "Liste numérotée"
+    }
   },
   "reader": {
     "progress": "Progression de la lecture",
@@ -1049,5 +1060,9 @@
     "asPreview": "Afficher comme aperçu",
     "stars": "{count, plural, one {# étoile} other {# étoiles}}",
     "pages": "{count, plural, one {# page} other {# pages}}"
+  },
+  "starters": {
+    "favourites": "Favoris",
+    "ideas": "Idées"
   }
 }

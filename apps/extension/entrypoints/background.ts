@@ -1,5 +1,5 @@
 import { finishSignIn } from "@/lib/auth";
-import { drain, pluckForPopup, pluckTab, pluckUrl, refreshBadge, resume, type PluckOutcome } from "@/lib/pluck";
+import { drain, pluckForPopup, pluckImage, pluckTab, pluckUrl, refreshBadge, resume, type PluckOutcome } from "@/lib/pluck";
 import { settings } from "@/lib/store";
 import { t } from "@/lib/t";
 
@@ -48,7 +48,7 @@ async function onMenu(info: MenuClick, tab?: { id?: number; url?: string; title?
     case "pluck-link":
       return info.linkUrl ? pluckUrl(info.linkUrl) : null;
     case "pluck-image":
-      return info.srcUrl ? pluckUrl(info.srcUrl) : null;
+      return info.srcUrl ? pluckImage(info.srcUrl, tab) : null;
     case "pluck-selection":
       return tab ? pluckTab(tab, { asHighlight: true }) : null;
     case "pluck-page":

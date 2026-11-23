@@ -1,5 +1,5 @@
 import { ApiError, json, route } from "@/lib/api";
-import { coverLocation, setCoverFromApp } from "@/lib/library";
+import { coverLocation, setCoverFromApp, setPictureFromApp } from "@/lib/library";
 
 // Covers live in a private bucket; the owner gets a short-lived signed URL. `?as=json` hands it over instead of
 // redirecting, for a download that must not carry the Authorization header on to the bucket (the iPhone's).
@@ -30,12 +30,14 @@ async function readUpTo(req: Request, max: number): Promise<Uint8Array | null> {
   return Buffer.concat(chunks);
 }
 
-// The extension sends a screenshot of the tab when the page has no image of its own.
+// The extension sends a screenshot of the tab when the page has no image of its own. With `?as=picture` the bytes
+// are the Item itself: an image the server could not fetch, as the tab showed it.
 export const PUT = route<{ id: string }>({ kind: "write" }, async ({ req, caller, params }) => {
   const type = req.headers.get("content-type")?.split(";")[0]?.trim() ?? "";
   if (!COVER_TYPES.has(type)) throw new ApiError("bad_request", "Send a JPEG, PNG or WebP image.", 400);
   if (Number(req.headers.get("content-length")) > MAX_COVER) throw tooBig();
   const body = await readUpTo(req, MAX_COVER);
   if (!body) throw tooBig();
-  return json({ item: await setCoverFromApp(caller.userId, params.id, body, type) });
+  const set = new URL(req.url).searchParams.get("as") === "picture" ? setPictureFromApp : setCoverFromApp;
+  return json({ item: await set(caller.userId, params.id, body, type) });
 });

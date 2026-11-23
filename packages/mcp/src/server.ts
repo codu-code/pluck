@@ -26,7 +26,16 @@ const READ = { readOnlyHint: true, openWorldHint: false } as const;
 const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: false } as const;
 
 // The same object twice: as text for every client, and as structuredContent for the ones that read a tool's outputSchema.
-const ok = (data: Record<string, unknown>): CallToolResult => ({ content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data });
+// A picture comes after the text, as image content: the AI tool looks at it itself, and Pluck reads nothing from it.
+type Image = { data: string; mimeType: string };
+const ok = (data: Record<string, unknown>, images: Image[] = []): CallToolResult => ({
+  content: [{ type: "text", text: JSON.stringify(data) }, ...images.map((i) => ({ type: "image" as const, ...i }))],
+  structuredContent: data,
+});
+// A tool's result with pictures to send beside it.
+class WithImages<T> {
+  constructor(readonly data: T, readonly images: Image[]) {}
+}
 
 // The library's errors ({ code, message, details }) go back to the AI tool as they are, so it can correct itself.
 // Only our own codes: a database or runtime error also has a code and a message, and those stay on our side, logged.
@@ -47,7 +56,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
   function tool<N extends keyof Results, S extends z.ZodType>(
     name: N,
     config: { description: string; inputSchema: S; annotations: object },
-    run: (args: z.infer<S>) => Promise<Results[N]>,
+    run: (args: z.infer<S>) => Promise<Results[N] | WithImages<Results[N]>>,
   ) {
     server.registerTool(name, { ...config, outputSchema: Results[name] }, (async (args: z.infer<S>) => {
       const started = Date.now();
@@ -56,9 +65,10 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
       try {
         // Parsed, so what goes out is the declared shape and no other key (the schema a client checks against allows
         // none), and a result that does not fit is our bug, logged as one here before the SDK refuses it in its own words.
-        const data = Results[name].parse(await run(args));
+        const out = await run(args);
+        const data = Results[name].parse(out instanceof WithImages ? out.data : out);
         done(null, countOf(data));
-        return ok(data);
+        return ok(data, out instanceof WithImages ? out.images : []);
       } catch (e) {
         const result = failed(e);
         done(result ? (e as { code: string }).code : "internal");
@@ -128,7 +138,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
     tool(
       "get_item",
       {
-        description: "Read one item in full: its kept text (paged), note, highlights and the lists it is in.",
+        description: "Read one item in full: its kept text (paged), note, highlights, the lists it is in and, for an image, the picture itself.",
         inputSchema: z.object({
           id: ObjectIdString,
           include: z.array(z.enum(["text", "highlights", "lists"])).default(["text", "highlights", "lists"]),
@@ -143,7 +153,7 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
           return { id, text: page.text, textCursor: page.nextCursor };
         }
         const out: Results["get_item"] = {
-          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, extraction: item.extraction.state, facts: item.facts },
+          item: { ...card(item, await names()), status: item.status, note: item.note, dueAt: item.dueAt, author: item.author, wordCount: item.wordCount, foundOn: item.foundOn, extraction: item.extraction.state, facts: item.facts },
         };
         if (include.includes("text")) {
           const page = textPage(await lib.text(id), 0);
@@ -152,7 +162,10 @@ export function createPluckServer(lib: PluckLibrary, { scopes, version = "1.0.0"
         }
         if (include.includes("highlights")) out.highlights = (await lib.highlights(id)).map((h) => ({ quote: h.quote, note: h.note }));
         if (include.includes("lists")) out.lists = (await lib.memberships(id)).map(membershipRow);
-        return out;
+        const picture = item.kind === "image" ? await lib.picture(id) : null;
+        if (!picture) return out;
+        out.item!.picture = typeof picture === "string" ? picture : "attached";
+        return typeof picture === "string" ? out : new WithImages(out, [picture]);
       },
     );
 
@@ -368,6 +381,7 @@ async function itemMarkdown(lib: PluckLibrary, id: string): Promise<string> {
   const [item, text] = await Promise.all([lib.item(id), lib.text(id)]);
   const lines = [`# ${item.title}`, ""];
   if (item.url) lines.push(item.url);
+  if (item.foundOn) lines.push(`Found on ${item.foundOn}`);
   lines.push([item.siteName, item.kind, `saved ${item.createdAt.slice(0, 10)}`].filter(Boolean).join(" · "), "");
   if (item.note) lines.push(`Note: ${item.note}`, "");
   if (text) {
