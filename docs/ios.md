@@ -84,7 +84,7 @@ It first asks which version this is (`scripts/release.mjs`): it shows the last v
 ## Checked automatically
 
 - Typecheck and lint with the rest of the repo; the pure modules' tests in `pnpm test`.
-- A Release build for the iOS 26.5 Simulator, app and share extension (`BUILD SUCCEEDED`).
+- A Release build for the iOS 27.2 Simulator (Xcode 27.2), app and share extension (`BUILD SUCCEEDED`).
 - Simulator screenshots of every screen against the boards: Inbox (light and dark), Reader (light and dark), a List, Lists, Search with results, Settings, First run, the note and todo editor. They live in `test-results/ios/` after a run.
 
 ## Manual checklist (needs a device and the Apple team)
