@@ -20,7 +20,8 @@ body { width: 360px; }
 .queued-dot { width: 10px; height: 10px; flex: none; border-radius: 5px; background: #9A5536; }
 .chip-static { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 12px; background: var(--chip); font-size: 12px; }
 
-.popup { max-height: 460px; display: flex; flex-direction: column; overflow: hidden; }
+/* As tall as Chrome lets a popup be (600): with Lists above the tags, 460 put Later, Archive and Open under a scroll. */
+.popup { max-height: 600px; display: flex; flex-direction: column; overflow: hidden; }
 /* The wordmark opens Pluck; the cog opens Options. */
 .bar { height: 40px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 10px 0 12px; border-bottom: 1px solid var(--line); }
 .home { display: flex; align-items: center; height: 28px; padding: 0 4px; border: 0; border-radius: 6px; background: none; color: var(--ink); }
@@ -36,8 +37,7 @@ body { width: 360px; }
 .body { display: flex; flex-direction: column; gap: 12px; padding: 12px 16px; flex: 1; overflow-y: auto; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: 12px; color: var(--ink2); }
-input[type="text"], select { height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font-size: 13px; }
-select { padding: 0 8px; }
+input[type="text"] { height: 36px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); font-size: 13px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -4px; }
 .field > .chips { margin-top: 0; } /* the Lists: chips under their own label, with no field between */
 .chip { height: 28px; padding: 0 10px; border-radius: 14px; border: 0; background: var(--chip); font-size: 12px; }

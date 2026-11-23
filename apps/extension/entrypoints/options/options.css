@@ -7,8 +7,8 @@ body { background: var(--ground); }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 16px 24px; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .strong { font-weight: 500; }
-.field input, .field select { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); }
-.field select { padding: 0 10px; }
+.field input, .field select { height: 40px; padding-left: 12px; border-radius: 8px; border: 1px solid var(--line-strong); background-color: var(--surface); }
+.field input { padding-right: 12px; }
 .account { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 40px; padding: 0 12px; border-radius: 8px; background: var(--rail); }
 .account input { flex: 1; min-width: 0; height: 32px; border-radius: 6px; border: 1px solid var(--line-strong); background: var(--surface); padding: 0 8px; }
 .links { display: flex; gap: 12px; }
