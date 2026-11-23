@@ -302,6 +302,19 @@
     "leaveTitle": "このリストから退出しますか？",
     "leaveBody": "リスト一覧から外れます。共有した人は、またいつでも共有できます。",
     "leave": "退出",
+    "report": "報告",
+    "reportTitle": "何が問題ですか？",
+    "reportReasons": {
+      "illegal": "違法なコンテンツ",
+      "minors": "未成年者を性的に扱っている",
+      "harassment": "嫌がらせ",
+      "doxxing": "他人の個人情報を公開している",
+      "spam": "スパムまたはリンクファーム",
+      "malware": "マルウェアまたはフィッシング",
+      "infringement": "著作権または商標の侵害",
+      "other": "その他"
+    },
+    "reported": "ありがとうございます。報告はすべて人が読んでいます。",
     "byNamed": "{name}さん（@{handle}）が共有 · 閲覧のみ",
     "by": "@{handle}が共有 · 閲覧のみ",
     "notShared": {

@@ -110,6 +110,7 @@ The share extension and the shared Keychain need real signing, so these are chec
 17. Add, the microphone in the box: iOS asks twice; say a sentence, tap stop: the words are in the box, and Pluck it makes a Note. In a Note, tap the microphone in the bar, speak over a pause, tap stop: the words are where the caret was. Airplane mode: it still works in a language the phone recognises itself (English, for one).
 18. Add, type a sentence, tap a List chip and a tag chip, Pluck it: the row in the Inbox shows the tag, the Item shows it under its title, and the List holds the Item. Tap the chip there: the tag picker opens. Add, Note, type a line: a Tags chip appears under the title; pick a tag and it shows in its place.
 19. A new account (sign in with an email never used): the Inbox holds "Nothing is deleted.", and Lists holds Favourites (empty) and Ideas with "Ask your AI what you plucked." in it. Lists, the +: type a name, Add: the new List opens. In a Note, type `#recipes` and a space: a recipes chip appears under the title within a second. Change the word to `#recipe`: the chip changes with it, and Settings, Tags shows no leftover.
+20. A List someone shared with you: Report asks what is wrong (iOS's own alert, eight reasons), and choosing one says "Thanks. A person reads every report."; Leave still takes it off your Lists. On an iPad with a keyboard: open an Item, press T, and type a tag name without tapping the field first: nothing behind the sheet moves (the single-letter keys, the arrows and ⌘V step aside while a sheet is up).
 
 ## Known gaps
 

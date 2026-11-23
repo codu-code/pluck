@@ -158,6 +158,11 @@ test("share a List with one person, See only: the email link, their Lists, no ta
   await expect(visitor.getByText("Book early.")).toBeVisible();
   await expect(visitor.getByText("private-tag")).toHaveCount(0);
   await expect(visitor.getByRole("checkbox")).toHaveCount(0); // no marks: they are the owner's
+  // Something wrong with it: a report goes to a person, from someone it is shared with.
+  await visitor.getByRole("button", { name: "Report this list" }).click();
+  await visitor.getByLabel("What is wrong?").selectOption("harassment");
+  await visitor.getByRole("button", { name: "Send the report" }).click();
+  await expect(visitor.getByRole("status").filter({ hasText: "A person reads every report." })).toBeVisible();
   await visitor.goto("/lists");
   await expect(visitor.getByRole("region", { name: "Shared with you" })).toContainText("Holiday ideas");
 
@@ -165,6 +170,7 @@ test("share a List with one person, See only: the email link, their Lists, no ta
   const stranger = await (await browser.newContext()).newPage();
   await signIn(stranger);
   expect((await stranger.request.get(`/api/v1/shared/${list.id}`)).status()).toBe(404);
+  expect((await stranger.request.post(`/api/v1/shared/${list.id}/report`, { data: { reason: "spam" } })).status()).toBe(404); // nor report it
   await stranger.goto(`/shared/${list.id}`);
   await expect(stranger.getByRole("heading", { name: "Not shared with you." })).toBeVisible();
   await expect(stranger.getByRole("button", { name: "Use another email" })).toBeVisible();

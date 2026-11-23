@@ -302,6 +302,19 @@
     "leaveTitle": "Quitter cette liste ?",
     "leaveBody": "Elle disparaît de vos listes. Son auteur peut la partager à nouveau avec vous.",
     "leave": "Quitter",
+    "report": "Signaler",
+    "reportTitle": "Quel est le problème ?",
+    "reportReasons": {
+      "illegal": "Contenu illicite",
+      "minors": "Sexualise des mineurs",
+      "harassment": "Harcèlement",
+      "doxxing": "Divulgue des informations privées sur quelqu’un",
+      "spam": "Spam ou ferme de liens",
+      "malware": "Logiciel malveillant ou hameçonnage",
+      "infringement": "Droit d’auteur ou marque",
+      "other": "Autre chose"
+    },
+    "reported": "Merci. Une personne lit chaque signalement.",
     "byNamed": "Partagée avec vous par {name} (@{handle}) · consultation seule",
     "by": "Partagée avec vous par @{handle} · consultation seule",
     "notShared": {

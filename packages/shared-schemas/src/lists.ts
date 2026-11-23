@@ -135,6 +135,8 @@ export type SharedListSummary = z.infer<typeof SharedListSummary>;
 
 export const REPORT_REASONS = ["illegal", "minors", "harassment", "doxxing", "spam", "malware", "infringement", "other"] as const;
 export const ReportBody = z.object({ listId: ObjectIdString, reason: z.enum(REPORT_REASONS), details: z.string().max(2000).optional() });
+// The same report, on a List shared with you: the List is the one in the address.
+export const SharedReportBody = ReportBody.omit({ listId: true });
 export const CopyListBody = z.object({ listId: ObjectIdString });
 
 export const AdminReport = z.object({
