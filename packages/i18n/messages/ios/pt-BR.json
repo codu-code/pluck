@@ -302,6 +302,19 @@
     "leaveTitle": "Sair desta Lista?",
     "leaveBody": "Ela sai das suas Listas. A pessoa pode compartilhar com você de novo.",
     "leave": "Sair",
+    "report": "Denunciar",
+    "reportTitle": "Qual é o problema?",
+    "reportReasons": {
+      "illegal": "Conteúdo ilegal",
+      "minors": "Sexualiza menores",
+      "harassment": "Assédio",
+      "doxxing": "Expõe dados pessoais de alguém",
+      "spam": "Spam ou fazenda de links",
+      "malware": "Malware ou phishing",
+      "infringement": "Direitos autorais ou marca",
+      "other": "Outra coisa"
+    },
+    "reported": "Obrigado. Uma pessoa lê cada denúncia.",
     "byNamed": "Compartilhada com você por {name} (@{handle}) · só para ver",
     "by": "Compartilhada com você por @{handle} · só para ver",
     "notShared": {

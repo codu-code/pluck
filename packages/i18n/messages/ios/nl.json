@@ -302,6 +302,19 @@
     "leaveTitle": "Deze Lijst verlaten?",
     "leaveBody": "Hij verdwijnt uit je Lijsten. De eigenaar kan hem opnieuw met je delen.",
     "leave": "Verlaat",
+    "report": "Melden",
+    "reportTitle": "Wat is er mis?",
+    "reportReasons": {
+      "illegal": "Illegale inhoud",
+      "minors": "Seksualiseert minderjarigen",
+      "harassment": "Intimidatie",
+      "doxxing": "Deelt iemands privégegevens",
+      "spam": "Spam of een linkfarm",
+      "malware": "Malware of phishing",
+      "infringement": "Auteursrecht of merkrecht",
+      "other": "Iets anders"
+    },
+    "reported": "Bedankt. Elke melding wordt door een mens gelezen.",
     "byNamed": "Met je gedeeld door {name} (@{handle}) · alleen bekijken",
     "by": "Met je gedeeld door @{handle} · alleen bekijken",
     "notShared": {

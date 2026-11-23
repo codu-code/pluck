@@ -302,6 +302,19 @@
     "leaveTitle": "Diese Liste verlassen?",
     "leaveBody": "Sie verschwindet aus deinen Listen. Sie kann wieder mit dir geteilt werden.",
     "leave": "Verlassen",
+    "report": "Melden",
+    "reportTitle": "Was stimmt nicht?",
+    "reportReasons": {
+      "illegal": "Illegale Inhalte",
+      "minors": "Sexualisiert Minderjährige",
+      "harassment": "Belästigung",
+      "doxxing": "Veröffentlicht private Daten anderer",
+      "spam": "Spam oder eine Linkfarm",
+      "malware": "Schadsoftware oder Phishing",
+      "infringement": "Urheber- oder Markenrecht",
+      "other": "Etwas anderes"
+    },
+    "reported": "Danke. Ein Mensch liest jede Meldung.",
     "byNamed": "Mit dir geteilt von {name} (@{handle}) · nur ansehen",
     "by": "Mit dir geteilt von @{handle} · nur ansehen",
     "notShared": {

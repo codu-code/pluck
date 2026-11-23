@@ -23,7 +23,7 @@ export { analyticsOf, claimStarters, getMe, markMcpCall, setHeardFrom, setName, 
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";
-export { shareList, sharesOf, unshareList, leaveSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
+export { shareList, sharesOf, unshareList, leaveSharedList, reportSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
 export { digestFor, isEmptyDigest, claimDueDigests, sendDigestOnce } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";

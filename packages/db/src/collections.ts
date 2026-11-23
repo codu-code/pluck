@@ -135,7 +135,8 @@ export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "in
 export type ReportDoc = {
   _id: ObjectId;
   listId: ObjectId;
-  reporterIp: string; // a salted hash, never the address itself
+  reporterIp: string; // a salted hash, never the address itself (for a shared List, of the email it was shared with)
+  shared?: true; // reported by someone it was shared with, not from its public page: it may well be private
   reason: string;
   details: string | null;
   createdAt: Date;

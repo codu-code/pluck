@@ -5,8 +5,9 @@ import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
 import styles from "./public.module.css";
 
-// The Report link in the footer: a short form, sent to a person.
-export function ReportLink({ listId }: { listId: string }) {
+// The Report link in the footer: a short form, sent to a person. `shared`: on a List shared with you, which may be
+// private, the report goes in as the signed-in person it is shared with.
+export function ReportLink({ listId, shared = false }: { listId: string; shared?: boolean }) {
   const t = useTranslations("site.publicList.report");
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<(typeof REPORT_REASONS)[number]>("spam");
@@ -15,7 +16,8 @@ export function ReportLink({ listId }: { listId: string }) {
 
   async function send(e: FormEvent) {
     e.preventDefault();
-    const res = await fetch("/api/v1/reports", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ listId, reason, details: details || undefined }) });
+    const [to, about] = shared ? [`/api/v1/shared/${listId}/report`, {}] : ["/api/v1/reports", { listId }];
+    const res = await fetch(to, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...about, reason, details: details || undefined }) });
     setState(res.ok ? "sent" : "error");
   }
 

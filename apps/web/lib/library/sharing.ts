@@ -1,6 +1,7 @@
 import { signedUrl } from "@pluck/blob";
 import {
   createList, createReport, createTextItem, getListMeta, getMe, hitRateLimit, leaveSharedList, listOwnedBy, listsSharedWith, pluckLink, publicCoverKey,
+  reportSharedList,
   publicList, publicListById, recordView, setHandle, setName, setVisibility, sharedCoverKey, sharedList, shareList, sharesOf, unshareList,
   setHeardFrom, updateSettings, MAX_PEOPLE,
 } from "@pluck/db";
@@ -171,6 +172,20 @@ export async function readShared(userId: string, listId: string): Promise<Public
   const page = await sharedList(listId, (await me(userId)).email);
   if (!page) throw new ApiError("not_found", "That List is not shared with you, or it has gone.", 404);
   return page;
+}
+
+// A report on a List shared with you: to the same person who reads the public pages' reports. A few a day per
+// account, since each one is an email to a person.
+export async function reportShared(userId: string, listId: string, reason: string, details?: string): Promise<void> {
+  if (!(await hitRateLimit(`report:${userId}`, 10, 86_400)).ok) throw new ApiError("rate_limited", "That is a lot of reports for one day. Try again tomorrow.", 429);
+  if (!(await reportSharedList(listId, (await me(userId)).email, reason, details ?? null))) throw new ApiError("not_found", "That List is not shared with you.", 404);
+  const to = process.env.ABUSE_EMAIL;
+  if (!to) return;
+  await sendEmail({
+    to,
+    subject: `Report: ${reason} on shared list ${listId}`,
+    text: `A List was reported by someone it is shared with. It may be private.\n\nList: ${listId}\nReason: ${reason}\nDetails: ${details ?? "(none)"}\n\nReview it in /admin.\n`,
+  }).catch((e) => log("error", "report email failed", { error: e }));
 }
 
 export async function leaveShared(userId: string, listId: string): Promise<void> {

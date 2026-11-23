@@ -302,6 +302,19 @@
     "leaveTitle": "退出这个清单？",
     "leaveBody": "它会从你的清单中移除。对方可以再次与你共享。",
     "leave": "退出",
+    "report": "举报",
+    "reportTitle": "有什么问题？",
+    "reportReasons": {
+      "illegal": "违法内容",
+      "minors": "对未成年人进行性化",
+      "harassment": "骚扰",
+      "doxxing": "泄露他人隐私信息",
+      "spam": "垃圾信息或链接农场",
+      "malware": "恶意软件或网络钓鱼",
+      "infringement": "版权或商标侵权",
+      "other": "其他"
+    },
+    "reported": "谢谢。每一份举报都有人亲自阅读。",
     "byNamed": "{name}（@{handle}）与你共享 · 仅可查看",
     "by": "@{handle} 与你共享 · 仅可查看",
     "notShared": {

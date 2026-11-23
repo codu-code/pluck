@@ -302,6 +302,19 @@
     "leaveTitle": "Lasciare questa lista?",
     "leaveBody": "Sparisce dalle tue liste. Chi l'ha condivisa può condividerla di nuovo con te.",
     "leave": "Lascia",
+    "report": "Segnala",
+    "reportTitle": "Cosa c'è che non va?",
+    "reportReasons": {
+      "illegal": "Contenuti illegali",
+      "minors": "Sessualizza minori",
+      "harassment": "Molestie",
+      "doxxing": "Diffonde dati privati di qualcuno",
+      "spam": "Spam o link farm",
+      "malware": "Malware o phishing",
+      "infringement": "Diritto d'autore o marchio",
+      "other": "Altro"
+    },
+    "reported": "Grazie. Ogni segnalazione viene letta da una persona.",
     "byNamed": "Condivisa con te da {name} (@{handle}) · solo visualizzazione",
     "by": "Condivisa con te da @{handle} · solo visualizzazione",
     "notShared": {
