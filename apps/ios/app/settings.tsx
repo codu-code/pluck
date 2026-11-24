@@ -1,5 +1,5 @@
 import { LOCALE_NAMES } from "@pluck/i18n";
-import type { AiConnection, Me, Settings as UserSettings } from "@pluck/shared-schemas";
+import { initial, type AiConnection, type Me, type Settings as UserSettings } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Application from "expo-application";
@@ -76,7 +76,6 @@ export default function Settings({ part }: { part?: Part }) {
   const host = new URL(server).host;
   const profile = me.data;
   const settings = profile?.settings;
-  const initials = ((profile?.name || profile?.email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("")) || "?";
   const needsAccount = tools.error instanceof Refused && tools.error.status === 403;
   // Sunday first, as digestDay counts: 7 Jan 2024 was a Sunday.
   const days = [0, 1, 2, 3, 4, 5, 6].map((d) => format.dateTime(new Date(2024, 0, 7 + d), { weekday: "long" }));
@@ -215,7 +214,7 @@ export default function Settings({ part }: { part?: Part }) {
           {section(tr("sections.account"))}
           <View style={card}>
             <View style={[styles.account, { borderBottomColor: t.tint }]}>
-              <View style={[styles.avatar, { backgroundColor: t.avatar }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 13 }]}>{initials}</Text></View>
+              <View style={[styles.avatar, { backgroundColor: t.brand }]}><Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.onBrand, fontSize: 15 }]}>{initial(profile?.name, profile?.email)}</Text></View>
               <View style={{ flex: 1, minWidth: 0 }}>
                 <Text style={[font.semibold, { color: t.ink, fontSize: 15 }]}>{profile?.name || tr("yourAccount")}</Text>
                 <Text style={[font.regular, { color: t.ink2, fontSize: 13 }]}>{profile?.email ?? session?.email ?? ""}</Text>
