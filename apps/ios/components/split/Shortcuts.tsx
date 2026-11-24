@@ -1,7 +1,7 @@
 import { isTask, withReferral } from "@pluck/shared-schemas";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { useEffect, useRef } from "react";
 import { Share } from "react-native";
@@ -12,9 +12,16 @@ import { toast } from "../Toast";
 import { shown, useSplit } from "./context";
 import { useGo } from "./Sidebar";
 
+// The sheets and modals that come up over the split view (app/_layout.tsx).
+const OVER = /^\/(pick|add|tags|note|handle|share|settings)(\/|$)/;
+
 // The iPad's keyboard (iPad-Shortcuts board), held ⌘ to see: the open Item's moves on single letters, the places on
 // ⌘ and a number, and plucking. Mounted with the split view, so a narrow window (the iPhone layout) has none.
 export function Shortcuts() {
+  // While a sheet is up, the keys that act on what is behind it (the single letters, the arrows, ⌘V) step aside, as
+  // they do while a field is being edited. The sheet's own field may not have the keyboard yet: a tag name typed
+  // there must not archive the Item underneath on its "e".
+  const over = OVER.test(usePathname());
   const tr = useTranslations("ios");
   const split = useSplit();
   const go = useGo();
@@ -80,12 +87,12 @@ export function Shortcuts() {
   run.current = (id) => commands.find((c) => c.id === id)?.run();
   const titles = commands.map((c) => c.title).join("|"); // set again only if the words change (another language)
   useEffect(() => {
-    void keyCommands.set(commands.map(({ run: _, ...c }) => c));
+    void keyCommands.set(commands.filter((c) => !(over && c.typing === false)).map(({ run: _, ...c }) => c));
     const sub = keyCommands.listen((id) => run.current(id));
     return () => {
       sub.remove();
       void keyCommands.set([]);
     };
-  }, [titles]);
+  }, [titles, over]);
   return null;
 }

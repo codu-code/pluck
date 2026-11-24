@@ -1,7 +1,8 @@
 import type { Locale } from "@pluck/i18n";
 import type { ListShare } from "@pluck/shared-schemas";
+import { createHash } from "node:crypto";
 import { ObjectId } from "mongodb";
-import { lists, listShares, oid, users, type ListShareDoc } from "./collections.ts";
+import { lists, listShares, oid, reports, users, type ListShareDoc } from "./collections.ts";
 import { getMe } from "./users.ts";
 
 // Sharing a list with people, See only. The owner adds and removes them by email; they read it through public.ts.
@@ -47,6 +48,20 @@ export async function sharesOf(userId: string, listId: string): Promise<ListShar
 export async function unshareList(userId: string, listId: string, shareId: string): Promise<boolean> {
   const res = await (await listShares()).deleteOne({ _id: oid(shareId), listId: oid(listId), ownerId: oid(userId) });
   return res.deletedCount === 1;
+}
+
+// A report from someone the List is shared with, kept with the reports from public pages (packages/db/src/public.ts)
+// for the same person to read. Only someone it is shared with can make one; who, is kept as a salted hash.
+export async function reportSharedList(listId: string, viewerEmail: string, reason: string, details: string | null): Promise<boolean> {
+  const email = viewerEmail.toLowerCase();
+  const share = await (await listShares()).findOne({ listId: oid(listId), email }, { projection: { _id: 1 } });
+  if (!share) return false;
+  const salt = process.env.BETTER_AUTH_SECRET ?? "pluck";
+  await (await reports()).insertOne({
+    _id: new ObjectId(), listId: oid(listId), reporterIp: createHash("sha256").update(`${salt}:${email}`).digest("hex").slice(0, 32),
+    reason, details: details?.trim().slice(0, 2000) || null, createdAt: new Date(), state: "open", shared: true,
+  });
+  return true;
 }
 
 // The person it was shared with takes it off their Lists.

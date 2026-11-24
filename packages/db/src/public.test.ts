@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   applyExtraction, createList, createTag, editItem, getListMeta, getMe, killList, killUser, moveToBin, pluckLink, PUBLIC_ITEM_FIELDS,
   publicCoverKey, publicList, publicListById, recordView, setHandle, setItemTags, setBlobKeys, setVisibility, updateEntry, updateList,
-  addToList, deleteList, leaveSharedList, listsSharedWith, sharedList, shareList, sharesOf, unshareList, updateSettings,
+  addToList, deleteList, leaveSharedList, listsSharedWith, openReports, reportSharedList, sharedList, shareList, sharesOf, unshareList, updateSettings,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
 
@@ -172,4 +172,21 @@ describe("lists shared with people (See only)", () => {
     await deleteList(b, other.id);
     expect(await listsSharedWith("c@example.test")).toEqual([]);
   });
+});
+
+test("a List can be reported by someone it is shared with, and by nobody else; the report reaches the admin's list", async () => {
+  const { a, b } = await twoUsers();
+  const list = await createList(a, { name: `Private and shared ${Date.now()}`, createdBy: "user" });
+  const [aEmail, bEmail] = [(await getMe(a))!.email, (await getMe(b))!.email];
+  // Not shared yet: b has no say on a List they cannot see. Nor has its owner, nor a stranger, once it is shared.
+  expect(await reportSharedList(list.id, bEmail, "spam", null)).toBe(false);
+  await shareList(a, list.id, bEmail);
+  expect(await reportSharedList(list.id, aEmail, "spam", null)).toBe(false);
+  expect(await reportSharedList(list.id, "stranger@example.test", "spam", null)).toBe(false);
+  expect(await reportSharedList(list.id, bEmail.toUpperCase(), "harassment", "  Not for me.  ")).toBe(true);
+  const mine = (await openReports()).filter((r) => r.list?.id === list.id);
+  expect(mine.map((r) => [r.reason, r.details, r.list?.name])).toEqual([["harassment", "Not for me.", list.name]]);
+  // Leaving ends it: no more reports from someone it is no longer shared with.
+  await leaveSharedList(list.id, bEmail);
+  expect(await reportSharedList(list.id, bEmail, "spam", null)).toBe(false);
 });

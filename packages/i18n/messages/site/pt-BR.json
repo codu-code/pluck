@@ -283,7 +283,7 @@
     "bugs": {
       "title": "Achou um bug<mark>?</mark>",
       "body": "Abra uma issue no GitHub. Conte o que você fez, o que esperava e o que aconteceu em vez disso. Ideias também são bem-vindas por lá.",
-      "note": "As issues são públicas. Não coloque links, notas ou qualquer outra coisa que você prefira guardar para si.",
+      "note": "As issues são públicas. Não coloque links, notas ou qualquer outra coisa que você prefira guardar para si. Ou escreva para <mail>{email}</mail>.",
       "button": "Abrir uma issue"
     }
   },
@@ -395,11 +395,11 @@
       "description": "O que o Pluck armazena, o que ele nunca faz e como levar tudo com você."
     },
     "title": "Privacidade",
-    "lede": "Versão curta: armazenamos o que você colhe para você ler depois. Não lemos, não vendemos e não usamos para alimentar nenhum modelo. Última atualização em 24 de outubro de 2026.",
+    "lede": "Versão curta: armazenamos o que você colhe para você ler depois. Não lemos, não vendemos e não usamos para alimentar nenhum modelo. Última atualização em 24 de novembro de 2026.",
     "sections": {
       "store": {
         "title": "O que armazenamos",
-        "body": "Seu e-mail e seu nome. Cada item que você colhe: o link, o texto e as imagens da página que buscamos, o seu título, nota, tags, tipo, status, listas, destaques e posição de leitura. A hora em que você colheu e a hora em que abriu pela última vez, que a regra de expiração e o e-mail de segunda-feira usam. Os itens que você importa do Pocket, do Omnivore, do Raindrop, do Instapaper, do Readwise Reader, do Wallabag, do Linkwarden, do Karakeep ou de um arquivo de favoritos."
+        "body": "Seu e-mail e seu nome. Cada item que você colhe: o link, o texto e as imagens da página que buscamos, o seu título, nota, tags, tipo, status, listas, destaques e posição de leitura. A hora em que você colheu e a hora em que abriu pela última vez, que a regra de expiração e o e-mail de segunda-feira usam. Os itens que você importa do Pocket, do Omnivore, do Raindrop, do Instapaper, do Readwise Reader, do Wallabag, do Linkwarden, do Karakeep ou de um arquivo de favoritos. As notas que você escreve, e as fotos e os arquivos que você mesmo adiciona."
       },
       "dont": {
         "title": "O que não fazemos",
@@ -408,6 +408,10 @@
       "extension": {
         "title": "A extensão do navegador",
         "body": "Enquanto você está conectado, a extensão pergunta ao seu servidor do Pluck se a página em que você está já está na sua biblioteca, para que o ícone dela possa aparecer preenchido. Esse endereço só é usado para responder a essa pergunta: ele não é adicionado à sua biblioteca nem guardado com a sua conta. Para desligar isso, saia da extensão ou remova-a."
+      },
+      "device": {
+        "title": "O app para iPhone e iPad",
+        "body": "O app pergunta antes de usar suas fotos, sua câmera ou seu microfone, na primeira vez que você recorre a cada um. Ele só vê as fotos que você escolhe, e só usa a câmera enquanto você tira uma foto. Essas fotos ficam na sua biblioteca como qualquer outra coisa que você colhe. Quando você fala uma nota, seu dispositivo transforma a fala em texto quando pode. Senão, a Apple faz isso, como no ditado do teclado. O Pluck guarda as palavras e nenhum som: o som nunca chega aos nossos servidores."
       },
       "ai": {
         "title": "Sua ferramenta de IA",

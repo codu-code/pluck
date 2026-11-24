@@ -45,6 +45,21 @@ const CAMERA = {
   ko: "담을 사진을 찍을 때 Pluck이 카메라를 엽니다.",
   "zh-Hans": "拍照摘下时，Pluck 会打开相机。",
 };
+// Why Pluck reads photos. iOS never asks this: Add uses iOS's own picker, which hands over only what is picked. But
+// the picker's library can reach the whole photo library, and App Store Connect refuses a build that has such code
+// and no words for it (ITMS-90683, which failed 1.7.0's first upload), so the words are here, and true.
+const PHOTOS: Record<string, string> = {
+  en: "Pluck plucks the photos you choose. It sees only the ones you pick.",
+  es: "Pluck recoge las fotos que eliges. Solo ve las que tú eliges.",
+  "pt-BR": "O Pluck colhe as fotos que você escolhe. Ele vê só as que você escolhe.",
+  fr: "Pluck cueille les photos que vous choisissez. Il ne voit que celles-là.",
+  de: "Pluck pflückt die Fotos, die du auswählst. Es sieht nur diese.",
+  ja: "選んだ写真をPluckします。選んだ写真以外は見えません。",
+  it: "Pluck prende le foto che scegli. Vede solo quelle.",
+  nl: "Pluck plukt de foto's die je kiest. Het ziet alleen die.",
+  ko: "고른 사진을 Pluck에 담습니다. 고른 사진만 볼 수 있어요.",
+  "zh-Hans": "Pluck 会摘下你选的照片，只能看到你选的那些。",
+};
 // What iOS shows the first time the microphone is tapped (components/Speak.tsx): two questions, one for the
 // microphone and one for turning speech into text.
 const MIC: Record<string, string> = {
@@ -75,7 +90,7 @@ const SPEECH: Record<string, string> = {
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
-  version: "1.6.1", // raised once per release, in its own change; never per feature (docs/ios.md)
+  version: "1.7.2", // raised once per release, in its own change; never per feature (docs/ios.md)
   // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect (withOnlyPluckScheme below):
   // sign-in comes back over HTTPS from the code the person types (lib/session.ts), so no scheme carries it.
   scheme: "pluck",
@@ -147,16 +162,17 @@ const config: ExpoConfig = {
       "expo-splash-screen",
       { image: "./assets/splash.png", imageWidth: 123, backgroundColor: "#F6F8F4", dark: { image: "./assets/splash-dark.png", backgroundColor: "#10130F" } },
     ],
-    // Add, Photo and Camera (app/add.tsx). The photo library needs no permission: iOS's own picker hands over only
-    // what the person picks. The camera asks, in the words below; nothing records sound.
+    // Add, Photo and Camera (app/add.tsx). The photo library asks nothing: iOS's own picker hands over only what the
+    // person picks. Its words are given all the same (see PHOTOS): `false` takes them out, and Apple refuses the build.
+    // The camera asks, in the words below; nothing records sound.
     // The microphone text is given here too: `false` would take the question's words out again, after the speech
     // plugin had put them in, and iOS closes an app that asks for the microphone without them.
-    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: false, microphonePermission: MIC.en }],
+    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: PHOTOS.en, microphonePermission: MIC.en }],
     ["expo-speech-recognition", { microphonePermission: MIC.en, speechRecognitionPermission: SPEECH.en }],
     "@bacons/apple-targets",
   ],
   // The camera and microphone questions in the other nine languages (iOS reads them from each InfoPlist.strings).
-  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text, NSMicrophoneUsageDescription: MIC[l], NSSpeechRecognitionUsageDescription: SPEECH[l] }])),
+  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text, NSPhotoLibraryUsageDescription: PHOTOS[l], NSMicrophoneUsageDescription: MIC[l], NSSpeechRecognitionUsageDescription: SPEECH[l] }])),
   // showServer: "Use your own server" on the sign-in screen. Off in store builds (it distracts everyone who is not
   // self-hosting); on for PLUCK_SHOW_SERVER=1 or a build pointed at another server. A server's own pluck://signin?server=
   // link opens it in any build.

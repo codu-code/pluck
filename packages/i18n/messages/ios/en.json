@@ -302,6 +302,19 @@
     "leaveTitle": "Leave this List?",
     "leaveBody": "It comes off your Lists. They can share it with you again.",
     "leave": "Leave",
+    "report": "Report",
+    "reportTitle": "What is wrong?",
+    "reportReasons": {
+      "illegal": "Illegal content",
+      "minors": "Sexualises minors",
+      "harassment": "Harassment",
+      "doxxing": "Shares someone's private details",
+      "spam": "Spam or a link farm",
+      "malware": "Malware or phishing",
+      "infringement": "Copyright or trademark",
+      "other": "Something else"
+    },
+    "reported": "Thanks. A person reads every report.",
     "byNamed": "Shared with you by {name} (@{handle}) · see only",
     "by": "Shared with you by @{handle} · see only",
     "notShared": {

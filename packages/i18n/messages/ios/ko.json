@@ -302,6 +302,19 @@
     "leaveTitle": "이 리스트에서 나갈까요?",
     "leaveBody": "내 리스트에서 사라져요. 상대가 다시 공유할 수 있어요.",
     "leave": "나가기",
+    "report": "신고",
+    "reportTitle": "무엇이 문제인가요?",
+    "reportReasons": {
+      "illegal": "불법 콘텐츠",
+      "minors": "미성년자를 성적으로 대상화함",
+      "harassment": "괴롭힘",
+      "doxxing": "다른 사람의 개인 정보 공개",
+      "spam": "스팸 또는 링크 팜",
+      "malware": "악성 소프트웨어 또는 피싱",
+      "infringement": "저작권 또는 상표권",
+      "other": "기타"
+    },
+    "reported": "고마워요. 모든 신고는 사람이 직접 읽어요.",
     "byNamed": "{name}(@{handle})님이 공유함 · 보기 전용",
     "by": "@{handle}님이 공유함 · 보기 전용",
     "notShared": {

@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import type { Item } from "./items.ts";
-import { initials, listMarkWord, markWord, rowSite, tileIndex, when } from "./format.ts";
+import { initial, initials, listMarkWord, markWord, rowSite, tileIndex, when } from "./format.ts";
 
 const now = new Date(2026, 9, 24, 15, 0); // Sat 24 Oct 2026, 15:00
 
@@ -14,6 +14,15 @@ test.each([
   [new Date(2025, 10, 3, 9, 0), "3 Nov 2025"],
 ])("when(%s) is %s", (d, expected) => {
   expect(when(d.toISOString(), now)).toBe(expected);
+});
+
+test.each([
+  ["Aoife Byrne", "aoife@example.test", "A"],
+  ["  ", "niall@example.test", "N"],
+  [null, "élan@example.test", "É"],
+  [undefined, undefined, "?"],
+])("initial(%s, %s) is %s", (name, email, expected) => {
+  expect(initial(name, email)).toBe(expected);
 });
 
 test.each([

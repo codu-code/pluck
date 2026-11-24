@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 // Each section's heading and paragraph, by key under site.privacy.sections.
 const SECTIONS = [
-  { key: "store" }, { key: "dont" }, { key: "extension" }, { key: "ai" }, { key: "publicLists" }, { key: "sharing" },
+  { key: "store" }, { key: "dont" }, { key: "extension" }, { key: "device" }, { key: "ai" }, { key: "publicLists" }, { key: "sharing" },
   { key: "emailIn" }, { id: "cookies", key: "cookies" }, { key: "where" }, { key: "export" }, { key: "rights" },
 ] as const;
 

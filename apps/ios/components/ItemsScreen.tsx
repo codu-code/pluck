@@ -1,4 +1,4 @@
-import { isTask, type Item, type Status } from "@pluck/shared-schemas";
+import { initial, isTask, type Item, type Status } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect, usePathname } from "expo-router";
@@ -17,9 +17,6 @@ import { ItemRow } from "./ItemRow";
 import { Empty, TitledList, usePull } from "./Screen";
 import { toast } from "./Toast";
 import { ToolBar } from "./ToolBar";
-
-const avatarOf = (name?: string, email?: string) =>
-  ((name?.trim() || email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?");
 
 // Inbox and Later (IOSInbox board): the count, what is waiting to sync, and the rows.
 export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
@@ -182,8 +179,8 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
             <Icon d={ICONS.plus} color={t.ink} />
           </Pressable>
           <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel={tr("items.settings")} style={styles.headerButton}>
-            <View style={[styles.avatar, { backgroundColor: t.avatar }]}>
-              <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 12 }]}>{avatarOf(me.data?.name, me.data?.email)}</Text>
+            <View style={[styles.avatar, { backgroundColor: t.brand }]}>
+              <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.onBrand, fontSize: 13 }]}>{initial(me.data?.name, me.data?.email)}</Text>
             </View>
           </Pressable>
         </View>
