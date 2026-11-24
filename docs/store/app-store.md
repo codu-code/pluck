@@ -93,7 +93,7 @@ node scripts/store-iphone.mjs de <dir with that language's 2.png … 5.png>
 
 ## Featuring art
 
-In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), and also the 16:9 master Apple takes for a product page header or a search result asset. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
+In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), with the circle inside Apple's art safe area for a universal asset (1402 × 962 at 1921, 660). It is also the product page header and the search results asset in App Store Connect, the same file in every language. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
 
 The listing text in `<lang>.json` is what is live in App Store Connect; change it there first, then here.
 
@@ -105,7 +105,7 @@ App Store Connect, Pluck, Featuring, Nominations, Create Nomination. Send it at 
 - **Type:** App Launch
 - **Description:** Pluck is a read-it-later app for everything, not just articles: a recipe from TikTok, a longread, a travel PDF, a lamp to buy, a note to self. You pluck it from the share sheet in one tap and the app never opens. Later, you sort it by hand, or ask the AI tool you already use, because Pluck has no AI inside. It connects to Claude, ChatGPT, Cursor and others over MCP, an open standard, and that AI can never delete anything. Things you leave alone move to the Archive after 30 days. Nothing is deleted. Pluck is free and open source, so it can't vanish the way Pocket and Omnivore did.
 - **What is unique:** A fresh take on a familiar category. Read-it-later apps either nag you or quietly delete things. Pluck does neither: untouched items go to an Archive you can search, and the share sheet saves in place without opening the app. There's no AI in the app. People bring their own AI, and every change it makes is marked and can be undone in one tap. The whole app is open source, and anyone can run their own server.
-- **Accessibility:** Dynamic Type up to the largest sizes, checked in the Simulator: rows grow and nothing clips. VoiceOver labels on the controls and the kind glyphs. Light and dark mode throughout. Animations respect Reduce Motion.
+- **Accessibility:** Text grows with Dynamic Type; titles stop at 140%. VoiceOver labels on the controls and the kind glyphs. Light and dark mode throughout. Animations respect Reduce Motion.
 - **Localization:** English, German, French, Spanish, Italian, Dutch, Portuguese (Brazil), Japanese, Korean and Simplified Chinese at launch.
 - **About the team:** Made in Ireland by Codú, a coding community of about 10,000 developers. Built in the open.
 - **Supplemental URLs:** [TESTFLIGHT PUBLIC LINK], https://getpluck.io, https://getpluck.io/connect, https://getpluck.io/open-source, https://github.com/codu-code/pluck.
