@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SessionUser } from "@/lib/auth";
+import { initial } from "@/lib/format";
 import { OfflineBar, OfflineMark } from "./Offline";
 import { RailNav } from "./RailNav";
 import { TimezoneSync } from "./TimezoneSync";
@@ -22,7 +23,7 @@ export function AppShell({ user, counts, timezone, children }: { user: SessionUs
         <RailNav counts={counts} />
         <div className={styles.me}>
           <span className={styles.avatar} aria-hidden="true">
-            {display.slice(0, 2).toUpperCase()}
+            {initial(user.name, user.email)}
           </span>
           <span className={styles.meName}>{display}</span>
         </div>
