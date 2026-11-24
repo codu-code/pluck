@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
-  aliasOf, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, updateImport, listApiKeys, recountTags,
+  aliasOf, claimStarters, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, updateImport, listApiKeys, recountTags,
   listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setHeardFrom, setVia, updateSettings, finishExport, latestExport, startExport, sweepTransfers,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -138,4 +138,12 @@ test("the newest analytics answer wins: an older one from an offline device does
   expect((await getMe(b))?.settings).toMatchObject({ analytics: null, analyticsAt: null });
   await updateSettings(b, { analytics: "yes", analyticsAt: now - 366 * 86_400_000 }); // a year and more ago: still the answer
   expect(await analyticsOf(b)).toMatchObject({ consent: "yes" });
+});
+
+test("the starter Lists are claimed once per account, each account for itself", async () => {
+  const { a, b } = await twoUsers();
+  expect(await Promise.all([claimStarters(a), claimStarters(a)])).toContain(false); // two requests at once: one makes them
+  expect(await claimStarters(a)).toBe(false);
+  expect(await claimStarters(b)).toBe(true); // a's claim is not b's
+  expect(await claimStarters(new ObjectId().toHexString())).toBe(false); // no such account: nothing to make
 });

@@ -412,8 +412,8 @@
     "title": "还没有摘下任何东西。",
     "lede": "三种开始方式。第一种只要一秒。",
     "one": {
-      "title": "点上面的“摘下来”",
-      "body": "示例链接已经填好了。看着它落进来。"
+      "title": "在上面粘贴一个链接",
+      "body": "或者写一句话，它会成为一条笔记。"
     },
     "two": {
       "title": "添加浏览器扩展",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "用手机摘下",
-      "body": "用 iOS App；App 上线之前，可以用 Pluck 快捷指令。",
-      "ios": "iOS App",
-      "shortcut": "添加快捷指令"
+      "body": "装上 iOS App，分享菜单里就有 Pluck。",
+      "ios": "iOS App"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count} 个链接。按 Enter 全部摘下。",
     "as": "摘下为",
     "due": "截止",
-    "enterAs": "按 Enter 摘下为{kind, select, note {笔记} todo {待办} other {物品}}。"
+    "enterAs": "按 Enter 摘下为{kind, select, note {笔记} todo {待办} other {物品}}。",
+    "drop": "拖放图片或 PDF 即可摘下",
+    "fileRefused": "Pluck 可摘下图片和 PDF，每个不超过 50 MB。"
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "获取扩展",
       "keptTitle": "它还是你的",
       "keptBody": "链接、你的笔记和标签都留着。搜索可以按标题和笔记找到它。"
-    }
+    },
+    "foundOn": "发现于 {site}"
   },
   "note": {
     "untitled": "无标题笔记",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · {edited}编辑",
     "title": "标题",
     "body": "正文",
-    "help": "第一行就是标题。纯文本。边写边保存。",
+    "help": "第一行就是标题。边写边保存。",
     "about": "关于{kind, select, note {这条笔记} todo {这条待办} other {这件物品}}",
     "kind": "类别",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "截止日期",
     "source": "来源：{via}",
     "pasteBox": "网页粘贴框",
-    "noHighlights": "笔记没有高亮。选中文字即可复制。"
+    "noHighlights": "笔记没有高亮。选中文字即可复制。",
+    "helpPlain": "第一行就是标题。纯文本。边写边保存。",
+    "format": {
+      "title": "格式",
+      "bold": "粗体",
+      "italic": "斜体",
+      "heading": "标题",
+      "bullets": "项目符号列表",
+      "numbers": "编号列表"
+    }
   },
   "reader": {
     "progress": "阅读进度",
@@ -1007,10 +1018,15 @@
         "pocket": "Pocket（CSV）",
         "omnivore": "Omnivore（zip）",
         "raindrop": "Raindrop（CSV）",
+        "instapaper": "Instapaper（CSV）",
+        "readwise": "Readwise Reader（CSV）",
+        "wallabag": "Wallabag（JSON）",
+        "linkwarden": "Linkwarden（JSON）",
+        "karakeep": "Karakeep（JSON）",
         "html": "浏览器书签（HTML）"
       },
       "drop": "拖入文件，或选择一个文件",
-      "formats": "Pocket CSV · Omnivore zip · Raindrop CSV · 书签 HTML",
+      "formats": "CSV · JSON · zip · 书签 HTML",
       "file": "导入文件",
       "job": "{source} 导入",
       "progress": "已完成 {done, number} 条",
@@ -1019,7 +1035,7 @@
       "running": "在后台运行。你可以关掉这个页面。",
       "export": {
         "title": "导出",
-        "lede": "pluck.json，加上每个条目一个 Markdown 文件（含正文和笔记），每个清单也一个。打包成 zip，通过邮件发送。单个清单可以在它自己的页面上导出。",
+        "lede": "pluck.json，加上每个条目一个 Markdown 文件（含正文和笔记），每个清单也一个，还有浏览器和其他应用可以导入的 bookmarks.html。打包成 zip，通过邮件发送。单个清单可以在它自己的页面上导出。",
         "started": "正在导出。链接会在一两分钟内通过邮件送达。",
         "busy": "正在导出",
         "action": "全部导出"
@@ -1044,5 +1060,9 @@
     "asPreview": "以预览显示",
     "stars": "{count} 颗星",
     "pages": "{count} 页"
+  },
+  "starters": {
+    "favourites": "最爱",
+    "ideas": "想法"
   }
 }

@@ -412,8 +412,8 @@
     "title": "Nada colhido ainda.",
     "lede": "Três jeitos de começar. O primeiro leva um segundo.",
     "one": {
-      "title": "Aperte Colha, ali em cima",
-      "body": "O link de exemplo já está lá. Veja o link chegar."
+      "title": "Cole um link ali em cima",
+      "body": "Ou escreva uma frase. Ela vira uma Nota."
     },
     "two": {
       "title": "Instale a extensão",
@@ -422,9 +422,8 @@
     },
     "three": {
       "title": "Colha pelo celular",
-      "body": "O app para iOS, ou o Atalho do Pluck até o app sair.",
-      "ios": "App para iOS",
-      "shortcut": "Adicionar o Atalho"
+      "body": "O app para iOS coloca o Pluck no menu de compartilhamento.",
+      "ios": "App para iOS"
     }
   },
   "shortcuts": {
@@ -585,7 +584,9 @@
     "links": "{count} links. Enter colhe todos.",
     "as": "Colher como",
     "due": "Prazo",
-    "enterAs": "Enter colhe como {kind, select, note {Nota} todo {Tarefa} other {Coisa}}."
+    "enterAs": "Enter colhe como {kind, select, note {Nota} todo {Tarefa} other {Coisa}}.",
+    "drop": "Solte uma imagem ou um PDF para colher",
+    "fileRefused": "O Pluck aceita imagens e PDFs de até 50 MB cada."
   },
   "itemList": {
     "inbox": {
@@ -841,7 +842,8 @@
       "extension": "Instalar a extensão",
       "keptTitle": "Continua seu",
       "keptBody": "O link, a sua nota e as suas tags estão guardados. A busca encontra pelo título e pela nota."
-    }
+    },
+    "foundOn": "Encontrado em {site}"
   },
   "note": {
     "untitled": "Nota sem título",
@@ -853,7 +855,7 @@
     "meta": "{kind} · {plucked} · editado {edited}",
     "title": "Título",
     "body": "Texto",
-    "help": "A primeira linha é o título. Texto simples. Salva enquanto você digita.",
+    "help": "A primeira linha é o título. Salva enquanto você digita.",
     "about": "Sobre esta {kind, select, note {nota} todo {tarefa} other {coisa}}",
     "kind": "Tipo",
     "kindHint": {
@@ -864,7 +866,16 @@
     "due": "Prazo",
     "source": "Origem: {via}",
     "pasteBox": "caixa de colar da web",
-    "noHighlights": "Notas não têm destaques. Selecione o texto para copiá-lo."
+    "noHighlights": "Notas não têm destaques. Selecione o texto para copiá-lo.",
+    "helpPlain": "A primeira linha é o título. Texto simples. Salva enquanto você digita.",
+    "format": {
+      "title": "Formatar",
+      "bold": "Negrito",
+      "italic": "Itálico",
+      "heading": "Título",
+      "bullets": "Lista com marcadores",
+      "numbers": "Lista numerada"
+    }
   },
   "reader": {
     "progress": "Progresso da leitura",
@@ -1007,10 +1018,15 @@
         "pocket": "Pocket (CSV)",
         "omnivore": "Omnivore (zip)",
         "raindrop": "Raindrop (CSV)",
+        "instapaper": "Instapaper (CSV)",
+        "readwise": "Readwise Reader (CSV)",
+        "wallabag": "Wallabag (JSON)",
+        "linkwarden": "Linkwarden (JSON)",
+        "karakeep": "Karakeep (JSON)",
         "html": "Favoritos do navegador (HTML)"
       },
       "drop": "Arraste um arquivo para cá, ou escolha um",
-      "formats": "CSV do Pocket · zip do Omnivore · CSV do Raindrop · HTML de favoritos",
+      "formats": "CSV · JSON · zip · HTML de favoritos",
       "file": "Arquivo para importar",
       "job": "Importação: {source}",
       "progress": "{done, number} prontos",
@@ -1019,7 +1035,7 @@
       "running": "Roda em segundo plano. Pode fechar a página, se quiser.",
       "export": {
         "title": "Exportar",
-        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, e um por lista. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
+        "lede": "pluck.json, mais um arquivo Markdown por item com o texto e as notas, um por lista, e bookmarks.html, que um navegador ou outro app consegue importar. Um zip, por e-mail. Qualquer lista pode ser exportada sozinha na própria página.",
         "started": "Exportando. O link chega por e-mail em um ou dois minutos.",
         "busy": "Exportando",
         "action": "Exportar tudo"
@@ -1044,5 +1060,9 @@
     "asPreview": "Ver como prévia",
     "stars": "{count, plural, one {# estrela} other {# estrelas}}",
     "pages": "{count, plural, one {# página} other {# páginas}}"
+  },
+  "starters": {
+    "favourites": "Favoritos",
+    "ideas": "Ideias"
   }
 }

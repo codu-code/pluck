@@ -9,6 +9,7 @@ export const Item = z.object({
   kind: Kind,
   url: z.string().nullable(),
   canonicalUrl: z.string().nullable(),
+  foundOn: z.string().nullable(), // Found on: the web page an Image was plucked from, its way back
   title: z.string(),
   titleIsDerived: z.boolean(),
   siteName: z.string().nullable(),
@@ -45,6 +46,7 @@ const Optional = {
   selection: z.string().max(20_000).optional(), // kept as a highlight on the item (the extension's "Pluck selection")
   transcript: z.string().max(500_000).optional(), // a video's captions, read in the browser; kept with the page text
   source: Source.optional(),
+  foundOn: z.string().max(4096).optional(), // the page an image was plucked from (the extension's "Pluck image")
 };
 
 export const DueAt = z.iso.datetime({ offset: true });
@@ -126,6 +128,22 @@ export const CreateHighlightBody = z.object({
 export type CreateHighlightBody = z.infer<typeof CreateHighlightBody>;
 export const UpdateHighlightBody = z.object({ note: z.string().max(5000).nullable() }).strict();
 
+// Highlights across the library, newest first, each with the Item it is in: what an AI tool needs to cite one.
+export const HighlightsQuery = z.object({
+  query: z.string().trim().min(1).max(200).optional(), // words to find in the quote or the note
+  itemId: ObjectIdString.optional(),
+  since: DueAt.optional(),
+  limit: z.number().int().min(1).max(25).default(25),
+  offset: z.number().int().min(0).default(0),
+});
+export type HighlightsQuery = z.infer<typeof HighlightsQuery>;
+export const HighlightInItem = Highlight.pick({ id: true, quote: true, note: true, createdAt: true }).extend({
+  item: Item.pick({ id: true, title: true, url: true, siteName: true }),
+});
+export type HighlightInItem = z.infer<typeof HighlightInItem>;
+export const HighlightPage = z.object({ highlights: z.array(HighlightInItem), more: z.boolean() });
+export type HighlightPage = z.infer<typeof HighlightPage>;
+
 // "archive" is the Archive page: archived and done together, newest move first.
 export const ListView = z.union([Status, z.literal("archive"), z.literal("bin")]);
 export type ListView = z.infer<typeof ListView>;
@@ -195,4 +213,7 @@ export const CreateFileItemBody = z.object({
   size: z.number().int().min(1).max(MAX_FILE_BYTES),
   source: Source.optional(),
 });
+export const isFileType = (type: string): type is keyof typeof FILE_TYPES => type in FILE_TYPES;
+// "The upload is in": the same name and type the file Item was begun with.
+export const FileArrivedBody = CreateFileItemBody.pick({ name: true, contentType: true });
 export type CreateFileItemBody = z.infer<typeof CreateFileItemBody>;

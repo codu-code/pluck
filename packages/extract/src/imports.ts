@@ -1,8 +1,9 @@
+import { KarakeepExport, LinkwardenExport, WallabagExport, type ImportSource } from "@pluck/shared-schemas";
 import { unzipSync, strFromU8 } from "fflate";
 import { parseHTML } from "linkedom";
 
 // Parsers for the files people bring from elsewhere. Pure: a file in, a list of entries out.
-export type ImportSource = "pocket" | "omnivore" | "raindrop" | "html";
+export type { ImportSource };
 export type ImportEntry = {
   url: string;
   title: string | null;
@@ -49,7 +50,7 @@ export function parseCsv(text: string): Record<string, string>[] {
   return body.map((r) => Object.fromEntries(keys.map((k, i) => [k, (r[i] ?? "").trim()])));
 }
 
-const date = (v: string | undefined): Date | null => {
+const date = (v: string | number | null | undefined): Date | null => {
   if (!v) return null;
   const n = Number(v);
   const d = Number.isFinite(n) && n > 0 ? new Date(n < 1e12 ? n * 1000 : n) : new Date(v);
@@ -68,6 +69,79 @@ function pocket(text: string): ImportEntry[] {
 function raindrop(text: string): ImportEntry[] {
   return parseCsv(text).map((r) => ({
     url: r.url ?? "", title: r.title || null, tags: tagList(r.tags, /,\s*/), note: r.note || null, createdAt: date(r.created), html: null,
+  }));
+}
+
+// Instapaper: URL,Title,Selection,Folder,Timestamp and, since late 2025, Tags (a JSON array in one cell). A folder
+// becomes a tag; Unread, Archive and Starred say where it sat, and that and the star are dropped.
+function instapaper(text: string): ImportEntry[] {
+  const jsonTags = (v: string | undefined): string[] => {
+    try {
+      const list: unknown = JSON.parse(v || "[]");
+      return Array.isArray(list) ? list.filter((t) => typeof t === "string") : [];
+    } catch {
+      return [];
+    }
+  };
+  return parseCsv(text).map((r) => ({
+    url: r.url ?? "", title: r.title || null, note: r.selection || null, createdAt: date(r.timestamp), html: null,
+    tags: [...(r.folder && !/^(unread|archive|starred)$/i.test(r.folder) ? [r.folder] : []), ...jsonTags(r.tags)],
+  }));
+}
+
+// Readwise Reader: Title,URL,ID,Document tags,Saved date,Reading progress,Location,Seen. The tags are one cell written
+// as a Python list (['a', 'b']). Feed rows are what Reader fetched from a subscription, not what the person kept.
+// Dropped: reading progress, seen, and where it sat (new, later, shortlist, archive).
+function readwise(text: string): ImportEntry[] {
+  const listed = (v = "") => {
+    const quoted = [...v.matchAll(/'([^']*)'|"([^"]*)"/g)].map((m) => m[1] ?? m[2] ?? "");
+    return quoted.length ? quoted : tagList(v.replace(/[[\]]/g, ""), /,/);
+  };
+  return parseCsv(text).filter((r) => r.location?.toLowerCase() !== "feed").map((r) => ({
+    url: r.url ?? "", title: r.title || null, tags: listed(r["document tags"]), note: null, createdAt: date(r["saved date"]), html: null,
+  }));
+}
+
+// The JSON exports: the fields Pluck keeps, as their schemas in shared-schemas say. Anything else is not that app's export.
+function readJson<T>(schema: { safeParse: (data: unknown) => { success: true; data: T } | { success: false } }, text: string): T {
+  const read = schema.safeParse(JSON.parse(text.replace(/^\uFEFF/, "")));
+  if (!read.success) throw new Error("not the export this app writes"); // not the schema's own error: it names every entry
+  return read.data;
+}
+
+// Wallabag: an array of entries, each with the page as Wallabag kept it: the article's HTML with no document round
+// it, so one is put round it for the reader. Where its own fetch failed it keeps a notice in the page's place, so
+// that one is fetched afresh. Dropped: archived, starred, annotations.
+function wallabag(text: string): ImportEntry[] {
+  return readJson(WallabagExport, text).map((e) => {
+    const page = e.content && !e.content.includes("wallabag can't retrieve contents") ? e.content : null;
+    return {
+      url: e.url ?? "", title: e.title || null, tags: (e.tags ?? []).map((t) => (typeof t === "string" ? t : t.label)), note: null,
+      createdAt: date(e.created_at), html: page ? () => `<html><body><article>${page}</article></body></html>` : null,
+    };
+  });
+}
+
+// Linkwarden: collections, each holding its links. A collection's name becomes a tag, but for "Unorganized", where
+// links in no collection sit. importDate is when a link Linkwarden itself imported was first kept.
+// Dropped: pins, colours and icons, how collections nest, and its kept copies (the export has only their paths).
+function linkwarden(text: string): ImportEntry[] {
+  return readJson(LinkwardenExport, text).collections.flatMap((c) =>
+    (c.links ?? []).map((l) => ({
+      url: l.url ?? "", title: l.name || null, note: l.description || null, createdAt: date(l.importDate ?? l.createdAt), html: null,
+      tags: [...(c.name && c.name !== "Unorganized" ? [c.name] : []), ...(l.tags ?? []).map((t) => t.name)],
+    })),
+  );
+}
+
+// Karakeep (once Hoarder): bookmarks, each a link, a text or an uploaded file. Only a link has a URL, so only links
+// come across. A list a link sits in becomes a tag. Dropped: archived.
+function karakeep(text: string): ImportEntry[] {
+  const { bookmarks, lists } = readJson(KarakeepExport, text);
+  const listName = new Map((lists ?? []).map((l) => [l.id, l.name]));
+  return bookmarks.map((b) => ({
+    url: b.content?.url ?? "", title: b.title || null, note: b.note || null, createdAt: date(b.createdAt), html: null,
+    tags: [...(b.tags ?? []), ...(b.lists ?? []).flatMap((id) => listName.get(id) ?? [])],
   }));
 }
 
@@ -114,8 +188,13 @@ function omnivore(zip: Uint8Array): ImportEntry[] {
   return out;
 }
 
+const text = (parse: (text: string) => ImportEntry[]) => (file: Uint8Array) => parse(strFromU8(file));
+const PARSERS: Record<ImportSource, (file: Uint8Array) => ImportEntry[]> = {
+  pocket: text(pocket), raindrop: text(raindrop), instapaper: text(instapaper), readwise: text(readwise), omnivore,
+  wallabag: text(wallabag), linkwarden: text(linkwarden), karakeep: text(karakeep), html: text(bookmarksHtml),
+};
+
+// Throws on a file that is not what the source writes; the import then says it could not be read.
 export function parseImport(source: ImportSource, file: Uint8Array): ImportEntry[] {
-  const text = () => strFromU8(file);
-  const entries = source === "omnivore" ? omnivore(file) : source === "pocket" ? pocket(text()) : source === "raindrop" ? raindrop(text()) : bookmarksHtml(text());
-  return entries.filter((e) => /^https?:\/\//i.test(e.url));
+  return PARSERS[source](file).filter((e) => /^https?:\/\//i.test(e.url));
 }

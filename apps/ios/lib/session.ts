@@ -72,6 +72,7 @@ async function clearWaiting(): Promise<void> {
     },
     () => new ExtensionStorage(GROUP).set("tags", undefined),
     () => new ExtensionStorage(GROUP).set("lastList", undefined),
+    () => new ExtensionStorage(GROUP).set("lists", undefined),
   ];
   for (const part of parts) await Promise.resolve().then(part).catch(() => {});
 }

@@ -46,3 +46,66 @@ test("Omnivore: a zip that unpacks too large is refused before it is unpacked", 
   const many = Object.fromEntries(Array.from({ length: 6 }, (_, i) => [`metadata_${i}.json`, big.subarray(0, 19_000_000)]));
   expect(() => parseImport("omnivore", zipSync(many))).toThrow(/too large/);
 });
+
+test("Instapaper: a folder becomes a tag, where it sat does not; JSON tags, the selection as the note, Unix dates", () => {
+  const e = parseImport("instapaper", file("instapaper.csv"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/small-teams", "https://example.com/window-functions", "https://example.com/kyoto", "https://example.com/small-teams"]);
+  expect(e[0]).toMatchObject({ title: 'Small teams ship, when the "list" is short', note: 'The part about "one list", quoted', tags: ["work", "teams"] });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.000Z");
+  expect(e[1]).toMatchObject({ title: null, note: null, tags: [] }); // Archive is not a folder
+  expect(e[2]).toMatchObject({ title: "京都の路地を歩く", tags: ["Travel", "japan"] });
+  expect(e[3]!.tags).toEqual([]); // nor is Starred
+  // An export from before the Timestamp and Tags columns, and a Tags cell that is not a list.
+  expect(parseImport("instapaper", strToU8("URL,Title,Selection,Folder\nhttps://example.com/old,Old,,Unread\n"))[0]).toMatchObject({ title: "Old", tags: [], createdAt: null });
+  expect(parseImport("instapaper", strToU8('URL,Title,Selection,Folder,Timestamp,Tags\nhttps://example.com/odd,Odd,,Unread,1700000000,"{""a"": 1"\n'))[0]!.tags).toEqual([]);
+});
+
+test("Readwise Reader: tags from the Python list in one cell, ISO dates, feed rows left out", () => {
+  const e = parseImport("readwise", file("readwise.csv"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/indexes", "https://example.com/rates", "https://example.com/privet", "https://example.com/indexes"]);
+  expect(e[0]).toMatchObject({ title: 'Indexes, queries and "plans"', tags: ["postgres", "db"], note: null });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.043Z");
+  expect(e[1]).toMatchObject({ title: null, tags: [] });
+  expect(e[2]).toMatchObject({ title: "Привет из архива", tags: ["it's long", "reading"] });
+  expect(e[2]!.createdAt?.toISOString()).toBe("2022-12-07T07:43:11.000Z");
+});
+
+test("Wallabag: tags as strings or objects, the kept page unless it is Wallabag's own failed-fetch notice", () => {
+  const e = parseImport("wallabag", file("wallabag.json"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/albums", "https://example.com/gone", "https://example.com/anagnosi", "https://example.com/albums"]);
+  expect(e[0]).toMatchObject({ title: "Albums of ordinary days", tags: ["family", "photos"], note: null });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.000Z"); // +0100, with no colon, as Wallabag writes it
+  expect(e[0]!.html?.()).toContain("Every printed photograph");
+  expect(e[1]).toMatchObject({ title: null, tags: [], html: null });
+  expect(e[2]).toMatchObject({ title: "Η τέχνη της ανάγνωσης", tags: ["ανάγνωση"], html: null });
+});
+
+test("Linkwarden: the collection's name as a tag beside the link's own, the description as the note, the first date it has", () => {
+  const e = parseImport("linkwarden", file("linkwarden.json"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/rates", "https://example.com/untitled", "https://example.com/hob", "https://example.com/led", "https://example.com/rates"]); // the PDF has no URL
+  expect(e[0]).toMatchObject({ title: 'Estimating rates, "roughly"', tags: [], note: null }); // Unorganized is no collection
+  expect(e[0]!.createdAt?.toISOString()).toBe("2024-02-01T10:00:00.000Z");
+  expect(e[1]).toMatchObject({ title: null, createdAt: new Date("2019-05-06T07:08:09.000Z") }); // importDate over createdAt
+  expect(e[2]).toMatchObject({ title: "Kitchen hob", tags: ["Reno", "kitchen", "to buy"], note: "Check the width against the worktop" });
+  expect(e[3]).toMatchObject({ title: "주방 조명 고르기", tags: ["Reno"] });
+});
+
+test("Karakeep: links with their tags, notes and lists; a text and an uploaded file have no URL and stay behind", () => {
+  const e = parseImport("karakeep", file("karakeep.json"));
+  expect(e.map((x) => x.url)).toEqual(["https://example.com/drop-d", "https://example.com/untitled", "https://example.com/awtar", "https://example.com/drop-d"]);
+  expect(e[0]).toMatchObject({ title: 'Drop D, slowly: "the" riff', tags: ["guitar", "practice", "Music"], note: "Bars 9 to 16 first" });
+  expect(e[0]!.createdAt?.toISOString()).toBe("2023-11-14T22:13:20.000Z");
+  expect(e[1]).toMatchObject({ title: null, tags: [], note: null });
+  expect(e[2]).toMatchObject({ title: "أوتار الجيتار", tags: ["Music"] });
+});
+
+test("a JSON file that is not the app's export is refused, with a short reason; an odd field is not", () => {
+  for (const source of ["wallabag", "linkwarden", "karakeep"] as const) {
+    expect(() => parseImport(source, strToU8("{not json"))).toThrow();
+    expect(() => parseImport(source, strToU8(JSON.stringify({ items: [] })))).toThrow("not the export this app writes");
+  }
+  expect(() => parseImport("wallabag", strToU8(JSON.stringify(Array.from({ length: 5000 }, () => 7))))).toThrow(/^not the export this app writes$/);
+  expect(() => parseImport("karakeep", file("wallabag.json"))).toThrow("not the export");
+  const odd = [{ url: "https://example.com/a", title: 7, tags: "x", created_at: null, content: ["?"] }, { url: 9 }];
+  expect(parseImport("wallabag", strToU8(`﻿${JSON.stringify(odd)}`))).toEqual([{ url: "https://example.com/a", title: null, tags: [], note: null, createdAt: null, html: null }]);
+});

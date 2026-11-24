@@ -56,7 +56,7 @@ export function registerPrompts(server: McpServer, { canWrite, onPrompt }: { can
       say(
         `I want to write about ${topic}. Use what I plucked${window ? ` ${window}` : ""} as the source material.
 
-1. Search my library with search_items and read the five to ten strongest items in full with get_item (follow textCursor for long ones). Use my notes and highlights; they show what I thought mattered.
+1. Search my library with search_items, and call list_highlights with the topic's main words as query: what I highlighted, and my notes on it, show what I thought mattered. Read the five to ten strongest items in full with get_item (follow textCursor for long ones), starting with the ones I highlighted.
 2. Draft three different angles. For each: a working title, three or four sentences in my voice, and the items it draws on (title and link).
 3. Then offer two things, and do them only if I say yes: a private list of the sources with create_list, and saving the angle I pick as a Note with save_item.${readOnly}`,
       ),

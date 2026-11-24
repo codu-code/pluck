@@ -1301,6 +1301,71 @@
         }
       }
     },
+    "lists": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lists"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listas"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listes"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Listen"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リスト"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liste"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lijsten"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "리스트"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清单"
+          }
+        }
+      }
+    },
     "noUploadAddress": {
       "extractionState": "manual",
       "localizations": {
@@ -2211,67 +2276,67 @@
         }
       }
     },
-    "tagsAndList": {
+    "tags": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tags and list"
+            "value": "Tags"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Etiquetas y lista"
+            "value": "Etiquetas"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tags e lista"
+            "value": "Tags"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tags et liste"
+            "value": "Tags"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tags und Liste"
+            "value": "Tags"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "タグとリスト"
+            "value": "タグ"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tag e lista"
+            "value": "Tag"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tags en lijst"
+            "value": "Tags"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "태그와 리스트"
+            "value": "태그"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "标签和清单"
+            "value": "标签"
           }
         }
       }

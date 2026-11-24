@@ -1,16 +1,17 @@
 import { TASK_KINDS, type Digest } from "@pluck/shared-schemas";
-import { DEFAULT_SETTINGS, items, lists, oid, users, type UserSettings } from "./collections.ts";
-import { localNow } from "./expiry.ts";
+import { DEFAULT_SETTINGS, items, lists, meta, oid, users, type UserSettings } from "./collections.ts";
+import { claimOnce, localNow } from "./expiry.ts";
 
 // The Monday digest, plain rules, no model: what expires within a week (not in a list), what is due this
 // week, the five oldest in the Inbox, and lists with no activity in 30 days. The same data is get_digest.
+// What an account was started with is never in it: our own posts, and a starter List nobody has used.
 
 const DAY = 86_400_000;
 
 export async function digestFor(userId: string, settings: UserSettings, now = new Date(), limit = 5): Promise<Digest> {
   const uid = oid(userId);
   const col = await items();
-  const base = { userId: uid, deletedAt: null };
+  const base = { userId: uid, deletedAt: null, starter: { $ne: true as const } };
   const scope = settings.expiryScope === "inbox" ? ["inbox"] : ["inbox", "later"];
   const days = settings.expiryDays;
   const lean = { projection: { title: 1, siteName: 1, url: 1, kind: 1, lastTouchedAt: 1, dueAt: 1, createdAt: 1 } };
@@ -35,7 +36,7 @@ export async function digestFor(userId: string, settings: UserSettings, now = ne
       .limit(limit)
       .toArray(),
     col.find({ ...base, status: "inbox" }, lean).sort({ createdAt: 1 }).limit(limit).toArray(),
-    (await lists()).find({ userId: uid, lastActivityAt: { $lt: new Date(now.getTime() - 30 * DAY) } }).sort({ lastActivityAt: 1 }).limit(limit).toArray(),
+    (await lists()).find({ userId: uid, lastActivityAt: { $lt: new Date(now.getTime() - 30 * DAY) }, $expr: { $ne: ["$starter", "$lastActivityAt"] } }).sort({ lastActivityAt: 1 }).limit(limit).toArray(),
   ]);
 
   const site = (d: { siteName: string | null; url: string | null; kind: string }) =>
@@ -80,4 +81,20 @@ export async function claimDueDigests(now = new Date(), each?: (u: DueDigest) =>
     due.push(one);
   }
   return due;
+}
+
+// One Monday email per person and local date, however often its job runs (a job that died after the provider took the
+// email comes back). The claim is taken just before `send` and handed back if `send` throws, so a failed send is
+// still tried again. False: this one has gone already.
+// shortcut: a run killed between the claim and the provider's answer sends nothing that week, and a send that threw after the provider took it goes twice on the retry; give the provider an idempotency key if either shows up.
+export async function sendDigestOnce(userId: string, localDate: string, send: () => Promise<unknown>): Promise<boolean> {
+  const key = `digest-sent:${userId}:${localDate}`;
+  if (!(await claimOnce(key))) return false;
+  try {
+    await send();
+  } catch (e) {
+    await (await meta()).deleteOne({ _id: key });
+    throw e;
+  }
+  return true;
 }

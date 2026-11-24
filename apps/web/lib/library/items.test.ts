@@ -2,7 +2,8 @@ import { getContent, getItemBlobKeys, hitRateLimit, pendingJobCount } from "@plu
 import { makeJobsVisible, twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { runJobs } from "../jobs";
-import { fileLocation, highlightsOf, lookup, pluck, pluckAny, readItem, readText, setCoverFromApp, updateItem } from "./index";
+import { hashTags } from "./hashtags";
+import { addTag, fileLocation, highlightsOf, lookup, pluck, pluckAny, readItem, readText, setCoverFromApp, tagsOf, updateItem } from "./index";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -288,4 +289,57 @@ test("a link is kept as it was given, and found again by its key", async () => {
   const { results } = await pluckAny(a, { text: `${FIX}/app.html#/doc/1 and ${FIX}/app.html#/doc/2 and ${FIX}/app.html#/doc/1` });
   expect(results.map((r) => [r.item.url, r.created])).toEqual([[`${FIX}/app.html#/doc/1`, true], [`${FIX}/app.html#/doc/2`, true]]);
   expect((await lookup(a, `${FIX}/app.html#/doc/2`))?.id).toBe(results[1]!.item.id);
+});
+
+test("a #tag is read where a person would mean one, and nowhere else", () => {
+  expect(hashTags("Buy milk #shopping, then (#home) #Shopping again\n\\#recipes for #crème-brûlée- and #日本 #to\\_read #cafe\u0301")).toEqual(["shopping", "home", "recipes", "crème-brûlée", "日本", "to_read", "cafe\u0301"]);
+  expect(hashTags([
+    "# A heading", "## Another", "Issue #12, C# and a#b", "https://example.com/page#part and [link](#anchor)", "[top]: #anchor",
+    "colours #c0ffee #1a2b3c #f0f", "`#inline` and", "```", "#include <x>", "```", "~~~", "#define Y", "~~~", "a fence still open:", "```c", "#pragma once",
+  ].join("\n"))).toEqual([]);
+});
+
+test("a #tag in a Note or a note tags the Item, for its own person only, and a slip of the keys leaves nothing behind", async () => {
+  const { a, b } = await twoUsers();
+  const names = async (u: string, itemId: string) => {
+    const all = await tagsOf(u);
+    return (await readItem(u, itemId)).tagIds.map((id) => all.find((t) => t.id === id)?.name).sort();
+  };
+  const tagNames = async (u: string) => (await tagsOf(u)).map((t) => t.name).sort();
+  const made = (await pluckAny(a, { text: "Sourdough starter #recipes", kind: "note" })).results[0]!.item;
+  expect(await names(a, made.id)).toEqual(["recipes"]);
+  expect(await tagsOf(b)).toEqual([]);
+
+  // Saved as it is typed: "#ba", a slip ("#bakign"), then "#baking". Only the last is left, on the Note and in the tags.
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes #ba" })).id)).toEqual(["ba", "recipes"]);
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes #bakign" })).id)).toEqual(["bakign", "recipes"]);
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes #baking" })).id)).toEqual(["baking", "recipes"]);
+  expect(await tagNames(a)).toEqual(["baking", "recipes"]);
+  // A word given up on goes with its tag.
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes" })).id)).toEqual(["recipes"]);
+  expect(await tagNames(a)).toEqual(["recipes"]);
+
+  // A tag from the picker is never the words' to take: typing "#work" then "#workout" leaves "work" on, and in the tags.
+  const work = (await addTag(a, "work")).tag;
+  await updateItem(a, made.id, { tagIds: [...(await readItem(a, made.id)).tagIds, work.id] });
+  await updateItem(a, made.id, { text: "Sourdough starter #recipes #work" });
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes #workout" })).id)).toEqual(["recipes", "work", "workout"]);
+
+  // A tag taken off by hand is not put back by the next save, while its word stays.
+  await updateItem(a, made.id, { tagIds: [] });
+  expect(await names(a, (await updateItem(a, made.id, { text: "Sourdough starter #recipes #workout, fed daily" })).id)).toEqual([]);
+
+  // The note on a link, when plucked and when edited; a change to something else leaves the words' tags alone.
+  const link = (await pluck(a, { url: `${FIX}/news-1.html`, note: "For the weekend #reading" })).item;
+  expect(await names(a, link.id)).toEqual(["reading"]);
+  expect(await names(a, (await updateItem(a, link.id, { note: "For the weekend #reading #long" })).id)).toEqual(["long", "reading"]);
+  expect(await names(a, (await updateItem(a, link.id, { status: "later" })).id)).toEqual(["long", "reading"]);
+  // Plucked again with another note: it is added under the first, and both notes' tags stand.
+  expect(await names(a, (await pluck(a, { url: `${FIX}/news-1.html`, note: "#again" })).item.id)).toEqual(["again", "long", "reading"]);
+
+  // An AI tool's words tag nothing, nor do words shared in from somewhere else (no Kind named: not typed here).
+  expect(await names(a, (await updateItem(a, link.id, { note: "#fromai" }, { by: "mcp" })).id)).toEqual(["again", "long", "reading"]);
+  expect((await pluckAny(a, { text: "An AI wrote #this", kind: "note", source: "mcp" })).results[0]!.item.tagIds).toEqual([]);
+  expect((await pluckAny(a, { text: "A caption from a post #AI #news", source: "ios" })).results[0]!.item.tagIds).toEqual([]);
+  await expect(updateItem(b, made.id, { text: "#theirs" })).rejects.toThrow("No such item.");
 });

@@ -23,8 +23,9 @@ export async function parseEmail(raw: Buffer): Promise<ParsedEmail> {
     .flatMap((a: AddressObject) => a.value.map((v) => v.address ?? ""));
   const headerText = ["delivered-to", "x-original-to", "x-forwarded-to", "envelope-to"].map((h) => String(mail.headers.get(h) ?? "")).join(" ");
   const aliasTokens = [...new Set([...`${addresses.join(" ")} ${headerText}`.matchAll(TOKEN)].map((m) => m[1]!.toLowerCase()))];
-  const verdict = (h: string) => String(mail.headers.get(h) ?? "").toUpperCase();
-  const spam = verdict("x-ses-spam-verdict") === "FAIL" || verdict("x-ses-virus-verdict") === "FAIL";
+  // A header written twice comes back as a list, and the sender can add a PASS of their own: any FAIL among them counts.
+  const failed = (h: string) => [mail.headers.get(h) ?? []].flat().some((v) => String(v).trim().toUpperCase() === "FAIL");
+  const spam = failed("x-ses-spam-verdict") || failed("x-ses-virus-verdict");
 
   const from = mail.from?.value[0];
   const subject = mail.subject?.trim() || "An email you plucked";

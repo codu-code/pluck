@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Aún no hay listas.",
-      "body": "Crea una en la web, o pide a tu IA que cree una con lo que recogiste."
+      "body": "Empieza una con el + de arriba, o pide a tu IA que cree una con lo que recogiste."
+    },
+    "new": {
+      "title": "Nueva Lista"
     }
   },
   "search": {
@@ -299,6 +302,19 @@
     "leaveTitle": "¿Salir de esta Lista?",
     "leaveBody": "Desaparece de tus Listas. Esa persona puede volver a compartirla contigo.",
     "leave": "Salir",
+    "report": "Denunciar",
+    "reportTitle": "¿Qué ocurre?",
+    "reportReasons": {
+      "illegal": "Contenido ilegal",
+      "minors": "Sexualiza a menores",
+      "harassment": "Acoso",
+      "doxxing": "Comparte datos privados de alguien",
+      "spam": "Spam o granja de enlaces",
+      "malware": "Malware o phishing",
+      "infringement": "Derechos de autor o marcas",
+      "other": "Otra cosa"
+    },
+    "reported": "Gracias. Una persona lee cada denuncia.",
     "byNamed": "Compartida contigo por {name} (@{handle}) · solo lectura",
     "by": "Compartida contigo por @{handle} · solo lectura",
     "notShared": {
@@ -446,7 +462,8 @@
     "titleA11y": "Título",
     "titleHint": "Deja el título vacío y la primera línea será el título. Se guarda mientras escribes.",
     "textA11y": "Texto",
-    "textPlaceholder": "Escríbelo."
+    "textPlaceholder": "Escríbelo.",
+    "foundOn": "Encontrado en {site}"
   },
   "settings": {
     "title": "Ajustes",
@@ -564,7 +581,12 @@
     "as": "Recoger como",
     "queued": "Recogido. Se sincronizará cuando vuelvas a tener conexión.",
     "failed": "No se pudo completar.",
-    "plucked": "Recogido en la Bandeja de entrada."
+    "plucked": "Recogido en la Bandeja de entrada.",
+    "photo": "Foto",
+    "camera": "Cámara",
+    "cameraOff": "Pluck no tiene permiso para usar la cámara. Puedes cambiarlo en Ajustes.",
+    "removePhoto": "Quitar esta foto",
+    "untagged": "Recogido en la Bandeja de entrada. Las listas y etiquetas no se pusieron."
   },
   "preview": {
     "open": "Abrir en {site}",
@@ -619,5 +641,20 @@
       "next": "Siguiente",
       "previous": "Anterior"
     }
+  },
+  "format": {
+    "title": "Formato",
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "heading": "Título",
+    "bullets": "Lista con viñetas",
+    "numbers": "Lista numerada"
+  },
+  "speak": {
+    "start": "Hablar",
+    "stop": "Dejar de escuchar",
+    "listening": "Escuchando",
+    "off": "Hablar no está disponible aquí en este idioma. El micrófono del teclado sigue funcionando.",
+    "denied": "Pluck no tiene permiso para usar el micrófono y el reconocimiento de voz. Puedes cambiarlo en Ajustes."
   }
 }

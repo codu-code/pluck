@@ -283,7 +283,7 @@
     "bugs": {
       "title": "¿Encontraste un error<mark>?</mark>",
       "body": "Abre un issue en GitHub. Cuenta qué hiciste, qué esperabas y qué pasó en su lugar. Las ideas también son bienvenidas allí.",
-      "note": "Los issues son públicos. No incluyas enlaces, notas ni nada que prefieras guardarte para ti.",
+      "note": "Los issues son públicos. No incluyas enlaces, notas ni nada que prefieras guardarte para ti. O escribe a <mail>{email}</mail>.",
       "button": "Abrir un issue"
     }
   },
@@ -338,12 +338,13 @@
         "note": "Las mismas herramientas y prompts, conectados a tu propio servidor."
       }
     },
-    "toolsTitle": "Doce herramientas. Nombres claros.",
+    "toolsTitle": "Trece herramientas. Nombres claros.",
     "toolsBody": "Los resultados llegan como tarjetas, con el título primero, así que una pregunta como “qué recogí esta semana” es una llamada y una pantalla.",
     "toolList": {
       "search_items": "Búsqueda de texto en título, nota, etiquetas, nombres de listas y texto.",
       "list_items": "Explora la Bandeja de entrada, Más tarde, el Archivo o Hecho, con lo más reciente o lo que lleva más tiempo sin tocar primero.",
       "get_item": "Un elemento completo, incluido el texto conservado de la página.",
+      "list_highlights": "Lo que resaltaste, con tus notas.",
       "save_item": "Recoge un enlace, varios enlaces, una nota, una tarea o una cosa. Marcado como recogido por IA.",
       "batch_update": "Estado, tipo, etiquetas y fechas de vencimiento de uno o varios elementos.",
       "list_tags": "Tus etiquetas, con recuentos.",
@@ -394,11 +395,11 @@
       "description": "Qué almacena Pluck, qué no hace nunca y cómo llevártelo todo."
     },
     "title": "Privacidad",
-    "lede": "En resumen: almacenamos lo que recoges para que puedas leerlo después. No lo leemos, no lo vendemos y no se lo damos a ningún modelo. Última actualización: 24 de octubre de 2026.",
+    "lede": "En resumen: almacenamos lo que recoges para que puedas leerlo después. No lo leemos, no lo vendemos y no se lo damos a ningún modelo. Última actualización: 24 de noviembre de 2026.",
     "sections": {
       "store": {
         "title": "Qué almacenamos",
-        "body": "Tu correo y tu nombre. Cada elemento que recoges: el enlace, el texto y las imágenes de la página que obtuvimos, tu título, nota, etiquetas, tipo, estado, listas, destacados y posición de lectura. La hora en que lo recogiste y la última vez que lo abriste, que usan la regla de caducidad y el correo de los lunes. Los elementos que importas de Pocket, Omnivore, Raindrop o un archivo de marcadores."
+        "body": "Tu correo y tu nombre. Cada elemento que recoges: el enlace, el texto y las imágenes de la página que obtuvimos, tu título, nota, etiquetas, tipo, estado, listas, destacados y posición de lectura. La hora en que lo recogiste y la última vez que lo abriste, que usan la regla de caducidad y el correo de los lunes. Los elementos que importas de Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep o un archivo de marcadores. Las notas que escribes, y las fotos y los archivos que añades tú."
       },
       "dont": {
         "title": "Qué no hacemos",
@@ -407,6 +408,10 @@
       "extension": {
         "title": "La extensión del navegador",
         "body": "Mientras tienes la sesión iniciada, la extensión pregunta a tu servidor de Pluck si la página en la que estás ya está en tu biblioteca, para que su icono se pueda rellenar. Esa dirección solo se usa para responder a la pregunta: no se añade a tu biblioteca ni se guarda con tu cuenta. Para desactivarlo, cierra sesión en la extensión o quítala."
+      },
+      "device": {
+        "title": "La app para iPhone y iPad",
+        "body": "La app pregunta antes de usar tus fotos, tu cámara o tu micrófono, la primera vez que recurres a cada uno. Solo ve las fotos que eliges, y solo usa la cámara mientras haces una foto. Esas fotos se guardan en tu biblioteca como cualquier otra cosa que recoges. Cuando dices una nota, tu dispositivo convierte la voz en texto cuando puede. Si no, lo hace Apple, como con el dictado del teclado. Pluck guarda las palabras y ningún sonido: el sonido nunca llega a nuestros servidores."
       },
       "ai": {
         "title": "Tu herramienta de IA",

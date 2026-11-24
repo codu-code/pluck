@@ -1,9 +1,10 @@
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createPluckServer } from "@pluck/mcp-server";
+import { claimStarters } from "@pluck/db";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { connectorFor } from "./connector";
-import { addTag, newList, pluckAny, readItem, readList, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
+import { addHighlight, addTag, beginFile, deleteItem, keepFile, newList, pluckAny, readItem, readList, removeHighlight, setListVisibility, tagIdsFor, tagsOf, updateMe } from "./library";
 
 const FIX = "http://127.0.0.1:4180";
 const ALL = ["library:read", "library:write"];
@@ -29,7 +30,7 @@ test("every tool is offered by scope; delete only with library:delete", async ()
   const { a } = await twoUsers();
   const names = async (scopes: string[]) => (await (await connect(a, scopes)).client.listTools()).tools.map((t) => t.name).sort();
   expect(await names(ALL)).toEqual(
-    ["batch_update", "create_list", "create_tag", "get_digest", "get_item", "get_list", "list_items", "list_lists", "list_tags", "save_item", "search_items", "update_list"],
+    ["batch_update", "create_list", "create_tag", "get_digest", "get_item", "get_list", "list_highlights", "list_items", "list_lists", "list_tags", "save_item", "search_items", "update_list"],
   );
   expect(await names(["library:read"])).not.toContain("save_item");
   expect(await names([...ALL, "library:delete"])).toContain("delete_item");
@@ -94,6 +95,71 @@ test("an error that is not one of ours stays on our side: logged, and the AI too
   expect(seen).toEqual(["list_tags"]);
 });
 
+test("every tool declares the shape of its result and answers with it, beside the same JSON as text; an error stays as it was", async () => {
+  const { a } = await twoUsers();
+  const { client, call } = await connect(a, [...ALL, "library:delete"]);
+  const item = (await pluckAny(a, { url: `${FIX}/news-1.html` })).results[0]!.item;
+  await addHighlight(a, { itemId: item.id, quote: "marked", note: "mine", selector: { textQuote: { exact: "marked", prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  const { tag } = await addTag(a, "Reading");
+  const list = await newList(a, { name: "Sources", purpose: "kept", items: [{ itemId: item.id, note: "why" }] });
+  const long = await note(a, Array.from({ length: 2000 }, (_, i) => `Line ${i} ${"word ".repeat(10)}`).join("\n"));
+  const { textCursor } = await call("get_item", { id: long.id, include: ["text"] });
+  const todo = (await pluckAny(a, { text: "Ring the printer", kind: "todo", dueAt: new Date(Date.now() + 86_400_000).toISOString() })).results[0]!.item;
+
+  // Every tool, with a call that fills its result (and get_item's two answers: the Item, and a later page of its text).
+  const calls: Record<string, Record<string, unknown>[]> = {
+    search_items: [{ query: "finishing problem" }],
+    list_items: [{}],
+    get_item: [{ id: item.id }, { id: long.id, cursor: textCursor }, { id: todo.id, include: [] }],
+    list_highlights: [{}],
+    list_tags: [{}],
+    list_lists: [{}],
+    get_list: [{ id: list.id }],
+    get_digest: [{}],
+    save_item: [{ url: `${FIX}/news-2.html`, tagIds: [tag.id] }, { text: "A note", kind: "note" }],
+    batch_update: [{ itemIds: [item.id], patch: { addTagIds: [tag.id] } }],
+    create_tag: [{ name: "Essays" }],
+    create_list: [{ name: "Made here", items: [{ itemId: item.id }] }],
+    update_list: [{ id: list.id, name: "Renamed" }],
+    delete_item: [{ id: todo.id }],
+  };
+  const { tools } = await client.listTools();
+  expect(tools.map((t) => t.name).sort()).toEqual(Object.keys(calls).sort()); // a new tool joins this table
+  for (const tool of tools) {
+    expect(tool.outputSchema, tool.name).toMatchObject({ type: "object", properties: expect.any(Object) });
+    for (const args of calls[tool.name]!) {
+      // Given the tool's definition, the client checks structuredContent against its outputSchema and throws when it does not fit.
+      const res = await client.callTool({ name: tool.name, arguments: args }, { toolDefinition: tool });
+      const text = (res.content as { text: string }[])[0]!.text;
+      expect(res.isError, `${tool.name}: ${text}`).toBeFalsy();
+      expect(res.structuredContent, tool.name).toEqual(JSON.parse(text));
+      expect(Object.keys(res.structuredContent as object).length, tool.name).toBeGreaterThan(0);
+    }
+  }
+
+  const getItem = tools.find((t) => t.name === "get_item")!;
+  const missing = await client.callTool({ name: "get_item", arguments: { id: todo.id } }, { toolDefinition: getItem }); // now in the bin
+  expect(missing).toMatchObject({ isError: true, content: [{ type: "text", text: JSON.stringify({ error: { code: "not_found", message: "No such item." } }) }] });
+  expect(missing.structuredContent).toBeUndefined();
+  const badInput = await client.callTool({ name: "get_item", arguments: { id: "nope" } }, { toolDefinition: getItem });
+  expect(badInput.isError).toBe(true);
+  expect(badInput.structuredContent).toBeUndefined();
+});
+
+test("a result goes out as its declared shape and nothing more; one that does not fit is our error, logged, and the AI tool gets a plain internal error", async () => {
+  const { a } = await twoUsers();
+  const seen: string[] = [];
+  const answers: unknown[] = [{ matched: 1, updated: 1, internal: "not for the AI tool" }, { matched: "two" }];
+  const lib = { ...connectorFor(a), batch: async () => answers.shift() as never };
+  const { client, call } = await connect(a, ALL, lib, (_e, tool) => seen.push(tool));
+  const args = { itemIds: ["000000000000000000000000"], patch: { status: "later" } };
+  const extra = await client.callTool({ name: "batch_update", arguments: args });
+  expect(extra.structuredContent).toEqual({ matched: 1, updated: 1 });
+  expect((extra.content as { text: string }[])[0]!.text).toBe('{"matched":1,"updated":1}');
+  expect((await call("batch_update", args)).error).toEqual({ code: "internal", message: "Something went wrong on Pluck's side." });
+  expect(seen).toEqual(["batch_update"]);
+});
+
 test("search, browse and read: cards, full text paged, highlights and lists, and nothing from another person", async () => {
   const { a, b } = await twoUsers();
   const { call } = await connect(a);
@@ -111,6 +177,64 @@ test("search, browse and read: cards, full text paged, highlights and lists, and
 
   const theirs = (await pluckAny(b, { text: "private", kind: "note" })).results[0]!.item.id;
   expect((await call("get_item", { id: theirs })).error.code).toBe("not_found");
+});
+
+test("list_highlights: what the person marked across the library with the Item to cite, by words, paged; never another person's or the bin's", async () => {
+  const { a, b } = await twoUsers();
+  const { call } = await connect(a);
+  const link = async (userId: string, page: string) => (await pluckAny(userId, { url: `${FIX}/${page}.html` })).results[0]!.item;
+  const mark = (userId: string, itemId: string, quote: string, note?: string) =>
+    addHighlight(userId, { itemId, quote, note, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  const one = await link(a, "news-1");
+  const two = await link(a, "news-2");
+  const binned = await link(a, "blog-1");
+  await mark(a, one.id, "a quokka never frowns", "for the essay");
+  const second = await mark(a, two.id, "short lists get finished");
+  await mark(a, binned.id, "a quokka in the bin");
+  await deleteItem(a, binned.id);
+  await mark(b, (await link(b, "news-1")).id, "a quokka, but theirs");
+
+  const all = await call("list_highlights");
+  expect(all).toEqual({
+    highlights: [
+      { quote: "short lists get finished", note: null, highlightedAt: second.createdAt, item: { id: two.id, title: two.title, url: two.url, siteName: two.siteName } },
+      { quote: "a quokka never frowns", note: "for the essay", highlightedAt: expect.any(String), item: { id: one.id, title: one.title, url: one.url, siteName: one.siteName } },
+    ],
+    nextCursor: null,
+  });
+  expect((await call("list_highlights", { query: "QUOKKA" })).highlights.map((h: { quote: string }) => h.quote)).toEqual(["a quokka never frowns"]);
+  expect((await call("list_highlights", { query: "essay" })).highlights).toHaveLength(1); // the person's note counts
+  expect((await call("list_highlights", { itemId: two.id })).highlights).toHaveLength(1);
+  expect((await call("list_highlights", { since: second.createdAt })).highlights).toHaveLength(1);
+
+  const first = await call("list_highlights", { limit: 1 });
+  expect(first.highlights).toHaveLength(1);
+  const rest = await call("list_highlights", { limit: 1, cursor: first.nextCursor });
+  expect(rest.highlights[0].quote).toBe("a quokka never frowns");
+  expect(rest.nextCursor).toBeNull();
+  expect((await call("list_highlights", { cursor: "made-up" })).error.code).toBe("bad_request");
+
+  // Long quotes: a page stops at the response cap, and its cursor carries on from the row it stopped at.
+  for (let i = 0; i < 8; i++) await mark(a, one.id, `long ${i} ${"word ".repeat(990)}`);
+  const capped = await call("list_highlights");
+  expect(JSON.stringify(capped).length).toBeLessThan(33_000);
+  expect(capped.highlights.length).toBeLessThan(8);
+  const after = await call("list_highlights", { cursor: capped.nextCursor });
+  expect([...capped.highlights, ...after.highlights].map((h: { quote: string }) => h.quote.slice(0, 6))).toEqual(["long 7", "long 6", "long 5", "long 4", "long 3", "long 2", "long 1", "long 0", "short ", "a quok"]);
+  expect(after.nextCursor).toBeNull();
+});
+
+test("search_items finds an Item by what was highlighted in it, until the highlight is removed", async () => {
+  const { a, b } = await twoUsers();
+  const { call } = await connect(a);
+  const id = (await pluckAny(a, { url: `${FIX}/news-1.html` })).results[0]!.item.id;
+  await pluckAny(b, { url: `${FIX}/news-1.html` });
+  const quote = "an axolotl of a sentence";
+  const h = await addHighlight(a, { itemId: id, quote, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
+  expect((await call("search_items", { query: "axolotl" })).items.map((c: { id: string }) => c.id)).toEqual([id]);
+  expect((await (await connect(b)).call("search_items", { query: "axolotl" })).items).toEqual([]);
+  await removeHighlight(a, h.id);
+  expect((await call("search_items", { query: "axolotl" })).items).toEqual([]);
 });
 
 test("get_item pages long text with an opaque cursor", async () => {
@@ -149,6 +273,7 @@ test("tags: list with counts, and create_tag is marked as made by AI", async () 
 
 test("create_list is private with AI notes; update_list changes everything but the purpose, and public needs the person", async () => {
   const { a } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not in list_lists below
   const { call } = await connect(a);
   const [x, y, z] = [await note(a, "x"), await note(a, "y"), await note(a, "z")];
   const { list } = await call("create_list", { name: "Reading", purpose: "For the talk", items: [{ itemId: x.id, note: "start here" }, { itemId: y.id }] });
@@ -199,6 +324,7 @@ test("another person's list is not found, and nothing is changed", async () => {
 
 test("get_digest, delete_item to the bin, the two resources and the four prompts", async () => {
   const { a } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not among the resources below
   const item = await note(a, "the body of the note");
   const list = await newList(a, { name: "Notes", purpose: "kept", items: [{ itemId: item.id, note: "why" }] });
   const { client, call } = await connect(a, [...ALL, "library:delete"]);
@@ -215,6 +341,7 @@ test("get_digest, delete_item to the bin, the two resources and the four prompts
   for (const name of prompts) {
     const p = await client.getPrompt({ name, arguments: name === "content_ideas" ? { topic: "small teams" } : {} });
     expect((p.messages[0]!.content as { text: string }).text.length).toBeGreaterThan(100);
+    if (name === "content_ideas") expect((p.messages[0]!.content as { text: string }).text).toContain("list_highlights");
   }
 
   expect(await call("delete_item", { id: item.id })).toEqual({ binned: item.id });
@@ -238,4 +365,45 @@ test("each tool call and prompt is reported by name and outcome, never with its 
     { tool: "get_item", ok: false, errorCode: "not_found", resultCount: null, ms: expect.any(Number) },
   ]);
   expect(prompts).toEqual(["tidy_inbox"]);
+});
+
+const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==", "base64");
+
+// A file Image as the phone makes one: the Item, the bytes by signed upload, then the worker's read.
+async function picture(userId: string, body: Buffer, contentType: "image/png" | "image/heic") {
+  const { item, uploadUrl } = await beginFile(userId, { name: "Page 41", contentType, size: body.length });
+  expect((await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType }, body: new Uint8Array(body) })).ok).toBe(true);
+  await keepFile(userId, item.id, new URL(uploadUrl).pathname.split("/").slice(2).join("/"), contentType, "Page 41");
+  return item.id;
+}
+
+test("get_item hands an Image's picture to the AI tool, says why when it cannot, and never another person's", async () => {
+  const { a, b } = await twoUsers();
+  const { client } = await connect(a);
+  const get = async (id: string, as = client) => {
+    const res = await as.callTool({ name: "get_item", arguments: { id } });
+    const [text, ...rest] = res.content as { type: string; text?: string; data?: string; mimeType?: string }[];
+    return { isError: res.isError, json: JSON.parse(text!.text!), rest, structured: res.structuredContent as { item?: { picture?: string } } };
+  };
+
+  const id = await picture(a, PNG, "image/png");
+  const seen = await get(id);
+  expect(seen.json.item).toMatchObject({ kind: "image", picture: "attached" });
+  expect(seen.structured.item?.picture).toBe("attached");
+  expect(seen.rest).toEqual([{ type: "image", data: PNG.toString("base64"), mimeType: "image/png" }]);
+
+  // Bytes that are not a picture AI tools read (a HEIC from the phone), whatever type they were sent as.
+  const heic = await get(await picture(a, Buffer.from("\0\0\0\x18ftypheic not really"), "image/heic"));
+  expect(heic.json.item.picture).toBe("unsupported");
+  expect(heic.rest).toEqual([]);
+
+  // A link, a Note: no picture key at all, and nothing after the JSON.
+  const plain = await get((await note(a, "No picture here")).id);
+  expect(plain.json.item).not.toHaveProperty("picture");
+  expect(plain.rest).toEqual([]);
+
+  const other = await get(id, (await connect(b)).client);
+  expect(other.isError).toBe(true);
+  expect(other.json.error.code).toBe("not_found");
+  expect(other.rest).toEqual([]);
 });

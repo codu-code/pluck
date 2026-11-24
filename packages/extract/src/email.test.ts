@@ -23,3 +23,10 @@ test("a plain forwarded email keeps its text; spam verdicts are flagged", async 
   expect((await parseEmail(eml("spam"))).spam).toBe(true);
   expect((await parseEmail(Buffer.from("To: someone@example.com\nSubject: x\n\nhi"))).aliasTokens).toEqual([]);
 });
+
+test("a verdict header the sender added does not hide the one that says FAIL", async () => {
+  const raw = (headers: string) => Buffer.from(`To: pluck+abc123xyz@in.getpluck.io\nSubject: x\n${headers}\n\nhi`);
+  expect((await parseEmail(raw("X-SES-Spam-Verdict: FAIL\nX-SES-Spam-Verdict: PASS"))).spam).toBe(true);
+  expect((await parseEmail(raw("X-SES-Virus-Verdict: PASS\nX-SES-Virus-Verdict: fail"))).spam).toBe(true);
+  expect((await parseEmail(raw("X-SES-Spam-Verdict: PASS\nX-SES-Virus-Verdict: PASS"))).spam).toBe(false);
+});

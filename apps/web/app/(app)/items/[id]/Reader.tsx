@@ -1,6 +1,6 @@
 "use client";
 
-import { isRenameable, LINK_KINDS, showsFile, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
+import { isRenameable, LINK_KINDS, showsFile, siteOf, withReferral, type Highlight, type Item, type Kind, type ListMembership, type Tag } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DeleteButton, ItemBar } from "@/components/ItemBar";
@@ -28,6 +28,7 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [progress, setProgress] = useState(item.readingProgress);
   const [note, setNote] = useState(item.note ?? "");
+  const [kept, setKept] = useState(item); // as last saved: a #tag in the note is on it
   const [title, setTitle] = useState(item.title);
   const savedTitle = useRef(item.title);
   const [kind, setKind] = useState<Kind>(item.kind);
@@ -145,6 +146,10 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
             </span>
             <h1 className={styles.title}>{title}</h1>
             {item.author && <span className={styles.byline}>{t("by", { author: item.author })}</span>}
+            {item.kind === "image" && item.foundOn && (
+              // Found on: the page the picture was plucked from, its way back.
+              <a className={styles.meta} href={withReferral(item.foundOn)} target="_blank" rel="noopener">{app("item.foundOn", { site: siteOf(item.foundOn) })}</a>
+            )}
             <PreviewFacts item={item} />
           </div>
           {card ? <PreviewCard item={item} text={text} /> : pdf ? <PdfView item={item} /> : <>
@@ -219,10 +224,10 @@ export function Reader({ item, html, text, initialHighlights, showCover, tags, l
               rows={4}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              onBlur={() => void went(library.edit(item.id, { note: note || null }))}
+              onBlur={() => void library.edit(item.id, { note: note || null }).then(setKept, () => {})}
             />
           </label>
-          <ItemTags item={item} vocabulary={tags} />
+          <ItemTags item={kept} vocabulary={tags} />
           <label className={styles.group}>
             <span className={styles.groupTitle}>{t("kind")}</span>
             <select

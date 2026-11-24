@@ -39,7 +39,7 @@ const { key } = await call("/api/v1/api-keys", { name: "iPhone demo" });
 const bearer = { authorization: `Bearer ${key}` };
 const api = (path, body, method) => call(path, body, method, bearer);
 
-await api("/api/v1/me", { name: store ? "Aoife Byrne" : "Demo Person", handle: `${store ? "aoife" : "demo"}${Date.now().toString(36).slice(-4)}` }, "PATCH");
+await call("/api/v1/me", { name: store ? "Aoife Byrne" : "Demo Person", handle: `${store ? "aoife" : "demo"}${Date.now().toString(36).slice(-4)}` }, "PATCH");
 if (store) {
   console.log(JSON.stringify({ email, key, ...(await storeLibrary()) }));
   process.exit(0);
@@ -128,5 +128,5 @@ async function storeLibrary() {
   for (const id of Object.values(places).slice(0, 2)) await api(`/api/v1/lists/${list.id}/items/${id}`, { ticked: true }, "PATCH");
   await api("/api/v1/items/batch", { itemIds: Object.values(places), patch: { status: "archived" } });
   await api(`/api/v1/lists/${list.id}/items`, { itemId: pdf, note: "Print it for the plane." });
-  return { listId: list.id, itemId: habits, noteId: dad, todoId: dentist, kitchenId: kitchen };
+  return { listId: list.id, itemId: habits, noteId: dad, todoId: dentist, kitchenId: kitchen, pasteisId: places["pasteis.html"] };
 }

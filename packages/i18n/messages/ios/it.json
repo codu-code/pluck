@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} di {count}",
     "empty": {
       "title": "Ancora nessuna lista.",
-      "body": "Creane una sul web, o chiedi alla tua IA di costruirne una con quello che hai preso."
+      "body": "Iniziane una con il + qui sopra, o chiedi alla tua IA di costruirne una con quello che hai preso."
+    },
+    "new": {
+      "title": "Nuova lista"
     }
   },
   "search": {
@@ -299,6 +302,19 @@
     "leaveTitle": "Lasciare questa lista?",
     "leaveBody": "Sparisce dalle tue liste. Chi l'ha condivisa può condividerla di nuovo con te.",
     "leave": "Lascia",
+    "report": "Segnala",
+    "reportTitle": "Cosa c'è che non va?",
+    "reportReasons": {
+      "illegal": "Contenuti illegali",
+      "minors": "Sessualizza minori",
+      "harassment": "Molestie",
+      "doxxing": "Diffonde dati privati di qualcuno",
+      "spam": "Spam o link farm",
+      "malware": "Malware o phishing",
+      "infringement": "Diritto d'autore o marchio",
+      "other": "Altro"
+    },
+    "reported": "Grazie. Ogni segnalazione viene letta da una persona.",
     "byNamed": "Condivisa con te da {name} (@{handle}) · solo visualizzazione",
     "by": "Condivisa con te da @{handle} · solo visualizzazione",
     "notShared": {
@@ -446,7 +462,8 @@
     "titleA11y": "Titolo",
     "titleHint": "Lascia vuoto il titolo e la prima riga diventa il titolo. Si salva mentre scrivi.",
     "textA11y": "Testo",
-    "textPlaceholder": "Scrivilo qui."
+    "textPlaceholder": "Scrivilo qui.",
+    "foundOn": "Trovato su {site}"
   },
   "settings": {
     "title": "Impostazioni",
@@ -564,7 +581,12 @@
     "as": "Prendi come",
     "queued": "Preso. Si sincronizza quando torni online.",
     "failed": "Non è andato a buon fine.",
-    "plucked": "Preso, è nell'Inbox."
+    "plucked": "Preso, è nell'Inbox.",
+    "photo": "Foto",
+    "camera": "Fotocamera",
+    "cameraOff": "Pluck non ha il permesso di usare la fotocamera. Puoi cambiarlo in Impostazioni.",
+    "removePhoto": "Rimuovi questa foto",
+    "untagged": "Preso, è nell'Inbox. Liste e tag non sono stati aggiunti."
   },
   "preview": {
     "open": "Apri su {site}",
@@ -619,5 +641,20 @@
       "next": "Successivo",
       "previous": "Precedente"
     }
+  },
+  "format": {
+    "title": "Formato",
+    "bold": "Grassetto",
+    "italic": "Corsivo",
+    "heading": "Titolo",
+    "bullets": "Elenco puntato",
+    "numbers": "Elenco numerato"
+  },
+  "speak": {
+    "start": "Parla",
+    "stop": "Interrompi l’ascolto",
+    "listening": "In ascolto",
+    "off": "Parlare non è disponibile qui in questa lingua. Il microfono della tastiera funziona comunque.",
+    "denied": "Pluck non ha il permesso di usare il microfono e il riconoscimento vocale. Puoi cambiarlo in Impostazioni."
   }
 }

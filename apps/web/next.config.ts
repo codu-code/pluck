@@ -17,7 +17,9 @@ const config: NextConfig = {
   // Monorepo root, so env and tracing resolve from there.
   outputFileTracingRoot: fileURLToPath(new URL("../..", import.meta.url)),
   // Blog posts (lib/blog.ts) are Markdown files imported as strings.
-  turbopack: { rules: { "*.md": { type: "text" } } },
+  // "react-native": the Note editor (react-native-enriched-markdown) has a web build that still asks that name for
+  // two small things; lib/react-native-web-shim.ts answers, so the web app carries no React Native.
+  turbopack: { rules: { "*.md": { type: "text" } }, resolveAlias: { "react-native": "./lib/react-native-web-shim.ts" } },
   poweredByHeader: false,
   skipTrailingSlashRedirect: true, // PostHog's ingest paths end in a slash
   // Dev: .env sets BETTER_AUTH_URL to 127.0.0.1, so the dev server must serve its scripts there too.
@@ -36,6 +38,7 @@ const config: NextConfig = {
   async rewrites() {
     return [
       { source: "/@:handle/:slug", destination: "/p/:handle/:slug" },
+      { source: "/@:handle/:slug/feed.xml", destination: "/p/:handle/:slug/feed.xml" }, // the same List as an Atom feed
       // PostHog, first-party (lib/analytics.ts): blockers that drop third-party analytics would also drop error reports.
       { source: "/ingest/static/:path*", destination: `${posthog.replace(/^https:\/\/(\w+)\.i\./, "https://$1-assets.i.")}/static/:path*` },
       { source: "/ingest/:path*", destination: `${posthog}/:path*` },

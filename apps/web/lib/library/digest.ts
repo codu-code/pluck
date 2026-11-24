@@ -1,4 +1,4 @@
-import { claimDueDigests, digestFor, editItem, enqueue, getMe, isEmptyDigest, markOpened, updateSettings } from "@pluck/db";
+import { claimDueDigests, digestFor, editItem, enqueue, getMe, isEmptyDigest, markOpened, sendDigestOnce, updateSettings } from "@pluck/db";
 import type { Digest } from "@pluck/shared-schemas";
 import { digestEmail } from "../digest-email";
 import { sendEmail } from "../email";
@@ -15,13 +15,15 @@ export async function digest(userId: string, { limit = 5 }: { limit?: number } =
 }
 
 // Builds and sends one person's digest. Nothing to say means no email.
-export async function sendDigest(userId: string, { force = false }: { force?: boolean } = {}): Promise<boolean> {
+// `date`: the local date the Monday job was queued for. That email goes once however often the job is retried;
+// "send me one now" (`force`) names no date and always sends.
+export async function sendDigest(userId: string, { force = false, date }: { force?: boolean; date?: string } = {}): Promise<boolean> {
   const me = await getMe(userId);
   if (!me) return false;
   const d = await digestFor(userId, me.settings);
   if (isEmptyDigest(d) && !force) return false;
   const tap = (a: Tap["a"], i?: string) => `${ORIGIN}/d/${signTap({ u: userId, a, i })}`;
-  await sendEmail({
+  const send = () => sendEmail({
     ...digestEmail(me.email, me.name, d, {
       keep: (id) => tap("keep", id),
       letGo: (id) => tap("letgo", id),
@@ -33,13 +35,15 @@ export async function sendDigest(userId: string, { force = false }: { force?: bo
     }, new Date(), { locale: me.settings.locale ?? "en", timeZone: me.settings.timezone }),
     from: process.env.DIGEST_FROM, // its own subdomain: a spam report on it never reaches sign-in links
   });
+  if (date) return sendDigestOnce(userId, date, send);
+  await send();
   return true;
 }
 
 // Monday 06:00 local (or the person's chosen day), once. Each email is its own job, so thousands due at the
 // same hour go out at the shared send rate across ticks, and a failed send is retried rather than lost.
 export async function queueDueDigests(now = new Date()): Promise<number> {
-  return (await claimDueDigests(now, (u) => enqueue("digest", { userId: u.userId }))).length; // queued as each is claimed
+  return (await claimDueDigests(now, (u) => enqueue("digest", { userId: u.userId, localDate: u.localDate }))).length; // queued as each is claimed
 }
 
 export type TapResult = { action: Tap["a"]; ok: boolean; undo?: string; count?: number };

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { extract, extractFromHtml } from "./extract.ts";
+import { extract, extractFile, extractFromHtml } from "./extract.ts";
 
 const FIX = "http://127.0.0.1:4180";
 
@@ -44,4 +44,16 @@ test("a PDF whose name has a stray % is kept, named as served", async () => {
   const x = await extract({ url: `${FIX}/odd/50%off.pdf` });
   expect(x.kind).toBe("pdf");
   expect(x.wordCount).toBeGreaterThan(0);
+});
+
+test("a PDF is read up to a page cap and stops when its time is up; the page count is still the file's own", async () => {
+  const file = { body: readFileSync(join(DIR, "pages/store/lisbon-in-three-days.pdf")), contentType: "application/pdf", fileName: "lisbon.pdf" };
+  const whole = await extractFile(file);
+  expect(whole.markdown).toContain("Day two: Belém");
+  const capped = await extractFile(file, { maxPages: 2 });
+  expect(capped.facts.pages).toBe(12);
+  expect(capped.markdown).toContain("Day one: Alfama");
+  expect(capped.markdown).not.toContain("Day two: Belém"); // page 3
+  expect(capped.markdown).toBe(whole.markdown.slice(0, capped.markdown.length)); // read as before, only less of it
+  await expect(extractFile(file, { signal: AbortSignal.timeout(0) })).rejects.toThrow(/timeout/i);
 });

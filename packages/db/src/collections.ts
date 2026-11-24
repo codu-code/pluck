@@ -1,5 +1,5 @@
 import type { Locale } from "@pluck/i18n";
-import type { ArchivedReason, ExtractionState, Facts, HeardFrom, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
+import type { ArchivedReason, ExtractionState, Facts, HeardFrom, ImportSource, Kind, Preview, Source, Status } from "@pluck/shared-schemas";
 import { ObjectId, type Collection, type Db } from "mongodb";
 import type { z } from "zod";
 import { getDb } from "./client.ts";
@@ -13,6 +13,7 @@ export type ItemDoc = {
   urlHash?: string; // absent for notes, todos and things
   clientKey?: string; // a note, todo or thing sent from a queue: its id there, so a resend finds this one
   canonicalUrl: string | null;
+  foundOn?: string | null; // the page an Image was plucked from; absent on Items made before Found on
   title: string;
   titleIsDerived: boolean;
   siteName: string | null;
@@ -28,6 +29,8 @@ export type ItemDoc = {
   dueAt: Date | null;
   tagIds: ObjectId[];
   aiTags?: { tagId: ObjectId; at: Date }[]; // assignments made by an AI tool, until the person touches the item's tags
+  wordTags?: { tagId: ObjectId; at: Date }[]; // tags its own words put on ("#recipes"), lately: only these can come off when the word changes
+  starter?: true; // one of our posts, given to a new account: never in the weekly email, never counted as plucked
   note: string | null;
   source: Source;
   readingProgress: number;
@@ -43,7 +46,7 @@ export type ItemDoc = {
   tagNames?: string[];
   listNames?: string[];
   inList?: boolean; // in at least one list: exempt from expiry
-  searchText?: string; // excerpt, site, host, author
+  searchText?: string; // excerpt, site, host, author; then, after a mark, the Item's highlights (search.ts)
   searchBody?: string; // the kept text or the note body, capped
   deletedAt: Date | null; // in the bin; purged 30 days later
   purging?: true; // claimed by a purge (purgeDocs in items.ts): its files and rows are going, and it cannot come back
@@ -58,6 +61,7 @@ export type TagDoc = {
   count: number;
   createdAt: Date;
   createdBy: "user" | "mcp";
+  fromWords?: true; // made by a #tag someone typed, not in a picker: only such a tag is dropped when the word was a slip
 };
 
 export type ListDoc = {
@@ -75,6 +79,7 @@ export type ListDoc = {
   createdBy: "user" | "mcp";
   createdAt: Date;
   updatedAt: Date;
+  starter?: Date; // a List the account started with, and its lastActivityAt then: while the two match nobody has used it, and the weekly email leaves it out
   publishedAt?: Date | null; // first made public: the slug is frozen from then on
   killed?: boolean; // taken down by an admin; never served publicly
 };
@@ -111,6 +116,7 @@ export type UserDoc = {
   lastMcpCallAt?: Date; // the connector's last call, for Settings, written at most once a minute
   via?: SignUpVia; // where the account was made, set once at sign-up
   heardFrom?: HeardFrom; // "How did you find Pluck?", answered once
+  startersAt?: Date; // the starter Lists were made for this account (once; deleting them does not bring them back)
 };
 
 export type SignUpVia = "try" | "mcp" | "public-page" | "shared-list" | "ios" | "extension" | "direct";
@@ -129,7 +135,8 @@ export const DEFAULT_SETTINGS: UserSettings = { expiryDays: 30, expiryScope: "in
 export type ReportDoc = {
   _id: ObjectId;
   listId: ObjectId;
-  reporterIp: string; // a salted hash, never the address itself
+  reporterIp: string; // a salted hash, never the address itself (for a shared List, of the email it was shared with)
+  shared?: true; // reported by someone it was shared with, not from its public page: it may well be private
   reason: string;
   details: string | null;
   createdAt: Date;
@@ -141,7 +148,7 @@ export type ApiKeyDoc = { _id: ObjectId; userId: ObjectId; name: string; hash: s
 export type ImportDoc = {
   _id: ObjectId;
   userId: ObjectId;
-  source: "pocket" | "omnivore" | "raindrop" | "html";
+  source: ImportSource;
   blobKey: string;
   total: number;
   done: number;

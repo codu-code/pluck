@@ -1,13 +1,14 @@
 "use client";
 
 import { answer, createQueue, type Queued } from "@pluck/client";
-import { extractUrls, type CreateItemBody, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
+import { extractUrls, isFileType, MAX_FILE_BYTES, type CreateItemBody, type Item, type PluckResponse, type TextKind } from "@pluck/shared-schemas";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import styles from "./TopBar.module.css";
 
-export type PluckDraft = { key: string; urls: string[]; text: string | null; kind: TextKind | null };
+// `file`: a picture or a PDF on its way up, shown as that Kind while it goes.
+export type PluckDraft = { key: string; urls: string[]; text: string | null; kind: TextKind | null; file?: "image" | "pdf" };
 
 type Props = {
   sample?: string;
@@ -76,6 +77,63 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
     return () => window.removeEventListener("online", flush);
   }, [onPlucked]);
 
+  // A picture or a PDF, pasted into the box or dropped anywhere on the page: the Item at once, the bytes straight to
+  // the bucket, then "it is in", so the picture shows without waiting for the worker. Anything else is said no to.
+  async function pluckFiles(files: File[]) {
+    setError(null);
+    setNotice(null);
+    const taken = files.filter((f) => isFileType(f.type) && f.size > 0 && f.size <= MAX_FILE_BYTES);
+    if (taken.length < files.length) setError(t("fileRefused"));
+    for (const file of taken) {
+      const draft: PluckDraft = { key: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`, urls: [], text: file.name, kind: null, file: file.type === "application/pdf" ? "pdf" : "image" };
+      const about = { name: file.name, contentType: file.type };
+      const send = (path: string, body: object) => fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+      const landed = (item: Item) => onPlucked?.(draft.key, { results: [{ item, created: true }], rejected: [] });
+      onPluck?.(draft);
+      try {
+        const begun = await send("/api/v1/items/files", { ...about, size: file.size, source: "web" });
+        if (!begun.ok) throw new Error("refused");
+        const { item, uploadUrl } = (await begun.json()) as { item: Item; uploadUrl: string };
+        landed(item);
+        window.dispatchEvent(new Event("pluck:counts"));
+        if (!(await fetch(uploadUrl, { method: "PUT", headers: { "content-type": file.type }, body: file })).ok) throw new Error("upload");
+        const kept = await send(`/api/v1/items/${item.id}/file`, about);
+        if (kept.ok) landed(((await kept.json()) as { item: Item }).item); // else the worker reads it on its next pass
+      } catch {
+        setError(t("failed"));
+        onFailed?.(draft);
+      }
+    }
+  }
+  const latest = useRef(pluckFiles);
+  latest.current = pluckFiles;
+
+  // Files dragged over the page are for the box, wherever they are let go.
+  const [dropping, setDropping] = useState(false);
+  useEffect(() => {
+    const files = (e: DragEvent) => Boolean(e.dataTransfer?.types.includes("Files"));
+    const over = (e: DragEvent) => {
+      if (!files(e)) return;
+      e.preventDefault();
+      setDropping(true);
+    };
+    const out = (e: DragEvent) => { if (!e.relatedTarget) setDropping(false); }; // left the window
+    const drop = (e: DragEvent) => {
+      if (!files(e)) return;
+      e.preventDefault();
+      setDropping(false);
+      void latest.current([...(e.dataTransfer?.files ?? [])]);
+    };
+    window.addEventListener("dragover", over);
+    window.addEventListener("dragleave", out);
+    window.addEventListener("drop", drop);
+    return () => {
+      window.removeEventListener("dragover", over);
+      window.removeEventListener("dragleave", out);
+      window.removeEventListener("drop", drop);
+    };
+  }, []);
+
   const text = value.trim();
   const urls = text ? extractUrls(text) : [];
   const isText = Boolean(text) && urls.length === 0;
@@ -117,7 +175,7 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
 
   return (
     <form className={styles.bar} onSubmit={submit}>
-      <div className={emphasis ? `${styles.pluck} ${styles.emphasis}` : styles.pluck}>
+      <div className={emphasis ? `${styles.pluck} ${styles.emphasis}` : styles.pluck} data-dropping={dropping || undefined}>
         <label className={styles.pluckLabel} htmlFor="pluck-box">
           {t("label")}
         </label>
@@ -129,7 +187,14 @@ export function TopBar({ sample, emphasis = false, onPluck, onPlucked, onFailed 
           name="pluck"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder={t("placeholder")}
+          onPaste={(e) => {
+            // A copied picture or file (a screenshot, a file from Finder) plucks as it is; text pastes as text.
+            const files = [...e.clipboardData.files];
+            if (!files.length) return;
+            e.preventDefault();
+            void pluckFiles(files);
+          }}
+          placeholder={dropping ? t("drop") : t("placeholder")}
           aria-describedby="pluck-hint"
           autoComplete="off"
         />

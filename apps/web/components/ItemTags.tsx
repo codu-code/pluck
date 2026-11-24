@@ -2,7 +2,7 @@
 
 import type { Item, Tag } from "@pluck/shared-schemas";
 import { useFormatter, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TagChip } from "@/components/TagChip";
 import { TagPicker } from "@/components/TagPicker";
 import { library } from "@/lib/actions";
@@ -17,6 +17,16 @@ export function ItemTags({ item: initial, vocabulary }: { item: Item; vocabulary
   const t = useTranslations("app.itemTags");
   const format = useFormatter();
   const byId = new Map(vocab.map((t) => [t.id, t]));
+
+  // The words tag too (a #tag in a note): when the screen hands over the Item with other tags, show those, and read
+  // the tags again, since the word may have made a new one.
+  const sent = initial.tagIds.join();
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) return void (first.current = false);
+    setItem(initial);
+    void library.tags().then(setVocab, () => {});
+  }, [sent]);
   const aiNames = item.aiTagIds.map((id) => byId.get(id)?.name).filter((n): n is string => Boolean(n));
 
   useEffect(() => {

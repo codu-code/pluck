@@ -20,7 +20,20 @@ Support URL https://getpluck.io/support, marketing URL https://getpluck.io, priv
 
 `screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore5`, with an everyday sample library rather than developer reading. Frame 5 is dark mode. The first `AppStore6` and `7` came down on 4 November 2026: they showed Settings the app doesn't have (guideline 2.3.3). The new 6 (AI tools) and 7 (Siri on iPhone, the hold-⌘ keys on iPad) are boards `AppStore6`, `AppStore7`, `AppStore-iPad-6` and `AppStore-iPad-7`. They draw the app's screens, so in other languages the scripts draw them again with the app's own words from the iOS catalog (`scripts/store-words.mjs`); iPad frame 7 puts that language's frame 2 capture under the keys.
 
-Before launch, swap each drawn phone screen for a real Simulator capture of the same library (`scripts/demo-seed.mjs` with the sample Items in the table below), so the listing shows the app exactly as it ships.
+Frames 2 to 5 are real Simulator captures of the sample library below, in every language, English included (since 1.7.0, 23 November 2026): `scripts/store-capture.sh` takes them with launch arguments only, and `scripts/store-iphone.mjs` and `scripts/store-ipad.mjs` put them in the frames. Frame 1's share sheet is still drawn, with the app's own rows in the app's own order: the note, Lists, Tags, Done. A new account's two starter Lists (Favourites, Ideas) and the post in its Inbox are in the captures, as they are in the app; the post in Ideas was taken out of the sample library so the Archive frame shows only the sample.
+
+To take them all again (about fifteen minutes, nothing to tap):
+
+```sh
+node scripts/demo-seed.mjs http://127.0.0.1:3000 <new email> --store > seed.json        # then the worker, once, for the picture and the PDF
+cd apps/ios && EXPO_NO_DOTENV=1 PLUCK_SERVER=http://127.0.0.1:3000 EXPO_PUBLIC_DEMO_KEY=<key in seed.json> \
+  xcodebuild -workspace ios/Pluck.xcworkspace -scheme Pluck -configuration Release -sdk iphonesimulator \
+  -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build-store CODE_SIGN_IDENTITY=- build
+scripts/store-capture.sh iphone <iPhone 17 udid> <Pluck.app> caps/iphone seed.json
+scripts/store-capture.sh ipad <iPad Pro 13-inch udid> <Pluck.app> caps/ipad seed.json
+for l in en es pt-BR fr de ja it nl ko zh-Hans; do node scripts/store-iphone.mjs $l caps/iphone/$l; done   # en writes screenshots/en: copy 1 to 5 over 6.9in, and at 1206 × 2622 over 6.3in
+node scripts/store-ipad.mjs caps/ipad/en; for l in es pt-BR fr de ja it nl ko zh-Hans; do node scripts/store-ipad.mjs --lang $l caps/ipad/$l; done
+```
 
 | Kind | Sample Item |
 |---|---|
@@ -80,7 +93,7 @@ node scripts/store-iphone.mjs de <dir with that language's 2.png … 5.png>
 
 ## Featuring art
 
-In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), and also the 16:9 master Apple takes for a product page header or a search result asset. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
+In `featuring/`, as layered SVG and PNG, for when Apple asks after a nomination: `Featuring-KeyArt.png` is the universal key art at 5244 × 2950 (no logo, no words), with the circle inside Apple's art safe area for a universal asset (1402 × 962 at 1921, 660). It is also the product page header and the search results asset in App Store Connect, the same file in every language. `Featuring-Header.png` is the 4320 × 1080 header. Supporting imagery (4000 × 4000, three to five screens on their own layers) is made when Apple asks, from the real captures.
 
 The listing text in `<lang>.json` is what is live in App Store Connect; change it there first, then here.
 
@@ -92,14 +105,14 @@ App Store Connect, Pluck, Featuring, Nominations, Create Nomination. Send it at 
 - **Type:** App Launch
 - **Description:** Pluck is a read-it-later app for everything, not just articles: a recipe from TikTok, a longread, a travel PDF, a lamp to buy, a note to self. You pluck it from the share sheet in one tap and the app never opens. Later, you sort it by hand, or ask the AI tool you already use, because Pluck has no AI inside. It connects to Claude, ChatGPT, Cursor and others over MCP, an open standard, and that AI can never delete anything. Things you leave alone move to the Archive after 30 days. Nothing is deleted. Pluck is free and open source, so it can't vanish the way Pocket and Omnivore did.
 - **What is unique:** A fresh take on a familiar category. Read-it-later apps either nag you or quietly delete things. Pluck does neither: untouched items go to an Archive you can search, and the share sheet saves in place without opening the app. There's no AI in the app. People bring their own AI, and every change it makes is marked and can be undone in one tap. The whole app is open source, and anyone can run their own server.
-- **Accessibility:** Dynamic Type up to the largest sizes, checked in the Simulator: rows grow and nothing clips. VoiceOver labels on the controls and the kind glyphs. Light and dark mode throughout. Animations respect Reduce Motion.
+- **Accessibility:** Text grows with Dynamic Type; titles stop at 140%. VoiceOver labels on the controls and the kind glyphs. Light and dark mode throughout. Animations respect Reduce Motion.
 - **Localization:** English, German, French, Spanish, Italian, Dutch, Portuguese (Brazil), Japanese, Korean and Simplified Chinese at launch.
 - **About the team:** Made in Ireland by Codú, a coding community of about 10,000 developers. Built in the open.
 - **Supplemental URLs:** [TESTFLIGHT PUBLIC LINK], https://getpluck.io, https://getpluck.io/connect, https://getpluck.io/open-source, https://github.com/codu-code/pluck.
 
 ## Promo video and posts
 
-`promo/pluck-promo-1080.mp4`: 20 s, 1080 × 1080, 30 fps, H.264. Upload it natively to LinkedIn and X (both autoplay muted, so the captions carry it). Source: `promo/promo.html`, pure CSS. Re-record with `node scripts/record-promo.mjs`.
+`promo/pluck-promo-1080.mp4`: 20 s, 1080 × 1080, 30 fps, H.264. Upload it natively to LinkedIn and X (both autoplay muted, so the captions carry it). Source: `promo/promo.html`, pure CSS. Re-record with `node scripts/record-promo.mjs` (and `--tall` for `pluck-promo-9x16.mp4`, the same square on a 1080 × 1920 ground).
 
 **X**
 

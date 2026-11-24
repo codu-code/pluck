@@ -7,6 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Pluck it. A fast, open-source URL saver your AI can read.",
     start_url: "/inbox",
     display: "standalone",
+    // Android's Share offers Pluck once the app is installed; what is shared arrives at app/(app)/share/route.ts.
+    share_target: { action: "/share", method: "POST", enctype: "application/x-www-form-urlencoded", params: { title: "title", text: "text", url: "url" } },
     background_color: "#F6F8F4",
     theme_color: "#1E5C45",
     icons: [

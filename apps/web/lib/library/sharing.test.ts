@@ -1,4 +1,4 @@
-import { hitRateLimit, pendingJobCount, pluckLink } from "@pluck/db";
+import { claimStarters, hitRateLimit, pendingJobCount, pluckLink } from "@pluck/db";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test } from "vitest";
 import { browse, copyList, listsOf, newList, readList, setListVisibility, updateMe } from "./index";
@@ -30,6 +30,7 @@ test("Pluck this list: a copy of 30 entries has every one in order with its note
 
 test("a copy cut off once its reads are queued has made no List yet, and every new Item is still queued", async () => {
   const { a, b } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not in the count below
   const theirs = await publicListOf(b, 3);
   const queued = await pendingJobCount("extract");
   const cutOff = () => {
@@ -42,6 +43,7 @@ test("a copy cut off once its reads are queued has made no List yet, and every n
 
 test("a copy spends the hourly links like a paste: one that would go over is refused and makes nothing", async () => {
   const { a, b } = await twoUsers();
+  await claimStarters(a); // an account whose starter Lists are not in the count below
   const theirs = await publicListOf(b, 30);
   await hitRateLimit(`links:${a}`, Infinity, 3600, 1990); // 1,990 of the hour's 2,000 spent
   await expect(copyList(a, theirs.id, { defer: skip })).rejects.toMatchObject({ status: 429, code: "rate_limited" });

@@ -66,10 +66,21 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   await expect(popup.getByRole("button", { name: "Note" })).toBeDisabled();
   await popup.getByPlaceholder("A note, if you like").fill("for the talk");
   await popup.getByPlaceholder("A note, if you like").press("Enter");
-  await popup.getByLabel("To list").selectOption({ label: "Reading for the talk" });
+  // Lists come first: a tap puts the page in one, a second tap takes it out, and a new List is made from here.
+  const listsOf = async () => Object.fromEntries(((await (await page.request.get("/api/v1/lists")).json()).lists as { name: string; itemCount: number }[]).map((l) => [l.name, l.itemCount]));
+  const inList = popup.getByRole("group", { name: "Lists" });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await expect(inList.getByRole("button", { name: "Reading for the talk" })).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 1 });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 0 });
+  await inList.getByRole("button", { name: "Reading for the talk" }).click();
+  await inList.getByRole("button", { name: "New list" }).click();
+  await inList.getByRole("textbox", { name: "New list" }).fill("Team notes");
+  await inList.getByRole("textbox", { name: "New list" }).press("Enter");
+  await expect(inList.getByRole("button", { name: "Team notes" })).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(listsOf).toEqual({ "Reading for the talk": 1, "Team notes": 1 });
   await expect.poll(async () => (await itemsOf(page))[0]?.note).toBe("for the talk");
-  const lists = (await (await page.request.get("/api/v1/lists")).json()).lists as { itemCount: number }[];
-  expect(lists[0]!.itemCount).toBe(1);
   expect(await sw.evaluate(async (tabId) => chrome.action.getTitle({ tabId }), await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]!.id!))).toBe("Plucked");
 
   // Later moves it. Opening it again shows the same tools on the Item instead of plucking a second one.
@@ -79,6 +90,7 @@ test("the popup plucks the page with what the browser rendered, then tags, notes
   const again = await popupFor(context, sw, extId, `${FIX}/news-1.html`);
   await expect(again.getByText(/^Plucked .* · Later$/)).toBeVisible();
   await expect(again.getByRole("button", { name: "teams" })).toHaveAttribute("aria-pressed", "true");
+  await expect(again.getByRole("group", { name: "Lists" }).getByRole("button", { pressed: true })).toHaveText(["Team notes", "Reading for the talk"]); // the Lists it is in, newest first
   await expect(again.getByPlaceholder("A note, if you like")).toHaveValue("for the talk");
   await expect(again.getByRole("button", { name: "Later" })).toHaveCount(0); // it is there already: Inbox and Archive instead
   await expect(again.getByRole("button", { name: "Inbox" })).toBeVisible();
@@ -110,8 +122,9 @@ test("the right-click menu plucks a link, an image and a selection as a highligh
   const article = await context.newPage();
   await article.goto(`${FIX}/news-1.html`);
   const hooks = (info: object, tab?: object) => sw.evaluate(({ info, tab }) => (globalThis as unknown as Hooks).pluckTest.menu(info, tab), { info, tab });
+  const tab = await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]);
   await hooks({ menuItemId: "pluck-link", linkUrl: `${FIX}/docs-1.html` });
-  await hooks({ menuItemId: "pluck-image", srcUrl: `${BASE}/icon-192.png` });
+  await hooks({ menuItemId: "pluck-image", srcUrl: `${BASE}/icon-192.png` }, tab);
 
   await article.evaluate(() => {
     const p = [...document.querySelectorAll("p")].find((x) => x.textContent?.includes("finishing problem"))!;
@@ -120,7 +133,6 @@ test("the right-click menu plucks a link, an image and a selection as a highligh
     getSelection()!.removeAllRanges();
     getSelection()!.addRange(range);
   });
-  const tab = await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]);
   await hooks({ menuItemId: "pluck-selection" }, tab);
 
   const items = await itemsOf(page);
@@ -129,6 +141,33 @@ test("the right-click menu plucks a link, an image and a selection as a highligh
   const article1 = items.find((i) => i.title === "Small teams ship when the list is short")!;
   const { highlights } = (await (await page.request.get(`/api/v1/items/${article1.id}?include=highlights`)).json()) as { highlights: { quote: string }[] };
   expect(highlights[0]?.quote).toContain("finishing problem");
+  // The image is an Image that remembers the page it was on; a link plucked from the same page does not.
+  const kept = (await (await page.request.get("/api/v1/items?status=inbox")).json()) as { items: { kind: string; foundOn: string | null; url: string }[] };
+  expect(kept.items.find((i) => i.kind === "image")).toMatchObject({ url: `${BASE}/icon-192.png`, foundOn: `${FIX}/news-1.html` });
+  expect(kept.items.filter((i) => i.kind !== "image").map((i) => i.foundOn)).toEqual([null, null]);
+});
+
+test("an image the server cannot fetch is plucked from the tab, as an Image with the page it was found on", async ({ context, sw, page }) => {
+  await useKey(page, sw);
+  // Behind a sign-in: the page's own browser gets the picture, the server (asking the fixture server) gets a 404.
+  const src = `${FIX}/members-only.png`;
+  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVR42mNk+M9Qz8DAwMDEAAUADhkCAT1LKY0AAAAASUVORK5CYII=", "base64");
+  await context.route(src, (route) => route.fulfill({ contentType: "image/png", body: png }));
+  const article = await context.newPage();
+  await article.goto(`${FIX}/news-1.html`);
+  await article.evaluate((src) => new Promise<void>((done) => {
+    const img = new Image(200, 120);
+    img.onload = () => done();
+    img.src = src;
+    document.body.prepend(img);
+  }), src);
+  const tab = await sw.evaluate(async () => (await chrome.tabs.query({ url: "http://127.0.0.1:4180/news-1.html" }))[0]);
+  await sw.evaluate(({ info, tab }) => (globalThis as unknown as Hooks).pluckTest.menu(info, tab), { info: { menuItemId: "pluck-image", srcUrl: src }, tab });
+
+  const { items } = (await (await page.request.get("/api/v1/items?status=inbox")).json()) as { items: { id: string; kind: string; hasCover: boolean; foundOn: string | null; extraction: { state: string } }[] };
+  expect(items).toMatchObject([{ kind: "image", hasCover: true, foundOn: `${FIX}/news-1.html`, extraction: { state: "done" } }]);
+  const cover = await page.request.get(`/api/v1/items/${items[0]!.id}/cover`);
+  expect(Buffer.from(await cover.body()).equals(png)).toBe(true); // the picture's own bytes, as the page had them
 });
 
 test("a video page's captions are kept with the page text", async ({ context, sw, extId, page }) => {

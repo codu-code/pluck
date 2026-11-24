@@ -1,0 +1,119 @@
+{
+  "name": "Ada",
+  "username": "ada",
+  "email": "ada@example.com",
+  "createdAt": "2024-01-05T09:00:00.000Z",
+  "updatedAt": "2024-06-01T09:00:00.000Z",
+  "collections": [
+    {
+      "id": 1,
+      "name": "Unorganized",
+      "description": "",
+      "icon": null,
+      "color": "#0ea5e9",
+      "parentId": null,
+      "isPublic": false,
+      "ownerId": 1,
+      "createdAt": "2024-01-05T09:00:00.000Z",
+      "updatedAt": "2024-01-05T09:00:00.000Z",
+      "rssSubscriptions": [],
+      "links": [
+        {
+          "id": 11,
+          "name": "Estimating rates, \"roughly\"",
+          "type": "url",
+          "description": "",
+          "collectionId": 1,
+          "collectionOrder": 0,
+          "url": "https://example.com/rates",
+          "clientSide": false,
+          "aiTagged": false,
+          "lastPreserved": "2024-02-01T10:00:05.000Z",
+          "importDate": null,
+          "createdAt": "2024-02-01T10:00:00.000Z",
+          "updatedAt": "2024-02-01T10:00:05.000Z",
+          "tags": []
+        },
+        {
+          "id": 12,
+          "name": "",
+          "type": "url",
+          "description": "",
+          "collectionId": 1,
+          "url": "https://example.com/untitled",
+          "importDate": "2019-05-06T07:08:09.000Z",
+          "createdAt": "2024-02-02T10:00:00.000Z",
+          "updatedAt": "2024-02-02T10:00:00.000Z",
+          "tags": []
+        },
+        {
+          "id": 13,
+          "name": "Worktop offcut.pdf",
+          "type": "pdf",
+          "description": "",
+          "collectionId": 1,
+          "url": null,
+          "importDate": null,
+          "createdAt": "2024-02-03T10:00:00.000Z",
+          "updatedAt": "2024-02-03T10:00:00.000Z",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Reno",
+      "description": "The kitchen, mostly",
+      "icon": null,
+      "color": "#22c55e",
+      "parentId": null,
+      "isPublic": false,
+      "ownerId": 1,
+      "createdAt": "2024-03-01T09:00:00.000Z",
+      "updatedAt": "2024-03-01T09:00:00.000Z",
+      "rssSubscriptions": [],
+      "links": [
+        {
+          "id": 21,
+          "name": "Kitchen hob",
+          "type": "url",
+          "description": "Check the width against the worktop",
+          "collectionId": 2,
+          "url": "https://example.com/hob",
+          "importDate": null,
+          "createdAt": "2024-03-01T10:00:00.000Z",
+          "updatedAt": "2024-03-01T10:00:00.000Z",
+          "tags": [
+            { "id": 5, "name": "kitchen", "ownerId": 1, "createdAt": "2024-03-01T10:00:00.000Z", "updatedAt": "2024-03-01T10:00:00.000Z" },
+            { "id": 6, "name": "to buy", "ownerId": 1, "createdAt": "2024-03-01T10:00:00.000Z", "updatedAt": "2024-03-01T10:00:00.000Z" }
+          ]
+        },
+        {
+          "id": 22,
+          "name": "주방 조명 고르기",
+          "type": "url",
+          "description": "",
+          "collectionId": 2,
+          "url": "https://example.com/led",
+          "importDate": null,
+          "createdAt": "2024-03-02T10:00:00.000Z",
+          "updatedAt": "2024-03-02T10:00:00.000Z",
+          "tags": []
+        },
+        {
+          "id": 23,
+          "name": "Rates, filed twice",
+          "type": "url",
+          "description": "",
+          "collectionId": 2,
+          "url": "https://example.com/rates",
+          "importDate": null,
+          "createdAt": "2024-03-03T10:00:00.000Z",
+          "updatedAt": "2024-03-03T10:00:00.000Z",
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "pinnedLinks": [{ "id": 21 }]
+}

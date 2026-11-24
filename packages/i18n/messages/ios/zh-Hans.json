@@ -179,7 +179,10 @@
     "tickedOf": "{ticked}/{count}",
     "empty": {
       "title": "还没有清单。",
-      "body": "在网页版上建一个，或者让你的 AI 用你摘下的内容建一个。"
+      "body": "点上面的 + 建一个，或者让你的 AI 用你摘下的内容建一个。"
+    },
+    "new": {
+      "title": "新建清单"
     }
   },
   "search": {
@@ -299,6 +302,19 @@
     "leaveTitle": "退出这个清单？",
     "leaveBody": "它会从你的清单中移除。对方可以再次与你共享。",
     "leave": "退出",
+    "report": "举报",
+    "reportTitle": "有什么问题？",
+    "reportReasons": {
+      "illegal": "违法内容",
+      "minors": "对未成年人进行性化",
+      "harassment": "骚扰",
+      "doxxing": "泄露他人隐私信息",
+      "spam": "垃圾信息或链接农场",
+      "malware": "恶意软件或网络钓鱼",
+      "infringement": "版权或商标侵权",
+      "other": "其他"
+    },
+    "reported": "谢谢。每一份举报都有人亲自阅读。",
     "byNamed": "{name}（@{handle}）与你共享 · 仅可查看",
     "by": "@{handle} 与你共享 · 仅可查看",
     "notShared": {
@@ -446,7 +462,8 @@
     "titleA11y": "标题",
     "titleHint": "标题留空，第一行就是标题。边写边存。",
     "textA11y": "正文",
-    "textPlaceholder": "写下来。"
+    "textPlaceholder": "写下来。",
+    "foundOn": "发现于 {site}"
   },
   "settings": {
     "title": "设置",
@@ -564,7 +581,12 @@
     "as": "摘下为",
     "queued": "已摘下。联网后会同步。",
     "failed": "没有成功。",
-    "plucked": "已摘进收件箱。"
+    "plucked": "已摘进收件箱。",
+    "photo": "照片",
+    "camera": "相机",
+    "cameraOff": "Pluck 无权使用相机。你可以在“设置”中更改。",
+    "removePhoto": "移除这张照片",
+    "untagged": "已摘进收件箱。清单和标签没有加上。"
   },
   "preview": {
     "open": "在 {site} 打开",
@@ -619,5 +641,20 @@
       "next": "下一项",
       "previous": "上一项"
     }
+  },
+  "format": {
+    "title": "格式",
+    "bold": "粗体",
+    "italic": "斜体",
+    "heading": "标题",
+    "bullets": "项目符号列表",
+    "numbers": "编号列表"
+  },
+  "speak": {
+    "start": "说话",
+    "stop": "停止聆听",
+    "listening": "正在聆听",
+    "off": "这里不支持用这种语言说话输入。键盘上的麦克风仍可使用。",
+    "denied": "Pluck 无权使用麦克风和语音识别。你可以在“设置”中更改。"
   }
 }

@@ -26,7 +26,7 @@ test("a visitor pastes links on the home page, signs up, and finds them in the I
   await openSignInLink(page, await linkFromEmail(email, sent));
   await expect(page).toHaveURL(/\/inbox$/);
   await expect(page.getByRole("link", { name: "Small teams ship when the list is short" }).first()).toBeVisible();
-  await expect.poll(async () => ((await (await page.request.get("/api/v1/items?status=inbox")).json()).items as unknown[]).length).toBe(3);
+  await expect.poll(async () => ((await (await page.request.get("/api/v1/items?status=inbox")).json()).items as unknown[]).length).toBe(4); // the three, and the post a new account starts with
   expect((await page.context().cookies()).some((c) => c.name === "pluck_try")).toBe(false);
 });
 
@@ -109,6 +109,7 @@ test("support: answers by topic, and bugs go to GitHub issues", async ({ page })
   for (const topic of ["The extension", "iPhone", "Your AI", "Your library and account", "Running your own"])
     await expect(page.getByRole("heading", { level: 2, name: topic })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open an issue" })).toHaveAttribute("href", /\/issues$/);
+  await expect(page.getByRole("link", { name: "support@getpluck.io" })).toHaveAttribute("href", "mailto:support@getpluck.io"); // a private way in: issues are public
   await page.getByRole("link", { name: "Connect your AI" }).last().click();
   await expect(page).toHaveURL(/\/connect$/);
 });

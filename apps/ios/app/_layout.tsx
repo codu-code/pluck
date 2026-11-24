@@ -106,7 +106,7 @@ export default function Root() {
                 <Stack.Screen name="welcome" options={{ presentation: "fullScreenModal" }} />
                 <Stack.Screen name="settings" options={{ presentation: "modal" }} />
                 <Stack.Screen name="note" options={{ presentation: "modal" }} />
-                <Stack.Screen name="add" options={{ presentation: "formSheet", sheetAllowedDetents: [0.5, 1] }} />
+                <Stack.Screen name="add" options={{ presentation: "formSheet", sheetAllowedDetents: [0.5, 1], sheetGrabberVisible: true }} />
                 <Stack.Screen name="handle" options={{ presentation: "modal" }} />
                 <Stack.Screen name="tags" options={{ presentation: "modal" }} />
                 <Stack.Screen name="share" options={{ presentation: "modal" }} />

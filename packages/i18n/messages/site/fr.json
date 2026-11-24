@@ -283,7 +283,7 @@
     "bugs": {
       "title": "Vous avez trouvé un bug <mark>?</mark>",
       "body": "Ouvrez une issue sur GitHub. Dites ce que vous avez fait, ce que vous attendiez, et ce qui s’est passé à la place. Les idées y sont aussi les bienvenues.",
-      "note": "Les issues sont publiques. N’y mettez pas de liens, de notes ni rien que vous préféreriez garder pour vous.",
+      "note": "Les issues sont publiques. N’y mettez pas de liens, de notes ni rien que vous préféreriez garder pour vous. Ou écrivez à <mail>{email}</mail>.",
       "button": "Ouvrir une issue"
     }
   },
@@ -338,12 +338,13 @@
         "note": "Les mêmes outils et les mêmes prompts, reliés à votre propre serveur."
       }
     },
-    "toolsTitle": "Douze outils. Des noms simples.",
+    "toolsTitle": "Treize outils. Des noms simples.",
     "toolsBody": "Les résultats reviennent sous forme de cartes, titres en premier : une question comme « qu’est-ce que j’ai cueilli cette semaine » tient en un appel et un écran.",
     "toolList": {
       "search_items": "Recherche texte dans le titre, la note, les tags, les noms de listes et le texte.",
       "list_items": "Parcourir la boîte de réception, Plus tard, les Archives ou Terminé, les plus récents ou les délaissés d’abord.",
       "get_item": "Un élément en entier, avec le texte de la page gardée.",
+      "list_highlights": "Ce que vous avez surligné, avec vos notes.",
       "save_item": "Cueillir un lien, plusieurs liens, une note, une tâche ou un objet. Marqué comme cueilli par l’IA.",
       "batch_update": "Statut, type, tags et échéances sur un ou plusieurs éléments.",
       "list_tags": "Vos tags, avec leur nombre d’éléments.",
@@ -394,11 +395,11 @@
       "description": "Ce que Pluck conserve, ce qu’il ne fait jamais, et comment tout emporter avec vous."
     },
     "title": "Confidentialité",
-    "lede": "En bref : nous conservons ce que vous cueillez pour que vous puissiez le lire plus tard. Nous ne le lisons pas, ne le vendons pas et ne le donnons à aucun modèle. Dernière mise à jour : 24 octobre 2026.",
+    "lede": "En bref : nous conservons ce que vous cueillez pour que vous puissiez le lire plus tard. Nous ne le lisons pas, ne le vendons pas et ne le donnons à aucun modèle. Dernière mise à jour : 24 novembre 2026.",
     "sections": {
       "store": {
         "title": "Ce que nous conservons",
-        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son type, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop ou un fichier de favoris."
+        "body": "Votre adresse e-mail et votre nom. Chaque élément que vous cueillez : le lien, le texte et les images de la page que nous avons récupérés, votre titre, votre note, vos tags, son type, son statut, ses listes, vos surlignages et votre position de lecture. L’heure à laquelle vous l’avez cueilli et celle à laquelle vous l’avez ouvert pour la dernière fois, qu’utilisent la règle d’expiration et l’e-mail du lundi. Les éléments que vous importez depuis Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep ou un fichier de favoris. Les notes que vous écrivez, et les photos et fichiers que vous ajoutez vous-même."
       },
       "dont": {
         "title": "Ce que nous ne faisons pas",
@@ -407,6 +408,10 @@
       "extension": {
         "title": "L’extension de navigateur",
         "body": "Tant que votre session est ouverte, l’extension demande à votre serveur Pluck si la page que vous consultez est déjà dans votre bibliothèque, pour que son icône puisse se remplir. Cette adresse ne sert qu’à répondre à cette question : elle n’est ni ajoutée à votre bibliothèque ni conservée avec votre compte. Pour désactiver cela, déconnectez-vous de l’extension ou supprimez-la."
+      },
+      "device": {
+        "title": "L’app iPhone et iPad",
+        "body": "L’app demande avant d’utiliser vos photos, votre appareil photo ou votre micro, la première fois que vous vous servez de chacun. Elle ne voit que les photos que vous choisissez, et n’utilise l’appareil photo que pendant que vous prenez une photo. Ces photos sont conservées dans votre bibliothèque comme tout ce que vous cueillez. Quand vous dites une note, votre appareil transforme la voix en texte quand il le peut. Sinon, c’est Apple qui le fait, comme pour la dictée du clavier. Pluck garde les mots et aucun son : le son n’arrive jamais sur nos serveurs."
       },
       "ai": {
         "title": "Votre outil d’IA",

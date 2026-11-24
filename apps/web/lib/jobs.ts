@@ -19,7 +19,7 @@ const handlers: Handlers = {
   },
   async digest(p) {
     await mailSlot();
-    await sendDigest(String(p.userId));
+    await sendDigest(String(p.userId), { date: typeof p.localDate === "string" ? p.localDate : undefined }); // a job queued before the date was carried has none
   },
   async welcome(p) {
     await mailSlot();

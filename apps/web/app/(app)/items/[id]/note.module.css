@@ -7,6 +7,15 @@
 .title { font-size: 36px; line-height: 44px; font-weight: 600; letter-spacing: -0.015em; }
 .title::placeholder { color: var(--ink); opacity: 0.45; }
 .body { resize: vertical; font-size: 18px; line-height: 29px; }
+/* The rich words: the same face and measure as the plain ones, tall enough to click into when empty. */
+.rich { min-height: 464px; outline: none; font-family: var(--font-reader); font-size: 18px; line-height: 29px; color: var(--ink); overflow-wrap: anywhere; }
+.rich a { color: var(--action-ink, var(--brand)); }
+/* The format bar: the paste box's segments, as buttons. */
+.tools { display: inline-flex; align-self: flex-start; gap: 2px; padding: 2px; border-radius: 8px; background: var(--chip); }
+.tool { min-width: 32px; height: 28px; padding: 0 8px; border: 0; border-radius: 6px; background: transparent; font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.tool[aria-pressed="true"] { background: var(--surface); }
+.tool:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.tool sub { font-size: 10px; }
 /* The board draws no box round the writing surfaces; the caret is the focus cue. */
 .title:focus-visible, .body:focus-visible { outline: none; }
 .aside { flex: 1 1 280px; max-width: 320px; display: flex; flex-direction: column; gap: 24px; }

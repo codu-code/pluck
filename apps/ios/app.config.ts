@@ -32,10 +32,65 @@ const withDarkIcon: ConfigPlugin = (c) => {
   });
 };
 
+// What iOS shows when Add first opens the camera, in the app's ten languages (the glossaries in docs/i18n).
+const CAMERA = {
+  en: "Pluck opens the camera when you take a photo to pluck.",
+  es: "Pluck abre la cámara cuando haces una foto para recogerla.",
+  "pt-BR": "O Pluck abre a câmera quando você tira uma foto para colher.",
+  fr: "Pluck ouvre l’appareil photo quand vous prenez une photo à cueillir.",
+  de: "Pluck öffnet die Kamera, wenn du ein Foto zum Pflücken aufnimmst.",
+  ja: "Pluckする写真を撮るときにカメラを開きます。",
+  it: "Pluck apre la fotocamera quando scatti una foto da prendere.",
+  nl: "Pluck opent de camera als je een foto maakt om te plukken.",
+  ko: "담을 사진을 찍을 때 Pluck이 카메라를 엽니다.",
+  "zh-Hans": "拍照摘下时，Pluck 会打开相机。",
+};
+// Why Pluck reads photos. iOS never asks this: Add uses iOS's own picker, which hands over only what is picked. But
+// the picker's library can reach the whole photo library, and App Store Connect refuses a build that has such code
+// and no words for it (ITMS-90683, which failed 1.7.0's first upload), so the words are here, and true.
+const PHOTOS: Record<string, string> = {
+  en: "Pluck plucks the photos you choose. It sees only the ones you pick.",
+  es: "Pluck recoge las fotos que eliges. Solo ve las que tú eliges.",
+  "pt-BR": "O Pluck colhe as fotos que você escolhe. Ele vê só as que você escolhe.",
+  fr: "Pluck cueille les photos que vous choisissez. Il ne voit que celles-là.",
+  de: "Pluck pflückt die Fotos, die du auswählst. Es sieht nur diese.",
+  ja: "選んだ写真をPluckします。選んだ写真以外は見えません。",
+  it: "Pluck prende le foto che scegli. Vede solo quelle.",
+  nl: "Pluck plukt de foto's die je kiest. Het ziet alleen die.",
+  ko: "고른 사진을 Pluck에 담습니다. 고른 사진만 볼 수 있어요.",
+  "zh-Hans": "Pluck 会摘下你选的照片，只能看到你选的那些。",
+};
+// What iOS shows the first time the microphone is tapped (components/Speak.tsx): two questions, one for the
+// microphone and one for turning speech into text.
+const MIC: Record<string, string> = {
+  en: "Pluck listens while you speak a note. It keeps the words and no sound.",
+  es: "Pluck escucha mientras dices una nota. Guarda las palabras y ningún sonido.",
+  "pt-BR": "O Pluck ouve enquanto você fala uma nota. Ele guarda as palavras e nenhum som.",
+  fr: "Pluck écoute pendant que vous dites une note. Il garde les mots et aucun son.",
+  de: "Pluck hört zu, während du eine Notiz sprichst. Es behält die Wörter und keinen Ton.",
+  ja: "メモを話している間、Pluckが聞き取ります。残るのは言葉だけで、音声は残りません。",
+  it: "Pluck ascolta mentre dici una nota. Conserva le parole e nessun suono.",
+  nl: "Pluck luistert terwijl je een notitie inspreekt. Het bewaart de woorden en geen geluid.",
+  ko: "메모를 말하는 동안 Pluck이 들어요. 말은 글로 남고 소리는 남지 않아요.",
+  "zh-Hans": "你说出笔记时，Pluck 会聆听。只保留文字，不保留任何声音。",
+};
+const SPEECH: Record<string, string> = {
+  en: "Pluck turns what you say into text. This device does it when it can. Otherwise Apple does, as it does for the keyboard’s dictation.",
+  es: "Pluck convierte lo que dices en texto. Lo hace este dispositivo cuando puede. Si no, lo hace Apple, como con el dictado del teclado.",
+  "pt-BR": "O Pluck transforma o que você diz em texto. Este dispositivo faz isso quando pode. Senão, a Apple faz, como no ditado do teclado.",
+  fr: "Pluck transforme ce que vous dites en texte. Cet appareil le fait quand il le peut. Sinon, Apple s’en charge, comme pour la dictée du clavier.",
+  de: "Pluck wandelt in Text um, was du sagst. Das macht dieses Gerät, wenn es kann. Sonst macht es Apple, wie bei der Diktierfunktion der Tastatur.",
+  ja: "話した内容を文字にします。できる場合はこのデバイス上で、できない場合はキーボードの音声入力と同じくAppleが行います。",
+  it: "Pluck trasforma in testo quello che dici. Lo fa questo dispositivo quando può. Altrimenti lo fa Apple, come per la dettatura della tastiera.",
+  nl: "Pluck zet wat je zegt om in tekst. Dit apparaat doet dat als het kan. Anders doet Apple het, zoals bij het dicteren van het toetsenbord.",
+  ko: "말한 내용을 글로 바꿔요. 이 기기가 할 수 있으면 기기에서 하고, 아니면 키보드 받아쓰기처럼 Apple이 해요.",
+  "zh-Hans": "Pluck 把你说的话转成文字。此设备能做到时在设备上完成，否则由 Apple 完成，与键盘听写相同。",
+};
+
 const config: ExpoConfig = {
   name: "Pluck",
   slug: "pluck",
-  version: "1.6.0", // raised once per release, in its own change; never per feature (docs/ios.md)
+  version: "1.7.2", // raised once per release, in its own change; never per feature (docs/ios.md)
   // "pluck://" opens screens. The app does not claim "io.getpluck.app", its OAuth redirect (withOnlyPluckScheme below):
   // sign-in comes back over HTTPS from the code the person types (lib/session.ts), so no scheme carries it.
   scheme: "pluck",
@@ -95,7 +150,8 @@ const config: ExpoConfig = {
       "expo-font",
       {
         fonts: [
-          ...["Regular", "Medium", "SemiBold", "Bold"].map((w) => `./node_modules/geist/dist/fonts/geist-sans/Geist-${w}.ttf`),
+          // Italic and BoldItalic are for the words of a Note, which can be either (components/RichText.tsx).
+          ...["Regular", "Medium", "SemiBold", "Bold", "Italic", "BoldItalic"].map((w) => `./node_modules/geist/dist/fonts/geist-sans/Geist-${w}.ttf`),
           ...["400Regular", "400Regular_Italic", "600SemiBold"].map((w) => `./node_modules/@expo-google-fonts/source-serif-4/${w}/SourceSerif4_${w}.ttf`),
           "./node_modules/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.ttf", // the wordmark and first-run headlines
         ],
@@ -106,8 +162,17 @@ const config: ExpoConfig = {
       "expo-splash-screen",
       { image: "./assets/splash.png", imageWidth: 123, backgroundColor: "#F6F8F4", dark: { image: "./assets/splash-dark.png", backgroundColor: "#10130F" } },
     ],
+    // Add, Photo and Camera (app/add.tsx). The photo library asks nothing: iOS's own picker hands over only what the
+    // person picks. Its words are given all the same (see PHOTOS): `false` takes them out, and Apple refuses the build.
+    // The camera asks, in the words below; nothing records sound.
+    // The microphone text is given here too: `false` would take the question's words out again, after the speech
+    // plugin had put them in, and iOS closes an app that asks for the microphone without them.
+    ["expo-image-picker", { cameraPermission: CAMERA.en, photosPermission: PHOTOS.en, microphonePermission: MIC.en }],
+    ["expo-speech-recognition", { microphonePermission: MIC.en, speechRecognitionPermission: SPEECH.en }],
     "@bacons/apple-targets",
   ],
+  // The camera and microphone questions in the other nine languages (iOS reads them from each InfoPlist.strings).
+  locales: Object.fromEntries(Object.entries(CAMERA).filter(([l]) => l !== "en").map(([l, text]) => [l, { NSCameraUsageDescription: text, NSPhotoLibraryUsageDescription: PHOTOS[l], NSMicrophoneUsageDescription: MIC[l], NSSpeechRecognitionUsageDescription: SPEECH[l] }])),
   // showServer: "Use your own server" on the sign-in screen. Off in store builds (it distracts everyone who is not
   // self-hosting); on for PLUCK_SHOW_SERVER=1 or a build pointed at another server. A server's own pluck://signin?server=
   // link opens it in any build.
@@ -117,10 +182,15 @@ const config: ExpoConfig = {
 
 // apple-targets builds an extension's Release like its Debug. Optimise the share extension and the App Intents
 // extension, keep a dSYM so crash reports symbolicate, and build them for iPhone and iPad like the app. Its targets are written in its own pass, so the change goes there.
+// Every extension also takes the app's build number and version, in Debug and Release: apple-targets gives an App
+// Intents extension build 1 whatever the app's is, and App Store Connect warns when the two differ (ITMS-90473).
 const withShareRelease: ConfigPlugin = (c) =>
   withXcodeProjectBeta(c, (m) => {
     for (const { props: p } of m.modResults.values() as Iterable<{ props: { isa?: string; name?: string; buildSettings?: Record<string, unknown> } }>) {
-      if (p.isa === "XCBuildConfiguration" && p.name === "Release" && p.buildSettings && ["io.getpluck.app.share", "io.getpluck.app.intents"].includes(String(p.buildSettings.PRODUCT_BUNDLE_IDENTIFIER)))
+      if (p.isa !== "XCBuildConfiguration" || !p.buildSettings) continue;
+      const id = String(p.buildSettings.PRODUCT_BUNDLE_IDENTIFIER);
+      if (id.startsWith(`${c.ios?.bundleIdentifier}.`)) Object.assign(p.buildSettings, { CURRENT_PROJECT_VERSION: c.ios?.buildNumber, MARKETING_VERSION: c.version });
+      if (p.name === "Release" && ["io.getpluck.app.share", "io.getpluck.app.intents"].includes(id))
         Object.assign(p.buildSettings, { SWIFT_OPTIMIZATION_LEVEL: "-O", DEBUG_INFORMATION_FORMAT: "dwarf-with-dsym", TARGETED_DEVICE_FAMILY: "1,2" });
     }
     return m;

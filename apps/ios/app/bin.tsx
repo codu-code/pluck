@@ -36,8 +36,14 @@ export default function Bin() {
     qc.setQueryData(keys.bin, (old: typeof data.data) => (old ? { ...old, pages: old.pages.map((p) => ({ ...p, items: p.items.filter((i) => i.id !== item.id) })) } : old));
 
   const restore = async (item: Item) => {
+    const before = data.data;
     drop(item);
-    await library.fromBin(item.id).catch(() => toast(tr("common.failed.title")));
+    try {
+      await library.fromBin(item.id);
+    } catch {
+      qc.setQueryData(keys.bin, before); // still in the Bin, so its row goes back
+      return toast(tr("common.failed.title"));
+    }
     toast(tr("archive.outOfBin"));
   };
 

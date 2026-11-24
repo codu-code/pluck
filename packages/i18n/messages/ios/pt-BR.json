@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} de {count}",
     "empty": {
       "title": "Nenhuma lista ainda.",
-      "body": "Crie uma na web, ou peça à sua IA para montar uma com o que você colheu."
+      "body": "Comece uma com o + ali em cima, ou peça à sua IA para montar uma com o que você colheu."
+    },
+    "new": {
+      "title": "Nova Lista"
     }
   },
   "search": {
@@ -299,6 +302,19 @@
     "leaveTitle": "Sair desta Lista?",
     "leaveBody": "Ela sai das suas Listas. A pessoa pode compartilhar com você de novo.",
     "leave": "Sair",
+    "report": "Denunciar",
+    "reportTitle": "Qual é o problema?",
+    "reportReasons": {
+      "illegal": "Conteúdo ilegal",
+      "minors": "Sexualiza menores",
+      "harassment": "Assédio",
+      "doxxing": "Expõe dados pessoais de alguém",
+      "spam": "Spam ou fazenda de links",
+      "malware": "Malware ou phishing",
+      "infringement": "Direitos autorais ou marca",
+      "other": "Outra coisa"
+    },
+    "reported": "Obrigado. Uma pessoa lê cada denúncia.",
     "byNamed": "Compartilhada com você por {name} (@{handle}) · só para ver",
     "by": "Compartilhada com você por @{handle} · só para ver",
     "notShared": {
@@ -446,7 +462,8 @@
     "titleA11y": "Título",
     "titleHint": "Deixe o título em branco e a primeira linha vira o título. Salva enquanto você digita.",
     "textA11y": "Texto",
-    "textPlaceholder": "Anote aqui."
+    "textPlaceholder": "Anote aqui.",
+    "foundOn": "Encontrado em {site}"
   },
   "settings": {
     "title": "Ajustes",
@@ -564,7 +581,12 @@
     "as": "Colher como",
     "queued": "Colhido. Vai sincronizar quando você estiver online de novo.",
     "failed": "Não deu certo.",
-    "plucked": "Colhido na Entrada."
+    "plucked": "Colhido na Entrada.",
+    "photo": "Foto",
+    "camera": "Câmera",
+    "cameraOff": "O Pluck não tem permissão para usar a câmera. Você pode mudar isso nos Ajustes.",
+    "removePhoto": "Remover esta foto",
+    "untagged": "Colhido na Entrada. As listas e tags não foram colocadas."
   },
   "preview": {
     "open": "Abrir no {site}",
@@ -619,5 +641,20 @@
       "next": "Próximo",
       "previous": "Anterior"
     }
+  },
+  "format": {
+    "title": "Formatar",
+    "bold": "Negrito",
+    "italic": "Itálico",
+    "heading": "Título",
+    "bullets": "Lista com marcadores",
+    "numbers": "Lista numerada"
+  },
+  "speak": {
+    "start": "Falar",
+    "stop": "Parar de ouvir",
+    "listening": "Ouvindo",
+    "off": "Falar não está disponível aqui neste idioma. O microfone do teclado continua funcionando.",
+    "denied": "O Pluck não tem permissão para usar o microfone e o reconhecimento de fala. Você pode mudar isso nos Ajustes."
   }
 }

@@ -1,5 +1,5 @@
 import type {
-  BatchBody, CreateItemBody, Digest, Highlight, Item, ItemPage, List, ListEntry, ListItemsQuery, ListMembership, PluckResponse,
+  BatchBody, CreateItemBody, Digest, Highlight, HighlightPage, HighlightsQuery, Item, ItemPage, List, ListEntry, ListItemsQuery, ListMembership, PluckResponse,
   SearchQuery, SearchResults, Tag,
 } from "@pluck/shared-schemas";
 
@@ -11,7 +11,10 @@ export interface PluckLibrary {
   browse(q: ListItemsQuery): Promise<ItemPage>;
   item(id: string): Promise<Item>;
   text(id: string): Promise<string>;
+  // An Image Item's picture as base64, or why it cannot be handed over; null when the Item has none.
+  picture(id: string): Promise<{ data: string; mimeType: string } | "too_large" | "unsupported" | null>;
   highlights(id: string): Promise<Highlight[]>;
+  highlightsAcross(q: HighlightsQuery): Promise<HighlightPage>; // the whole library, newest first; never an Item in the bin
   memberships(id: string): Promise<ListMembership[]>;
   pluck(body: CreateItemBody): Promise<PluckResponse>;
   batch(body: BatchBody): Promise<{ matched: number; updated: number }>;

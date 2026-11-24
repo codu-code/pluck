@@ -1,4 +1,4 @@
-import { isTask, type Item, type Status } from "@pluck/shared-schemas";
+import { initial, isTask, type Item, type Status } from "@pluck/shared-schemas";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { router, useFocusEffect, usePathname } from "expo-router";
@@ -18,9 +18,6 @@ import { Empty, TitledList, usePull } from "./Screen";
 import { toast } from "./Toast";
 import { ToolBar } from "./ToolBar";
 
-const avatarOf = (name?: string, email?: string) =>
-  ((name?.trim() || email || "?").split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?");
-
 // Inbox and Later (IOSInbox board): the count, what is waiting to sync, and the rows.
 export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const t = useTheme();
@@ -38,16 +35,27 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
   const split = useSplit();
   // iPad's kind chips (iPad-Inbox): All, Links, Notes, Todos, Things.
   const [only, setOnly] = useState<Filter>("all");
-  const rows = (items.data?.items ?? []).filter((i) => only === "all" || !split || FILTERS[only].includes(i.kind)); // narrower than 600 the chips are gone, and so is their filter
+  const match = (i: Item) => only === "all" || !split || FILTERS[only].includes(i.kind); // narrower than 600 the chips are gone, and so is their filter
+  const rows = (items.data?.pages.flatMap((p) => p.items) ?? []).filter(match);
+  // 50 at a time, as the Archive: the next page when the list is scrolled to its end.
+  const { hasNextPage, isFetchingNextPage, fetchNextPage } = items;
+  const next = () => { if (hasNextPage && !isFetchingNextPage) void fetchNextPage(); };
+  // A chip can leave a whole page with nothing to show, and a list that did not grow never reaches its end again, so
+  // a page that added no row asks for the next one itself.
+  const last = items.data?.pages.at(-1);
+  useEffect(() => {
+    if (last && !last.items.some(match)) next();
+  }, [last, only]);
   // ↓ and ↑ on iPad's keyboard walk the rows of the column you are looking at.
   const rowIds = rows.map((r) => r.id).join(",");
   useFocusEffect(useCallback(() => void (shown.rows = rowIds ? rowIds.split(",") : []), [rowIds]));
 
-  // Rows that were not here last time slide in (a pluck arriving); the first paint and rows scrolled into view do not.
+  // Rows that were not here last time slide in (a pluck arriving); the first paint, rows scrolled into view and the
+  // pages after the first do not.
   const seen = useRef<Set<string> | null>(null);
-  const fresh = new Set(seen.current ? rows.filter((r) => !seen.current!.has(r.id)).map((r) => r.id) : []);
+  const fresh = new Set(seen.current ? (items.data?.pages[0]?.items ?? []).filter((r) => !seen.current!.has(r.id)).map((r) => r.id) : []);
   useEffect(() => {
-    if (items.data) seen.current = new Set(items.data.items.map((r) => r.id));
+    if (items.data) seen.current = new Set(items.data.pages.flatMap((p) => p.items.map((r) => r.id)));
   }, [items.data]);
 
   useEffect(() => void waiting.refetch(), [items.dataUpdatedAt]);
@@ -59,12 +67,24 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
     if (tags.data && lists.data) shareExtensionCache(tags.data, lists.data);
   }, [tags.data, lists.data]);
 
+  // A move that did not go through says so, in place of the toast that said it had, and its rows go back where they were.
+  // shortcut: puts back the list as it was before the move, so a second move still on its way shows again until the refetch every move ends with; put back only the failed rows if moves ever stop refetching.
+  const failed = (before: typeof items.data) => {
+    qc.setQueryData(keys.items(status), before);
+    toast(tr("items.moveFailed"));
+  };
+
+  // Off the screen at once, from whichever page they are on.
+  const take = (ids: string[]) =>
+    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, pages: old.pages.map((p) => ({ ...p, items: p.items.filter((i) => !ids.includes(i.id)) })) } : old));
+
   const move = (item: Item, to: Status) => {
-    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => i.id !== item.id) } : old));
+    const before = items.data;
+    take([item.id]);
     seen.current?.delete(item.id);
-    patch.mutate({ id: item.id, patch: { status: to } });
+    void patch.mutateAsync({ id: item.id, patch: { status: to } }).catch(() => failed(before));
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(tr(`moved.${to}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${to}`), () => void patch.mutateAsync({ id: item.id, patch: { status: item.status } }).catch(() => toast(tr("items.moveFailed"))));
   };
 
   // Selecting: a long press picks the first row; the toolbar takes the tab bar's place until Done or the last
@@ -85,11 +105,16 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
 
   const moveMany = async (moved: Item[], to: Status) => {
     const ids = moved.map((i) => i.id);
+    const before = items.data;
     setPicked(null);
-    qc.setQueryData(keys.items(status), (old: typeof items.data) => (old ? { ...old, items: old.items.filter((i) => !ids.includes(i.id)) } : old));
+    take(ids);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await library.move(ids, to).catch(() => toast(tr("items.moveFailed")));
-    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void library.restore(moved));
+    try {
+      await library.move(ids, to);
+    } catch {
+      return failed(before);
+    }
+    toast(tr(`movedMany.${to}`, { count: ids.length }), () => void library.restore(moved).catch(() => toast(tr("items.moveFailed"))));
   };
 
   const away: Status = status === "later" ? "inbox" : "later";
@@ -154,8 +179,8 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
             <Icon d={ICONS.plus} color={t.ink} />
           </Pressable>
           <Pressable onPress={() => router.push("/settings")} accessibilityRole="button" accessibilityLabel={tr("items.settings")} style={styles.headerButton}>
-            <View style={[styles.avatar, { backgroundColor: t.avatar }]}>
-              <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.ink, fontSize: 12 }]}>{avatarOf(me.data?.name, me.data?.email)}</Text>
+            <View style={[styles.avatar, { backgroundColor: t.brand }]}>
+              <Text maxFontSizeMultiplier={scale.badge} style={[font.semibold, { color: t.onBrand, fontSize: 13 }]}>{initial(me.data?.name, me.data?.email)}</Text>
             </View>
           </Pressable>
         </View>
@@ -194,6 +219,9 @@ export function ItemsScreen({ status }: { status: "inbox" | "later" }) {
       data={rows}
       extraData={picked} // rows redraw when the selection changes, not only when the data does
       keyExtractor={(i) => i.id}
+      onEndReached={next}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={isFetchingNextPage ? <ActivityIndicator color={t.ink2} style={{ padding: 24 }} /> : undefined}
       renderItem={({ item }) => (
         // No exit animation: inside a FlatList on the new architecture, a row leaving with one can stay drawn after it
         // has gone from the list (an archived row that would not move). Arriving rows still slide in.

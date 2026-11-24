@@ -10,6 +10,7 @@ import { useFormat } from "@/components/useFormat";
 import { ItemRow, RowLead, RowNote } from "@/components/ItemRow";
 import { readShared } from "@/lib/library";
 import styles from "../../p/[handle]/[slug]/public.module.css";
+import { ReportLink } from "../../p/[handle]/[slug]/ReportLink";
 import { LeaveButton } from "./LeaveButton";
 import { NoAccess } from "./NoAccess";
 
@@ -60,6 +61,7 @@ export default async function SharedListPage({ params }: { params: Promise<{ id:
         </ol>
         <div className={styles.links}>
           <LeaveButton listId={list.id} className={styles.leave} />
+          <ReportLink listId={list.id} shared />
         </div>
       </main>
     </div>

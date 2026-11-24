@@ -1,5 +1,5 @@
 import { ExtensionStorage } from "@bacons/apple-targets";
-import type { CreateItemBody, Highlight, Item, ItemPage, List, ListEntry, ListMembership, Me, PluckResponse, SearchResults, Status, Tag, UpdateItemBody } from "@pluck/shared-schemas";
+import { isFileType, type CreateItemBody, type Highlight, type Item, type ItemPage, type List, type ListEntry, type ListMembership, type Me, type PluckResponse, type SearchResults, type Status, type Tag, type UpdateItemBody } from "@pluck/shared-schemas";
 import { focusManager, onlineManager, QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { Directory, File, Paths } from "expo-file-system";
 import * as Network from "expo-network";
@@ -32,7 +32,8 @@ const subscribe = (fn: () => void) => onlineManager.subscribe(fn);
 export const useOnline = () => useSyncExternalStore(subscribe, () => onlineManager.isOnline());
 
 export const keys = {
-  items: (status: Status) => ["items", status] as const,
+  // "pages": Inbox and Later page now, and a cache kept by an older build has one unpaged page under ["items", status].
+  items: (status: Status) => ["items", status, "pages"] as const,
   archive: ["items", "archive"] as const, // under "items", so every move refreshes it
   bin: ["items", "bin"] as const,
   item: (id: string) => ["item", id] as const,
@@ -49,12 +50,14 @@ export const keys = {
 const stale = (...ks: QueryKey[]) => { for (const queryKey of ks) void queryClient.invalidateQueries({ queryKey }); };
 const moved = () => stale(["items"], ["counts"], keys.lists); // the Item lists (Archive and bin too), their counts, Lists' rows
 const tagged = () => stale(keys.tags, ["items"]);
+// A #tag in someone's words is a tag on the Item, made by the server if it is new: the tags are read again so its chip has a name.
+const worded = (words?: string | null) => { if (words?.includes("#")) stale(keys.tags); };
 const listed = (listId?: string) => stale(keys.lists, ...(listId ? [keys.list(listId)] : []), ["items"], ["counts"]); // a Todo marked in a List is Done
 const after = <A extends unknown[], R>(act: (...a: A) => Promise<R>, then: (...a: A) => void) => (...a: A) => act(...a).finally(() => then(...a));
 const lib = createLibrary(api);
 export const library = {
   ...lib,
-  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, moved),
+  move: after(lib.move, moved), restore: after(lib.restore, moved), edit: after(lib.edit, (_, patch) => { moved(); worded(`${patch.text ?? ""}${patch.note ?? ""}`); }),
   remove: after(lib.remove, moved), fromBin: after(lib.fromBin, moved), forever: after(lib.forever, moved),
   setTag: after(lib.setTag<Item>, tagged), newTag: after(lib.newTag, tagged), renameTag: after(lib.renameTag, tagged), deleteTag: after(lib.deleteTag, tagged),
   newList: after(lib.newList, () => listed()), setInList: after(lib.setInList, (_, listId) => listed(listId)),
@@ -63,24 +66,21 @@ export const library = {
 
 export type FullItem ={ item: Item; text: string; highlights: Highlight[]; lists: ListMembership[] };
 
-export const useItems = (status: Status) =>
-  useQuery({ queryKey: keys.items(status), queryFn: () => api<ItemPage>(`/api/v1/items?status=${status}&limit=50`), refetchOnWindowFocus: "always" });
-// The Archive: archived and done together, newest move first, 50 at a time.
-export const useArchive = () =>
+// Every list of Items comes 50 at a time, the next page when the list is scrolled to its end.
+const usePaged = (queryKey: QueryKey, status: Status | "archive" | "bin", onFocus?: "always") =>
   useInfiniteQuery({
-    queryKey: keys.archive,
-    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=archive&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
+    queryKey,
+    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=${status}&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.nextCursor,
+    refetchOnWindowFocus: onFocus ?? true,
   });
-// The bin: deleted Items, newest delete first, 50 at a time. Each goes for good 30 days after it was deleted.
-export const useBin = () =>
-  useInfiniteQuery({
-    queryKey: keys.bin,
-    queryFn: ({ pageParam }) => api<ItemPage>(`/api/v1/items?status=bin&limit=50${pageParam ? `&cursor=${encodeURIComponent(pageParam)}` : ""}`),
-    initialPageParam: null as string | null,
-    getNextPageParam: (last) => last.nextCursor,
-  });
+// Inbox and Later, newest first. Coming back to the app always refetches them: a pluck from the browser is there.
+export const useItems = (status: Status) => usePaged(keys.items(status), status, "always");
+// The Archive: archived and done together, newest move first.
+export const useArchive = () => usePaged(keys.archive, "archive");
+// The bin: deleted Items, newest delete first. Each goes for good 30 days after it was deleted.
+export const useBin = () => usePaged(keys.bin, "bin");
 // While the page is still being plucked, ask again every few seconds so it shows up without leaving the screen.
 // An Item kept for offline reading opens on its kept copy, and the server's copy replaces it once it can be fetched.
 export const useItem = (id: string) =>
@@ -149,18 +149,34 @@ export function usePatchItem() {
 
 const queue = createQueue({ read: () => kv.get("queue", []), write: (q) => kv.set("queue", q) });
 
-export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; queued: boolean }> {
+export async function pluck(body: CreateItemBody): Promise<{ item: Item | null; items: Item[]; queued: boolean }> {
   const clientKey = newKey(); // the same key on the first send and on the queued copy: a lost answer makes no second Note
   try {
     const res = await api<PluckResponse>("/api/v1/items", { json: { source: "ios", clientKey, ...body } });
     void queryClient.invalidateQueries({ queryKey: ["items"] });
-    return { item: res.results[0]?.item ?? null, queued: false };
+    worded(`${body.text ?? ""}${body.note ?? ""}`);
+    return { item: res.results[0]?.item ?? null, items: res.results.map((r) => r.item), queued: false };
   } catch (e) {
     if (!(e instanceof Unreachable)) throw e;
     await queue.add({ source: "ios", ...body }, clientKey);
     void queryClient.invalidateQueries({ queryKey: keys.pending });
-    return { item: null, queued: true };
+    return { item: null, items: [], queued: true };
   }
+}
+
+// A photo from Add, out of the library or the camera: the Item first, the bytes straight to the bucket, then "it is
+// in", so the picture is there when the Inbox shows it.
+// shortcut: a photo needs a connection (it is not queued the way the share sheet queues a file), queue it when people take photos offline.
+export async function pluckPhoto(uri: string, name: string, type: string | undefined): Promise<Item> {
+  const bytes = await (await fetch(uri)).blob();
+  const contentType = type && isFileType(type) ? type : "image/jpeg"; // the picker hands over a JPEG unless it says otherwise
+  const file = { name, contentType };
+  const { item, uploadUrl } = await api<{ item: Item; uploadUrl: string }>("/api/v1/items/files", { json: { ...file, size: bytes.size, source: "ios" } });
+  const put = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType }, body: bytes });
+  if (!put.ok) throw new Error(`upload ${put.status}`);
+  const kept = await api<{ item: Item }>(`/api/v1/items/${item.id}/file`, { json: file }).catch(() => null); // the worker reads it if this does not
+  void queryClient.invalidateQueries({ queryKey: ["items"] });
+  return kept?.item ?? item;
 }
 
 // What the share extension could not send (no connection) waits as files in the App Group container.
@@ -178,7 +194,8 @@ export async function toSync(): Promise<number> {
   return (await queue.count()) + shared;
 }
 
-type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string } };
+// edit: a note, title or tags typed in the share sheet for an Item it had already plucked, not yet up when it closed.
+type SharedRecord = { body?: CreateItemBody; file?: { name: string; contentType: string; path: string }; edit?: { id: string; patch: UpdateItemBody } };
 type Share = { f: File; record: SharedRecord | null }; // null: unreadable
 
 // The share extension's leftovers go by the same rules as the phone's queue. The extension writes them and the app
@@ -205,6 +222,7 @@ export async function syncPending(): Promise<number> {
     // lost, or the upload below fails, sending the body again makes no second Note.
     if (record.body) await api("/api/v1/items", { json: { clientKey: f.name, ...record.body } });
     if (record.file) await uploadShared(record.file);
+    if (record.edit) await api(`/api/v1/items/${record.edit.id}`, { method: "PATCH", json: record.edit.patch });
   });
   void queryClient.invalidateQueries({ queryKey: ["items"] });
   void queryClient.invalidateQueries({ queryKey: keys.pending });
@@ -236,12 +254,13 @@ function removeShared(path: string) {
   if (local?.exists) local.delete();
 }
 
-// The share extension shows two of your tags and "Add to <last list>"; it reads them from the App Group.
+// The share extension shows your Lists (last added to first) and your most used tags; it reads them from the App Group.
 export function shareExtensionCache(tags: Tag[], lists: List[]) {
   const storage = new ExtensionStorage(GROUP);
-  const last = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? ""))[0];
+  const recent = [...lists].sort((a, b) => (b.lastAddedAt ?? "").localeCompare(a.lastAddedAt ?? "")).slice(0, 12).map((l) => ({ id: l.id, name: l.name }));
   storage.set("tags", JSON.stringify([...tags].sort((a, b) => b.count - a.count).slice(0, 12).map((t) => ({ id: t.id, name: t.name }))));
-  storage.set("lastList", last ? JSON.stringify({ id: last.id, name: last.name }) : undefined);
+  storage.set("lists", JSON.stringify(recent));
+  storage.set("lastList", recent[0] ? JSON.stringify(recent[0]) : undefined); // shortcut: read by a share sheet from before "lists"; drop once no such build is in use
 }
 
 // ---- Kept on this iPhone --------------------------------------------------------------------------------------
@@ -267,9 +286,18 @@ export async function keepByHand(item: Item, on: boolean): Promise<void> {
   handWatchers.forEach((fn) => fn());
   if (!on) return; // let go: it leaves with the next keep, unless it is among the newest
   // Asked for by hand, so kept now, on any connection.
-  const kept = await kv.get<Kept>("kept", {});
-  kept[item.id] = await keepOne(item, true);
-  await kv.set("kept", kept);
+  const run = clears;
+  const one = await keepOne(item, true);
+  if (run !== clears) return forget([item.id]); // cleared or signed out meanwhile
+  await kv.set("kept", { ...(await kv.get<Kept>("kept", {})), [item.id]: one });
+}
+
+// What a keep wrote for these Items, taken away again: their texts, pictures and files.
+async function forget(ids: string[]): Promise<void> {
+  for (const id of ids) {
+    await kv.remove(keptKey(id));
+    for (const ext of ["img", "pdf"] as const) if (keptMedia(id, ext).exists) keptMedia(id, ext).delete();
+  }
 }
 
 const keptKey = (id: string) => `kept:${id}`;
@@ -281,8 +309,11 @@ export async function keptSize(): Promise<{ ids: string[]; bytes: number }> {
   return { ids: Object.keys(kept), bytes: Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0) };
 }
 
-// Clear the offline copy: everything, the Items kept by hand too.
+// Clear the offline copy: everything, the Items kept by hand too. `clears` counts them, so a keep that was already
+// running (signing out mid-run) knows, stops, and takes away what it wrote after the clear.
+let clears = 0;
 export async function clearKept(): Promise<void> {
+  clears++;
   const kept = await kv.get<Kept>("kept", {});
   for (const id of Object.keys(kept)) await kv.remove(keptKey(id));
   await kv.remove("kept");
@@ -340,6 +371,7 @@ const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function keep(force: boolean) {
   if ((!force && Date.now() - keptAt < 15 * 60_000) || !(await keepSetting()) || !(await wifi())) return;
+  const run = clears; // a clear after this (signing out, Clear the offline copy) ends the run, with nothing written after it
   const items: Item[] = [];
   for (const status of ["inbox", "later"] as const) {
     let cursor: string | null = null;
@@ -352,9 +384,11 @@ async function keep(force: boolean) {
     } while (cursor && got < KEEP);
   }
   const lists = (await api<{ lists: List[] }>("/api/v1/lists")).lists;
+  if (run !== clears) return;
   queryClient.setQueryData(keys.lists, lists);
   for (const l of lists) {
     const one = await api<{ list: List; entries: ListEntry[] }>(`/api/v1/lists/${l.id}`);
+    if (run !== clears) return;
     queryClient.setQueryData(keys.list(l.id), one); // the List itself opens offline too
     items.push(...one.entries.map((e) => e.item));
   }
@@ -364,16 +398,16 @@ async function keep(force: boolean) {
   for (const id of hand) if (!seen.has(id)) items.push((await api<{ item: Item }>(`/api/v1/items/${id}`).catch(() => null))?.item ?? ({ id } as Item));
   const keep = toKeep(items.filter((i) => i.createdAt), hand);
   const kept = await kv.get<Kept>("kept", {});
+  if (run !== clears) return;
   const { fetch, drop } = plan(keep, kept, hand);
   try {
     for (const id of drop) {
-      await kv.remove(keptKey(id));
-      for (const ext of ["img", "pdf"] as const) if (keptMedia(id, ext).exists) keptMedia(id, ext).delete();
+      await forget([id]);
       delete kept[id];
     }
     const total = () => Object.values(kept).reduce((n, k) => n + k.bytes + (k.media ?? 0), 0);
     for (const item of fetch) {
-      if (!(await wifi()) || !(await keepSetting())) break; // off the Wi-Fi, or turned off: stop here
+      if (run !== clears || !(await wifi()) || !(await keepSetting())) break; // cleared, off the Wi-Fi, or turned off: stop here
       kept[item.id] = await keepOne(item, hand.has(item.id) || total() < MAX_BYTES);
       await pause(250); // gently: well under the API's 600 reads a minute, with room for the app itself
     }
@@ -383,7 +417,7 @@ async function keep(force: boolean) {
     }
     keptAt = Date.now();
   } finally {
-    if (await keepSetting()) await kv.set("kept", kept);
-    else for (const id of Object.keys(kept)) await kv.remove(keptKey(id)); // turned off meanwhile: leave nothing behind
+    if (run === clears && (await keepSetting())) await kv.set("kept", kept);
+    else await forget(Object.keys(kept)); // cleared, signed out or turned off meanwhile: leave nothing behind
   }
 }

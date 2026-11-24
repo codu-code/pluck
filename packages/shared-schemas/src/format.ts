@@ -69,6 +69,9 @@ export function rowMeta(item: Item, now = new Date()): string {
 
 const KNOWN: Record<string, string> = { "youtube.com": "YT", "youtu.be": "YT", "x.com": "X", "twitter.com": "X", "github.com": "GH" };
 
+// The one letter in someone's avatar: of their name, or of their email until they give one.
+export const initial = (name?: string | null, email?: string | null): string => [...(name?.trim() || email?.trim() || "?")][0]!.toUpperCase();
+
 // Site initials for the 40px tile when there is no cover.
 export function initials(siteName: string | null, url: string | null): string {
   const host = url ? new URL(url).hostname.replace(/^www\./, "") : "";

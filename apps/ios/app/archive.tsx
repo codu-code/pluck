@@ -67,11 +67,14 @@ export default function Archive() {
   }
 
   const restore = (item: Item, to: Status) => {
+    const before = data.data;
     qc.setQueryData(keys.archive, (old: typeof data.data) =>
       old ? { ...old, pages: old.pages.map((p) => ({ ...p, items: p.items.filter((i) => i.id !== item.id) })) } : old);
-    patch.mutate({ id: item.id, patch: { status: to } });
+    // One that did not go through says so, and the row goes back where it was (as ItemsScreen's move does).
+    const failed = () => toast(tr("items.moveFailed"));
+    void patch.mutateAsync({ id: item.id, patch: { status: to } }).catch(() => { qc.setQueryData(keys.archive, before); failed(); });
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    toast(tr(`moved.${to}`), () => patch.mutate({ id: item.id, patch: { status: item.status } }));
+    toast(tr(`moved.${to}`), () => void patch.mutateAsync({ id: item.id, patch: { status: item.status } }).catch(failed));
   };
 
   // Delete: out of the list at once, into the bin, with Undo for as long as the toast shows.

@@ -33,6 +33,12 @@ export async function setVia(userId: string, via: SignUpVia): Promise<void> {
   await (await users()).updateOne({ _id: oid(userId), via: { $exists: false } }, { $set: { via } });
 }
 
+// The starter Lists are made once per account: true for the one caller that may make them, false for every other,
+// so two requests at once (or a person who deleted them) never get a second set.
+export async function claimStarters(userId: string): Promise<boolean> {
+  return (await (await users()).updateOne({ _id: oid(userId), startersAt: { $exists: false } }, { $set: { startersAt: new Date() } })).modifiedCount > 0;
+}
+
 // What usage analytics may know of an account: its answer to the cookie question, and (for signed_up) when and how it began.
 export async function analyticsOf(userId: string): Promise<{ consent: "yes" | "no" | null; createdAt: Date; via: SignUpVia | null } | null> {
   const d = await (await users()).findOne({ _id: oid(userId) }, { projection: { "settings.analytics": 1, "settings.analyticsAt": 1, createdAt: 1, via: 1 } });

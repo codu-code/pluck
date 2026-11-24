@@ -60,7 +60,9 @@ async function uniqueSlug(userId: ObjectId, name: string, except?: ObjectId): Pr
   }
 }
 
-export type NewList = { name: string; purpose?: string; createdBy: Actor; items?: { itemId: string; note?: string | null }[] };
+// `lastActivityAt`: a List made for an account long after it began (a starter List) sorts as if it had always been
+// there, under the Lists the person has been using.
+export type NewList = { name: string; purpose?: string; createdBy: Actor; items?: { itemId: string; note?: string | null }[]; lastActivityAt?: Date };
 
 // A new list is always private. Items passed in keep their order, each with an optional note.
 export async function createList(userId: string, input: NewList): Promise<List> {
@@ -68,7 +70,7 @@ export async function createList(userId: string, input: NewList): Promise<List> 
   const now = new Date();
   const doc: ListDoc = {
     _id: new ObjectId(), userId: uid, name: input.name.trim().slice(0, 120), slug: await uniqueSlug(uid, input.name), purpose: input.purpose?.trim() ?? "",
-    visibility: "private", itemCount: 0, tickedCount: 0, views: 0, lastAddedAt: null, lastActivityAt: now, createdBy: input.createdBy, createdAt: now,
+    visibility: "private", itemCount: 0, tickedCount: 0, views: 0, lastAddedAt: null, lastActivityAt: input.lastActivityAt ?? now, createdBy: input.createdBy, createdAt: now,
     updatedAt: now,
   };
   try {
@@ -80,6 +82,15 @@ export async function createList(userId: string, input: NewList): Promise<List> 
   }
   if (input.items?.length) await addEntries(userId, doc._id.toHexString(), input.items, { by: input.createdBy });
   return toList((await (await lists()).findOne({ _id: doc._id }))!);
+}
+
+// What an account was started with, marked once it is all in place: its posts are never in the weekly email or
+// counted as plucked, and its Lists are left out of the email's quiet Lists until the person uses them (any use moves
+// lastActivityAt on from the time kept here).
+export async function markStarters(userId: string, { listIds, itemIds }: { listIds: string[]; itemIds: string[] }): Promise<void> {
+  const uid = oid(userId);
+  if (itemIds.length) await (await items()).updateMany({ _id: { $in: itemIds.map(oid) }, userId: uid }, { $set: { starter: true } });
+  if (listIds.length) await (await lists()).updateMany({ _id: { $in: listIds.map(oid) }, userId: uid }, [{ $set: { starter: "$lastActivityAt" } }]);
 }
 
 export async function listLists(userId: string): Promise<List[]> {

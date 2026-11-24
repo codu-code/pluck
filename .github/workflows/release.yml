@@ -1,0 +1,132 @@
+# A release: when a tag v<version> is pushed, the Docker image goes to ghcr.io/codu-code/pluck for amd64 and arm64
+# (as <version>, <major>.<minor> and latest) and the tag gets a GitHub release whose notes are that version's section
+# of CHANGELOG.md. The image is built here from the tagged commit, with no build arguments: no analytics key and no
+# address are in it, so it serves whatever PLUCK_URL its owner sets. The steps for a person are in docs/deploy.md,
+# "Cutting a release".
+#
+# Run by hand from the Actions tab (or `gh workflow run release.yml`) it builds both architectures and publishes
+# nothing. With push ticked, and run from a tag, it publishes that tag as a pushed tag would.
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      push:
+        description: Publish the image and the GitHub release (only when run from a tag). Leave off to try the build.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: ghcr.io/codu-code/pluck
+
+jobs:
+  image:
+    name: Docker image
+    runs-on: ubuntu-latest
+    # shortcut: arm64 is built under QEMU, several times slower than amd64; build each on its own runner (ubuntu-24.04-arm) and join the two when a release nears this limit.
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write # push to ghcr.io with this run's own token
+      id-token: write # the OIDC token the provenance is signed with
+      attestations: write # keep the provenance where `gh attestation verify` finds it
+    outputs:
+      publish: ${{ steps.notes.outputs.publish }}
+      notes: ${{ steps.notes.outputs.notes }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      # First, before anything is built or pushed: a release with no notes stops here.
+      - name: The tag has a dated section in CHANGELOG.md
+        id: notes
+        env:
+          PUSH: ${{ github.event_name == 'push' || inputs.push }}
+          REF_TYPE: ${{ github.ref_type }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if [ "$PUSH" != true ]; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$REF_TYPE" != tag ]; then
+            echo "::error::push publishes a tag. Run the workflow from the tag (Use workflow from, Tags), not from a branch."
+            exit 1
+          fi
+          version=${TAG#v}
+          # The lines under "## [<version>] - <date>", up to the next "## " heading. A section still marked Unreleased does not count.
+          awk -v head="## [$version] - " '
+            index($0, head) == 1 && /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/ { on = 1; next }
+            on && /^## / { exit }
+            on
+          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md"; then
+            echo "::error::CHANGELOG.md has no section \"## [$version] - YYYY-MM-DD\" with notes under it. Set the date on main (docs/deploy.md, Cutting a release), then tag that commit."
+            exit 1
+          fi
+          {
+            echo "publish=true"
+            echo "notes<<END_OF_RELEASE_NOTES"
+            cat "$RUNNER_TEMP/notes.md"
+            echo "END_OF_RELEASE_NOTES"
+          } >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          platforms: arm64
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - if: steps.notes.outputs.publish == 'true'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # v1.2.3 becomes 1.2.3, 1.2 and latest. The labels name this repo, the version and the commit.
+      # shortcut: latest follows the newest tag pushed, not the highest version; set flavor latest=false for a patch to an older line when there is one.
+      - id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+          labels: |
+            org.opencontainers.image.title=Pluck
+            org.opencontainers.image.licenses=Apache-2.0
+      - id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: . # the checkout, as docker compose builds it (.dockerignore applies)
+          platforms: linux/amd64,linux/arm64
+          # No build-args: the Dockerfile's defaults leave NEXT_PUBLIC_POSTHOG_KEY empty, so this image sends nothing anywhere.
+          # No cache: a release takes nothing another run could have written.
+          push: ${{ steps.notes.outputs.publish == 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      # Signed provenance for the pushed digest: `gh attestation verify oci://ghcr.io/codu-code/pluck:<version> --repo codu-code/pluck`.
+      - if: steps.notes.outputs.publish == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+          create-storage-record: false # a storage record would need one more permission (artifact-metadata: write)
+
+  release:
+    name: GitHub release
+    needs: image
+    if: needs.image.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # to create the release; this job checks nothing out and runs no code from the repo
+    steps:
+      - name: Create the release with the notes from CHANGELOG.md
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          NOTES: ${{ needs.image.outputs.notes }}
+        run: printf '%s\n' "$NOTES" | gh release create "$TAG" --verify-tag --title "$TAG" --notes-file -

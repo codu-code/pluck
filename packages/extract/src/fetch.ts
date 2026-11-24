@@ -12,8 +12,10 @@ export const BROWSER_UA =
 const blocked = new BlockList();
 for (const [net, prefix] of [["0.0.0.0", 8], ["10.0.0.0", 8], ["100.64.0.0", 10], ["127.0.0.0", 8], ["169.254.0.0", 16], ["172.16.0.0", 12], ["192.0.0.0", 24], ["192.168.0.0", 16], ["198.18.0.0", 15], ["224.0.0.0", 4], ["240.0.0.0", 4]] as const)
   blocked.addSubnet(net, prefix, "ipv4");
-// NAT64 (64:ff9b::/96) and 6to4 (2002::/16) carry an IPv4 address inside, private ones included: refused whole.
-for (const [net, prefix] of [["::", 128], ["::1", 128], ["64:ff9b::", 96], ["2002::", 16], ["fc00::", 7], ["fe80::", 10]] as const)
+// The forms that carry an IPv4 address inside, private ones included, are refused whole: IPv4-compatible (::/96, which
+// also holds :: and ::1), IPv4-translated (::ffff:0:0/96), NAT64 (64:ff9b::/96 and its local-use 64:ff9b:1::/48),
+// 6to4 (2002::/16) and Teredo (2001::/32). No public site lives at any of them.
+for (const [net, prefix] of [["::", 96], ["::ffff:0:0:0", 96], ["64:ff9b::", 96], ["64:ff9b:1::", 48], ["2001::", 32], ["2002::", 16], ["fc00::", 7], ["fe80::", 10]] as const)
   blocked.addSubnet(net, prefix, "ipv6");
 
 export function isPrivateAddress(ip: string): boolean {

@@ -186,7 +186,9 @@ export function fromPage(doc: Doc, url: string, words: number): { preview: Previ
   const pdf = metaOf(doc, "citation_pdf_url");
   if (pdf) {
     try {
-      return { preview: "document", facts: { ...facts, pdfUrl: new URL(pdf, url).toString() } };
+      // The clients open this address as it is: a web address only, never javascript:, data: or an app's own scheme.
+      const at = new URL(pdf, url);
+      if (at.protocol === "http:" || at.protocol === "https:") return { preview: "document", facts: { ...facts, pdfUrl: at.toString() } };
     } catch {
       // not an address
     }

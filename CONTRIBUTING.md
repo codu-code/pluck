@@ -76,6 +76,7 @@ If you cannot translate, write your best attempt and say so in the pull request;
 
 - One change per pull request, on a short branch.
 - Fill in the template: what and why, how you checked it, screenshots for anything visible (light and dark, wide and phone).
+- A change that someone using Pluck or running their own would notice gets a line in [CHANGELOG.md](CHANGELOG.md), under `## [Unreleased]`.
 - A maintainer reviews and squash-merges. Merging to `main` deploys getpluck.io, so `main` stays green.
 
 ## Licence and sign-off

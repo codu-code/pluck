@@ -1,15 +1,17 @@
-import { deletePrefix, keys as blobKeys, putObject, signedUrl } from "@pluck/blob";
+import { deletePrefix, getObject, keys as blobKeys, putObject, signedUrl, TooLarge } from "@pluck/blob";
 import {
-  batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, getContent, getItem, getItemBlobKeys,
+  applyExtraction, batchTags, batchUpdate, countItems, createHighlight, createTextItem, deleteHighlight, editItem, findByUrl, findHighlights, getContent, getItem, getItemBlobKeys,
   hitRateLimit, listHighlights, listItems, listsForItem, markOpened, misfit, moveToBin, pluckLink, purgeBin, purgeFromBin, resetExtraction, restoreFromBin, setBlobKeys, setItemTags,
+  tagByWords,
   updateHighlight,
 } from "@pluck/db";
 import {
   cleanUrl, extractUrls, isTextKind, type BatchBody, type CreateHighlightBody, type CreateItemBody, type CreateItemResult,
-  type Highlight, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
+  type Highlight, type HighlightPage, type HighlightsQuery, type Item, type ItemPage, type ListItemsQuery, type ListMembership, type PluckResponse, type Source, type Status, type UpdateItemBody,
 } from "@pluck/shared-schemas";
 import { ApiError } from "../errors";
 import { itemsBucket, track } from "../telemetry";
+import { hashTags } from "./hashtags";
 import { keepLater, keepNow } from "./keeping";
 
 type Defer = (task: () => Promise<void>) => void;
@@ -49,6 +51,11 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
       kind: isTextKind(body.kind) ? body.kind : "note", text: body.text, title: body.title, source,
       dueAt: body.dueAt ? new Date(body.dueAt) : null, clientKey: body.clientKey,
     });
+    // A #tag in words someone wrote is a tag on the Item. Written means a composer sent them, which names the Kind:
+    // words shared in from elsewhere (a caption, with its author's hashtags) come without one, and tag nothing. Nor
+    // do an AI tool's: it tags with its own tool.
+    if (result.created && isTextKind(body.kind) && source !== "mcp" && (await tagByWords(userId, result.item.id, hashTags(body.text), [])))
+      result.item = await readItem(userId, result.item.id);
     return { results: [result], rejected: [] };
   }
   const inputs = body.url !== undefined ? [body.url] : (body.urls ?? extractUrls(body.text!));
@@ -82,14 +89,20 @@ async function pluckAll(userId: string, body: CreateItemBody, { defer }: { defer
 export async function pluck(userId: string, body: CreateItemBody & { url: string }, { defer }: { defer?: Defer } = {}): Promise<CreateItemResult> {
   const url = cleanUrl(body.url); // kept as given; pluckLink dedupes on its key
   if (!url) throw new ApiError("bad_request", "That is not a link Pluck can open.", 400);
-  const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web" });
+  const foundOn = body.foundOn ? cleanUrl(body.foundOn) : null; // the page an image was on; one that is no link is left out
+  const { item, created, needsExtraction } = await pluckLink(userId, { url, title: body.title, note: body.note, source: body.source ?? "web", foundOn });
   const kept = needsExtraction || body.html || body.transcript
     ? await keepNow(userId, item, { html: body.html, transcript: body.transcript, timeoutMs: INLINE_TIMEOUT_MS, defer })
     : item;
   // A selection becomes a highlight anchored by its quote; the reader finds it in the kept text.
   const quote = body.selection?.trim();
   if (quote) await addHighlight(userId, { itemId: item.id, quote, selector: { textQuote: { exact: quote, prefix: "", suffix: "" }, textPosition: { start: 0, end: 0 } } });
-  return { item: kept, created };
+  // The note's #tags, as above. A link plucked again has this note added under the one it had: the words now are
+  // both, and the words before are the part that was there.
+  const note = body.note?.trim();
+  const whole = item.note ?? "";
+  const tagged = note && body.source !== "mcp" && (await tagByWords(userId, item.id, hashTags(whole), hashTags(whole.endsWith(note) ? whole.slice(0, whole.length - note.length) : "")));
+  return { item: tagged ? await readItem(userId, item.id) : kept, created };
 }
 
 // The item a URL is already in, if any (the bin does not count): the extension's badge and "already plucked".
@@ -104,6 +117,20 @@ export async function setCoverFromApp(userId: string, itemId: string, body: Uint
   if (item.hasCover) return item;
   await putObject(blobKeys.cover(userId, itemId), Buffer.from(body), contentType);
   await setBlobKeys(userId, itemId, { coverKey: blobKeys.cover(userId, itemId) });
+  return readItem(userId, itemId);
+}
+
+// The picture itself, from the extension, for an image the server could not fetch (it sits behind a sign-in): what the
+// tab showed becomes the Item's picture, and the Item an Image that reads as kept. One the server did read keeps its own.
+export async function setPictureFromApp(userId: string, itemId: string, body: Uint8Array, contentType: string): Promise<Item> {
+  const item = await readItem(userId, itemId);
+  if (isTextKind(item.kind)) throw new ApiError("bad_request", "Only a link can take a picture.", 400);
+  if (item.kind === "image" && item.extraction.state === "done") return item;
+  await putObject(blobKeys.cover(userId, itemId), Buffer.from(body), contentType);
+  await setBlobKeys(userId, itemId, { coverKey: blobKeys.cover(userId, itemId) });
+  await applyExtraction(userId, itemId, {
+    kind: "image", preview: null, facts: {}, title: null, siteName: null, author: null, excerpt: null, canonicalUrl: null, lang: null, wordCount: 0, markdown: "", extractor: "app",
+  });
   return readItem(userId, itemId);
 }
 
@@ -135,11 +162,21 @@ export async function updateItem(userId: string, itemId: string, patch: UpdateIt
   const { tagIds, ...rest } = patch;
   if (tagIds) await setItemTags(userId, itemId, await tagIdsFor(userId, tagIds), by);
   if (!Object.keys(rest).length) return readItem(userId, itemId);
-  const updated = await editItem(userId, itemId, {
+  // The person's words tag the Item (hashtags.ts): all of its words as they will be, the text and the note, against
+  // all of them as they are. The kept text is read only when it is needed: when the text is not what is changing,
+  // or when there is a #tag to look for.
+  const worded = by === "user" && (rest.text !== undefined || rest.note !== undefined);
+  let kept: string | null = null;
+  const text = async () => (kept ??= isTextKind(current.kind) ? await readText(userId, itemId) : "");
+  const words = (t: string, note: string | null | undefined) => hashTags(`${t}\n${note ?? ""}`);
+  const said = worded ? words(rest.text ?? (await text()), rest.note === undefined ? current.note : rest.note) : [];
+  const saidBefore = said.length ? words(await text(), current.note) : [];
+  const edited = await editItem(userId, itemId, {
     ...rest,
     dueAt: rest.dueAt === undefined ? undefined : rest.dueAt === null ? null : new Date(rest.dueAt),
   });
-  if (!updated) throw new ApiError("not_found", "No such item.", 404);
+  if (!edited) throw new ApiError("not_found", "No such item.", 404);
+  const updated = worded && (await tagByWords(userId, itemId, said, saidBefore)) ? await readItem(userId, itemId) : edited;
   // Show as article on a link kept only for what it said: read it again, keeping the body this time.
   if (patch.preview === "reader" && updated.previewGuess && !["reader", "code", "document"].includes(updated.previewGuess) && updated.url)
     return retryExtraction(userId, itemId);
@@ -168,7 +205,7 @@ export async function openItem(userId: string, itemId: string): Promise<void> {
     return { kind: item?.kind, preview: item?.preview };
   });
 }
-export const count = (userId: string, status: Status) => countItems(userId, status);
+export const count = (userId: string, status?: Status) => countItems(userId, status); // no status: every Item
 
 export async function deleteItem(userId: string, itemId: string): Promise<void> {
   if (!(await moveToBin(userId, itemId))) throw new ApiError("not_found", "No such item.", 404);
@@ -197,6 +234,7 @@ export async function purgeBinNow(): Promise<number> {
 }
 
 export const highlightsOf = (userId: string, itemId: string): Promise<Highlight[]> => listHighlights(userId, itemId);
+export const highlightsAcross = (userId: string, q: HighlightsQuery): Promise<HighlightPage> => findHighlights(userId, q);
 
 export async function addHighlight(userId: string, body: CreateHighlightBody): Promise<Highlight> {
   const h = await createHighlight(userId, body);
@@ -220,6 +258,31 @@ export async function coverLocation(userId: string, itemId: string): Promise<str
   const keys = await getItemBlobKeys(userId, itemId);
   if (!keys?.coverKey) throw new ApiError("not_found", "No cover.", 404);
   return signedUrl(keys.coverKey, 600);
+}
+
+// The picture of an Image Item, for the person's AI tool to look at (the connector's get_item). Only the formats AI
+// tools read, told from the bytes (a file's stored type is whatever its sender said), and only up to a size one tool
+// answer can carry: a bigger one, or a HEIC, is named as such so the AI tool can say why it cannot see it.
+export const PICTURE_MAX_BYTES = 3_000_000;
+export type Picture = { data: string; mimeType: string } | "too_large" | "unsupported" | null;
+const pictureType = (b: Buffer): string | null =>
+  b[0] === 0xff && b[1] === 0xd8 ? "image/jpeg"
+  : b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) ? "image/png"
+  : b.subarray(0, 4).toString("latin1") === "GIF8" ? "image/gif"
+  : b.subarray(0, 4).toString("latin1") === "RIFF" && b.subarray(8, 12).toString("latin1") === "WEBP" ? "image/webp"
+  : null;
+export async function pictureOf(userId: string, itemId: string): Promise<Picture> {
+  const item = await readItem(userId, itemId);
+  const keys = item.kind === "image" ? await getItemBlobKeys(userId, itemId) : null;
+  if (!keys?.coverKey) return null;
+  try {
+    const body = await getObject(keys.coverKey, { maxBytes: PICTURE_MAX_BYTES });
+    const mimeType = pictureType(body);
+    return mimeType ? { data: body.toString("base64"), mimeType } : "unsupported";
+  } catch (e) {
+    if (e instanceof TooLarge) return "too_large";
+    throw e;
+  }
 }
 
 // A PDF's own file, kept when it was plucked: the web's viewer and Download, and Save to Files on the iPhone once the

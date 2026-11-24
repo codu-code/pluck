@@ -2,12 +2,12 @@ import type { SharedListSummary } from "@pluck/shared-schemas";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { Icon, ICONS } from "@/components/Glyph";
 import { Empty, TitledList, usePull } from "@/components/Screen";
 import { useSplit } from "@/components/split/context";
-import { useLists } from "@/lib/data";
+import { library, useLists } from "@/lib/data";
 import { kv } from "@/lib/kv";
 import { api } from "@/lib/session";
 import { font, scale, useTheme } from "@/lib/theme";
@@ -25,14 +25,39 @@ export default function Lists() {
   useEffect(() => void kv.get(FOLD, false).then(setFolded), []);
   const split = useSplit();
   const all = lists.data ?? [];
+  // A new List starts with its name (iOS's own prompt, as Reminders asks) and opens, ready to be filled.
+  const start = () =>
+    Alert.prompt(tr("lists.new.title"), undefined, [
+      { text: tr("common.cancel"), style: "cancel" },
+      {
+        text: tr("common.add"),
+        onPress: (typed?: string) => {
+          const name = typed?.trim();
+          if (!name) return;
+          void library.newList(name).then(
+            (l) => (split ? split.show({ kind: "list", id: l.id }) : router.push(`/lists/${l.id}`)),
+            () => Alert.alert(tr("common.failed.title"), tr("common.failed.body")),
+          );
+        },
+      },
+    ], "plain-text");
+  const add = (
+    <Pressable accessibilityRole="button" accessibilityLabel={tr("lists.new.title")} onPress={start} hitSlop={8} style={split ? undefined : styles.headerButton}>
+      <Icon d={ICONS.plus} size={split ? 20 : undefined} color={split ? t.actionInk : t.ink} />
+    </Pressable>
+  );
   return (
     <TitledList
       title={tr("tabs.lists")}
+      right={add}
       sub={split && lists.data ? tr("ipad.listsSub", { count: all.length, shared: all.filter((l) => l.visibility === "public").length }) : undefined}
       bar={split && (
-        <Pressable accessibilityRole="button" accessibilityLabel={tr("tabs.search")} onPress={() => router.navigate("/search")} hitSlop={8}>
-          <Icon d={ICONS.search} size={20} color={t.actionInk} />
-        </Pressable>
+        <>
+          <Pressable accessibilityRole="button" accessibilityLabel={tr("tabs.search")} onPress={() => router.navigate("/search")} hitSlop={8}>
+            <Icon d={ICONS.search} size={20} color={t.actionInk} />
+          </Pressable>
+          {add}
+        </>
       )}
       // On iPad the Archive is in the sidebar.
       head={split ? undefined : 
@@ -108,6 +133,7 @@ export default function Lists() {
 }
 
 const styles = StyleSheet.create({
+  headerButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   splitRow: { flexDirection: "row", gap: 12, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, marginHorizontal: 8 },
   tile: { width: 40, height: 40, borderRadius: 8, borderWidth: 1, borderStyle: "dashed", alignItems: "center", justifyContent: "center" },
   archive: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 52, paddingHorizontal: 16 },

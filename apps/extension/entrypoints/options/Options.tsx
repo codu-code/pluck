@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "use-intl";
 import { signOut, startSignIn, useApiKey } from "@/lib/auth";
+import { switchServer, typedServer } from "@/lib/server";
 import { pageShortcut } from "@/lib/shortcut";
 import { get, set, settings as readSettings, type Settings } from "@/lib/store";
 
@@ -31,21 +32,18 @@ export function Options() {
     await set({ settings: next });
   };
 
-  const saveServer = async () => {
-    let origin: string;
-    try {
-      origin = new URL(server.trim()).origin;
-    } catch {
-      return setMessage(t("options.messages.notAddress"));
-    }
-    if (origin === s.server) return;
-    // Only servers this build was made for (its host permissions); others need their own build.
-    if (!(await browser.permissions.contains({ origins: [`${origin}/*`] })))
-      return setMessage(t("options.messages.ownServerOnly"));
-    await signOut();
-    await save({ server: origin });
+  // Runs in the click or the Enter itself: the browser only asks for a new host while it is handling one.
+  const confirmServer = () => {
+    const typed = typedServer(server);
+    if ("error" in typed) return setMessage(t(`options.messages.${typed.error}`));
+    const { origin } = typed;
     setServer(origin);
-    setMessage(t("options.messages.using", { origin }));
+    if (origin === s.server) return;
+    setMessage(null); // the browser is asking: an earlier answer was not about this address
+    void switchServer(s.server, origin).then((outcome) => {
+      if (outcome === "using") setS((now) => now && { ...now, server: origin });
+      setMessage(t(`options.messages.${outcome}`, { origin }));
+    });
   };
 
   return (
@@ -55,10 +53,15 @@ export function Options() {
         {keys && <span className="meta">{t("options.shortcut", { keys })}</span>}
       </div>
       <div className="grid">
-        <label className="field">
-          <span className="strong">{t("options.server")}</span>
-          <input type="url" value={server} onChange={(e) => setServer(e.target.value)} onBlur={() => void saveServer()} onKeyDown={(e) => e.key === "Enter" && void saveServer()} />
-        </label>
+        <div className="field">
+          <label className="strong" htmlFor="server">{t("options.server")}</label>
+          <input id="server" type="url" value={server} onChange={(e) => setServer(e.target.value)} onKeyDown={(e) => e.key === "Enter" && confirmServer()} />
+          {server.trim() !== s.server && (
+            <span className="links">
+              <button type="button" className="link" onClick={confirmServer}>{t("options.useServer")}</button>
+            </span>
+          )}
+        </div>
         <label className="field">
           <span className="strong">{t("options.defaultKind")}</span>
           <select value={s.defaultKind} onChange={(e) => void save({ defaultKind: e.target.value as Settings["defaultKind"] })}>

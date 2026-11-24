@@ -1,4 +1,4 @@
-import { isTextKind, withReferral, type Item, type List, type PublicList } from "@pluck/shared-schemas";
+import { isTextKind, REPORT_REASONS, withReferral, type Item, type List, type PublicList } from "@pluck/shared-schemas";
 import { Refused } from "@pluck/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
@@ -19,7 +19,7 @@ const EPOCH = new Date(0).toISOString(); // never shown (hideWhen), but the row 
 
 // The Inbox row reads an Item; a shared entry has only its public fields, so the rest are the plain defaults.
 const asItem = (e: Entry): Item => ({
-  id: e.id, kind: e.kind, url: e.url, canonicalUrl: null, title: e.title, titleIsDerived: false, siteName: e.siteName, author: null, excerpt: e.excerpt,
+  id: e.id, kind: e.kind, url: e.url, canonicalUrl: null, foundOn: null, title: e.title, titleIsDerived: false, siteName: e.siteName, author: null, excerpt: e.excerpt,
   hasCover: e.hasCover, preview: e.preview, previewGuess: e.preview, facts: e.facts, status: "inbox", archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "copied", wordCount: e.wordCount,
   lang: null, extraction: { state: "done", attempts: 0, lastError: null }, readingProgress: 0, inList: true, createdAt: EPOCH, updatedAt: EPOCH, lastTouchedAt: EPOCH,
   statusChangedAt: EPOCH, deletedAt: null,
@@ -61,6 +61,17 @@ export default function SharedList() {
       },
     ]);
 
+  // Something wrong with it: why, from the same reasons the public page asks, sent to a person. iOS's own alert,
+  // which lists them on iPhone and iPad alike.
+  const report = () =>
+    Alert.alert(tr("shared.reportTitle"), undefined, [
+      ...REPORT_REASONS.map((reason) => ({
+        text: tr(`shared.reportReasons.${reason}`),
+        onPress: () => void api(`/api/v1/shared/${id}/report`, { json: { reason } }).then(() => toast(tr("shared.reported")), failed),
+      })),
+      { text: tr("common.cancel"), style: "cancel" as const },
+    ]);
+
   return (
     <View style={{ flex: 1, backgroundColor: t.ground }}>
       <View style={[styles.top, { paddingTop: insets.top + 8 }]}>
@@ -69,9 +80,14 @@ export default function SharedList() {
           <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink, fontSize: 15 }]}>{tr("tabs.lists")}</Text>
         </Pressable>
         {list && (
-          <Pressable accessibilityRole="button" onPress={leave} style={styles.leave}>
-            <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("shared.leave")}</Text>
-          </Pressable>
+          <View style={{ flexDirection: "row" }}>
+            <Pressable accessibilityRole="button" onPress={report} style={styles.leave}>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("shared.report")}</Text>
+            </Pressable>
+            <Pressable accessibilityRole="button" onPress={leave} style={styles.leave}>
+              <Text maxFontSizeMultiplier={scale.title} style={[font.regular, { color: t.ink2, fontSize: 15 }]}>{tr("shared.leave")}</Text>
+            </Pressable>
+          </View>
         )}
       </View>
       <FlatList

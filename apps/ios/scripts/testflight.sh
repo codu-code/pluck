@@ -25,6 +25,7 @@ echo "Building build $PLUCK_BUILD_NUMBER"
 pnpm exec expo prebuild -p ios --clean
 xcodebuild -workspace ios/Pluck.xcworkspace -scheme Pluck -configuration Release -destination "generic/platform=iOS" \
   -archivePath "$out/Pluck.xcarchive" archive "${auth[@]}"
+scripts/check-versions.sh "$out/Pluck.xcarchive/Products/Applications/Pluck.app" # stops here, before the upload, if an extension's build number is not the app's
 
 cat > "$out/ExportOptions.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>

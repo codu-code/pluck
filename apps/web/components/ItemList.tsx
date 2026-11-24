@@ -30,12 +30,12 @@ const SLIDE_MS = 150; // motion token: archiveRow
 function placeholders(d: PluckDraft): Row[] {
   const now = new Date().toISOString();
   const base = {
-    canonicalUrl: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, facts: {}, status: "inbox" as const,
+    canonicalUrl: null, foundOn: null, titleIsDerived: true, siteName: null, author: null, excerpt: null, hasCover: false, facts: {}, status: "inbox" as const,
     archivedReason: null, dueAt: null, tagIds: [], aiTagIds: [], note: null, source: "web" as const, wordCount: null, lang: null, readingProgress: 0, inList: false,
     createdAt: now, updatedAt: now, lastTouchedAt: now, statusChangedAt: now, deletedAt: null, draft: d.key,
   };
   if (d.text !== null)
-    return [{ ...base, id: `draft-${d.key}`, kind: d.kind ?? "note", url: null, preview: null, previewGuess: null, title: d.text.split("\n")[0]!, extraction: { state: "none", attempts: 0, lastError: null } }];
+    return [{ ...base, id: `draft-${d.key}`, kind: d.file ?? d.kind ?? "note", url: null, preview: null, previewGuess: null, title: d.text.split("\n")[0]!, extraction: { state: d.file ? "pending" : "none", attempts: 0, lastError: null } }];
   return d.urls.map((url, i) => ({ ...base, id: `draft-${d.key}-${i}`, kind: "link" as const, url, preview: "reader" as const, previewGuess: "reader" as const, title: url, extraction: { state: "pending" as const, attempts: 0, lastError: null } }));
 }
 
@@ -55,11 +55,11 @@ type Props = {
   expiry: Expiry;
   expiringThisWeek?: number;
   deletedId?: string; // set after a delete on the item page: offers Undo from the bin
-  sample?: string; // the paste box's example link while the list is empty (Inbox only)
+  started?: boolean; // the library has Items somewhere, so an empty Inbox is one cleared by triage (Inbox only)
 };
 
 // Inbox and Later: the paste box, kind chips, sort, rows, keyboard triage, bulk select and undo.
-export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId, sample }: Props) {
+export function ItemList({ view, initial, total: initialTotal, tags: initialTags, expiry, expiringThisWeek = 0, deletedId, started = false }: Props) {
   const t = useTranslations("app.itemList");
   const app = useTranslations("app");
   const title = app(`status.${view}`);
@@ -81,7 +81,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const mounted = useNow();
   const [ticked, setNow] = useState<Date | null>(null);
   const now = ticked ?? mounted;
-  const [everPlucked, setEverPlucked] = useState(initial.items.length > 0);
+  const [everPlucked, setEverPlucked] = useState(started || initial.items.length > 0);
   const [toast, showToast] = useToast();
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -297,6 +297,8 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
   const onPlucked = (key: string, { results }: PluckResponse) => {
     if (view !== "inbox") return;
     const ids = new Set(results.map((r) => r.item.id));
+    // A #tag in the words may have made a tag: read them again so its chip has a name.
+    if (results.some((r) => r.item.tagIds.some((id) => !vocab.some((t) => t.id === id)))) void library.tags().then(setVocab, () => {});
     setTotal((t) => t + results.filter((r) => r.created).length);
     setRows((cur) => [...results.map((r) => r.item), ...cur.filter((r) => r.draft !== key && !ids.has(r.id))]);
   };
@@ -309,7 +311,7 @@ export function ItemList({ view, initial, total: initialTotal, tags: initialTags
 
   return (
     <>
-      <TopBar sample={emptyNode ? sample : undefined} emphasis={Boolean(emptyNode) && view === "inbox"} onPluck={onPluck} onPlucked={onPlucked} onFailed={onFailed} />
+      <TopBar emphasis={Boolean(emptyNode) && view === "inbox"} onPluck={onPluck} onPlucked={onPlucked} onFailed={onFailed} />
       {emptyNode ?? (
         <div className={styles.page}>
           <div className={styles.head}>

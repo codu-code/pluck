@@ -229,3 +229,20 @@ test("a purge whose files fail keeps its claim: the Item cannot be restored, and
   expect(await purgeFromBin(a, item.id)).toBe(true);
   expect(await (await items()).countDocuments({ _id: oid(item.id) })).toBe(0);
 });
+
+test("Found on is the page an image was first seen on: kept from the first pluck, filled in by a later one, never another person's", async () => {
+  const { a, b } = await twoUsers();
+  const url = "https://cdn.example.test/ad.png";
+  const first = await pluckLink(a, { url, source: "extension", foundOn: "https://example.test/campaign" });
+  expect(first.item.foundOn).toBe("https://example.test/campaign");
+  const again = await pluckLink(a, { url, source: "extension", foundOn: "https://example.test/elsewhere" });
+  expect(again).toMatchObject({ created: false, item: { id: first.item.id, foundOn: "https://example.test/campaign" } });
+
+  const bare = await pluckLink(a, { url: "https://cdn.example.test/other.png", source: "web" });
+  expect(bare.item.foundOn).toBeNull();
+  expect((await pluckLink(a, { url: "https://cdn.example.test/other.png", source: "extension", foundOn: "https://example.test/later" })).item.foundOn).toBe("https://example.test/later");
+
+  // The same picture in someone else's library is their own Item, with their own Found on.
+  expect((await pluckLink(b, { url, source: "extension" })).item).toMatchObject({ foundOn: null });
+  expect((await getItem(a, first.item.id))?.foundOn).toBe("https://example.test/campaign");
+});

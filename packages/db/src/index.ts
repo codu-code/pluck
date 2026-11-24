@@ -8,24 +8,24 @@ export {
   type PluckLinkInput, type TextItemInput, type ItemEdit, type BatchEdit, type ExtractionResult,
 } from "./items.ts";
 export { misfit } from "./item-doc.ts";
-export { createHighlight, listHighlights, updateHighlight, deleteHighlight, type HighlightInput } from "./highlights.ts";
+export { createHighlight, listHighlights, updateHighlight, deleteHighlight, findHighlights, foldAllHighlights, type HighlightInput } from "./highlights.ts";
 export { enqueue, claimJob, completeJob, retryJob, failJob, pendingJobCount, type Job } from "./jobs.ts";
 export { hitRateLimit } from "./rate-limit.ts";
 export {
-  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, recountTags, batchTags, purgeAiTags, countAiTagged,
+  slugify, listTags, createTag, renameTag, deleteTag, resolveTags, nearestTags, setItemTags, recountTags, batchTags, purgeAiTags, countAiTagged, tagByWords,
 } from "./tags.ts";
 export { searchItems, snippetFor } from "./search.ts";
 export {
-  createList, listLists, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
+  createList, listLists, markStarters, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
-export { analyticsOf, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
+export { analyticsOf, claimStarters, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";
-export { shareList, sharesOf, unshareList, leaveSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
+export { shareList, sharesOf, unshareList, leaveSharedList, reportSharedList, MAX_PEOPLE, type ShareResult } from "./shares.ts";
 export { openReports, resolveReport, killList, killUser, isAdminEmail } from "./admin.ts";
-export { digestFor, isEmptyDigest, claimDueDigests } from "./digest.ts";
+export { digestFor, isEmptyDigest, claimDueDigests, sendDigestOnce } from "./digest.ts";
 export { aliasOf, regenerateAlias, userForAlias, createEmailItem, setRawEmailKey, type EmailItemInput } from "./email-in.ts";
 export { createApiKey, listApiKeys, revokeApiKey, verifyApiKey, DEFAULT_KEY_SCOPES } from "./api-keys.ts";
 export {

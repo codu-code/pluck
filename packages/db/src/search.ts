@@ -1,19 +1,37 @@
 import { createHash } from "node:crypto";
 import { normalizeUrl, type Item, type SearchHit, type SearchQuery } from "@pluck/shared-schemas";
 import type { Filter, ObjectId } from "mongodb";
-import { items, listRows, oid, tags, type ItemDoc } from "./collections.ts";
+import { highlights, items, listRows, oid, tags, type ItemDoc } from "./collections.ts";
 import { toItem } from "./items.ts";
 
-// Text search over title (10), note and tags (5), list names (3), site and excerpt (2) and the kept text (1).
+// Text search over title (10), note and tags (5), list names (3), site, excerpt and highlights (2) and the kept text (1).
 // One $text index on items; the kept text is copied onto the item, capped, so one query ranks everything.
 
 const BODY_CAP = 32_000;
+const HIGHLIGHTS_CAP = 8_000;
+const HIGHLIGHTS_MARK = "\n\v\n"; // where an Item's highlights begin in its searchText: all before it belongs to textForSearch
 
 export const bodyForSearch = (text: string) => text.slice(0, BODY_CAP);
 
 export function textForSearch(p: { url?: string | null; excerpt?: string | null; siteName?: string | null; author?: string | null }): string {
   const host = p.url ? new URL(p.url).hostname.replace(/^www\./, "") : null;
   return [p.excerpt, p.siteName, host, p.author].filter(Boolean).join(" · ");
+}
+
+// An Item's highlights as they sit at the end of its searchText, after the excerpt, site and author and never in their
+// place. The person's notes go first: they are their own words and kept nowhere else, while most quotes are in the
+// kept text too.
+// shortcut: highlights past 8,000 characters an Item are not searched (list_highlights still finds them), their own text index when people highlight that much.
+export async function highlightsForSearch(userId: ObjectId, itemId: ObjectId): Promise<string> {
+  const docs = await (await highlights()).find({ userId, itemId }, { projection: { quote: 1, note: 1 } }).sort({ createdAt: 1 }).toArray();
+  const text = [...docs.map((h) => h.note), ...docs.map((h) => h.quote)].filter(Boolean).join(" · ").slice(0, HIGHLIGHTS_CAP);
+  return text && HIGHLIGHTS_MARK + text;
+}
+
+// Keeps an Item's searchText in step after its highlights change: what textForSearch wrote stays as it is.
+export async function syncHighlightText(userId: ObjectId, itemId: ObjectId): Promise<void> {
+  const own = { $arrayElemAt: [{ $split: [{ $ifNull: ["$searchText", ""] }, HIGHLIGHTS_MARK] }, 0] };
+  await (await items()).updateOne({ _id: itemId, userId }, [{ $set: { searchText: { $concat: [own, { $literal: await highlightsForSearch(userId, itemId) }] } } }]);
 }
 
 // Keeps items' tag names in step after tags change. `filter` picks the items to refresh.
@@ -32,7 +50,7 @@ export async function syncTagNames(userId: ObjectId, filter: Filter<ItemDoc>): P
 // Japanese, Chinese and Korean: $text splits on spaces and punctuation, so it finds nothing inside their sentences.
 const CJK = /[\p{sc=Han}\p{sc=Hiragana}\p{sc=Katakana}\p{sc=Hangul}]/u;
 const SEARCHED = ["title", "note", "tagNames", "listNames", "searchText", "searchBody"] as const;
-const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const terms = (q: string) =>
   q.toLowerCase().replace(/["'“”]/g, " ").split(/\s+/).filter((t) => (t.length > 1 || CJK.test(t)) && !t.startsWith("-"));

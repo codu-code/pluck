@@ -2,7 +2,7 @@
 
 A fast, open-source URL saver with a connector for the AI tool you already use. Pluck anything in one tap, from the iPhone share sheet, the browser, email or a chat with your AI. The page is kept, not just the link. Sort it later, by hand or with your AI. There is no AI inside the app; your AI reads and organises your library through the connector, only when you ask.
 
-Hosted at [getpluck.io](https://getpluck.io), or run your own with `docker compose up` ([docs/self-host.md](docs/self-host.md)).
+Hosted at [getpluck.io](https://getpluck.io), or run your own with `docker compose up`, which pulls the published image for amd64 and arm64 ([docs/self-host.md](docs/self-host.md); releases are in [CHANGELOG.md](CHANGELOG.md)).
 
 ## What is where
 
@@ -64,6 +64,7 @@ Stop `pnpm dev` before `pnpm e2e`: both use `apps/web/.next`.
 - [docs/architecture.md](docs/architecture.md): how the pieces fit, for a newcomer.
 - [docs/self-host.md](docs/self-host.md): run your own, and every setting.
 - [docs/mcp.md](docs/mcp.md): the connector, its tools and how to connect an AI tool.
+- [docs/threat-model.md](docs/threat-model.md): what can go wrong, what stops it, and what a hostile page can and cannot make your AI do.
 - [docs/ios.md](docs/ios.md): the iPhone app, its share extension, offline and TestFlight (`apps/ios/scripts/testflight.sh`).
 - [docs/i18n.md](docs/i18n.md): the ten languages and how to add a string.
 - [docs/deploy.md](docs/deploy.md): how getpluck.io is deployed (a human step; nothing here deploys itself).

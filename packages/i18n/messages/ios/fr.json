@@ -179,7 +179,10 @@
     "tickedOf": "{ticked} sur {count}",
     "empty": {
       "title": "Pas encore de liste.",
-      "body": "Créez-en une sur le web, ou demandez à votre IA d’en construire une à partir de ce que vous avez cueilli."
+      "body": "Créez-en une avec le + en haut, ou demandez à votre IA d’en construire une à partir de ce que vous avez cueilli."
+    },
+    "new": {
+      "title": "Nouvelle liste"
     }
   },
   "search": {
@@ -299,6 +302,19 @@
     "leaveTitle": "Quitter cette liste ?",
     "leaveBody": "Elle disparaît de vos listes. Son auteur peut la partager à nouveau avec vous.",
     "leave": "Quitter",
+    "report": "Signaler",
+    "reportTitle": "Quel est le problème ?",
+    "reportReasons": {
+      "illegal": "Contenu illicite",
+      "minors": "Sexualise des mineurs",
+      "harassment": "Harcèlement",
+      "doxxing": "Divulgue des informations privées sur quelqu’un",
+      "spam": "Spam ou ferme de liens",
+      "malware": "Logiciel malveillant ou hameçonnage",
+      "infringement": "Droit d’auteur ou marque",
+      "other": "Autre chose"
+    },
+    "reported": "Merci. Une personne lit chaque signalement.",
     "byNamed": "Partagée avec vous par {name} (@{handle}) · consultation seule",
     "by": "Partagée avec vous par @{handle} · consultation seule",
     "notShared": {
@@ -446,7 +462,8 @@
     "titleA11y": "Titre",
     "titleHint": "Laissez le titre vide et la première ligne servira de titre. Enregistrement automatique pendant la saisie.",
     "textA11y": "Texte",
-    "textPlaceholder": "Notez-le."
+    "textPlaceholder": "Notez-le.",
+    "foundOn": "Trouvé sur {site}"
   },
   "settings": {
     "title": "Réglages",
@@ -564,7 +581,12 @@
     "as": "Cueillir comme",
     "queued": "Cueilli. Synchronisation dès votre retour en ligne.",
     "failed": "Ça n’est pas passé.",
-    "plucked": "Cueilli dans la boîte de réception."
+    "plucked": "Cueilli dans la boîte de réception.",
+    "photo": "Photo",
+    "camera": "Appareil photo",
+    "cameraOff": "Pluck n’est pas autorisé à utiliser l’appareil photo. Vous pouvez changer cela dans Réglages.",
+    "removePhoto": "Retirer cette photo",
+    "untagged": "Cueilli dans la boîte de réception. Les listes et les tags n’ont pas été ajoutés."
   },
   "preview": {
     "open": "Ouvrir sur {site}",
@@ -619,5 +641,20 @@
       "next": "Suivant",
       "previous": "Précédent"
     }
+  },
+  "format": {
+    "title": "Format",
+    "bold": "Gras",
+    "italic": "Italique",
+    "heading": "Titre",
+    "bullets": "Liste à puces",
+    "numbers": "Liste numérotée"
+  },
+  "speak": {
+    "start": "Parler",
+    "stop": "Arrêter l’écoute",
+    "listening": "Écoute en cours",
+    "off": "Parler n’est pas disponible ici dans cette langue. Le micro du clavier fonctionne toujours.",
+    "denied": "Pluck n’est pas autorisé à utiliser le micro et la reconnaissance vocale. Vous pouvez changer cela dans Réglages."
   }
 }
