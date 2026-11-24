@@ -109,6 +109,7 @@ test("support: answers by topic, and bugs go to GitHub issues", async ({ page })
   for (const topic of ["The extension", "iPhone", "Your AI", "Your library and account", "Running your own"])
     await expect(page.getByRole("heading", { level: 2, name: topic })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open an issue" })).toHaveAttribute("href", /\/issues$/);
+  await expect(page.getByRole("link", { name: "support@getpluck.io" })).toHaveAttribute("href", "mailto:support@getpluck.io"); // a private way in: issues are public
   await page.getByRole("link", { name: "Connect your AI" }).last().click();
   await expect(page).toHaveURL(/\/connect$/);
 });

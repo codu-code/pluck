@@ -283,7 +283,7 @@
     "bugs": {
       "title": "Found a bug<mark>?</mark>",
       "body": "Open an issue on GitHub. Say what you did, what you expected, and what happened instead. Ideas are welcome there too.",
-      "note": "Issues are public. Leave out links, notes or anything else you would rather keep to yourself.",
+      "note": "Issues are public. Leave out links, notes or anything else you would rather keep to yourself. Or write to <mail>{email}</mail>.",
       "button": "Open an issue"
     }
   },
@@ -395,11 +395,11 @@
       "description": "What Pluck stores, what it never does, and how to take it all with you."
     },
     "title": "Privacy",
-    "lede": "Short version: we store what you pluck so you can read it later. We don't read it, sell it, or feed it to a model. Last updated 24 October 2026.",
+    "lede": "Short version: we store what you pluck so you can read it later. We don't read it, sell it, or feed it to a model. Last updated 24 November 2026.",
     "sections": {
       "store": {
         "title": "What we store",
-        "body": "Your email and name. Every item you pluck: the link, the page text and images we fetched, your title, note, tags, kind, status, lists, highlights and reading position. The time you plucked it and the time you last opened it, which the expiry rule and the Monday email use. Items you import from Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep or a bookmarks file."
+        "body": "Your email and name. Every item you pluck: the link, the page text and images we fetched, your title, note, tags, kind, status, lists, highlights and reading position. The time you plucked it and the time you last opened it, which the expiry rule and the Monday email use. Items you import from Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep or a bookmarks file. The Notes you write, and the photos and files you add yourself."
       },
       "dont": {
         "title": "What we don't do",
@@ -408,6 +408,10 @@
       "extension": {
         "title": "The browser extension",
         "body": "While you are signed in, the extension asks your Pluck server whether the page you are on is already in your library, so its icon can fill in. That address is only used to answer the question: it is not added to your library or kept with your account. Turn it off by signing out of the extension or removing it."
+      },
+      "device": {
+        "title": "The iPhone and iPad app",
+        "body": "The app asks before it uses your photos, your camera or your microphone, the first time you reach for each. It sees only the photos you choose, and it uses the camera only while you take a picture. Those photos are kept in your library like anything else you pluck. When you speak a note, your device turns the speech into text when it can. Otherwise Apple does, as it does for the keyboard's dictation. Pluck keeps the words and no sound: the sound never reaches our servers."
       },
       "ai": {
         "title": "Your AI tool",

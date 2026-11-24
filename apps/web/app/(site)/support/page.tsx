@@ -12,6 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title"), description: t("description"), ...(await pageMeta("/support")) };
 }
 
+const EMAIL = "support@getpluck.io";
+
 // Each topic's answers, by key under site.support.<topic>.
 const TOPICS = [
   { id: "extension", key: "extension", answers: ["extension.pluckPage", "extension.quote", "extension.dot", "extension.login", "extension.server"] },
@@ -69,7 +71,7 @@ export default async function Support() {
           <div className={styles.bugCopy}>
             <h2 className={`${styles.display} ${styles.h2Mid}`}>{t.rich("bugs.title", { mark: (c) => <span className={styles.mint}>{c}</span> })}</h2>
             <p className={styles.aiPara}>{t("bugs.body")}</p>
-            <p className={styles.bugNote}>{t("bugs.note")}</p>
+            <p className={styles.bugNote}>{t.rich("bugs.note", { email: EMAIL, mail: (c) => <a href={`mailto:${EMAIL}`}>{c}</a> })}</p>
           </div>
           <a href={`${REPO_URL}/issues`} className={`${styles.big} ${styles.bigLight}`}>{t("bugs.button")}</a>
         </div>

@@ -283,7 +283,7 @@
     "bugs": {
       "title": "Einen Fehler gefunden<mark>?</mark>",
       "body": "Eröffne ein Issue auf GitHub. Schreib, was du getan hast, was du erwartet hast und was stattdessen passiert ist. Ideen sind dort auch willkommen.",
-      "note": "Issues sind öffentlich. Lass Links, Notizen und alles andere weg, was du lieber für dich behältst.",
+      "note": "Issues sind öffentlich. Lass Links, Notizen und alles andere weg, was du lieber für dich behältst. Oder schreib an <mail>{email}</mail>.",
       "button": "Issue eröffnen"
     }
   },
@@ -395,11 +395,11 @@
       "description": "Was Pluck speichert, was es nie tut und wie du alles mitnimmst."
     },
     "title": "Datenschutz",
-    "lede": "Kurz gesagt: Wir speichern, was du pflückst, damit du es später lesen kannst. Wir lesen es nicht, verkaufen es nicht und füttern kein Modell damit. Stand: 24. Oktober 2026.",
+    "lede": "Kurz gesagt: Wir speichern, was du pflückst, damit du es später lesen kannst. Wir lesen es nicht, verkaufen es nicht und füttern kein Modell damit. Stand: 24. November 2026.",
     "sections": {
       "store": {
         "title": "Was wir speichern",
-        "body": "Deine E-Mail-Adresse und deinen Namen. Jeden Eintrag, den du pflückst: den Link, den Seitentext und die Bilder, die wir abgerufen haben, deinen Titel, deine Notiz, Tags, Art, Status, Listen, Markierungen und deine Leseposition. Den Zeitpunkt, zu dem du ihn gepflückt hast, und den Zeitpunkt, zu dem du ihn zuletzt geöffnet hast; beides nutzen die Ablaufregel und die Montagsmail. Einträge, die du aus Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep oder einer Lesezeichendatei importierst."
+        "body": "Deine E-Mail-Adresse und deinen Namen. Jeden Eintrag, den du pflückst: den Link, den Seitentext und die Bilder, die wir abgerufen haben, deinen Titel, deine Notiz, Tags, Art, Status, Listen, Markierungen und deine Leseposition. Den Zeitpunkt, zu dem du ihn gepflückt hast, und den Zeitpunkt, zu dem du ihn zuletzt geöffnet hast; beides nutzen die Ablaufregel und die Montagsmail. Einträge, die du aus Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep oder einer Lesezeichendatei importierst. Die Notizen, die du schreibst, und die Fotos und Dateien, die du selbst hinzufügst."
       },
       "dont": {
         "title": "Was wir nicht tun",
@@ -408,6 +408,10 @@
       "extension": {
         "title": "Die Browser-Erweiterung",
         "body": "Solange du angemeldet bist, fragt die Erweiterung deinen Pluck-Server, ob die Seite, auf der du bist, schon in deiner Bibliothek ist, damit sich ihr Symbol füllen kann. Diese Adresse wird nur zur Beantwortung dieser Frage verwendet: Sie wird weder deiner Bibliothek hinzugefügt noch mit deinem Konto gespeichert. Du schaltest das ab, indem du dich in der Erweiterung abmeldest oder sie entfernst."
+      },
+      "device": {
+        "title": "Die App für iPhone und iPad",
+        "body": "Die App fragt, bevor sie deine Fotos, deine Kamera oder dein Mikrofon nutzt, jeweils beim ersten Mal. Sie sieht nur die Fotos, die du auswählst, und nutzt die Kamera nur, während du ein Bild aufnimmst. Diese Fotos liegen in deiner Bibliothek wie alles andere, was du pflückst. Wenn du eine Notiz sprichst, macht dein Gerät daraus Text, wenn es das kann. Sonst macht es Apple, wie beim Diktieren über die Tastatur. Pluck behält die Wörter und keinen Ton: Der Ton erreicht unsere Server nie."
       },
       "ai": {
         "title": "Dein KI-Tool",
