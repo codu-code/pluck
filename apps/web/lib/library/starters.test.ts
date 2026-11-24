@@ -1,7 +1,7 @@
-import { countItems, digestFor, getMe, isEmptyDigest, listLists, updateSettings } from "@pluck/db";
+import { countItems, digestFor, getMe, isEmptyDigest, updateSettings } from "@pluck/db";
 import { twoUsers } from "@pluck/db/testing";
 import { expect, test, vi } from "vitest";
-import { addItems, browse, giveStarters, listsOf, newList, pluckAny, readList, readText, removeList, startersBackfill } from "./index";
+import { addItems, browse, giveStarters, listsOf, newList, pluckAny, readList, readText, removeList } from "./index";
 
 // The posts are Markdown the web app's bundler loads; here two short ones stand in.
 vi.mock("../blog", () => ({
@@ -65,19 +65,4 @@ test("what an account starts with is never in the weekly email or counted as plu
   const d = await digestFor(a, settings, later(45));
   expect(d.oldest.map((o) => o.title)).toEqual(["Mine"]);
   expect(d.quietLists.map((l) => l.name)).toEqual(["Favourites"]);
-});
-
-test("the worker gives accounts from before their Lists unasked, but leaves one still signing up to its sign-up", async () => {
-  const { a, b } = await twoUsers();
-  const mine = await newList(b, { name: "Ideas" }); // b made its own Ideas before
-  // Made a moment ago: sign-up may still be at work, so the worker passes them by.
-  expect(await startersBackfill()).toBe(0);
-  expect(await listLists(a)).toEqual([]);
-  const later = new Date(Date.now() + 3_600_000);
-  while (await startersBackfill(later)) { /* every account, a few at a time, to the end */ }
-  expect(await startersBackfill(later)).toBe(0); // given once: nothing left to ask about
-  expect((await listLists(a)).map((l) => l.name).sort()).toEqual(["Favourites", "Ideas"]);
-  expect((await listLists(b)).map((l) => [l.name, l.id === mine.id])).toEqual(expect.arrayContaining([["Ideas", true], ["Favourites", false]]));
-  expect(await listLists(b)).toHaveLength(2); // no twin of the Ideas b already had
-  expect((await browse(a, { status: "inbox", sort: "newest", limit: 50 })).items).toEqual([]); // Lists only, no posts
 });

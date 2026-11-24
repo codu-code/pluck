@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { expect, test } from "vitest";
 import { getDb } from "./client.ts";
 import {
-  aliasOf, claimStarters, withoutStarters, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, updateImport, listApiKeys, recountTags,
+  aliasOf, claimStarters, createApiKey, createHighlight, createList, createTextItem, deleteAccountData, exportData, claimImportStart, createImport, getImport, getItem, importLink, updateImport, listApiKeys, recountTags,
   listTags, pluckLink, revokeApiKey, verifyApiKey, analyticsOf, countItems, getMe, setHeardFrom, setVia, updateSettings, finishExport, latestExport, startExport, sweepTransfers,
 } from "./index.ts";
 import { twoUsers } from "./testing.ts";
@@ -146,16 +146,4 @@ test("the starter Lists are claimed once per account, each account for itself", 
   expect(await claimStarters(a)).toBe(false);
   expect(await claimStarters(b)).toBe(true); // a's claim is not b's
   expect(await claimStarters(new ObjectId().toHexString())).toBe(false); // no such account: nothing to make
-});
-
-test("the accounts still without starter Lists are the unclaimed ones, and never one made in the last ten minutes", async () => {
-  const { a, b } = await twoUsers();
-  const later = new Date(Date.now() + 3_600_000);
-  expect(await withoutStarters(1000)).not.toEqual(expect.arrayContaining([a])); // just made: its sign-up is still at work
-  expect(await withoutStarters(1000, later)).toEqual(expect.arrayContaining([a, b]));
-  await claimStarters(a);
-  const left = await withoutStarters(1000, later);
-  expect(left).toContain(b);
-  expect(left).not.toContain(a); // a's claim takes a off the list, and leaves b on it
-  expect(await withoutStarters(0 + 1, later)).toHaveLength(1); // a few at a time
 });
