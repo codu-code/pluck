@@ -283,7 +283,7 @@
     "bugs": {
       "title": "Een bug gevonden<mark>?</mark>",
       "body": "Open een issue op GitHub. Zeg wat je deed, wat je verwachtte en wat er in plaats daarvan gebeurde. Ideeën zijn daar ook welkom.",
-      "note": "Issues zijn openbaar. Laat links, notities en alles wat je liever voor jezelf houdt weg.",
+      "note": "Issues zijn openbaar. Laat links, notities en alles wat je liever voor jezelf houdt weg. Of mail <mail>{email}</mail>.",
       "button": "Open een issue"
     }
   },
@@ -395,11 +395,11 @@
       "description": "Wat Pluck bewaart, wat het nooit doet en hoe je alles meeneemt."
     },
     "title": "Privacy",
-    "lede": "Kort gezegd: we bewaren wat je plukt, zodat je het later kunt lezen. We lezen het niet, verkopen het niet en stoppen het niet in een AI-model. Laatst bijgewerkt op 24 oktober 2026.",
+    "lede": "Kort gezegd: we bewaren wat je plukt, zodat je het later kunt lezen. We lezen het niet, verkopen het niet en stoppen het niet in een AI-model. Laatst bijgewerkt op 24 november 2026.",
     "sections": {
       "store": {
         "title": "Wat we bewaren",
-        "body": "Je e-mailadres en naam. Elk item dat je plukt: de link, de paginatekst en afbeeldingen die we ophaalden, je titel, notitie, tags, soort, status, lijsten, markeringen en leespositie. Het tijdstip waarop je het plukte en waarop je het voor het laatst opende, die de verloopregel en de maandagmail gebruiken. Items die je importeert uit Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep of een bladwijzerbestand."
+        "body": "Je e-mailadres en naam. Elk item dat je plukt: de link, de paginatekst en afbeeldingen die we ophaalden, je titel, notitie, tags, soort, status, lijsten, markeringen en leespositie. Het tijdstip waarop je het plukte en waarop je het voor het laatst opende, die de verloopregel en de maandagmail gebruiken. Items die je importeert uit Pocket, Omnivore, Raindrop, Instapaper, Readwise Reader, Wallabag, Linkwarden, Karakeep of een bladwijzerbestand. De notities die je schrijft, en de foto’s en bestanden die je zelf toevoegt."
       },
       "dont": {
         "title": "Wat we niet doen",
@@ -408,6 +408,10 @@
       "extension": {
         "title": "De browserextensie",
         "body": "Zolang je bent ingelogd, vraagt de extensie je Pluck-server of de pagina waar je op bent al in je bibliotheek staat, zodat het pictogram kan inkleuren. Dat adres wordt alleen gebruikt om die vraag te beantwoorden: het wordt niet aan je bibliotheek toegevoegd en niet bij je account bewaard. Zet dit uit door uit te loggen in de extensie of door de extensie te verwijderen."
+      },
+      "device": {
+        "title": "De app voor iPhone en iPad",
+        "body": "De app vraagt het voordat hij je foto’s, je camera of je microfoon gebruikt, de eerste keer dat je ze nodig hebt. Hij ziet alleen de foto’s die je kiest, en gebruikt de camera alleen terwijl je een foto maakt. Die foto’s staan in je bibliotheek, net als al het andere dat je plukt. Als je een notitie inspreekt, zet je apparaat de spraak om in tekst als het dat kan. Anders doet Apple dat, net als bij het dicteren via het toetsenbord. Pluck bewaart de woorden en geen geluid: het geluid komt nooit op onze servers."
       },
       "ai": {
         "title": "Je AI-tool",
