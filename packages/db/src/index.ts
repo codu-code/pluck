@@ -19,7 +19,7 @@ export {
   createList, listLists, markStarters, getListMeta, getList, updateList, deleteList, addToList, removeFromList, updateEntry, markEntries, reorderList, listsForItem,
   setVisibility, listOwnedBy, type NewList, type ListEdit, type EntryEdit, type VisibilityResult,
 } from "./lists.ts";
-export { analyticsOf, claimStarters, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, withoutStarters, type HandleResult } from "./users.ts";
+export { analyticsOf, claimStarters, getMe, markMcpCall, setHeardFrom, setName, setHandle, setVia, updateSettings, type HandleResult } from "./users.ts";
 export { expireItems, archiveStale, countExpiringSoon, runDueExpiry, claimOnce, localNow } from "./expiry.ts";
 export { DEFAULT_SETTINGS, type SignUpVia, type UserSettings } from "./collections.ts";
 export { publicList, publicListById, publicCoverKey, recordView, createReport, PUBLIC_ITEM_FIELDS, sharedList, listsSharedWith, sharedCoverKey } from "./public.ts";

@@ -39,13 +39,6 @@ export async function claimStarters(userId: string): Promise<boolean> {
   return (await (await users()).updateOne({ _id: oid(userId), startersAt: { $exists: false } }, { $set: { startersAt: new Date() } })).modifiedCount > 0;
 }
 
-// Accounts that have not been given the starter Lists, a few at a time, for the worker to give them. Not one made in
-// the last ten minutes: its sign-up is still giving it the Lists and the posts, and must win.
-export async function withoutStarters(limit: number, now = new Date()): Promise<string[]> {
-  const docs = await (await users()).find({ startersAt: { $exists: false }, createdAt: { $lt: new Date(now.getTime() - 600_000) } }, { projection: { _id: 1 }, limit }).toArray();
-  return docs.map((d) => d._id.toHexString());
-}
-
 // What usage analytics may know of an account: its answer to the cookie question, and (for signed_up) when and how it began.
 export async function analyticsOf(userId: string): Promise<{ consent: "yes" | "no" | null; createdAt: Date; via: SignUpVia | null } | null> {
   const d = await (await users()).findOne({ _id: oid(userId) }, { projection: { "settings.analytics": 1, "settings.analyticsAt": 1, createdAt: 1, via: 1 } });

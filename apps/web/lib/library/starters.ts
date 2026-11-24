@@ -1,4 +1,4 @@
-import { addToList, claimStarters, createList, editItem, getMe, listLists, markStarters, slugify, withoutStarters } from "@pluck/db";
+import { addToList, claimStarters, createList, editItem, getMe, listLists, markStarters, slugify } from "@pluck/db";
 import { DEFAULT_LOCALE, messagesFor, type Locale } from "@pluck/i18n";
 import type { List } from "@pluck/shared-schemas";
 import { log } from "../log";
@@ -49,16 +49,6 @@ export async function giveStarters(userId: string, { articles, locale, defer }: 
     }
   }
   await markStarters(userId, { listIds: made.map((l) => l.id), itemIds: posts });
-}
-
-// Accounts from before, given their Lists without waiting for them to open Lists: the share sheet, the extension and
-// their AI tools show them too. Run from every tick (schedule.ts), a few accounts at a time.
-// shortcut: asks the database on every tick for good; drop this and its call once every account has startersAt.
-export async function startersBackfill(now = new Date(), limit = 20): Promise<number> {
-  const ids = await withoutStarters(limit, now);
-  for (const userId of ids)
-    await giveStarters(userId, { articles: false }).catch((e) => log("warn", "starter Lists not given", { userId, error: e instanceof Error ? e.message : String(e) }));
-  return ids.length;
 }
 
 // One of our posts, plucked for the account from the words this server already holds: nothing is fetched but its
