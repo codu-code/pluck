@@ -24,6 +24,25 @@ final class ShareViewController: UIViewController {
     Task { await model.run(with: Shared.inputs(from: extensionContext)) }
   }
 
+  // Since iOS 26 the sheet a share extension is shown in is made in this process: as tall as an iPhone's screen (a
+  // card in the middle of an iPad's) and filled with the system background, so the app behind was hidden by an empty
+  // sheet with Pluck's own at its foot. Clearing what is above this view lets the app show through again, dimmed by
+  // the system. Before iOS 26 there is nothing of ours above the window to clear.
+  override func viewWillAppear(_ animated: Bool) { super.viewWillAppear(animated); clearCard() }
+  override func viewIsAppearing(_ animated: Bool) { super.viewIsAppearing(animated); clearCard() }
+  override func viewDidLayoutSubviews() { super.viewDidLayoutSubviews(); clearCard() }
+
+  // More than once, as early as there is anything above: the card is on screen from the first frame of its way in.
+  private func clearCard() {
+    var below: UIView = view
+    while let v = below.superview {
+      // The view that was filled is the system's card: its shadow goes too, or an iPad shows the ghost of a card.
+      if let filled = v.backgroundColor, filled != .clear { for other in v.subviews where other !== below { other.isHidden = true } }
+      v.backgroundColor = .clear
+      below = v
+    }
+  }
+
   // Extensions cannot call UIApplication.open; the responder chain reaches the host app's application.
   private func open(_ url: URL) {
     var responder: UIResponder? = self

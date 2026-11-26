@@ -30,6 +30,12 @@ xcrun simctl io booted screenshot list.png
 
 Never set `EXPO_PUBLIC_DEMO_KEY` for a build that leaves your machine.
 
+### The share sheet in the Simulator
+
+The share extension only shows as iOS shows it when it is opened from another app's share sheet, and no launch argument does that. `apps/ios/scripts/share-sheet.sh <udid> <Pluck.app> <out dir> [light|dark]` does: it installs a demo build, opens a fixture page in Safari, and runs a small XCUITest (`scripts/share-sheet/`) that opens Share, picks Pluck and takes a picture about every third of a second. The test drives the Simulator from inside, so nothing is tapped on the Mac and the Simulator needs no window. Run it on an iPhone and an iPad, on the oldest and newest iOS you have Simulators for, after any change to `targets/share`.
+
+Since iOS 26 the system shows a share extension in a sheet of its own, made inside the extension: as tall as an iPhone's screen, a card in the middle of an iPad's, and filled with the system background. Pluck's sheet only fills the foot of it, so `ShareViewController.clearCard` clears what is above its view and the app behind shows through, as it did before iOS 26. If a later iOS builds that sheet differently, the sign is an empty sheet covering the screen with Pluck's at its foot.
+
 ## iPad
 
 The same app, universal since the iPad work (`supportsTablet: true`; the share extension builds for iPad too). From 600 wide it shows a split view: the sidebar, the list column and the detail column (`components/split`, sizes in `lib/layout.ts` from the `iPad-Spec` board). Under 600 wide (an iPhone, or an iPad window in Split View or Stage Manager) it is the iPhone layout and tab bar, unchanged. The sidebar is pinned in landscape, and in portrait and on iPad mini it comes over the list from its button or a swipe from the left edge. Rows open beside the list. A link from Safari (`/items/…`, `/lists/…`) still opens full screen. Settings lists its groups in the list column and shows one at a time in the detail column. A hardware keyboard gets the shortcuts in `components/split/Shortcuts.tsx`, which `modules/key-commands` turns into `UIKeyCommand`s so they show when ⌘ is held. Messages that name the device take `{device}`, so an iPad says iPad.

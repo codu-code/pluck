@@ -186,25 +186,36 @@ struct ShareView: View {
   private var dark: Bool { scheme == .dark }
 
   var body: some View {
-    ZStack(alignment: .bottom) {
-      Color.black.opacity(0.30).ignoresSafeArea().onTapGesture { model.finish() }
+    ZStack(alignment: floats ? .center : .bottom) {
+      scrim.ignoresSafeArea().onTapGesture { model.finish() }
       VStack(alignment: .leading, spacing: 16) {
-        Capsule().fill(Palette.handle).frame(width: 36, height: 5).frame(maxWidth: .infinity)
+        if !floats { Capsule().fill(Palette.handle).frame(width: 36, height: 5).frame(maxWidth: .infinity) }
         content
       }
-      .padding(EdgeInsets(top: 10, leading: 20, bottom: 16, trailing: 20))
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(EdgeInsets(top: floats ? 20 : 10, leading: 20, bottom: floats ? 20 : 16, trailing: 20))
       .background {
-        UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16).fill(Palette.ground(dark)).ignoresSafeArea(.container, edges: .bottom)
+        if floats { RoundedRectangle(cornerRadius: 16).fill(Palette.ground(dark)) }
+        else { UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16).fill(Palette.ground(dark)).ignoresSafeArea(.container, edges: .bottom) }
       }
+      .animation(reduceMotion ? nil : .easeOut(duration: 0.25), value: formHeight) // the sheet grows into the form, it does not jump
     }
     .font(Typeface.body)
     .foregroundStyle(Palette.ink(dark))
   }
 
+  // Since iOS 26 the system's own sheet is cleared (ShareViewController.clearCard) and the system dims the app
+  // behind it, so a dim of ours would only draw that sheet's outline: the scrim is clear, and still takes the tap
+  // that means Done. On an iPad that sheet was a card in the middle, so Pluck's is one too, with no handle to pull.
+  private var cleared: Bool { if #available(iOS 26, *) { return true } else { return false } }
+  private var floats: Bool { cleared && UIDevice.current.userInterfaceIdiom == .pad }
+  private var scrim: Color { Color.black.opacity(cleared ? 0.001 : 0.30) }
+
   @ViewBuilder private var content: some View {
     switch model.phase {
     case .working:
-      HStack(spacing: 12) { ProgressView(); Text("plucking").foregroundStyle(Palette.ink2(dark)) }.frame(minHeight: 44)
+      // The same row "Plucked." takes, so nothing moves when it lands: the mark's sparks where the tick will be.
+      header(String(localized: "plucking"), subtitle: model.title.isEmpty ? nil : model.title, working: true)
     case .signedOut:
       Text("signedOutTitle").font(Typeface.heading)
       Text("signedOutBody").foregroundStyle(Palette.ink2(dark))
@@ -300,9 +311,13 @@ struct ShareView: View {
     ScrollView(.horizontal, showsIndicators: false) { HStack(spacing: 8) { chips() } }
   }
 
-  private func header(_ title: String, subtitle: String?) -> some View {
+  private func header(_ title: String, subtitle: String?, working: Bool = false) -> some View {
     HStack(spacing: 12) {
-      ZStack { Circle().fill(Palette.mint); glyph("M3.5 8.5l3 3 6-7", size: 24, color: Color(hex: 0x151A13), width: 2) }.frame(width: 44, height: 44)
+      ZStack {
+        Circle().fill(working ? Palette.brand : Palette.mint)
+        if working { Sparks(still: reduceMotion) } else { glyph("M3.5 8.5l3 3 6-7", size: 24, color: Color(hex: 0x151A13), width: 2) }
+      }
+      .frame(width: 44, height: 44)
       VStack(alignment: .leading, spacing: 0) {
         Text(title).font(Typeface.heading).tracking(-0.7)
         if let subtitle { Text(subtitle).lineLimit(1).truncationMode(.tail).foregroundStyle(Palette.ink2(dark)) }
@@ -331,6 +346,27 @@ struct ShareView: View {
 
   private func glyph(_ d: String, size: CGFloat, color: Color, width: CGFloat) -> some View {
     SVGPath(d: d).stroke(color, style: StrokeStyle(lineWidth: width, lineCap: .round, lineJoin: .round)).frame(width: size, height: size)
+  }
+}
+
+// The three sparks of the Pluck mark (packages/ui Logo, 1.25 times about their centre on this 16-unit grid), flicking
+// out one after another while a pluck is on its way. Still, and whole, with Reduce Motion.
+private struct Sparks: View {
+  let still: Bool
+  @State private var out = false
+  private let lines = ["M3.5 6.9375L4.25 2.8125", "M7 9.1875L10.75 5.8125", "M8 13.1875L12.5 12.25"]
+
+  var body: some View {
+    ZStack {
+      ForEach(lines.indices, id: \.self) { i in
+        SVGPath(d: lines[i]).trim(from: 0, to: still || out ? 1 : 0.3)
+          .stroke(Palette.mint, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+          .animation(still ? nil : .easeInOut(duration: 0.45).repeatForever(autoreverses: true).delay(Double(i) * 0.12), value: out)
+      }
+    }
+    .frame(width: 28, height: 28)
+    .onAppear { out = true }
+    .accessibilityHidden(true)
   }
 }
 
