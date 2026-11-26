@@ -21,3 +21,7 @@ apps/ios/.expo/
 .claude/settings.local.json
 *.tsbuildinfo
 coverage/
+
+# The share sheet test (apps/ios/scripts/share-sheet.sh) writes its Xcode project and build beside itself.
+apps/ios/scripts/share-sheet/ShareSheet.xcodeproj
+apps/ios/scripts/share-sheet/build
