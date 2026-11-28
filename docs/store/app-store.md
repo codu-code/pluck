@@ -12,7 +12,7 @@ Paste from `en.json`. Counts against Apple's limits:
 | subtitle | 24 | 30 characters |
 | promotionalText | 132 | 170 characters |
 | description | 1482 | 4000 characters |
-| keywords | 97 | 100 bytes |
+| keywords | 99 | 100 bytes |
 
 Support URL https://getpluck.io/support, marketing URL https://getpluck.io, privacy policy https://getpluck.io/privacy. Category Productivity, then News. Copyright 2026 Codú Limited.
 
@@ -21,6 +21,15 @@ Support URL https://getpluck.io/support, marketing URL https://getpluck.io, priv
 `screenshots/6.9in` (1320 × 2868) and `screenshots/6.3in` (1206 × 2622), PNG with no alpha, in upload order. Drawn on the canvas as `AppStore1` to `AppStore5`, with an everyday sample library rather than developer reading. Frame 5 is dark mode. The first `AppStore6` and `7` came down on 4 November 2026: they showed Settings the app doesn't have (guideline 2.3.3). The new 6 (AI tools) and 7 (Siri on iPhone, the hold-⌘ keys on iPad) are boards `AppStore6`, `AppStore7`, `AppStore-iPad-6` and `AppStore-iPad-7`. They draw the app's screens, so in other languages the scripts draw them again with the app's own words from the iOS catalog (`scripts/store-words.mjs`); iPad frame 7 puts that language's frame 2 capture under the keys.
 
 Frames 2 to 5 are real Simulator captures of the sample library below, in every language, English included (since 1.7.0, 23 November 2026): `scripts/store-capture.sh` takes them with launch arguments only, and `scripts/store-iphone.mjs` and `scripts/store-ipad.mjs` put them in the frames. Frame 1's share sheet is still drawn, with the app's own rows in the app's own order: the note, Lists, Tags, Done. A new account's two starter Lists (Favourites, Ideas) and the post in its Inbox are in the captures, as they are in the app; the post in Ideas was taken out of the sample library so the Archive frame shows only the sample.
+
+What the two scripts hold every frame to (28 November 2026, after a read of the listing before review):
+
+- **No price on a frame.** Frame 1's chips say Open source and No ads. "Free" came off: guideline 2.3.7 keeps prices out of screenshots.
+- **One status bar.** A capture's own is the Simulator's (a 24-hour clock, the day it was taken in English, a charging battery), so the boards' bar is drawn over it, with the date in the frame's language on iPad.
+- **Words that break where a reader would.** Japanese between phrases, Korean between words. A title can carry its own line break (`\n`), which Chinese needs.
+- **Words that stop 24 px short of the device.** A script stops with the frame's name when they do not: shorten them in that language's `strings` file.
+
+To put new words on frames without the Simulator, give the scripts the screen cut back out of each committed frame 2 to 5 (iPhone 1080 × 2337 from 120, 704; iPad 1806 × 2408 from 129, 666).
 
 To take them all again (about fifteen minutes, nothing to tap):
 
@@ -32,7 +41,7 @@ cd apps/ios && EXPO_NO_DOTENV=1 PLUCK_SERVER=http://127.0.0.1:3000 EXPO_PUBLIC_D
 scripts/store-capture.sh iphone <iPhone 17 udid> <Pluck.app> caps/iphone seed.json
 scripts/store-capture.sh ipad <iPad Pro 13-inch udid> <Pluck.app> caps/ipad seed.json
 for l in en es pt-BR fr de ja it nl ko zh-Hans; do node scripts/store-iphone.mjs $l caps/iphone/$l; done   # en writes screenshots/en: copy 1 to 5 over 6.9in, and at 1206 × 2622 over 6.3in
-node scripts/store-ipad.mjs caps/ipad/en; for l in es pt-BR fr de ja it nl ko zh-Hans; do node scripts/store-ipad.mjs --lang $l caps/ipad/$l; done
+for l in en es pt-BR fr de ja it nl ko zh-Hans; do node scripts/store-ipad.mjs --lang $l caps/ipad/$l; done   # en writes ipad/with-text
 ```
 
 | Kind | Sample Item |
@@ -64,7 +73,7 @@ cd apps/ios && EXPO_NO_DOTENV=1 PLUCK_SERVER=http://127.0.0.1:3000 EXPO_PUBLIC_D
   -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build-release CODE_SIGN_IDENTITY=- build
 xcrun simctl status_bar booted override --time 9:41 --batteryState charged --batteryLevel 100
 xcrun simctl launch booted io.getpluck.app -demoDetail item:<id>   # then: xcrun simctl io booted screenshot 2.png
-node scripts/store-ipad.mjs <dir with 2.png … 7.png>
+node scripts/store-ipad.mjs --lang en <dir with 2.png … 5.png>
 ```
 
 Every other language has its own set in `ipad/<lang>/` (frames 1 to 5), with the app itself in that language: the words in `ipad/strings.<lang>.json`, drawn with each board's own text layer over `art-only`, and the captures made with the Simulator in that language (`xcrun simctl launch booted io.getpluck.app -AppleLanguages "(de)" -AppleLocale de_DE …`):
