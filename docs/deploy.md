@@ -83,6 +83,7 @@ Store reviewers (Apple's App Review, Google Play's, the Chrome Web Store's) need
 
 - Give App Store Connect (App Review Information, Sign-in required) the two values, with the note: "Type the email, tap Email me a link, then type the password."
 - Sign in as the account once before submitting and pluck a few real links, a Note and a Todo, tag two and make a List, so the reviewer sees a library and not an empty Inbox. `scripts/demo-seed.mjs` cannot do this: it needs Mailpit and the local fixture pages, so it only fills a local server.
+- Set its expiry to Never (Settings, Expiry). Left at 30 days, the library moves to the Archive a month after it is filled, and the reviewer opens an empty Inbox: it did on 25 November 2026.
 - Unset both to turn it off. The account and its library stay; nothing is deleted.
 
 ## Publishing @getpluck/mcp

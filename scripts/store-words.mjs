@@ -59,3 +59,21 @@ export function words(lang) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) console.log(words(process.argv[2] ?? "de"));
+
+// What every frame's headline, line and drawn page get: Japanese breaks between phrases and Korean between words, never inside
+// one, and a title may carry its own line break (Chinese has no such rule to lean on).
+export const TEXT_CSS = ":lang(ja) :is(h1, p, b) { word-break: auto-phrase } :lang(ko) :is(h1, p, b) { word-break: keep-all } h1 { white-space: pre-line }";
+
+// Runs in the page. A capture's own status bar is the Simulator's (a 24-hour clock, the day it was taken in English,
+// a charging battery), so the boards' bar is drawn over it: each [data-bar] takes the colour the capture has there.
+export const paintBars = async () => {
+  for (const bar of document.querySelectorAll("[data-bar]")) {
+    const img = bar.closest("[data-screen]").querySelector("img");
+    await img.decode();
+    const c = document.createElement("canvas").getContext("2d");
+    c.drawImage(img, img.naturalWidth * Number(bar.dataset.bar), 3, 1, 1, 0, 0, 1, 1);
+    const [r, g, b] = c.getImageData(0, 0, 1, 1).data;
+    bar.style.background = `rgb(${r}, ${g}, ${b})`;
+    bar.style.color = r + g + b < 384 ? "#F6F8F4" : "#151A13";
+  }
+};

@@ -1,8 +1,8 @@
 {
   "ipadScreenshots": [
     {
-      "title": "Cueillez depuis n’importe quelle app.",
-      "subtitle": "Un geste dans Partager. Pluck garde la page, et l’app reste fermée."
+      "title": "Cueillez depuis toutes vos apps.",
+      "subtitle": "Un geste dans Partager, et l’app reste fermée."
     },
     {
       "title": "Triez plus tard.",
@@ -30,7 +30,6 @@
     }
   ],
   "chips": [
-    "Gratuit",
     "Open source",
     "Sans pub"
   ]
